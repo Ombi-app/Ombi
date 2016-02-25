@@ -1,5 +1,5 @@
 ﻿<div>
-    <h2 >Search</h2>
+    <h2>Search</h2>
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
@@ -12,10 +12,13 @@
         <div role="tabpanel" class="tab-pane active" id="MoviesTab">
             <div class="input-group">
                 <input id="movieSearchContent" type="text" class="form-control">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" type="button" id="movieSearchButton">Search</button>
-                </span>
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+
             </div>
+            <br />
+            <br />
             <div id="movieList">
 
             </div>
@@ -24,6 +27,9 @@
 
             <div class="input-group">
                 <input id="tvSearchContent" type="text" class="form-control">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
                 <span class="input-group-btn">
                     <button class="btn btn-default" type="button" id="tvSearchButton">Search</button>
                 </span>
@@ -37,38 +43,84 @@
 </div>
 
 
+<script id="movie-template" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-sm-2">
+            <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+        </div>
+        <div class="col-sm-5">
+            <div id="{{id}}">
+                <a href="https://www.themoviedb.org/movie/{{id}}">
+                    <h4>{{title}} ({{year}})</h4>
+                </a>
+            </div>
+            <p>{{overview}}.</p>
+        </div>
+        <div class="col-sm-5">
+
+            <small>Vote Average: {{voteAverage}}</small>
+            <small>Vote Count: {{voteCount}}</small>
+            <button style="text-align: right" class="btn btn-primary bottom-align-text">
+                <i class="fa fa-plus"></i>Request
+            </button>
+        </div>
+
+    </div>
+    <hr />
+</script>
 
 
 <script>
     $(function () {
 
+        var movieSource = $("#movie-template").html();
+        var movieTemplate = Handlebars.compile(movieSource);
+        var movieTimer = 0;
+        var tvimer = 0;
 
+        $('#movieSearchContent').on('keyup', function (e) {
+            if (movieTimer) {
+                clearTimeout(movieTimer);
+            }
+            movieTimer = setTimeout(movieSearch, 400);
+        });
 
+        $('#tvSearchContent').on('keyup', function (e) {
+            if (tvimer) {
+                clearTimeout(tvimer);
+            }
+            tvimer = setTimeout(tvSearch(), 400);
+        });
 
-        $('#movieSearchButton').click(function (e) {
-            $('#list').html("");
-            e.preventDefault();
-
+        function movieSearch() {
+            $('#movieList').html("");
             var query = $('#movieSearchContent').val();
 
             $.ajax("/request/movie/" + query).success(function (results) {
                 results.forEach(function (result) {
-                    $('#movieList').append("<div id='" + result.id + "'>" + result.title + "</div>");
+                    var date = new Date(result.releaseDate);
+                    var year = date.getFullYear();
+                    var context = { posterPath: result.posterPath, id: result.id, title: result.title, overview: result.overview, voteCount: result.voteCount, voteAverage: result.voteAverage, year: year };
+                    var html = movieTemplate(context);
+                    $('#movieList').append(html);
                 });
             });
-        });
+        };
 
-        $('#tvSearchButton').click(function (e) {
-            $('#list').html("");
-            e.preventDefault();
-
+        function tvSearch() {
+            $('#tvList').html("");
             var query = $('#tvSearchContent').val();
 
             $.ajax("/request/tv/" + query).success(function (results) {
                 results.forEach(function (result) {
-                    $('#tvList').append("<div id='" + result.id + "'>" + result.name + "</div>");
+                    var date = new Date(result.airDate);
+                    var year = date.getFullYear();
+                    var context = { posterPath: result.posterPath, id: result.id, title: result.title, overview: result.overview, voteCount: result.voteCount, voteAverage: result.voteAverage, year : year };
+                    var html = movieTemplate(context);
+                    $('#tvList').append(html);
                 });
             });
-        });
+        };
+
     });
 </script>

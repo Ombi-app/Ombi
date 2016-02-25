@@ -34,16 +34,16 @@ namespace RequestPlex.UI.Modules
         {
             var api = new TheMovieDbApi();
             var movies = api.SearchMovie(searchTerm);
-
-            return Response.AsJson(movies);
+            var result = movies.Result;
+            return Response.AsJson(result);
         }
 
         private Response SearchTvShow(string searchTerm)
         {
             var api = new TheMovieDbApi();
-            var movies = api.SearchTv(searchTerm);
-
-            return Response.AsJson(movies);
+            var tvShow = api.SearchTv(searchTerm);
+            var result = tvShow.Result;
+            return Response.AsJson(result);
         }
     }
 }
