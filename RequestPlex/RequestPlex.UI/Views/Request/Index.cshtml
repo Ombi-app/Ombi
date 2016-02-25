@@ -1,0 +1,74 @@
+﻿<div>
+    <h2 >Search</h2>
+    <!-- Nav tabs -->
+    <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
+        <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+            <div class="input-group">
+                <input id="movieSearchContent" type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="movieSearchButton">Search</button>
+                </span>
+            </div>
+            <div id="movieList">
+
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="TvShowTab">
+
+            <div class="input-group">
+                <input id="tvSearchContent" type="text" class="form-control">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button" id="tvSearchButton">Search</button>
+                </span>
+            </div>
+            <div id="tvList">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+<script>
+    $(function () {
+
+
+
+
+        $('#movieSearchButton').click(function (e) {
+            $('#list').html("");
+            e.preventDefault();
+
+            var query = $('#movieSearchContent').val();
+
+            $.ajax("/request/movie/" + query).success(function (results) {
+                results.forEach(function (result) {
+                    $('#movieList').append("<div id='" + result.id + "'>" + result.title + "</div>");
+                });
+            });
+        });
+
+        $('#tvSearchButton').click(function (e) {
+            $('#list').html("");
+            e.preventDefault();
+
+            var query = $('#tvSearchContent').val();
+
+            $.ajax("/request/tv/" + query).success(function (results) {
+                results.forEach(function (result) {
+                    $('#tvList').append("<div id='" + result.id + "'>" + result.name + "</div>");
+                });
+            });
+        });
+    });
+</script>
