@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS User
 CREATE TABLE IF NOT EXISTS Settings
 (
 	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    Port								INTEGER NOT NULL
+    Port								INTEGER NOT NULL,
+	UserAuthentication					INTEGER NOT NULL,
+	PlexAuthToken						varchar(50)				
 );
 
 CREATE TABLE IF NOT EXISTS Requested

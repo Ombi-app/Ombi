@@ -1,9 +1,22 @@
 ﻿@Html.Partial("/Admin/_Sidebar")
 @{
-    var port = Model.Port ?? 0;
+    int port;
+    if (Model.Port == null)
+    {
+        port = 3579;
+    }
+    else
+    {
+        port = Model.Port;
+    }
+
+    //if (string.IsNullOrEmpty(Model.PlexAuthToken))
+    //{
+    //    Model.PlexAuthToken = string.Empty;
+    //}
 }
 <div class="col-sm-8">
-    <form class="form-horizontal" method="POST">
+    <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Request Plex Settings</legend>
             <div class="form-group">
@@ -11,6 +24,32 @@
                 <div class="col-lg-10">
                     <input type="text" class="form-control" id="portNumber" name="portNumber" placeholder="Port Number" value="@port">
                 </div>
+            </div>
+
+            <div class="form-group">
+                <label for="authToken" class="col-lg-2 control-label">Plex Authorization Token</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="authToken" name="authToken" placeholder="Plex Auth Token" value="@*@Model.PlexAuthToken*@">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="userpass" class="col-lg-2 control-label">Username and Password</label>
+                <div class="col-lg-4">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+                </div>
+                <div class="col-lg-4 col-lg-push-1">
+                    <input type="text" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button id="requestToken" class="btn btn-primary">Request Token</button>
+                </div>
+            </div>
+
+            <div>
+                <small>Please note, you will have to restart after changing these settings.</small>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">
@@ -30,3 +69,32 @@
         Please enter in a correct port number
     </div>
 }
+
+<script>
+    $(function () {
+
+        $('#requestToken').click(function (e) {
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: "admin/requestauth",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.Result === true) {
+                        generateNotify("Success!", "success");
+                        $('#authToken').val(response.authToken);
+                    } else {
+                        generateNotify(response.Message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+    });
+</script>

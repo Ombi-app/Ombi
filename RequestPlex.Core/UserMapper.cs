@@ -37,7 +37,7 @@ namespace RequestPlex.Core
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new UserRepository<UserModel>(db);
             var users = repo.GetAll();
-            var userRecord = users.FirstOrDefault(u => u.UserName == username && u.Password == password); // TODO hashing
+            var userRecord = users.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase) && u.Password.Equals(password)); // TODO hashing
 
             if (userRecord == null)
             {

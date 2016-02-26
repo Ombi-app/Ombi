@@ -17,7 +17,6 @@ $("#tvSearchContent").on("keyup", function (e) {
     tvimer = setTimeout(tvSearch(), 400);
 });
 
-
 $("#test").click(function (e) {
     e.preventDefault();
     
@@ -103,15 +102,4 @@ function buildTvShowContext(result) {
         type: "tv"
     };
     return context;
-}
-
-function generateNotify(message, type) {
-    // type = danger, warning, info, successs
-    $.notify({
-        // options
-        message: message
-    }, {
-        // settings
-        type: type
-    });
 }
