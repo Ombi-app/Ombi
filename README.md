@@ -20,7 +20,7 @@ TBC
 
 #Installation
 
-TBC
+Just run the .exe! (Use mono if not on Windows `mono RequestPlex.UI.exe`)
 
 #Configuration
 

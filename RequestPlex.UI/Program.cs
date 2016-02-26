@@ -12,10 +12,13 @@ namespace RequestPlex.UI
     {
         static void Main(string[] args)
         {
+            var uri = "http://localhost:3579/";
+            var s = new Setup();
+            s.SetupDb();
+
             var service = new SettingsService();
             var settings = service.GetSettings();
 
-            var uri = "http://localhost:3579/";
             if (settings != null)
             {
                 uri = $"http://localhost:{settings.Port}";
