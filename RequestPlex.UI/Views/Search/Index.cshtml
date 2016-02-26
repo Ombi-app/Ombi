@@ -48,11 +48,11 @@
     <div class="row">
         <div class="col-sm-2">
             {{#if posterPath}}
-                <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+            <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
             {{/if}}
         </div>
         <div class="col-sm-5">
-            <div id="{{id}}">
+            <div>
                 <a href="https://www.themoviedb.org/{{type}}/{{id}}">
                     <h4>{{title}} ({{year}})</h4>
                 </a>
@@ -62,9 +62,10 @@
         <div class="col-sm-5">
             <small>Vote Average: {{voteAverage}}</small>
             <small>Vote Count: {{voteCount}}</small>
-            <button style="text-align: right" class="btn btn-primary bottom-align-text">
-                <i class="fa fa-plus"></i>Request
-            </button>
+            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden"/>
+                <button id="test" style="text-align: right" class="btn btn-primary bottom-align-text requestClass" type="submit"><i class="fa fa-plus"></i>Request</button>
+            </form>
         </div>
 
     </div>

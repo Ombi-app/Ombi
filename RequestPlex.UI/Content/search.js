@@ -17,6 +17,34 @@ $("#tvSearchContent").on("keyup", function (e) {
     tvimer = setTimeout(tvSearch(), 400);
 });
 
+
+$("#test").click(function (e) {
+    e.preventDefault();
+    
+    var $form = $('#form'+e.target.id);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: $form.serialize(),
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            if (response.Result === true) {
+                generateNotify("Success!", "success");
+            } else {
+                generateNotify(response.Message, "warning");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
+});
+
+
 function movieSearch() {
     $("#movieList").html("");
     var query = $("#movieSearchContent").val();

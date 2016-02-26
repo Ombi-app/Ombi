@@ -38,5 +38,36 @@ namespace RequestPlex.Core
 
             return settings;
         }
+
+        public void AddRequest(int tmdbid, RequestType type)
+        {
+            var model = new RequestedModel
+            {
+                Tmdbid = tmdbid,
+                Type = type
+            };
+
+            var db = new DbConfiguration(new SqliteFactory());
+            var repo = new GenericRepository<RequestedModel>(db);
+
+            repo.Insert(model);
+        }
+
+        public bool CheckRequest(int tmdbid)
+        {
+            var db = new DbConfiguration(new SqliteFactory());
+            var repo = new GenericRepository<RequestedModel>(db);
+
+            return repo.GetAll().Any(x => x.Tmdbid == tmdbid);
+        }
+
+        public void DeleteRequest(int tmdbId)
+        {
+            var db = new DbConfiguration(new SqliteFactory());
+            var repo = new GenericRepository<RequestedModel>(db);
+            var entity = repo.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId);
+            repo.Delete(entity);
+        }
+
     }
 }
