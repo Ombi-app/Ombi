@@ -1,0 +1,75 @@
+﻿<div>
+    <h2>Search</h2>
+    <!-- Nav tabs -->
+    <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
+        <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+
+        <!-- Movie tab -->
+        <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+            <div class="input-group">
+                <input id="movieSearchContent" type="text" class="form-control">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+            <br />
+            <br />
+            <!-- Movie content -->
+            <div id="movieList">
+            </div>
+        </div>
+
+        <!-- TV tab -->
+        <div role="tabpanel" class="tab-pane" id="TvShowTab">
+            <div class="input-group">
+                <input id="tvSearchContent" type="text" class="form-control">
+                <div class="input-group-addon">
+                    <i class="fa fa-search"></i>
+                </div>
+            </div>
+            <br />
+            <br />
+            <!-- TV content -->
+            <div id="tvList">
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<script id="search-template" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-sm-2">
+            {{#if posterPath}}
+                <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+            {{/if}}
+        </div>
+        <div class="col-sm-5">
+            <div id="{{id}}">
+                <a href="https://www.themoviedb.org/{{type}}/{{id}}">
+                    <h4>{{title}} ({{year}})</h4>
+                </a>
+            </div>
+            <p>{{overview}}.</p>
+        </div>
+        <div class="col-sm-5">
+            <small>Vote Average: {{voteAverage}}</small>
+            <small>Vote Count: {{voteCount}}</small>
+            <button style="text-align: right" class="btn btn-primary bottom-align-text">
+                <i class="fa fa-plus"></i>Request
+            </button>
+        </div>
+
+    </div>
+    <hr />
+</script>
+
+
+<script src="/Content/search.js" type="text/javascript"></script>

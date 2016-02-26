@@ -1,0 +1,32 @@
+﻿@Html.Partial("/Admin/_Sidebar")
+@{
+    var port = Model.Port ?? 0;
+}
+<div class="col-sm-8">
+    <form class="form-horizontal" method="POST">
+        <fieldset>
+            <legend>Request Plex Settings</legend>
+            <div class="form-group">
+                <label for="portNumber" class="col-lg-2 control-label">Port</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" id="portNumber" name="portNumber" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
+                    <button type="reset" class="btn btn-default">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+@if (Model.Errored)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+        Please enter in a correct port number
+    </div>
+}

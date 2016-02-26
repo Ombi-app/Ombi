@@ -1,1 +1,19 @@
-﻿
+﻿<form method="POST">
+    Username <input class="form-control" type="text" name="Username"/>
+    <br/>
+    Password <input class="form-control" name="Password" type="password"/>
+    <br/>
+    Remember Me <input name="RememberMe" type="checkbox" value="True"/>
+    <br/>
+    <input class="btn btn-success" type="submit" value="Login"/>
+</form>
+
+If you have not yet created an Admin account you can do here: <a href="/register">Register</a>
+
+@if (Model.Errored)
+{
+    <div class="alert alert-dismissible alert-danger">
+        <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
+        Invalid Username or Password!
+    </div>
+}
