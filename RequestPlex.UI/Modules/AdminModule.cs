@@ -11,6 +11,7 @@ using Nancy.Security;
 using Newtonsoft.Json;
 using RequestPlex.Api;
 using RequestPlex.Core;
+using RequestPlex.Store;
 using RequestPlex.UI.Models;
 
 namespace RequestPlex.UI.Modules
@@ -32,6 +33,7 @@ namespace RequestPlex.UI.Modules
                 if (settings != null)
                 {
                     model.Port = settings.Port;
+                    model.PlexAuthToken = settings.PlexAuthToken;
                 }
 
                 return View["/Admin/Settings", model];
@@ -39,16 +41,10 @@ namespace RequestPlex.UI.Modules
 
             Post["admin/"] = _ =>
             {
-                var portString = (string)Request.Form.portNumber;
-                int port;
-
-                if (!int.TryParse(portString, out port))
-                {
-                    return Context.GetRedirect("~/admin?error=true");
-                }
+                var model = this.Bind<SettingsModel>();
 
                 var s = new SettingsService();
-                s.SaveSettings(port);
+                s.SaveSettings(model);
 
 
                 return Context.GetRedirect("~/admin");
@@ -64,10 +60,34 @@ namespace RequestPlex.UI.Modules
                 }
 
                 var plex = new PlexApi();
-                plex.GetToken(user.username, user.password);
+                var model = plex.GetToken(user.username, user.password);
+                var s = new SettingsService();
+                var oldSettings = s.GetSettings();
+                if (oldSettings != null)
+                {
+                    oldSettings.PlexAuthToken = model.user.authentication_token;
+                    s.SaveSettings(oldSettings);
+                }
+                else
+                {
+                    var newModel = new SettingsModel
+                    {
+                        PlexAuthToken = model.user.authentication_token
+                    };
+                    s.SaveSettings(newModel);
+                }
+
 
 
                 return Context.GetRedirect("~/admin");
+            };
+
+            Get["admin/getusers"] = _ =>
+            {
+                var api = new PlexApi();
+                
+
+                return View["/Admin/Settings"];
             };
 
         }

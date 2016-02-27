@@ -1,43 +1,51 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Nancy.Json;
+using RequestPlex.Api.Models;
+using RestSharp;
 
 namespace RequestPlex.Api
 {
     public class PlexApi
     {
-        public void GetToken(string username, string password)
+        public PlexAuthentication GetToken(string username, string password)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes("username:password");
-            string auth = System.Convert.ToBase64String(plainTextBytes);
-
-            using (var client = new WebClient())
+            var userModel = new PlexUserRequest
             {
-                var values = new NameValueCollection
+                user = new UserRequest
                 {
-                    ["Authorization"] = "Basic " + auth,
-                    ["X-Plex-Client-Identifier"] = "RequestPlex0001",
-                    ["X-Plex-Product"] = "Request Plex",
-                    ["X-Plex-Version"] = "0.1.0"
-                };
+                    password = password,
+                    login = username
+                },
+            };
+            var request = new RestRequest
+            {
+                Method = Method.POST,
+            };
 
-                client.Headers.Add(values);
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", "0.0.1");
+            request.AddHeader("Content-Type", "application/json");
+            
+            request.AddJsonBody(userModel);
 
-                var response = client.UploadString("https://plex.tv/users/sign_in.json", "");
+            var api = new ApiRequest();
+            return api.Execute<PlexAuthentication>(request, new Uri("https://plex.tv/users/sign_in.json"));
+        }
 
-                var json = new JavaScriptSerializer();
-                dynamic result = json.DeserializeObject(response);
+        public void GetUsers(string authToken)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.POST,
+            };
 
-                var token = result["user"]["authentication_token"];
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", "0.0.1");
+            request.AddHeader("X-Plex-Token", authToken);
+            request.AddHeader("Content-Type", "application/json");
 
-                Debug.WriteLine(token);
-            }
         }
     }
 }
+

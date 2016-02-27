@@ -61,7 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
-    <Compile Include="Models\MovieSearch.cs" />
+    <Compile Include="Models\PlexAuthentication.cs" />
+    <Compile Include="Models\PlexUserRequest.cs" />
     <Compile Include="PlexApi.cs" />
     <Compile Include="TheMovieDbApi.cs" />
     <Compile Include="MovieBase.cs" />

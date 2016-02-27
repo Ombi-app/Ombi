@@ -12,7 +12,7 @@ namespace RequestPlex.Core
 {
     public class SettingsService
     {
-        public void SaveSettings(int port)
+        public void SaveSettings(SettingsModel model)
         {
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<SettingsModel>(db);
@@ -20,13 +20,12 @@ namespace RequestPlex.Core
             var existingSettings = repo.GetAll().FirstOrDefault();
             if (existingSettings != null)
             {
-                existingSettings.Port = port;
+                existingSettings = model;
                 repo.Update(existingSettings);
                 return;
             }
 
-            var newSettings = new SettingsModel { Port = port };
-            repo.Insert(newSettings);
+            repo.Insert(model);
         }
 
         public SettingsModel GetSettings()
