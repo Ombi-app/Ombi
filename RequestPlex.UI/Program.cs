@@ -25,7 +25,7 @@ namespace RequestPlex.UI
             var service = new SettingsServiceV2<RequestPlexSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
 
-            if (settings != null)
+            if (settings.Port != 0)
             {
                 uri = $"http://localhost:{settings.Port}";
             }

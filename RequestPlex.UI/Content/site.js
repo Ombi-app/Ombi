@@ -1,7 +1,4 @@
-﻿
-
-
-function generateNotify(message, type) {
+﻿function generateNotify(message, type) {
     // type = danger, warning, info, successs
     $.notify({
         // options
