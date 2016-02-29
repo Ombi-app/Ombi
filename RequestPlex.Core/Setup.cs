@@ -10,7 +10,7 @@ namespace RequestPlex.Core
         public void SetupDb()
         {
             var db = new DbConfiguration(new SqliteFactory());
-            db.CreateDatabase();
+            db.CheckDb();
             TableCreation.CreateTables(db.DbConnection());
         }
     }

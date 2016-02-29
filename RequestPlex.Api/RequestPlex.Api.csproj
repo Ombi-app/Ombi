@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -53,7 +61,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
-    <Compile Include="Models\MovieSearch.cs" />
+    <Compile Include="Models\PlexAuthentication.cs" />
+    <Compile Include="Models\PlexUserRequest.cs" />
+    <Compile Include="PlexApi.cs" />
     <Compile Include="TheMovieDbApi.cs" />
     <Compile Include="MovieBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
