@@ -49,7 +49,6 @@ namespace RequestPlex.UI.Modules
 
         private Response SearchMovie(string searchTerm)
         {
-            var s = new SettingsService();
             var api = new TheMovieDbApi();
             var movies = api.SearchMovie(searchTerm);
             var result = movies.Result;

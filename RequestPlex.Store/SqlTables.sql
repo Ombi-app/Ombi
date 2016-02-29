@@ -22,3 +22,10 @@ CREATE TABLE IF NOT EXISTS Requested
 	Type								INTEGER NOT NULL,
     Tmdbid								INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS GlobalSettings
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    SettingsName						varchar(50) NOT NULL,
+    Content								varchar(100) NOT NULL
+);

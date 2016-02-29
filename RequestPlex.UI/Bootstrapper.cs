@@ -1,9 +1,16 @@
-﻿using Nancy;
+﻿using Mono.Data.Sqlite;
+
+using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.TinyIoc;
 
 using RequestPlex.Core;
+using RequestPlex.Core.SettingModels;
+using RequestPlex.Helpers;
+using RequestPlex.Store;
+using RequestPlex.Store.Models;
+using RequestPlex.Store.Repository.NZBDash.DataAccessLayer.Repository;
 
 using FormsAuthentication = Nancy.Authentication.Forms.FormsAuthentication;
 
@@ -17,8 +24,21 @@ namespace RequestPlex.UI
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
-            base.ConfigureRequestContainer(container, context);
+            
             container.Register<IUserMapper, UserMapper>();
+            base.ConfigureRequestContainer(container, context);
+
+            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
+            
+            container.Register<ISettingsRepository, JsonRepository>();
+            container.Register<ICacheProvider, MemoryCacheProvider>();
+
+
+            container.Register<ISettingsService<RequestPlexSettings>, SettingsServiceV2<RequestPlexSettings>>();
+
+
+
+
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

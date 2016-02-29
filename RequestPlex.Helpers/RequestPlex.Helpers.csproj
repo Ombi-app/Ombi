@@ -49,6 +49,7 @@
     <Compile Include="MemoryCacheProvider.cs" />
     <Compile Include="ObjectCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerializerSettings.cs" />
     <Compile Include="StringCipher.cs" />
   </ItemGroup>
   <ItemGroup>

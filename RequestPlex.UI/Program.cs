@@ -2,9 +2,15 @@
 
 using Microsoft.Owin.Hosting;
 
+using Mono.Data.Sqlite;
+
 using Nancy.Hosting.Self;
 
 using RequestPlex.Core;
+using RequestPlex.Core.SettingModels;
+using RequestPlex.Helpers;
+using RequestPlex.Store;
+using RequestPlex.Store.Repository.NZBDash.DataAccessLayer.Repository;
 
 namespace RequestPlex.UI
 {
@@ -16,7 +22,7 @@ namespace RequestPlex.UI
             var s = new Setup();
             s.SetupDb();
 
-            var service = new SettingsService();
+            var service = new SettingsServiceV2<RequestPlexSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
 
             if (settings != null)

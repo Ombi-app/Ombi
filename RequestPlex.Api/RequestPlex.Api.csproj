@@ -76,6 +76,10 @@
       <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
       <Name>RequestPlex.Api.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RequestPlex.Helpers\RequestPlex.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>RequestPlex.Helpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

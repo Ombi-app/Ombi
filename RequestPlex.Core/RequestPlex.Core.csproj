@@ -41,6 +41,14 @@
       <HintPath>..\packages\Nancy.Authentication.Forms.1.4.1\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=3.1.1.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <HintPath>..\packages\valueinjecter.3.1.1.2\lib\net40\Omu.ValueInjecter.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -51,7 +59,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ISettingsService.cs" />
+    <Compile Include="RequestService.cs" />
+    <Compile Include="SettingModels\RequestPlexSettings.cs" />
+    <Compile Include="SettingModels\Settings.cs" />
     <Compile Include="SettingsService.cs" />
+    <Compile Include="SettingsServiceV2.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="UserIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,6 +74,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RequestPlex.Helpers\RequestPlex.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>RequestPlex.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RequestPlex.Store\RequestPlex.Store.csproj">
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
       <Name>RequestPlex.Store</Name>

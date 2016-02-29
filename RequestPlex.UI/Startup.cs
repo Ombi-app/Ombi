@@ -1,4 +1,6 @@
-﻿using Owin;
+﻿using System;
+
+using Owin;
 
 namespace RequestPlex.UI
 {
@@ -6,7 +8,16 @@ namespace RequestPlex.UI
     {
         public void Configuration(IAppBuilder app)
         {
+            try
+            {
             app.UseNancy();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception.Message);    
+                throw;
+            }
+
         }
     }
 }
