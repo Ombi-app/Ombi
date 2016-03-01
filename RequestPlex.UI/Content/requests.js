@@ -48,7 +48,8 @@ function buildMovieRequestContext(result) {
         title: result.title,
         overview: result.overview,
         year: year,
-        type: "movie"
+        type: "movie",
+        status: result.status
     };
 
     return context;
@@ -62,10 +63,9 @@ function buildTvShowRequestContext(result) {
         id: result.tmdbid,
         title: result.name,
         overview: result.overview,
-        voteCount: result.voteCount,
-        voteAverage: result.voteAverage,
         year: year,
-        type: "tv"
+        type: "tv",
+        status: result.status
     };
     return context;
 }

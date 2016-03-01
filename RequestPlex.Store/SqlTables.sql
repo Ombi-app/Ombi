@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	Title								varchar(50) NOT NULL,
 	PosterPath							varchar(50) NOT NULL,
 	ReleaseDate							varchar(50) NOT NULL
+	Status								varchar(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS GlobalSettings

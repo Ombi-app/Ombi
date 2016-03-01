@@ -57,13 +57,14 @@ namespace RequestPlex.Core
 
                 model = new RequestedModel
                 {
-                    Tmdbid = tmdbid,
+                    Tmdbid = movieInfo.Id,
                     Type = type,
                     Overview = movieInfo.Overview,
                     ImdbId = movieInfo.ImdbId,
                     PosterPath = "http://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
                     Title = movieInfo.Title,
-                    ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue
+                    ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
+                    Status = movieInfo.Status
                 };
             }
             else
@@ -72,13 +73,13 @@ namespace RequestPlex.Core
 
                 model = new RequestedModel
                 {
-                    Tmdbid = tmdbid,
+                    Tmdbid = showInfo.Id,
                     Type = type,
                     Overview = showInfo.Overview,
-                    //ImdbId = showInfo.ImdbId, //TODO where's the IMDBId?
                     PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.PosterPath,
                     Title = showInfo.Name,
-                    ReleaseDate = showInfo.FirstAirDate ?? DateTime.MinValue
+                    ReleaseDate = showInfo.FirstAirDate ?? DateTime.MinValue,
+                    Status = showInfo.Status
                 };
             }
             var db = new DbConfiguration(new SqliteFactory());

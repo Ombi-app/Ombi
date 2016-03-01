@@ -15,6 +15,7 @@ namespace RequestPlex.Store
         public string PosterPath { get; set; }
         public DateTime ReleaseDate { get; set; }
         public RequestType Type { get; set; }
+        public string Status { get; set; }
     }
 
     public enum RequestType
