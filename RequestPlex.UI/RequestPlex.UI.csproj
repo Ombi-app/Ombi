@@ -214,6 +214,9 @@
     <Content Include="Views\Requests\Index.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Admin\CouchPotato.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
