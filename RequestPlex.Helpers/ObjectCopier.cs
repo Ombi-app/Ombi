@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: ObjectCopier.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,34 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using Newtonsoft.Json;
 
-namespace RequestPlex.Store
+namespace RequestPlex.Helpers
 {
-    public interface IRepository<T>
+    /// <summary>
+    /// Provides a method for performing a deep copy of an object.
+    /// Binary Serialization is used to perform the copy.
+    /// </summary>
+    public static class ObjectCopier
     {
         /// <summary>
-        /// Inserts the specified entity.
+        /// <para>Initialize inner objects individually</para>
+        /// For example in default constructor some list property initialized with some values,
+        /// but in 'source' these items are cleaned -
+        /// without <c>ObjectCreationHandling.Replace</c> default constructor values will be added to result
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings { ObjectCreationHandling = ObjectCreationHandling.Replace };
 
         /// <summary>
-        /// Gets all.
+        /// Perform a deep Copy of the object, using Json as a serialisation method.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
-
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
+        /// <typeparam name="T">The type of object being copied.</typeparam>
+        /// <param name="source">The object instance to copy.</param>
+        /// <returns>The copied object.</returns>
+        public static T CloneJson<T>(this T source)
+        {
+            // Don't serialize a null object, simply return the default for that object
+            return ReferenceEquals(source, null) ? default(T) : JsonConvert.DeserializeObject<T>(JsonConvert.SerializeObject(source), Settings);
+        }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Nancy;
+using Nancy.Extensions;
+using Nancy.Responses;
 
 namespace RequestPlex.UI.Modules
 {
@@ -6,8 +8,8 @@ namespace RequestPlex.UI.Modules
     {
         public IndexModule()
         {
-            Get["/"] = parameters => View["Index"];
-            Get["/Index"] = parameters => View["Index"];
+            Get["/"] = parameters => Context.GetRedirect("~/search");
+            Get["/Index"] = parameters => Context.GetRedirect("~/search");
         }
     }
 }

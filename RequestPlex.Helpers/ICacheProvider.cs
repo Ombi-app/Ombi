@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: ICacheProvider.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,43 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System;
 
-namespace RequestPlex.Store
+namespace RequestPlex.Helpers
 {
-    public interface IRepository<T>
+    public interface ICacheProvider
     {
         /// <summary>
-        /// Inserts the specified entity.
+        /// Gets the item from the cache, if the item is not present 
+        /// then we will get that item and store it in the cache.
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        /// <typeparam name="T">Type to store in the cache</typeparam>
+        /// <param name="key">The key</param>
+        /// <param name="itemCallback">The item callback. This will be called if the item is not present in the cache. </param>
+        /// <param name="cacheTime">The amount of time we want to cache the object</param>
+        /// <returns><see cref="T"/></returns>
+        T GetOrSet<T>(string key, Func<T> itemCallback, int cacheTime = 20) where T : class;
 
         /// <summary>
-        /// Gets all.
+        /// Gets the specified item from the cache.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
+        /// <typeparam name="T">Type to get from the cache</typeparam>
+        /// <param name="key">The key.</param>
+        /// <returns><see cref="T"/></returns>
+        T Get<T>(string key) where T : class;
 
         /// <summary>
-        /// Gets the specified identifier.
+        /// Set/Store the specified object in the cache
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
+        /// <param name="key">The key.</param>
+        /// <param name="data">The object we want to store.</param>
+        /// <param name="cacheTime">The amount of time we want to cache the object.</param>
+        void Set(string key, object data, int cacheTime);
 
         /// <summary>
-        /// Updates the specified entity.
+        /// Removes the specified object from the cache.
         /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
+        /// <param name="key">The key.</param>
+        void Remove(string key);
     }
 }

@@ -5,6 +5,7 @@ using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
+using TMDbLib.Objects.TvShows;
 
 namespace RequestPlex.Api
 {
@@ -38,6 +39,18 @@ namespace RequestPlex.Api
         {
             var movies = await Client.GetMovieList(MovieListType.Upcoming);
             return movies.Results;
+        }
+
+        public async Task<Movie> GetMovieInformation(int tmdbId)
+        {
+            var movies = await Client.GetMovie(tmdbId);
+            return movies;
+        }
+
+        public async Task<TvShow> GetTvShowInformation(int tmdbId)
+        {
+            var show = await Client.GetTvShow(tmdbId);
+            return show;
         }
     }
 }

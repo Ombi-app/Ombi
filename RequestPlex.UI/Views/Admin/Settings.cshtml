@@ -2,7 +2,7 @@
 @{
     int port;
     var authToken = string.Empty;
-    if (Model.Port == null)
+    if (Model.Port == 0)
     {
         port = 3579;
     }
@@ -44,7 +44,7 @@
                     <input type="text" class="form-control" id="username" name="Username" placeholder="Username">
                 </div>
                 <div class="col-lg-4 col-lg-push-1">
-                    <input type="password" class="form-control" id="password" name="Username" placeholder="Password">
+                    <input type="password" class="form-control" id="password" name="Password" placeholder="Password">
                 </div>
             </div>
             <div class="form-group">
@@ -69,10 +69,10 @@
                 </div>
             </div>
 
-            <br/>
-            <br/>
-            <br/>
-            <br/>
+            <br />
+            <br />
+            <br />
+            <br />
             <div>
                 <small class="col-lg-10 col-lg-offset-2">Please note, you will have to restart after changing these settings.</small>
             </div>
@@ -98,9 +98,11 @@
 <script>
     $(function () {
 
+        if ($('#PlexAuthToken')) {
         loadUserList();
+        }
 
-        $('#refreshUsers').click(function() {
+        $('#refreshUsers').click(function () {
             loadUserList();
         });
 

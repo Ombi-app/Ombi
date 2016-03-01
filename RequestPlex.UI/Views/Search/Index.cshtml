@@ -51,20 +51,37 @@
             <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
             {{/if}}
         </div>
-        <div class="col-sm-5">
+        <div class="col-sm-5 ">
             <div>
                 <a href="https://www.themoviedb.org/{{type}}/{{id}}">
                     <h4>{{title}} ({{year}})</h4>
                 </a>
             </div>
-            <p>{{overview}}.</p>
+            <p>{{overview}}</p>
         </div>
-        <div class="col-sm-5">
-            <small>Vote Average: {{voteAverage}}</small>
-            <small>Vote Count: {{voteCount}}</small>
+        <div class="col-sm-2 col-sm-push-3">
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden"/>
-                <button id="test" style="text-align: right" class="btn btn-primary bottom-align-text requestClass" type="submit"><i class="fa fa-plus"></i>Request</button>
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+                {{#if_eq type "movie"}}
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
+                {{/if_eq}}
+                {{#if_eq type "tv"}}
+                <div class="dropdown">
+                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-plus"></i> Request
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
+                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">Latest Season</a></li>
+                    </ul>
+                </div>
+                {{/if_eq}}
+                <br />
+                <br />
+                <br />
+                <small class="row">Vote Average: {{voteAverage}}</small>
+                <small class="row">Vote Count: {{voteCount}}</small>
             </form>
         </div>
 

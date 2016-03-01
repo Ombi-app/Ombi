@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: RequestService.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,42 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System.Linq;
 
-namespace RequestPlex.Store
+using RequestPlex.Store;
+
+namespace RequestPlex.Core
 {
-    public interface IRepository<T>
+    public class RequestService
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        public RequestService(ISqliteConfiguration db, IRepository<RequestedModel> repo)
+        {
+            Db = db;
+            Repo = repo;
+        }
+        private ISqliteConfiguration Db { get; set; }
+        private IRepository<RequestedModel> Repo { get; set; }
+        public void AddRequest(int tmdbid, RequestType type)
+        {
+            var model = new RequestedModel
+            {
+                Tmdbid = tmdbid,
+                Type = type
+            };
 
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
+            Repo.Insert(model);
+        }
 
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
+        public bool CheckRequest(int tmdbid)
+        {
+            return Repo.GetAll().Any(x => x.Tmdbid == tmdbid);
+        }
 
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
+        public void DeleteRequest(int tmdbId)
+        {
+            var entity = Repo.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId);
+            Repo.Delete(entity);
+        }
+
     }
 }

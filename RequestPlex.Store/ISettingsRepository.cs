@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: ISettingsRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,40 +26,45 @@
 #endregion
 using System.Collections.Generic;
 
+using RequestPlex.Store.Models;
+
 namespace RequestPlex.Store
 {
-    public interface IRepository<T>
+    public interface ISettingsRepository
     {
         /// <summary>
         /// Inserts the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        long Insert(GlobalSettings entity);
 
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<T> GetAll();
+        IEnumerable<GlobalSettings> GetAll();
 
         /// <summary>
         /// Gets the specified identifier.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="settingsName">Name of the settings.</param>
         /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
+        GlobalSettings Get(string settingsName);
+
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        void Delete(T entity);
+        /// <returns></returns>
+        bool Delete(GlobalSettings entity);
 
         /// <summary>
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        bool Update(T entity);
+        bool Update(GlobalSettings entity);
+
+
     }
 }

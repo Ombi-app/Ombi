@@ -37,7 +37,7 @@ namespace RequestPlex.UI.Modules
             Post["search/request/tv"] = parameters =>
             {
                 var tvShowId = (int)Request.Form.tvId;
-                var latest = (bool)Request.Form.latestSeason;
+                var latest = (bool)Request.Form.latest;
                 return RequestTvShow(tvShowId, latest);
             };
         }
@@ -49,7 +49,6 @@ namespace RequestPlex.UI.Modules
 
         private Response SearchMovie(string searchTerm)
         {
-            var s = new SettingsService();
             var api = new TheMovieDbApi();
             var movies = api.SearchMovie(searchTerm);
             var result = movies.Result;
@@ -87,14 +86,25 @@ namespace RequestPlex.UI.Modules
             {
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
             }
+            
             s.AddRequest(movieId, RequestType.Movie);
             return Response.AsJson(new { Result = true });
         }
 
+        /// <summary>
+        /// Requests the tv show.
+        /// </summary>
+        /// <param name="showId">The show identifier.</param>
+        /// <param name="latest">if set to <c>true</c> [latest].</param>
+        /// <returns></returns>
         private Response RequestTvShow(int showId, bool latest)
         {
             // Latest send to Sonarr and no need to store in DB
             var s = new SettingsService();
+            if (s.CheckRequest(showId))
+            {
+                return Response.AsJson(new { Result = false, Message = "TV Show has already been requested!" });
+            }
             s.AddRequest(showId, RequestType.TvShow);
             return Response.AsJson(new {Result = true });
         }

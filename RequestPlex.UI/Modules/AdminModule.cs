@@ -1,7 +1,29 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
+#region Copyright
+// /************************************************************************
+//    Copyright (c) 2016 Jamie Rees
+//    File: AdminModule.cs
+//    Created By: Jamie Rees
+//   
+//    Permission is hereby granted, free of charge, to any person obtaining
+//    a copy of this software and associated documentation files (the
+//    "Software"), to deal in the Software without restriction, including
+//    without limitation the rights to use, copy, modify, merge, publish,
+//    distribute, sublicense, and/or sell copies of the Software, and to
+//    permit persons to whom the Software is furnished to do so, subject to
+//    the following conditions:
+//   
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//   
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+//    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+//    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+//    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//  ************************************************************************/
+#endregion
 using System.Dynamic;
 using System.Linq;
 using System.Web.UI;
@@ -9,18 +31,20 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Security;
-using Newtonsoft.Json;
+
 using RequestPlex.Api;
 using RequestPlex.Core;
-using RequestPlex.Store;
+using RequestPlex.Core.SettingModels;
 using RequestPlex.UI.Models;
 
 namespace RequestPlex.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        public AdminModule()
+        private ISettingsService<RequestPlexSettings> Service { get; set; }
+        public AdminModule(ISettingsService<RequestPlexSettings> service)
         {
+            Service = service;
 #if !DEBUG
             this.RequiresAuthentication();
 #endif
@@ -41,8 +65,8 @@ namespace RequestPlex.UI.Modules
             dynamic model = new ExpandoObject();
             model.Errored = Request.Query.error.HasValue;
             model.Port = null;
-            var s = new SettingsService();
-            var settings = s.GetSettings();
+
+            var settings = Service.GetSettings();
             if (settings != null)
             {
                 model.Port = settings.Port;
@@ -54,10 +78,9 @@ namespace RequestPlex.UI.Modules
 
         private Response SaveAdmin()
         {
-            var model = this.Bind<SettingsModel>();
+            var model = this.Bind<RequestPlexSettings>();
 
-            var s = new SettingsService();
-            s.SaveSettings(model);
+            Service.SaveSettings(model);
 
 
             return Context.GetRedirect("~/admin");
@@ -74,20 +97,19 @@ namespace RequestPlex.UI.Modules
 
             var plex = new PlexApi();
             var model = plex.GetToken(user.username, user.password);
-            var s = new SettingsService();
-            var oldSettings = s.GetSettings();
+            var oldSettings = Service.GetSettings();
             if (oldSettings != null)
             {
                 oldSettings.PlexAuthToken = model.user.authentication_token;
-                s.SaveSettings(oldSettings);
+                Service.SaveSettings(oldSettings);
             }
             else
             {
-                var newModel = new SettingsModel
+                var newModel = new RequestPlexSettings
                 {
                     PlexAuthToken = model.user.authentication_token
                 };
-                s.SaveSettings(newModel);
+                Service.SaveSettings(newModel);
             }
 
             return Context.GetRedirect("~/admin");
@@ -96,8 +118,7 @@ namespace RequestPlex.UI.Modules
 
         private Response GetUsers()
         {
-            var s = new SettingsService();
-            var token = s.GetSettings().PlexAuthToken;
+            var token = Service.GetSettings().PlexAuthToken;
             var api = new PlexApi();
             var users = api.GetUsers(token);
             var usernames = users.User.Select(x => x.Username);

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: SerializerSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 
-namespace RequestPlex.Store
+using Newtonsoft.Json;
+
+namespace RequestPlex.Helpers
 {
-    public interface IRepository<T>
+    public static class SerializerSettings
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
 
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
+        public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            Formatting = Formatting.None,
+            TypeNameHandling = TypeNameHandling.Objects,
+            TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
+            NullValueHandling = NullValueHandling.Ignore
+        };
 
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
     }
 }
