@@ -27,9 +27,7 @@ namespace RequestPlex.Api
             var response = client.Execute<T>(request);
 
             if (response.ErrorException != null)
-            {
-
-
+            { 
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApplicationException(message, response.ErrorException);
             }
