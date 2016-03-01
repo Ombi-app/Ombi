@@ -37,13 +37,11 @@ namespace RequestPlex.UI
             container.Register<ISettingsService<RequestPlexSettings>, SettingsServiceV2<RequestPlexSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
 
-
-
-
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            StaticConfiguration.DisableErrorTraces = false;
             base.ApplicationStartup(container, pipelines);
 
             // Enable forms auth
