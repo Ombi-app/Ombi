@@ -64,7 +64,9 @@ namespace RequestPlex.Core
                     PosterPath = "http://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
                     Title = movieInfo.Title,
                     ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
-                    Status = movieInfo.Status
+                    Status = movieInfo.Status,
+                    RequestedDate = DateTime.Now,
+                    Approved = false
                 };
             }
             else
@@ -79,7 +81,9 @@ namespace RequestPlex.Core
                     PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.PosterPath,
                     Title = showInfo.Name,
                     ReleaseDate = showInfo.FirstAirDate ?? DateTime.MinValue,
-                    Status = showInfo.Status
+                    Status = showInfo.Status,
+                    RequestedDate = DateTime.Now,
+                    Approved = false
                 };
             }
             var db = new DbConfiguration(new SqliteFactory());

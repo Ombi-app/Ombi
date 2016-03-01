@@ -224,9 +224,7 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Auth\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\RequestPlex.Api\RequestPlex.Api.csproj">
       <Project>{8cb8d235-2674-442d-9c6a-35fcaeeb160d}</Project>

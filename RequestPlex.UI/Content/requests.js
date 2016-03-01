@@ -61,7 +61,7 @@ function buildTvShowRequestContext(result) {
     var context = {
         posterPath: result.posterPath,
         id: result.tmdbid,
-        title: result.name,
+        title: result.title,
         overview: result.overview,
         year: year,
         type: "tv",
