@@ -24,10 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Linq;
 
 using Mono.Data.Sqlite;
 
+using RequestPlex.Api;
 using RequestPlex.Store;
 
 namespace RequestPlex.Core
@@ -47,12 +49,38 @@ namespace RequestPlex.Core
 
         public void AddRequest(int tmdbid, RequestType type)
         {
-            var model = new RequestedModel
+            var api = new TheMovieDbApi();
+            var model = new RequestedModel();
+            if (type == RequestType.Movie)
             {
-                Tmdbid = tmdbid,
-                Type = type
-            };
+                var movieInfo = api.GetMovieInformation(tmdbid).Result;
 
+                model = new RequestedModel
+                {
+                    Tmdbid = tmdbid,
+                    Type = type,
+                    Overview = movieInfo.Overview,
+                    ImdbId = movieInfo.ImdbId,
+                    PosterPath = "http://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
+                    Title = movieInfo.Title,
+                    ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue
+                };
+            }
+            else
+            {
+                var showInfo = api.GetTvShowInformation(tmdbid).Result;
+
+                model = new RequestedModel
+                {
+                    Tmdbid = tmdbid,
+                    Type = type,
+                    Overview = showInfo.Overview,
+                    //ImdbId = showInfo.ImdbId, //TODO where's the IMDBId?
+                    PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.PosterPath,
+                    Title = showInfo.Name,
+                    ReleaseDate = showInfo.FirstAirDate ?? DateTime.MinValue
+                };
+            }
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<RequestedModel>(db);
 

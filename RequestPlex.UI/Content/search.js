@@ -25,18 +25,15 @@ $("#tvSearchContent").keypress(function (e) {
 });
 
 $(document).on("click", ".dropdownTv", function (e) {
-    var formData = [];
+
     e.preventDefault();
     console.log(e.target.id);
     var $form = $('#form'+e.target.id);
     var data = $form.serialize();
     var seasons = $(this).attr("season-select");
     console.log(data);
-    formData.push(data);
     if (seasons === "1") {
-        formData.push("latest=true");
-    } else {
-        data.latest = false;
+        data = data + "&latest=true";
     }
 
     $.ajax({
@@ -60,7 +57,7 @@ $(document).on("click", ".dropdownTv", function (e) {
 
 });
 
-$(document).on("click", ".requesttv", function (e) {
+$(document).on("click", ".requestMovie", function (e) {
     e.preventDefault();
     console.log(e.target.id);
     var $form = $('#form' + e.target.id);
@@ -114,35 +111,3 @@ function tvSearch() {
     });
 };
 
-function buildMovieContext(result) {
-    var date = new Date(result.releaseDate);
-    var year = date.getFullYear();
-    var context = {
-        posterPath: result.posterPath,
-        id: result.id,
-        title: result.title,
-        overview: result.overview,
-        voteCount: result.voteCount,
-        voteAverage: result.voteAverage,
-        year: year,
-        type : "movie"
-    };
-
-    return context;
-}
-
-function buildTvShowContext(result) {
-    var date = new Date(result.firstAirDate);
-    var year = date.getFullYear();
-    var context = {
-        posterPath: result.posterPath,
-        id: result.id,
-        title: result.name,
-        overview: result.overview,
-        voteCount: result.voteCount,
-        voteAverage: result.voteAverage,
-        year: year,
-        type: "tv"
-    };
-    return context;
-}

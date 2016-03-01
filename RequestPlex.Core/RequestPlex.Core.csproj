@@ -57,6 +57,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TMDbLib">
+      <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ISettingsService.cs" />
@@ -74,6 +77,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RequestPlex.Api\RequestPlex.Api.csproj">
+      <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
+      <Name>RequestPlex.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RequestPlex.Helpers\RequestPlex.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>RequestPlex.Helpers</Name>

@@ -27,8 +27,6 @@
 using System;
 using System.Linq;
 
-using Mono.Data.Sqlite;
-
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
@@ -63,7 +61,6 @@ namespace RequestPlex.Core
 
         public static Guid? ValidateUser(string username, string password)
         {
-            var db = new DbConfiguration(new SqliteFactory());
             var repo = new UserRepository<UserModel>(Db);
             var users = repo.GetAll();
             var userRecord = users.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase) && u.Password.Equals(password)); // TODO hashing
@@ -78,7 +75,6 @@ namespace RequestPlex.Core
 
         public static bool DoUsersExist()
         {
-            var db = new DbConfiguration(new SqliteFactory());
             var repo = new UserRepository<UserModel>(Db);
             var users = repo.GetAll();
             return users.Any();
@@ -86,7 +82,6 @@ namespace RequestPlex.Core
 
         public static Guid? CreateUser(string username, string password)
         {
-            var db = new DbConfiguration(new SqliteFactory());
             var repo = new UserRepository<UserModel>(Db);
 
             var userModel = new UserModel { UserName = username, User = Guid.NewGuid().ToString(), Password = password };

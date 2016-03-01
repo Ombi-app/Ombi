@@ -35,6 +35,7 @@ namespace RequestPlex.UI
 
 
             container.Register<ISettingsService<RequestPlexSettings>, SettingsServiceV2<RequestPlexSettings>>();
+            container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
 
 
 
