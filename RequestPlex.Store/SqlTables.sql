@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	Overview							varchar(50) NOT NULL,
 	Title								varchar(50) NOT NULL,
 	PosterPath							varchar(50) NOT NULL,
-	ReleaseDate							varchar(50) NOT NULL
+	ReleaseDate							varchar(50) NOT NULL,
 	Status								varchar(50) NOT NULL
 );
 
