@@ -19,6 +19,7 @@
     {
         authToken = Model.PlexAuthToken;
     }
+
 }
 <div class="col-sm-8">
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -26,8 +27,50 @@
             <legend>Request Plex Settings</legend>
             <div class="form-group">
                 <label for="portNumber" class="col-lg-2 control-label">Port</label>
+
                 <div class="col-lg-10">
                     <input type="text" class="form-control" id="portNumber" name="Port" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+            <small class="col-lg-10 col-lg-offset-2">You will have to restart after changing the port.</small>
+            <div class="form-group">
+                <label for="SearchForMovies" class="col-lg-2 control-label">Search for Movies</label>
+                <div class="col-lg-10 checkbox">
+                    <label>
+                        @if (Model.SearchForMovies)
+                        {
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked">
+                        }
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="SearchForTvShows" class="col-lg-2 control-label">Search for TV Shows</label>
+                <div class="col-lg-10 checkbox">
+                    <label>
+                        @if (Model.SearchForTvShows)
+                        {
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows">
+                        }
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="WeeklyRequestLimit" class="col-lg-2 control-label">Weekly Request Limit</label>
+                <div class="col-lg-10 checkbox">
+                    <label>
+                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" value="@Model.WeeklyRequestLimit">
+                    </label>
                 </div>
             </div>
 
@@ -39,7 +82,7 @@
             </div>
 
             <div class="form-group">
-                <label for="userpass" class="col-lg-2 control-label">Username and Password</label>
+                <label for="username" class="col-lg-2 control-label">Username and Password</label>
                 <div class="col-lg-4">
                     <input type="text" class="form-control" id="username" name="Username" placeholder="Username">
                 </div>
@@ -55,15 +98,30 @@
 
             <div class="form-group">
                 <label for="userAuth" class="col-lg-2 control-label">Enable User Authentication</label>
-                <div class="col-lg-4">
-                    <input type="checkbox" class="form-control" id="userAuth" name="UserAuthentication">
+                <div class="col-lg-4 checkbox">
+                    <label>
+                        @if (Model.UserAuthentication)
+                        {
+                            <input type="checkbox" id="userAuth" name="UserAuthentication" checked="checked">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="userAuth" name="UserAuthentication">
+                        }
+                    </label>
                 </div>
             </div>
-            <small>Current users that are allowed to authenticate: </small>
-            <select id="users" multiple="" class="form-control col-lg-10 col-lg-offset-2">
-            </select>
-
+            <br />
+            <br />
+            <small class="col-lg-offset-2">Current users that are allowed to authenticate: </small>
+            <br />
+            <br />
             <div class="form-group">
+                <select id="users" multiple="" class="col-lg-10 col-lg-offset-2"></select>
+            </div>
+            <div class="form-group">
+                <br />
+                <br />
                 <div class="col-lg-10 col-lg-offset-2">
                     <button id="refreshUsers" class="btn btn-primary">Refresh Users</button>
                 </div>
@@ -74,7 +132,6 @@
             <br />
             <br />
             <div>
-                <small class="col-lg-10 col-lg-offset-2">Please note, you will have to restart after changing these settings.</small>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">
@@ -87,19 +144,11 @@
 </div>
 
 
-@if (Model.Errored)
-{
-    <div class="alert alert-dismissible alert-danger">
-        <button type="button" class="close" data-dismiss="alert"><i class="fa fa-times"></i></button>
-        Please enter in a correct port number
-    </div>
-}
-
 <script>
     $(function () {
 
         if ($('#PlexAuthToken')) {
-        loadUserList();
+            loadUserList();
         }
 
         $('#refreshUsers').click(function () {
@@ -107,6 +156,7 @@
         });
 
         $('#requestToken').click(function (e) {
+            e.preventDefault();
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
@@ -115,11 +165,11 @@
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
-                    if (response.Result === true) {
+                    if (response.result === true) {
                         generateNotify("Success!", "success");
                         $('#authToken').val(response.authToken);
                     } else {
-                        generateNotify(response.Message, "warning");
+                        generateNotify(response.message, "warning");
                     }
                 },
                 error: function (e) {
@@ -137,9 +187,13 @@
                 url: "admin/getusers",
                 dataType: "json",
                 success: function (response) {
-                    response.each(function (user) {
-                        $('#users').append("<option>" + user + "</option>");
-                    });
+                    if (response.length > 1) {
+                        response.each(function(user) {
+                            $('#users').append("<option>" + user + "</option>");
+                        });
+                    } else {
+                        $('#users').append("<option>No Users!</option>");
+                    }
                 },
                 error: function (e) {
                     console.log(e);

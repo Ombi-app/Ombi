@@ -30,6 +30,7 @@ using System.Web.UI;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
+using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
 using RequestPlex.Api;
@@ -60,19 +61,12 @@ namespace RequestPlex.UI.Modules
         }
 
 
-        private Response Admin()
+        private Negotiator Admin()
         {
             dynamic model = new ExpandoObject();
-            model.Errored = Request.Query.error.HasValue;
-            model.Port = null;
-
             var settings = Service.GetSettings();
-            if (settings != null)
-            {
-                model.Port = settings.Port;
-                model.PlexAuthToken = settings.PlexAuthToken;
-            }
 
+            model = settings;
             return View["/Admin/Settings", model];
         }
 
@@ -112,7 +106,7 @@ namespace RequestPlex.UI.Modules
                 Service.SaveSettings(newModel);
             }
 
-            return Context.GetRedirect("~/admin");
+            return Response.AsJson(new {Result = true, AuthToken = model.user.authentication_token});
         }
 
 

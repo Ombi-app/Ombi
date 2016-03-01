@@ -16,6 +16,10 @@ namespace RequestPlex.Store
         public DateTime ReleaseDate { get; set; }
         public RequestType Type { get; set; }
         public string Status { get; set; }
+        public string RequestedStatus { get; set; }
+        public string RequestedBy { get; set; }
+        public DateTime RequestedDate { get; set; }
+
     }
 
     public enum RequestType
