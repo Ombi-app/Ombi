@@ -10,8 +10,7 @@ using RequestPlex.Core;
 using RequestPlex.Core.SettingModels;
 using RequestPlex.Helpers;
 using RequestPlex.Store;
-using RequestPlex.Store.Models;
-using RequestPlex.Store.Repository.NZBDash.DataAccessLayer.Repository;
+using RequestPlex.Store.Repository;
 
 using FormsAuthentication = Nancy.Authentication.Forms.FormsAuthentication;
 

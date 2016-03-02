@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
@@ -8,7 +7,7 @@ using RequestPlex.Core;
 using RequestPlex.Core.SettingModels;
 using RequestPlex.Helpers;
 using RequestPlex.Store;
-using RequestPlex.Store.Repository.NZBDash.DataAccessLayer.Repository;
+using RequestPlex.Store.Repository;
 
 namespace RequestPlex.UI
 {

@@ -36,84 +36,79 @@ using RequestPlex.Store.Models;
 
 namespace RequestPlex.Store.Repository
 {
-
-
-    namespace NZBDash.DataAccessLayer.Repository
+    public class JsonRepository : ISettingsRepository
     {
-        public class JsonRepository : ISettingsRepository
+        private ICacheProvider Cache { get; set; }
+
+        private string TypeName { get; set; }
+        public JsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
         {
-            private ICacheProvider Cache { get; set; }
+            Db = config;
+            Cache = cacheProvider;
+            TypeName = typeof(JsonRepository).Name;
+        }
 
-            private string TypeName { get; set; }
-            public JsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
+        private ISqliteConfiguration Db { get; set; }
+
+        public long Insert(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
             {
-                Db = config;
-                Cache = cacheProvider;
-                TypeName = typeof(JsonRepository).Name;
+                return con.Insert(entity);
             }
+        }
 
-            private ISqliteConfiguration Db { get; set; }
-
-            public long Insert(GlobalSettings entity)
+        public IEnumerable<GlobalSettings> GetAll()
+        {
+            var key = TypeName + "GetAll";
+            var item = Cache.GetOrSet(key, () =>
             {
-                ResetCache();
                 using (var con = Db.DbConnection())
                 {
-                    return con.Insert(entity);
+                    var page = con.GetAll<GlobalSettings>();
+                    return page;
                 }
-            }
+            }, 5);
+            return item;
+        }
 
-            public IEnumerable<GlobalSettings> GetAll()
+        public GlobalSettings Get(string pageName)
+        {
+            var key = pageName + "Get";
+            var item = Cache.GetOrSet(key, () =>
             {
-                var key = TypeName + "GetAll";
-                var item = Cache.GetOrSet(key, () =>
-                {
-                    using (var con = Db.DbConnection())
-                    {
-                        var page = con.GetAll<GlobalSettings>();
-                        return page;
-                    }
-                }, 5);
-                return item;
-            }
-
-            public GlobalSettings Get(string pageName)
-            {
-                var key = pageName + "Get";
-                var item = Cache.GetOrSet(key, () =>
-                {
-                    using (var con = Db.DbConnection())
-                    {
-                        var page = con.GetAll<GlobalSettings>().SingleOrDefault(x => x.SettingsName == pageName);
-                        return page;
-                    }
-                }, 5);
-                return item;
-            }
-
-            public bool Delete(GlobalSettings entity)
-            {
-                ResetCache();
                 using (var con = Db.DbConnection())
                 {
-                    return con.Delete(entity);
+                    var page = con.GetAll<GlobalSettings>().SingleOrDefault(x => x.SettingsName == pageName);
+                    return page;
                 }
-            }
+            }, 5);
+            return item;
+        }
 
-            public bool Update(GlobalSettings entity)
+        public bool Delete(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
             {
-                ResetCache();
-                using (var con = Db.DbConnection())
-                {
-                    return con.Update(entity);
-                }
+                return con.Delete(entity);
             }
+        }
 
-            private void ResetCache()
+        public bool Update(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
             {
-                Cache.Remove("Get");
-                Cache.Remove(TypeName + "GetAll");
+                return con.Update(entity);
             }
+        }
+
+        private void ResetCache()
+        {
+            Cache.Remove("Get");
+            Cache.Remove(TypeName + "GetAll");
         }
     }
 }
