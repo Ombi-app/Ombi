@@ -3,6 +3,7 @@
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Diagnostics;
 using Nancy.TinyIoc;
 
 using RequestPlex.Core;
@@ -54,5 +55,7 @@ namespace RequestPlex.UI
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
         }
+
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
     }
 }
