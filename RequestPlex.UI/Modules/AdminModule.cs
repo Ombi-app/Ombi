@@ -25,10 +25,12 @@
 //  ************************************************************************/
 #endregion
 using System.Dynamic;
-
+using System.Linq;
+using System.Web.UI;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
+using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
 using RequestPlex.Api;
@@ -40,76 +42,102 @@ namespace RequestPlex.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        public AdminModule(ISettingsService<RequestPlexSettings> service)
+        private ISettingsService<RequestPlexSettings> RpService { get; set; }
+        private ISettingsService<CouchPotatoSettings> CpService { get; set; }
+        public AdminModule(ISettingsService<RequestPlexSettings> rpService, ISettingsService<CouchPotatoSettings> cpService  ) : base("admin")
         {
+            RpService = rpService;
+            CpService = cpService;
 #if !DEBUG
             this.RequiresAuthentication();
 #endif
-            Get["admin/"] = _ =>
-            {
-                dynamic model = new ExpandoObject();
-                model.Errored = Request.Query.error.HasValue;
-                model.Port = null;
+            Get["/"] = _ => Admin();
 
-                var settings = service.GetSettings();
-                if (settings != null)
-                {
-                    model.Port = settings.Port;
-                    model.PlexAuthToken = settings.PlexAuthToken;
-                }
+            Post["/"] = _ => SaveAdmin();
 
-                return View["/Admin/Settings", model];
-            };
+            Post["/requestauth"] = _ => RequestAuthToken();
 
-            Post["admin/"] = _ =>
-            {
-                var model = this.Bind<RequestPlexSettings>();
+            Get["/getusers"] = _ => GetUsers();
 
-                service.SaveSettings(model);
-
-
-                return Context.GetRedirect("~/admin");
-            };
-
-            Post["admin/requestauth"] = _ =>
-            {
-                var user = this.Bind<PlexAuth>();
-
-                if (string.IsNullOrEmpty(user.username) || string.IsNullOrEmpty(user.password))
-                {
-                    return Context.GetRedirect("~/admin?error=true");
-                }
-
-                var plex = new PlexApi();
-                var model = plex.GetToken(user.username, user.password);
-                var oldSettings = service.GetSettings();
-                if (oldSettings != null)
-                {
-                    oldSettings.PlexAuthToken = model.user.authentication_token;
-                    service.SaveSettings(oldSettings);
-                }
-                else
-                {
-                    var newModel = new RequestPlexSettings
-                    {
-                        PlexAuthToken = model.user.authentication_token
-                    };
-                    service.SaveSettings(newModel);
-                }
-
-
-
-                return Context.GetRedirect("~/admin");
-            };
-
-            Get["admin/getusers"] = _ =>
-            {
-                var api = new PlexApi();
-                
-
-                return View["/Admin/Settings"];
-            };
-
+            Get["/couchpotato"] = _ => CouchPotato();
+            Post["/couchpotato"] = _ => SaveCouchPotato();
         }
+
+
+        private Negotiator Admin()
+        {
+            dynamic model = new ExpandoObject();
+            var settings = RpService.GetSettings();
+
+            model = settings;
+            return View["/Admin/Settings", model];
+        }
+
+        private Response SaveAdmin()
+        {
+            var model = this.Bind<RequestPlexSettings>();
+
+            RpService.SaveSettings(model);
+
+
+            return Context.GetRedirect("~/admin");
+        }
+
+        private Response RequestAuthToken()
+        {
+            var user = this.Bind<PlexAuth>();
+
+            if (string.IsNullOrEmpty(user.username) || string.IsNullOrEmpty(user.password))
+            {
+                return Context.GetRedirect("~/admin?error=true");
+            }
+
+            var plex = new PlexApi();
+            var model = plex.GetToken(user.username, user.password);
+            var oldSettings = RpService.GetSettings();
+            if (oldSettings != null)
+            {
+                oldSettings.PlexAuthToken = model.user.authentication_token;
+                RpService.SaveSettings(oldSettings);
+            }
+            else
+            {
+                var newModel = new RequestPlexSettings
+                {
+                    PlexAuthToken = model.user.authentication_token
+                };
+                RpService.SaveSettings(newModel);
+            }
+
+            return Response.AsJson(new {Result = true, AuthToken = model.user.authentication_token});
+        }
+
+
+        private Response GetUsers()
+        {
+            var token = RpService.GetSettings().PlexAuthToken;
+            var api = new PlexApi();
+            var users = api.GetUsers(token);
+            var usernames = users.User.Select(x => x.Username);
+            return Response.AsJson(usernames); //TODO usernames are not populated.
+        }
+
+        private Negotiator CouchPotato()
+        {
+            dynamic model = new ExpandoObject();
+            var settings = CpService.GetSettings();
+            model = settings;
+
+            return View["/Admin/CouchPotato", model];
+        }
+        private Response SaveCouchPotato()
+        {
+            var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
+
+            CpService.SaveSettings(couchPotatoSettings);
+
+            return Context.GetRedirect("~/admin/couchpotato");
+        }
+        
     }
 }

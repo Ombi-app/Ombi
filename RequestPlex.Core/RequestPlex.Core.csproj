@@ -64,6 +64,9 @@
   <ItemGroup>
     <Compile Include="ISettingsService.cs" />
     <Compile Include="RequestService.cs" />
+    <Compile Include="SettingModels\SonarrSettings.cs" />
+    <Compile Include="SettingModels\SickRageSettings.cs" />
+    <Compile Include="SettingModels\CouchPotatoSettings.cs" />
     <Compile Include="SettingModels\RequestPlexSettings.cs" />
     <Compile Include="SettingModels\Settings.cs" />
     <Compile Include="SettingsService.cs" />
@@ -74,6 +77,7 @@
     <Compile Include="UserMapper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

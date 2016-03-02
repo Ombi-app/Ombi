@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyHelper.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="MemoryCacheProvider.cs" />
     <Compile Include="ObjectCopier.cs" />

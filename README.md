@@ -16,7 +16,7 @@ I wanted to write a similar application in .Net!
 
 #Preview
 
-TBC
+![Preview](http://i.imgur.com/Q8iRI43.gif)
 
 #Installation
 

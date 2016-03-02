@@ -31,5 +31,9 @@ namespace RequestPlex.Core.SettingModels
         public int Port { get; set; }
         public bool UserAuthentication { get; set; }
         public string PlexAuthToken { get; set; }
+        public bool SearchForMovies { get; set; }
+        public bool SearchForTvShows { get; set; }
+        public bool RequireApprovial { get; set; }
+        public int WeeklyRequestLimit { get; set; }
     }
 }

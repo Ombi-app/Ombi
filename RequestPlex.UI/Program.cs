@@ -1,10 +1,8 @@
 ﻿using System;
-
+using System.Diagnostics;
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
-
-using Nancy.Hosting.Self;
 
 using RequestPlex.Core;
 using RequestPlex.Core.SettingModels;
@@ -18,6 +16,8 @@ namespace RequestPlex.UI
     {
         static void Main(string[] args)
         {
+            var assemblyVer = AssemblyHelper.GetAssemblyVersion();
+            Console.WriteLine($"Version: {assemblyVer}");
             var uri = "http://localhost:3579/";
             var s = new Setup();
             s.SetupDb();
@@ -32,8 +32,8 @@ namespace RequestPlex.UI
 
             using (WebApp.Start<Startup>(uri))
             {
-                Console.WriteLine("Running on {0}", uri);
-                Console.WriteLine("Press enter to exit");
+                Console.WriteLine($"Request Plex is running on {uri}");
+                Console.WriteLine("Press any key to exit");
                 Console.ReadLine();
             }
         }

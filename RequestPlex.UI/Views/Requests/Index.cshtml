@@ -49,9 +49,11 @@
         </div>
         <div class="col-sm-2 col-sm-push-3">
             <span class="label label-success">{{status}}</span>
+            <br />
+            <br />
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary requestMovie" type="submit"><i class="fa fa-plus"></i> TestBtn</button>            
+                <button id="{{id}}" style="text-align: right" class="btn btn-danger" type="submit"><i class="fa fa-plus"></i> Remove</button>            
             </form>
         </div>
 

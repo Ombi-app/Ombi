@@ -21,12 +21,17 @@ CREATE TABLE IF NOT EXISTS Requested
 	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
 	Type								INTEGER NOT NULL,
     Tmdbid								INTEGER NOT NULL,
-	ImdbId								varchar(50) NOT NULL,
+	ImdbId								varchar(50),
 	Overview							varchar(50) NOT NULL,
 	Title								varchar(50) NOT NULL,
 	PosterPath							varchar(50) NOT NULL,
 	ReleaseDate							varchar(50) NOT NULL,
-	Status								varchar(50) NOT NULL
+	Status								varchar(50) NOT NULL,
+	Approved							INTEGER NOT NULL,
+	RequestedBy							varchar(50),
+	RequestedDate						varchar(50) NOT NULL,
+	Available							varchar(50)
+
 );
 
 CREATE TABLE IF NOT EXISTS GlobalSettings
