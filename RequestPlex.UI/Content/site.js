@@ -27,7 +27,7 @@ function buildMovieContext(result) {
 }
 
 function buildTvShowContext(result) {
-    var date = new Date(result.firstAirDate);
+    var date = new Date(result.firstAired);
     var year = date.getFullYear();
     var context = {
         posterPath: result.posterPath,

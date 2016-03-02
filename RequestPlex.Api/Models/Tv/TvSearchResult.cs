@@ -63,6 +63,6 @@ namespace RequestPlex.Api.Models.Tv
 
     public class TvSearchResult
     {
-        public List<TvShowSearchResult> data { get; set; }
+        public List<TvShow> data { get; set; }
     }
 }
