@@ -65,7 +65,7 @@ namespace RequestPlex.UI.Modules
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             var viewModel = dbMovies.Select(tv => new RequestViewModel
             {
-                Tmdbid = tv.Tmdbid,
+                Tmdbid = tv.ProviderId,
                 Type = tv.Type,
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
@@ -88,7 +88,7 @@ namespace RequestPlex.UI.Modules
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
-                Tmdbid = tv.Tmdbid,
+                Tmdbid = tv.ProviderId,
                 Type = tv.Type,
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
@@ -106,9 +106,9 @@ namespace RequestPlex.UI.Modules
             return Response.AsJson(viewModel);
         }
 
-        private Response DeleteRequest(int tmdbId, RequestType type)
+        private Response DeleteRequest(int providerId, RequestType type)
         {
-            var currentEntity = Service.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId && x.Type == type);
+            var currentEntity = Service.GetAll().FirstOrDefault(x => x.ProviderId == providerId && x.Type == type);
             Service.Delete(currentEntity);
             return Response.AsJson(new { Result = true });
         }

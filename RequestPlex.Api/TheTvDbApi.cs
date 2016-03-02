@@ -45,18 +45,21 @@ namespace RequestPlex.Api
         /// Authenticates against TheTVDB.
         /// </summary>
         /// <returns></returns>
-        public Authentication Authenticate()
+        public string Authenticate()
         {
             var request = new RestRequest
             {
                 Method = Method.POST,
-                Resource = "login"
+                Resource = "login",
+                RequestFormat = DataFormat.Json,
+                
             };
             var apiKey = new { apikey = ApiKey };
-            var json = JsonConvert.SerializeObject(apiKey);
-            request.AddBody(json);
+        
+            request.AddBody(apiKey);
+            request.AddHeader("Content-Type", "application/json");
 
-            return Api.Execute<Authentication>(request, Url);
+            return Api.Execute<Authentication>(request, Url).token;
         }
 
         /// <summary>
@@ -72,6 +75,7 @@ namespace RequestPlex.Api
                 Resource = "refresh_token"
             };
             request.AddHeader("Authorization", $"Bearer {oldToken}");
+            request.AddHeader("Content-Type", "application/json");
 
             return Api.Execute<Authentication>(request, Url);
         }
@@ -86,11 +90,12 @@ namespace RequestPlex.Api
         {
             var request = new RestRequest
             {
-                Method = Method.POST,
+                Method = Method.GET,
                 Resource = "search/series?name={searchTerm}"
             };
             request.AddUrlSegment("searchTerm", searchTerm);
             request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("Content-Type", "application/json");
 
             return Api.Execute<TvSearchResult>(request, Url);
         }
@@ -102,17 +107,18 @@ namespace RequestPlex.Api
         /// <param name="tvdbId">The TVDB identifier.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        public TvSearchResult GetInformation(int tvdbId, string token)
+        public TvShow GetInformation(int tvdbId, string token)
         {
             var request = new RestRequest
             {
-                Method = Method.POST,
+                Method = Method.GET,
                 Resource = "search/{id}"
             };
             request.AddUrlSegment("id", tvdbId.ToString());
             request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("Content-Type", "application/json");
 
-            return Api.Execute<TvSearchResult>(request, Url);
+            return Api.Execute<TvShow>(request, Url);
         }
     }
 }

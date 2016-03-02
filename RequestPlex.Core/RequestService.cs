@@ -43,7 +43,7 @@ namespace RequestPlex.Core
         {
             var model = new RequestedModel
             {
-                Tmdbid = tmdbid,
+                ProviderId = tmdbid,
                 Type = type
             };
 
@@ -52,12 +52,12 @@ namespace RequestPlex.Core
 
         public bool CheckRequest(int tmdbid)
         {
-            return Repo.GetAll().Any(x => x.Tmdbid == tmdbid);
+            return Repo.GetAll().Any(x => x.ProviderId == tmdbid);
         }
 
         public void DeleteRequest(int tmdbId)
         {
-            var entity = Repo.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId);
+            var entity = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
             Repo.Delete(entity);
         }
 

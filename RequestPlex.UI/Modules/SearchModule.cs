@@ -2,16 +2,21 @@ using Nancy;
 using Nancy.Responses.Negotiation;
 
 using RequestPlex.Api;
+using RequestPlex.Api.Models.Tv;
 using RequestPlex.Core;
+using RequestPlex.Helpers;
 using RequestPlex.Store;
 
 namespace RequestPlex.UI.Modules
 {
     public class SearchModule : NancyModule
     {
-        public SearchModule() : base("search")
+        public SearchModule(ICacheProvider cache) : base("search")
         {
-            Api = new TheMovieDbApi();
+            MovieApi = new TheMovieDbApi();
+            TvApi = new TheTvDbApi();
+            Cache = cache;
+            
             Get["/"] = parameters => RequestLoad();
 
             Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
@@ -23,37 +28,39 @@ namespace RequestPlex.UI.Modules
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
         }
-        private TheMovieDbApi Api { get; }
+        private TheMovieDbApi MovieApi { get; }
+        private TheTvDbApi TvApi { get; }
+        private ICacheProvider Cache { get; }
+        private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
-        {
+        { 
             return View["Search/Index"];
         }
 
         private Response SearchMovie(string searchTerm)
         {
-            var movies = Api.SearchMovie(searchTerm);
+            var movies = MovieApi.SearchMovie(searchTerm);
             var result = movies.Result;
             return Response.AsJson(result);
         }
 
         private Response SearchTvShow(string searchTerm)
         {
-            var tvShow = Api.SearchTv(searchTerm);
-            var result = tvShow.Result;
-            return Response.AsJson(result);
+            var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
+            return Response.AsJson(tvShow);
         }
 
         private Response UpcomingMovies()
         {
-            var movies = Api.GetUpcomingMovies();
+            var movies = MovieApi.GetUpcomingMovies();
             var result = movies.Result;
             return Response.AsJson(result);
         }
 
         private Response CurrentlyPlayingMovies()
         {
-            var movies = Api.GetCurrentPlayingMovies();
+            var movies = MovieApi.GetCurrentPlayingMovies();
             var result = movies.Result;
             return Response.AsJson(result);
         }

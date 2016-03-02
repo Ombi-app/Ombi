@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: MovieBase.cs
+//    File: TvShow.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,16 +24,32 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using System.Collections.Generic;
 
-using RequestPlex.Helpers;
-
-namespace RequestPlex.Api
+namespace RequestPlex.Api.Models.Tv
 {
-    public abstract class TvBase
+    public class TvShow
     {
-        private static readonly string Encrypted = "AVdhrVK6XX8anvrQgEyN/qNr9rk8ZPwy7/r1t5t5cKyUEzxcyk0L1v6dSxgE7hTCxvITUX2cWa6VlFMlTMgJWyuPZml7fN3csCHntgd/VGYro6VfNf24snZ/rQ3mf005";
-        protected string ApiKey = StringCipher.Decrypt(Encrypted, "ApiKey");
-        protected Uri Url = new Uri("https://api-beta.thetvdb.com/");
+        public int id { get; set; }
+        public string seriesName { get; set; }
+        public List<string> aliases { get; set; }
+        public string banner { get; set; }
+        public int seriesId { get; set; }
+        public string status { get; set; }
+        public string firstAired { get; set; }
+        public string network { get; set; }
+        public string networkId { get; set; }
+        public string runtime { get; set; }
+        public List<string> genre { get; set; }
+        public string overview { get; set; }
+        public int lastUpdated { get; set; }
+        public string airsDayOfWeek { get; set; }
+        public string airsTime { get; set; }
+        public string rating { get; set; }
+        public string imdbId { get; set; }
+        public string zap2itId { get; set; }
+        public string added { get; set; }
+        public int siteRating { get; set; }
+
     }
 }

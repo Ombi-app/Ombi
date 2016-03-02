@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: MovieBase.cs
+//    File: CacheKeys.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,16 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-
-using RequestPlex.Helpers;
-
-namespace RequestPlex.Api
+namespace RequestPlex.Core
 {
-    public abstract class TvBase
+    public class CacheKeys
     {
-        private static readonly string Encrypted = "AVdhrVK6XX8anvrQgEyN/qNr9rk8ZPwy7/r1t5t5cKyUEzxcyk0L1v6dSxgE7hTCxvITUX2cWa6VlFMlTMgJWyuPZml7fN3csCHntgd/VGYro6VfNf24snZ/rQ3mf005";
-        protected string ApiKey = StringCipher.Decrypt(Encrypted, "ApiKey");
-        protected Uri Url = new Uri("https://api-beta.thetvdb.com/");
+        public const string TvDbToken = "TheTvDbApiToken";
     }
 }

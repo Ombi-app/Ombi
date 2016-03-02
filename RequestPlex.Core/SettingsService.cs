@@ -30,6 +30,8 @@ using System.Linq;
 using Mono.Data.Sqlite;
 
 using RequestPlex.Api;
+using RequestPlex.Api.Models.Tv;
+using RequestPlex.Helpers;
 using RequestPlex.Store;
 
 namespace RequestPlex.Core
@@ -37,7 +39,7 @@ namespace RequestPlex.Core
     public class SettingsService
     {
 
-        public SettingsModel GetSettings()
+        public SettingsModel GetSettings(ICacheProvider cache)
         {
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<SettingsModel>(db);
@@ -46,18 +48,20 @@ namespace RequestPlex.Core
 
             return settings;
         }
+        private ICacheProvider Cache { get; set; }
 
-        public void AddRequest(int tmdbid, RequestType type)
+        public void AddRequest(int providerId, RequestType type)
         {
-            var api = new TheMovieDbApi();
+
             var model = new RequestedModel();
             if (type == RequestType.Movie)
             {
-                var movieInfo = api.GetMovieInformation(tmdbid).Result;
+                var movieApi = new TheMovieDbApi();
+                var movieInfo = movieApi.GetMovieInformation(providerId).Result;
 
                 model = new RequestedModel
                 {
-                    Tmdbid = movieInfo.Id,
+                    ProviderId = movieInfo.Id,
                     Type = type,
                     Overview = movieInfo.Overview,
                     ImdbId = movieInfo.ImdbId,
@@ -71,17 +75,23 @@ namespace RequestPlex.Core
             }
             else
             {
-                var showInfo = api.GetTvShowInformation(tmdbid).Result;
+                var tvApi = new TheTvDbApi();
+                var token = GetAuthToken(tvApi);
+
+                var showInfo = tvApi.GetInformation(providerId, token);
+
+                DateTime firstAir;
+                DateTime.TryParse(showInfo.firstAired, out firstAir);
 
                 model = new RequestedModel
                 {
-                    Tmdbid = showInfo.Id,
+                    ProviderId = showInfo.id,
                     Type = type,
-                    Overview = showInfo.Overview,
-                    PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.PosterPath,
-                    Title = showInfo.Name,
-                    ReleaseDate = showInfo.FirstAirDate ?? DateTime.MinValue,
-                    Status = showInfo.Status,
+                    Overview = showInfo.overview,
+                    PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.banner, // This is incorrect
+                    Title = showInfo.seriesName,
+                    ReleaseDate = firstAir,
+                    Status = showInfo.status,
                     RequestedDate = DateTime.Now,
                     Approved = false
                 };
@@ -92,21 +102,25 @@ namespace RequestPlex.Core
             repo.Insert(model);
         }
 
-        public bool CheckRequest(int tmdbid)
+        public bool CheckRequest(int providerId)
         {
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<RequestedModel>(db);
 
-            return repo.GetAll().Any(x => x.Tmdbid == tmdbid);
+            return repo.GetAll().Any(x => x.ProviderId == providerId);
         }
 
         public void DeleteRequest(int tmdbId)
         {
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<RequestedModel>(db);
-            var entity = repo.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId);
+            var entity = repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
             repo.Delete(entity);
         }
 
+        private string GetAuthToken(TheTvDbApi api)
+        {
+            return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
+        }
     }
 }

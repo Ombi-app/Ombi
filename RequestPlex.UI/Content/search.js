@@ -99,7 +99,8 @@ function tvSearch() {
     var query = $("#tvSearchContent").val();
 
     $.ajax("/search/tv/" + query).success(function (results) {
-        results.forEach(function (result) {
+
+        results.data.forEach(function (result) {
             var context = buildTvShowContext(result);
             var html = searchTemplate(context);
             $("#tvList").append(html);

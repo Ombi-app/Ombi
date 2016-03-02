@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Requested
 (
 	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
 	Type								INTEGER NOT NULL,
-    Tmdbid								INTEGER NOT NULL,
+    ProviderId							INTEGER NOT NULL,
 	ImdbId								varchar(50),
 	Overview							varchar(50) NOT NULL,
 	Title								varchar(50) NOT NULL,

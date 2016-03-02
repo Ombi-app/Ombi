@@ -8,7 +8,7 @@ namespace RequestPlex.Store
     public class RequestedModel : Entity
     {
         // ReSharper disable once IdentifierTypo
-        public int Tmdbid { get; set; }
+        public int ProviderId { get; set; }
         public string ImdbId { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }

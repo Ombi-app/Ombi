@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CacheKeys.cs" />
     <Compile Include="ISettingsService.cs" />
     <Compile Include="RequestService.cs" />
     <Compile Include="SettingModels\SonarrSettings.cs" />

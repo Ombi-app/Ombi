@@ -28,7 +28,7 @@ using System.Collections.Generic;
 
 namespace RequestPlex.Api.Models.Tv
 {
-    public class TvShow
+    public class TvShowSearchResult
     {
         public int id { get; set; }
         public int airedSeason { get; set; }
@@ -63,6 +63,6 @@ namespace RequestPlex.Api.Models.Tv
 
     public class TvSearchResult
     {
-        public TvShow[] data { get; set; }
+        public List<TvShowSearchResult> data { get; set; }
     }
 }
