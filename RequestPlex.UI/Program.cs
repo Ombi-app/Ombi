@@ -3,6 +3,8 @@ using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
 
+using Nancy.ViewEngines.Razor;
+
 using RequestPlex.Core;
 using RequestPlex.Core.SettingModels;
 using RequestPlex.Helpers;
@@ -15,6 +17,7 @@ namespace RequestPlex.UI
     {
         static void Main(string[] args)
         {
+            var foo = typeof(RazorViewEngine);
             var assemblyVer = AssemblyHelper.GetAssemblyVersion();
             Console.WriteLine($"Version: {assemblyVer}");
             var uri = "http://localhost:3579/";
