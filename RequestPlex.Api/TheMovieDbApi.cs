@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using TMDbLib.Client;
@@ -23,9 +24,9 @@ namespace RequestPlex.Api
             return results.Results;
         }
 
+        [Obsolete("Should use TheTvDbApi for TV")]
         public async Task<List<SearchTv>> SearchTv(string searchTerm)
         {
-
             var results = await Client.SearchTvShow(searchTerm);
             return results.Results;
         }
@@ -47,6 +48,7 @@ namespace RequestPlex.Api
             return movies;
         }
 
+        [Obsolete("Should use TheTvDbApi for TV")]
         public async Task<TvShow> GetTvShowInformation(int tmdbId)
         {
             var show = await Client.GetTvShow(tmdbId);
