@@ -28,7 +28,7 @@ $(document).on("click", ".delete", function (e) {
             if (response.result === true) {
                 generateNotify("Success!", "success");
 
-                $("#" + buttonId + "Template").html("");
+                $("#" + buttonId + "Template").slideUp();
             } else {
                 generateNotify(response.message, "warning");
             }

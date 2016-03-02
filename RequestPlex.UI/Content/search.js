@@ -35,29 +35,10 @@ $(document).on("click", ".dropdownTv", function (e) {
         data = data + "&latest=true";
     }
 
-    $.ajax({
-        type: $form.prop('method'),
-        url: $form.prop('action'),
-        data: data,
-        dataType: "json",
-        success: function (response) {
-            console.log(response);
-            if (response.result === true) {
-                generateNotify("Success!", "success");
+    var type = $form.prop('method');
+    var url = $form.prop('action');
 
-                $('#' + buttonId).html("<i class='fa fa-check'></i> Requested <span class='caret'></span>");
-                $('#' + buttonId).removeClass("btn-primary");
-                $('#' + buttonId).addClass("btn-success");
-            } else {
-                generateNotify(response.message, "warning");
-            }
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
-        }
-    });
-
+    sendRequestAjax(data, type, url, buttonId);
 });
 
 // Click Request for movie
@@ -66,10 +47,18 @@ $(document).on("click", ".requestMovie", function (e) {
     var buttonId = e.target.id;
     var $form = $('#form' + buttonId);
 
+    var type = $form.prop('method');
+    var url = $form.prop('action');
+    var data = $form.serialize();
+
+    sendRequestAjax(data, type, url, buttonId);
+});
+
+function sendRequestAjax(data, type, url, buttonId) {
     $.ajax({
-        type: $form.prop('method'),
-        url: $form.prop('action'),
-        data: $form.serialize(),
+        type: type,
+        url: url,
+        data: data,
         dataType: "json",
         success: function (response) {
             console.log(response);
@@ -78,6 +67,7 @@ $(document).on("click", ".requestMovie", function (e) {
 
                 $('#' + buttonId).html("<i class='fa fa-check'></i> Requested");
                 $('#' + buttonId).removeClass("btn-primary");
+                $('#' + buttonId).removeAttr("data-toggle");
                 $('#' + buttonId).addClass("btn-success");
             } else {
                 generateNotify(response.message, "warning");
@@ -88,9 +78,7 @@ $(document).on("click", ".requestMovie", function (e) {
             generateNotify("Something went wrong!", "danger");
         }
     });
-
-});
-
+}
 
 function movieSearch() {
     $("#movieList").html("");
