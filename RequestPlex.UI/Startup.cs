@@ -10,11 +10,11 @@ namespace RequestPlex.UI
         {
             try
             {
-            app.UseNancy();
+                app.UseNancy();
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);    
+                Console.WriteLine(exception.Message);
                 throw;
             }
 

@@ -24,20 +24,18 @@ namespace RequestPlex.UI
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
-            
             container.Register<IUserMapper, UserMapper>();
-            base.ConfigureRequestContainer(container, context);
 
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
             
             container.Register<ISettingsRepository, JsonRepository>();
             container.Register<ICacheProvider, MemoryCacheProvider>();
 
-
             container.Register<ISettingsService<RequestPlexSettings>, SettingsServiceV2<RequestPlexSettings>>();
             container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
 
+            base.ConfigureRequestContainer(container, context);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

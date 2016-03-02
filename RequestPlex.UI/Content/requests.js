@@ -13,6 +13,34 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+$(document).on("click", ".delete", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var $form = $('#form' + buttonId);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: $form.serialize(),
+        dataType: "json",
+        success: function (response) {
+            console.log(response);
+            if (response.result === true) {
+                generateNotify("Success!", "success");
+
+                $("#" + buttonId + "Template").html("");
+            } else {
+                generateNotify(response.message, "warning");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
+});
+
 
 function movieLoad() {
     $("#movieList").html("");

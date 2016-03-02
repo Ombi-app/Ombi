@@ -21,17 +21,16 @@ $("#tvSearchContent").keypress(function (e) {
     if (tvimer) {
         clearTimeout(tvimer);
     }
-    tvimer = setTimeout(tvSearch(), 400);
+    tvimer = setTimeout(tvSearch, 400);
 });
 
+// Click TV dropdown option
 $(document).on("click", ".dropdownTv", function (e) {
-
     e.preventDefault();
-    console.log(e.target.id);
-    var $form = $('#form'+e.target.id);
+    var buttonId = e.target.id;
+    var $form = $('#form' + buttonId);
     var data = $form.serialize();
     var seasons = $(this).attr("season-select");
-    console.log(data);
     if (seasons === "1") {
         data = data + "&latest=true";
     }
@@ -45,6 +44,10 @@ $(document).on("click", ".dropdownTv", function (e) {
             console.log(response);
             if (response.result === true) {
                 generateNotify("Success!", "success");
+
+                $('#' + buttonId).html("<i class='fa fa-check'></i> Requested <span class='caret'></span>");
+                $('#' + buttonId).removeClass("btn-primary");
+                $('#' + buttonId).addClass("btn-success");
             } else {
                 generateNotify(response.message, "warning");
             }
@@ -57,10 +60,11 @@ $(document).on("click", ".dropdownTv", function (e) {
 
 });
 
+// Click Request for movie
 $(document).on("click", ".requestMovie", function (e) {
     e.preventDefault();
-    console.log(e.target.id);
-    var $form = $('#form' + e.target.id);
+    var buttonId = e.target.id;
+    var $form = $('#form' + buttonId);
 
     $.ajax({
         type: $form.prop('method'),
@@ -71,6 +75,10 @@ $(document).on("click", ".requestMovie", function (e) {
             console.log(response);
             if (response.result === true) {
                 generateNotify("Success!", "success");
+
+                $('#' + buttonId).html("<i class='fa fa-check'></i> Requested");
+                $('#' + buttonId).removeClass("btn-primary");
+                $('#' + buttonId).addClass("btn-success");
             } else {
                 generateNotify(response.message, "warning");
             }

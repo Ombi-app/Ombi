@@ -12,7 +12,7 @@
 
         <!-- Movie tab -->
         <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-           <br />
+            <br />
             <br />
             <!-- Movie content -->
             <div id="movieList">
@@ -33,32 +33,35 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
-    <div class="row">
-        <div class="col-sm-2">
-            {{#if posterPath}}
-            <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
-            {{/if}}
-        </div>
-        <div class="col-sm-5 ">
-            <div>
-                <a href="https://www.themoviedb.org/{{type}}/{{id}}">
-                    <h4>{{title}} ({{year}})</h4>
-                </a>
+    <div id="{{id}}Template">
+        <div class="row">
+            <div class="col-sm-2">
+                {{#if posterPath}}
+                <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+                {{/if}}
             </div>
-            <p>{{overview}}</p>
-        </div>
-        <div class="col-sm-2 col-sm-push-3">
-            <span class="label label-success">{{status}}</span>
-            <br />
-            <br />
-            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
-                <button id="{{id}}" style="text-align: right" class="btn btn-danger" type="submit"><i class="fa fa-plus"></i> Remove</button>            
-            </form>
-        </div>
+            <div class="col-sm-5 ">
+                <div>
+                    <a href="https://www.themoviedb.org/{{type}}/{{id}}">
+                        <h4>{{title}} ({{year}})</h4>
+                    </a>
+                </div>
+                <p>{{overview}}</p>
+            </div>
+            <div class="col-sm-2 col-sm-push-3">
+                <span class="label label-success">{{status}}</span>
+                <br />
+                <br />
+                <form method="POST" action="/requests/delete" id="form{{id}}">
+                    <input name="Id" type="text" value="{{id}}" hidden="hidden" />
+                    <input name="Type" type="text" value="{{type}}" hidden="hidden" />
+                    <button id="{{id}}" style="text-align: right" class="btn btn-danger delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
+                </form>
+            </div>
 
+        </div>
+        <hr />
     </div>
-    <hr />
 </script>
 
 

@@ -13,13 +13,18 @@ namespace RequestPlex.UI.Modules
     public class RequestsModule : NancyModule
     {
         private IRepository<RequestedModel> Service { get; set; }
-        public RequestsModule(IRepository<RequestedModel> service)
+        public RequestsModule(IRepository<RequestedModel> service) : base("requests")
         {
             Service = service;
 
-            Get["requests/"] = _ => LoadRequests();
-            Get["requests/movies"] = _ => GetMovies();
-            Get["requests/tvshows"] = _ => GetTvShows();
+            Get["/"] = _ => LoadRequests();
+            Get["/movies"] = _ => GetMovies();
+            Get["/tvshows"] = _ => GetTvShows();
+            Post["/delete"] = _ =>
+            {
+                var convertedType = (string)Request.Form.type == "movie" ? RequestType.Movie : RequestType.TvShow;
+                return Delete((int)Request.Form.id, convertedType);
+            };
         }
 
 
@@ -38,6 +43,13 @@ namespace RequestPlex.UI.Modules
         {
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             return Response.AsJson(dbTv);
+        }
+
+        private Response Delete(int tmdbId, RequestType type)
+        {
+            var currentEntity = Service.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId && x.Type == type);
+            Service.Delete(currentEntity);
+            return Response.AsJson(new { Result = true });
         }
     }
 }

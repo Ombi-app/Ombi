@@ -9,38 +9,21 @@ namespace RequestPlex.UI.Modules
 {
     public class SearchModule : NancyModule
     {
-        public SearchModule()
+        public SearchModule() : base("search")
         {
-            Get["search/"] = parameters => RequestLoad();
+            Api = new TheMovieDbApi();
+            Get["/"] = parameters => RequestLoad();
 
-            Get["search/movie/{searchTerm}"] = parameters =>
-            {
-                var search = (string)parameters.searchTerm;
-                return SearchMovie(search);
-            };
+            Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
+            Get["tv/{searchTerm}"] = parameters => SearchTvShow((string)parameters.searchTerm);
 
-            Get["search/tv/{searchTerm}"] = parameters =>
-            {
-                var search = (string)parameters.searchTerm;
-                return SearchTvShow(search);
-            };
+            Get["movie/upcoming"] = parameters => UpcomingMovies();
+            Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
-            Get["search/movie/upcoming"] = parameters => UpcomingMovies();
-            Get["search/movie/playing"] = parameters => CurrentlyPlayingMovies();
-
-            Post["search/request/movie"] = parameters =>
-            {
-                var movieId = (int)Request.Form.movieId;
-                return RequestMovie(movieId);
-            };
-
-            Post["search/request/tv"] = parameters =>
-            {
-                var tvShowId = (int)Request.Form.tvId;
-                var latest = (bool)Request.Form.latest;
-                return RequestTvShow(tvShowId, latest);
-            };
+            Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
+            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
         }
+        private TheMovieDbApi Api { get; }
 
         private Negotiator RequestLoad()
         {
@@ -49,32 +32,28 @@ namespace RequestPlex.UI.Modules
 
         private Response SearchMovie(string searchTerm)
         {
-            var api = new TheMovieDbApi();
-            var movies = api.SearchMovie(searchTerm);
+            var movies = Api.SearchMovie(searchTerm);
             var result = movies.Result;
             return Response.AsJson(result);
         }
 
         private Response SearchTvShow(string searchTerm)
         {
-            var api = new TheMovieDbApi();
-            var tvShow = api.SearchTv(searchTerm);
+            var tvShow = Api.SearchTv(searchTerm);
             var result = tvShow.Result;
             return Response.AsJson(result);
         }
 
         private Response UpcomingMovies()
         {
-            var api = new TheMovieDbApi();
-            var movies = api.GetUpcomingMovies();
+            var movies = Api.GetUpcomingMovies();
             var result = movies.Result;
             return Response.AsJson(result);
         }
 
         private Response CurrentlyPlayingMovies()
         {
-            var api = new TheMovieDbApi();
-            var movies = api.GetCurrentPlayingMovies();
+            var movies = Api.GetCurrentPlayingMovies();
             var result = movies.Result;
             return Response.AsJson(result);
         }
