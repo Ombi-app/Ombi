@@ -131,8 +131,10 @@
     </Content>
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
+    <Compile Include="Models\SessionKeys.cs" />
     <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
+    <Compile Include="Modules\UserLoginModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\RequestsModule.cs" />
     <Compile Include="Modules\SearchModule.cs" />
@@ -217,6 +219,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\CouchPotato.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\UserLogin\Index.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

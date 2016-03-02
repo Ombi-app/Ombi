@@ -1,7 +1,7 @@
-﻿#region Copyright
+#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Program.cs
+//    File: UserLoginModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,57 +24,33 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Nancy;
 
-using Microsoft.Owin.Hosting;
+using RequestPlex.UI.Models;
 
-using Mono.Data.Sqlite;
-
-using RequestPlex.Core;
-using RequestPlex.Core.SettingModels;
-using RequestPlex.Helpers;
-using RequestPlex.Store;
-using RequestPlex.Store.Repository;
-
-namespace RequestPlex.UI
+namespace RequestPlex.UI.Modules
 {
-    class Program
+    // TODO: Check the settings to see if we need to authenticate
+    // TODO: Add ability to logout
+    // TODO: Create UserLogin page
+    // TODO: If we need to authenticate we need to check if they are in Plex
+    // TODO: Allow the user of a username only or a Username and password
+    public class UserLoginModule : NancyModule
     {
-        static void Main(string[] args)
+        public UserLoginModule() : base("userlogin")
         {
-            WriteOutVersion();
-
-            var s = new Setup();
-            s.SetupDb();
-
-            var uri = GetStartupUri();
-
-            using (WebApp.Start<Startup>(uri))
-            {
-                Console.WriteLine($"Request Plex is running on {uri}");
-                Console.WriteLine("Press any key to exit");
-                Console.ReadLine();
-            }
+            Get["/"] = _ => View["Index"];
+            Post["/"] = x => LoginUser();
         }
 
-        private static void WriteOutVersion()
+        private Response LoginUser()
         {
-            var assemblyVer = AssemblyHelper.GetAssemblyVersion();
-            Console.WriteLine($"Version: {assemblyVer}");
-        }
+            var username = Request.Form.username;
 
-        private static string GetStartupUri()
-        {
-            var uri = "http://localhost:3579/";
-            var service = new SettingsServiceV2<RequestPlexSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            var settings = service.GetSettings();
+            // Add to the session
+            Request.Session[SessionKeys.UsernameKey] = username;
 
-            if (settings.Port != 0)
-            {
-                uri = $"http://localhost:{settings.Port}";
-            }
-
-            return uri;
+            return Response.AsJson("");
         }
     }
 }

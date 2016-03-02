@@ -50,7 +50,7 @@ namespace RequestPlex.UI.Modules
             Post["/delete"] = _ =>
             {
                 var convertedType = (string)Request.Form.type == "movie" ? RequestType.Movie : RequestType.TvShow;
-                return Delete((int)Request.Form.id, convertedType);
+                return DeleteRequest((int)Request.Form.id, convertedType);
             };
         }
 
@@ -106,7 +106,7 @@ namespace RequestPlex.UI.Modules
             return Response.AsJson(viewModel);
         }
 
-        private Response Delete(int tmdbId, RequestType type)
+        private Response DeleteRequest(int tmdbId, RequestType type)
         {
             var currentEntity = Service.GetAll().FirstOrDefault(x => x.Tmdbid == tmdbId && x.Type == type);
             Service.Delete(currentEntity);
