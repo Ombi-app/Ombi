@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Startup.cs
+//    File: RequestViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,24 +26,25 @@
 #endregion
 using System;
 
-using Owin;
+using RequestPlex.Store;
 
-namespace RequestPlex.UI
+namespace RequestPlex.UI.Models
 {
-    public class Startup
+    public class RequestViewModel
     {
-        public void Configuration(IAppBuilder app)
-        {
-            try
-            {
-                app.UseNancy();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw;
-            }
-
-        }
+        public int Id { get; set; }
+        public int Tmdbid { get; set; }
+        public string ImdbId { get; set; }
+        public string Overview { get; set; }
+        public string Title { get; set; }
+        public string PosterPath { get; set; }
+        public string ReleaseDate { get; set; }
+        public RequestType Type { get; set; }
+        public string Status { get; set; }
+        public bool Approved { get; set; }
+        public string RequestedBy { get; set; }
+        public string RequestedDate { get; set; }
+        public string ReleaseYear { get; set; }
+        public bool Available { get; set; }
     }
 }

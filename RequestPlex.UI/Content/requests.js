@@ -47,7 +47,7 @@ function movieLoad() {
 
     $.ajax("/requests/movies/").success(function (results) {
         results.forEach(function (result) {
-            var context = buildMovieRequestContext(result);
+            var context = buildRequestContext(result, "movie");
 
             var html = searchTemplate(context);
             $("#movieList").append(html);
@@ -60,40 +60,29 @@ function tvLoad() {
 
     $.ajax("/requests/tvshows/").success(function (results) {
         results.forEach(function (result) {
-            var context = buildTvShowRequestContext(result);
+            var context = buildRequestContext(result, "tv");
             var html = searchTemplate(context);
             $("#tvList").append(html);
         });
     });
 };
 
-function buildMovieRequestContext(result) {
-    var date = new Date(result.releaseDate);
-    var year = date.getFullYear();
+function buildRequestContext(result, type) {
+
     var context = {
         posterPath: result.posterPath,
         id: result.tmdbid,
         title: result.title,
         overview: result.overview,
-        year: year,
-        type: "movie",
-        status: result.status
+        year: result.releaseYear,
+        type: type,
+        status: result.status,
+        releaseDate: result.releaseDate,
+        approved: result.approved,
+        requestedBy: result.requestedBy,
+        requestedDate: result.requestedDate,
+        available: result.available
     };
 
-    return context;
-}
-
-function buildTvShowRequestContext(result) {
-    var date = new Date(result.releaseDate);
-    var year = date.getFullYear();
-    var context = {
-        posterPath: result.posterPath,
-        id: result.tmdbid,
-        title: result.title,
-        overview: result.overview,
-        year: year,
-        type: "tv",
-        status: result.status
-    };
     return context;
 }

@@ -1,5 +1,6 @@
 ﻿<div>
-    <h2>Requests</h2>
+    <h1>Requests</h1>
+    <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
@@ -45,11 +46,32 @@
                     <a href="https://www.themoviedb.org/{{type}}/{{id}}">
                         <h4>{{title}} ({{year}})</h4>
                     </a>
+                    <span class="label label-success">{{status}}</span>
                 </div>
-                <p>{{overview}}</p>
+                <br />
+                <p>Release Date: {{releaseDate}}</p>
+                <p>
+                    Approved:
+                    {{#if_eq approved false}}
+                    <i class="fa fa-times"></i>
+                    {{/if_eq}}
+                    {{#if_eq approved true}}
+                    <i class="fa fa-check"></i>
+                    {{/if_eq}}
+                </p>
+                <p>
+                    Available
+                    {{#if_eq available false}}
+                    <i class="fa fa-times"></i>
+                    {{/if_eq}}
+                    {{#if_eq available true}}
+                    <i class="fa fa-check"></i>
+                    {{/if_eq}}
+                </p>
+                <p>Requested By: {{requestedBy}}</p>
+                <p>Requested Date: {{requestedDate}}</p>
             </div>
             <div class="col-sm-2 col-sm-push-3">
-                <span class="label label-success">{{status}}</span>
                 <br />
                 <br />
                 <form method="POST" action="/requests/delete" id="form{{id}}">

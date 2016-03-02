@@ -48,13 +48,21 @@ namespace RequestPlex.UI
             s.SetupDb();
 
             var uri = GetStartupUri();
-
-            using (WebApp.Start<Startup>(uri))
+            try
             {
-                Console.WriteLine($"Request Plex is running on {uri}");
-                Console.WriteLine("Press any key to exit");
-                Console.ReadLine();
+                using (WebApp.Start<Startup>(uri))
+                {
+                    Console.WriteLine($"Request Plex is running on {uri}");
+                    Console.WriteLine("Press any key to exit");
+                    Console.ReadLine();
+                }
             }
+            catch (Exception e) 
+            {
+                
+                throw;
+            }
+
         }
 
         private static void WriteOutVersion()
