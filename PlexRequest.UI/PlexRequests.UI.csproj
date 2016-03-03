@@ -233,19 +233,19 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\RequestPlex.Api\PlexRequests.Api.csproj">
+    <ProjectReference Include="..\PlexRequest.Api\PlexRequests.Api.csproj">
       <Project>{8cb8d235-2674-442d-9c6a-35fcaeeb160d}</Project>
       <Name>PlexRequests.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Core\PlexRequests.Core.csproj">
+    <ProjectReference Include="..\PlexRequest.Core\PlexRequests.Core.csproj">
       <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
       <Name>PlexRequests.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Helpers\PlexRequests.Helpers.csproj">
+    <ProjectReference Include="..\PlexRequest.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>PlexRequests.Helpers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Store\PlexRequests.Store.csproj">
+    <ProjectReference Include="..\PlexRequest.Store\PlexRequests.Store.csproj">
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
