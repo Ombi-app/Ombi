@@ -29,12 +29,11 @@ using System.Linq;
 
 using Mono.Data.Sqlite;
 
-using RequestPlex.Api;
-using RequestPlex.Api.Models.Tv;
-using RequestPlex.Helpers;
-using RequestPlex.Store;
+using PlexRequests.Api;
+using PlexRequests.Helpers;
+using PlexRequests.Store;
 
-namespace RequestPlex.Core
+namespace PlexRequests.Core
 {
     public class SettingsService
     {

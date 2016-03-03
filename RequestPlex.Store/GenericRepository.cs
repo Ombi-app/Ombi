@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public class GenericRepository<T> : IRepository<T> where T : Entity
     {

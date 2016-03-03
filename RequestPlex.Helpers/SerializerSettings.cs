@@ -28,7 +28,7 @@ using System.Runtime.Serialization.Formatters;
 
 using Newtonsoft.Json;
 
-namespace RequestPlex.Helpers
+namespace PlexRequests.Helpers
 {
     public static class SerializerSettings
     {

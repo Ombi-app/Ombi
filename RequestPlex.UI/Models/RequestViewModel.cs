@@ -24,11 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using PlexRequests.Store;
 
-using RequestPlex.Store;
-
-namespace RequestPlex.UI.Models
+namespace PlexRequests.UI.Models
 {
     public class RequestViewModel
     {

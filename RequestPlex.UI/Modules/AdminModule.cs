@@ -33,12 +33,12 @@ using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
-using RequestPlex.Api;
-using RequestPlex.Core;
-using RequestPlex.Core.SettingModels;
-using RequestPlex.UI.Models;
+using PlexRequests.Api;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Models;
 
-namespace RequestPlex.UI.Modules
+namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
     {

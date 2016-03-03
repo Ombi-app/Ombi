@@ -30,7 +30,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace RequestPlex.Helpers
+namespace PlexRequests.Helpers
 {
     public class StringCipher
     {

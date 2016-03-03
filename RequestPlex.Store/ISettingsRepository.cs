@@ -26,9 +26,9 @@
 #endregion
 using System.Collections.Generic;
 
-using RequestPlex.Store.Models;
+using PlexRequests.Store.Models;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public interface ISettingsRepository
     {

@@ -26,7 +26,7 @@
 #endregion
 using System;
 
-namespace RequestPlex.Helpers
+namespace PlexRequests.Helpers
 {
     public interface ICacheProvider
     {

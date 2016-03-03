@@ -26,9 +26,9 @@
 #endregion
 using System.Linq;
 
-using RequestPlex.Store;
+using PlexRequests.Store;
 
-namespace RequestPlex.Core
+namespace PlexRequests.Core
 {
     public class RequestService
     {

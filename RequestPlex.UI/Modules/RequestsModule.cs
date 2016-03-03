@@ -24,7 +24,6 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
 using System.Linq;
 
 using Humanizer;
@@ -32,10 +31,10 @@ using Humanizer;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
-using RequestPlex.Store;
-using RequestPlex.UI.Models;
+using PlexRequests.Store;
+using PlexRequests.UI.Models;
 
-namespace RequestPlex.UI.Modules
+namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : NancyModule
     {

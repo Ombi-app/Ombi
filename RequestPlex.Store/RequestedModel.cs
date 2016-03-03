@@ -2,7 +2,7 @@
 
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     [Table("Requested")]
     public class RequestedModel : Entity

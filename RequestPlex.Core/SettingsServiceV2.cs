@@ -26,14 +26,12 @@
 #endregion
 using Newtonsoft.Json;
 
-using Omu.ValueInjecter;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Store;
+using PlexRequests.Store.Models;
 
-using RequestPlex.Core.SettingModels;
-using RequestPlex.Helpers;
-using RequestPlex.Store;
-using RequestPlex.Store.Models;
-
-namespace RequestPlex.Core
+namespace PlexRequests.Core
 {
     public class SettingsServiceV2<T> : ISettingsService<T>
         where T : Settings, new()

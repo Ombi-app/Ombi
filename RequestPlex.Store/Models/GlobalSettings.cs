@@ -26,7 +26,7 @@
 #endregion
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store.Models
+namespace PlexRequests.Store.Models
 {
 
     [Table("GlobalSettings")]

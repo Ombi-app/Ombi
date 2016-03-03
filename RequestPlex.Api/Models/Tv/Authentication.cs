@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace RequestPlex.Api.Models.Tv
+namespace PlexRequests.Api.Models.Tv
 {
     public class Authentication
     {

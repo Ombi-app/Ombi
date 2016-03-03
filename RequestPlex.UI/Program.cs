@@ -30,13 +30,13 @@ using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
 
-using RequestPlex.Core;
-using RequestPlex.Core.SettingModels;
-using RequestPlex.Helpers;
-using RequestPlex.Store;
-using RequestPlex.Store.Repository;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
-namespace RequestPlex.UI
+namespace PlexRequests.UI
 {
     class Program
     {

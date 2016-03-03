@@ -30,7 +30,7 @@ using System.IO;
 
 using Mono.Data.Sqlite;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public class DbConfiguration : ISqliteConfiguration
     {

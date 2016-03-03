@@ -7,8 +7,8 @@
     <ProjectGuid>{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RequestPlex.UI</RootNamespace>
-    <AssemblyName>RequestPlex</AssemblyName>
+    <RootNamespace>PlexRequests.UI</RootNamespace>
+    <AssemblyName>PlexRequests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
@@ -233,21 +233,21 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <ProjectReference Include="..\RequestPlex.Api\RequestPlex.Api.csproj">
+    <ProjectReference Include="..\RequestPlex.Api\PlexRequests.Api.csproj">
       <Project>{8cb8d235-2674-442d-9c6a-35fcaeeb160d}</Project>
-      <Name>RequestPlex.Api</Name>
+      <Name>PlexRequests.Api</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Core\RequestPlex.Core.csproj">
+    <ProjectReference Include="..\RequestPlex.Core\PlexRequests.Core.csproj">
       <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
-      <Name>RequestPlex.Core</Name>
+      <Name>PlexRequests.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Helpers\RequestPlex.Helpers.csproj">
+    <ProjectReference Include="..\RequestPlex.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
-      <Name>RequestPlex.Helpers</Name>
+      <Name>PlexRequests.Helpers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RequestPlex.Store\RequestPlex.Store.csproj">
+    <ProjectReference Include="..\RequestPlex.Store\PlexRequests.Store.csproj">
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
-      <Name>RequestPlex.Store</Name>
+      <Name>PlexRequests.Store</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

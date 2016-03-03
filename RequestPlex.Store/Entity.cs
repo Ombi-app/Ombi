@@ -26,7 +26,7 @@
 #endregion
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public class Entity
     {

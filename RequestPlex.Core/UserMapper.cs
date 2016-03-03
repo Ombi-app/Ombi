@@ -31,9 +31,9 @@ using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
 
-using RequestPlex.Store;
+using PlexRequests.Store;
 
-namespace RequestPlex.Core
+namespace PlexRequests.Core
 {
     public class UserMapper : IUserMapper
     {

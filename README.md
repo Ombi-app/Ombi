@@ -1,4 +1,4 @@
-# Request Plex!
+# Plex Requests .NET!
 
 [![Gitter](https://badges.gitter.im/tidusjar/RequestPlex.svg)](https://gitter.im/tidusjar/RequestPlex?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)

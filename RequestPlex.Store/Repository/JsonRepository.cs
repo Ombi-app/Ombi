@@ -24,17 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-
 using System.Collections.Generic;
 using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
-using RequestPlex.Helpers;
-using RequestPlex.Store.Models;
+using PlexRequests.Helpers;
+using PlexRequests.Store.Models;
 
-namespace RequestPlex.Store.Repository
+namespace PlexRequests.Store.Repository
 {
     public class JsonRepository : ISettingsRepository
     {

@@ -26,7 +26,7 @@
 #endregion
 using System.Data;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
 	public interface ISqliteConfiguration
 	{

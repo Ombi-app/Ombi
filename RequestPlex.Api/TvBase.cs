@@ -26,9 +26,9 @@
 #endregion
 using System;
 
-using RequestPlex.Helpers;
+using PlexRequests.Helpers;
 
-namespace RequestPlex.Api
+namespace PlexRequests.Api
 {
     public abstract class TvBase
     {

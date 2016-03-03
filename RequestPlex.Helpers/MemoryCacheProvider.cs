@@ -28,7 +28,7 @@ using System;
 using System.Linq;
 using System.Runtime.Caching;
 
-namespace RequestPlex.Helpers
+namespace PlexRequests.Helpers
 {
     public class MemoryCacheProvider : ICacheProvider
     {

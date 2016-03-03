@@ -26,11 +26,11 @@
 #endregion
 using System;
 
-using RequestPlex.Api.Models;
+using PlexRequests.Api.Models;
 
 using RestSharp;
 
-namespace RequestPlex.Api
+namespace PlexRequests.Api
 {
     public class PlexApi
     {

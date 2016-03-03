@@ -26,7 +26,7 @@
 #endregion
 using System.Collections.Generic;
 
-namespace RequestPlex.Api.Models.Tv
+namespace PlexRequests.Api.Models.Tv
 {
     public class TvShowSearchResult
     {

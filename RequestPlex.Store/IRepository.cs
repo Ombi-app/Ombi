@@ -26,7 +26,7 @@
 #endregion
 using System.Collections.Generic;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public interface IRepository<T>
     {

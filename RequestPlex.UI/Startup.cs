@@ -28,7 +28,7 @@ using System;
 
 using Owin;
 
-namespace RequestPlex.UI
+namespace PlexRequests.UI
 {
     public class Startup
     {

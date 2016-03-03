@@ -26,9 +26,9 @@
 #endregion
 using Nancy;
 
-using RequestPlex.UI.Models;
+using PlexRequests.UI.Models;
 
-namespace RequestPlex.UI.Modules
+namespace PlexRequests.UI.Modules
 {
     // TODO: Check the settings to see if we need to authenticate
     // TODO: Add ability to logout

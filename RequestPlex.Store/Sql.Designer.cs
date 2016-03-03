@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace RequestPlex.Store {
+namespace PlexRequests.Store {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace RequestPlex.Store {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RequestPlex.Store.Sql", typeof(Sql).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlexRequests.Store.Sql", typeof(Sql).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -65,10 +65,22 @@ namespace RequestPlex.Store {
         ///
         ///CREATE TABLE IF NOT EXISTS User
         ///(
-        ///    UserID								varchar PRIMARY KEY,
+        ///	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///    User								varchar(50) NOT NULL ,
         ///    UserName							varchar(50) NOT NULL,
         ///    Password							varchar(100) NOT NULL
-        ///);.
+        ///);
+        ///
+        ///CREATE TABLE IF NOT EXISTS Settings
+        ///(
+        ///	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+        ///    Port								INTEGER NOT NULL,
+        ///	UserAuthentication					INTEGER NOT NULL,
+        ///	PlexAuthToken						varchar(50)				
+        ///);
+        ///
+        ///CREATE TABLE IF NOT EXISTS Requested
+        ///( [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SqlTables {
             get {

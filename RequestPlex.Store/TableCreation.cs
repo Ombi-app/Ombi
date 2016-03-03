@@ -29,7 +29,7 @@ using System.Data;
 using Dapper;
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public static class TableCreation
     {

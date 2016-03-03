@@ -30,7 +30,7 @@ using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
-namespace RequestPlex.Store
+namespace PlexRequests.Store
 {
     public class UserRepository<T> : IRepository<T> where T : UserModel
     {
@@ -94,3 +94,4 @@ namespace RequestPlex.Store
         }
     }
 }
+

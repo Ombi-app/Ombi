@@ -24,14 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Newtonsoft.Json;
-
-using RequestPlex.Api.Models.Tv;
+using PlexRequests.Api.Models.Tv;
 
 using RestSharp;
 
-namespace RequestPlex.Api
+namespace PlexRequests.Api
 {
     public class TheTvDbApi : TvBase
     {

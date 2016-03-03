@@ -26,7 +26,7 @@
 #endregion
 using Newtonsoft.Json;
 
-namespace RequestPlex.Helpers
+namespace PlexRequests.Helpers
 {
     /// <summary>
     /// Provides a method for performing a deep copy of an object.
