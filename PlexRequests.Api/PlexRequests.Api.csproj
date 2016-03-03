@@ -67,6 +67,7 @@
     <Compile Include="Models\Tv\Authentication.cs" />
     <Compile Include="Models\Tv\TvSearchResult.cs" />
     <Compile Include="Models\Tv\TvShow.cs" />
+    <Compile Include="Models\Tv\TvShowImages.cs" />
     <Compile Include="MovieBase.cs" />
     <Compile Include="PlexApi.cs" />
     <Compile Include="TheMovieDbApi.cs" />

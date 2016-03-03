@@ -30,12 +30,10 @@ function buildTvShowContext(result) {
     var date = new Date(result.firstAired);
     var year = date.getFullYear();
     var context = {
-        posterPath: result.posterPath,
+        posterPath: result.banner,
         id: result.id,
-        title: result.name,
+        title: result.seriesName,
         overview: result.overview,
-        voteCount: result.voteCount,
-        voteAverage: result.voteAverage,
         year: year,
         type: "tv"
     };

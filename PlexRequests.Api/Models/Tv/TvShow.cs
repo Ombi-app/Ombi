@@ -34,7 +34,7 @@ namespace PlexRequests.Api.Models.Tv
         public string seriesName { get; set; }
         public List<string> aliases { get; set; }
         public string banner { get; set; }
-        public int seriesId { get; set; }
+        public string seriesId { get; set; }
         public string status { get; set; }
         public string firstAired { get; set; }
         public string network { get; set; }
@@ -49,7 +49,13 @@ namespace PlexRequests.Api.Models.Tv
         public string imdbId { get; set; }
         public string zap2itId { get; set; }
         public string added { get; set; }
+        public int addedBy { get; set; }
         public int siteRating { get; set; }
 
+    }
+
+    public class TvShowInformation
+    {
+        public TvShow data { get; set; }
     }
 }

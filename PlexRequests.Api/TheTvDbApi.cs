@@ -97,6 +97,26 @@ namespace PlexRequests.Api
             return Api.Execute<TvSearchResult>(request, Url);
         }
 
+        /// <summary>
+        /// Gets the tv images.
+        /// </summary>
+        /// <param name="seriesId">The series identifier.</param>
+        /// <param name="token">The token.</param>
+        /// <returns></returns>
+        public TvShowImages GetTvImages(int seriesId, string token)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "/series/{id}/images/query?keyType=poster"
+            };
+            request.AddUrlSegment("id", seriesId.ToString());
+            request.AddHeader("Authorization", $"Bearer {token}");
+            request.AddHeader("Content-Type", "application/json");
+
+            return Api.Execute<TvShowImages>(request, Url);
+        }
+
 
         /// <summary>
         /// Gets the information for a TV Series.
@@ -104,18 +124,18 @@ namespace PlexRequests.Api
         /// <param name="tvdbId">The TVDB identifier.</param>
         /// <param name="token">The token.</param>
         /// <returns></returns>
-        public TvShow GetInformation(int tvdbId, string token)
+        public TvShowInformation GetInformation(int tvdbId, string token)
         {
             var request = new RestRequest
             {
                 Method = Method.GET,
-                Resource = "search/{id}"
+                Resource = "series/{id}"
             };
             request.AddUrlSegment("id", tvdbId.ToString());
             request.AddHeader("Authorization", $"Bearer {token}");
             request.AddHeader("Content-Type", "application/json");
 
-            return Api.Execute<TvShow>(request, Url);
+            return Api.Execute<TvShowInformation>(request, Url);
         }
     }
 }

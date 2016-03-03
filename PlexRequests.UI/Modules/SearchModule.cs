@@ -24,6 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
+using System.Linq;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
@@ -31,6 +34,7 @@ using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
@@ -73,7 +77,42 @@ namespace PlexRequests.UI.Modules
         private Response SearchTvShow(string searchTerm)
         {
             var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
-            return Response.AsJson(tvShow);
+
+            if (tvShow?.data == null)
+            {
+                return Response.AsJson("");
+            }
+            var model = new List<SearchTvShowViewModel>();
+
+            foreach (var t in tvShow.data)
+            {
+                model.Add(new SearchTvShowViewModel
+                {
+                    Added = t.added,
+                    AirsDayOfWeek = t.airsDayOfWeek,
+                    AirsTime = t.airsTime,
+                    Aliases = t.aliases,
+                    // We are constructing the banner with the id: 
+                    // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
+                    Banner = t.id.ToString(), 
+                    FirstAired = t.firstAired,
+                    Genre = t.genre,
+                    Id = t.id,
+                    ImdbId = t.imdbId,
+                    LastUpdated = t.lastUpdated,
+                    Network = t.network,
+                    NetworkId = t.networkId,
+                    Overview = t.overview,
+                    Rating = t.rating,
+                    Runtime = t.runtime,
+                    SeriesId = t.id,
+                    SeriesName = t.seriesName,
+                    SiteRating = t.siteRating,
+                    Status = t.status,
+                    Zap2ItId = t.zap2itId
+                });
+            }
+            return Response.AsJson(model);
         }
 
         private Response UpcomingMovies()
@@ -92,7 +131,7 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestMovie(int movieId)
         {
-            var s = new SettingsService();
+            var s = new SettingsService(Cache);
             if (s.CheckRequest(movieId))
             {
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
@@ -111,7 +150,7 @@ namespace PlexRequests.UI.Modules
         private Response RequestTvShow(int showId, bool latest)
         {
             // Latest send to Sonarr and no need to store in DB
-            var s = new SettingsService();
+            var s = new SettingsService(Cache);
             if (s.CheckRequest(showId))
             {
                 return Response.AsJson(new { Result = false, Message = "TV Show has already been requested!" });

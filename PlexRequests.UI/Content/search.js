@@ -85,12 +85,14 @@ function movieSearch() {
     var query = $("#movieSearchContent").val();
 
     $.ajax("/search/movie/" + query).success(function (results) {
-        results.forEach(function (result) {
-            var context = buildMovieContext(result);
+        if (results.length > 0) {
+            results.forEach(function(result) {
+                var context = buildMovieContext(result);
 
-            var html = searchTemplate(context);
-            $("#movieList").append(html);
-        });
+                var html = searchTemplate(context);
+                $("#movieList").append(html);
+            });
+        }
     });
 };
 
@@ -99,12 +101,13 @@ function tvSearch() {
     var query = $("#tvSearchContent").val();
 
     $.ajax("/search/tv/" + query).success(function (results) {
-
-        results.data.forEach(function (result) {
-            var context = buildTvShowContext(result);
-            var html = searchTemplate(context);
-            $("#tvList").append(html);
-        });
+        if (results.length > 0) {
+            results.forEach(function(result) {
+                var context = buildTvShowContext(result);
+                var html = searchTemplate(context);
+                $("#tvList").append(html);
+            });
+        }
     });
 };
 

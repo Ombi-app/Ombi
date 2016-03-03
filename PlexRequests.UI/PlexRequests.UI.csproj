@@ -142,6 +142,7 @@
     </Content>
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
+    <Compile Include="Models\SearchTvShowViewModel.cs" />
     <Compile Include="Models\SessionKeys.cs" />
     <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />

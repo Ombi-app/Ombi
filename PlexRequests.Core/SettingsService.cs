@@ -37,9 +37,14 @@ namespace PlexRequests.Core
 {
     public class SettingsService
     {
-
-        public SettingsModel GetSettings(ICacheProvider cache)
+        public SettingsService(ICacheProvider cache)
         {
+            Cache = cache;
+        }
+
+        public SettingsModel GetSettings()
+        {
+            
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<SettingsModel>(db);
 
@@ -77,7 +82,7 @@ namespace PlexRequests.Core
                 var tvApi = new TheTvDbApi();
                 var token = GetAuthToken(tvApi);
 
-                var showInfo = tvApi.GetInformation(providerId, token);
+                var showInfo = tvApi.GetInformation(providerId, token).data;
 
                 DateTime firstAir;
                 DateTime.TryParse(showInfo.firstAired, out firstAir);

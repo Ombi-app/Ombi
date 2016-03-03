@@ -48,9 +48,18 @@
 <script id="search-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-sm-2">
+
+            {{#if_eq type "movie"}}
             {{#if posterPath}}
             <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
             {{/if}}
+            {{/if_eq}}
+            {{#if_eq type "tv"}}
+            {{#if posterPath}}
+            <img width="150" src="http://thetvdb.com/banners/_cache/posters/{{posterPath}}-1.jpg" alt="poster">
+            {{/if}}
+            {{/if_eq}}
+
         </div>
         <div class="col-sm-5 ">
             <div>
@@ -68,7 +77,7 @@
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
                 <div class="dropdown">
-                    <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-plus"></i> Request
                         <span class="caret"></span>
                     </button>
@@ -81,8 +90,11 @@
                 <br />
                 <br />
                 <br />
+                {{#if voteAverage}}
+
                 <small class="row">Vote Average: {{voteAverage}}</small>
                 <small class="row">Vote Count: {{voteCount}}</small>
+                {{/if}}
             </form>
         </div>
 

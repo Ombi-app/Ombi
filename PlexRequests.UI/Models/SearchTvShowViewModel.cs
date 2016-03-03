@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestViewModel.cs
+//    File: SearchTvShowViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,25 +24,32 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
+
+using System.Collections.Generic;
 
 namespace PlexRequests.UI.Models
 {
-    public class RequestViewModel
+    public class SearchTvShowViewModel
     {
         public int Id { get; set; }
-        public int ProviderId { get; set; }
-        public string ImdbId { get; set; }
-        public string Overview { get; set; }
-        public string Title { get; set; }
-        public string PosterPath { get; set; }
-        public string ReleaseDate { get; set; }
-        public RequestType Type { get; set; }
+        public string SeriesName { get; set; }
+        public List<string> Aliases { get; set; }
+        public string Banner { get; set; }
+        public int SeriesId { get; set; }
         public string Status { get; set; }
-        public bool Approved { get; set; }
-        public string RequestedBy { get; set; }
-        public string RequestedDate { get; set; }
-        public string ReleaseYear { get; set; }
-        public bool Available { get; set; }
+        public string FirstAired { get; set; }
+        public string Network { get; set; }
+        public string NetworkId { get; set; }
+        public string Runtime { get; set; }
+        public List<string> Genre { get; set; }
+        public string Overview { get; set; }
+        public int LastUpdated { get; set; }
+        public string AirsDayOfWeek { get; set; }
+        public string AirsTime { get; set; }
+        public string Rating { get; set; }
+        public string ImdbId { get; set; }
+        public string Zap2ItId { get; set; }
+        public string Added { get; set; }
+        public int SiteRating { get; set; }
     }
 }

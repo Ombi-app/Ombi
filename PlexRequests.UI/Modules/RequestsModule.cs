@@ -64,7 +64,7 @@ namespace PlexRequests.UI.Modules
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             var viewModel = dbMovies.Select(tv => new RequestViewModel
             {
-                Tmdbid = tv.ProviderId,
+                ProviderId = tv.ProviderId,
                 Type = tv.Type,
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
@@ -87,12 +87,12 @@ namespace PlexRequests.UI.Modules
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
-                Tmdbid = tv.ProviderId,
+                ProviderId = tv.ProviderId,
                 Type = tv.Type,
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
                 Id = tv.Id,
-                PosterPath = tv.PosterPath,
+                PosterPath = tv.ProviderId.ToString(),
                 ReleaseDate = tv.ReleaseDate.Humanize(),
                 RequestedDate = tv.RequestedDate.Humanize(),
                 Approved = tv.Approved,
