@@ -1,54 +1,61 @@
 ﻿@using Nancy.Security
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
+<html>
+<head>
+    <title>Plex Requests</title>
+    <!-- Styles -->
+    <link rel="stylesheet" href="~/Content/custom.css" type="text/css"/>
+    <link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="~/Content/font-awesome.css" type="text/css"/>
 
-<!-- Styles -->
-<link rel="stylesheet" href="~/Content/custom.css" type="text/css"/>
-<link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css"/>
-<link rel="stylesheet" href="~/Content/font-awesome.css" type="text/css"/>
+    <!-- Scripts -->
+    <script src="/Content/jquery-2.2.1.min.js"></script>
+    <script src="/Content/handlebars.js"></script>
+    <script src="/Content/bootstrap.min.js"></script>
+    <script src="/Content/bootstrap-notify.min.js"></script>
+    <script src="/Content/site.js"></script>
+</head>
+<body>
 
-<!-- Scripts -->
-<script src="/Content/jquery-2.2.1.min.js"></script>
-<script src="/Content/handlebars.js"></script>
-<script src="/Content/bootstrap.min.js"></script>
-<script src="/Content/bootstrap-notify.min.js"></script>
-<script src="/Content/site.js"></script>
 
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Plex Requests</a>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Plex Requests</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="/search">Search</a></li>
+                    @if (Context.CurrentUser.IsAuthenticated())
+                    {
+                        <li><a href="/admin">Admin</a></li>
+                    }
+                    <li><a href="/requests">Requests</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    @if (!Context.CurrentUser.IsAuthenticated())
+                    {
+                        <li><a href="/login">Login</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/logout">Logout</a></li>
+                    }
+
+                </ul>
+            </div>
         </div>
+    </nav>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="active"><a href="/search">Search</a></li>
-                @if (Context.CurrentUser.IsAuthenticated())
-                {
-                    <li><a href="/admin">Admin</a></li>
-                }
-                <li><a href="/requests">Requests</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                @if (!Context.CurrentUser.IsAuthenticated())
-                {
-                    <li><a href="/login">Login</a></li>
-                }
-                else
-                {
-                    <li><a href="/logout">Logout</a></li>
-                }
-
-            </ul>
-        </div>
+    <div class="container">
+        @RenderBody()
     </div>
-</nav>
-
-<div class="container">
-    @RenderBody()
-</div>
+</body>
+</html>
