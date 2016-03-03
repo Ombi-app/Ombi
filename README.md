@@ -20,7 +20,7 @@ I wanted to write a similar application in .Net!
 
 #Installation
 
-Just run the .exe! (Use mono if not on Windows `mono RequestPlex.UI.exe`)
+Just run the .exe! (Use mono if not on Windows `mono PlexRequests.exe`)
 
 #Configuration
 
