@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI", "PlexRequest.UI\PlexRequests.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI", "PlexRequests.UI\PlexRequests.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api", "PlexRequest.Api\PlexRequests.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api", "PlexRequests.Api\PlexRequests.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api.Interfaces", "PlexRequest.Api.Interfaces\PlexRequests.Api.Interfaces.csproj", "{95834072-A675-415D-AA8F-877C91623810}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api.Interfaces", "PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj", "{95834072-A675-415D-AA8F-877C91623810}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core", "PlexRequest.Core\PlexRequests.Core.csproj", "{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core", "PlexRequests.Core\PlexRequests.Core.csproj", "{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Store", "PlexRequest.Store\PlexRequests.Store.csproj", "{92433867-2B7B-477B-A566-96C382427525}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Store", "PlexRequests.Store\PlexRequests.Store.csproj", "{92433867-2B7B-477B-A566-96C382427525}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F4BC839C-B8FF-48BE-B22E-536A0A0A81A5}"
 	ProjectSection(SolutionItems) = preProject
@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers", "PlexRequest.Helpers\PlexRequests.Helpers.csproj", "{1252336D-42A3-482A-804C-836E60173DFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers", "PlexRequests.Helpers\PlexRequests.Helpers.csproj", "{1252336D-42A3-482A-804C-836E60173DFA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
