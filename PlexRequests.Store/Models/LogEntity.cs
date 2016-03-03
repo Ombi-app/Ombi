@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Setup.cs
+//    File: LogEntity.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
+using System;
 
-using PlexRequests.Store;
-
-namespace PlexRequests.Core
+namespace PlexRequests.Store.Models
 {
-    public class Setup
+    public class LogEntity : Entity
     {
-
-        public string SetupDb()
-        {
-            var db = new DbConfiguration(new SqliteFactory());
-            db.CheckDb();
-            TableCreation.CreateTables(db.DbConnection());
-            return db.DbConnection().ConnectionString;
-        }
+        public string Username { get; set; }
+        public DateTime Date { get; set; }
+        public string Level { get; set; }
+        public string Logger { get; set; }
+        public string Message { get; set; }
+        public string Callsite { get; set; }
+        public string Exception { get; set; }
     }
 }

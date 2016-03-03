@@ -25,10 +25,18 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Data;
 
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
+
+using NLog;
+using NLog.Config;
+using NLog.LayoutRenderers;
+using NLog.Layouts;
+using NLog.Targets;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -45,7 +53,10 @@ namespace PlexRequests.UI
             WriteOutVersion();
 
             var s = new Setup();
-            s.SetupDb();
+            var connection = s.SetupDb();
+
+            //ConfigureTargets(connection);
+
 
             var uri = GetStartupUri();
 
@@ -75,6 +86,59 @@ namespace PlexRequests.UI
             }
 
             return uri;
+        }
+
+        private static void ConfigureTargets(string connectionString)
+        {
+            LogManager.ThrowExceptions = true;
+            // Step 1. Create configuration object 
+            var config = new LoggingConfiguration();
+
+            // Step 2. Create targets and add them to the configuration 
+            var databaseTarget = new DatabaseTarget { CommandType = CommandType.Text,ConnectionString = connectionString,
+                DBProvider = "Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
+                Name = "database"};
+
+
+            var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
+            var callsiteParam = new DatabaseParameterInfo { Name = "@Callsite", Layout = "${callsite}" };
+            var levelParam = new DatabaseParameterInfo { Name = "@Level", Layout = "${level}" };
+            var usernameParam = new DatabaseParameterInfo { Name = "@Username", Layout = "${identity}" };
+            var dateParam = new DatabaseParameterInfo { Name = "@Date", Layout = "${date}" };
+            var loggerParam = new DatabaseParameterInfo { Name = "@Logger", Layout = "${logger}" };
+            var exceptionParam = new DatabaseParameterInfo { Name = "@Exception", Layout = "${exception:tostring}" };
+
+            databaseTarget.Parameters.Add(messageParam);
+            databaseTarget.Parameters.Add(callsiteParam);
+            databaseTarget.Parameters.Add(levelParam);
+            databaseTarget.Parameters.Add(usernameParam);
+            databaseTarget.Parameters.Add(dateParam);
+            databaseTarget.Parameters.Add(loggerParam);
+            databaseTarget.Parameters.Add(exceptionParam);
+
+            databaseTarget.CommandText = "INSERT INTO Log (Username,Date,Level,Logger, Message, Callsite, Exception) VALUES(@Username,@Date,@Level,@Logger, @Message, @Callsite, @Exception);";
+            config.AddTarget("database", databaseTarget);
+
+            // Step 4. Define rules
+            var rule1 = new LoggingRule("*", LogLevel.Error, databaseTarget);
+            config.LoggingRules.Add(rule1);
+
+            try
+            {
+
+                // Step 5. Activate the configuration
+                LogManager.Configuration = config;
+            }
+            catch (Exception e)
+            {
+                
+                throw;
+            }
+
+            // Example usage
+            Logger logger = LogManager.GetLogger("Example");
+
+            logger.Error("error log message");
         }
     }
 }
