@@ -33,9 +33,12 @@ using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
+using NLog;
+
 using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -45,6 +48,8 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexRequestSettings> RpService { get; set; }
         private ISettingsService<CouchPotatoSettings> CpService { get; set; }
         private ISettingsService<AuthenticationSettings> AuthService { get; set; }
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService, ISettingsService<CouchPotatoSettings> cpService, ISettingsService<AuthenticationSettings> auth) : base("admin")
         {
             RpService = rpService;
@@ -89,11 +94,11 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Admin()
         {
-            dynamic model = new ExpandoObject();
             var settings = RpService.GetSettings();
-
-            model = settings;
-            return View["/Settings", model];
+            Log.Trace("Getting Settings:");
+            Log.Trace(settings.DumpJson());
+    
+            return View["/Settings", settings];
         }
 
         private Response SaveAdmin()
