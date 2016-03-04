@@ -1,7 +1,7 @@
 ﻿@Html.Partial("/Admin/_Sidebar")
 
 <div class="col-sm-8">
-    <form class="form-horizontal" method="POST" action="/admin/SaveAuthentication" id="mainForm">
+    <form class="form-horizontal" method="POST" action="/admin/authentication" id="mainForm">
         <fieldset>
             <legend>Authentication Settings</legend>
 
@@ -40,17 +40,17 @@
             <div class="form-group">
                 <label for="authToken" class="col-lg-2 control-label">Plex Authorization Token</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="authToken" name="PlexAuthToken" placeholder="Plex Auth Token" value="@Model.PlexAuthToken">
+                    <input type="text" class="form-control-custom form-control " id="authToken" name="PlexAuthToken" placeholder="Plex Auth Token" value="@Model.PlexAuthToken">
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="username" class="col-lg-2 control-label">Username and Password</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control" id="username" name="Username" placeholder="Username">
+                    <input type="text" class="form-control form-control-custom" id="username" name="Username" placeholder="Username">
                 </div>
-                <div class="col-lg-4 col-lg-push-1">
-                    <input type="password" class="form-control" id="password" name="Password" placeholder="Password">
+                <div class="col-lg-4 col-lg-push-2">
+                    <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
                 </div>
             </div>
             <div class="form-group">
@@ -66,20 +66,16 @@
             <br />
             <br />
             <div class="form-group">
-                <select id="users" multiple="" class="col-lg-10 col-lg-offset-2"></select>
+                <select id="users" multiple="" class="col-lg-10 col-lg-offset-2 form-control-custom "></select>
             </div>
             <div class="form-group">
-                <br />
-                <br />
+
                 <div class="col-lg-10 col-lg-offset-2">
                     <button id="refreshUsers" class="btn btn-primary">Refresh Users</button>
                 </div>
             </div>
 
-            <br />
-            <br />
-            <br />
-            <br />
+
             <div>
             </div>
             <div class="form-group">
@@ -137,7 +133,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.length > 1) {
-                        $(response).each(function(user) {
+                        $(response).each(function() {
                             $('#users').append("<option>" + this + "</option>");
                         });
                     } else {

@@ -39,7 +39,7 @@ namespace PlexRequests.Api
 {
     public class ApiRequest : IApiRequest
     {
-        
+
         /// <summary>
         /// An API request handler
         /// </summary>
@@ -54,7 +54,7 @@ namespace PlexRequests.Api
             var response = client.Execute<T>(request);
 
             if (response.ErrorException != null)
-            { 
+            {
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApplicationException(message, response.ErrorException);
             }
@@ -75,7 +75,8 @@ namespace PlexRequests.Api
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-            return Deserialize<T>(response.Content);
+            var result = Deserialize<T>(response.Content);
+            return result;
         }
 
         public T Deserialize<T>(string input)
@@ -83,8 +84,15 @@ namespace PlexRequests.Api
         {
             var ser = new XmlSerializer(typeof(T));
 
-            using (var sr = new StringReader(input))
-                return (T)ser.Deserialize(sr);
+            try
+            {
+                using (var sr = new StringReader(input))
+                    return (T)ser.Deserialize(sr);
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
     }
 }

@@ -117,6 +117,12 @@ namespace PlexRequests.UI.Modules
 
             var plex = new PlexApi();
             var model = plex.GetToken(user.username, user.password);
+
+            if (model.user == null)
+            {
+                return Response.AsJson(new { Result = false, Message = "Incorrect username or password!" });
+            }
+
             var oldSettings = AuthService.GetSettings();
             if (oldSettings != null)
             {
@@ -132,15 +138,22 @@ namespace PlexRequests.UI.Modules
                 AuthService.SaveSettings(newModel);
             }
 
-            return Response.AsJson(new {Result = true, AuthToken = model.user.authentication_token});
+            return Response.AsJson(new { Result = true, AuthToken = model.user.authentication_token });
         }
 
 
         private Response GetUsers()
         {
             var token = AuthService.GetSettings().PlexAuthToken;
+            if (token == null)
+            {
+                return Response.AsJson(string.Empty);
+            }
             var api = new PlexApi();
             var users = api.GetUsers(token);
+            if (users == null)
+            { return Response.AsJson(string.Empty); }
+
             var usernames = users.User.Select(x => x.Username);
             return Response.AsJson(usernames); //TODO usernames are not populated.
         }
@@ -162,6 +175,6 @@ namespace PlexRequests.UI.Modules
 
             return Context.GetRedirect("~/admin/couchpotato");
         }
-        
+
     }
 }

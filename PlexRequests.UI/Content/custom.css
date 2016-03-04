@@ -1,11 +1,20 @@
 ﻿@media (min-width: 768px ) {
-  .row {
-      position: relative;
-  }
+    .row {
+        position: relative;
+    }
 
-  .bottom-align-text {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-  }
+    .bottom-align-text {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+}
+
+.multiSelect {
+    background-color: #4e5d6c;
+}
+
+.form-control-custom {
+    background-color: #4e5d6c !important;
+    color: white !important;
 }

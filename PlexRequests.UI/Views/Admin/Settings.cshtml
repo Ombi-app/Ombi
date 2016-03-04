@@ -13,14 +13,14 @@
 
 }
 <div class="col-sm-8">
-    <form class="form-horizontal" method="POST" action="/admin/couchpotato" id="mainForm">
+    <form class="form-horizontal" method="POST" action="/admin" id="mainForm">
         <fieldset>
             <legend>Request Plex Settings</legend>
             <div class="form-group">
                 <label for="portNumber" class="col-lg-2 control-label">Port</label>
 
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="portNumber" name="Port" placeholder="Port Number" value="@port">
+                    <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
                 </div>
             </div>
             <small class="col-lg-10 col-lg-offset-2">You will have to restart after changing the port.</small>
@@ -58,9 +58,9 @@
 
             <div class="form-group">
                 <label for="WeeklyRequestLimit" class="col-lg-2 control-label">Weekly Request Limit</label>
-                <div class="col-lg-10 checkbox">
+                <div class="col-lg-10">
                     <label>
-                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" value="@Model.WeeklyRequestLimit">
+                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
                     </label>
                 </div>
             </div>

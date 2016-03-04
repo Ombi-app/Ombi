@@ -130,7 +130,7 @@ namespace PlexRequests.UI
                 // Step 5. Activate the configuration
                 LogManager.Configuration = config;
             }
-            catch (Exception e)
+            catch (Exception )
             {
 
                 throw;
