@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestPlexSettings.cs
+//    File: PlexRequestSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,11 +26,10 @@
 #endregion
 namespace PlexRequests.Core.SettingModels
 {
-    public class RequestPlexSettings : Settings
+    public class PlexRequestSettings : Settings
     {
         public int Port { get; set; }
-        public bool UserAuthentication { get; set; }
-        public string PlexAuthToken { get; set; }
+       
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
         public bool RequireApprovial { get; set; }

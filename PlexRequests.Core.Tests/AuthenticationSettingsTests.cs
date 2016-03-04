@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IApiRequest.cs
+//    File: AuthenticationSettingsTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,36 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using NUnit.Framework;
 
-using RestSharp;
+using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Core.Tests
 {
-    public interface IApiRequest
+    [TestFixture]
+    public class AuthenticationSettingsTests
     {
-        T Execute<T>(IRestRequest request, Uri baseUri) where T : new();
-        T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class;
+        [Test, TestCaseSource(nameof(UserData))]
+        public void DeniedUserListTest(string users, string[] expected)
+        {
+            var model = new AuthenticationSettings { DeniedUsers = users };
+
+            var result = model.DeniedUserList;
+
+            Assert.That(result.Count, Is.EqualTo(expected.Length));
+            for (var i = 0; i < expected.Length; i++)
+            {
+                Assert.That(result[i], Is.EqualTo(expected[i]));
+            }
+        }
+
+        static readonly object[] UserData =
+        {
+            new object[] { "john", new [] {"john"} },
+            new object[] { "john , abc   ,", new [] {"john", "abc"} },
+            new object[] { "john,, cde", new [] {"john", "cde"} },
+            new object[] { "john,,, aaa , baaa  ,       ", new [] {"john","aaa","baaa"} },
+            new object[] { "john, aaa , baaa  ,       maaa, caaa", new [] {"john","aaa","baaa", "maaa", "caaa"} },
+        };
     }
 }

@@ -27,6 +27,7 @@
 using System;
 
 using PlexRequests.Api.Models;
+using PlexRequests.Helpers;
 
 using RestSharp;
 
@@ -34,6 +35,12 @@ namespace PlexRequests.Api
 {
     public class PlexApi
     {
+        static PlexApi()
+        {
+            Version = AssemblyHelper.GetAssemblyVersion();
+        }
+        private static string Version { get; set; }
+
         public PlexAuthentication GetToken(string username, string password)
         {
             var userModel = new PlexUserRequest
@@ -51,7 +58,7 @@ namespace PlexRequests.Api
 
             request.AddHeader("X-Plex-Client-Identifier", "Test213"); // TODO need something unique to the users version/installation
             request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", "0.0.1");
+            request.AddHeader("X-Plex-Version", Version);
             request.AddHeader("Content-Type", "application/json");
 
             request.AddJsonBody(userModel);
@@ -69,12 +76,12 @@ namespace PlexRequests.Api
 
             request.AddHeader("X-Plex-Client-Identifier", "Test213");
             request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", "0.0.1");
+            request.AddHeader("X-Plex-Version", Version);
             request.AddHeader("X-Plex-Token", authToken);
             request.AddHeader("Content-Type", "application/xml");
 
             var api = new ApiRequest();
-            var users = api.Execute<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all"));
+            var users = api.ExecuteXml<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all"));
 
             return users;
         }

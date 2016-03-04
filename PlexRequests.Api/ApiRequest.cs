@@ -25,8 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
 
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models;
 
 using RestSharp;
 
@@ -56,6 +61,30 @@ namespace PlexRequests.Api
 
             return response.Data;
 
+        }
+
+        public T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class
+        {
+            var client = new RestClient { BaseUrl = baseUri };
+
+            var response = client.Execute(request);
+
+            if (response.ErrorException != null)
+            {
+                var message = "Error retrieving response. Check inner details for more info.";
+                throw new ApplicationException(message, response.ErrorException);
+            }
+
+            return Deserialize<T>(response.Content);
+        }
+
+        public T Deserialize<T>(string input)
+             where T : class
+        {
+            var ser = new XmlSerializer(typeof(T));
+
+            using (var sr = new StringReader(input))
+                return (T)ser.Deserialize(sr);
         }
     }
 }

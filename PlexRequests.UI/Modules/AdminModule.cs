@@ -42,16 +42,21 @@ namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        private ISettingsService<RequestPlexSettings> RpService { get; set; }
+        private ISettingsService<PlexRequestSettings> RpService { get; set; }
         private ISettingsService<CouchPotatoSettings> CpService { get; set; }
-        public AdminModule(ISettingsService<RequestPlexSettings> rpService, ISettingsService<CouchPotatoSettings> cpService  ) : base("admin")
+        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
+        public AdminModule(ISettingsService<PlexRequestSettings> rpService, ISettingsService<CouchPotatoSettings> cpService, ISettingsService<AuthenticationSettings> auth) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
+            AuthService = auth;
 #if !DEBUG
             this.RequiresAuthentication();
 #endif
             Get["/"] = _ => Admin();
+
+            Get["/authentication"] = _ => Authentication();
+            Post["/authentication"] = _ => SaveAuthentication();
 
             Post["/"] = _ => SaveAdmin();
 
@@ -63,6 +68,24 @@ namespace PlexRequests.UI.Modules
             Post["/couchpotato"] = _ => SaveCouchPotato();
         }
 
+        private Negotiator Authentication()
+        {
+            var settings = AuthService.GetSettings();
+
+            return View["/Authentication", settings];
+        }
+
+        private Response SaveAuthentication()
+        {
+            var model = this.Bind<AuthenticationSettings>();
+
+            var result = AuthService.SaveSettings(model);
+            if (result)
+            {
+                return Context.GetRedirect("~/admin/authentication");
+            }
+            return Context.GetRedirect("~/error"); //TODO create error page
+        }
 
         private Negotiator Admin()
         {
@@ -70,12 +93,12 @@ namespace PlexRequests.UI.Modules
             var settings = RpService.GetSettings();
 
             model = settings;
-            return View["/Admin/Settings", model];
+            return View["/Settings", model];
         }
 
         private Response SaveAdmin()
         {
-            var model = this.Bind<RequestPlexSettings>();
+            var model = this.Bind<PlexRequestSettings>();
 
             RpService.SaveSettings(model);
 
@@ -89,24 +112,24 @@ namespace PlexRequests.UI.Modules
 
             if (string.IsNullOrEmpty(user.username) || string.IsNullOrEmpty(user.password))
             {
-                return Context.GetRedirect("~/admin?error=true");
+                return Response.AsJson(new { Result = false, Message = "Please provide a valid username and password" });
             }
 
             var plex = new PlexApi();
             var model = plex.GetToken(user.username, user.password);
-            var oldSettings = RpService.GetSettings();
+            var oldSettings = AuthService.GetSettings();
             if (oldSettings != null)
             {
                 oldSettings.PlexAuthToken = model.user.authentication_token;
-                RpService.SaveSettings(oldSettings);
+                AuthService.SaveSettings(oldSettings);
             }
             else
             {
-                var newModel = new RequestPlexSettings
+                var newModel = new AuthenticationSettings
                 {
                     PlexAuthToken = model.user.authentication_token
                 };
-                RpService.SaveSettings(newModel);
+                AuthService.SaveSettings(newModel);
             }
 
             return Response.AsJson(new {Result = true, AuthToken = model.user.authentication_token});
@@ -115,7 +138,7 @@ namespace PlexRequests.UI.Modules
 
         private Response GetUsers()
         {
-            var token = RpService.GetSettings().PlexAuthToken;
+            var token = AuthService.GetSettings().PlexAuthToken;
             var api = new PlexApi();
             var users = api.GetUsers(token);
             var usernames = users.User.Select(x => x.Username);
@@ -130,6 +153,7 @@ namespace PlexRequests.UI.Modules
 
             return View["/Admin/CouchPotato", model];
         }
+
         private Response SaveCouchPotato()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();

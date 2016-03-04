@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 using Microsoft.Owin.Hosting;
@@ -34,8 +33,6 @@ using Mono.Data.Sqlite;
 
 using NLog;
 using NLog.Config;
-using NLog.LayoutRenderers;
-using NLog.Layouts;
 using NLog.Targets;
 
 using PlexRequests.Core;
@@ -77,7 +74,7 @@ namespace PlexRequests.UI
         private static string GetStartupUri()
         {
             var uri = "http://localhost:3579/";
-            var service = new SettingsServiceV2<RequestPlexSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
 
             if (settings.Port != 0)
@@ -95,9 +92,13 @@ namespace PlexRequests.UI
             var config = new LoggingConfiguration();
 
             // Step 2. Create targets and add them to the configuration 
-            var databaseTarget = new DatabaseTarget { CommandType = CommandType.Text,ConnectionString = connectionString,
+            var databaseTarget = new DatabaseTarget
+            {
+                CommandType = CommandType.Text,
+                ConnectionString = connectionString,
                 DBProvider = "Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
-                Name = "database"};
+                Name = "database"
+            };
 
 
             var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
@@ -131,7 +132,7 @@ namespace PlexRequests.UI
             }
             catch (Exception e)
             {
-                
+
                 throw;
             }
 

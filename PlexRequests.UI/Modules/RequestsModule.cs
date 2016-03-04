@@ -78,7 +78,7 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = tv.RequestedBy,
                 ReleaseYear = tv.ReleaseDate.Year.ToString()
             }).ToList();
-            //TODO check if Available
+            //TODO check if Available in CP
             return Response.AsJson(viewModel);
         }
 
@@ -101,7 +101,7 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = tv.RequestedBy,
                 ReleaseYear = tv.ReleaseDate.Year.ToString()
             }).ToList();
-            //TODO check if Available
+            //TODO check if Available in Sonarr
             return Response.AsJson(viewModel);
         }
 

@@ -71,7 +71,7 @@ namespace PlexRequests.Api.Models
     public class PlexFriends
     {
         [XmlElement(ElementName = "User")]
-        public List<UserFriends> User { get; set; }
+        public UserFriends[] User { get; set; }
         [XmlAttribute(AttributeName = "friendlyName")]
         public string FriendlyName { get; set; }
         [XmlAttribute(AttributeName = "identifier")]
