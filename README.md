@@ -2,6 +2,7 @@
 
 [![Gitter](https://badges.gitter.im/tidusjar/PlexRequest.NET.svg)](https://gitter.im/tidusjar/PlexRequests.Net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/plexrequest)
+[![Linux Status](https://travis-ci.org/tidusjar/PlexRequests.Net.svg)](https://travis-ci.org/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
@@ -20,7 +21,7 @@ I wanted to write a similar application in .Net!
 
 #Installation
 
-Just run the .exe! (Use mono if not on Windows `mono PlexRequests.exe`)
+Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 
 #Configuration
 
