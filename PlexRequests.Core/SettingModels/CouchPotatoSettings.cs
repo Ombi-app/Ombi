@@ -24,6 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
+using Newtonsoft.Json;
+using PlexRequests.Helpers;
+
 namespace PlexRequests.Core.SettingModels
 {
     public class CouchPotatoSettings : Settings
@@ -32,5 +37,15 @@ namespace PlexRequests.Core.SettingModels
         public int Port { get; set; }
         public string ApiKey { get; set; }
         public bool Enabled { get; set; }
+
+        [JsonIgnore]
+        public Uri FullUri
+        {
+            get
+            {
+                var formatted = Ip.ReturnUri(Port);
+                return formatted;
+            }
+        }
     }
 }

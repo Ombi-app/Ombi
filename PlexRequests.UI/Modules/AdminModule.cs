@@ -175,7 +175,6 @@ namespace PlexRequests.UI.Modules
         private Response SaveCouchPotato()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
-
             CpService.SaveSettings(couchPotatoSettings);
 
             return Context.GetRedirect("~/admin/couchpotato");

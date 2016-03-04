@@ -149,6 +149,11 @@ namespace PlexRequests.UI.Modules
             }
             Log.Trace("movie with id {0} doesnt exists", movieId);
             var settings = CpService.GetSettings();
+            if (settings.ApiKey == null)
+            {
+                Log.Warn("CP apiKey is null");
+                return Response.AsJson(new { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
+            }
             Log.Trace("Settings: ");
             Log.Trace(settings.DumpJson);
 
@@ -173,7 +178,7 @@ namespace PlexRequests.UI.Modules
 
             var cp = new CouchPotatoApi();
             Log.Trace("Adding movie to CP");
-            var result = cp.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.Ip);
+            var result = cp.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.FullUri);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
             {

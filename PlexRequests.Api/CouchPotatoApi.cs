@@ -43,7 +43,7 @@ namespace PlexRequests.Api
         private ApiRequest Api { get; set; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public bool AddMovie(string imdbid, string apiKey, string title, string baseUrl)
+        public bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl)
         {
             var request = new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}" };
 
@@ -51,7 +51,7 @@ namespace PlexRequests.Api
             request.AddUrlSegment("imdbid", imdbid);
             request.AddUrlSegment("title", title);
 
-            var obj = Api.ExecuteJson<JObject>(request, new Uri(baseUrl));
+            var obj = Api.ExecuteJson<JObject>(request, baseUrl);
             Log.Trace("CP movie Add result count {0}", obj.Count);
 
             if (obj.Count > 0)

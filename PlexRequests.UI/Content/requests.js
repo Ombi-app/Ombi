@@ -71,7 +71,7 @@ function buildRequestContext(result, type) {
 
     var context = {
         posterPath: result.posterPath,
-        id: result.tmdbid,
+        id: result.providerId,
         title: result.title,
         overview: result.overview,
         year: result.releaseYear,
