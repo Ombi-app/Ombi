@@ -30,6 +30,8 @@ using System.Linq;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
+using NLog;
+
 using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -63,15 +65,18 @@ namespace PlexRequests.UI.Modules
         private TheTvDbApi TvApi { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; set; }
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
         { 
+            Log.Trace("Loading Index");
             return View["Search/Index"];
         }
 
         private Response SearchMovie(string searchTerm)
         {
+            Log.Trace("Searching for Movie {0}", searchTerm);
             var movies = MovieApi.SearchMovie(searchTerm);
             var result = movies.Result;
             return Response.AsJson(result);
@@ -79,6 +84,7 @@ namespace PlexRequests.UI.Modules
 
         private Response SearchTvShow(string searchTerm)
         {
+            Log.Trace("Searching for TV Show {0}", searchTerm);
             var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
 
             if (tvShow?.data == null)
@@ -134,14 +140,22 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestMovie(int movieId)
         {
+            Log.Trace("Requesting movie with id {0}", movieId);
             var s = new SettingsService(Cache);
             if (s.CheckRequest(movieId))
             {
+                Log.Trace("movie with id {0} exists", movieId);
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
             }
+            Log.Trace("movie with id {0} doesnt exists", movieId);
             var settings = CpService.GetSettings();
+            Log.Trace("Settings: ");
+            Log.Trace(settings.DumpJson);
+
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
+            Log.Trace("Getting movie info from TheMovieDb");
+            Log.Trace(movieInfo.DumpJson);
 
             var model = new RequestedModel
             {
@@ -158,10 +172,12 @@ namespace PlexRequests.UI.Modules
             };
 
             var cp = new CouchPotatoApi();
-
+            Log.Trace("Adding movie to CP");
             var result = cp.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.Ip);
+            Log.Trace("Adding movie to CP result {0}", result);
             if (result)
             {
+                Log.Trace("Adding movie to database requests");
                 s.AddRequest(movieId, model);
 
                 return Response.AsJson(new { Result = true });

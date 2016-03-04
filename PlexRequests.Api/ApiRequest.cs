@@ -33,6 +33,8 @@ using System.Xml.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using NLog;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
 
@@ -42,7 +44,7 @@ namespace PlexRequests.Api
 {
     public class ApiRequest : IApiRequest
     {
-
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// An API request handler
         /// </summary>

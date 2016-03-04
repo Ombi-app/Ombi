@@ -45,10 +45,12 @@ namespace PlexRequests.UI
 {
     class Program
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
+            Log.Trace("Getting assembly version");
             WriteOutVersion();
-
+            
             var s = new Setup();
             var connection = s.SetupDb();
 
@@ -68,15 +70,17 @@ namespace PlexRequests.UI
         private static void WriteOutVersion()
         {
             var assemblyVer = AssemblyHelper.GetAssemblyVersion();
+            Log.Info($"Version: {assemblyVer}");
             Console.WriteLine($"Version: {assemblyVer}");
         }
 
         private static string GetStartupUri()
         {
+            Log.Trace("Getting startup URI");
             var uri = "http://localhost:3579/";
             var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
-
+            Log.Trace("Port: {0}", settings.Port);
             if (settings.Port != 0)
             {
                 uri = $"http://localhost:{settings.Port}";

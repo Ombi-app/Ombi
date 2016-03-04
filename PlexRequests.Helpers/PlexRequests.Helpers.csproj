@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AssemblyHelper.cs" />
     <Compile Include="ICacheProvider.cs" />
+    <Compile Include="LoggingHelper.cs" />
     <Compile Include="MemoryCacheProvider.cs" />
     <Compile Include="ObjectCopier.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

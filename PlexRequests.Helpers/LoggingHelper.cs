@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoApi.cs
+//    File: LoggingHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,42 +26,34 @@
 #endregion
 using System;
 
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
-using NLog;
-
-using RestSharp;
-
-namespace PlexRequests.Api
+namespace PlexRequests.Helpers
 {
-    public class CouchPotatoApi
+    public static class LoggingHelper
     {
-        public CouchPotatoApi()
+        public static string DumpJson(this object value)
         {
-            Api = new ApiRequest();
-        }
-        private ApiRequest Api { get; set; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public bool AddMovie(string imdbid, string apiKey, string title, string baseUrl)
-        {
-            var request = new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}" };
-
-            request.AddUrlSegment("apikey", apiKey);
-            request.AddUrlSegment("imdbid", imdbid);
-            request.AddUrlSegment("title", title);
-
-            var obj = Api.ExecuteJson<JObject>(request, new Uri(baseUrl));
-            Log.Trace("CP movie Add result count {0}", obj.Count);
-
-            if (obj.Count > 0)
+            var dumpTarget = value;
+            //if this is a string that contains a JSON object, do a round-trip serialization to format it:
+            var stringValue = value as string;
+            if (stringValue != null)
             {
-                Log.Trace("CP movie obj[\"success\"] = {0}", obj["success"]);
-                var result = (bool)obj["success"];
-                Log.Trace("CP movie Add result {0}", result);
-                return result;
+                if (stringValue.Trim().StartsWith("{", StringComparison.Ordinal))
+                {
+                    var obj = JsonConvert.DeserializeObject(stringValue);
+                    dumpTarget = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                }
+                else
+                {
+                    dumpTarget = stringValue;
+                }
             }
-            return false;
+            else
+            {
+                dumpTarget = JsonConvert.SerializeObject(value, Formatting.Indented);
+            }
+            return dumpTarget.ToString();
         }
     }
 }

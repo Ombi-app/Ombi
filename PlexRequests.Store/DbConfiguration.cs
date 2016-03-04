@@ -30,10 +30,13 @@ using System.IO;
 
 using Mono.Data.Sqlite;
 
+using NLog;
+
 namespace PlexRequests.Store
 {
     public class DbConfiguration : ISqliteConfiguration
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public DbConfiguration(SqliteFactory provider)
         {
             Factory = provider;
@@ -43,8 +46,10 @@ namespace PlexRequests.Store
 
         public virtual void CheckDb()
         {
+            Log.Trace("Checking DB");
             if (!File.Exists(DbFile))
             {
+                Log.Trace("DB doesn't exist, creating a new one");
                 CreateDatabase();
             }
         }
