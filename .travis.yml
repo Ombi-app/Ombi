@@ -4,4 +4,4 @@ install:
  - mono Tools/nuget.exe restore PlexRequests.sln
  - nuget install NUnit.Runners -OutputDirectory testrunner  
 script:
- - xbuild /p:Configuration=Release PlexRequests.sln
+ - xbuild /p:Configuration=Release PlexRequests.sln /p:TargetFrameworkVersion="v4.5"
