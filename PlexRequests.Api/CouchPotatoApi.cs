@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IApiRequest.cs
+//    File: CouchPotatoApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,14 +26,37 @@
 #endregion
 using System;
 
+using Newtonsoft.Json.Linq;
+
+using PlexRequests.Api.Models.Movie;
+
 using RestSharp;
 
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api
 {
-    public interface IApiRequest
+    public class CouchPotatoApi
     {
-        T Execute<T>(IRestRequest request, Uri baseUri) where T : new();
-        T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class;
-        T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new();
+        public CouchPotatoApi()
+        {
+            Api = new ApiRequest();
+        }
+        private ApiRequest Api { get; set; }
+
+        public bool AddMovie(string imdbid, string apiKey, string title, string baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}" };
+
+            request.AddUrlSegment("apikey", apiKey);
+            request.AddUrlSegment("imdbid", imdbid);
+            request.AddUrlSegment("title", title);
+
+            var obj = Api.ExecuteJson<JObject>(request, new Uri(baseUrl));
+            if (obj.Count > 0)
+            {
+                var result = (bool)obj["success"];
+                return result;
+            }
+            return false;
+        }
     }
 }

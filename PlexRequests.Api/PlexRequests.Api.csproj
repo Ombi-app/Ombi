@@ -61,6 +61,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
+    <Compile Include="CouchPotatoApi.cs" />
+    <Compile Include="Models\Movie\CouchPotatoAdd.cs" />
     <Compile Include="Models\PlexAuthentication.cs" />
     <Compile Include="Models\PlexError.cs" />
     <Compile Include="Models\PlexFriends.cs" />

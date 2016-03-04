@@ -54,52 +54,8 @@ namespace PlexRequests.Core
         }
         private ICacheProvider Cache { get; set; }
 
-        public void AddRequest(int providerId, RequestType type)
+        public void AddRequest(int providerId, RequestedModel model)
         {
-
-            var model = new RequestedModel();
-            if (type == RequestType.Movie)
-            {
-                var movieApi = new TheMovieDbApi();
-                var movieInfo = movieApi.GetMovieInformation(providerId).Result;
-
-                model = new RequestedModel
-                {
-                    ProviderId = movieInfo.Id,
-                    Type = type,
-                    Overview = movieInfo.Overview,
-                    ImdbId = movieInfo.ImdbId,
-                    PosterPath = "http://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
-                    Title = movieInfo.Title,
-                    ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
-                    Status = movieInfo.Status,
-                    RequestedDate = DateTime.Now,
-                    Approved = false
-                };
-            }
-            else
-            {
-                var tvApi = new TheTvDbApi();
-                var token = GetAuthToken(tvApi);
-
-                var showInfo = tvApi.GetInformation(providerId, token).data;
-
-                DateTime firstAir;
-                DateTime.TryParse(showInfo.firstAired, out firstAir);
-
-                model = new RequestedModel
-                {
-                    ProviderId = showInfo.id,
-                    Type = type,
-                    Overview = showInfo.overview,
-                    PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.banner, // This is incorrect
-                    Title = showInfo.seriesName,
-                    ReleaseDate = firstAir,
-                    Status = showInfo.status,
-                    RequestedDate = DateTime.Now,
-                    Approved = false
-                };
-            }
             var db = new DbConfiguration(new SqliteFactory());
             var repo = new GenericRepository<RequestedModel>(db);
 
@@ -122,9 +78,6 @@ namespace PlexRequests.Core
             repo.Delete(entity);
         }
 
-        private string GetAuthToken(TheTvDbApi api)
-        {
-            return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
-        }
+
     }
 }

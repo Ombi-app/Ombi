@@ -30,6 +30,9 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
 
@@ -75,11 +78,29 @@ namespace PlexRequests.Api
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-            var result = Deserialize<T>(response.Content);
+            var result = DeserializeXml<T>(response.Content);
             return result;
         }
 
-        public T Deserialize<T>(string input)
+        public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
+        {
+            var client = new RestClient { BaseUrl = baseUri };
+
+            var response = client.Execute(request);
+
+            if (response.ErrorException != null)
+            {
+                var message = "Error retrieving response. Check inner details for more info.";
+                throw new ApplicationException(message, response.ErrorException);
+            }
+
+            var json = JsonConvert.DeserializeObject<T>(response.Content);
+
+            return json;
+
+        }
+
+        public T DeserializeXml<T>(string input)
              where T : class
         {
             var ser = new XmlSerializer(typeof(T));

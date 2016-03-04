@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Nancy;
@@ -32,6 +32,7 @@ using Nancy.Responses.Negotiation;
 
 using PlexRequests.Api;
 using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
@@ -40,8 +41,9 @@ namespace PlexRequests.UI.Modules
 {
     public class SearchModule : NancyModule
     {
-        public SearchModule(ICacheProvider cache) : base("search")
+        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings) : base("search")
         {
+            CpService = cpSettings;
             MovieApi = new TheMovieDbApi();
             TvApi = new TheTvDbApi();
             Cache = cache;
@@ -60,6 +62,7 @@ namespace PlexRequests.UI.Modules
         private TheMovieDbApi MovieApi { get; }
         private TheTvDbApi TvApi { get; }
         private ICacheProvider Cache { get; }
+        private ISettingsService<CouchPotatoSettings> CpService { get; set; }
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
@@ -136,9 +139,34 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
             }
-            
-            s.AddRequest(movieId, RequestType.Movie);
-            return Response.AsJson(new { Result = true });
+            var settings = CpService.GetSettings();
+            var movieApi = new TheMovieDbApi();
+            var movieInfo = movieApi.GetMovieInformation(movieId).Result;
+
+            var model = new RequestedModel
+            {
+                ProviderId = movieInfo.Id,
+                Type = RequestType.Movie,
+                Overview = movieInfo.Overview,
+                ImdbId = movieInfo.ImdbId,
+                PosterPath = "http://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
+                Title = movieInfo.Title,
+                ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
+                Status = movieInfo.Status,
+                RequestedDate = DateTime.Now,
+                Approved = false
+            };
+
+            var cp = new CouchPotatoApi();
+
+            var result = cp.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.Ip);
+            if (result)
+            {
+                s.AddRequest(movieId, model);
+
+                return Response.AsJson(new { Result = true });
+            }
+            return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
         }
 
         /// <summary>
@@ -155,8 +183,34 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new { Result = false, Message = "TV Show has already been requested!" });
             }
-            s.AddRequest(showId, RequestType.TvShow);
+
+            var tvApi = new TheTvDbApi();
+            var token = GetAuthToken(tvApi);
+
+            var showInfo = tvApi.GetInformation(showId, token).data;
+
+            DateTime firstAir;
+            DateTime.TryParse(showInfo.firstAired, out firstAir);
+
+           var model = new RequestedModel
+            {
+                ProviderId = showInfo.id,
+                Type = RequestType.TvShow,
+                Overview = showInfo.overview,
+                PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.banner, // This is incorrect
+                Title = showInfo.seriesName,
+                ReleaseDate = firstAir,
+                Status = showInfo.status,
+                RequestedDate = DateTime.Now,
+                Approved = false
+            };
+
+            s.AddRequest(showId, model);
             return Response.AsJson(new {Result = true });
+        }
+        private string GetAuthToken(TheTvDbApi api)
+        {
+            return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
         }
     }
 }
