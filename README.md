@@ -1,7 +1,7 @@
 # Plex Requests .NET!
 
 [![Gitter](https://badges.gitter.im/tidusjar/PlexRequest.NET.svg)](https://gitter.im/tidusjar/PlexRequests.Net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/plexrequest)
+[![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
 [![Linux Status](https://travis-ci.org/tidusjar/PlexRequests.Net.svg)](https://travis-ci.org/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
