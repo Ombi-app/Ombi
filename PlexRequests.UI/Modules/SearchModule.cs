@@ -69,7 +69,7 @@ namespace PlexRequests.UI.Modules
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
-        { 
+        {
             Log.Trace("Loading Index");
             return View["Search/Index"];
         }

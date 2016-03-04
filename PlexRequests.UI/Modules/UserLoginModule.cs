@@ -56,10 +56,10 @@ namespace PlexRequests.UI.Modules
 
         private Response LoginUser()
         {
-            var username = Request.Form.username;
+            var username = Request.Form.username.Value;
 
             // Add to the session
-            Session[SessionKeys.UsernameKey] = username;
+            Session[SessionKeys.UsernameKey] = (string)username;
 
             return Response.AsJson(new { Result = true });
         }
