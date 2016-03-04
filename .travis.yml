@@ -5,6 +5,3 @@ install:
  - nuget install NUnit.Runners -OutputDirectory testrunner  
 script:
  - xbuild /p:Configuration=Release PlexRequests.sln
- notifications:
-  email:
-    - jamierees@outlook.com
