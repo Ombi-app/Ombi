@@ -1,0 +1,17 @@
+version: 0.5.{build}
+configuration: Release
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: '{version}'
+  assembly_file_version: '{version}'
+  assembly_informational_version: '{version}'
+before_build:
+- cmd: appveyor-retry nuget restore
+build:
+  verbosity: minimal
+after_build:
+- cmd: >-
+    7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
+
+    appveyor PushArtifact PlexRequests.zip
