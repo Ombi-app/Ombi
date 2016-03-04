@@ -25,7 +25,10 @@
 //  ************************************************************************/
 #endregion
 using Nancy;
+using Nancy.Responses.Negotiation;
 
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -37,11 +40,19 @@ namespace PlexRequests.UI.Modules
     // TODO: Allow the user of a username only or a Username and password
     public class UserLoginModule : NancyModule
     {
-        public UserLoginModule() : base("userlogin")
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth) : base("userlogin")
         {
-            Get["/"] = _ => View["Index"];
+            AuthService = auth;
+            Get["/"] = _ => Index();
             Post["/"] = x => LoginUser();
         }
+
+        public Negotiator Index()
+        {
+            var settings = AuthService.GetSettings();
+            return View["Index", settings];
+        }
+        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
 
         private Response LoginUser()
         {

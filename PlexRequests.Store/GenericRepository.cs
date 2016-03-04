@@ -60,7 +60,7 @@ namespace PlexRequests.Store
 
         public T Get(string id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Get(string) is not supported. Use Get(int)");
         }
 
         public T Get(int id)

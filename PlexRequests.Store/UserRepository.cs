@@ -72,7 +72,7 @@ namespace PlexRequests.Store
 
         public T Get(int id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("Get(int) is not supported. Use Get(string)");
         }
 
         public void Delete(T entity)
