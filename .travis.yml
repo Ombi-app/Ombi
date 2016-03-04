@@ -1,8 +1,7 @@
 language: csharp
 solution: PlexRequests.sln
 install:
- - NuGet.exe update --self
- - nuget restore PlexRequests.sln
+ - mono tools/NuGet.exe restore PlexRequests.sln
  - nuget install NUnit.Runners -OutputDirectory testrunner  
 script:
  - xbuild /p:Configuration=Release PlexRequests.sln
