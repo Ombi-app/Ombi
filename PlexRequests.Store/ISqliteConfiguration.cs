@@ -33,7 +33,7 @@ namespace PlexRequests.Store
 		/// <summary>
 		/// Checks the database.
 		/// </summary>
-		void CheckDb();
+		bool CheckDb();
 
 		/// <summary>
 		/// Returns the database connection.

@@ -43,13 +43,14 @@ namespace PlexRequests.UI.Modules
 {
     public class SearchModule : BaseModule
     {
-        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings) : base("search")
+        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings, ISettingsService<PlexRequestSettings> prSettings) : base("search")
         {
             CpService = cpSettings;
+            PrService = prSettings;
             MovieApi = new TheMovieDbApi();
             TvApi = new TheTvDbApi();
             Cache = cache;
-            
+
             Get["/"] = parameters => RequestLoad();
 
             Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
@@ -64,14 +65,17 @@ namespace PlexRequests.UI.Modules
         private TheMovieDbApi MovieApi { get; }
         private TheTvDbApi TvApi { get; }
         private ICacheProvider Cache { get; }
-        private ISettingsService<CouchPotatoSettings> CpService { get; set; }
+        private ISettingsService<CouchPotatoSettings> CpService { get; }
+        private ISettingsService<PlexRequestSettings> PrService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
         {
+            var settings = PrService.GetSettings();
+
             Log.Trace("Loading Index");
-            return View["Search/Index"];
+            return View["Search/Index", settings];
         }
 
         private Response SearchMovie(string searchTerm)
@@ -103,7 +107,7 @@ namespace PlexRequests.UI.Modules
                     Aliases = t.aliases,
                     // We are constructing the banner with the id: 
                     // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
-                    Banner = t.id.ToString(), 
+                    Banner = t.id.ToString(),
                     FirstAired = t.firstAired,
                     Genre = t.genre,
                     Id = t.id,
@@ -148,14 +152,14 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
             }
             Log.Trace("movie with id {0} doesnt exists", movieId);
-            var settings = CpService.GetSettings();
-            if (settings.ApiKey == null)
+            var cpSettings = CpService.GetSettings();
+            if (cpSettings.ApiKey == null)
             {
                 Log.Warn("CP apiKey is null");
                 return Response.AsJson(new { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
             }
             Log.Trace("Settings: ");
-            Log.Trace(settings.DumpJson);
+            Log.Trace(cpSettings.DumpJson);
 
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
@@ -173,21 +177,41 @@ namespace PlexRequests.UI.Modules
                 ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.Now,
-                Approved = false
+                Approved = false,
+                RequestedBy = Session[SessionKeys.UsernameKey].ToString()
             };
 
-            var cp = new CouchPotatoApi();
-            Log.Trace("Adding movie to CP");
-            var result = cp.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.FullUri);
-            Log.Trace("Adding movie to CP result {0}", result);
-            if (result)
+
+            var settings = PrService.GetSettings();
+            if (!settings.RequireApproval)
+            {
+                var cp = new CouchPotatoApi();
+                Log.Trace("Adding movie to CP (No approval required)");
+                var result = cp.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri);
+                Log.Trace("Adding movie to CP result {0}", result);
+                if (result)
+                {
+                    model.Approved = true;
+                    Log.Trace("Adding movie to database requests (No approval required)");
+                    s.AddRequest(movieId, model);
+
+                    return Response.AsJson(new { Result = true });
+                }
+                return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+            }
+
+            try
             {
                 Log.Trace("Adding movie to database requests");
                 s.AddRequest(movieId, model);
-
                 return Response.AsJson(new { Result = true });
             }
-            return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+
+                return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+            }
         }
 
         /// <summary>
@@ -213,7 +237,7 @@ namespace PlexRequests.UI.Modules
             DateTime firstAir;
             DateTime.TryParse(showInfo.firstAired, out firstAir);
 
-           var model = new RequestedModel
+            var model = new RequestedModel
             {
                 ProviderId = showInfo.id,
                 Type = RequestType.TvShow,
@@ -223,11 +247,12 @@ namespace PlexRequests.UI.Modules
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
-                Approved = false
+                Approved = false,
+                RequestedBy = Session[SessionKeys.UsernameKey].ToString()
             };
 
             s.AddRequest(showId, model);
-            return Response.AsJson(new {Result = true });
+            return Response.AsJson(new { Result = true });
         }
         private string GetAuthToken(TheTvDbApi api)
         {

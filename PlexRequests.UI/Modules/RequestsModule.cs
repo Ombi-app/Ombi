@@ -30,7 +30,8 @@ using Humanizer;
 
 using Nancy;
 using Nancy.Responses.Negotiation;
-
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
@@ -38,10 +39,11 @@ namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseModule
     {
-        private IRepository<RequestedModel> Service { get; set; }
-        public RequestsModule(IRepository<RequestedModel> service) : base("requests")
+
+        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings) : base("requests")
         {
             Service = service;
+            PrSettings = prSettings;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -52,11 +54,13 @@ namespace PlexRequests.UI.Modules
                 return DeleteRequest((int)Request.Form.id, convertedType);
             };
         }
-
+        private IRepository<RequestedModel> Service { get; }
+        private ISettingsService<PlexRequestSettings> PrSettings { get; }
 
         private Negotiator LoadRequests()
         {
-            return View["Requests/Index"];
+            var settings = PrSettings.GetSettings();
+            return View["Requests/Index", settings];
         }
 
         private Response GetMovies()

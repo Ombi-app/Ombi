@@ -1,46 +1,59 @@
 ﻿<div>
     <h2>Search</h2>
-    <h4>Want to wacth something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
+    <h4>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
-        <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+        @if (Model.SearchForMovies)
+        {
+            <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
+        }
+        @if (Model.SearchForTvShows)
+        {
+            <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+        }
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-
-        <!-- Movie tab -->
-        <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-            <div class="input-group">
-                <input id="movieSearchContent" type="text" class="form-control">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
+        @if (Model.SearchForMovies)
+        {
+            <!-- Movie tab -->
+            <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+                <div class="input-group">
+                    <input id="movieSearchContent" type="text" class="form-control">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <!-- Movie content -->
+                <div id="movieList">
                 </div>
             </div>
-            <br />
-            <br />
-            <!-- Movie content -->
-            <div id="movieList">
-            </div>
-        </div>
+        }
 
-        <!-- TV tab -->
-        <div role="tabpanel" class="tab-pane" id="TvShowTab">
-            <div class="input-group">
-                <input id="tvSearchContent" type="text" class="form-control">
-                <div class="input-group-addon">
-                    <i class="fa fa-search"></i>
+
+        @if (Model.SearchForTvShows)
+        {
+    <!-- TV tab -->
+            <div role="tabpanel" class="tab-pane" id="TvShowTab">
+                <div class="input-group">
+                    <input id="tvSearchContent" type="text" class="form-control">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <!-- TV content -->
+                <div id="tvList">
                 </div>
             </div>
-            <br />
-            <br />
-            <!-- TV content -->
-            <div id="tvList">
-            </div>
-        </div>
+        }
     </div>
+
 
 </div>
 

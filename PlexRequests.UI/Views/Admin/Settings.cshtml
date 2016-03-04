@@ -54,7 +54,24 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="RequireApproval" class="col-lg-2 control-label">Require approval of requests</label>
 
+                <div class="col-lg-10 checkbox">
+                    <label>
+                        @if (Model.RequireApproval)
+                        {
+                            <input type="checkbox" id="RequireApproval" name="RequireApproval" checked="checked">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="RequireApproval" name="RequireApproval">
+                        }
+                    </label>
+
+                </div>
+            </div>
+  
             <div class="form-group">
                 <label for="WeeklyRequestLimit" class="col-lg-2 control-label">Weekly Request Limit</label>
                 <div class="col-lg-10">

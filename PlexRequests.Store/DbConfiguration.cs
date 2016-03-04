@@ -31,6 +31,8 @@ using System.IO;
 using Mono.Data.Sqlite;
 
 using NLog;
+using PlexRequests.Helpers;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Store
 {
@@ -44,14 +46,16 @@ namespace PlexRequests.Store
 
         private SqliteFactory Factory { get; set; }
 
-        public virtual void CheckDb()
+        public virtual bool CheckDb()
         {
             Log.Trace("Checking DB");
             if (!File.Exists(DbFile))
             {
                 Log.Trace("DB doesn't exist, creating a new one");
                 CreateDatabase();
+                return true;
             }
+            return false;
         }
 
         public string DbFile = "RequestPlex.sqlite";

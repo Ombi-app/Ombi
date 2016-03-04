@@ -25,8 +25,10 @@
 //  ************************************************************************/
 #endregion
 using Mono.Data.Sqlite;
-
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core
 {
@@ -36,9 +38,29 @@ namespace PlexRequests.Core
         public string SetupDb()
         {
             var db = new DbConfiguration(new SqliteFactory());
-            db.CheckDb();
+            var created = db.CheckDb();
             TableCreation.CreateTables(db.DbConnection());
+
+            if (created)
+            {
+                CreateDefaultSettingsPage();
+            }
+
             return db.DbConnection().ConnectionString;
+        }
+
+
+        private void CreateDefaultSettingsPage()
+        {
+            var defaultSettings = new PlexRequestSettings
+            {
+                RequireApproval = true,
+                SearchForMovies = true,
+                SearchForTvShows = true,
+                WeeklyRequestLimit = 0
+            };
+            var s = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            s.SaveSettings(defaultSettings);
         }
     }
 }

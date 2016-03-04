@@ -3,31 +3,42 @@
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
-        <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+        @if (Model.SearchForMovies)
+        {
+            <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
+        }
+        @if (Model.SearchForTvShows)
+        {
+            <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+        }
 
     </ul>
 
     <!-- Tab panes -->
     <div class="tab-content">
-
-        <!-- Movie tab -->
-        <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-            <br />
-            <br />
-            <!-- Movie content -->
-            <div id="movieList">
+        @if (Model.SearchForMovies)
+        {
+    <!-- Movie tab -->
+            <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+                <br />
+                <br />
+                <!-- Movie content -->
+                <div id="movieList">
+                </div>
             </div>
-        </div>
+        }
 
-        <!-- TV tab -->
-        <div role="tabpanel" class="tab-pane" id="TvShowTab">
-            <br />
-            <br />
-            <!-- TV content -->
-            <div id="tvList">
+        @if (Model.SearchForTvShows)
+        {
+    <!-- TV tab -->
+            <div role="tabpanel" class="tab-pane" id="TvShowTab">
+                <br />
+                <br />
+                <!-- TV content -->
+                <div id="tvList">
+                </div>
             </div>
-        </div>
+        }
     </div>
 
 </div>
