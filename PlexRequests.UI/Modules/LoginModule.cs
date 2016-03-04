@@ -35,7 +35,7 @@ using PlexRequests.Core;
 
 namespace PlexRequests.UI.Modules
 {
-    public class LoginModule : NancyModule
+    public class LoginModule : BaseModule
     {
         public LoginModule()
         {

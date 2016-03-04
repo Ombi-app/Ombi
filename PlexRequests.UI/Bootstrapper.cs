@@ -29,6 +29,7 @@ using Mono.Data.Sqlite;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Cryptography;
 using Nancy.Diagnostics;
 using Nancy.Session;
 using Nancy.TinyIoc;
@@ -66,7 +67,9 @@ namespace PlexRequests.UI
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            CookieBasedSessions.Enable(pipelines);
+
+            CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
+            
             StaticConfiguration.DisableErrorTraces = false;
 
             base.ApplicationStartup(container, pipelines);

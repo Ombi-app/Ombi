@@ -33,25 +33,24 @@ namespace PlexRequests.UI.Modules
 {
     public class BaseModule : NancyModule
     {
-        // TODO get this working
         public BaseModule()
         {
-            //CheckAuth();
+            Before += (ctx)=> CheckAuth();
         }
 
         public BaseModule(string modulePath) : base(modulePath)
         {
-            //CheckAuth();
+            Before += (ctx) => CheckAuth();
         }
         
 
-        private void CheckAuth()
+        private Response CheckAuth()
         {
-            
-            if (Request?.Session?[SessionKeys.UsernameKey] == null)
+            if (Session[SessionKeys.UsernameKey] == null)
             {
-                Context.GetRedirect("~/userlogin");
+                return Context.GetRedirect("~/userlogin");
             }
+            return null;
         }
 
     }

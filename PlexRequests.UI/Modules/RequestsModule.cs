@@ -36,7 +36,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class RequestsModule : NancyModule
+    public class RequestsModule : BaseModule
     {
         private IRepository<RequestedModel> Service { get; set; }
         public RequestsModule(IRepository<RequestedModel> service) : base("requests")

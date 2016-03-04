@@ -66,18 +66,7 @@ namespace PlexRequests.Helpers.Tests
         };
 
         static readonly object[] UriDataWithPort =
-{
-            new object[] { "google.com", new Uri("http://google.com/"),  },
-            new object[] { "http://google.com", new Uri("http://google.com/"),  },
-            new object[] { "https://google.com", new Uri("https://google.com/"),  },
-            new object[] { "192.168.1.1", new Uri("http://192.168.1.1")},
-            new object[] { "0.0.0.0:5533", new Uri("http://0.0.0.0:5533")},
-            new object[] {"www.google.com", new Uri("http://www.google.com/")},
-            new object[] {"http://www.google.com/", new Uri("http://www.google.com/") },
-            new object[] {"https://www.google.com", new Uri("https://www.google.com/") },
-            new object[] {"www.google.com:443", new Uri("http://www.google.com:443/") },
-            new object[] {"https://www.google.com:443", new Uri("https://www.google.com:443/") },
-            new object[] {"http://www.google.com:443/id=2", new Uri("http://www.google.com:443/id=2") },
+        {
             new object[] {"www.google.com", 80, new Uri("http://www.google.com:80/"),  },
             new object[] {"www.google.com", 443, new Uri("http://www.google.com:443/") },
             new object[] {"http://www.google.com", 443, new Uri("http://www.google.com:443/") },
