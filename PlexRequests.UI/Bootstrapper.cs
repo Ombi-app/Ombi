@@ -60,6 +60,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
             container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
+            container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
 
             base.ConfigureRequestContainer(container, context);

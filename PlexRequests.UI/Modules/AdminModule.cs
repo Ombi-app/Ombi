@@ -48,13 +48,16 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexRequestSettings> RpService { get; set; }
         private ISettingsService<CouchPotatoSettings> CpService { get; set; }
         private ISettingsService<AuthenticationSettings> AuthService { get; set; }
+        private ISettingsService<PlexSettings> PlexService { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public AdminModule(ISettingsService<PlexRequestSettings> rpService, ISettingsService<CouchPotatoSettings> cpService, ISettingsService<AuthenticationSettings> auth) : base("admin")
+        public AdminModule(ISettingsService<PlexRequestSettings> rpService, ISettingsService<CouchPotatoSettings> cpService, ISettingsService<AuthenticationSettings> auth, ISettingsService<PlexSettings> plex) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
             AuthService = auth;
+            PlexService = plex;
+
 #if !DEBUG
             this.RequiresAuthentication();
 #endif
@@ -71,6 +74,9 @@ namespace PlexRequests.UI.Modules
 
             Get["/couchpotato"] = _ => CouchPotato();
             Post["/couchpotato"] = _ => SaveCouchPotato();
+
+            Get["/plex"] = _ => Plex();
+            Post["/plex"] = _ => SavePlex();
         }
 
         private Negotiator Authentication()
@@ -178,6 +184,21 @@ namespace PlexRequests.UI.Modules
             CpService.SaveSettings(couchPotatoSettings);
 
             return Context.GetRedirect("~/admin/couchpotato");
+        }
+
+        private Negotiator Plex()
+        {
+            var settings = PlexService.GetSettings();
+
+            return View["Plex", settings];
+        }
+
+        private Response SavePlex()
+        {
+            var plexSettings = this.Bind<PlexSettings>();
+            PlexService.SaveSettings(plexSettings);
+
+            return Context.GetRedirect("~/admin/plex");
         }
 
     }

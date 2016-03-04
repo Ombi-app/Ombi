@@ -1,19 +1,34 @@
-﻿<form method="POST" id="loginForm">
-    <label>
-        Username</label> <input class="form-control" type="text" name="Username"/>
-    <br/>
-    @if (Model.UsePassword)
-    {
-        <label> Password </label>
-        <input class="form-control" name="Password" type="password"/>
-    }
-    <br/>
-    <input id="loginBtn"  class="btn btn-success" type="submit" value="Login"/>
+﻿<h1>Login</h1>
+<div class="row">
+    <label class="col-md-5">
+        Want to watch a movie or tv show but it's not currently on Plex?
+        Login below with your Plex.tv username and password! <span title="Your login details are only used to authenticate your Plex account."><i class="fa fa-question-circle"></i></span>
+    </label>
+</div>
+<form method="POST" id="loginForm">
+    <div class="col-md-2">
+        <label style="padding-top: 8px"> Username </label>
+    </div>
+    <div class="col-md-5">
+        <input class="form-control form-control-custom col-md-5" type="text" name="Username"/>
+    </div>
+        <br />
+        @if (Model.UsePassword)
+        {
+            <div class="col-md-2">
+                <label style="padding-top: 8px"> Password </label>
+            </div>
+            <div class="col-md-5">
+                <input class="form-control form-control-custom col-md-5" name="Password" type="password" />
+            </div>
+        }
+        <br />
+        <input id="loginBtn" class="btn btn-success" type="submit" value="Login" />
 </form>
 
 
 <script>
-    $(function() {
+    $(function () {
 
         $('#loginBtn').click(function (e) {
             e.preventDefault();
