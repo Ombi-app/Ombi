@@ -41,7 +41,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class SearchModule : NancyModule
+    public class SearchModule : BaseModule
     {
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings) : base("search")
         {

@@ -1,7 +1,44 @@
-﻿<form method="POST">
-    Username <input class="form-control" type="text" name="Username"/>
+﻿<form method="POST" id="loginForm">
+    <label>
+        Username</label> <input class="form-control" type="text" name="Username"/>
     <br/>
-    Password <input class="form-control" name="Password" type="password"/>
+    @if (Model.UsePassword)
+    {
+        <label> Password </label>
+        <input class="form-control" name="Password" type="password"/>
+    }
     <br/>
-    <input class="btn btn-success" type="submit" value="Login"/>
+    <input id="loginBtn"  class="btn btn-success" type="submit" value="Login"/>
 </form>
+
+
+<script>
+    $(function() {
+
+        $('#loginBtn').click(function (e) {
+            e.preventDefault();
+            var $form = $("#loginForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: $form.prop("action"),
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        window.location.replace("/search");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+
+
+    });
+</script>

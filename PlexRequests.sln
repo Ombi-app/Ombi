@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core.Tests", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers.Tests", "PlexRequests.Helpers.Tests\PlexRequests.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{EC46BEB4-AEC4-42AE-B1D5-6B32FEA8154A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,5 +76,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A930E2CF-79E2-45F9-B06A-9A719A254CE4} = {EC46BEB4-AEC4-42AE-B1D5-6B32FEA8154A}
+		{FCFECD5D-47F6-454D-8692-E27A921BE655} = {EC46BEB4-AEC4-42AE-B1D5-6B32FEA8154A}
+		{0E6395D3-B074-49E8-898D-0EB99E507E0E} = {EC46BEB4-AEC4-42AE-B1D5-6B32FEA8154A}
 	EndGlobalSection
 EndGlobal

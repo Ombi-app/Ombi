@@ -1,7 +1,7 @@
-#region Copyright
+﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserLoginModule.cs
+//    File: BaseModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,44 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Nancy;
-using Nancy.Responses.Negotiation;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
+using Nancy;
+using Nancy.Extensions;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    // TODO: Check the settings to see if we need to authenticate
-    // TODO: Add ability to logout
-    // TODO: Create UserLogin page
-    // TODO: If we need to authenticate we need to check if they are in Plex
-    // TODO: Allow the user of a username only or a Username and password
-    public class UserLoginModule : NancyModule
+    public class BaseModule : NancyModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth) : base("userlogin")
+        // TODO get this working
+        public BaseModule()
         {
-            AuthService = auth;
-            Get["/"] = _ => Index();
-            Post["/"] = x => LoginUser();
+            //CheckAuth();
         }
 
-        public Negotiator Index()
+        public BaseModule(string modulePath) : base(modulePath)
         {
-            var settings = AuthService.GetSettings();
-            return View["Index", settings];
+            //CheckAuth();
         }
-        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
+        
 
-        private Response LoginUser()
+        private void CheckAuth()
         {
-            var username = Request.Form.username;
-
-            // Add to the session
-            Request.Session[SessionKeys.UsernameKey] = username;
-
-            return Response.AsJson(new { Result = true });
+            
+            if (Request?.Session?[SessionKeys.UsernameKey] == null)
+            {
+                Context.GetRedirect("~/userlogin");
+            }
         }
+
     }
 }
