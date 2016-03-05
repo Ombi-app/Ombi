@@ -25,8 +25,10 @@
 //  ************************************************************************/
 #endregion
 using System;
-
+using Hangfire;
+using Hangfire.SQLite;
 using Owin;
+using PlexRequests.Core;
 
 namespace PlexRequests.UI
 {
@@ -37,6 +39,12 @@ namespace PlexRequests.UI
             try
             {
                 app.UseNancy();
+
+                //GlobalConfiguration.Configuration.UseSQLiteStorage("Sqlite");
+
+                //app.UseHangfireDashboard();
+                //app.UseHangfireServer();
+
             }
             catch (Exception exception)
             {

@@ -24,12 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
 using System.Linq;
 
 using Humanizer;
 
 using Nancy;
 using Nancy.Responses.Negotiation;
+using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
@@ -40,10 +43,12 @@ namespace PlexRequests.UI.Modules
     public class RequestsModule : BaseModule
     {
 
-        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings) : base("requests")
+        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<AuthenticationSettings> auth, ISettingsService<PlexSettings> plex) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
+            AuthSettings = auth;
+            PlexSettings = plex;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -56,6 +61,8 @@ namespace PlexRequests.UI.Modules
         }
         private IRepository<RequestedModel> Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
+        private ISettingsService<AuthenticationSettings> AuthSettings { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
 
         private Negotiator LoadRequests()
         {
@@ -65,6 +72,10 @@ namespace PlexRequests.UI.Modules
 
         private Response GetMovies()
         {
+            // TODO check plex to see the availability
+            var settings = AuthSettings.GetSettings();
+            var plexSettings = PlexSettings.GetSettings();
+            var plex = new PlexApi();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             var viewModel = dbMovies.Select(tv => new RequestViewModel
             {
@@ -82,6 +93,9 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = tv.RequestedBy,
                 ReleaseYear = tv.ReleaseDate.Year.ToString()
             }).ToList();
+
+
+
             //TODO check if Available in CP
             return Response.AsJson(viewModel);
         }

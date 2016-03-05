@@ -85,6 +85,34 @@ namespace PlexRequests.Api
 
             return users;
         }
+
+        /// <summary>
+        /// Gets the users.
+        /// </summary>
+        /// <param name="authToken">The authentication token.</param>
+        /// <param name="searchTerm">The search term.</param>
+        /// <param name="plexFullHost">The full plex host.</param>
+        /// <returns></returns>
+        public PlexSearch SearchContent(string authToken, string searchTerm, Uri plexFullHost)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "search?query={searchTerm}"
+            };
+
+            request.AddUrlSegment("searchTerm", searchTerm);
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", Version);
+            request.AddHeader("X-Plex-Token", authToken);
+            request.AddHeader("Content-Type", "application/xml");
+
+            var api = new ApiRequest();
+            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+
+            return search;
+        }
     }
 }
 

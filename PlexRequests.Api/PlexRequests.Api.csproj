@@ -71,6 +71,7 @@
     <Compile Include="Models\PlexAuthentication.cs" />
     <Compile Include="Models\PlexError.cs" />
     <Compile Include="Models\PlexFriends.cs" />
+    <Compile Include="Models\PlexSearch.cs" />
     <Compile Include="Models\PlexUserRequest.cs" />
     <Compile Include="Models\Tv\Authentication.cs" />
     <Compile Include="Models\Tv\TvSearchResult.cs" />

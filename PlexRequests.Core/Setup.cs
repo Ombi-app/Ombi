@@ -34,21 +34,22 @@ namespace PlexRequests.Core
 {
     public class Setup
     {
-
+        private static DbConfiguration Db { get; set; }
         public string SetupDb()
         {
-            var db = new DbConfiguration(new SqliteFactory());
-            var created = db.CheckDb();
-            TableCreation.CreateTables(db.DbConnection());
+            Db = new DbConfiguration(new SqliteFactory());
+            var created = Db.CheckDb();
+            TableCreation.CreateTables(Db.DbConnection());
 
             if (created)
             {
                 CreateDefaultSettingsPage();
             }
 
-            return db.DbConnection().ConnectionString;
+            return Db.DbConnection().ConnectionString;
         }
 
+        public static string ConnectionString => Db.DbConnection().ConnectionString;
 
         private void CreateDefaultSettingsPage()
         {
