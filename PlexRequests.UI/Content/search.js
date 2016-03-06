@@ -43,7 +43,9 @@ $(document).on("click", ".dropdownTv", function (e) {
 
 // Click Request for movie
 $(document).on("click", ".requestMovie", function (e) {
+    $(".requestMovie").prop("disabled", true);
     e.preventDefault();
+
     var buttonId = e.target.id;
     var $form = $('#form' + buttonId);
 

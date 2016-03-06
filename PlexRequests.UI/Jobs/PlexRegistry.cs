@@ -33,7 +33,7 @@ namespace PlexRequests.UI.Jobs
     {
         public PlexRegistry()
         {
-            Schedule<PlexAvailabilityChecker>().ToRunNow().AndEvery(2).Minutes();
+            Schedule<PlexAvailabilityChecker>().ToRunNow();
         }
     }
 }

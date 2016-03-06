@@ -49,7 +49,7 @@ namespace PlexRequests.UI.Jobs
         private bool _shuttingDown;
         private ISettingsService<PlexSettings> Plex { get; } 
         private ISettingsService<AuthenticationSettings> Auth { get; } 
-        private IRequestService RequestService { get; set; }
+        private IRequestService RequestService { get; }
         public void CheckAndUpdate(string searchTerm, int id)
         {
             var plexSettings = Plex.GetSettings();
@@ -67,6 +67,7 @@ namespace PlexRequests.UI.Jobs
 
         public void CheckAndUpdateAll()
         {
+            //TODO Observable collections to get and refresh the data every x minutes
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
             var requests = RequestService.GetAll();
