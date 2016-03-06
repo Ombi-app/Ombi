@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using FluentScheduler;
 using Mono.Data.Sqlite;
 
 using Nancy;
@@ -39,6 +41,8 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Jobs;
+using TaskFactory = FluentScheduler.TaskFactory;
 
 namespace PlexRequests.UI
 {
@@ -62,12 +66,16 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
+            container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
+            container.Register<IRequestService, RequestService>();
 
             base.ConfigureRequestContainer(container, context);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            TaskManager.TaskFactory = new Jobs.TaskFactory();
+            TaskManager.Initialize(new PlexRegistry());
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
             

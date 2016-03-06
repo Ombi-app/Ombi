@@ -26,7 +26,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
@@ -37,19 +36,24 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.UI.Jobs;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class SearchModule : BaseModule
     {
-        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings, ISettingsService<PlexRequestSettings> prSettings) : base("search")
+        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
+            ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
+            IRequestService request) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
             MovieApi = new TheMovieDbApi();
             TvApi = new TheTvDbApi();
             Cache = cache;
+            Checker = checker;
+            RequestService = request;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -64,9 +68,11 @@ namespace PlexRequests.UI.Modules
         }
         private TheMovieDbApi MovieApi { get; }
         private TheTvDbApi TvApi { get; }
+        private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
+        private IAvailabilityChecker Checker { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
@@ -145,8 +151,7 @@ namespace PlexRequests.UI.Modules
         private Response RequestMovie(int movieId)
         {
             Log.Trace("Requesting movie with id {0}", movieId);
-            var s = new SettingsService(Cache);
-            if (s.CheckRequest(movieId))
+            if (RequestService.CheckRequest(movieId))
             {
                 Log.Trace("movie with id {0} exists", movieId);
                 return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
@@ -193,7 +198,7 @@ namespace PlexRequests.UI.Modules
                 {
                     model.Approved = true;
                     Log.Trace("Adding movie to database requests (No approval required)");
-                    s.AddRequest(movieId, model);
+                    RequestService.AddRequest(movieId, model);
 
                     return Response.AsJson(new { Result = true });
                 }
@@ -203,7 +208,9 @@ namespace PlexRequests.UI.Modules
             try
             {
                 Log.Trace("Adding movie to database requests");
-                s.AddRequest(movieId, model);
+                var id = RequestService.AddRequest(movieId, model);
+                //BackgroundJob.Enqueue(() => Checker.CheckAndUpdate(model.Title, (int)id));
+
                 return Response.AsJson(new { Result = true });
             }
             catch (Exception e)
@@ -223,8 +230,7 @@ namespace PlexRequests.UI.Modules
         private Response RequestTvShow(int showId, bool latest)
         {
             // Latest send to Sonarr and no need to store in DB
-            var s = new SettingsService(Cache);
-            if (s.CheckRequest(showId))
+            if (RequestService.CheckRequest(showId))
             {
                 return Response.AsJson(new { Result = false, Message = "TV Show has already been requested!" });
             }
@@ -251,7 +257,7 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString()
             };
 
-            s.AddRequest(showId, model);
+            RequestService.AddRequest(showId, model);
             return Response.AsJson(new { Result = true });
         }
         private string GetAuthToken(TheTvDbApi api)

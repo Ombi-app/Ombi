@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Startup.cs
+//    File: IAvailabilityChecker.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using FluentScheduler;
-using Owin;
-using PlexRequests.UI.Jobs;
-using TaskFactory = FluentScheduler.TaskFactory;
-
-namespace PlexRequests.UI
+namespace PlexRequests.UI.Jobs
 {
-    public class Startup
+    public interface IAvailabilityChecker
     {
-        public void Configuration(IAppBuilder app)
-        {
-            try
-            {
-                app.UseNancy();
-
-
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw;
-            }
-
-        }
-
-
+        void CheckAndUpdate(string searchTerm, int id);
+        void CheckAndUpdateAll();
     }
 }

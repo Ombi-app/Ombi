@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	Approved							INTEGER NOT NULL,
 	RequestedBy							varchar(50),
 	RequestedDate						varchar(50) NOT NULL,
-	Available							varchar(50)
+	Available							INTEGER(50)
 
 );
 

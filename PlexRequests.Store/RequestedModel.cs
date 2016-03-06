@@ -19,6 +19,7 @@ namespace PlexRequests.Store
         public bool Approved { get; set; }
         public string RequestedBy { get; set; }
         public DateTime RequestedDate { get; set; }
+        public bool Available { get; set; }
 
     }
 

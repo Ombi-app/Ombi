@@ -104,7 +104,7 @@ namespace PlexRequests.UI.Modules
             Log.Trace("Getting Settings:");
             Log.Trace(settings.DumpJson());
     
-            return View["/Settings", settings];
+            return View["Settings", settings];
         }
 
         private Response SaveAdmin()
@@ -166,7 +166,7 @@ namespace PlexRequests.UI.Modules
             { return Response.AsJson(string.Empty); }
 
             var usernames = users.User.Select(x => x.Username);
-            return Response.AsJson(usernames); //TODO usernames are not populated.
+            return Response.AsJson(usernames);
         }
 
         private Negotiator CouchPotato()

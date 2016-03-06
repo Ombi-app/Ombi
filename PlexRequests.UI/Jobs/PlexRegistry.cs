@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Startup.cs
+//    File: PlexRegistry.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+
 using FluentScheduler;
-using Owin;
-using PlexRequests.UI.Jobs;
-using TaskFactory = FluentScheduler.TaskFactory;
 
-namespace PlexRequests.UI
+namespace PlexRequests.UI.Jobs
 {
-    public class Startup
+    public class PlexRegistry : Registry
     {
-        public void Configuration(IAppBuilder app)
+        public PlexRegistry()
         {
-            try
-            {
-                app.UseNancy();
-
-
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                throw;
-            }
-
+            Schedule<PlexAvailabilityChecker>().ToRunNow().AndEvery(2).Minutes();
         }
-
-
     }
 }

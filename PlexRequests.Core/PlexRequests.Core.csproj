@@ -64,8 +64,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="IRequestService.cs" />
     <Compile Include="ISettingsService.cs" />
-    <Compile Include="RequestService.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\PlexSettings.cs" />
     <Compile Include="SettingModels\SonarrSettings.cs" />
@@ -73,7 +73,7 @@
     <Compile Include="SettingModels\CouchPotatoSettings.cs" />
     <Compile Include="SettingModels\PlexRequestSettings.cs" />
     <Compile Include="SettingModels\Settings.cs" />
-    <Compile Include="SettingsService.cs" />
+    <Compile Include="RequestService.cs" />
     <Compile Include="SettingsServiceV2.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="UserIdentity.cs" />

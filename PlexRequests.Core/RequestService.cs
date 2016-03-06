@@ -24,35 +24,30 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Linq;
 
+using System.Collections.Generic;
+using System.Linq;
 using PlexRequests.Store;
 
 namespace PlexRequests.Core
 {
-    public class RequestService
+    public class RequestService : IRequestService
     {
-        public RequestService(ISqliteConfiguration db, IRepository<RequestedModel> repo)
+        public RequestService(IRepository<RequestedModel> db)
         {
-            Db = db;
-            Repo = repo;
+            Repo = db;
         }
-        private ISqliteConfiguration Db { get; set; }
+    
         private IRepository<RequestedModel> Repo { get; set; }
-        public void AddRequest(int tmdbid, RequestType type)
-        {
-            var model = new RequestedModel
-            {
-                ProviderId = tmdbid,
-                Type = type
-            };
 
-            Repo.Insert(model);
+        public long AddRequest(int providerId, RequestedModel model)
+        {
+            return Repo.Insert(model);
         }
 
-        public bool CheckRequest(int tmdbid)
+        public bool CheckRequest(int providerId)
         {
-            return Repo.GetAll().Any(x => x.ProviderId == tmdbid);
+            return Repo.GetAll().Any(x => x.ProviderId == providerId);
         }
 
         public void DeleteRequest(int tmdbId)
@@ -61,5 +56,20 @@ namespace PlexRequests.Core
             Repo.Delete(entity);
         }
 
+        public void UpdateRequest(int originalId, RequestedModel model)
+        {
+            model.Id = originalId;
+            Repo.Update(model);
+        }
+
+        public RequestedModel Get(int id)
+        {
+            return Repo.Get(id);
+        }
+
+        public IEnumerable<RequestedModel> GetAll()
+        {
+            return Repo.GetAll();
+        }
     }
 }

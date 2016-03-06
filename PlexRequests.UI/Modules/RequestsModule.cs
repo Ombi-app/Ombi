@@ -72,31 +72,25 @@ namespace PlexRequests.UI.Modules
 
         private Response GetMovies()
         {
-            // TODO check plex to see the availability
-            var settings = AuthSettings.GetSettings();
-            var plexSettings = PlexSettings.GetSettings();
-            var plex = new PlexApi();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
-            var viewModel = dbMovies.Select(tv => new RequestViewModel
+            var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
-                ProviderId = tv.ProviderId,
-                Type = tv.Type,
-                Status = tv.Status,
-                ImdbId = tv.ImdbId,
-                Id = tv.Id,
-                PosterPath = tv.PosterPath,
-                ReleaseDate = tv.ReleaseDate.Humanize(),
-                RequestedDate = tv.RequestedDate.Humanize(),
-                Approved = tv.Approved,
-                Title = tv.Title,
-                Overview = tv.Overview,
-                RequestedBy = tv.RequestedBy,
-                ReleaseYear = tv.ReleaseDate.Year.ToString()
+                ProviderId = movie.ProviderId,
+                Type = movie.Type,
+                Status = movie.Status,
+                ImdbId = movie.ImdbId,
+                Id = movie.Id,
+                PosterPath = movie.PosterPath,
+                ReleaseDate = movie.ReleaseDate.Humanize(),
+                RequestedDate = movie.RequestedDate.Humanize(),
+                Approved = movie.Approved,
+                Title = movie.Title,
+                Overview = movie.Overview,
+                RequestedBy = movie.RequestedBy,
+                ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                Available = movie.Available
             }).ToList();
 
-
-
-            //TODO check if Available in CP
             return Response.AsJson(viewModel);
         }
 
@@ -117,9 +111,10 @@ namespace PlexRequests.UI.Modules
                 Title = tv.Title,
                 Overview = tv.Overview,
                 RequestedBy = tv.RequestedBy,
-                ReleaseYear = tv.ReleaseDate.Year.ToString()
+                ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                Available = tv.Available
             }).ToList();
-            //TODO check if Available in Sonarr
+
             return Response.AsJson(viewModel);
         }
 
