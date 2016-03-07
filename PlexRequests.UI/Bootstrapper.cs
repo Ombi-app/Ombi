@@ -39,9 +39,14 @@ using Nancy.TinyIoc;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
+
+using IAvailabilityChecker = PlexRequests.UI.Jobs.IAvailabilityChecker;
+using PlexAvailabilityChecker = PlexRequests.UI.Jobs.PlexAvailabilityChecker;
 using TaskFactory = FluentScheduler.TaskFactory;
 
 namespace PlexRequests.UI
@@ -69,12 +74,16 @@ namespace PlexRequests.UI
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IRequestService, RequestService>();
 
+            container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
+            container.Register<IConfigurationReader, ConfigurationReader>();
+            container.Register<IIntervals, UpdateInterval>();
+
             base.ConfigureRequestContainer(container, context);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            TaskManager.TaskFactory = new Jobs.TaskFactory();
+            TaskManager.TaskFactory = new Jobs.PlexTaskFactory();
             TaskManager.Initialize(new PlexRegistry());
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);

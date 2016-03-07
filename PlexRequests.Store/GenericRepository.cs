@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
@@ -88,6 +89,20 @@ namespace PlexRequests.Store
                 db.Open();
                 return db.Update(entity);
             }
+        }
+
+        public bool UpdateAll(IEnumerable<T> entity)
+        {
+            var result = new HashSet<bool>();
+            using (var db = Config.DbConnection())
+            {
+                db.Open();
+                foreach (var e in entity)
+                {
+                    result.Add(db.Update(e));
+                }
+            }
+            return result.All(x => true);
         }
     }
 }

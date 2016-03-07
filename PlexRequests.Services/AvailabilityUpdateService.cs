@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: AvailabilityUpdateService.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,49 +24,50 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System;
+using System.Reactive.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Threading.Tasks;
+using System.Web.Hosting;
 
-namespace PlexRequests.Store
+using FluentScheduler;
+
+using NLog;
+
+using PlexRequests.Services.Interfaces;
+
+namespace PlexRequests.Services
 {
-    public interface IRepository<T>
+    public class AvailabilityUpdateService : ITask, IRegisteredObject
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        public AvailabilityUpdateService(IConfigurationReader reader, IAvailabilityChecker checker)
+        {
+            ConfigurationReader = reader;
+            Checker = checker;
+            HostingEnvironment.RegisterObject(this);
+        }
 
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
+        private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
+        private IConfigurationReader ConfigurationReader { get; }
+        private IAvailabilityChecker Checker { get; }
+        private IDisposable UpdateSubscription { get; set; }
 
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
+        public void Start(Configuration c)
+        {
+            UpdateSubscription?.Dispose();
 
-        /// <summary>
-        /// Updates all.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool UpdateAll(IEnumerable<T> entity);
+            UpdateSubscription = Observable.Interval(c.Intervals.Measurement).Subscribe(Checker.CheckAndUpdateAll);
+        }
+
+        public void Execute()
+        {
+            Start(ConfigurationReader.Read());
+        }
+
+        public void Stop(bool immediate)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

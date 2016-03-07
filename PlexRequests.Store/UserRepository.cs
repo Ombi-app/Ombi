@@ -92,6 +92,11 @@ namespace PlexRequests.Store
                 return db.Update(entity);
             }
         }
+
+        public bool UpdateAll(IEnumerable<T> entity)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
 

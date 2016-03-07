@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestService.cs
+//    File: PlexAvailabilityChecker.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,62 +24,50 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using System.Collections.Generic;
 using System.Linq;
+
+using PlexRequests.Api;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 
-namespace PlexRequests.Core
+namespace PlexRequests.Services
 {
-    public class RequestService : IRequestService
+    public class PlexAvailabilityChecker : IAvailabilityChecker
     {
-        public RequestService(IRepository<RequestedModel> db)
+        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request)
         {
-            Repo = db;
-        }
-    
-        private IRepository<RequestedModel> Repo { get; set; }
-
-        public long AddRequest(int providerId, RequestedModel model)
-        {
-            return Repo.Insert(model);
+            Plex = plexSettings;
+            Auth = auth;
+            RequestService = request;
         }
 
-        public bool CheckRequest(int providerId)
-        {
-            return Repo.GetAll().Any(x => x.ProviderId == providerId);
-        }
+        private ISettingsService<PlexSettings> Plex { get; } 
+        private ISettingsService<AuthenticationSettings> Auth { get; } 
+        private IRequestService RequestService { get; }
 
-        public void DeleteRequest(int tmdbId)
-        {
-            var entity = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
-            Repo.Delete(entity);
-        }
 
-        public void UpdateRequest(int originalId, RequestedModel model)
+        public void CheckAndUpdateAll(long check)
         {
-            model.Id = originalId;
-            Repo.Update(model);
-        }
+            var plexSettings = Plex.GetSettings();
+            var authSettings = Auth.GetSettings();
+            var requests = RequestService.GetAll();
+            var api = new PlexApi();
 
-        /// <summary>
-        /// Updates all the entities. NOTE: we need to Id to be the original entity
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public bool BatchUpdate(List<RequestedModel> model)
-        {
-           return Repo.UpdateAll(model);
-        }
+            var modifiedModel = new List<RequestedModel>();
+            foreach (var r in requests)
+            {
+                var results = api.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
+                var result = results.Video.FirstOrDefault(x => x.Title == r.Title);
+                var originalRequest = RequestService.Get(r.Id);
 
-        public RequestedModel Get(int id)
-        {
-            return Repo.Get(id);
-        }
+                originalRequest.Available = result != null;
+                modifiedModel.Add(originalRequest);
+            }
 
-        public IEnumerable<RequestedModel> GetAll()
-        {
-            return Repo.GetAll();
+           RequestService.BatchUpdate(modifiedModel);
         }
     }
 }

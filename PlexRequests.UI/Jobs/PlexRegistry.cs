@@ -27,13 +27,15 @@
 
 using FluentScheduler;
 
+using PlexRequests.Services;
+
 namespace PlexRequests.UI.Jobs
 {
     public class PlexRegistry : Registry
     {
         public PlexRegistry()
         {
-            Schedule<PlexAvailabilityChecker>().ToRunNow();
+            Schedule<AvailabilityUpdateService>().ToRunNow();
         }
     }
 }

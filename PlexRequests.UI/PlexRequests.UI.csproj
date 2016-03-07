@@ -164,7 +164,7 @@
     <Compile Include="Jobs\IAvailabilityChecker.cs" />
     <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
     <Compile Include="Jobs\PlexRegistry.cs" />
-    <Compile Include="Jobs\TaskFactory.cs" />
+    <Compile Include="Jobs\PlexTaskFactory.cs" />
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
     <Compile Include="Models\SearchTvShowViewModel.cs" />
@@ -296,6 +296,10 @@
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>PlexRequests.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Services\PlexRequests.Services.csproj">
+      <Project>{566EFA49-68F8-4716-9693-A6B3F2624DEA}</Project>
+      <Name>PlexRequests.Services</Name>
     </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
