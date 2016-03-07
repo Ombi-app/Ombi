@@ -44,9 +44,6 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
-
-using IAvailabilityChecker = PlexRequests.UI.Jobs.IAvailabilityChecker;
-using PlexAvailabilityChecker = PlexRequests.UI.Jobs.PlexAvailabilityChecker;
 using TaskFactory = FluentScheduler.TaskFactory;
 
 namespace PlexRequests.UI
@@ -62,7 +59,7 @@ namespace PlexRequests.UI
             container.Register<IUserMapper, UserMapper>();
 
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
-            
+
             container.Register<ISettingsRepository, JsonRepository>();
             container.Register<ICacheProvider, MemoryCacheProvider>();
 
@@ -71,13 +68,11 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
-            container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IRequestService, RequestService>();
 
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
-
             base.ConfigureRequestContainer(container, context);
         }
 

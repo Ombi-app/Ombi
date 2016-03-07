@@ -35,6 +35,7 @@ using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.UI.Jobs;
 using PlexRequests.UI.Models;

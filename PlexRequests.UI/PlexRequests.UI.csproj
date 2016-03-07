@@ -161,8 +161,6 @@
     <Content Include="Content\custom.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Jobs\IAvailabilityChecker.cs" />
-    <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
     <Compile Include="Jobs\PlexRegistry.cs" />
     <Compile Include="Jobs\PlexTaskFactory.cs" />
     <Compile Include="Models\PlexAuth.cs" />

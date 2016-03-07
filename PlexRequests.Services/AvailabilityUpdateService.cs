@@ -32,18 +32,27 @@ using System.Web.Hosting;
 
 using FluentScheduler;
 
+using Mono.Data.Sqlite;
+
 using NLog;
 
+using PlexRequests.Api.Models;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Services
 {
-    public class AvailabilityUpdateService : ITask, IRegisteredObject
+    public class AvailabilityUpdateService : ITask, IRegisteredObject, IAvailabilityUpdateService
     {
-        public AvailabilityUpdateService(IConfigurationReader reader, IAvailabilityChecker checker)
+        public AvailabilityUpdateService()
         {
-            ConfigurationReader = reader;
-            Checker = checker;
+            ConfigurationReader = new ConfigurationReader();
+            var repo = new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new RequestService(new GenericRepository<RequestedModel>(new DbConfiguration(new SqliteFactory())))  );
             HostingEnvironment.RegisterObject(this);
         }
 
@@ -57,7 +66,7 @@ namespace PlexRequests.Services
         {
             UpdateSubscription?.Dispose();
 
-            UpdateSubscription = Observable.Interval(c.Intervals.Measurement).Subscribe(Checker.CheckAndUpdateAll);
+            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(Checker.CheckAndUpdateAll);
         }
 
         public void Execute()
@@ -69,5 +78,10 @@ namespace PlexRequests.Services
         {
             throw new System.NotImplementedException();
         }
+    }
+
+    public interface IAvailabilityUpdateService
+    {
+        void Start(Configuration c);
     }
 }

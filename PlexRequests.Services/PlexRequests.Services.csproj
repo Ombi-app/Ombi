@@ -36,6 +36,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -88,6 +92,10 @@
     <ProjectReference Include="..\PlexRequests.Core\PlexRequests.Core.csproj">
       <Project>{dd7dc444-d3bf-4027-8ab9-efc71f5ec581}</Project>
       <Name>PlexRequests.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>PlexRequests.Helpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
       <Project>{92433867-2b7b-477b-a566-96c382427525}</Project>
