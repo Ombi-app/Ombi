@@ -56,10 +56,18 @@ namespace PlexRequests.Api
 
             if (obj.Count > 0)
             {
-                Log.Trace("CP movie obj[\"success\"] = {0}", obj["success"]);
-                var result = (bool)obj["success"];
-                Log.Trace("CP movie Add result {0}", result);
-                return result;
+                try
+                {
+                    Log.Trace("CP movie obj[\"success\"] = {0}", obj["success"]);
+                    var result = (bool)obj["success"];
+                    Log.Trace("CP movie Add result {0}", result);
+                    return result;
+                }
+                catch (Exception e)
+                {
+                    Log.Fatal(e);
+                    return false;
+                }
             }
             return false;
         }
