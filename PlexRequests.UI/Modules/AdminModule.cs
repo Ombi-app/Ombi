@@ -127,7 +127,7 @@ namespace PlexRequests.UI.Modules
             }
 
             var plex = new PlexApi();
-            var model = plex.GetToken(user.username, user.password);
+            var model = plex.SignIn(user.username, user.password);
 
             if (model.user == null)
             {

@@ -30,6 +30,7 @@ using Nancy;
 using Nancy.Responses.Negotiation;
 
 using PlexRequests.Api;
+using PlexRequests.Api.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
@@ -72,6 +73,15 @@ namespace PlexRequests.UI.Modules
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
 
+                var signedIn = (PlexAuthentication)api.SignIn(username, password);
+                if (signedIn.user?.authentication_token != null)
+                {
+                    var users = api.GetUsers(settings.PlexAuthToken);
+                    if (users.User.Any(x => x.Username == username))
+                    {
+                        authenticated = true;
+                    }
+                }
             }
             else if(settings.UserAuthentication) // Check against the users in Plex
             {

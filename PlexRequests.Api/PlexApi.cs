@@ -41,7 +41,7 @@ namespace PlexRequests.Api
         }
         private static string Version { get; set; }
 
-        public PlexAuthentication GetToken(string username, string password)
+        public PlexAuthentication SignIn(string username, string password)
         {
             var userModel = new PlexUserRequest
             {
