@@ -24,9 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Linq;
+
 using Nancy;
 using Nancy.Responses.Negotiation;
 
+using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
@@ -55,12 +58,40 @@ namespace PlexRequests.UI.Modules
 
         private Response LoginUser()
         {
+            var authenticated = false;
+            var api = new PlexApi();
+            var settings = AuthService.GetSettings();
             var username = Request.Form.username.Value;
+            var password = string.Empty;
+            if (settings.UsePassword)
+            {
+                password = Request.Form.password.Value;
+            }
+
+            
+            if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
+            {
+
+            }
+            else if(settings.UserAuthentication) // Check against the users in Plex
+            {
+                var users = api.GetUsers(settings.PlexAuthToken);
+                if (users.User.Any(x => x.Username == username))
+                {
+                    authenticated = true;
+                }
+            }
+            else if(!settings.UserAuthentication)
+            {
+                authenticated = true;
+            }
+
 
             // Add to the session
             Session[SessionKeys.UsernameKey] = (string)username;
-
-            return Response.AsJson(new { Result = true });
+            return Response.AsJson(authenticated 
+                ? new JsonResponseModel { Result = true } 
+                : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
         }
     }
 }
