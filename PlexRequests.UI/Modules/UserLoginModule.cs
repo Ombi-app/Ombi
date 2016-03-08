@@ -37,10 +37,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    // TODO: Check the settings to see if we need to authenticate
     // TODO: Add ability to logout
-    // TODO: If we need to authenticate we need to check if they are in Plex
-    // TODO: Allow the user of a username only or a Username and password
     public class UserLoginModule : NancyModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth) : base("userlogin")
@@ -72,36 +69,35 @@ namespace PlexRequests.UI.Modules
             
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
-
                 var signedIn = (PlexAuthentication)api.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
-                    var users = api.GetUsers(settings.PlexAuthToken);
-                    if (users.User.Any(x => x.Username == username))
-                    {
-                        authenticated = true;
-                    }
+                    authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
                 }
             }
             else if(settings.UserAuthentication) // Check against the users in Plex
             {
-                var users = api.GetUsers(settings.PlexAuthToken);
-                if (users.User.Any(x => x.Username == username))
-                {
-                    authenticated = true;
-                }
+                authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
             }
-            else if(!settings.UserAuthentication)
+            else if(!settings.UserAuthentication) // No auth, let them pass!
             {
                 authenticated = true;
             }
 
 
-            // Add to the session
+            // Add to the session (Used in the BaseModules)
             Session[SessionKeys.UsernameKey] = (string)username;
+
             return Response.AsJson(authenticated 
                 ? new JsonResponseModel { Result = true } 
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
+        }
+
+        private bool CheckIfUserIsInPlexFriends(string username, string authToken)
+        {
+            var api = new PlexApi();
+            var users = api.GetUsers(authToken);
+            return users.User.Any(x => x.Username == username);
         }
     }
 }
