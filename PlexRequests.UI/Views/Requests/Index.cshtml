@@ -1,6 +1,11 @@
-﻿<div>
+﻿@using Nancy.Security
+<div>
     <h1>Requests</h1>
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
+    @if (Context.CurrentUser.IsAuthenticated())
+    {
+        <button id="approveAll" class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Approve All</button>
+    }
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         @if (Model.SearchForMovies)
@@ -92,11 +97,29 @@
             <div class="col-sm-2 col-sm-push-3">
                 <br />
                 <br />
+                {{#if_eq admin true}}
                 <form method="POST" action="/requests/delete" id="form{{id}}">
                     <input name="Id" type="text" value="{{id}}" hidden="hidden" />
                     <input name="Type" type="text" value="{{type}}" hidden="hidden" />
                     <button id="{{id}}" style="text-align: right" class="btn btn-danger delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
                 </form>
+                {{/if_eq}}
+
+                {{#if_eq admin false}}
+                <div class="dropdown">
+                    <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-plus"></i> Report Issue
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">Wrong Audio</a></li>
+                        <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">No Subtitles</a></li>
+                        <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">Wrong Content</a></li>
+                        <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">Playback Issues</a></li>
+                        <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" href="#" data-toggle="modal" data-target="#myModal">Other</a></li>
+                    </ul>
+                </div>
+                {{/if_eq}}
             </div>
 
         </div>
@@ -104,5 +127,22 @@
     </div>
 </script>
 
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <h4 class="modal-title">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <p>One fine body</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary theSaveButton">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script src="/Content/requests.js" type="text/javascript"></script>

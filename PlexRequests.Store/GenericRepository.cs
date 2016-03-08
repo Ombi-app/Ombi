@@ -30,6 +30,10 @@ using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
+using NLog;
+
+using PlexRequests.Helpers;
+
 namespace PlexRequests.Store
 {
     public class GenericRepository<T> : IRepository<T> where T : Entity
@@ -38,6 +42,8 @@ namespace PlexRequests.Store
         {
             Config = config;
         }
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private ISqliteConfiguration Config { get; set; }
         public long Insert(T entity)
@@ -84,6 +90,8 @@ namespace PlexRequests.Store
 
         public bool Update(T entity)
         {
+            Log.Trace("Updating entity");
+            Log.Trace(entity.DumpJson());
             using (var db = Config.DbConnection())
             {
                 db.Open();
@@ -93,7 +101,9 @@ namespace PlexRequests.Store
 
         public bool UpdateAll(IEnumerable<T> entity)
         {
+            Log.Trace("Updating all entities");
             var result = new HashSet<bool>();
+
             using (var db = Config.DbConnection())
             {
                 db.Open();

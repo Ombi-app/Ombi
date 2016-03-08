@@ -13,6 +13,67 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+$('#approveAll').click(function() {
+    $.ajax({
+        type: 'post',
+        url: '/approval/approveall',
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success!", "success");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+});
+
+
+// Report Issue
+$(document).on("click", ".dropdownIssue", function (e) {
+    var issue = $(this).attr("issue-select");
+    var id = e.target.id;
+    // Other issue so the modal is opening
+    if (issue == 4) {
+        return;
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/requests/reportissue",
+        data: $form.serialize(), // TODO pass in issue enum and Id
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                generateNotify("Success!", "success");
+
+                $("#" + buttonId + "Template").slideUp();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+});
+
+// Modal click
+$('.theSaveButton').click(function() {
+
+});
+
+// Update the modal
+$('#myModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('identifier'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('.theSaveButton').val(id);
+});
+
 $(document).on("click", ".delete", function (e) {
     e.preventDefault();
     var buttonId = e.target.id;
@@ -24,13 +85,11 @@ $(document).on("click", ".delete", function (e) {
         data: $form.serialize(),
         dataType: "json",
         success: function (response) {
-            console.log(response);
-            if (response.result === true) {
+
+            if (checkJsonResponse(response)) {
                 generateNotify("Success!", "success");
 
                 $("#" + buttonId + "Template").slideUp();
-            } else {
-                generateNotify(response.message, "warning");
             }
         },
         error: function (e) {
@@ -81,7 +140,8 @@ function buildRequestContext(result, type) {
         approved: result.approved,
         requestedBy: result.requestedBy,
         requestedDate: result.requestedDate,
-        available: result.available
+        available: result.available,
+        admin: result.admin
     };
 
     return context;

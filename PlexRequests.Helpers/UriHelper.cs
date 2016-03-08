@@ -1,5 +1,7 @@
 ﻿using System;
 
+using PlexRequests.Helpers.Exceptions;
+
 namespace PlexRequests.Helpers
 {
     public static class UriHelper
@@ -7,6 +9,10 @@ namespace PlexRequests.Helpers
 
         public static Uri ReturnUri(this string val)
         {
+            if (val == null)
+            {
+                throw new ApplicationSettingsException("The URI is null, please check your settings to make sure you have configured the applications correctly.");
+            }
             try
             {
                 var uri = new UriBuilder();
@@ -53,6 +59,10 @@ namespace PlexRequests.Helpers
         /// <exception cref="System.Exception"></exception>
         public static Uri ReturnUri(this string val, int port)
         {
+            if (val == null)
+            {
+                throw new ApplicationSettingsException("The URI is null, please check your settings to make sure you have configured the applications correctly.");
+            }
             try
             {
                 var uri = new UriBuilder();
@@ -65,7 +75,7 @@ namespace PlexRequests.Helpers
                         uri = new UriBuilder(Uri.UriSchemeHttp, split[2], port, "/" + split[3]);
                     }
                     else
-                        uri = new UriBuilder(new Uri(string.Format("{0}:{1}", val, port)));
+                        uri = new UriBuilder(new Uri($"{val}:{port}"));
                 }
                 else if (val.StartsWith("https://", StringComparison.Ordinal))
                 {

@@ -32,6 +32,8 @@ using Humanizer;
 
 using Nancy;
 using Nancy.Responses.Negotiation;
+using Nancy.Security;
+
 using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -67,11 +69,12 @@ namespace PlexRequests.UI.Modules
         private Negotiator LoadRequests()
         {
             var settings = PrSettings.GetSettings();
-            return View["Requests/Index", settings];
+            return View["Index", settings];
         }
 
         private Response GetMovies()
         {
+            var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
@@ -88,7 +91,8 @@ namespace PlexRequests.UI.Modules
                 Overview = movie.Overview,
                 RequestedBy = movie.RequestedBy,
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available
+                Available = movie.Available,
+                Admin = isAdmin
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -96,6 +100,7 @@ namespace PlexRequests.UI.Modules
 
         private Response GetTvShows()
         {
+            var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
@@ -112,7 +117,8 @@ namespace PlexRequests.UI.Modules
                 Overview = tv.Overview,
                 RequestedBy = tv.RequestedBy,
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                Available = tv.Available
+                Available = tv.Available,
+                Admin = isAdmin
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -120,9 +126,13 @@ namespace PlexRequests.UI.Modules
 
         private Response DeleteRequest(int providerId, RequestType type)
         {
-            var currentEntity = Service.GetAll().FirstOrDefault(x => x.ProviderId == providerId && x.Type == type);
-            Service.Delete(currentEntity);
-            return Response.AsJson(new { Result = true });
+            if (Context.CurrentUser.IsAuthenticated())
+            {
+                var currentEntity = Service.GetAll().FirstOrDefault(x => x.ProviderId == providerId && x.Type == type);
+                Service.Delete(currentEntity);
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+            return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot delete any requests." });
         }
     }
 }

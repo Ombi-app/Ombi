@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	Type								INTEGER NOT NULL,
     ProviderId							INTEGER NOT NULL,
 	ImdbId								varchar(50),
-	Overview							varchar(50) NOT NULL,
+	Overview							varchar(50),
 	Title								varchar(50) NOT NULL,
 	PosterPath							varchar(50) NOT NULL,
 	ReleaseDate							varchar(50) NOT NULL,
@@ -30,7 +30,9 @@ CREATE TABLE IF NOT EXISTS Requested
 	Approved							INTEGER NOT NULL,
 	RequestedBy							varchar(50),
 	RequestedDate						varchar(50) NOT NULL,
-	Available							INTEGER(50)
+	Available							INTEGER(50),
+	Issues								INTEGER,
+	OtherMessage						varchar(50)
 
 );
 

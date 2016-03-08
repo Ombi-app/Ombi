@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestViewModel.cs
+//    File: JsonResponseModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
-
 namespace PlexRequests.UI.Models
 {
-    public class RequestViewModel
+    public class JsonResponseModel
     {
-        public int Id { get; set; }
-        public int ProviderId { get; set; }
-        public string ImdbId { get; set; }
-        public string Overview { get; set; }
-        public string Title { get; set; }
-        public string PosterPath { get; set; }
-        public string ReleaseDate { get; set; }
-        public RequestType Type { get; set; }
-        public string Status { get; set; }
-        public bool Approved { get; set; }
-        public string RequestedBy { get; set; }
-        public string RequestedDate { get; set; }
-        public string ReleaseYear { get; set; }
-        public bool Available { get; set; }
-        public bool Admin { get; set; }
+        public bool Result { get; set; }
+        public string Message { get; set; } 
     }
 }

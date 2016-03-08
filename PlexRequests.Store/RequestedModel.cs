@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography;
 
 using Dapper.Contrib.Extensions;
 
@@ -20,12 +21,22 @@ namespace PlexRequests.Store
         public string RequestedBy { get; set; }
         public DateTime RequestedDate { get; set; }
         public bool Available { get; set; }
-
+        public IssueState Issues { get; set; }
+        public string OtherMessage { get; set; }
     }
 
     public enum RequestType
     {
         Movie,
         TvShow
+    }
+
+    public enum IssueState
+    {
+        WrongAudio,
+        NoSubtitles,
+        WrongContent,
+        PlaybackIssues,
+        Other    
     }
 }

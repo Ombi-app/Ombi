@@ -163,6 +163,7 @@
     </Content>
     <Compile Include="Jobs\PlexRegistry.cs" />
     <Compile Include="Jobs\PlexTaskFactory.cs" />
+    <Compile Include="Models\JsonResponseModel.cs" />
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
     <Compile Include="Models\SearchTvShowViewModel.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
+    <Compile Include="Modules\ApprovalModule.cs" />
     <Compile Include="Modules\UserLoginModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\RequestsModule.cs" />
@@ -217,9 +219,6 @@
     <None Include="sqlite3.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\Index.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -27,6 +27,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using NLog;
+
 using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -44,9 +46,10 @@ namespace PlexRequests.Services
             RequestService = request;
         }
 
-        private ISettingsService<PlexSettings> Plex { get; } 
-        private ISettingsService<AuthenticationSettings> Auth { get; } 
+        private ISettingsService<PlexSettings> Plex { get; }
+        private ISettingsService<AuthenticationSettings> Auth { get; }
         private IRequestService RequestService { get; }
+        private static Logger Log = LogManager.GetCurrentClassLogger();
 
 
         public void CheckAndUpdateAll(long check)
@@ -54,6 +57,18 @@ namespace PlexRequests.Services
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
             var requests = RequestService.GetAll();
+
+            if (plexSettings.Ip == null || authSettings.PlexAuthToken == null || requests == null)
+            {
+                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                return;
+            }
+            if (!requests.Any())
+            {
+                Log.Info("We have no requests to check if they are available on Plex.");
+                return;
+            }
+
             var api = new PlexApi();
 
             var modifiedModel = new List<RequestedModel>();
@@ -67,7 +82,7 @@ namespace PlexRequests.Services
                 modifiedModel.Add(originalRequest);
             }
 
-           RequestService.BatchUpdate(modifiedModel);
+            RequestService.BatchUpdate(modifiedModel);
         }
     }
 }

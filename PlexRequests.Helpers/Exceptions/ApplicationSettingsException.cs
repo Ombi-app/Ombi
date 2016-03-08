@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestViewModel.cs
+//    File: ApplicationSettingsException.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,25 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
+using System;
 
-namespace PlexRequests.UI.Models
+namespace PlexRequests.Helpers.Exceptions
 {
-    public class RequestViewModel
+    public class ApplicationSettingsException : Exception
     {
-        public int Id { get; set; }
-        public int ProviderId { get; set; }
-        public string ImdbId { get; set; }
-        public string Overview { get; set; }
-        public string Title { get; set; }
-        public string PosterPath { get; set; }
-        public string ReleaseDate { get; set; }
-        public RequestType Type { get; set; }
-        public string Status { get; set; }
-        public bool Approved { get; set; }
-        public string RequestedBy { get; set; }
-        public string RequestedDate { get; set; }
-        public string ReleaseYear { get; set; }
-        public bool Available { get; set; }
-        public bool Admin { get; set; }
+
+        public ApplicationSettingsException(string message) : base(message)
+        {
+            
+        }
+        public ApplicationSettingsException(string message, Exception innerException) : base(message, innerException)
+        {
+
+        }
+
+        public ApplicationSettingsException()
+        {
+            
+        }
     }
 }

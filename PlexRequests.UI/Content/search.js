@@ -10,14 +10,14 @@ var searchTemplate = Handlebars.compile(searchSource);
 var movieTimer = 0;
 var tvimer = 0;
 
-$("#movieSearchContent").keypress(function (e) {
+$("#movieSearchContent").keypress(function () {
     if (movieTimer) {
         clearTimeout(movieTimer);
     }
     movieTimer = setTimeout(movieSearch, 400);
 });
 
-$("#tvSearchContent").keypress(function (e) {
+$("#tvSearchContent").keypress(function () {
     if (tvimer) {
         clearTimeout(tvimer);
     }
@@ -26,12 +26,17 @@ $("#tvSearchContent").keypress(function (e) {
 
 // Click TV dropdown option
 $(document).on("click", ".dropdownTv", function (e) {
-    e.preventDefault();
     var buttonId = e.target.id;
+    $("#" + buttonId).prop("disabled", true);
+
+    e.preventDefault();
+
+
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
     var seasons = $(this).attr("season-select");
     if (seasons === "1") {
+        // Send over the latest
         data = data + "&latest=true";
     }
 
@@ -39,14 +44,16 @@ $(document).on("click", ".dropdownTv", function (e) {
     var url = $form.prop('action');
 
     sendRequestAjax(data, type, url, buttonId);
+    $("#" + buttonId).prop("disabled", false);
 });
 
 // Click Request for movie
 $(document).on("click", ".requestMovie", function (e) {
-    $(".requestMovie").prop("disabled", true);
+    var buttonId = e.target.id;
+    $("#" + buttonId).prop("disabled", true);
+
     e.preventDefault();
 
-    var buttonId = e.target.id;
     var $form = $('#form' + buttonId);
 
     var type = $form.prop('method');
@@ -54,6 +61,7 @@ $(document).on("click", ".requestMovie", function (e) {
     var data = $form.serialize();
 
     sendRequestAjax(data, type, url, buttonId);
+     $("#" + buttonId).prop("disabled", false);
 });
 
 function sendRequestAjax(data, type, url, buttonId) {
@@ -113,3 +121,34 @@ function tvSearch() {
     });
 };
 
+
+function buildMovieContext(result) {
+    var date = new Date(result.releaseDate);
+    var year = date.getFullYear();
+    var context = {
+        posterPath: result.posterPath,
+        id: result.id,
+        title: result.title,
+        overview: result.overview,
+        voteCount: result.voteCount,
+        voteAverage: result.voteAverage,
+        year: year,
+        type: "movie"
+    };
+
+    return context;
+}
+
+function buildTvShowContext(result) {
+    var date = new Date(result.firstAired);
+    var year = date.getFullYear();
+    var context = {
+        posterPath: result.banner,
+        id: result.id,
+        title: result.seriesName,
+        overview: result.overview,
+        year: year,
+        type: "tv"
+    };
+    return context;
+}
