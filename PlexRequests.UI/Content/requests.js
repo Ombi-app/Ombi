@@ -20,7 +20,7 @@ $('#approveAll').click(function () {
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
-                generateNotify("Success!", "success");
+                generateNotify("Success! All requests approved!", "success");
             }
         },
         error: function (e) {
@@ -52,7 +52,7 @@ $(document).on("click", ".dropdownIssue", function (e) {
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
-                generateNotify("Success!", "success");
+                generateNotify("Success! Added Issue.", "success");
             }
         },
         error: function (e) {
@@ -66,7 +66,7 @@ $(document).on("click", ".dropdownIssue", function (e) {
 $(".theSaveButton").click(function (e) {
     var comment = $("#commentArea").val();
     e.preventDefault();
-    var id = e.target.value;
+
     var $form = $("#commentForm");
     var data = $form.serialize();
     data = data + "&issue=" + 4 + "&comment=" + comment;
@@ -78,7 +78,7 @@ $(".theSaveButton").click(function (e) {
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
-                generateNotify("Success!", "success");
+                generateNotify("Success! Added Issue.", "success");
                 $("#myModal").modal("hide");
             }
         },
@@ -100,6 +100,7 @@ $('#myModal').on('show.bs.modal', function (event) {
     requestField.val(id);  // Add ID to the hidden field
 });
 
+// Delete
 $(document).on("click", ".delete", function (e) {
     e.preventDefault();
     var buttonId = e.target.id;
@@ -113,9 +114,35 @@ $(document).on("click", ".delete", function (e) {
         success: function (response) {
 
             if (checkJsonResponse(response)) {
-                generateNotify("Success!", "success");
+                generateNotify("Success! Request Deleted.", "success");
 
                 $("#" + buttonId + "Template").slideUp();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
+});
+
+// Clear issues
+$(document).on("click", ".clear", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var $form = $('#clear' + buttonId);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: $form.serialize(),
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! Issues Cleared.", "info");
+                $('#issueArea').html("<p>Issue: None</p>");
             }
         },
         error: function (e) {

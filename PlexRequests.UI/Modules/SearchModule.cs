@@ -184,7 +184,8 @@ namespace PlexRequests.UI.Modules
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString()
+                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                Issues = IssueState.None,
             };
 
 
@@ -255,7 +256,8 @@ namespace PlexRequests.UI.Modules
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString()
+                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                Issues = IssueState.None
             };
 
             RequestService.AddRequest(showId, model);

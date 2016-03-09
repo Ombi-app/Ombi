@@ -33,10 +33,11 @@ namespace PlexRequests.Store
 
     public enum IssueState
     {
-        WrongAudio,
-        NoSubtitles,
-        WrongContent,
-        PlaybackIssues,
-        Other    
+        None = 99,
+        WrongAudio = 0,
+        NoSubtitles = 1,
+        WrongContent = 2,
+        PlaybackIssues = 3,
+        Other = 4 // Provide a message    
     }
 }

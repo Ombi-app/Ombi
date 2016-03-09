@@ -59,6 +59,8 @@ namespace PlexRequests.UI.Modules
             Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
 
+            Post["/clearissues"] = _ => ClearIssue((int)Request.Form.requestId);
+
         }
         private IRepository<RequestedModel> Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
@@ -162,6 +164,27 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
+        }
+
+        private Response ClearIssue(int requestId)
+        {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot clear any issues." });
+            }
+
+            var originalRequest = Service.Get(requestId);
+            if (originalRequest == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to clear it!" });
+            }
+            originalRequest.Issues = IssueState.None;
+            originalRequest.OtherMessage = string.Empty;
+
+            var result = Service.Update(originalRequest);
+            return Response.AsJson(result 
+                                       ? new JsonResponseModel { Result = true } 
+                                       : new JsonResponseModel { Result = false, Message = "Could not clear issue, please try again or check the logs" });
         }
     }
 }

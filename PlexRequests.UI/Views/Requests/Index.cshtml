@@ -93,12 +93,13 @@
                 </p>
                 <p>Requested By: {{requestedBy}}</p>
                 <p>Requested Date: {{requestedDate}}</p>
-                {{#if otherMessage}}
-                <p>Message: {{otherMessage}}</p>
-                {{else}}
-                <p>Issue: {{issues}}</p>
-                {{/if}}
-
+                <div id="issueArea">
+                    {{#if otherMessage}}
+                    <p>Message: {{otherMessage}}</p>
+                    {{else}}
+                    <p>Issue: {{issues}}</p>
+                    {{/if}}
+                </div>
             </div>
             <div class="col-sm-2 col-sm-push-3">
                 <br />
@@ -107,6 +108,11 @@
                 <form method="POST" action="/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-danger delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
+                </form>
+                
+                <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
+                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
+                    <button id="{{requestId}}" style="text-align: right" class="btn btn-info clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
                 {{/if_eq}}
 
