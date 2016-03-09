@@ -1,4 +1,6 @@
 ﻿@using Nancy.Security
+@using Nancy.Session
+@using PlexRequests.UI.Models
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
 <html>
 <head>
@@ -42,13 +44,16 @@
                 <ul class="nav navbar-nav navbar-right">
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><a href="/login">Login</a></li>
+                        <li><a href="/login">Admin</a></li>
                     }
                     else
                     {
-                        <li><a href="/logout">Logout</a></li>
+                        <li><a href="/logout">Admin Logout</a></li>
                     }
-
+                    @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
+                    {
+                        <li><a href="/userlogin/logout">Logout</a></li>
+                    }
                 </ul>
             </div>
         </div>

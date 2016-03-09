@@ -27,6 +27,7 @@
 using System.Linq;
 
 using Nancy;
+using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 
 using PlexRequests.Api.Interfaces;
@@ -46,6 +47,7 @@ namespace PlexRequests.UI.Modules
             Api = api;
             Get["/"] = _ => Index();
             Post["/"] = x => LoginUser();
+            Get["/logout"] = x => Logout();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
@@ -102,6 +104,15 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(authenticated 
                 ? new JsonResponseModel { Result = true } 
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
+        }
+
+        private Response Logout()
+        {
+            if (Session[SessionKeys.UsernameKey] != null)
+            {
+                Session.Delete(SessionKeys.UsernameKey);
+            }
+            return Context.GetRedirect("~/userlogin");
         }
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)

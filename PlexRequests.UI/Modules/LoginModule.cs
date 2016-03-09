@@ -32,10 +32,11 @@ using Nancy.Authentication.Forms;
 using Nancy.Extensions;
 
 using PlexRequests.Core;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class LoginModule : BaseModule
+    public class LoginModule : NancyModule
     {
         public LoginModule()
         {
@@ -54,17 +55,21 @@ namespace PlexRequests.UI.Modules
 
             Post["/login"] = x =>
             {
-                var userId = UserMapper.ValidateUser((string)Request.Form.Username, (string)Request.Form.Password);
+                var username = (string)Request.Form.Username;
+                var password = (string)Request.Form.Password;
+
+                var userId = UserMapper.ValidateUser(username, password);
 
                 if (userId == null)
                 {
-                    return Context.GetRedirect("~/login?error=true&username=" + (string)Request.Form.Username);
+                    return Context.GetRedirect("~/login?error=true&username=" + username);
                 }
                 DateTime? expiry = null;
                 if (Request.Form.RememberMe.HasValue)
                 {
                     expiry = DateTime.Now.AddDays(7);
                 }
+                Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 

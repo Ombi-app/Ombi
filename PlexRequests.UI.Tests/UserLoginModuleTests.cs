@@ -330,5 +330,29 @@ namespace PlexRequests.UI.Tests
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
+
+        [Test]
+        public void Logout()
+        {
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object> { {SessionKeys.UsernameKey, "abc"} });
+
+            var browser = new Browser(bootstrapper);
+            var result = browser.Get("/userlogin/logout", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+            });
+
+            Assert.That(HttpStatusCode.SeeOther, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.Null);
+        }
     }
 }
