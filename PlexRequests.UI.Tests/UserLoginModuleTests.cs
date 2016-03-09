@@ -36,6 +36,8 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models;
+using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
@@ -87,6 +89,206 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
+
+        }
+
+        [Test]
+        public void LoginWithUsernameSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+            {
+                new UserFriends
+                {
+                    Username = "abc",
+                },
+            }
+            };
+
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            // When
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "abc");
+            });
+
+            // Then
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(true));
+
+        }
+
+        [Test]
+        public void LoginWithUsernameUnSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+            {
+                new UserFriends
+                {
+                    Username = "aaaa",
+                },
+            }
+            };
+
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "abc");
+            });
+
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(false));
+            Assert.That(body.Message, Is.Not.Empty);
+        }
+
+        [Test]
+        public void LoginWithUsernameAndPasswordSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, UsePassword = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+            {
+                new UserFriends
+                {
+                    Username = "abc",
+                },
+            }
+            };
+            var plexAuth = new PlexAuthentication
+            {
+                user = new User
+                {
+                    authentication_token = "abc"
+                }
+            };
+
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            // When
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "abc");
+                with.FormValue("Password", "abc");
+            });
+
+            // Then
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(true));
+
+        }
+
+        [Test]
+        public void LoginWithUsernameAndPasswordUnSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, UsePassword = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+            {
+                new UserFriends
+                {
+                    Username = "abc",
+                },
+            }
+            };
+            var plexAuth = new PlexAuthentication
+            {
+                user = null
+            };
+
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            // When
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "abc");
+                with.FormValue("Password", "abc");
+            });
+
+            // Then
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(false));
+            Assert.That(body.Message, Is.Not.Empty);
 
         }
     }
