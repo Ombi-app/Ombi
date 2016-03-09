@@ -282,6 +282,14 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
+      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
+      <Name>PlexRequests.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>PlexRequests.Api.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Api\PlexRequests.Api.csproj">
       <Project>{8cb8d235-2674-442d-9c6a-35fcaeeb160d}</Project>
       <Name>PlexRequests.Api</Name>

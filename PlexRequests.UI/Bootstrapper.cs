@@ -36,6 +36,8 @@ using Nancy.Diagnostics;
 using Nancy.Session;
 using Nancy.TinyIoc;
 
+using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -73,6 +75,9 @@ namespace PlexRequests.UI
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
+
+
+            container.Register<IPlexApi, PlexApi>();
             base.ConfigureRequestContainer(container, context);
         }
 

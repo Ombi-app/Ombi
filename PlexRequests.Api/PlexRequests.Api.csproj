@@ -67,16 +67,6 @@
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
     <Compile Include="CouchPotatoApi.cs" />
-    <Compile Include="Models\Movie\CouchPotatoAdd.cs" />
-    <Compile Include="Models\PlexAuthentication.cs" />
-    <Compile Include="Models\PlexError.cs" />
-    <Compile Include="Models\PlexFriends.cs" />
-    <Compile Include="Models\PlexSearch.cs" />
-    <Compile Include="Models\PlexUserRequest.cs" />
-    <Compile Include="Models\Tv\Authentication.cs" />
-    <Compile Include="Models\Tv\TvSearchResult.cs" />
-    <Compile Include="Models\Tv\TvShow.cs" />
-    <Compile Include="Models\Tv\TvShowImages.cs" />
     <Compile Include="MovieBase.cs" />
     <Compile Include="PlexApi.cs" />
     <Compile Include="TheMovieDbApi.cs" />
@@ -92,6 +82,10 @@
     <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
       <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
       <Name>PlexRequests.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>PlexRequests.Api.Models</Name>
     </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>

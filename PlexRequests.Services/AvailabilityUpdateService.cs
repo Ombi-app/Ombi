@@ -36,7 +36,6 @@ using Mono.Data.Sqlite;
 
 using NLog;
 
-using PlexRequests.Api.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;

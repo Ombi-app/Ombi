@@ -26,6 +26,7 @@
 #endregion
 using System;
 
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
 using PlexRequests.Helpers;
 
@@ -33,13 +34,13 @@ using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class PlexApi
+    public class PlexApi : IPlexApi
     {
         static PlexApi()
         {
             Version = AssemblyHelper.GetAssemblyVersion();
         }
-        private static string Version { get; set; }
+        private static string Version { get; }
 
         public PlexAuthentication SignIn(string username, string password)
         {

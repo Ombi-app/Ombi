@@ -29,7 +29,7 @@ using System.Linq;
 using Nancy;
 using Nancy.Responses.Negotiation;
 
-using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -40,24 +40,27 @@ namespace PlexRequests.UI.Modules
     // TODO: Add ability to logout
     public class UserLoginModule : NancyModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth) : base("userlogin")
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api) : base("userlogin")
         {
             AuthService = auth;
+            Api = api;
             Get["/"] = _ => Index();
             Post["/"] = x => LoginUser();
         }
+
+        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
+        private IPlexApi Api { get; set; }
 
         public Negotiator Index()
         {
             var settings = AuthService.GetSettings();
             return View["Index", settings];
         }
-        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
 
         private Response LoginUser()
         {
             var authenticated = false;
-            var api = new PlexApi();
+
             var settings = AuthService.GetSettings();
             var username = Request.Form.username.Value;
             var password = string.Empty;
@@ -69,7 +72,7 @@ namespace PlexRequests.UI.Modules
             
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
-                var signedIn = (PlexAuthentication)api.SignIn(username, password);
+                var signedIn = (PlexAuthentication)Api.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
                     authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
@@ -95,8 +98,7 @@ namespace PlexRequests.UI.Modules
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
-            var api = new PlexApi();
-            var users = api.GetUsers(authToken);
+            var users = Api.GetUsers(authToken);
             return users.User.Any(x => x.Username == username);
         }
     }
