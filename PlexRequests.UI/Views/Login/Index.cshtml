@@ -7,9 +7,10 @@
     <br/>
     <input class="btn btn-success" type="submit" value="Login"/>
 </form>
-
-If you have not yet created an Admin account you can do here: <a href="/register">Register</a>
-
+@if (!Model.AdminExists)
+{
+    <div>If you have not yet created an Admin account you can do here: <a href="/register">Register</a></div>
+}
 @if (Model.Errored)
 {
     <div class="alert alert-dismissible alert-danger">

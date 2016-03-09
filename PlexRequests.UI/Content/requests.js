@@ -41,10 +41,10 @@ $(document).on("click", ".dropdownIssue", function (e) {
     }
     e.preventDefault();
 
-    var $form = $('#form' + id);
+    var $form = $('#report' + id);
     var data = $form.serialize();
     data = data + "&issue=" + issue;
-    
+
     $.ajax({
         type: $form.prop('method'),
         url: $form.prop('action'),
@@ -63,13 +63,13 @@ $(document).on("click", ".dropdownIssue", function (e) {
 });
 
 // Modal click
-$(".theSaveButton").click(function () {
+$(".theSaveButton").click(function (e) {
     var comment = $("#commentArea").val();
     e.preventDefault();
-
-    var $form = $("#form" + id);
+    var id = e.target.value;
+    var $form = $("#commentForm");
     var data = $form.serialize();
-    data = data + "&issue=" + 4 + "&comment="+comment;
+    data = data + "&issue=" + 4 + "&comment=" + comment;
 
     $.ajax({
         type: $form.prop("method"),
@@ -96,13 +96,14 @@ $('#myModal').on('show.bs.modal', function (event) {
 
     var modal = $(this);
     modal.find('.theSaveButton').val(id); // Add ID to the button
-    modal.find('#requestId').val(id); // Add ID to the hidden field
+    var requestField = modal.find('input');
+    requestField.val(id);  // Add ID to the hidden field
 });
 
 $(document).on("click", ".delete", function (e) {
     e.preventDefault();
     var buttonId = e.target.id;
-    var $form = $('#form' + buttonId);
+    var $form = $('#delete' + buttonId);
 
     $.ajax({
         type: $form.prop('method'),
@@ -168,7 +169,8 @@ function buildRequestContext(result, type) {
         available: result.available,
         admin: result.admin,
         issues: result.issues,
-        otherMessage: result.otherMessage
+        otherMessage: result.otherMessage,
+        requestId: result.id
     };
 
     return context;

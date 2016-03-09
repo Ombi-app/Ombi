@@ -45,7 +45,8 @@ namespace PlexRequests.UI.Modules
                 {
                     dynamic model = new ExpandoObject();
                     model.Errored = Request.Query.error.HasValue;
-
+                    var adminCreated = UserMapper.DoUsersExist();
+                    model.AdminExists = adminCreated;
                     return View["Login/Index", model];
                 }
                 

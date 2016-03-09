@@ -55,13 +55,9 @@ namespace PlexRequests.UI.Modules
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
             Get["/tvshows"] = _ => GetTvShows();
-            Post["/delete"] = _ =>
-            {
-                var convertedType = (string)Request.Form.type == "movie" ? RequestType.Movie : RequestType.TvShow;
-                return DeleteRequest((int)Request.Form.id, convertedType);
-            };
-            Get["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)Request.Form.issue, null);
-            Get["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
+            Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
+            Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
+            Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
 
         }
         private IRepository<RequestedModel> Service { get; }
@@ -96,7 +92,7 @@ namespace PlexRequests.UI.Modules
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
                 Admin = isAdmin,
-                Issues = movie.Issues,
+                Issues = movie.Issues.Humanize(LetterCasing.Title),
                 OtherMessage = movie.OtherMessage
             }).ToList();
 
@@ -124,18 +120,18 @@ namespace PlexRequests.UI.Modules
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
                 Available = tv.Available,
                 Admin = isAdmin,
-                Issues = tv.Issues,
+                Issues = tv.Issues.Humanize(LetterCasing.Title),
                 OtherMessage = tv.OtherMessage
             }).ToList();
 
             return Response.AsJson(viewModel);
         }
 
-        private Response DeleteRequest(int providerId, RequestType type)
+        private Response DeleteRequest(int requestid)
         {
             if (Context.CurrentUser.IsAuthenticated())
             {
-                var currentEntity = Service.GetAll().FirstOrDefault(x => x.ProviderId == providerId && x.Type == type);
+                var currentEntity = Service.Get(requestid);
                 Service.Delete(currentEntity);
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
@@ -152,8 +148,20 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response ReportIssue(int requestId, IssueState issue, string comment)
         {
-            
-            return Response.AsJson(new JsonResponseModel());
+            var originalRequest = Service.Get(requestId);
+            if (originalRequest == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
+            }
+            originalRequest.Issues = issue;
+            originalRequest.OtherMessage = comment;
+
+            var result = Service.Update(originalRequest);
+            if (result)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
         }
     }
 }

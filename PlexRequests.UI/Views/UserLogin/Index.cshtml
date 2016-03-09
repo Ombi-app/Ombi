@@ -6,24 +6,28 @@
     </label>
 </div>
 <form method="POST" id="loginForm">
-    <div class="col-md-2">
-        <label style="padding-top: 8px"> Username </label>
+    <div class="row">
+        <div class="col-md-2">
+            <label style="padding-top: 8px"> Username </label>
+        </div>
+        <div class="col-md-5">
+            <input class="form-control form-control-custom col-md-5" type="text" name="Username" />
+        </div>
     </div>
-    <div class="col-md-5">
-        <input class="form-control form-control-custom col-md-5" type="text" name="Username"/>
-    </div>
-        <br />
-        @if (Model.UsePassword)
-        {
+    <br />
+    @if (Model.UsePassword)
+    {
+        <div class="row">
             <div class="col-md-2">
                 <label style="padding-top: 8px"> Password </label>
             </div>
             <div class="col-md-5">
                 <input class="form-control form-control-custom col-md-5" name="Password" type="password" />
             </div>
-        }
-        <br />
-        <input id="loginBtn" class="btn btn-success" type="submit" value="Login" />
+        </div>
+    }
+    <br />
+    <input id="loginBtn" class="btn btn-success" type="submit" value="Login" />
 </form>
 
 
