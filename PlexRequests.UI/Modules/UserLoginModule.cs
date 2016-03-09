@@ -48,8 +48,8 @@ namespace PlexRequests.UI.Modules
             Post["/"] = x => LoginUser();
         }
 
-        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
-        private IPlexApi Api { get; set; }
+        private ISettingsService<AuthenticationSettings> AuthService { get; }
+        private IPlexApi Api { get; }
 
         public Negotiator Index()
         {
