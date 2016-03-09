@@ -85,6 +85,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
+      <Project>{95834072-a675-415d-aa8f-877c91623810}</Project>
+      <Name>PlexRequests.Api.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
       <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
       <Name>PlexRequests.Api.Models</Name>
