@@ -156,7 +156,10 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
             }
             originalRequest.Issues = issue;
-            originalRequest.OtherMessage = comment;
+            originalRequest.OtherMessage = string.IsNullOrEmpty(comment) 
+                ? $"{Session[SessionKeys.UsernameKey]} - {comment}" 
+                : string.Empty;
+
 
             var result = Service.Update(originalRequest);
             if (result)
