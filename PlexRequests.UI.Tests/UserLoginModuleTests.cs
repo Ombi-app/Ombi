@@ -176,7 +176,7 @@ namespace PlexRequests.UI.Tests
 
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.Null);
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
@@ -286,13 +286,48 @@ namespace PlexRequests.UI.Tests
 
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.Null);
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
             Assert.That(body.Message, Is.Not.Empty);
             AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void AttemptToLoginAsDeniedUser()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = false, DeniedUsers = "abc", PlexAuthToken = "abc" };
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "abc");
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.Null);
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(false));
+            Assert.That(body.Message, Is.Not.Empty);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
+            PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
     }

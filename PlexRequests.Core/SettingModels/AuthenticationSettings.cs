@@ -49,6 +49,11 @@ namespace PlexRequests.Core.SettingModels
             get
             {
                 var users = new List<string>();
+                if (string.IsNullOrEmpty(DeniedUsers))
+                {
+                    return users;
+                }
+
                 var splitUsers = DeniedUsers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var user in splitUsers)
                 {

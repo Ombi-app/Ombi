@@ -63,6 +63,12 @@ namespace PlexRequests.UI.Modules
 
             var settings = AuthService.GetSettings();
             var username = Request.Form.username.Value;
+
+            if (IsUserInDeniedList(username, settings))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+            }
+
             var password = string.Empty;
             if (settings.UsePassword)
             {
@@ -87,9 +93,11 @@ namespace PlexRequests.UI.Modules
                 authenticated = true;
             }
 
-
-            // Add to the session (Used in the BaseModules)
-            Session[SessionKeys.UsernameKey] = (string)username;
+            if (authenticated)
+            {
+                // Add to the session (Used in the BaseModules)
+                Session[SessionKeys.UsernameKey] = (string)username;
+            }
 
             return Response.AsJson(authenticated 
                 ? new JsonResponseModel { Result = true } 
@@ -100,6 +108,11 @@ namespace PlexRequests.UI.Modules
         {
             var users = Api.GetUsers(authToken);
             return users.User.Any(x => x.Username == username);
+        }
+
+        private bool IsUserInDeniedList(string username, AuthenticationSettings settings)
+        {
+            return settings.DeniedUserList.Any(x => x.Equals(username));
         }
     }
 }

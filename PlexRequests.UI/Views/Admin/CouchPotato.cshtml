@@ -16,22 +16,6 @@
             <legend>CouchPotato Settings</legend>
 
             <div class="form-group">
-                <label for="Enabled" class="col-lg-2 control-label">Enable CouchPotato</label>
-                <div class="col-lg-10 checkbox">
-                    <label>
-                        @if (Model.Enabled)
-                        {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked">
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="Enabled" name="Enabled">
-                        }
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-group">
                 <label for="Ip" class="col-lg-2 control-label">CouchPotato Hostname or IP</label>
                 <div class="col-lg-10">
                     <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" value="@Model.Ip">

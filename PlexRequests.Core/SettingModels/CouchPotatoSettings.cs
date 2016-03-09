@@ -36,7 +36,6 @@ namespace PlexRequests.Core.SettingModels
         public string Ip { get; set; }
         public int Port { get; set; }
         public string ApiKey { get; set; }
-        public bool Enabled { get; set; }
 
         [JsonIgnore]
         public Uri FullUri
