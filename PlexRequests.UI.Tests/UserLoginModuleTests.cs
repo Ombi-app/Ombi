@@ -98,12 +98,12 @@ namespace PlexRequests.UI.Tests
             var plexFriends = new PlexFriends
             {
                 User = new[]
-            {
-                new UserFriends
                 {
-                    Username = "abc",
-                },
-            }
+                    new UserFriends
+                    {
+                        Username = "abc",
+                    },
+                }
             };
 
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
@@ -144,12 +144,12 @@ namespace PlexRequests.UI.Tests
             var plexFriends = new PlexFriends
             {
                 User = new[]
-            {
-                new UserFriends
                 {
-                    Username = "aaaa",
-                },
-            }
+                    new UserFriends
+                    {
+                        Username = "aaaa",
+                    },
+                }
             };
 
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
@@ -193,12 +193,12 @@ namespace PlexRequests.UI.Tests
             var plexFriends = new PlexFriends
             {
                 User = new[]
-            {
-                new UserFriends
                 {
-                    Username = "abc",
-                },
-            }
+                    new UserFriends
+                    {
+                        Username = "abc",
+                    }
+                }
             };
             var plexAuth = new PlexAuthentication
             {
@@ -249,12 +249,12 @@ namespace PlexRequests.UI.Tests
             var plexFriends = new PlexFriends
             {
                 User = new[]
-            {
-                new UserFriends
                 {
-                    Username = "abc",
-                },
-            }
+                    new UserFriends
+                    {
+                        Username = "abc",
+                    },
+                }
             };
             var plexAuth = new PlexAuthentication
             {

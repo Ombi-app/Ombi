@@ -105,23 +105,24 @@
                 </form>
                 {{/if_eq}}
 
-                {{#if_eq admin false}}
-                <div class="dropdown">
-                    <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-plus"></i> Report Issue
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">Wrong Audio</a></li>
-                        <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">No Subtitles</a></li>
-                        <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">Wrong Content</a></li>
-                        <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">Playback Issues</a></li>
-                        <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" href="#" data-toggle="modal" data-target="#myModal">Other</a></li>
-                    </ul>
-                </div>
-                {{/if_eq}}
+                <form method="POST" action="/search/reportissue/" id="form{{id}}">
+                    <input name="requestId" type="text" value="{{id}}" hidden="hidden" />
+                    <div class="dropdown">
+                        <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-plus"></i> Report Issue
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">Wrong Audio</a></li>
+                            <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">No Subtitles</a></li>
+                            <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">Wrong Content</a></li>
+                            <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">Playback Issues</a></li>
+                            <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" href="#" data-toggle="modal" data-target="#myModal">Other</a></li>
+                        </ul>
+                    </div>
+                </form>
             </div>
-
+            @* // TODO add Issues to the view *@
         </div>
         <hr />
     </div>
@@ -132,15 +133,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-                <h4 class="modal-title">Modal title</h4>
+                <h4 class="modal-title">Add issue/comment</h4>
             </div>
-            <div class="modal-body">
-                <p>One fine body</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary theSaveButton">Save changes</button>
-            </div>
+            <form method="POST" action="/search/reportissuecomment/" id="commentForm">
+                <div class="modal-body">
+                    <input name="requestId" type="text" hidden="hidden" />
+                    <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary theSaveButton" data-dismiss="modal">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

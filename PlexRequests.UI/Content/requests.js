@@ -13,7 +13,7 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
-$('#approveAll').click(function() {
+$('#approveAll').click(function () {
     $.ajax({
         type: 'post',
         url: '/approval/approveall',
@@ -39,18 +39,20 @@ $(document).on("click", ".dropdownIssue", function (e) {
     if (issue == 4) {
         return;
     }
+    e.preventDefault();
 
+    var $form = $('#form' + id);
+    var data = $form.serialize();
+    data = data + "&issue=" + issue;
+    
     $.ajax({
-        type: "post",
-        url: "/requests/reportissue",
-        data: $form.serialize(), // TODO pass in issue enum and Id
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: data,
         dataType: "json",
         success: function (response) {
-
             if (checkJsonResponse(response)) {
                 generateNotify("Success!", "success");
-
-                $("#" + buttonId + "Template").slideUp();
             }
         },
         error: function (e) {
@@ -61,17 +63,40 @@ $(document).on("click", ".dropdownIssue", function (e) {
 });
 
 // Modal click
-$('.theSaveButton').click(function() {
+$(".theSaveButton").click(function () {
+    var comment = $("#commentArea").val();
+    e.preventDefault();
 
+    var $form = $("#form" + id);
+    var data = $form.serialize();
+    data = data + "&issue=" + 4 + "&comment="+comment;
+
+    $.ajax({
+        type: $form.prop("method"),
+        url: $form.prop("action"),
+        data: data,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success!", "success");
+                $("#myModal").modal("hide");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
 });
 
 // Update the modal
-$('#myModal').on('show.bs.modal', function(event) {
+$('#myModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('identifier'); // Extract info from data-* attributes
 
     var modal = $(this);
-    modal.find('.theSaveButton').val(id);
+    modal.find('.theSaveButton').val(id); // Add ID to the button
+    modal.find('#requestId').val(id); // Add ID to the hidden field
 });
 
 $(document).on("click", ".delete", function (e) {
@@ -141,7 +166,9 @@ function buildRequestContext(result, type) {
         requestedBy: result.requestedBy,
         requestedDate: result.requestedDate,
         available: result.available,
-        admin: result.admin
+        admin: result.admin,
+        issues: result.issues,
+        otherMessage: result.otherMessage
     };
 
     return context;

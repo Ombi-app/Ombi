@@ -45,5 +45,7 @@ namespace PlexRequests.UI.Models
         public string ReleaseYear { get; set; }
         public bool Available { get; set; }
         public bool Admin { get; set; }
+        public IssueState Issues { get; set; }
+        public string OtherMessage { get; set; }
     }
 }

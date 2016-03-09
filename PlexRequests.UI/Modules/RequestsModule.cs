@@ -60,6 +60,9 @@ namespace PlexRequests.UI.Modules
                 var convertedType = (string)Request.Form.type == "movie" ? RequestType.Movie : RequestType.TvShow;
                 return DeleteRequest((int)Request.Form.id, convertedType);
             };
+            Get["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)Request.Form.issue, null);
+            Get["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
+
         }
         private IRepository<RequestedModel> Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
@@ -92,7 +95,9 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = movie.RequestedBy,
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
-                Admin = isAdmin
+                Admin = isAdmin,
+                Issues = movie.Issues,
+                OtherMessage = movie.OtherMessage
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -118,7 +123,9 @@ namespace PlexRequests.UI.Modules
                 RequestedBy = tv.RequestedBy,
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
                 Available = tv.Available,
-                Admin = isAdmin
+                Admin = isAdmin,
+                Issues = tv.Issues,
+                OtherMessage = tv.OtherMessage
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -133,6 +140,20 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot delete any requests." });
+        }
+
+        /// <summary>
+        /// Reports the issue.
+        /// Comment can be null if the <c>IssueState != Other</c>
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <param name="issue">The issue.</param>
+        /// <param name="comment">The comment.</param>
+        /// <returns></returns>
+        private Response ReportIssue(int requestId, IssueState issue, string comment)
+        {
+            
+            return Response.AsJson(new JsonResponseModel());
         }
     }
 }
