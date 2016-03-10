@@ -5,7 +5,13 @@
         message: message
     }, {
         // settings
-        type: type
+        type: type,
+        animate: {
+            enter: 'animated bounceInDown',
+            exit: 'animated bounceOutUp'
+        },
+        newest_on_top: true
+
     });
 }
 

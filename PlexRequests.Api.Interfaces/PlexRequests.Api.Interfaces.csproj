@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IApiRequest.cs" />
+    <Compile Include="ICouchPotatoApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

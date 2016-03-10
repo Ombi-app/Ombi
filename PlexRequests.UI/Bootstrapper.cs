@@ -76,6 +76,10 @@ namespace PlexRequests.UI
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
 
+            container.Register<ICouchPotatoApi, CouchPotatoApi>();
+
+
+
 
             container.Register<IPlexApi, PlexApi>();
             base.ConfigureRequestContainer(container, context);

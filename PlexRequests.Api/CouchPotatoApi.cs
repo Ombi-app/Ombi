@@ -29,12 +29,12 @@ using System;
 using Newtonsoft.Json.Linq;
 
 using NLog;
-
+using PlexRequests.Api.Interfaces;
 using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class CouchPotatoApi
+    public class CouchPotatoApi : ICouchPotatoApi
     {
         public CouchPotatoApi()
         {

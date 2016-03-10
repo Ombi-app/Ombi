@@ -36,7 +36,6 @@ using Newtonsoft.Json.Linq;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models;
 
 using RestSharp;
 

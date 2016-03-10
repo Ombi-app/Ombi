@@ -32,6 +32,7 @@ using Nancy.Responses.Negotiation;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
@@ -61,10 +62,17 @@ namespace PlexRequests.UI.Modules
 
         private Response LoginUser()
         {
+            var username = Request.Form.username.Value;
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+            }
+
             var authenticated = false;
 
             var settings = AuthService.GetSettings();
-            var username = Request.Form.username.Value;
+
 
             if (IsUserInDeniedList(username, settings))
             {

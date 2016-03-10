@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 
-namespace PlexRequests.Api.Models
+namespace PlexRequests.Api.Models.Plex
 {
     public class PlexAuthentication
     {

@@ -13,6 +13,7 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+// Approve all
 $('#approveAll').click(function () {
     $.ajax({
         type: 'post',
@@ -117,6 +118,34 @@ $(document).on("click", ".delete", function (e) {
                 generateNotify("Success! Request Deleted.", "success");
 
                 $("#" + buttonId + "Template").slideUp();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
+});
+
+// Approve single request
+$(document).on("click", ".approve", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var $form = $('#approve' + buttonId);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: $form.serialize(),
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! Request Approved.", "success");
+
+                $("button[custom-button='" + buttonId + "']").remove();
+                $("#" + buttonId + "notapproved").prop("class", "fa fa-check");
             }
         },
         error: function (e) {

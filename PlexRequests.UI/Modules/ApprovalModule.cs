@@ -32,7 +32,10 @@ using Nancy;
 using Nancy.Security;
 
 using NLog;
-
+using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
@@ -41,11 +44,13 @@ namespace PlexRequests.UI.Modules
     public class ApprovalModule : BaseModule
     {
 
-        public ApprovalModule(IRepository<RequestedModel> service) : base("approval")
+        public ApprovalModule(IRepository<RequestedModel> service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi) : base("approval")
         {
             this.RequiresAuthentication();
 
             Service = service;
+            CpService = cpService;
+            CpApi = cpApi;
 
             Post["/approve"] = parameters => Approve((int)Request.Form.requestid);
             Post["/approveall"] = x => ApproveAll();
@@ -54,6 +59,8 @@ namespace PlexRequests.UI.Modules
         private IRepository<RequestedModel> Service { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private ISettingsService<CouchPotatoSettings> CpService { get; }
+        private ICouchPotatoApi CpApi { get; }
 
         /// <summary>
         /// Approves the specified request identifier.
@@ -62,6 +69,10 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response Approve(int requestId)
         {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
             // Get the request from the DB
             var request = Service.Get(requestId);
 
@@ -71,15 +82,59 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no requests to approve. Please refresh." });
             }
 
-            // Approve it
-            request.Approved = true;
+            switch (request.Type)
+            {
+                case RequestType.Movie:
+                    return RequestMovieAndUpdateStatus(request);
+                case RequestType.TvShow:
+                    return RequestTvAndUpdateStatus(request);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(request));
+            }
+        }
 
-            // Update the record
-            var result = Service.Update(request);
+        private Response RequestTvAndUpdateStatus(RequestedModel request)
+        {
+            // TODO
+            return Response.AsJson(new JsonResponseModel());
+        }
 
-            return Response.AsJson(result
-                ? new JsonResponseModel { Result = true }
-                : new JsonResponseModel { Result = false, Message = "We could not approve this request. Please try again or check the logs." });
+        private Response RequestMovieAndUpdateStatus(RequestedModel request)
+        {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
+
+            var cpSettings = CpService.GetSettings();
+            var cp = new CouchPotatoApi();
+            Log.Info("Adding movie to CP : {0}", request.Title);
+            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri);
+            Log.Trace("Adding movie to CP result {0}", result);
+            if (result)
+            {
+                // Approve it
+                request.Approved = true;
+
+                // Update the record
+                var inserted = Service.Update(request);
+
+                return Response.AsJson(inserted
+                    ? new JsonResponseModel {Result = true}
+                    : new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "We could not approve this request. Please try again or check the logs."
+                    });
+            }
+            return
+                Response.AsJson(
+                    new
+                    {
+                        Result = false,
+                        Message =
+                            "Something went wrong adding the movie to CouchPotato! Please check your settings."
+                    });
         }
 
         /// <summary>
@@ -88,18 +143,36 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response ApproveAll()
         {
-            var requests = Service.GetAll();
+            var requests = Service.GetAll().Where(x => x.Approved == false);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no requests to approve. Please refresh." });
             }
 
+            var cpSettings = CpService.GetSettings();
+
+
             var updatedRequests = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
-                r.Approved = true;
-                updatedRequests.Add(r);
+                if (r.Type == RequestType.Movie)
+                {
+                    var result = SendMovie(cpSettings, r, CpApi);
+                    if (result)
+                    {
+                        r.Approved = true;
+                        updatedRequests.Add(r);
+                    }
+                    else
+                    {
+                        Log.Error("Could not approve send the movie {0} to couch potato!", r.Title);
+                    }
+                }
+                if (r.Type == RequestType.TvShow)
+                {
+                    // TODO
+                }
             }
             try
             {
@@ -115,6 +188,15 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
             }
 
+        }
+
+
+        private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)
+        { 
+            Log.Info("Adding movie to CP : {0}", r.Title);
+            var result = cp.AddMovie(r.ImdbId, settings.ApiKey, r.Title, settings.FullUri);
+            Log.Trace("Adding movie to CP result {0}", result);
+            return result;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IPlexApi.cs
+//    File: ICouchPotatoApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
-using PlexRequests.Api.Models;
-using PlexRequests.Api.Models.Plex;
+using System;
 
 namespace PlexRequests.Api.Interfaces
 {
-    public interface IPlexApi
+    public interface ICouchPotatoApi
     {
-        PlexAuthentication SignIn(string username, string password);
-        PlexFriends GetUsers(string authToken);
-        PlexSearch SearchContent(string authToken, string searchTerm, Uri plexFullHost);
+        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl);
 
     }
 }

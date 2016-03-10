@@ -37,6 +37,7 @@ using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
@@ -87,6 +88,39 @@ namespace PlexRequests.UI.Tests
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
             AuthMock.Verify(x => x.GetSettings(), Times.Once);
+            PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
+        }
+
+        [Test]
+        public void LoginWithoutAuthenticationWithEmptyUsername()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", string.Empty);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(false));
+            AuthMock.Verify(x => x.GetSettings(), Times.Never);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }

@@ -28,6 +28,7 @@ using System;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
 
 using RestSharp;

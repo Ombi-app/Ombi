@@ -4,7 +4,9 @@
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
     @if (Context.CurrentUser.IsAuthenticated())
     {
-        <button id="approveAll" class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Approve All</button>
+        <button id="approveAll" class="btn btn-success" type="submit"><i class="fa fa-plus"></i> Approve All</button>
+        <br/>
+        <br/>
     }
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
@@ -50,7 +52,7 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
-    <div id="{{id}}Template">
+    <div id="{{requestId}}Template">
         <div class="row">
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}
@@ -76,7 +78,7 @@
                 <p>
                     Approved:
                     {{#if_eq approved false}}
-                    <i class="fa fa-times"></i>
+                    <i id="{{requestId}}notapproved" class="fa fa-times"></i>
                     {{/if_eq}}
                     {{#if_eq approved true}}
                     <i class="fa fa-check"></i>
@@ -105,6 +107,12 @@
                 <br />
                 <br />
                 {{#if_eq admin true}}
+                {{#if_eq approved false}}
+                <form method="POST" action="/approval/approve" id="approve{{requestId}}">
+                    <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
+                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-success approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                </form>
+                {{/if_eq}}
                 <form method="POST" action="/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-danger delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
