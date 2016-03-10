@@ -43,6 +43,15 @@
                         <li><a href="/search">Search</a></li>
                     }
 
+
+                    @if (Context.Request.Path == "/requests")
+                    {
+                        <li class="active"><a href="/requests">Requests</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/requests">Requests</a></li>
+                    }
                     @if (Context.CurrentUser.IsAuthenticated())
                     {
                         if (Context.Request.Path == "/admin")
@@ -53,14 +62,6 @@
                         {
                             <li><a href="/admin">Admin</a></li>
                         }
-                    }
-                    @if (Context.Request.Path == "/requests")
-                    {
-                        <li class="active"><a href="/requests">Requests</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="/requests">Requests</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

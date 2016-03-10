@@ -69,6 +69,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
+            container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
             container.Register<IRequestService, RequestService>();
 

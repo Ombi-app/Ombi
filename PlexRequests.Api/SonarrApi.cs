@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrSettings.cs
+//    File: CouchPotatoApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
-namespace PlexRequests.Core.SettingModels
+using NLog;
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Sonarr;
+using RestSharp;
+
+namespace PlexRequests.Api
 {
-    public class SonarrSettings : Settings
+    public class SonarrApi
     {
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string ApiKey { get; set; }
-        public string QualityProfile { get; set; }
-
-        [JsonIgnore]
-        public Uri FullUri
+        public SonarrApi()
         {
-            get
-            {
-                var formatted = Ip.ReturnUri(Port);
-                return formatted;
-            }
+            Api = new ApiRequest();
+        }
+        private ApiRequest Api { get; set; }
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        public List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/profile", Method = Method.GET};
+
+            request.AddHeader("X-Api-Key", apiKey);
+
+            var obj = Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl);
+
+            return obj;
         }
     }
 }

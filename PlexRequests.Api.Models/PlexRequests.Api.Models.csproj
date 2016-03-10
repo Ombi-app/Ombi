@@ -48,6 +48,7 @@
     <Compile Include="Plex\PlexSearch.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Tv\Authentication.cs" />
     <Compile Include="Tv\TvSearchResult.cs" />
     <Compile Include="Tv\TvShow.cs" />

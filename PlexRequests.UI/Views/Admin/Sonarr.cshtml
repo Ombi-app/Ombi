@@ -1,0 +1,84 @@
+﻿@Html.Partial("_Sidebar")
+@{
+    int port;
+    if (Model.Port == 0)
+    {
+        port = 80;
+    }
+    else
+    {
+        port = Model.Port;
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Sonarr Settings</legend>
+
+            <div class="form-group">
+                <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" value="@Model.Ip">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="portNumber" class="control-label">Port</label>
+
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ApiKey" class="control-label">Sonarr API Key</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" value="@Model.ApiKey">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select" class="control-label">Quality Profiles</label>
+                <div>
+                    <select class="form-control" id="select">
+
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+
+<script>
+    $(function () {
+
+        $.ajax({
+            type: "GET",
+            url: "sonarrprofiles",
+            dataType: "json",
+            success: function (response) {
+                response.forEach(function (result) {
+                    $("#select").append("<option>" + result.name + "</option>");
+                });
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+
+
+
+
+    })
+</script>

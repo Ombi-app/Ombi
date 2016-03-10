@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrSettings.cs
+//    File: SonarrProfile.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,27 +25,33 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using System.Collections.Generic;
 
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public class SonarrSettings : Settings
+    public class Cutoff
     {
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string ApiKey { get; set; }
-        public string QualityProfile { get; set; }
+        public int id { get; set; }
+        public string name { get; set; }
+    }
 
-        [JsonIgnore]
-        public Uri FullUri
-        {
-            get
-            {
-                var formatted = Ip.ReturnUri(Port);
-                return formatted;
-            }
-        }
+    public class Quality
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+    }
+
+    public class Item
+    {
+        public Quality quality { get; set; }
+        public bool allowed { get; set; }
+    }
+
+    public class SonarrProfile
+    {
+        public string name { get; set; }
+        public Cutoff cutoff { get; set; }
+        public List<Item> items { get; set; }
+        public int id { get; set; }
     }
 }

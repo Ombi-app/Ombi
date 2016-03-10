@@ -49,14 +49,20 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<CouchPotatoSettings> CpService { get; set; }
         private ISettingsService<AuthenticationSettings> AuthService { get; set; }
         private ISettingsService<PlexSettings> PlexService { get; set; }
+        private ISettingsService<SonarrSettings> SonarrService { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public AdminModule(ISettingsService<PlexRequestSettings> rpService, ISettingsService<CouchPotatoSettings> cpService, ISettingsService<AuthenticationSettings> auth, ISettingsService<PlexSettings> plex) : base("admin")
+        public AdminModule(ISettingsService<PlexRequestSettings> rpService,
+            ISettingsService<CouchPotatoSettings> cpService,
+            ISettingsService<AuthenticationSettings> auth
+            , ISettingsService<PlexSettings> plex,
+            ISettingsService<SonarrSettings> sonarr ) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
             AuthService = auth;
             PlexService = plex;
+            SonarrService = sonarr;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -77,6 +83,11 @@ namespace PlexRequests.UI.Modules
 
             Get["/plex"] = _ => Plex();
             Post["/plex"] = _ => SavePlex();
+
+            Get["/sonarr"] = _ => Sonarr();
+            Post["/sonarr"] = _ => SaveSonarr();
+
+            Get["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
         }
 
         private Negotiator Authentication()
@@ -199,6 +210,30 @@ namespace PlexRequests.UI.Modules
             PlexService.SaveSettings(plexSettings);
 
             return Context.GetRedirect("~/admin/plex");
+        }
+
+        private Negotiator Sonarr()
+        {
+            var settings = SonarrService.GetSettings();
+
+            return View["Sonarr", settings];
+        }
+
+        private Response SaveSonarr()
+        {
+            var plexSettings = this.Bind<SonarrSettings>();
+            SonarrService.SaveSettings(plexSettings);
+
+            return Context.GetRedirect("~/admin/Sonarr");
+        }
+
+        private Response GetSonarrQualityProfiles()
+        {
+            var settings = SonarrService.GetSettings();
+            var api = new SonarrApi();
+            var profiles = api.GetProfiles(settings.ApiKey, settings.FullUri);
+
+            return Response.AsJson(profiles);
         }
 
     }
