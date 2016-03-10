@@ -10,17 +10,22 @@ var searchTemplate = Handlebars.compile(searchSource);
 var movieTimer = 0;
 var tvimer = 0;
 
-$("#movieSearchContent").keypress(function () {
+// Type in movie search
+$("#movieSearchContent").on("input", function () {
     if (movieTimer) {
         clearTimeout(movieTimer);
     }
+    $('#movieSearchButton').attr("class","fa fa-spinner fa-spin");
     movieTimer = setTimeout(movieSearch, 400);
+
 });
 
-$("#tvSearchContent").keypress(function () {
+// Type in TV search
+$("#tvSearchContent").on("input", function () {
     if (tvimer) {
         clearTimeout(tvimer);
     }
+    $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
     tvimer = setTimeout(tvSearch, 400);
 });
 
@@ -30,7 +35,6 @@ $(document).on("click", ".dropdownTv", function (e) {
     $("#" + buttonId).prop("disabled", true);
 
     e.preventDefault();
-
 
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
@@ -103,6 +107,7 @@ function movieSearch() {
                 $("#movieList").append(html);
             });
         }
+        $('#movieSearchButton').attr("class","fa fa-search");
     });
 };
 
@@ -118,6 +123,7 @@ function tvSearch() {
                 $("#tvList").append(html);
             });
         }
+        $('#tvSearchButton').attr("class", "fa fa-search");
     });
 };
 
