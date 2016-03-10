@@ -1,92 +1,94 @@
 ﻿@Html.Partial("_Sidebar")
 
-<div class="col-sm-8">
+<div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" action="/admin/authentication" id="mainForm">
         <fieldset>
             <legend>Authentication Settings</legend>
 
             <div class="form-group">
-                <label for="userAuth" class="col-lg-2 control-label">Enable User Authentication</label>
-                <div class="col-lg-4 checkbox">
+                <div class="checkbox">
                     <label>
                         @if (Model.UserAuthentication)
                         {
                             <input type="checkbox" id="userAuth" name="UserAuthentication" checked="checked">
+                            <text>Enable User Authentication</text>
                         }
                         else
                         {
                             <input type="checkbox" id="userAuth" name="UserAuthentication">
+                            <text>Enable User Authentication</text>
                         }
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="userAuth" class="col-lg-2 control-label">Require users to login with their passwords</label>
-                <div class="col-lg-4 checkbox">
+                <div class="checkbox">
                     <label>
                         @if (Model.UsePassword)
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword" checked="checked">
+                            <text>Require users to login with their passwords</text>
                         }
                         else
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword">
+                            <text>Require users to login with their passwords</text>
                         }
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="authToken" class="col-lg-2 control-label">Plex Authorization Token</label>
-                <div class="col-lg-10">
+                <label for="authToken" class="control-label">Plex Authorization Token</label>
+                <div class="">
                     <input type="text" class="form-control-custom form-control " id="authToken" name="PlexAuthToken" placeholder="Plex Auth Token" value="@Model.PlexAuthToken">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="username" class="col-lg-2 control-label">Username and Password</label>
-                <div class="col-lg-4">
+                <label for="username" class="control-label">Username and Password</label>
+                <div>
                     <input type="text" class="form-control form-control-custom" id="username" name="Username" placeholder="Username">
                 </div>
-                <div class="col-lg-4 col-lg-push-2">
+                <br/>
+                <div>
                     <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-lg-10 col-lg-offset-2">
+                <div class="">
                     <button id="requestToken" class="btn btn-primary">Request Token <i class="fa fa-key"></i></button>
                 </div>
             </div>
 
-            
+
             <br />
             <br />
-            <small class="col-lg-offset-2">Current users that are allowed to authenticate: </small>
-            <br />
-            <br />
+            <p class="form-group">Current users that are allowed to authenticate: </p>
+
             <div class="form-group">
-                <select id="users" multiple="" class="col-lg-10 col-lg-offset-2 form-control-custom "></select>
+                <select id="users" multiple="" class="form-control-custom "></select>
             </div>
             <div class="form-group">
 
-                <div class="col-lg-10 col-lg-offset-2">
+                <div>
                     <button id="refreshUsers" class="btn btn-primary">Refresh Users</button>
                 </div>
             </div>
 
-            <small class="col-lg-offset-2">A comma separated list of users that you do not want to login.</small>
+            <p class="form-group">A comma separated list of users that you do not want to login.</p>
             <div class="form-group">
-                <label for="deniedUsers" class="col-lg-2 control-label">Denied Users</label>
-                <div class="col-lg-10">
+                <label for="deniedUsers" class="control-label">Denied Users</label>
+                <div >
                     <input type="text" class="form-control-custom form-control " id="DeniedUsers" name="DeniedUsers" placeholder="e.g. John, Bobby" value="@Model.DeniedUsers">
                 </div>
             </div>
-
+            <br/>
             <div>
             </div>
             <div class="form-group">
-                <div class="col-lg-10 col-lg-offset-2">
+                <div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>
@@ -140,7 +142,7 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.length > 1) {
-                        $(response).each(function() {
+                        $(response).each(function () {
                             $('#users').append("<option>" + this + "</option>");
                         });
                     } else {

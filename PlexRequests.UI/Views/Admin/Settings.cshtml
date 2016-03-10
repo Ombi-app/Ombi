@@ -11,70 +11,66 @@
     }
 
 }
-<div class="col-sm-8">
+<div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" action="/admin" id="mainForm">
         <fieldset>
             <legend>Request Plex Settings</legend>
             <div class="form-group">
-                <label for="portNumber" class="col-lg-2 control-label">Port</label>
+                <label for="portNumber" class="control-label">Port</label>
 
-                <div class="col-lg-10">
+                <div>
                     <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
                 </div>
             </div>
-            <small class="col-lg-10 col-lg-offset-2">You will have to restart after changing the port.</small>
+            <small class="control-label">You will have to restart after changing the port.</small>
             <div class="form-group">
-                <label for="SearchForMovies" class="col-lg-2 control-label">Search for Movies</label>
-                <div class="col-lg-10 checkbox">
+                <div class="checkbox">
                     <label>
                         @if (Model.SearchForMovies)
                         {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked">
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><text>Search for Movies</text>
                         }
                         else
                         {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies">
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><text>Search for Movies</text>
                         }
                     </label>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="SearchForTvShows" class="col-lg-2 control-label">Search for TV Shows</label>
-                <div class="col-lg-10 checkbox">
+                <div class="checkbox">
                     <label>
                         @if (Model.SearchForTvShows)
                         {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked">
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><text>Search for TV Shows</text>
                         }
                         else
                         {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows">
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><text>Search for TV Shows</text>
                         }
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <label for="RequireApproval" class="col-lg-2 control-label">Require approval of requests</label>
-
-                <div class="col-lg-10 checkbox">
+                <div class="checkbox">
                     <label>
                         @if (Model.RequireApproval)
                         {
-                            <input type="checkbox" id="RequireApproval" name="RequireApproval" checked="checked">
+                            <input type="checkbox" id="RequireApproval" name="RequireApproval" checked="checked"><text>Require approval of requests</text>
                         }
                         else
                         {
-                            <input type="checkbox" id="RequireApproval" name="RequireApproval">
+                            <input type="checkbox" id="RequireApproval" name="RequireApproval"><text>Require approval of requests</text>
                         }
                     </label>
 
                 </div>
             </div>
-  
+
             <div class="form-group">
-                <label for="WeeklyRequestLimit" class="col-lg-2 control-label">Weekly Request Limit</label>
-                <div class="col-lg-10">
+                <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
+                <div>
                     <label>
                         <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
                     </label>
@@ -84,7 +80,7 @@
             <div>
             </div>
             <div class="form-group">
-                <div class="col-lg-10 col-lg-offset-2">
+                <div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </div>

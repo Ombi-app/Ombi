@@ -10,6 +10,19 @@
     }
 }
 
+@media (max-width: 48em) {
+    .home {
+        padding-top: 1rem;
+    }
+}
+
+@media (min-width: 48em) {
+    .home {
+        padding-top: 4rem;
+    }
+}
+
+
 .multiSelect {
     background-color: #4e5d6c;
 }
@@ -19,3 +32,18 @@
     color: white !important;
 }
 
+
+h1 {
+    font-size: 3.5rem !important;
+    font-weight: 600 !important;
+}
+
+p {
+    font-size: 1.1rem !important;
+}
+
+label {
+    display: inline-block !important;
+    margin-bottom: .5rem !important;
+    font-size: 16px !important;
+}

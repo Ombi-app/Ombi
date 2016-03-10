@@ -1,35 +1,36 @@
-﻿<h1>Login</h1>
-<div class="row">
-    <label class="col-md-5">
-        Want to watch a movie or tv show but it's not currently on Plex?
-        Login below with your Plex.tv username and password! <span title="Your login details are only used to authenticate your Plex account."><i class="fa fa-question-circle"></i></span>
-    </label>
-</div>
-<form method="POST" id="loginForm">
-    <div class="row">
-        <div class="col-md-2">
-            <label style="padding-top: 8px"> Username </label>
-        </div>
-        <div class="col-md-5">
-            <input class="form-control form-control-custom col-md-5" type="text" name="Username" />
-        </div>
+﻿<div class="home">
+    <h1>Login</h1>
+    <div>
+        <p>
+            Want to watch a movie or tv show but it's not currently on Plex?
+            Login below with your Plex.tv username and password! <span title="Your login details are only used to authenticate your Plex account."><i class="fa fa-question-circle"></i></span>
+        </p>
     </div>
-    <br />
-    @if (Model.UsePassword)
-    {
-        <div class="row">
-            <div class="col-md-2">
-                <label style="padding-top: 8px"> Password </label>
+    <form method="POST" id="loginForm">
+        <div>
+            <div>
+                <label>Plex.tv Username </label>
             </div>
-            <div class="col-md-5">
-                <input class="form-control form-control-custom col-md-5" name="Password" type="password" />
+            <div>
+                <input class="form-control form-control-custom" style="width: 50%" type="text" name="Username" placeholder="Username" />
             </div>
         </div>
-    }
-    <br />
-    <input id="loginBtn" class="btn btn-success" type="submit" value="Login" />
-</form>
-
+        <br />
+        @if (Model.UsePassword)
+        {
+            <div>
+                <div>
+                    <label> Password </label>
+                </div>
+                <div>
+                    <input class="form-control form-control-custom" style="width: 50%" name="Password" type="password" placeholder="Password" />
+                </div>
+            </div>
+        }
+        <br />
+        <button id="loginBtn" class="btn btn-success" type="submit"><i class="fa fa-user fa-fw"></i> Sign In</button>
+    </form>
+</div>
 
 <script>
     $(function () {
