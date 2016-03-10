@@ -64,12 +64,12 @@
 
             {{#if_eq type "movie"}}
             {{#if posterPath}}
-            <img src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+            <img class="img-responsive" src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
             {{/if}}
             {{/if_eq}}
             {{#if_eq type "tv"}}
             {{#if posterPath}}
-            <img width="150" src="http://thetvdb.com/banners/_cache/posters/{{posterPath}}-1.jpg" alt="poster">
+            <img class="img-responsive" width="150" src="http://thetvdb.com/banners/_cache/posters/{{posterPath}}-1.jpg" alt="poster">
             {{/if}}
             {{/if_eq}}
 
