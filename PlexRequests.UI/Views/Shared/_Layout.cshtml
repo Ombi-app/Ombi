@@ -31,15 +31,37 @@
                 </button>
                 <a class="navbar-brand" href="#">Plex Requests</a>
             </div>
-
+            
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/search">Search</a></li>
+                    @if (Context.Request.Path == "/search")
+                    {
+                        <li class="active"><a href="/search">Search</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/search">Search</a></li>
+                    }
+
                     @if (Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><a href="/admin">Admin</a></li>
+                        if (Context.Request.Path == "/admin")
+                        {
+                            <li class="active"><a href="/admin">Admin</a></li>
+                        }
+                        else
+                        {
+                            <li class="active"><a href="/admin">Admin</a></li>
+                        }
                     }
-                    <li><a href="/requests">Requests</a></li>
+                    @if (Context.Request.Path == "/requests")
+                    {
+                        <li class="active"><a href="/requests">Requests</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="/requests">Requests</a></li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @if (!Context.CurrentUser.IsAuthenticated())
