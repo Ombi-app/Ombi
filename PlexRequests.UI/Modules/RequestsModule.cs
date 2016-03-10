@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Modules
             Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
 
-            Post["/clearissues"] = _ => ClearIssue((int)Request.Form.requestId);
+            Post["/clearissues"] = _ => ClearIssue((int)Request.Form.Id);
 
         }
         private IRepository<RequestedModel> Service { get; }
@@ -156,7 +156,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
             }
             originalRequest.Issues = issue;
-            originalRequest.OtherMessage = string.IsNullOrEmpty(comment) 
+            originalRequest.OtherMessage = !string.IsNullOrEmpty(comment) 
                 ? $"{Session[SessionKeys.UsernameKey]} - {comment}" 
                 : string.Empty;
 
