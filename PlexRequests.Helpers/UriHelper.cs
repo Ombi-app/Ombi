@@ -70,22 +70,12 @@ namespace PlexRequests.Helpers
                 if (val.StartsWith("http://", StringComparison.Ordinal))
                 {
                     var split = val.Split('/');
-                    if (split.Length >= 4)
-                    {
-                        uri = new UriBuilder(Uri.UriSchemeHttp, split[2], port, "/" + split[3]);
-                    }
-                    else
-                        uri = new UriBuilder(new Uri($"{val}:{port}"));
+                    uri = split.Length >= 4 ? new UriBuilder(Uri.UriSchemeHttp, split[2], port, "/" + split[3]) : new UriBuilder(new Uri($"{val}:{port}"));
                 }
                 else if (val.StartsWith("https://", StringComparison.Ordinal))
                 {
                     var split = val.Split('/');
-                    if (split.Length >= 4)
-                    {
-                        uri = new UriBuilder(Uri.UriSchemeHttps, split[2], port, "/" + split[3]);
-                    }
-                    else
-                        uri = new UriBuilder(Uri.UriSchemeHttps, split[2], port);
+                    uri = split.Length >= 4 ? new UriBuilder(Uri.UriSchemeHttps, split[2], port, "/" + split[3]) : new UriBuilder(Uri.UriSchemeHttps, split[2], port);
                 }
                 else
                 {

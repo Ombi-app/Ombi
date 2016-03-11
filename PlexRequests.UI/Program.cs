@@ -48,11 +48,12 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
+           
             Log.Trace("Getting assembly version");
             WriteOutVersion();
             
             var s = new Setup();
-            var connection = s.SetupDb();
+            s.SetupDb();
 
             //ConfigureTargets(connection);
 

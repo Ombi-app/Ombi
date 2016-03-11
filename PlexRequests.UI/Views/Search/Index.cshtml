@@ -86,11 +86,11 @@
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq type "movie"}}
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
                 <div class="dropdown">
-                    <button id="{{id}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <button id="{{id}}" class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-plus"></i> Request
                         <span class="caret"></span>
                     </button>

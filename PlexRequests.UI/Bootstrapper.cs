@@ -38,6 +38,7 @@ using Nancy.TinyIoc;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Mocks;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -78,6 +79,9 @@ namespace PlexRequests.UI
             container.Register<IIntervals, UpdateInterval>();
 
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
+
+            container.Register<ISonarrApi, SonarrApi>();
+            //container.Register<ISonarrApi, MockSonarrApi>();
 
 
 

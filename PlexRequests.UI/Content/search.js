@@ -80,9 +80,9 @@ function sendRequestAjax(data, type, url, buttonId) {
                 generateNotify("Success!", "success");
 
                 $('#' + buttonId).html("<i class='fa fa-check'></i> Requested");
-                $('#' + buttonId).removeClass("btn-primary");
+                $('#' + buttonId).removeClass("btn-primary-outline");
                 $('#' + buttonId).removeAttr("data-toggle");
-                $('#' + buttonId).addClass("btn-success");
+                $('#' + buttonId).addClass("btn-success-outline");
             } else {
                 generateNotify(response.message, "warning");
             }

@@ -4,7 +4,7 @@
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
     @if (Context.CurrentUser.IsAuthenticated())
     {
-        <button id="approveAll" class="btn btn-success" type="submit"><i class="fa fa-plus"></i> Approve All</button>
+        <button id="approveAll" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve All</button>
         <br/>
         <br/>
     }
@@ -69,13 +69,13 @@
             <div class="col-sm-5 ">
                 <div>
                     <a href="https://www.themoviedb.org/{{type}}/{{id}}">
-                        <h4>{{title}} ({{year}})</h4>
+                        <h4 class="request-title">{{title}} ({{year}})</h4>
                     </a>
                     <span class="label label-success">{{status}}</span>
                 </div>
                 <br />
-                <p>Release Date: {{releaseDate}}</p>
-                <p>
+                <div>Release Date: {{releaseDate}}</div>
+                <div>
                     Approved:
                     {{#if_eq approved false}}
                     <i id="{{requestId}}notapproved" class="fa fa-times"></i>
@@ -83,8 +83,8 @@
                     {{#if_eq approved true}}
                     <i class="fa fa-check"></i>
                     {{/if_eq}}
-                </p>
-                <p>
+                </div>
+                <div>
                     Available
                     {{#if_eq available false}}
                     <i class="fa fa-times"></i>
@@ -92,14 +92,14 @@
                     {{#if_eq available true}}
                     <i class="fa fa-check"></i>
                     {{/if_eq}}
-                </p>
-                <p>Requested By: {{requestedBy}}</p>
-                <p>Requested Date: {{requestedDate}}</p>
+                </div>
+                <div>Requested By: {{requestedBy}}</div>
+                <div>Requested Date: {{requestedDate}}</div>
                 <div id="issueArea">
                     {{#if otherMessage}}
-                    <p>Message: {{otherMessage}}</p>
+                    <div>Message: {{otherMessage}}</div>
                     {{else}}
-                    <p>Issue: {{issues}}</p>
+                    <div>Issue: {{issues}}</div>
                     {{/if}}
                 </div>
             </div>
@@ -110,24 +110,24 @@
                 {{#if_eq approved false}}
                 <form method="POST" action="/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-success approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
                 {{/if_eq}}
                 <form method="POST" action="/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-danger delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
+                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
                 </form>
                 
                 <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-info clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
+                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
                 {{/if_eq}}
 
                 <form method="POST" action="/requests/reportissue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
-                        <button id="{{requestId}}" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                             <i class="fa fa-plus"></i> Report Issue
                             <span class="caret"></span>
                         </button>
@@ -161,7 +161,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary theSaveButton" data-dismiss="modal">Save changes</button>
+                    <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">Save changes</button>
                 </div>
             </form>
         </div>

@@ -208,8 +208,8 @@ function tvLoad() {
     });
 };
 
+// Builds the request context.
 function buildRequestContext(result, type) {
-
     var context = {
         posterPath: result.posterPath,
         id: result.providerId,

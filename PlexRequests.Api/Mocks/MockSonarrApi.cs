@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoApi.cs
+//    File: MockSonarrApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -27,30 +27,19 @@
 using System;
 using System.Collections.Generic;
 
-using NLog;
+using Newtonsoft.Json;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
-using RestSharp;
 
-namespace PlexRequests.Api
+namespace PlexRequests.Api.Mocks
 {
-    public class SonarrApi : ISonarrApi
+    public class MockSonarrApi : ISonarrApi
     {
-        public SonarrApi()
-        {
-            Api = new ApiRequest();
-        }
-        private ApiRequest Api { get; set; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
         public List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl)
         {
-            var request = new RestRequest { Resource = "/api/profile", Method = Method.GET};
-
-            request.AddHeader("X-Api-Key", apiKey);
-
-            var obj = Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl);
-
+            var json = MockApiData.Sonarr_Profiles;
+            var obj = JsonConvert.DeserializeObject<List<SonarrProfile>>(json);
             return obj;
         }
     }

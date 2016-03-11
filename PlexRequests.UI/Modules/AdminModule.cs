@@ -36,6 +36,7 @@ using Nancy.Security;
 using NLog;
 
 using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -50,19 +51,22 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; set; }
         private ISettingsService<PlexSettings> PlexService { get; set; }
         private ISettingsService<SonarrSettings> SonarrService { get; set; }
+        private ISonarrApi SonarrApi { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
             ISettingsService<CouchPotatoSettings> cpService,
             ISettingsService<AuthenticationSettings> auth
             , ISettingsService<PlexSettings> plex,
-            ISettingsService<SonarrSettings> sonarr ) : base("admin")
+            ISettingsService<SonarrSettings> sonarr,
+            ISonarrApi sonarrApi) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
             AuthService = auth;
             PlexService = plex;
             SonarrService = sonarr;
+            SonarrApi = sonarrApi;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -87,7 +91,7 @@ namespace PlexRequests.UI.Modules
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
 
-            Get["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+            Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
         }
 
         private Negotiator Authentication()
@@ -224,14 +228,13 @@ namespace PlexRequests.UI.Modules
             var plexSettings = this.Bind<SonarrSettings>();
             SonarrService.SaveSettings(plexSettings);
 
-            return Context.GetRedirect("~/admin/Sonarr");
+            return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
         private Response GetSonarrQualityProfiles()
         {
-            var settings = SonarrService.GetSettings();
-            var api = new SonarrApi();
-            var profiles = api.GetProfiles(settings.ApiKey, settings.FullUri);
+            var settings = this.Bind<SonarrSettings>();
+            var profiles = SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
 
             return Response.AsJson(profiles);
         }

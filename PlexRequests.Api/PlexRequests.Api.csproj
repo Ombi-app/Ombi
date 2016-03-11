@@ -66,6 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
+    <Compile Include="MockApiData.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MockApiData.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Mocks\MockSonarrApi.cs" />
     <Compile Include="SonarrApi.cs" />
     <Compile Include="CouchPotatoApi.cs" />
     <Compile Include="MovieBase.cs" />
@@ -93,7 +99,12 @@
       <Name>PlexRequests.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="MockApiData.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>MockApiData.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
