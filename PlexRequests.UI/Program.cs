@@ -51,7 +51,15 @@ namespace PlexRequests.UI
             var uri = string.Empty;
             if (args.Length > 0)
             {
-                uri = args[0];
+                Log.Info("We are going to use port {0} that was passed in", args[0]);
+                int portResult;
+                if (!int.TryParse(args[0], out portResult))
+                {
+                    Console.WriteLine("Incorrect Port format. Press Any Key to shut down.");
+                    Console.ReadLine();
+                    Environment.Exit(1);
+                }
+                uri = $"http://localhost:{portResult}";
             }
 
             Log.Trace("Getting assembly version");
