@@ -48,7 +48,12 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-           
+            var uri = string.Empty;
+            if (args.Length > 0)
+            {
+                uri = args[0];
+            }
+
             Log.Trace("Getting assembly version");
             WriteOutVersion();
             
@@ -57,8 +62,8 @@ namespace PlexRequests.UI
 
             //ConfigureTargets(connection);
 
-
-            var uri = GetStartupUri();
+            if(string.IsNullOrEmpty(uri))
+                uri = GetStartupUri();
 
             using (WebApp.Start<Startup>(uri))
             {
