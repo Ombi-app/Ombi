@@ -67,9 +67,7 @@ namespace PlexRequests.UI
             
             var s = new Setup();
             s.SetupDb();
-
-            //ConfigureTargets(connection);
-
+            
             if(string.IsNullOrEmpty(uri))
                 uri = GetStartupUri();
 

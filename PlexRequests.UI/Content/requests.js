@@ -182,6 +182,50 @@ $(document).on("click", ".clear", function (e) {
 
 });
 
+//change
+
+// Change Availability
+$(document).on("click", ".change", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+
+    var availablity = $("button[custom-availibility='" + buttonId + "']").val();
+    var $form = $('#change' + buttonId);
+    var data = $form.serialize();
+    data = data + "&Available=" + availablity;
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: data,
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! Availibility changed.", "info");
+                var button = $("button[custom-availibility='" + buttonId + "']");
+                var icon = $('#availableIcon'+buttonId);
+
+                if (response.available) {
+                    button.text("Mark Unavailable");
+                    button.val("false");
+                    button.prop("class", "btn btn-sm btn-info-outline change");
+                    icon.prop("class", "fa fa-check");
+                } else {
+                    button.text("Mark Available");
+                    button.prop("class", "btn btn-sm btn-success-outline change");
+                    icon.prop("class", "fa fa-times");
+                    button.val("true");
+                }
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
+});
 
 function movieLoad() {
     $("#movieList").html("");

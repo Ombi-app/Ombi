@@ -45,11 +45,10 @@ namespace PlexRequests.UI.Modules
     public class RequestsModule : BaseModule
     {
 
-        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<AuthenticationSettings> auth, ISettingsService<PlexSettings> plex) : base("requests")
+        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
-            AuthSettings = auth;
             PlexSettings = plex;
 
             Get["/"] = _ => LoadRequests();
@@ -61,10 +60,10 @@ namespace PlexRequests.UI.Modules
 
             Post["/clearissues"] = _ => ClearIssue((int)Request.Form.Id);
 
+            Post["/changeavailability"] = _ => ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
         }
         private IRepository<RequestedModel> Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
-        private ISettingsService<AuthenticationSettings> AuthSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
 
         private Negotiator LoadRequests()
@@ -131,13 +130,14 @@ namespace PlexRequests.UI.Modules
 
         private Response DeleteRequest(int requestid)
         {
-            if (Context.CurrentUser.IsAuthenticated())
+            if (!Context.CurrentUser.IsAuthenticated())
             {
-                var currentEntity = Service.Get(requestid);
-                Service.Delete(currentEntity);
-                return Response.AsJson(new JsonResponseModel { Result = true });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot delete any requests." });
             }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot delete any requests." });
+
+            var currentEntity = Service.Get(requestid);
+            Service.Delete(currentEntity);
+            return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
         /// <summary>
@@ -162,11 +162,9 @@ namespace PlexRequests.UI.Modules
 
 
             var result = Service.Update(originalRequest);
-            if (result)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = true });
-            }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true } 
+                : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
         }
 
         private Response ClearIssue(int requestId)
@@ -188,6 +186,22 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result 
                                        ? new JsonResponseModel { Result = true } 
                                        : new JsonResponseModel { Result = false, Message = "Could not clear issue, please try again or check the logs" });
+        }
+
+        private Response ChangeRequestAvailability(int requestId, bool available)
+        {
+            var originalRequest = Service.Get(requestId);
+            if (originalRequest == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to change the availability!" });
+            }
+
+            originalRequest.Available = available;
+
+            var result = Service.Update(originalRequest);
+            return Response.AsJson(result
+                                       ? new {Result = true, Available = available, Message = string.Empty}
+                                       : new { Result = false, Available=false, Message = "Could not update the availability, please try again or check the logs" });
         }
     }
 }

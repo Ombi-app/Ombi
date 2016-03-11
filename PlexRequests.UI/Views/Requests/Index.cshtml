@@ -87,10 +87,10 @@
                 <div>
                     Available
                     {{#if_eq available false}}
-                    <i class="fa fa-times"></i>
+                    <i id="availableIcon{{requestId}}" class="fa fa-times"></i>
                     {{/if_eq}}
                     {{#if_eq available true}}
-                    <i class="fa fa-check"></i>
+                    <i id="availableIcon{{requestId}}" class="fa fa-check"></i>
                     {{/if_eq}}
                 </div>
                 <div>Requested By: {{requestedBy}}</div>
@@ -122,6 +122,16 @@
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
+
+                <form method="POST" action="/requests/changeavailability" id="change{{requestId}}">
+                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
+                    {{#if_eq available true}}
+                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit">Mark Unavailable</button>
+                    {{else}}
+                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change" type="submit">Mark Available</button>
+                    {{/if_eq}}
+                </form>
+
                 {{/if_eq}}
 
                 <form method="POST" action="/requests/reportissue/" id="report{{requestId}}">
