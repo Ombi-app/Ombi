@@ -32,6 +32,7 @@ using Nancy.Responses.Negotiation;
 using NLog;
 
 using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -46,7 +47,7 @@ namespace PlexRequests.UI.Modules
     {
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
-            IRequestService request) : base("search")
+            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -55,6 +56,8 @@ namespace PlexRequests.UI.Modules
             Cache = cache;
             Checker = checker;
             RequestService = request;
+            SonarrApi = sonarrApi;
+            SonarrService = sonarrSettings;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -68,11 +71,13 @@ namespace PlexRequests.UI.Modules
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
         }
         private TheMovieDbApi MovieApi { get; }
+        private ISonarrApi SonarrApi { get; }
         private TheTvDbApi TvApi { get; }
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
+        private ISettingsService<SonarrSettings> SonarrService { get; }
         private IAvailabilityChecker Checker { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
@@ -257,10 +262,26 @@ namespace PlexRequests.UI.Modules
                 RequestedDate = DateTime.Now,
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
-                Issues = IssueState.None
+                Issues = IssueState.None,
+                LatestTv =  latest
             };
 
             RequestService.AddRequest(showId, model);
+
+            var settings = PrService.GetSettings();
+            if (!settings.RequireApproval)
+            {
+                var sonarrSettings = SonarrService.GetSettings();
+                int qualityProfile;
+                int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+                var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.LatestTv, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri);
+                Log.Info("Added series {0} to Sonarr, Result: {1}", model.Title, result);
+                Log.Trace("Model sent to Sonarr: ");
+                Log.Trace(model.DumpJson());
+            }
+
             return Response.AsJson(new { Result = true });
         }
         private string GetAuthToken(TheTvDbApi api)

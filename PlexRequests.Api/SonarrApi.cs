@@ -45,11 +45,56 @@ namespace PlexRequests.Api
 
         public List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl)
         {
-            var request = new RestRequest { Resource = "/api/profile", Method = Method.GET};
+            var request = new RestRequest { Resource = "/api/profile", Method = Method.GET };
 
             request.AddHeader("X-Api-Key", apiKey);
 
             var obj = Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl);
+
+            return obj;
+        }
+
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes, string apiKey, Uri baseUrl)
+        {
+
+            var request = new RestRequest
+            {
+                Resource = "/api/Series?",
+                Method = Method.POST
+            };
+
+            var options = new SonarrAddSeries();
+            if (episodes == true)
+            {
+                options.addOptions = new AddOptions
+                {
+                    ignoreEpisodesWithFiles = true,
+                    ignoreEpisodesWithoutFiles = true,
+                    searchForMissingEpisodes = false
+                };
+            }
+            else
+            {
+                options.addOptions = new AddOptions
+                {
+                    ignoreEpisodesWithFiles = false,
+                    searchForMissingEpisodes = true,
+                    ignoreEpisodesWithoutFiles = false
+                };
+            }
+            options.seasonFolder = seasonFolders;
+            options.title = title;
+            options.qualityProfileId = qualityId;
+            options.tvdbId = tvdbId;
+            options.titleSlug = title;
+            options.seasons = new List<Season>();
+            options.rootFolderPath = rootPath;
+
+
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(options);
+
+            var obj = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
 
             return obj;
         }

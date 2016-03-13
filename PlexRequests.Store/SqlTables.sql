@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	ReleaseDate							varchar(50) NOT NULL,
 	Status								varchar(50) NOT NULL,
 	Approved							INTEGER NOT NULL,
+	LatestTv							INTEGER NOT NULL,
 	RequestedBy							varchar(50),
 	RequestedDate						varchar(50) NOT NULL,
 	Available							INTEGER(50),

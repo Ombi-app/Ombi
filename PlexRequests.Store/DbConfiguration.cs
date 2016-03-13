@@ -58,7 +58,7 @@ namespace PlexRequests.Store
             return false;
         }
 
-        public string DbFile = "RequestPlex.sqlite";
+        public string DbFile = "PlexRequests.sqlite";
         
         /// <summary>
         /// Gets the database connection.

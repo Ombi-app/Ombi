@@ -61,6 +61,43 @@ namespace PlexRequests.Api {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///    &quot;title&quot;: &quot;Archer (2009)&quot;,
+        ///    &quot;seasons&quot;: [
+        ///      {
+        ///        &quot;seasonNumber&quot;: 5,
+        ///        &quot;monitored&quot;: true
+        ///      },
+        ///      {
+        ///        &quot;seasonNumber&quot;: 4,
+        ///        &quot;monitored&quot;: true
+        ///      },
+        ///      {
+        ///        &quot;seasonNumber&quot;: 3,
+        ///        &quot;monitored&quot;: true
+        ///      },
+        ///      {
+        ///        &quot;seasonNumber&quot;: 2,
+        ///        &quot;monitored&quot;: true
+        ///      },
+        ///      {
+        ///        &quot;seasonNumber&quot;: 1,
+        ///        &quot;monitored&quot;: true
+        ///      },
+        ///      {
+        ///        &quot;seasonNumber&quot;: 0,
+        ///        &quot;monitored&quot;: false
+        ///      }
+        ///    ],
+        ///    &quot;pat [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string Sonarr_AddSeriesResult {
+            get {
+                return ResourceManager.GetString("Sonarr_AddSeriesResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [
         ///  {
         ///    &quot;name&quot;: &quot;SD&quot;,

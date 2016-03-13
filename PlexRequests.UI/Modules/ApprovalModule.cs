@@ -44,13 +44,16 @@ namespace PlexRequests.UI.Modules
     public class ApprovalModule : BaseModule
     {
 
-        public ApprovalModule(IRepository<RequestedModel> service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi) : base("approval")
+        public ApprovalModule(IRepository<RequestedModel> service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
+            ISettingsService<SonarrSettings> sonarrSettings) : base("approval")
         {
             this.RequiresAuthentication();
 
             Service = service;
             CpService = cpService;
             CpApi = cpApi;
+            SonarrApi = sonarrApi;
+            SonarrSettings = sonarrSettings;
 
             Post["/approve"] = parameters => Approve((int)Request.Form.requestid);
             Post["/approveall"] = x => ApproveAll();
@@ -59,7 +62,9 @@ namespace PlexRequests.UI.Modules
         private IRepository<RequestedModel> Service { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private ISettingsService<SonarrSettings> SonarrSettings { get; set; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
+        private ISonarrApi SonarrApi { get; set; }
         private ICouchPotatoApi CpApi { get; }
 
         /// <summary>
@@ -95,8 +100,21 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestTvAndUpdateStatus(RequestedModel request)
         {
-            // TODO
-            return Response.AsJson(new JsonResponseModel());
+            var sonarrSettings = SonarrSettings.GetSettings();
+            int qualityProfile;
+            int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+            var result = SonarrApi.AddSeries(request.ProviderId, request.Title, qualityProfile,
+                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, request.LatestTv, sonarrSettings.ApiKey,
+                sonarrSettings.FullUri);
+
+            if (!string.IsNullOrEmpty(result.title))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+            return Response.AsJson(new JsonResponseModel
+            {
+                Result = false, Message = "Could not add the series to Sonarr"
+            });
         }
 
         private Response RequestMovieAndUpdateStatus(RequestedModel request)

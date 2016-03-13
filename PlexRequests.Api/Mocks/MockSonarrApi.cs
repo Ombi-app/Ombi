@@ -42,5 +42,13 @@ namespace PlexRequests.Api.Mocks
             var obj = JsonConvert.DeserializeObject<List<SonarrProfile>>(json);
             return obj;
         }
+
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes,
+            string apiKey, Uri baseUrl)
+        {
+            var json = MockApiData.Sonarr_AddSeriesResult;
+            var obj = JsonConvert.DeserializeObject<SonarrAddSeries>(json);
+            return obj;
+        }
     }
 }

@@ -23,6 +23,7 @@ namespace PlexRequests.Store
         public bool Available { get; set; }
         public IssueState Issues { get; set; }
         public string OtherMessage { get; set; }
+        public bool LatestTv { get; set; }
     }
 
     public enum RequestType

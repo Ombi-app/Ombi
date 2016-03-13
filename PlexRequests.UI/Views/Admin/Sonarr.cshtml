@@ -3,7 +3,7 @@
     int port;
     if (Model.Port == 0)
     {
-        port = 80;
+        port = 8989;
     }
     else
     {
@@ -47,6 +47,31 @@
                 <label for="select" class="control-label">Quality Profiles</label>
                 <div id="profiles">
                     <select class="form-control" id="select"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="RootPath" class="control-label">Root save directory for TV shows</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="RootPath" name="RootPath" value="@Model.RootPath">
+                    <label>Enter the root folder where tv shows are saved. For example <strong>C:\Media\TV</strong>.</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.SeasonFolders)
+                        {
+                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders" checked="checked">
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders">
+                        }
+                        <label>Enable season folders</label>
+                        <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
+                    </label>
                 </div>
             </div>
 
