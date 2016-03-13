@@ -20,12 +20,14 @@ I wanted to write a similar application in .Net!
 ![Preview](http://i.imgur.com/yNztwTn.gif)
 
 #Installation
-
+Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
+Extract the .zip file (Unblock if on Windows! Right Click > Properties > Unblock).
 Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 
 #Configuration
 
-TBC
+To configure PlexRequests you need to register an admin user by clicking on Admin (top right) and press the Register link.
+You will then have a admin menu option once registered where you can setup Sonarr, Couchpotato and any other settings.
 
 # Contributors
 
