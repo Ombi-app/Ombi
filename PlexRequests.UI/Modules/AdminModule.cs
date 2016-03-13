@@ -68,9 +68,9 @@ namespace PlexRequests.UI.Modules
             SonarrService = sonarr;
             SonarrApi = sonarrApi;
 
-#if !DEBUG
+//#if !DEBUG
             this.RequiresAuthentication();
-#endif
+//#endif
             Get["/"] = _ => Admin();
 
             Get["/authentication"] = _ => Authentication();

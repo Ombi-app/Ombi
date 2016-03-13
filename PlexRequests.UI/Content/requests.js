@@ -182,8 +182,6 @@ $(document).on("click", ".clear", function (e) {
 
 });
 
-//change
-
 // Change Availability
 $(document).on("click", ".change", function (e) {
     e.preventDefault();
