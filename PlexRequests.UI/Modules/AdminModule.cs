@@ -190,7 +190,7 @@ namespace PlexRequests.UI.Modules
             var settings = CpService.GetSettings();
             model = settings;
 
-            return View["/Admin/CouchPotato", model];
+            return View["CouchPotato", model];
         }
 
         private Response SaveCouchPotato()
