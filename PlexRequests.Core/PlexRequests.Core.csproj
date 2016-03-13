@@ -67,6 +67,7 @@
     <Compile Include="IRequestService.cs" />
     <Compile Include="ISettingsService.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
+    <Compile Include="SettingModels\EmailNotificationSettings.cs" />
     <Compile Include="SettingModels\PlexSettings.cs" />
     <Compile Include="SettingModels\SonarrSettings.cs" />
     <Compile Include="SettingModels\SickRageSettings.cs" />
