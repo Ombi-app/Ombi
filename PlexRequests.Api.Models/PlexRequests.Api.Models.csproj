@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Movie\CouchPotatoAdd.cs" />
+    <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Plex\PlexAuthentication.cs" />
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />

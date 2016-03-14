@@ -166,6 +166,7 @@
     <Compile Include="Models\SearchTvShowViewModel.cs" />
     <Compile Include="Models\SessionKeys.cs" />
     <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Modules\ApplicationTesterModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
     <Compile Include="Modules\ApprovalModule.cs" />
