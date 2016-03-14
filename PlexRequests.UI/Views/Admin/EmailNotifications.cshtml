@@ -1,0 +1,92 @@
+﻿@Html.Partial("_Sidebar")
+@{
+    int port;
+    if (Model.EmailPort == 0)
+    {
+        port = 25;
+    }
+    else
+    {
+        port = Model.EmailPort;
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Email Notifications</legend>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.Enabled)
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                        }
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="EmailHost" class="control-label">SMTP Hostname or IP</label>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="EmailHost" name="EmailHost" placeholder="localhost" value="@Model.EmailHost">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="EmailPort" class="control-label">SMTP Port</label>
+
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="EmailPort" name="EmailPort" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="RecipientEmail" class="control-label">Email Recipient</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="RecipientEmail" name="RecipientEmail" value="@Model.RecipientEmail">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.EmailAuthentication)
+                        {
+                            <input type="checkbox" id="EmailAuthentication" name="EmailAuthentication" checked="checked"><text>Authenticate</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="EmailAuthentication" name="EmailAuthentication"><text>Authenticate</text>
+                        }
+                    </label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="EmailUsername" class="control-label">Username</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="EmailUsername" name="EmailUsername" value="@Model.EmailUsername">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="EmailPassword" class="control-label">Password</label>
+                <div>
+                    <input type="password" class="form-control form-control-custom " id="EmailPassword" name="EmailPassword" value="@Model.EmailPassword">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

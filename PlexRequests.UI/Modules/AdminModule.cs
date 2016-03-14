@@ -51,6 +51,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; set; }
         private ISettingsService<PlexSettings> PlexService { get; set; }
         private ISettingsService<SonarrSettings> SonarrService { get; set; }
+        private ISettingsService<EmailNotificationSettings> EmailService { get; set; }
         private ISonarrApi SonarrApi { get; set; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -59,7 +60,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<AuthenticationSettings> auth
             , ISettingsService<PlexSettings> plex,
             ISettingsService<SonarrSettings> sonarr,
-            ISonarrApi sonarrApi) : base("admin")
+            ISonarrApi sonarrApi,
+             ISettingsService<EmailNotificationSettings> email) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -67,10 +69,11 @@ namespace PlexRequests.UI.Modules
             PlexService = plex;
             SonarrService = sonarr;
             SonarrApi = sonarrApi;
+            EmailService = email;
 
-//#if !DEBUG
+#if !DEBUG
             this.RequiresAuthentication();
-//#endif
+#endif
             Get["/"] = _ => Admin();
 
             Get["/authentication"] = _ => Authentication();
@@ -92,6 +95,9 @@ namespace PlexRequests.UI.Modules
             Post["/sonarr"] = _ => SaveSonarr();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+
+            Get["/emailnotification"] = _ => EmailNotifications();
+            Post["/emailnotification"] = _ => SaveEmailNotifications();
         }
 
         private Negotiator Authentication()
@@ -239,5 +245,21 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(profiles);
         }
 
+
+        private Negotiator EmailNotifications()
+        {
+            var settings = EmailService.GetSettings();
+            return View["EmailNotifications",settings];
+        }
+
+        private Response SaveEmailNotifications()
+        {
+            var settings = this.Bind<EmailNotificationSettings>();
+            Log.Trace(settings.DumpJson());
+
+            var result = EmailService.SaveSettings(settings);
+            Log.Info("Saved email settings, result: {0}", result);
+            return Context.GetRedirect("~/admin/emailnotification");
+        }
     }
 }
