@@ -2,5 +2,9 @@
   {
     "outputFile": "Content/custom.css",
     "inputFile": "Content/custom.scss"
+  },
+  {
+    "outputFile": "Content/pace.css",
+    "inputFile": "Content/pace.scss"
   }
 ]

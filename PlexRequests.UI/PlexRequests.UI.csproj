@@ -206,6 +206,13 @@
     <Content Include="Content\jquery-2.2.1.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\pace.css">
+      <DependentUpon>pace.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\pace.min.css">
+      <DependentUpon>pace.css</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\requests.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -222,6 +229,10 @@
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
     <None Include="Content\custom.scss" />
+    <Content Include="Content\pace.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Content\pace.scss" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
