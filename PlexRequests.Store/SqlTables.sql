@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Requested
 	PosterPath							varchar(50) NOT NULL,
 	ReleaseDate							varchar(50) NOT NULL,
 	Status								varchar(50) NOT NULL,
+	AdminNote							varchar(50),
 	Approved							INTEGER NOT NULL,
 	LatestTv							INTEGER NOT NULL,
 	RequestedBy							varchar(50),

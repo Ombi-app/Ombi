@@ -5,8 +5,8 @@
     @if (Context.CurrentUser.IsAuthenticated())
     {
         <button id="approveAll" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve All</button>
-        <br/>
-        <br/>
+        <br />
+        <br />
     }
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
@@ -102,10 +102,13 @@
                     <div>Issue: {{issues}}</div>
                     {{/if}}
                 </div>
+                <div id="adminNotesArea">
+                    {{#if adminNote}}
+                    <div>Note from Admin: {{adminNote}}</div>
+                    {{/if}}
+                </div>
             </div>
             <div class="col-sm-2 col-sm-push-3">
-                <br />
-                <br />
                 {{#if_eq admin true}}
                 {{#if_eq approved false}}
                 <form method="POST" action="/approval/approve" id="approve{{requestId}}">
@@ -117,7 +120,7 @@
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
                 </form>
-                
+
                 <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
@@ -150,6 +153,11 @@
                         </ul>
                     </div>
                 </form>
+                {{#if_eq admin true}}
+
+                    <button id="{{requestId}}" data-identifier="{{requestId}}" style="text-align: right" value="false" href="#" class="btn btn-sm btn-info-outline note" data-toggle="modal" data-target="#noteModal">Add Note</button>
+
+                {{/if_eq}}
             </div>
             @* // TODO add Issues to the view *@
         </div>
@@ -170,8 +178,29 @@
                     <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="noteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <h4 class="modal-title">Add a note</h4>
+            </div>
+            <form method="POST" action="/requests/addnote" id="noteForm">
+                <div class="modal-body">
+                    <input name="requestId" class="requestId" type="text" hidden="hidden" value="" />
+                    <textarea class="form-control form-control-custom" rows="3" id="noteArea" name="noteArea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-outline theNoteSaveButton" data-dismiss="modal">Save changes</button>
                 </div>
             </form>
         </div>

@@ -24,6 +24,7 @@ namespace PlexRequests.Store
         public IssueState Issues { get; set; }
         public string OtherMessage { get; set; }
         public bool LatestTv { get; set; }
+        public string AdminNote { get; set; }
     }
 
     public enum RequestType

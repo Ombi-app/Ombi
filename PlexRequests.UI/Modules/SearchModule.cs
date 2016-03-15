@@ -189,10 +189,12 @@ namespace PlexRequests.UI.Modules
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
 
+#if !DEBUG
             if (CheckIfTitleExistsInPlex(movieInfo.Title))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
             }
+#endif
 
             var model = new RequestedModel
             {
@@ -263,10 +265,12 @@ namespace PlexRequests.UI.Modules
 
             var showInfo = tvApi.GetInformation(showId, token).data;
 
+#if !DEBUG
             if (CheckIfTitleExistsInPlex(showInfo.seriesName))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.seriesName} is already in Plex!" });
             }
+#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.firstAired, out firstAir);
