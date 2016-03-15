@@ -36,6 +36,7 @@ using Mono.Data.Sqlite;
 
 using NLog;
 
+using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -51,7 +52,7 @@ namespace PlexRequests.Services
         {
             ConfigurationReader = new ConfigurationReader();
             var repo = new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new RequestService(new GenericRepository<RequestedModel>(new DbConfiguration(new SqliteFactory())))  );
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new RequestService(new GenericRepository<RequestedModel>(new DbConfiguration(new SqliteFactory()))), new PlexApi());
             HostingEnvironment.RegisterObject(this);
         }
 
