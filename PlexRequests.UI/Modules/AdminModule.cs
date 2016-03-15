@@ -35,7 +35,6 @@ using Nancy.Security;
 
 using NLog;
 
-using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -46,22 +45,24 @@ namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        private ISettingsService<PlexRequestSettings> RpService { get; set; }
-        private ISettingsService<CouchPotatoSettings> CpService { get; set; }
-        private ISettingsService<AuthenticationSettings> AuthService { get; set; }
-        private ISettingsService<PlexSettings> PlexService { get; set; }
-        private ISettingsService<SonarrSettings> SonarrService { get; set; }
-        private ISettingsService<EmailNotificationSettings> EmailService { get; set; }
-        private ISonarrApi SonarrApi { get; set; }
+        private ISettingsService<PlexRequestSettings> RpService { get; }
+        private ISettingsService<CouchPotatoSettings> CpService { get; }
+        private ISettingsService<AuthenticationSettings> AuthService { get; }
+        private ISettingsService<PlexSettings> PlexService { get; }
+        private ISettingsService<SonarrSettings> SonarrService { get; }
+        private ISettingsService<EmailNotificationSettings> EmailService { get; }
+        private IPlexApi PlexApi { get; }
+        private ISonarrApi SonarrApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
             ISettingsService<CouchPotatoSettings> cpService,
-            ISettingsService<AuthenticationSettings> auth
-            , ISettingsService<PlexSettings> plex,
+            ISettingsService<AuthenticationSettings> auth,
+            ISettingsService<PlexSettings> plex,
             ISettingsService<SonarrSettings> sonarr,
             ISonarrApi sonarrApi,
-             ISettingsService<EmailNotificationSettings> email) : base("admin")
+            ISettingsService<EmailNotificationSettings> email,
+            IPlexApi plexApi) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -70,6 +71,7 @@ namespace PlexRequests.UI.Modules
             SonarrService = sonarr;
             SonarrApi = sonarrApi;
             EmailService = email;
+            PlexApi = plexApi;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -124,7 +126,7 @@ namespace PlexRequests.UI.Modules
             var settings = RpService.GetSettings();
             Log.Trace("Getting Settings:");
             Log.Trace(settings.DumpJson());
-    
+
             return View["Settings", settings];
         }
 
@@ -147,10 +149,9 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new { Result = false, Message = "Please provide a valid username and password" });
             }
 
-            var plex = new PlexApi();
-            var model = plex.SignIn(user.username, user.password);
+            var model = PlexApi.SignIn(user.username, user.password);
 
-            if (model.user == null)
+            if (model?.user == null)
             {
                 return Response.AsJson(new { Result = false, Message = "Incorrect username or password!" });
             }
@@ -176,15 +177,23 @@ namespace PlexRequests.UI.Modules
 
         private Response GetUsers()
         {
-            var token = AuthService.GetSettings().PlexAuthToken;
+            var settings = AuthService.GetSettings();
+
+            var token = settings?.PlexAuthToken;
             if (token == null)
             {
                 return Response.AsJson(string.Empty);
             }
-            var api = new PlexApi();
-            var users = api.GetUsers(token);
+
+            var users = PlexApi.GetUsers(token);
             if (users == null)
-            { return Response.AsJson(string.Empty); }
+            {
+                return Response.AsJson(string.Empty);
+            }
+            if (users.User == null || users.User?.Length == 0)
+            {
+                return Response.AsJson(string.Empty);
+            }
 
             var usernames = users.User.Select(x => x.Username);
             return Response.AsJson(usernames);
@@ -251,7 +260,7 @@ namespace PlexRequests.UI.Modules
         private Negotiator EmailNotifications()
         {
             var settings = EmailService.GetSettings();
-            return View["EmailNotifications",settings];
+            return View["EmailNotifications", settings];
         }
 
         private Response SaveEmailNotifications()
