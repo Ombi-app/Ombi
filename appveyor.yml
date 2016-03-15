@@ -15,7 +15,7 @@ after_build:
     7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
 
     appveyor PushArtifact PlexRequests.zip
-
+    
 deploy:
 - provider: GitHub
   release: PlexRequests $(appveyor_build_version)
