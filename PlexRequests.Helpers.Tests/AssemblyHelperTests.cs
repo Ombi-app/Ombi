@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AssemblyHelper.cs
+//    File: AssemblyHelperTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Diagnostics;
-using System.Reflection;
+using NUnit.Framework;
 
-namespace PlexRequests.Helpers
+namespace PlexRequests.Helpers.Tests
 {
-    public class AssemblyHelper
+    [TestFixture]
+    public class AssemblyHelperTests
     {
-        public static string GetAssemblyVersion()
+        [Test]
+        public void GetReleaseVersionTest()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fvi.FileVersion;
-        }
-
-        public static string GetReleaseVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            var retVersion = "v" + fvi.FileVersion.Substring(0, fvi.FileVersion.Length - 2);
-            return retVersion;
+            var result = AssemblyHelper.GetReleaseVersion();
+            Assert.That(result, Contains.Substring("v"));
+            Assert.That(result, Is.Not.EqualTo("1.0.0.0"));
         }
     }
 }

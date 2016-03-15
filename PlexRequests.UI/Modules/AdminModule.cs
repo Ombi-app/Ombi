@@ -100,6 +100,7 @@ namespace PlexRequests.UI.Modules
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
+            Get["/status"] = _ => Status();
         }
 
         private Negotiator Authentication()
@@ -271,6 +272,13 @@ namespace PlexRequests.UI.Modules
             var result = EmailService.SaveSettings(settings);
             Log.Info("Saved email settings, result: {0}", result);
             return Context.GetRedirect("~/admin/emailnotification");
+        }
+
+        private Negotiator Status()
+        {
+            var checker = new StatusChecker();
+            var status = checker.GetStatus();
+            return View["Status", status];
         }
     }
 }

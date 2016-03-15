@@ -54,5 +54,14 @@
         {
             <a class="list-group-item" href="/admin/emailnotification">Email Notifications</a>
         }
+
+        @if (Context.Request.Path == "/admin/status")
+        {
+            <a class="list-group-item active" href="/admin/status">Status/a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/status">Status</a>
+        }
     </div>
 </div>

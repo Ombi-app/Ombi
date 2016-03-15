@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AssemblyHelper.cs
+//    File: AuthenticationSettingsTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Diagnostics;
-using System.Reflection;
+using NUnit.Framework;
 
-namespace PlexRequests.Helpers
+namespace PlexRequests.Core.Tests
 {
-    public class AssemblyHelper
+    [TestFixture]
+    public class StatusCheckerTests
     {
-        public static string GetAssemblyVersion()
+        [Test]
+        public void CheckStatusTest()
         {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            return fvi.FileVersion;
-        }
+            var checker = new StatusChecker();
+            var status = checker.GetStatus();
 
-        public static string GetReleaseVersion()
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            var retVersion = "v" + fvi.FileVersion.Substring(0, fvi.FileVersion.Length - 2);
-            return retVersion;
+            Assert.That(status, Is.Not.Null);
         }
     }
 }
