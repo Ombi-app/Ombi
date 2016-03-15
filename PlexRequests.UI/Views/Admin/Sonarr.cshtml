@@ -74,6 +74,12 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <div>
+                    <button id="testSonarr" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                </div>
+            </div>
+
 
             <div class="form-group">
                 <div>
@@ -182,6 +188,31 @@
                 }
             });
         });
+
+        $('#testSonarr').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: "/test/sonarr",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                        $('#authToken').val(response.authToken);
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
 
 
     })

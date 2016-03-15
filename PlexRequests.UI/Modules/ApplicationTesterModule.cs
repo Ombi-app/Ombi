@@ -25,8 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 using Nancy;
 using Nancy.ModelBinding;
@@ -34,11 +32,8 @@ using Nancy.Security;
 
 using NLog;
 
-using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -55,6 +50,7 @@ namespace PlexRequests.UI.Modules
 
 
             Post["/cp"] = _ => CouchPotatoTest();
+            Post["/sonarr"] = _ => SonarrTest();
 
         }
         
@@ -81,6 +77,30 @@ namespace PlexRequests.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to CouchPotato, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+
+        private Response SonarrTest()
+        {
+            var sonarrSettings = this.Bind<SonarrSettings>();
+            try
+            {
+                var status = SonarrApi.SystemStatus(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                return status != null
+               ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Sonarr successfully!" })
+               : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Sonarr, please check your settings." });
+
+            }
+            catch (ApplicationException e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+            {
+                Log.Warn("Exception thrown when attempting to get Sonarr's status: ");
+                Log.Warn(e);
+                var message = $"Could not connect to Sonarr, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to Sonarr, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }

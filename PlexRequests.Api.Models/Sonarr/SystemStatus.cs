@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISonarrApi.cs
+//    File: SystemStatus.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,20 +24,25 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
-
-using PlexRequests.Api.Models.Sonarr;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public interface ISonarrApi
+    public class SystemStatus
     {
-        List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl);
-
-        SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
-            bool episodes, string apiKey, Uri baseUrl);
-
-        SystemStatus SystemStatus(string apiKey, Uri baseUrl);
+        public string version { get; set; }
+        public string buildTime { get; set; }
+        public bool isDebug { get; set; }
+        public bool isProduction { get; set; }
+        public bool isAdmin { get; set; }
+        public bool isUserInteractive { get; set; }
+        public string startupPath { get; set; }
+        public string appData { get; set; }
+        public string osVersion { get; set; }
+        public bool isMono { get; set; }
+        public bool isLinux { get; set; }
+        public bool isWindows { get; set; }
+        public string branch { get; set; }
+        public bool authentication { get; set; }
+        public int startOfWeek { get; set; }
+        public string urlBase { get; set; }
     }
 }

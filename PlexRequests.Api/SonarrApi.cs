@@ -98,5 +98,15 @@ namespace PlexRequests.Api
 
             return obj;
         }
+
+        public SystemStatus SystemStatus(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/system/status", Method = Method.GET };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            var obj = Api.ExecuteJson<SystemStatus>(request, baseUrl);
+
+            return obj;
+        }
     }
 }
