@@ -1,9 +1,9 @@
-version: 1.1.{build}
+version: 1.2.{build}
 configuration: Release
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
+  assembly_version: '1.2.0'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}'
 before_build:
