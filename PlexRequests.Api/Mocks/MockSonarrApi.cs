@@ -50,5 +50,10 @@ namespace PlexRequests.Api.Mocks
             var obj = JsonConvert.DeserializeObject<SonarrAddSeries>(json);
             return obj;
         }
+
+        public SystemStatus SystemStatus(string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
