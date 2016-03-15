@@ -61,7 +61,9 @@ namespace PlexRequests.UI.Modules
             Post["/clearissues"] = _ => ClearIssue((int)Request.Form.Id);
 
             Post["/changeavailability"] = _ => ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
+            Post["/addnote"] = _ => AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
+
         private IRepository<RequestedModel> Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
@@ -94,7 +96,8 @@ namespace PlexRequests.UI.Modules
                 Available = movie.Available,
                 Admin = isAdmin,
                 Issues = movie.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = movie.OtherMessage
+                OtherMessage = movie.OtherMessage,
+                AdminNotes = movie.AdminNote
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -122,7 +125,8 @@ namespace PlexRequests.UI.Modules
                 Available = tv.Available,
                 Admin = isAdmin,
                 Issues = tv.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = tv.OtherMessage
+                OtherMessage = tv.OtherMessage,
+                AdminNotes = tv.AdminNote
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -156,14 +160,14 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
             }
             originalRequest.Issues = issue;
-            originalRequest.OtherMessage = !string.IsNullOrEmpty(comment) 
-                ? $"{Session[SessionKeys.UsernameKey]} - {comment}" 
+            originalRequest.OtherMessage = !string.IsNullOrEmpty(comment)
+                ? $"{Session[SessionKeys.UsernameKey]} - {comment}"
                 : string.Empty;
 
 
             var result = Service.Update(originalRequest);
             return Response.AsJson(result
-                ? new JsonResponseModel { Result = true } 
+                ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
         }
 
@@ -183,8 +187,8 @@ namespace PlexRequests.UI.Modules
             originalRequest.OtherMessage = string.Empty;
 
             var result = Service.Update(originalRequest);
-            return Response.AsJson(result 
-                                       ? new JsonResponseModel { Result = true } 
+            return Response.AsJson(result
+                                       ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not clear issue, please try again or check the logs" });
         }
 
@@ -200,8 +204,24 @@ namespace PlexRequests.UI.Modules
 
             var result = Service.Update(originalRequest);
             return Response.AsJson(result
-                                       ? new {Result = true, Available = available, Message = string.Empty}
-                                       : new { Result = false, Available=false, Message = "Could not update the availability, please try again or check the logs" });
+                                       ? new { Result = true, Available = available, Message = string.Empty }
+                                       : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
+        }
+
+        private Response AddNote(int requestId, string noteArea)
+        {
+            var originalRequest = Service.Get(requestId);
+            if (originalRequest == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to add a note!" });
+            }
+
+            originalRequest.AdminNote = noteArea;
+
+            var result = Service.Update(originalRequest);
+            return Response.AsJson(result
+                                       ? new JsonResponseModel { Result = true }
+                                       : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
         }
     }
 }

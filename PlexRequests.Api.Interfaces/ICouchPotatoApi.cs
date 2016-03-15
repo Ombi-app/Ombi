@@ -27,11 +27,13 @@
 
 using System;
 
+using PlexRequests.Api.Models.Movie;
+
 namespace PlexRequests.Api.Interfaces
 {
     public interface ICouchPotatoApi
     {
         bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl);
-
+        CouchPotatoStatus GetStatus(Uri url, string apiKey);
     }
 }

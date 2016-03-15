@@ -29,5 +29,6 @@ namespace PlexRequests.Services.Interfaces
     public interface IAvailabilityChecker
     {
         void CheckAndUpdateAll(long check);
+        bool IsAvailable(string title);
     }
 }

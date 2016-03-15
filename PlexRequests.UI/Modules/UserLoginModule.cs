@@ -30,16 +30,17 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 
+using NLog;
+
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    // TODO: Add ability to logout
     public class UserLoginModule : NancyModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api) : base("userlogin")
@@ -54,6 +55,8 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private IPlexApi Api { get; }
 
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         public Negotiator Index()
         {
             var settings = AuthService.GetSettings();
@@ -63,7 +66,7 @@ namespace PlexRequests.UI.Modules
         private Response LoginUser()
         {
             var username = Request.Form.username.Value;
-
+            Log.Debug("Username \"{0}\" attempting to login",username);
             if (string.IsNullOrWhiteSpace(username))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
@@ -72,39 +75,49 @@ namespace PlexRequests.UI.Modules
             var authenticated = false;
 
             var settings = AuthService.GetSettings();
-
+            Log.Debug("Settings: ");
+            Log.Debug(settings.DumpJson());
 
             if (IsUserInDeniedList(username, settings))
             {
+                Log.Debug("User is in denied list, not allowing them to authenticate");
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
             }
 
             var password = string.Empty;
             if (settings.UsePassword)
             {
+                Log.Debug("Using password");
                 password = Request.Form.password.Value;
             }
 
             
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
+                Log.Debug("Need to auth and also provide pass");
                 var signedIn = (PlexAuthentication)Api.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
+                    Log.Debug("Correct credentials, checking if the user is in the friends list");
                     authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                    Log.Debug("Friends list result = {0}", authenticated);
                 }
             }
             else if(settings.UserAuthentication) // Check against the users in Plex
             {
+                Log.Debug("Need to auth");
                 authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                Log.Debug("Friends list result = {0}", authenticated);
             }
             else if(!settings.UserAuthentication) // No auth, let them pass!
             {
+                Log.Debug("No need to auth");
                 authenticated = true;
             }
 
             if (authenticated)
             {
+                Log.Debug("We are authenticated! Setting session.");
                 // Add to the session (Used in the BaseModules)
                 Session[SessionKeys.UsernameKey] = (string)username;
             }
@@ -116,6 +129,7 @@ namespace PlexRequests.UI.Modules
 
         private Response Logout()
         {
+            Log.Debug("Logging Out");
             if (Session[SessionKeys.UsernameKey] != null)
             {
                 Session.Delete(SessionKeys.UsernameKey);
@@ -126,6 +140,8 @@ namespace PlexRequests.UI.Modules
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
             var users = Api.GetUsers(authToken);
+            Log.Debug("Plex Users: ");
+            Log.Debug(users.DumpJson());
             return users.User.Any(x => x.Username == username);
         }
 

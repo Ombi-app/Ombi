@@ -26,6 +26,9 @@
 #endregion
 using System;
 using FluentScheduler;
+
+using NLog;
+
 using Owin;
 using PlexRequests.UI.Jobs;
 using TaskFactory = FluentScheduler.TaskFactory;
@@ -34,6 +37,8 @@ namespace PlexRequests.UI
 {
     public class Startup
     {
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public void Configuration(IAppBuilder app)
         {
             try
@@ -44,7 +49,7 @@ namespace PlexRequests.UI
             }
             catch (Exception exception)
             {
-                Console.WriteLine(exception.Message);
+                Log.Fatal(exception);
                 throw;
             }
 

@@ -47,5 +47,6 @@ namespace PlexRequests.UI.Models
         public bool Admin { get; set; }
         public string Issues { get; set; }
         public string OtherMessage { get; set; }
+        public string AdminNotes { get; set; }
     }
 }

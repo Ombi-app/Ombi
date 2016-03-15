@@ -90,6 +90,34 @@ $(".theSaveButton").click(function (e) {
     });
 });
 
+// Note Modal click
+$(".theNoteSaveButton").click(function (e) {
+    var comment = $("#noteArea").val();
+    e.preventDefault();
+
+    var $form = $("#noteForm");
+    var data = $form.serialize();
+    
+
+    $.ajax({
+        type: $form.prop("method"),
+        url: $form.prop("action"),
+        data: data,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! Added Note.", "success");
+                $("#myModal").modal("hide");
+                $('#adminNotesArea').html("<div>Note from Admin: " + comment + "</div>");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+});
+
 // Update the modal
 $('#myModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
@@ -98,6 +126,17 @@ $('#myModal').on('show.bs.modal', function (event) {
     var modal = $(this);
     modal.find('.theSaveButton').val(id); // Add ID to the button
     var requestField = modal.find('input');
+    requestField.val(id);  // Add ID to the hidden field
+});
+
+// Update the note modal
+$('#noteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('identifier'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('.theNoteSaveButton').val(id); // Add ID to the button
+    var requestField = modal.find('.noteId');
     requestField.val(id);  // Add ID to the hidden field
 });
 
@@ -171,7 +210,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea').html("<p>Issue: None</p>");
+                $('#issueArea').html("<div>Issue: None</div>");
             }
         },
         error: function (e) {
@@ -181,8 +220,6 @@ $(document).on("click", ".clear", function (e) {
     });
 
 });
-
-//change
 
 // Change Availability
 $(document).on("click", ".change", function (e) {
@@ -270,7 +307,8 @@ function buildRequestContext(result, type) {
         admin: result.admin,
         issues: result.issues,
         otherMessage: result.otherMessage,
-        requestId: result.id
+        requestId: result.id,
+        adminNote: result.adminNotes
     };
 
     return context;

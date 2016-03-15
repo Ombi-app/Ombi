@@ -37,5 +37,7 @@ namespace PlexRequests.Api.Interfaces
 
         SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
             bool episodes, string apiKey, Uri baseUrl);
+
+        SystemStatus SystemStatus(string apiKey, Uri baseUrl);
     }
 }

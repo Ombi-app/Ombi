@@ -2,11 +2,11 @@
     <div class="list-group table-of-contents">
         @if (Context.Request.Path == "/admin")
         {
-            <a class="list-group-item active" href="/admin">Plex Request Settings</a>
+            <a class="list-group-item active" href="/admin">Plex Request</a>
         }
         else
         {
-            <a class="list-group-item" href="/admin">Plex Request Settings</a>
+            <a class="list-group-item" href="/admin">Plex Request</a>
         }
         @if (Context.Request.Path == "/admin/authentication")
         {
@@ -21,30 +21,47 @@
 
         @if (Context.Request.Path == "/admin/plex")
         {
-            <a class="list-group-item active" href="/admin/plex">Plex Settings</a>
+            <a class="list-group-item active" href="/admin/plex">Plex</a>
         }
         else
         {
-            <a class="list-group-item" href="/admin/plex">Plex Settings</a>
+            <a class="list-group-item" href="/admin/plex">Plex</a>
         }
         @if (Context.Request.Path == "/admin/couchpotato")
         {
-            <a class="list-group-item active" href="/admin/couchpotato">CouchPotato Settings</a>
+            <a class="list-group-item active" href="/admin/couchpotato">CouchPotato</a>
         }
         else
         {
 
-            <a class="list-group-item" href="/admin/couchpotato">CouchPotato Settings</a>
+            <a class="list-group-item" href="/admin/couchpotato">CouchPotato</a>
         }
         @if (Context.Request.Path == "/admin/sonarr")
         {
-            <a class="list-group-item active" href="/admin/sonarr">Sonarr Settings</a>
+            <a class="list-group-item active" href="/admin/sonarr">Sonarr</a>
         }
         else
         {
-            <a class="list-group-item" href="/admin/sonarr">Sonarr Settings</a>
-
+            <a class="list-group-item" href="/admin/sonarr">Sonarr</a>
         }
         @*<a class="list-group-item" href="/admin/sickbeard">Sickbeard Settings</a>*@
+
+        @if (Context.Request.Path == "/admin/emailnotification")
+        {
+            <a class="list-group-item active" href="/admin/emailnotification">Email Notifications</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/emailnotification">Email Notifications</a>
+        }
+
+        @if (Context.Request.Path == "/admin/status")
+        {
+            <a class="list-group-item active" href="/admin/status">Status</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/status">Status</a>
+        }
     </div>
 </div>

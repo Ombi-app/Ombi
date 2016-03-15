@@ -62,7 +62,7 @@ namespace PlexRequests.UI
                 uri = $"http://localhost:{portResult}";
             }
 
-            Log.Trace("Getting assembly version");
+            Log.Trace("Getting product version");
             WriteOutVersion();
             
             var s = new Setup();
@@ -81,7 +81,7 @@ namespace PlexRequests.UI
 
         private static void WriteOutVersion()
         {
-            var assemblyVer = AssemblyHelper.GetAssemblyVersion();
+            var assemblyVer = AssemblyHelper.GetProductVersion();
             Log.Info($"Version: {assemblyVer}");
             Console.WriteLine($"Version: {assemblyVer}");
         }

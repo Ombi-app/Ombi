@@ -38,7 +38,6 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
-using PlexRequests.UI.Jobs;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -47,7 +46,8 @@ namespace PlexRequests.UI.Modules
     {
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
-            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings) : base("search")
+            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
+            ICouchPotatoApi cpApi) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -58,6 +58,7 @@ namespace PlexRequests.UI.Modules
             RequestService = request;
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
+            CouchPotatoApi = cpApi;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -71,6 +72,7 @@ namespace PlexRequests.UI.Modules
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
         }
         private TheMovieDbApi MovieApi { get; }
+        private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
         private TheTvDbApi TvApi { get; }
         private IRequestService RequestService { get; }
@@ -105,6 +107,7 @@ namespace PlexRequests.UI.Modules
 
             if (tvShow?.data == null)
             {
+                Log.Trace("TV Show data is null");
                 return Response.AsJson("");
             }
             var model = new List<SearchTvShowViewModel>();
@@ -137,38 +140,47 @@ namespace PlexRequests.UI.Modules
                     Zap2ItId = t.zap2itId
                 });
             }
+
+            Log.Trace("Returning TV Show results: ");
+            Log.Trace(model.DumpJson());
             return Response.AsJson(model);
         }
 
-        private Response UpcomingMovies()
+        private Response UpcomingMovies() // TODO : Not used
         {
             var movies = MovieApi.GetUpcomingMovies();
             var result = movies.Result;
+            Log.Trace("Movie Upcoming Results: ");
+            Log.Trace(result.DumpJson());
             return Response.AsJson(result);
         }
 
-        private Response CurrentlyPlayingMovies()
+        private Response CurrentlyPlayingMovies() // TODO : Not used
         {
             var movies = MovieApi.GetCurrentPlayingMovies();
             var result = movies.Result;
+            Log.Trace("Movie Currently Playing Results: ");
+            Log.Trace(result.DumpJson());
             return Response.AsJson(result);
         }
 
         private Response RequestMovie(int movieId)
         {
-            Log.Trace("Requesting movie with id {0}", movieId);
+            Log.Info("Requesting movie with id {0}", movieId);
             if (RequestService.CheckRequest(movieId))
             {
                 Log.Trace("movie with id {0} exists", movieId);
-                return Response.AsJson(new { Result = false, Message = "Movie has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Movie has already been requested!" });
             }
-            Log.Trace("movie with id {0} doesnt exists", movieId);
+
+            Log.Debug("movie with id {0} doesnt exists", movieId);
             var cpSettings = CpService.GetSettings();
             if (cpSettings.ApiKey == null)
             {
                 Log.Warn("CP apiKey is null");
-                return Response.AsJson(new { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
             }
+
             Log.Trace("Settings: ");
             Log.Trace(cpSettings.DumpJson);
 
@@ -176,6 +188,13 @@ namespace PlexRequests.UI.Modules
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
+
+#if !DEBUG
+            if (CheckIfTitleExistsInPlex(movieInfo.Title))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+            }
+#endif
 
             var model = new RequestedModel
             {
@@ -195,36 +214,36 @@ namespace PlexRequests.UI.Modules
 
 
             var settings = PrService.GetSettings();
+            Log.Trace(settings.DumpJson());
             if (!settings.RequireApproval)
             {
-                var cp = new CouchPotatoApi();
-                Log.Trace("Adding movie to CP (No approval required)");
-                var result = cp.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri);
-                Log.Trace("Adding movie to CP result {0}", result);
+                Log.Info("Adding movie to CP (No approval required)");
+                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri);
+                Log.Debug("Adding movie to CP result {0}", result);
                 if (result)
                 {
                     model.Approved = true;
-                    Log.Trace("Adding movie to database requests (No approval required)");
+                    Log.Debug("Adding movie to database requests (No approval required)");
                     RequestService.AddRequest(movieId, model);
 
-                    return Response.AsJson(new { Result = true });
+                    return Response.AsJson(new JsonResponseModel { Result = true });
                 }
-                return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
             }
 
             try
             {
-                Log.Trace("Adding movie to database requests");
+                Log.Debug("Adding movie to database requests");
                 var id = RequestService.AddRequest(movieId, model);
                 //BackgroundJob.Enqueue(() => Checker.CheckAndUpdate(model.Title, (int)id));
 
-                return Response.AsJson(new { Result = true });
+                return Response.AsJson(new JsonResponseModel { Result = true });
             }
             catch (Exception e)
             {
                 Log.Fatal(e);
 
-                return Response.AsJson(new { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
             }
         }
 
@@ -236,16 +255,22 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response RequestTvShow(int showId, bool latest)
         {
-            // Latest send to Sonarr and no need to store in DB
             if (RequestService.CheckRequest(showId))
             {
-                return Response.AsJson(new { Result = false, Message = "TV Show has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "TV Show has already been requested!" });
             }
 
             var tvApi = new TheTvDbApi();
-            var token = GetAuthToken(tvApi);
+            var token = GetTvDbAuthToken(tvApi);
 
             var showInfo = tvApi.GetInformation(showId, token).data;
+
+#if !DEBUG
+            if (CheckIfTitleExistsInPlex(showInfo.seriesName))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.seriesName} is already in Plex!" });
+            }
+#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.firstAired, out firstAir);
@@ -263,7 +288,7 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                LatestTv =  latest
+                LatestTv = latest
             };
 
             RequestService.AddRequest(showId, model);
@@ -284,9 +309,15 @@ namespace PlexRequests.UI.Modules
 
             return Response.AsJson(new { Result = true });
         }
-        private string GetAuthToken(TheTvDbApi api)
+        private string GetTvDbAuthToken(TheTvDbApi api)
         {
             return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
+        }
+
+        private bool CheckIfTitleExistsInPlex(string title)
+        {
+            var result = Checker.IsAvailable(title);
+            return result;
         }
     }
 }

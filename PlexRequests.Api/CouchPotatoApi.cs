@@ -30,6 +30,8 @@ using Newtonsoft.Json.Linq;
 
 using NLog;
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Movie;
+
 using RestSharp;
 
 namespace PlexRequests.Api
@@ -70,6 +72,26 @@ namespace PlexRequests.Api
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Gets the status.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="apiKey">The API key.</param>
+        /// <returns></returns>
+        public CouchPotatoStatus GetStatus(Uri url, string apiKey)
+        {
+            Log.Trace("Getting CP Status, ApiKey = {0}", apiKey);
+            var request = new RestRequest
+            {
+                Resource = "api/{apikey}/app.available/",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("apikey", apiKey);
+
+            return Api.Execute<CouchPotatoStatus>(request,url);
         }
     }
 }

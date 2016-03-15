@@ -29,9 +29,10 @@ using System.Linq;
 
 using NLog;
 
-using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 
@@ -39,17 +40,19 @@ namespace PlexRequests.Services
 {
     public class PlexAvailabilityChecker : IAvailabilityChecker
     {
-        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request)
+        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex)
         {
             Plex = plexSettings;
             Auth = auth;
             RequestService = request;
+            PlexApi = plex;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private IRequestService RequestService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private IPlexApi PlexApi { get; set; }
 
 
         public void CheckAndUpdateAll(long check)
@@ -58,23 +61,16 @@ namespace PlexRequests.Services
             var authSettings = Auth.GetSettings();
             var requests = RequestService.GetAll();
 
-            if (plexSettings.Ip == null || authSettings.PlexAuthToken == null || requests == null)
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!ValidateSettings(plexSettings, authSettings, requestedModels))
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
                 return;
             }
-            if (!requests.Any())
-            {
-                Log.Info("We have no requests to check if they are available on Plex.");
-                return;
-            }
-
-            var api = new PlexApi();
 
             var modifiedModel = new List<RequestedModel>();
-            foreach (var r in requests)
+            foreach (var r in requestedModels)
             {
-                var results = api.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
+                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
                 var result = results.Video.FirstOrDefault(x => x.Title == r.Title);
                 var originalRequest = RequestService.Get(r.Id);
 
@@ -83,6 +79,52 @@ namespace PlexRequests.Services
             }
 
             RequestService.BatchUpdate(modifiedModel);
+        }
+
+        /// <summary>
+        /// Determines whether the specified search term is available.
+        /// </summary>
+        /// <param name="title">The search term.</param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
+        public bool IsAvailable(string title)
+        {
+            var plexSettings = Plex.GetSettings();
+            var authSettings = Auth.GetSettings();
+
+            if (!ValidateSettings(plexSettings, authSettings))
+            {
+                throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
+            }
+
+            var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
+            var result = results.Video.FirstOrDefault(x => x.Title == title);
+            return result?.Title != null;
+        }
+
+        private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth, IEnumerable<RequestedModel> requests)
+        {
+            if (plex.Ip == null || auth.PlexAuthToken == null || requests == null)
+            {
+                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                return false;
+            }
+            if (!requests.Any())
+            {
+                Log.Info("We have no requests to check if they are available on Plex.");
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth)
+        {
+            if (plex?.Ip == null || auth?.PlexAuthToken == null)
+            {
+                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                return false;
+            }
+            return true;
         }
     }
 }

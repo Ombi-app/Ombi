@@ -1,0 +1,28 @@
+﻿@Html.Partial("_Sidebar")
+
+<div class="col-sm-8 col-sm-push-1">
+    <fieldset>
+        <legend>Status</legend>
+
+
+        <div class="form-group">
+            <label class="control-label">Version: </label>
+            <label class="control-label">@Model.Version</label>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label">Update Available: </label>
+            @if (Model.UpdateAvailable)
+            {
+                <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i> Click Here!</a></label>
+            }
+            else
+            {
+                <label class="control-label"><i class="fa fa-times"></i></label>
+            }
+
+        </div>
+
+
+    </fieldset>
+</div>
