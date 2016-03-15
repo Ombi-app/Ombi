@@ -47,6 +47,7 @@
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />
     <Compile Include="Plex\PlexSearch.cs" />
+    <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sonarr\SonarrAddSeries.cs" />

@@ -33,6 +33,7 @@ using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers.Exceptions;

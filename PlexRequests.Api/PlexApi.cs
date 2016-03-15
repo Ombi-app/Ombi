@@ -115,6 +115,25 @@ namespace PlexRequests.Api
 
             return search;
         }
+
+        public PlexStatus GetStatus(string authToken, Uri uri)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+            };
+
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", Version);
+            request.AddHeader("X-Plex-Token", authToken);
+            request.AddHeader("Content-Type", "application/xml");
+
+            var api = new ApiRequest();
+            var users = api.ExecuteXml<PlexStatus>(request, uri);
+
+            return users;
+        }
     }
 }
 

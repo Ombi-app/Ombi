@@ -29,6 +29,11 @@
                     <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
                 </div>
             </div>
+            <div class="form-group">
+                <div>
+                    <button id="testPlex" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div>
@@ -40,3 +45,32 @@
 </div>
 
 
+<script>
+    $(function() {
+
+        $('#testPlex').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: "/test/plex",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                        $('#authToken').val(response.authToken);
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+    });
+</script>
