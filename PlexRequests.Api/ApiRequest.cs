@@ -95,10 +95,17 @@ namespace PlexRequests.Api
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-            var json = JsonConvert.DeserializeObject<T>(response.Content);
+            try
+            {
 
-            return json;
-
+                var json = JsonConvert.DeserializeObject<T>(response.Content);
+                return json;
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                throw;
+            }
         }
 
         public T DeserializeXml<T>(string input)

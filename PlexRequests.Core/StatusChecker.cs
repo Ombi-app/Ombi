@@ -55,7 +55,7 @@ namespace PlexRequests.Core
 
         public StatusModel GetStatus()
         {
-            var assemblyVersion = AssemblyHelper.GetAssemblyVersion();
+            var assemblyVersion = AssemblyHelper.GetProductVersion();
             var model = new StatusModel
             {
                 Version = assemblyVersion,
@@ -66,7 +66,7 @@ namespace PlexRequests.Core
             var latestVersionArray = latestRelease.Result.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
             var latestVersion = latestVersionArray.Length > 1 ? latestVersionArray[1] : string.Empty;
 
-            if (!latestVersion.Equals(AssemblyHelper.GetProductVersion(), StringComparison.InvariantCultureIgnoreCase))
+            if (!latestVersion.Equals(assemblyVersion, StringComparison.InvariantCultureIgnoreCase))
             {
                 model.UpdateAvailable = true;
                 model.UpdateUri = latestRelease.Result.HtmlUrl;

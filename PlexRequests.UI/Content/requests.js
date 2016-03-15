@@ -136,7 +136,7 @@ $('#noteModal').on('show.bs.modal', function (event) {
 
     var modal = $(this);
     modal.find('.theNoteSaveButton').val(id); // Add ID to the button
-    var requestField = modal.find('input');
+    var requestField = modal.find('.noteId');
     requestField.val(id);  // Add ID to the hidden field
 });
 

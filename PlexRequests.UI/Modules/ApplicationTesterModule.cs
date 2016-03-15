@@ -118,7 +118,7 @@ namespace PlexRequests.UI.Modules
             var settings = AuthSettings.GetSettings();
             if (settings?.PlexAuthToken == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Plex is not setup yet, we need " });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Plex is not setup yet, you need to update your Authentication settings" });
             }
             try
             {

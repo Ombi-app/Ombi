@@ -61,7 +61,7 @@ namespace PlexRequests.UI.Modules
             Post["/clearissues"] = _ => ClearIssue((int)Request.Form.Id);
 
             Post["/changeavailability"] = _ => ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
-            Post["/addnote"] = _ => AddNote((int)Request.Form.Id, (string)Request.Form.noteArea);
+            Post["/addnote"] = _ => AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
 
         private IRepository<RequestedModel> Service { get; }
@@ -213,7 +213,7 @@ namespace PlexRequests.UI.Modules
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to change the availability!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to add a note!" });
             }
 
             originalRequest.AdminNote = noteArea;

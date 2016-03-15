@@ -37,12 +37,15 @@ namespace PlexRequests.Api.Models.Sonarr
         public string startupPath { get; set; }
         public string appData { get; set; }
         public string osVersion { get; set; }
+        public bool isMonoRuntime { get; set; }
         public bool isMono { get; set; }
         public bool isLinux { get; set; }
+        public bool isOsx { get; set; }
         public bool isWindows { get; set; }
         public string branch { get; set; }
-        public bool authentication { get; set; }
-        public int startOfWeek { get; set; }
+        public string authentication { get; set; }
+        public string sqliteVersion { get; set; }
         public string urlBase { get; set; }
+        public string runtimeVersion { get; set; }
     }
 }

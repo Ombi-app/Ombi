@@ -86,12 +86,14 @@ namespace PlexRequests.UI.Modules
 
             Post["/register"] = x =>
             {
+                var username = (string) Request.Form.Username;
                 var exists = UserMapper.DoUsersExist();
                 if (exists)
                 {
-                    return Context.GetRedirect("~/register?error=true&username=" + (string)Request.Form.Username);
+                    return Context.GetRedirect("~/register?error=true&username=" + username);
                 }
-                var userId = UserMapper.CreateUser(Request.Form.Username, Request.Form.Password);
+                var userId = UserMapper.CreateUser(username, Request.Form.Password);
+                Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect((Guid)userId);
             };
         }
