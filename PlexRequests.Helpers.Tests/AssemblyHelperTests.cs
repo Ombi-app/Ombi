@@ -34,9 +34,8 @@ namespace PlexRequests.Helpers.Tests
         [Test]
         public void GetReleaseVersionTest()
         {
-            var result = AssemblyHelper.GetReleaseVersion();
-            Assert.That(result, Contains.Substring("v"));
-            Assert.That(result, Is.Not.EqualTo("1.0.0.0"));
+            var result = AssemblyHelper.GetProductVersion();
+            Assert.That(result, Is.Not.Null);
         }
     }
 }

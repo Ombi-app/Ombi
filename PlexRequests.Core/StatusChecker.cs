@@ -63,10 +63,10 @@ namespace PlexRequests.Core
 
             var latestRelease = GetLatestRelease();
 
-            var latestVersionArray = latestRelease.Result.Name.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var latestVersionArray = latestRelease.Result.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
             var latestVersion = latestVersionArray.Length > 1 ? latestVersionArray[1] : string.Empty;
 
-            if (!latestVersion.Equals(AssemblyHelper.GetReleaseVersion(), StringComparison.InvariantCultureIgnoreCase))
+            if (!latestVersion.Equals(AssemblyHelper.GetProductVersion(), StringComparison.InvariantCultureIgnoreCase))
             {
                 model.UpdateAvailable = true;
                 model.UpdateUri = latestRelease.Result.HtmlUrl;

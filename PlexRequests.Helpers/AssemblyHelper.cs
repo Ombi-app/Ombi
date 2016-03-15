@@ -38,11 +38,11 @@ namespace PlexRequests.Helpers
             return fvi.FileVersion;
         }
 
-        public static string GetReleaseVersion()
+        public static string GetProductVersion()
         {
             var assembly = Assembly.GetExecutingAssembly();
             var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
-            var retVersion = "v" + fvi.FileVersion.Substring(0, fvi.FileVersion.Length - 2);
+            var retVersion = fvi.ProductVersion;
             return retVersion;
         }
     }

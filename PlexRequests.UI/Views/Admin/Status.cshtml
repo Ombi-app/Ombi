@@ -6,11 +6,21 @@
 
 
         <div class="form-group">
-            <label for="portNumber" class="control-label">Latest Version</label>
+            <label class="control-label">Version: </label>
+            <label class="control-label">@Model.Version</label>
+        </div>
 
-            <div class="">
-                <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
-            </div>
+        <div class="form-group">
+            <label class="control-label">Update Available: </label>
+            @if (Model.UpdateAvailable)
+            {
+                <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i> Click Here!</a></label>
+            }
+            else
+            {
+                <label class="control-label"><i class="fa fa-times"></i></label>
+            }
+
         </div>
 
 
