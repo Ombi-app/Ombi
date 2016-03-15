@@ -15,3 +15,12 @@ after_build:
     7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
 
     appveyor PushArtifact PlexRequests.zip
+
+deploy:
+- provider: GitHub
+  release: PlexRequests $(appveyor_build_version)
+  auth_token:
+    secure: jDpp1/WUQl3uN41fNI3VeZoRZbDiDfs3GPQ1v+C5ZNE3cWdnUvuJfCCfUbYUV1Rp
+  draft: true
+  on:
+    branch: master
