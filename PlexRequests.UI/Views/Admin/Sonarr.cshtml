@@ -131,6 +131,11 @@
 
         $('#save').click(function(e) {
             e.preventDefault();
+            var port = $('#portNumber').val();
+            if (isNaN(port)) {
+                generateNotify("You must specify a Port.", "warning");
+                return;
+            }
             var qualityProfile = $("#profiles option:selected").val();
 
             var $form = $("#mainForm");
