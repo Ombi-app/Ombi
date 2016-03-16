@@ -104,7 +104,7 @@ var newPort = GetPort();
             return uri;
         }
 
-private static string GetPort()
+private static int GetPort()
 {
  
            
