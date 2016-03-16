@@ -59,26 +59,38 @@ namespace PlexRequests.UI
                     Console.ReadLine();
                     Environment.Exit(1);
                 }
-                uri = $"http://localhost:{portResult}";
+                uri = $"http://*:{portResult}";
             }
 
             Log.Trace("Getting product version");
             WriteOutVersion();
-            
+
             var s = new Setup();
             s.SetupDb();
-            
-            if(string.IsNullOrEmpty(uri))
+
+            if (string.IsNullOrEmpty(uri))
                 uri = GetStartupUri();
-StartOptions options = new StartOptions();
-var newPort = GetPort();
-    options.Urls.Add($"http://*:{newPort}");
+
+;
+            var options = new StartOptions(uri)
+            {
+                ServerFactory = "Microsoft.Owin.Host.HttpListener"
+            };
+            try
+            {
 
             using (WebApp.Start<Startup>(options))
             {
                 Console.WriteLine($"Request Plex is running on {uri}");
                 Console.WriteLine("Press any key to exit");
                 Console.ReadLine();
+            }
+
+            }
+            catch (Exception e)
+            {
+                var a = e.Message;
+                throw;
             }
         }
 
@@ -92,27 +104,17 @@ var newPort = GetPort();
         private static string GetStartupUri()
         {
             Log.Trace("Getting startup URI");
-            var uri = "http://localhost:3579/";
+            var uri = "http://*:3579/";
             var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
             Log.Trace("Port: {0}", settings.Port);
             if (settings.Port != 0)
             {
-                uri = $"http://localhost:{settings.Port}";
+                uri = $"http://*:{settings.Port}";
             }
 
             return uri;
         }
-
-private static int GetPort()
-{
- 
-           
-            var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            var settings = service.GetSettings();
-
-            return settings.Port;
-}
 
         private static void ConfigureTargets(string connectionString)
         {
@@ -159,7 +161,7 @@ private static int GetPort()
                 // Step 5. Activate the configuration
                 LogManager.Configuration = config;
             }
-            catch (Exception )
+            catch (Exception)
             {
 
                 throw;
