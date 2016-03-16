@@ -35,6 +35,9 @@ We are looking for any contributions to the project! Just pick up a task, if you
 
 Please feed free to submit a pull request!
 
+# Donation
+If you feel like donating you can [here!](paypal.me/PlexRequestsNet)
+
 
 # Sponsors
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools!!!

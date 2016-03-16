@@ -31,6 +31,7 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
+using Nancy.Security;
 using Nancy.Validation;
 
 using NLog;
