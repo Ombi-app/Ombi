@@ -70,8 +70,11 @@ namespace PlexRequests.UI
             
             if(string.IsNullOrEmpty(uri))
                 uri = GetStartupUri();
+StartOptions options = new StartOptions();
+var newPort = GetPort();
+    options.Urls.Add($"http://*:{newPort}");
 
-            using (WebApp.Start<Startup>(uri))
+            using (WebApp.Start<Startup>(options))
             {
                 Console.WriteLine($"Request Plex is running on {uri}");
                 Console.WriteLine("Press any key to exit");
@@ -100,6 +103,16 @@ namespace PlexRequests.UI
 
             return uri;
         }
+
+private static string GetPort()
+{
+ 
+           
+            var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var settings = service.GetSettings();
+
+            return settings.Port;
+}
 
         private static void ConfigureTargets(string connectionString)
         {
