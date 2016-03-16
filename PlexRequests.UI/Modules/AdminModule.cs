@@ -31,7 +31,7 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
-using Nancy.Security;
+using Nancy.Validation;
 
 using NLog;
 
@@ -39,6 +39,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -214,9 +215,16 @@ namespace PlexRequests.UI.Modules
         private Response SaveCouchPotato()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
-            CpService.SaveSettings(couchPotatoSettings);
+            var valid = this.Validate(couchPotatoSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
 
-            return Context.GetRedirect("~/admin/couchpotato");
+            var result = CpService.SaveSettings(couchPotatoSettings);
+            return Response.AsJson(result 
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" } 
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
         private Negotiator Plex()
@@ -229,9 +237,18 @@ namespace PlexRequests.UI.Modules
         private Response SavePlex()
         {
             var plexSettings = this.Bind<PlexSettings>();
-            PlexService.SaveSettings(plexSettings);
+            var valid = this.Validate(plexSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
 
-            return Context.GetRedirect("~/admin/plex");
+
+            var result = PlexService.SaveSettings(plexSettings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Plex!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
         private Negotiator Sonarr()
@@ -243,10 +260,19 @@ namespace PlexRequests.UI.Modules
 
         private Response SaveSonarr()
         {
-            var plexSettings = this.Bind<SonarrSettings>();
-            SonarrService.SaveSettings(plexSettings);
+            var sonarrSettings = this.Bind<SonarrSettings>();
 
-            return Response.AsJson(new JsonResponseModel { Result = true });
+            var valid = this.Validate(sonarrSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+
+            var result = SonarrService.SaveSettings(sonarrSettings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
         private Response GetSonarrQualityProfiles()

@@ -85,8 +85,6 @@ namespace PlexRequests.UI
             //container.Register<ISonarrApi, MockSonarrApi>();
 
 
-
-
             container.Register<IPlexApi, PlexApi>();
             base.ConfigureRequestContainer(container, context);
         }
@@ -99,6 +97,7 @@ namespace PlexRequests.UI
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
             
             StaticConfiguration.DisableErrorTraces = false;
+
 
             base.ApplicationStartup(container, pipelines);
 
