@@ -64,7 +64,7 @@ namespace PlexRequests.UI
 
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
 
-            container.Register<ISettingsRepository, JsonRepository>();
+            container.Register<ISettingsRepository, SettingsJsonRepository>();
             container.Register<ICacheProvider, MemoryCacheProvider>();
 
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();

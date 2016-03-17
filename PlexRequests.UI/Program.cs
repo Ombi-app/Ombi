@@ -105,7 +105,7 @@ namespace PlexRequests.UI
         {
             Log.Trace("Getting startup URI");
             var uri = "http://*:3579/";
-            var service = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var service = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
             Log.Trace("Port: {0}", settings.Port);
             if (settings.Port != 0)

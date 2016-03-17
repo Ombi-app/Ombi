@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: JsonRepository.cs
+//    File: SettingsJsonRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -34,16 +34,16 @@ using PlexRequests.Store.Models;
 
 namespace PlexRequests.Store.Repository
 {
-    public class JsonRepository : ISettingsRepository
+    public class SettingsJsonRepository : ISettingsRepository
     {
         private ICacheProvider Cache { get; set; }
 
         private string TypeName { get; set; }
-        public JsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
+        public SettingsJsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
         {
             Db = config;
             Cache = cacheProvider;
-            TypeName = typeof(JsonRepository).Name;
+            TypeName = typeof(SettingsJsonRepository).Name;
         }
 
         private ISqliteConfiguration Db { get; set; }

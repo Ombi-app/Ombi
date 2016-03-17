@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestService.cs
+//    File: JsonRequestService.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,62 +24,77 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+
+using Newtonsoft.Json;
+
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
 
 namespace PlexRequests.Core
 {
-    public class RequestService : IRequestService
+    public class JsonRequestService : IRequestService
     {
-        public RequestService(IRepository<RequestedModel> db)
+        public JsonRequestService(IRequestRepository repo)
         {
-            Repo = db;
+            Repo = repo;
         }
-    
-        private IRepository<RequestedModel> Repo { get; set; }
-
+        private IRequestRepository Repo { get; }
         public long AddRequest(int providerId, RequestedModel model)
         {
-            return Repo.Insert(model);
+            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId};
+
+           return Repo.Insert(entity);
         }
 
         public bool CheckRequest(int providerId)
         {
-            return Repo.GetAll().Any(x => x.ProviderId == providerId);
+            var blobs = Repo.GetAll();
+            return blobs.Any(x => x.ProviderId == providerId);
         }
 
         public void DeleteRequest(int tmdbId)
         {
-            var entity = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
-            Repo.Delete(entity);
+            var blob = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
+            Repo.Delete(blob);
         }
 
         public void UpdateRequest(RequestedModel model)
         {
-
-            Repo.Update(model);
-        }
-
-        /// <summary>
-        /// Updates all the entities. NOTE: we need to Id to be the original entity
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        public bool BatchUpdate(List<RequestedModel> model)
-        {
-           return Repo.UpdateAll(model);
+            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id};
+            Repo.Update(entity);
         }
 
         public RequestedModel Get(int id)
         {
-            return Repo.Get(id);
+            var blob = Repo.Get(id);
+            var json = Encoding.UTF8.GetString(blob.Content);
+            var model = JsonConvert.DeserializeObject<RequestedModel>(json);
+            return model;
         }
 
         public IEnumerable<RequestedModel> GetAll()
         {
-            return Repo.GetAll();
+            var blobs = Repo.GetAll();
+            return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
+                .Select(JsonConvert.DeserializeObject<RequestedModel>)
+                .ToList();
+        }
+
+        public bool BatchUpdate(List<RequestedModel> model)
+        {
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId }).ToList();
+            return Repo.UpdateAll(entities);
+        }
+
+        public byte[] ReturnBytes(object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            var bytes = Encoding.UTF8.GetBytes(json);
+
+            return bytes;
         }
     }
 }

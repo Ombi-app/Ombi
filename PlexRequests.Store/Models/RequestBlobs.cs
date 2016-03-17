@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRequestService.cs
+//    File: RequestBlobs.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,20 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using Dapper.Contrib.Extensions;
 
-using System.Collections.Generic;
-using PlexRequests.Store;
-
-namespace PlexRequests.Core
+namespace PlexRequests.Store.Models
 {
-    public interface IRequestService
+    [Table("RequestBlobs")]
+    public class RequestBlobs : Entity
     {
-        long AddRequest(int providerId, RequestedModel model);
-        bool CheckRequest(int providerId);
-        void DeleteRequest(int tmdbId);
-        void UpdateRequest(RequestedModel model);
-        RequestedModel Get(int id);
-        IEnumerable<RequestedModel> GetAll();
-        bool BatchUpdate(List<RequestedModel> model);
+        public int ProviderId { get; set; }
+        public byte[] Content { get; set; }
+        public RequestType Type { get; set; }
     }
 }

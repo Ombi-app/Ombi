@@ -60,7 +60,7 @@ namespace PlexRequests.Core
                 SearchForTvShows = true,
                 WeeklyRequestLimit = 0
             };
-            var s = new SettingsServiceV2<PlexRequestSettings>(new JsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
         }
     }

@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS Settings
 	PlexAuthToken						varchar(50)				
 );
 
+
 CREATE TABLE IF NOT EXISTS Requested
 (
 	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,6 +44,14 @@ CREATE TABLE IF NOT EXISTS GlobalSettings
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     SettingsName						varchar(50) NOT NULL,
     Content								varchar(100) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS RequestBlobs
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProviderId							INTEGER NOT NULL,
+    Type								INTEGER NOT NULL,
+    Content								BLOB NOT NULL
 );
 
 
