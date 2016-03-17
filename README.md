@@ -20,7 +20,7 @@ I wanted to write a similar application in .Net!
 
 #Preview
 
-![Preview](http://i.imgur.com/yNztwTn.gif)
+![Preview](http://i.imgur.com/ucCFUvd.gif)
 
 #Installation
 Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
