@@ -98,8 +98,9 @@ namespace PlexRequests.Services
             }
 
             var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-            var result = results.Video.FirstOrDefault(x => x.Title == title);
-            return result?.Title != null;
+            var result = results.Video?.FirstOrDefault(x => x.Title == title);
+            var directoryTitle = results.Directory?.Title == title;
+            return result?.Title != null || directoryTitle;
         }
 
         private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth, IEnumerable<RequestedModel> requests)

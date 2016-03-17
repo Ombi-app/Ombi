@@ -80,6 +80,27 @@ namespace PlexRequests.Services.Tests
         }
 
         [Test]
+        public void IsAvailableDirectoryTitleTest()
+        {
+            var settingsMock = new Mock<ISettingsService<PlexSettings>>();
+            var authMock = new Mock<ISettingsService<AuthenticationSettings>>();
+            var requestMock = new Mock<IRequestService>();
+            var plexMock = new Mock<IPlexApi>();
+
+            var searchResult = new PlexSearch { Directory = new Directory1 {Title = "title"} };
+
+            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
+            authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
+            plexMock.Setup(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>())).Returns(searchResult);
+
+            Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
+
+            var result = Checker.IsAvailable("title");
+
+            Assert.That(result, Is.True);
+        }
+
+        [Test]
         public void IsNotAvailableTest()
         {
             var settingsMock = new Mock<ISettingsService<PlexSettings>>();

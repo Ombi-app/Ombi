@@ -267,12 +267,12 @@ namespace PlexRequests.UI.Modules
 
             var showInfo = tvApi.GetInformation(showId, token).data;
 
-#if !DEBUG
+//#if !DEBUG
             if (CheckIfTitleExistsInPlex(showInfo.seriesName))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.seriesName} is already in Plex!" });
             }
-#endif
+//#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.firstAired, out firstAir);
