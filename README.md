@@ -20,7 +20,7 @@ I wanted to write a similar application in .Net!
 
 #Preview
 
-![Preview](http://i.imgur.com/yNztwTn.gif)
+![Preview](http://i.imgur.com/ucCFUvd.gif)
 
 #Installation
 Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
@@ -39,7 +39,11 @@ We are looking for any contributions to the project! Just pick up a task, if you
 Please feed free to submit a pull request!
 
 # Donation
-If you feel like donating you can [here!](paypal.me/PlexRequestsNet)
+If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
+
+###### A massive thanks to everyone below!
+
+[heartisall](https://github.com/heartisall)
 
 
 # Sponsors
