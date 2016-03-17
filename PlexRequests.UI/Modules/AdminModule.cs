@@ -36,6 +36,7 @@ using Nancy.Validation;
 
 using NLog;
 
+using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -54,8 +55,10 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexSettings> PlexService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<EmailNotificationSettings> EmailService { get; }
+        private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
+        private PushbulletApi PushbulletApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
@@ -65,7 +68,9 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SonarrSettings> sonarr,
             ISonarrApi sonarrApi,
             ISettingsService<EmailNotificationSettings> email,
-            IPlexApi plexApi) : base("admin")
+            IPlexApi plexApi,
+            ISettingsService<PushbulletNotificationSettings> pbSettings,
+            PushbulletApi pbApi) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -75,6 +80,8 @@ namespace PlexRequests.UI.Modules
             SonarrApi = sonarrApi;
             EmailService = email;
             PlexApi = plexApi;
+            PushbulletService = pbSettings;
+            PushbulletApi = pbApi;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -104,6 +111,9 @@ namespace PlexRequests.UI.Modules
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
             Get["/status"] = _ => Status();
+
+            Get["/pushbulletnotification"] = _ => PushbulletNotifications();
+            Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
         }
 
         private Negotiator Authentication()
@@ -317,6 +327,32 @@ namespace PlexRequests.UI.Modules
             var checker = new StatusChecker();
             var status = checker.GetStatus();
             return View["Status", status];
+        }
+
+        private Negotiator PushbulletNotifications()
+        {
+            var settings = PushbulletService.GetSettings();
+            return View["PushbulletNotifications", settings];
+        }
+
+        private Response SavePushbulletNotifications()
+        {
+            var settings = this.Bind<PushbulletNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            Log.Trace(settings.DumpJson());
+
+            var result = PushbulletService.SaveSettings(settings);
+
+            NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+
+            Log.Info("Saved email settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushbullet Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
     }
 }

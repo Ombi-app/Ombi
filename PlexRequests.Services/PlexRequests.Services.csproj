@@ -80,6 +80,7 @@
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\NotificationService.cs" />
+    <Compile Include="Notification\PushbulletNotification.cs" />
     <Compile Include="PlexAvailabilityChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateInterval.cs" />

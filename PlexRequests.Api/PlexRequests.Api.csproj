@@ -72,6 +72,7 @@
       <DependentUpon>MockApiData.resx</DependentUpon>
     </Compile>
     <Compile Include="Mocks\MockSonarrApi.cs" />
+    <Compile Include="PushbulletApi.cs" />
     <Compile Include="SonarrApi.cs" />
     <Compile Include="CouchPotatoApi.cs" />
     <Compile Include="MovieBase.cs" />

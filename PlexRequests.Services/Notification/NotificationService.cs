@@ -27,10 +27,16 @@
 using System.Collections.Generic;
 using System.Threading;
 
+using NLog;
+
+using PlexRequests.Helpers;
+
 namespace PlexRequests.Services.Notification
 {
     public static class NotificationService
     {
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public static Dictionary<string, INotification> Observers { get; }
 
         static NotificationService()
@@ -40,6 +46,8 @@ namespace PlexRequests.Services.Notification
 
         public static void Publish(string title, string requester)
         {
+            Log.Trace("Notifying all observers: ");
+            Log.Trace(Observers.DumpJson());
             foreach (var observer in Observers)
             {
                 var notification = observer.Value;
@@ -54,9 +62,11 @@ namespace PlexRequests.Services.Notification
 
         public static void Subscribe(INotification notification)
         {
+            Log.Trace("Subscribing Observer {0}", notification.NotificationName);
             INotification notificationValue;
             if (Observers.TryGetValue(notification.NotificationName, out notificationValue))
             {
+                Log.Trace("Observer {0} already exists", notification.NotificationName);
                 // Observer already exists
                 return;
             }
@@ -66,9 +76,11 @@ namespace PlexRequests.Services.Notification
 
         public static void UnSubscribe(INotification notification)
         {
+            Log.Trace("Unsubscribing Observer {0}", notification.NotificationName);
             INotification notificationValue;
             if (!Observers.TryGetValue(notification.NotificationName, out notificationValue))
             {
+                Log.Trace("Observer {0} doesn't exist to Unsubscribe", notification.NotificationName);
                 // Observer doesn't exists
                 return;
             }

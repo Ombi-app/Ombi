@@ -73,6 +73,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
+            container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
             container.Register<IRequestService, RequestService>();
 
@@ -81,6 +82,7 @@ namespace PlexRequests.UI
             container.Register<IIntervals, UpdateInterval>();
 
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
+            container.Register<IPushbulletApi, PushbulletApi>();
 
             container.Register<ISonarrApi, SonarrApi>();
             //container.Register<ISonarrApi, MockSonarrApi>();
@@ -124,6 +126,13 @@ namespace PlexRequests.UI
             if (emailSettings.Enabled)
             {
                 NotificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
+            }
+
+            var pushbulletService = container.Resolve<ISettingsService<PushbulletNotificationSettings>>();
+            var pushbulletSettings = pushbulletService.GetSettings();
+            if (pushbulletSettings.Enabled)
+            {
+                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), container.Resolve<ISettingsService<PushbulletNotificationSettings>>()));
             }
         }
     }
