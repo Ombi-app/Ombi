@@ -41,6 +41,10 @@ Please feed free to submit a pull request!
 # Donation
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
+###### A massive thanks to everyone below!
+
+[heartisall](https://github.com/heartisall)
+
 
 # Sponsors
 - [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools!!!
