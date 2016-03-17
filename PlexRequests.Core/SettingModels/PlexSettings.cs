@@ -35,13 +35,14 @@ namespace PlexRequests.Core.SettingModels
     {
         public string Ip { get; set; }
         public int Port { get; set; }
+        public bool Ssl { get; set; }
        
         [JsonIgnore]
         public Uri FullUri
         {
             get
             {
-                var formatted = Ip.ReturnUri(Port);
+                var formatted = Ip.ReturnUri(Port, Ssl);
                 return formatted;
             }
         }

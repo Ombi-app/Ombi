@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: INotification.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,23 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-
-namespace PlexRequests.Services.Interfaces
+namespace PlexRequests.Services.Notification
 {
-    public interface IIntervals
+    public interface INotification
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        /// <summary>
+        /// Gets the name of the notification.
+        /// </summary>
+        /// <value>
+        /// The name of the notification.
+        /// </value>
+        string NotificationName { get; }
+        /// <summary>
+        /// Notifies the specified title.
+        /// </summary>
+        /// <param name="title">The title.</param>
+        /// <param name="requester">The requester.</param>
+        /// <returns></returns>
+        bool Notify(string title, string requester);
     }
 }

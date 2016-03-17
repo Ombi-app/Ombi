@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: ISettingsRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,42 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using System.Collections.Generic;
 
-namespace PlexRequests.Services.Interfaces
+using PlexRequests.Store.Models;
+
+namespace PlexRequests.Store
 {
-    public interface IIntervals
+    public interface IRequestRepository
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        /// <summary>
+        /// Inserts the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        long Insert(RequestBlobs entity);
+
+        /// <summary>
+        /// Gets all.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<RequestBlobs> GetAll();
+
+        RequestBlobs Get(int id);
+
+        /// <summary>
+        /// Deletes the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        bool Delete(RequestBlobs entity);
+
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        bool Update(RequestBlobs entity);
+
+        bool UpdateAll(IEnumerable<RequestBlobs> entity);
     }
 }

@@ -35,7 +35,7 @@ namespace PlexRequests.Core
         long AddRequest(int providerId, RequestedModel model);
         bool CheckRequest(int providerId);
         void DeleteRequest(int tmdbId);
-        void UpdateRequest(int originalId, RequestedModel model);
+        void UpdateRequest(RequestedModel model);
         RequestedModel Get(int id);
         IEnumerable<RequestedModel> GetAll();
         bool BatchUpdate(List<RequestedModel> model);

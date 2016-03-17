@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Setup.cs
+//    File: PushbulletNotification.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,44 +24,57 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
+using System;
+
+using NLog;
+
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
 
-namespace PlexRequests.Core
+namespace PlexRequests.Services.Notification
 {
-    public class Setup
+    public class PushbulletNotification : INotification
     {
-        private static DbConfiguration Db { get; set; }
-        public string SetupDb()
+        public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings)
         {
-            Db = new DbConfiguration(new SqliteFactory());
-            var created = Db.CheckDb();
-            TableCreation.CreateTables(Db.DbConnection());
+            PushbulletApi = pushbulletApi;
+            Settings = settings;
+        }
+        private IPushbulletApi PushbulletApi { get;  }
+        private ISettingsService<PushbulletNotificationSettings> Settings { get; }
 
-            if (created)
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+        public string NotificationName => "PushbulletNotification";
+        public bool Notify(string title, string requester)
+        {
+            var settings = GetSettings();
+
+            if (!settings.Enabled)
             {
-                CreateDefaultSettingsPage();
+                return false;
             }
 
-            return Db.DbConnection().ConnectionString;
+            var message = $"{title} has been requested by {requester}";
+            var pushTitle = $"Plex Requests: {title}";
+            try
+            {
+                var result = PushbulletApi.Push(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
+                if (result != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+            }
+            return false;
         }
 
-        public static string ConnectionString => Db.DbConnection().ConnectionString;
-
-        private void CreateDefaultSettingsPage()
+        private PushbulletNotificationSettings GetSettings()
         {
-            var defaultSettings = new PlexRequestSettings
-            {
-                RequireApproval = true,
-                SearchForMovies = true,
-                SearchForTvShows = true,
-                WeeklyRequestLimit = 0
-            };
-            var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            s.SaveSettings(defaultSettings);
+            return Settings.GetSettings();
         }
     }
 }

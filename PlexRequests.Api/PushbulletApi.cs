@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: PlexApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,10 +26,38 @@
 #endregion
 using System;
 
-namespace PlexRequests.Services.Interfaces
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Notifications;
+
+using RestSharp;
+
+namespace PlexRequests.Api
 {
-    public interface IIntervals
+    public class PushbulletApi : IPushbulletApi
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        public PushbulletResponse Push(string accessToken, string title, string message, string deviceIdentifier = default(string))
+        {
+            var request = new RestRequest
+            {
+                Method = Method.POST,
+                
+            };
+            
+            request.AddHeader("Access-Token", accessToken);
+            request.AddHeader("Content-Type", "application/json");
+
+            var push = new PushbulletPush { title = title, body = message, type = "note"};
+
+            if (!string.IsNullOrEmpty(deviceIdentifier))
+            {
+                push.device_iden = deviceIdentifier;
+            }
+
+            request.AddJsonBody(push);
+
+            var api = new ApiRequest();
+            return api.ExecuteJson<PushbulletResponse>(request, new Uri("https://api.pushbullet.com/v2/pushes"));
+        }
     }
 }
+

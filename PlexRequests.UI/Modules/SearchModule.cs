@@ -37,6 +37,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
@@ -235,7 +236,8 @@ namespace PlexRequests.UI.Modules
             {
                 Log.Debug("Adding movie to database requests");
                 var id = RequestService.AddRequest(movieId, model);
-                //BackgroundJob.Enqueue(() => Checker.CheckAndUpdate(model.Title, (int)id));
+
+                NotificationService.Publish(model.Title, model.RequestedBy);
 
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
@@ -291,7 +293,6 @@ namespace PlexRequests.UI.Modules
                 LatestTv = latest
             };
 
-            RequestService.AddRequest(showId, model);
 
             var settings = PrService.GetSettings();
             if (!settings.RequireApproval)
@@ -302,10 +303,19 @@ namespace PlexRequests.UI.Modules
                 var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                     sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.LatestTv, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
-                Log.Info("Added series {0} to Sonarr, Result: {1}", model.Title, result);
-                Log.Trace("Model sent to Sonarr: ");
-                Log.Trace(model.DumpJson());
+                if (result != null)
+                {
+                    model.Approved = true;
+                    Log.Debug("Adding tv to database requests (No approval required)");
+                    RequestService.AddRequest(showId, model);
+
+                    return Response.AsJson(new JsonResponseModel { Result = true });
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
             }
+
+            RequestService.AddRequest(showId, model);
+            NotificationService.Publish(model.Title, model.RequestedBy);
 
             return Response.AsJson(new { Result = true });
         }

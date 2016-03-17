@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: RequestBlobs.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Services.Interfaces
+namespace PlexRequests.Store.Models
 {
-    public interface IIntervals
+    [Table("RequestBlobs")]
+    public class RequestBlobs : Entity
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        public int ProviderId { get; set; }
+        public byte[] Content { get; set; }
+        public RequestType Type { get; set; }
     }
 }

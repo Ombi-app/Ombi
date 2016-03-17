@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Net;
 using FluentScheduler;
 using Mono.Data.Sqlite;
 
@@ -44,6 +45,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
@@ -63,7 +65,7 @@ namespace PlexRequests.UI
 
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
 
-            container.Register<ISettingsRepository, JsonRepository>();
+            container.Register<ISettingsRepository, SettingsJsonRepository>();
             container.Register<ICacheProvider, MemoryCacheProvider>();
 
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
@@ -72,6 +74,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
+            container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
             container.Register<IRequestService, RequestService>();
 
@@ -80,24 +83,26 @@ namespace PlexRequests.UI
             container.Register<IIntervals, UpdateInterval>();
 
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
+            container.Register<IPushbulletApi, PushbulletApi>();
 
             container.Register<ISonarrApi, SonarrApi>();
             //container.Register<ISonarrApi, MockSonarrApi>();
 
 
             container.Register<IPlexApi, PlexApi>();
+
+            SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            TaskManager.TaskFactory = new Jobs.PlexTaskFactory();
+            TaskManager.TaskFactory = new PlexTaskFactory();
             TaskManager.Initialize(new PlexRegistry());
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
             
             StaticConfiguration.DisableErrorTraces = false;
-
 
             base.ApplicationStartup(container, pipelines);
 
@@ -109,8 +114,30 @@ namespace PlexRequests.UI
             };
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
+
+            ServicePointManager.ServerCertificateValidationCallback +=
+                 (sender, certificate, chain, sslPolicyErrors) => true;
+
         }
 
+
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
+
+        private void SubscribeAllObservers(TinyIoCContainer container)
+        {
+            var emailSettingsService = container.Resolve<ISettingsService<EmailNotificationSettings>>();
+            var emailSettings = emailSettingsService.GetSettings();
+            if (emailSettings.Enabled)
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
+            }
+
+            var pushbulletService = container.Resolve<ISettingsService<PushbulletNotificationSettings>>();
+            var pushbulletSettings = pushbulletService.GetSettings();
+            if (pushbulletSettings.Enabled)
+            {
+                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), container.Resolve<ISettingsService<PushbulletNotificationSettings>>()));
+            }
+        }
     }
 }

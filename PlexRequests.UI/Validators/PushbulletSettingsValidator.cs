@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using FluentValidation;
 
-namespace PlexRequests.Services.Interfaces
+using PlexRequests.Core.SettingModels;
+
+namespace PlexRequests.UI.Validators
 {
-    public interface IIntervals
+    public class PushbulletSettingsValidator : AbstractValidator<PushbulletNotificationSettings>
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        public PushbulletSettingsValidator()
+        {
+            RuleFor(request => request.AccessToken).NotEmpty().WithMessage("You must specify a Access Token.");
+        }
     }
 }

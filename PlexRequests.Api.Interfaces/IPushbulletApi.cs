@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: IPushbulletApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using PlexRequests.Api.Models.Notifications;
 
-namespace PlexRequests.Services.Interfaces
+namespace PlexRequests.Api.Interfaces
 {
-    public interface IIntervals
+    public interface IPushbulletApi
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        /// <summary>
+        /// Pushes the specified message.
+        /// </summary>
+        /// <param name="accessToken">The access token.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="deviceIdentifier">The device identifier.</param>
+        /// <returns></returns>
+        PushbulletResponse Push(string accessToken, string title, string message, string deviceIdentifier = default(string));
     }
 }
