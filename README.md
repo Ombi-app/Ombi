@@ -39,7 +39,7 @@ We are looking for any contributions to the project! Just pick up a task, if you
 Please feed free to submit a pull request!
 
 # Donation
-If you feel like donating you can [here!](paypal.me/PlexRequestsNet)
+If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 
 # Sponsors
