@@ -53,8 +53,10 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<PlexSettings>> PlexSettingsMock { get; set; }
         private Mock<ISettingsService<SonarrSettings>> SonarrSettingsMock { get; set; }
         private Mock<ISettingsService<EmailNotificationSettings>> EmailMock { get; set; }
+        private Mock<ISettingsService<PushbulletNotificationSettings>> PushbulletSettings { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
         private Mock<ISonarrApi> SonarrApiMock { get; set; }
+        private Mock<IPushbulletApi> PushbulletApi { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -75,6 +77,8 @@ namespace PlexRequests.UI.Tests
             SonarrApiMock = new Mock<ISonarrApi>();
             SonarrSettingsMock = new Mock<ISettingsService<SonarrSettings>>();
             EmailMock = new Mock<ISettingsService<EmailNotificationSettings>>();
+            PushbulletApi = new Mock<IPushbulletApi>();
+            PushbulletSettings = new Mock<ISettingsService<PushbulletNotificationSettings>>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -87,6 +91,8 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(SonarrSettingsMock.Object);
                 with.Dependency(PlexMock.Object);
                 with.Dependency(EmailMock.Object);
+                with.Dependency(PushbulletApi.Object);
+                with.Dependency(PushbulletSettings.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {
