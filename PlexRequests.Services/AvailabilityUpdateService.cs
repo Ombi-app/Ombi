@@ -26,8 +26,6 @@
 #endregion
 using System;
 using System.Reactive.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Threading.Tasks;
 using System.Web.Hosting;
 
 using FluentScheduler;
@@ -76,7 +74,7 @@ namespace PlexRequests.Services
 
         public void Stop(bool immediate)
         {
-            throw new System.NotImplementedException();
+            HostingEnvironment.UnregisterObject(this);
         }
     }
 

@@ -32,9 +32,7 @@ namespace PlexRequests.Services
 {
     public class UpdateInterval : IIntervals
     {
-        public TimeSpan Measurement => TimeSpan.FromSeconds(1);
-        public TimeSpan CriticalNotification { get; }
-        public TimeSpan Notification => TimeSpan.FromMinutes(2);
+        public TimeSpan Notification => TimeSpan.FromMinutes(5);
 
     }
 }

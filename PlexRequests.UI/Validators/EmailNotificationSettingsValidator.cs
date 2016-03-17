@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IIntervals.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,23 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using FluentValidation;
 
-namespace PlexRequests.Services.Interfaces
+using PlexRequests.Core.SettingModels;
+
+namespace PlexRequests.UI.Validators
 {
-    public interface IIntervals
+    public class EmailNotificationSettingsValidator : AbstractValidator<EmailNotificationSettings>
     {
-        TimeSpan Notification { get; } // notification interval for high load
+        public EmailNotificationSettingsValidator()
+        {
+            RuleFor(request => request.EmailHost).NotEmpty().WithMessage("You must specify a Host name.");
+            RuleFor(request => request.EmailPort).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.RecipientEmail).NotEmpty().WithMessage("You must specify a Recipient.");
+            RuleFor(request => request.RecipientEmail).EmailAddress().WithMessage("You must specify a valid Recipient.");
+            RuleFor(request => request.EmailUsername).EmailAddress().WithMessage("You must specify a valid Username.");
+            RuleFor(request => request.EmailUsername).NotEmpty().WithMessage("You must specify a Username.");
+            RuleFor(request => request.EmailPassword).NotEmpty().WithMessage("You must specify a valid password.");
+        }
     }
 }

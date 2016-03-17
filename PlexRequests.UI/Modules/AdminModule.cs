@@ -294,6 +294,11 @@ namespace PlexRequests.UI.Modules
         private Response SaveEmailNotifications()
         {
             var settings = this.Bind<EmailNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             Log.Trace(settings.DumpJson());
 
             var result = EmailService.SaveSettings(settings);
