@@ -77,6 +77,9 @@
     <Compile Include="Interfaces\IAvailabilityChecker.cs" />
     <Compile Include="Interfaces\IConfigurationReader.cs" />
     <Compile Include="Interfaces\IIntervals.cs" />
+    <Compile Include="Notification\INotification.cs" />
+    <Compile Include="Notification\EmailMessageNotification.cs" />
+    <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="PlexAvailabilityChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UpdateInterval.cs" />

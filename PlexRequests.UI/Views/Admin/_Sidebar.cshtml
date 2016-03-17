@@ -46,14 +46,14 @@
         }
         @*<a class="list-group-item" href="/admin/sickbeard">Sickbeard Settings</a>*@
 
-        @*@if (Context.Request.Path == "/admin/emailnotification")
+        @if (Context.Request.Path == "/admin/emailnotification")
         {
             <a class="list-group-item active" href="/admin/emailnotification">Email Notifications</a>
         }
         else
         {
             <a class="list-group-item" href="/admin/emailnotification">Email Notifications</a>
-        }*@
+        }
 
         @if (Context.Request.Path == "/admin/status")
         {

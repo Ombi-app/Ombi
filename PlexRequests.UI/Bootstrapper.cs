@@ -44,6 +44,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
@@ -86,18 +87,19 @@ namespace PlexRequests.UI
 
 
             container.Register<IPlexApi, PlexApi>();
+
+            SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            TaskManager.TaskFactory = new Jobs.PlexTaskFactory();
+            TaskManager.TaskFactory = new PlexTaskFactory();
             TaskManager.Initialize(new PlexRegistry());
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
             
             StaticConfiguration.DisableErrorTraces = false;
-
 
             base.ApplicationStartup(container, pipelines);
 
@@ -109,8 +111,20 @@ namespace PlexRequests.UI
             };
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
+
         }
 
+
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
+
+        private void SubscribeAllObservers(TinyIoCContainer container)
+        {
+            var emailSettingsService = container.Resolve<ISettingsService<EmailNotificationSettings>>();
+            var emailSettings = emailSettingsService.GetSettings();
+            if (emailSettings.Enabled)
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
+            }
+        }
     }
 }

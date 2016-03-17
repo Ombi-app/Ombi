@@ -40,6 +40,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Notification;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
@@ -302,8 +303,13 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
 
             var result = EmailService.SaveSettings(settings);
+            
+            NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+
             Log.Info("Saved email settings, result: {0}", result);
-            return Context.GetRedirect("~/admin/emailnotification");
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Email Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
         private Negotiator Status()
