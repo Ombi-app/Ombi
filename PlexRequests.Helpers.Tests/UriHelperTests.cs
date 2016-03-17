@@ -34,15 +34,24 @@ namespace PlexRequests.Helpers.Tests
     public class UriHelperTests
     {
         [TestCaseSource(nameof(UriData))]
-        public void CreateUri(string uri, Uri expected)
+        public void CreateUri1(string uri, Uri expected)
         { 
             var result = uri.ReturnUri();
 
             Assert.That(result, Is.EqualTo(expected));
         }
 
+        [Test]
+        public void CreateUriWithSsl()
+        {
+            var uri = "192.168.1.69";
+            var result = uri.ReturnUri(8080, true);
+
+            Assert.That(result, Is.EqualTo(new Uri("https://192.168.1.69:8080")));
+        }
+
         [TestCaseSource(nameof(UriDataWithPort))]
-        public void CreateUri(string uri, int port, Uri expected)
+        public void CreateUri2(string uri, int port, Uri expected)
         {
             var result = uri.ReturnUri(port);
 

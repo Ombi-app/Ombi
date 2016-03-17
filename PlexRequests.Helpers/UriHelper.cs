@@ -48,8 +48,6 @@ namespace PlexRequests.Helpers
             }
         }
 
-
-
         /// <summary>
         /// Returns the URI.
         /// </summary>
@@ -57,7 +55,7 @@ namespace PlexRequests.Helpers
         /// <param name="port">The port.</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public static Uri ReturnUri(this string val, int port)
+        public static Uri ReturnUri(this string val, int port, bool ssl = default(bool))
         {
             if (val == null)
             {
@@ -75,7 +73,13 @@ namespace PlexRequests.Helpers
                 else if (val.StartsWith("https://", StringComparison.Ordinal))
                 {
                     var split = val.Split('/');
-                    uri = split.Length >= 4 ? new UriBuilder(Uri.UriSchemeHttps, split[2], port, "/" + split[3]) : new UriBuilder(Uri.UriSchemeHttps, split[2], port);
+                    uri = split.Length >= 4
+                        ? new UriBuilder(Uri.UriSchemeHttps, split[2], port, "/" + split[3])
+                        : new UriBuilder(Uri.UriSchemeHttps, split[2], port);
+                }
+                else if(ssl)
+                {
+                    uri = new UriBuilder(Uri.UriSchemeHttps, val, port);
                 }
                 else
                 {

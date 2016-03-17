@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Net;
 using FluentScheduler;
 using Mono.Data.Sqlite;
 
@@ -113,6 +114,9 @@ namespace PlexRequests.UI
             };
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
+
+            ServicePointManager.ServerCertificateValidationCallback +=
+                 (sender, certificate, chain, sslPolicyErrors) => true;
 
         }
 
