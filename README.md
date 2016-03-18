@@ -13,7 +13,7 @@ I wanted to write a similar application in .Net!
 #Features
 
 * Integration with [TheMovieDB](https://www.themoviedb.org/) for all Movies
-* Integration with [TheTvDb](http://thetvdb.com/) for all TV shows! (soon to be changed [#21](https://github.com/tidusjar/PlexRequests.Net/issues/21))
+* Integration with [TVMaze](www.tvmaze.com) for all TV shows!
 * Secure authentication
 * [Sonarr](https://sonarr.tv/) integration (SickRage/Sickbeard TBD)
 * [CouchPotato](https://couchpota.to/) integration

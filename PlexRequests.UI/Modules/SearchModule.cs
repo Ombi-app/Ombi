@@ -128,7 +128,7 @@ namespace PlexRequests.UI.Modules
                     ImdbId = t.show.externals?.imdb,
                     Network = t.show.network?.name,
                     NetworkId = t.show.network?.id.ToString(),
-                    Overview = t.show.summary,
+                    Overview = t.show.summary.RemoveHtml(),
                     Rating = t.score.ToString(CultureInfo.CurrentUICulture),
                     Runtime = t.show.runtime.ToString(),
                     SeriesId = t.show.id,
@@ -276,7 +276,7 @@ namespace PlexRequests.UI.Modules
             {
                 ProviderId = showInfo.id,
                 Type = RequestType.TvShow,
-                Overview = showInfo.summary,
+                Overview = showInfo.summary.RemoveHtml(),
                 PosterPath = showInfo.image?.medium,
                 Title = showInfo.name,
                 ReleaseDate = firstAir,
