@@ -44,13 +44,13 @@ namespace PlexRequests.Core
         private IRequestRepository Repo { get; }
         public long AddRequest(int providerId, RequestedModel model)
         {
-            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId};
+            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId };
+            var id = Repo.Insert(entity);
 
-           var id = Repo.Insert(entity);
-
+            // TODO Keep an eye on this, since we are now doing 2 DB update for 1 single request, inserting and then updating
             model.Id = (int)id;
 
-            entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id};
+            entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id };
             var result = Repo.Update(entity);
 
             return result ? id : -1;
@@ -70,7 +70,7 @@ namespace PlexRequests.Core
 
         public bool UpdateRequest(RequestedModel model)
         {
-            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id};
+            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
             return Repo.Update(entity);
         }
 
@@ -92,7 +92,7 @@ namespace PlexRequests.Core
 
         public bool BatchUpdate(List<RequestedModel> model)
         {
-            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id}).ToList();
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
             return Repo.UpdateAll(entities);
         }
 
