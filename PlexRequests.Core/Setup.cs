@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -70,18 +72,29 @@ namespace PlexRequests.Core
 
         private void MigrateDb() // TODO: Remove when no longer needed
         {
-            var repo = new GenericRepository<RequestedModel>(Db);
-            var records = repo.GetAll();
-            var requestedModels = records as RequestedModel[] ?? records.ToArray();
-            if(!requestedModels.Any())
-            { return; }
-
-            var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
             var result = new List<long>();
-            foreach (var r in requestedModels)
+            RequestedModel[] requestedModels;
+            var repo = new GenericRepository<RequestedModel>(Db);
+            try
             {
-                var id = jsonRepo.AddRequest(r);
-                result.Add(id);
+                var records = repo.GetAll();
+
+                requestedModels = records as RequestedModel[] ?? records.ToArray();
+                if (!requestedModels.Any())
+                { return; }
+
+                var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
+
+                foreach (var r in requestedModels)
+                {
+                    var id = jsonRepo.AddRequest(r);
+                    result.Add(id);
+                }
+            }
+            catch (SqliteException)
+            {
+                // There is no requested table so they do not have an old version of the DB
+                return;
             }
 
             if (result.Any(x => x == -1))
