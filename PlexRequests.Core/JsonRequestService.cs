@@ -44,12 +44,16 @@ namespace PlexRequests.Core
         private IRequestRepository Repo { get; }
         public long AddRequest(int providerId, RequestedModel model)
         {
-            var latestId = Repo.GetAll().OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
-            var newId = latestId + 1;
-            model.Id = newId;
             var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId};
 
-           return Repo.Insert(entity);
+           var id = Repo.Insert(entity);
+
+            model.Id = (int)id;
+
+            entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id};
+            var result = Repo.Update(entity);
+
+            return result ? id : -1;
         }
 
         public bool CheckRequest(int providerId)
