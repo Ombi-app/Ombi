@@ -78,24 +78,24 @@ namespace PlexRequests.Core
             try
             {
                 var records = repo.GetAll();
-
                 requestedModels = records as RequestedModel[] ?? records.ToArray();
-                if (!requestedModels.Any())
-                { return; }
-
-                var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
-
-                foreach (var r in requestedModels)
-                {
-                    var id = jsonRepo.AddRequest(r);
-                    result.Add(id);
-                }
             }
             catch (SqliteException)
             {
                 // There is no requested table so they do not have an old version of the DB
                 return;
             }
+            if (!requestedModels.Any())
+            { return; }
+
+            var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
+
+            foreach (var r in requestedModels)
+            {
+                var id = jsonRepo.AddRequest(r);
+                result.Add(id);
+            }
+
 
             if (result.Any(x => x == -1))
             {
