@@ -108,7 +108,7 @@ $(".theNoteSaveButton").click(function (e) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Added Note.", "success");
                 $("#myModal").modal("hide");
-                $('#adminNotesArea').html("<div>Note from Admin: " + comment + "</div>");
+                $('#adminNotesArea' + e.target.value).html("<div>Note from Admin: " + comment + "</div>");
             }
         },
         error: function (e) {

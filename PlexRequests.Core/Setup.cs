@@ -68,7 +68,7 @@ namespace PlexRequests.Core
             s.SaveSettings(defaultSettings);
         }
 
-        private void MigrateDb()
+        private void MigrateDb() // TODO: Remove when no longer needed
         {
             var repo = new GenericRepository<RequestedModel>(Db);
             var records = repo.GetAll();
@@ -88,7 +88,20 @@ namespace PlexRequests.Core
             {
                 throw new SqliteException("Could not migrate the DB!");
             }
-            
+
+
+            if (result.Count != requestedModels.Length)
+            {
+                throw new SqliteException("Could not migrate the DB! count is different");
+            }
+
+
+            // Now delete the old requests
+            foreach (var oldRequest in requestedModels)
+            {
+                repo.Delete(oldRequest);
+            }
+
         }
     }
 }
