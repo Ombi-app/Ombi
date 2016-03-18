@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Mono.Data.Sqlite;
+using PlexRequests.Api;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
@@ -85,14 +86,38 @@ namespace PlexRequests.Core
                 // There is no requested table so they do not have an old version of the DB
                 return;
             }
+
             if (!requestedModels.Any())
             { return; }
 
             var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
 
-            foreach (var r in requestedModels)
+            var api = new TvMazeApi();
+
+            foreach (var r in requestedModels.Where(x => x.Type == RequestType.TvShow))
             {
-                var id = jsonRepo.AddRequest(r);
+                var show = api.ShowLookupByTheTvDbId(r.ProviderId);
+
+                var model = new RequestedModel
+                {
+                    Title = show.name,
+                    PosterPath = show.image?.medium,
+                    Type = RequestType.TvShow,
+                    ProviderId = show.externals.thetvdb ?? 0,
+                    ReleaseDate = r.ReleaseDate,
+                    AdminNote = r.AdminNote,
+                    Approved = r.Approved,
+                    Available = r.Available,
+                    ImdbId = show.externals.imdb,
+                    Issues = r.Issues,
+                    LatestTv = r.LatestTv,
+                    OtherMessage = r.OtherMessage,
+                    Overview = show.summary.RemoveHtml(),
+                    RequestedBy = r.RequestedBy,
+                    RequestedDate = r.ReleaseDate,
+                    Status = show.status
+                };
+                var id = jsonRepo.AddRequest(model);
                 result.Add(id);
             }
 

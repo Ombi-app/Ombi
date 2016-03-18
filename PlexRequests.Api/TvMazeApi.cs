@@ -69,5 +69,18 @@ namespace PlexRequests.Api
             return Api.Execute<TvMazeShow>(request, new Uri(Uri));
         }
 
+        public TvMazeShow ShowLookupByTheTvDbId(int theTvDbId)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "lookup/shows?thetvdb={id}"
+            };
+            request.AddUrlSegment("id", theTvDbId.ToString());
+            request.AddHeader("Content-Type", "application/json");
+
+            return Api.Execute<TvMazeShow>(request, new Uri(Uri));
+        }
+
     }
 }
