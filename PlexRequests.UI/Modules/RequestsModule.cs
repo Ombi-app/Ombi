@@ -45,7 +45,7 @@ namespace PlexRequests.UI.Modules
     public class RequestsModule : BaseModule
     {
 
-        public RequestsModule(IRepository<RequestedModel> service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex) : base("requests")
+        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
@@ -64,7 +64,7 @@ namespace PlexRequests.UI.Modules
             Post["/addnote"] = _ => AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
 
-        private IRepository<RequestedModel> Service { get; }
+        private IRequestService Service { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
 
@@ -140,7 +140,7 @@ namespace PlexRequests.UI.Modules
             }
 
             var currentEntity = Service.Get(requestid);
-            Service.Delete(currentEntity);
+            Service.DeleteRequest(currentEntity);
             return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
@@ -165,7 +165,7 @@ namespace PlexRequests.UI.Modules
                 : string.Empty;
 
 
-            var result = Service.Update(originalRequest);
+            var result = Service.UpdateRequest(originalRequest);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
@@ -186,7 +186,7 @@ namespace PlexRequests.UI.Modules
             originalRequest.Issues = IssueState.None;
             originalRequest.OtherMessage = string.Empty;
 
-            var result = Service.Update(originalRequest);
+            var result = Service.UpdateRequest(originalRequest);
             return Response.AsJson(result
                                        ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not clear issue, please try again or check the logs" });
@@ -202,7 +202,7 @@ namespace PlexRequests.UI.Modules
 
             originalRequest.Available = available;
 
-            var result = Service.Update(originalRequest);
+            var result = Service.UpdateRequest(originalRequest);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
@@ -218,7 +218,7 @@ namespace PlexRequests.UI.Modules
 
             originalRequest.AdminNote = noteArea;
 
-            var result = Service.Update(originalRequest);
+            var result = Service.UpdateRequest(originalRequest);
             return Response.AsJson(result
                                        ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });

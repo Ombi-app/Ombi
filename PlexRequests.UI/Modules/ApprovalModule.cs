@@ -44,7 +44,7 @@ namespace PlexRequests.UI.Modules
     public class ApprovalModule : BaseModule
     {
 
-        public ApprovalModule(IRepository<RequestedModel> service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
+        public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings) : base("approval")
         {
             this.RequiresAuthentication();
@@ -59,12 +59,12 @@ namespace PlexRequests.UI.Modules
             Post["/approveall"] = x => ApproveAll();
         }
 
-        private IRepository<RequestedModel> Service { get; set; }
+        private IRequestService Service { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private ISettingsService<SonarrSettings> SonarrSettings { get; set; }
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
-        private ISonarrApi SonarrApi { get; set; }
+        private ISonarrApi SonarrApi { get; }
         private ICouchPotatoApi CpApi { get; }
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace PlexRequests.UI.Modules
                 request.Approved = true;
 
                 // Update the record
-                var inserted = Service.Update(request);
+                var inserted = Service.UpdateRequest(request);
 
                 return Response.AsJson(inserted
                     ? new JsonResponseModel {Result = true}
@@ -195,7 +195,7 @@ namespace PlexRequests.UI.Modules
             try
             {
 
-                var result = Service.UpdateAll(updatedRequests); return Response.AsJson(result
+                var result = Service.BatchUpdate(updatedRequests); return Response.AsJson(result
                  ? new JsonResponseModel { Result = true }
                  : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });
 

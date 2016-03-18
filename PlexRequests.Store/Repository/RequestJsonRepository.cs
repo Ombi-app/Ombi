@@ -53,7 +53,8 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return con.Insert(entity);
+                var id = con.Insert(entity);
+                return id;
             }
         }
 

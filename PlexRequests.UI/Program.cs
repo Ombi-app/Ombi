@@ -71,7 +71,6 @@ namespace PlexRequests.UI
             if (string.IsNullOrEmpty(uri))
                 uri = GetStartupUri();
 
-;
             var options = new StartOptions(uri)
             {
                 ServerFactory = "Microsoft.Owin.Host.HttpListener"

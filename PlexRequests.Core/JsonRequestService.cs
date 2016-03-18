@@ -44,6 +44,9 @@ namespace PlexRequests.Core
         private IRequestRepository Repo { get; }
         public long AddRequest(int providerId, RequestedModel model)
         {
+            var latestId = Repo.GetAll().OrderByDescending(x => x.Id).Select(x => x.Id).FirstOrDefault();
+            var newId = latestId + 1;
+            model.Id = newId;
             var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId};
 
            return Repo.Insert(entity);
@@ -55,16 +58,16 @@ namespace PlexRequests.Core
             return blobs.Any(x => x.ProviderId == providerId);
         }
 
-        public void DeleteRequest(int tmdbId)
+        public void DeleteRequest(RequestedModel request)
         {
-            var blob = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
+            var blob = Repo.Get(request.Id);
             Repo.Delete(blob);
         }
 
-        public void UpdateRequest(RequestedModel model)
+        public bool UpdateRequest(RequestedModel model)
         {
             var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id};
-            Repo.Update(entity);
+            return Repo.Update(entity);
         }
 
         public RequestedModel Get(int id)
@@ -85,7 +88,7 @@ namespace PlexRequests.Core
 
         public bool BatchUpdate(List<RequestedModel> model)
         {
-            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId }).ToList();
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id}).ToList();
             return Repo.UpdateAll(entities);
         }
 

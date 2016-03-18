@@ -76,7 +76,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
-            container.Register<IRequestService, RequestService>();
+            container.Register<IRequestService, JsonRequestService>();
 
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IConfigurationReader, ConfigurationReader>();
