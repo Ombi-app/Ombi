@@ -36,7 +36,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Dapper.Contrib, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.Contrib.1.42\lib\net45\Dapper.Contrib.dll</HintPath>
+      <HintPath>..\packages\Dapper.Contrib.1.43\lib\net45\Dapper.Contrib.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Mono.Data.Sqlite">
