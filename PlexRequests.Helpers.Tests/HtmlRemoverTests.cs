@@ -1,7 +1,8 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: HtmlRemoverTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -23,12 +24,33 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
-namespace PlexRequests.Services.Interfaces
+
+using NUnit.Framework;
+
+namespace PlexRequests.Helpers.Tests
 {
-    public interface IAvailabilityChecker
+    [TestFixture]
+    public class HtmlRemoverTests
     {
-        void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year);
+        [Test]
+        public void RemoveHtmlBasic()
+        {
+            var html = "this is <b>bold</b> <p>para</p> OK!";
+            var result = html.RemoveHtml();
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo("this is bold para OK!"));
+        }
+
+        [Test]
+        public void RemoveHtmlMoreTags()
+        {
+            // Good 'ol Ali G ;)
+            var html = "<p><strong><em>\"Ali G: Rezurection\"</em></strong> includes every episode of <em>Da Ali G Show</em> with new, original introductions by star, creator/writer Sacha Baron Cohen, along with the BAFTA(R) Award-winning English episodes of <em>Da Ali G Show</em> which have never aired on American television and <em>The Best of Ali G</em>.</p>";
+            var result = html.RemoveHtml();
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo("\"Ali G: Rezurection\" includes every episode of Da Ali G Show with new, original introductions by star, creator/writer Sacha Baron Cohen, along with the BAFTA(R) Award-winning English episodes of Da Ali G Show which have never aired on American television and The Best of Ali G."));
+        }
     }
 }

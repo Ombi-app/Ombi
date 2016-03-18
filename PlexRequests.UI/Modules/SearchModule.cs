@@ -126,9 +126,9 @@ namespace PlexRequests.UI.Modules
                     FirstAired = t.show.premiered,
                     Id = t.show.id,
                     ImdbId = t.show.externals?.imdb,
-                    Network = t.show.network.name,
-                    NetworkId = t.show.network.id.ToString(),
-                    Overview = t.show.summary,
+                    Network = t.show.network?.name,
+                    NetworkId = t.show.network?.id.ToString(),
+                    Overview = t.show.summary.RemoveHtml(),
                     Rating = t.score.ToString(CultureInfo.CurrentUICulture),
                     Runtime = t.show.runtime.ToString(),
                     SeriesId = t.show.id,
@@ -186,12 +186,12 @@ namespace PlexRequests.UI.Modules
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
 
-#if !DEBUG
-            if (CheckIfTitleExistsInPlex(movieInfo.Title))
+//#if !DEBUG
+            if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
             }
-#endif
+//#endif
 
             var model = new RequestedModel
             {
@@ -258,28 +258,27 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "TV Show has already been requested!" });
             }
 
-            var tvApi = new TheTvDbApi();
-            var token = GetTvDbAuthToken(tvApi);
+            var tvApi = new TvMazeApi();
 
-            var showInfo = tvApi.GetInformation(showId, token).data;
+            var showInfo = tvApi.ShowLookup(showId);
 
 //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(showInfo.seriesName))
+            if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered.Substring(0,4))) // Take only the year Format = 2014-01-01
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.seriesName} is already in Plex!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
             }
 //#endif
 
             DateTime firstAir;
-            DateTime.TryParse(showInfo.firstAired, out firstAir);
+            DateTime.TryParse(showInfo.premiered, out firstAir);
 
             var model = new RequestedModel
             {
                 ProviderId = showInfo.id,
                 Type = RequestType.TvShow,
-                Overview = showInfo.overview,
-                PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.banner, // This is incorrect
-                Title = showInfo.seriesName,
+                Overview = showInfo.summary.RemoveHtml(),
+                PosterPath = showInfo.image?.medium,
+                Title = showInfo.name,
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
@@ -320,9 +319,9 @@ namespace PlexRequests.UI.Modules
             return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
         }
 
-        private bool CheckIfTitleExistsInPlex(string title)
+        private bool CheckIfTitleExistsInPlex(string title, string year)
         {
-            var result = Checker.IsAvailable(title);
+            var result = Checker.IsAvailable(title, year);
             return result;
         }
     }

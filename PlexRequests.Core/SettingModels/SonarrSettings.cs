@@ -39,13 +39,14 @@ namespace PlexRequests.Core.SettingModels
         public string QualityProfile { get; set; }
         public bool SeasonFolders { get; set; }
         public string RootPath { get; set; }
+        public bool Ssl { get; set; }
 
         [JsonIgnore]
         public Uri FullUri
         {
             get
             {
-                var formatted = Ip.ReturnUri(Port);
+                var formatted = Ip.ReturnUri(Port, Ssl);
                 return formatted;
             }
         }

@@ -28,6 +28,6 @@ namespace PlexRequests.Api
 {
     public class TvMazeBase
     {
-        public string Uri = "http://api.tvmaze.com";
+        protected string Uri = "http://api.tvmaze.com";
     }
 }

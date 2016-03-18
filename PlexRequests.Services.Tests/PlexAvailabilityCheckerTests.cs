@@ -55,7 +55,7 @@ namespace PlexRequests.Services.Tests
             var plexMock = new Mock<IPlexApi>();
             Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
 
-            Assert.Throws<ApplicationSettingsException>(() => Checker.IsAvailable("title"), "We should be throwing an exception since we cannot talk to the services.");
+            Assert.Throws<ApplicationSettingsException>(() => Checker.IsAvailable("title", "2013"), "We should be throwing an exception since we cannot talk to the services.");
         }
 
         [Test]
@@ -66,7 +66,7 @@ namespace PlexRequests.Services.Tests
             var requestMock = new Mock<IRequestService>();
             var plexMock = new Mock<IPlexApi>();
 
-            var searchResult = new PlexSearch {Video = new List<Video> {new Video {Title = "title" } } };
+            var searchResult = new PlexSearch {Video = new List<Video> {new Video {Title = "title", Year = "2011"} } };
 
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
             authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
@@ -74,7 +74,7 @@ namespace PlexRequests.Services.Tests
 
             Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
 
-            var result = Checker.IsAvailable("title");
+            var result = Checker.IsAvailable("title", "2011");
 
             Assert.That(result, Is.True);
         }
@@ -87,7 +87,7 @@ namespace PlexRequests.Services.Tests
             var requestMock = new Mock<IRequestService>();
             var plexMock = new Mock<IPlexApi>();
 
-            var searchResult = new PlexSearch { Directory = new Directory1 {Title = "title"} };
+            var searchResult = new PlexSearch { Directory = new Directory1 {Title = "title", Year = "2013"} };
 
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
             authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
@@ -95,7 +95,7 @@ namespace PlexRequests.Services.Tests
 
             Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
 
-            var result = Checker.IsAvailable("title");
+            var result = Checker.IsAvailable("title", "2013");
 
             Assert.That(result, Is.True);
         }
@@ -108,7 +108,7 @@ namespace PlexRequests.Services.Tests
             var requestMock = new Mock<IRequestService>();
             var plexMock = new Mock<IPlexApi>();
 
-            var searchResult = new PlexSearch { Video = new List<Video> { new Video { Title = "wrong title" } } };
+            var searchResult = new PlexSearch { Video = new List<Video> { new Video { Title = "wrong title", Year = "2011"} } };
 
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
             authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
@@ -116,7 +116,28 @@ namespace PlexRequests.Services.Tests
 
             Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
 
-            var result = Checker.IsAvailable("title");
+            var result = Checker.IsAvailable("title", "2011");
+
+            Assert.That(result, Is.False);
+        }
+
+        [Test]
+        public void IsYearDoesNotMatchTest()
+        {
+            var settingsMock = new Mock<ISettingsService<PlexSettings>>();
+            var authMock = new Mock<ISettingsService<AuthenticationSettings>>();
+            var requestMock = new Mock<IRequestService>();
+            var plexMock = new Mock<IPlexApi>();
+
+            var searchResult = new PlexSearch { Video = new List<Video> { new Video { Title = "title", Year = "2019" } } };
+
+            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
+            authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
+            plexMock.Setup(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>())).Returns(searchResult);
+
+            Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
+
+            var result = Checker.IsAvailable("title", "2011");
 
             Assert.That(result, Is.False);
         }

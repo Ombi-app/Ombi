@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="AssemblyHelper.cs" />
     <Compile Include="Exceptions\ApplicationSettingsException.cs" />
+    <Compile Include="HtmlRemover.cs" />
     <Compile Include="ICacheProvider.cs" />
     <Compile Include="LoggingHelper.cs" />
     <Compile Include="MemoryCacheProvider.cs" />

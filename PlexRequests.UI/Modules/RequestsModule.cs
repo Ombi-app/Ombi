@@ -114,7 +114,7 @@ namespace PlexRequests.UI.Modules
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
                 Id = tv.Id,
-                PosterPath = tv.ProviderId.ToString(),
+                PosterPath = tv.PosterPath,
                 ReleaseDate = tv.ReleaseDate.Humanize(),
                 RequestedDate = tv.RequestedDate.Humanize(),
                 Approved = tv.Approved,

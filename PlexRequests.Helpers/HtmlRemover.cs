@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: HtmlRemover.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Interfaces
+
+using System.Text.RegularExpressions;
+
+namespace PlexRequests.Helpers
 {
-    public interface IAvailabilityChecker
+    public static class HtmlRemover
     {
-        void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year);
+        public static string RemoveHtml(this string value)
+        {
+            var step1 = Regex.Replace(value, @"<[^>]+>|&nbsp;", "").Trim();
+            var step2 = Regex.Replace(step1, @"\s{2,}", " ");
+            return step2;
+        }
     }
 }

@@ -34,6 +34,7 @@ namespace PlexRequests.Core.Tests
     public class StatusCheckerTests
     {
         [Test]
+        [Ignore("API Limit")]
         public void CheckStatusTest()
         {
             var checker = new StatusChecker();
