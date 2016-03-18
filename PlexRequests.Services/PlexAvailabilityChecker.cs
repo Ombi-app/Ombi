@@ -85,9 +85,10 @@ namespace PlexRequests.Services
         /// Determines whether the specified search term is available.
         /// </summary>
         /// <param name="title">The search term.</param>
+        /// <param name="year">The year.</param>
         /// <returns></returns>
         /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
-        public bool IsAvailable(string title)
+        public bool IsAvailable(string title, string year)
         {
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
@@ -98,8 +99,8 @@ namespace PlexRequests.Services
             }
 
             var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-            var result = results.Video?.FirstOrDefault(x => x.Title == title);
-            var directoryTitle = results.Directory?.Title == title;
+            var result = results.Video?.FirstOrDefault(x => x.Title == title && x.Year == year);
+            var directoryTitle = results.Directory?.Title == title && results.Directory?.Year == year;
             return result?.Title != null || directoryTitle;
         }
 
