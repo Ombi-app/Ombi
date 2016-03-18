@@ -40,7 +40,7 @@ namespace PlexRequests.Core
     
         private IRepository<RequestedModel> Repo { get; set; }
 
-        public long AddRequest(int providerId, RequestedModel model)
+        public long AddRequest(RequestedModel model)
         {
             return Repo.Insert(model);
         }

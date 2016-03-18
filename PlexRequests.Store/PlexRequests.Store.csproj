@@ -68,7 +68,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\SettingsJsonRepository.cs" />
     <Compile Include="Repository\RequestJsonRepository.cs" />
-    <Compile Include="SettingsModel.cs" />
     <Compile Include="GenericRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserRepository.cs" />

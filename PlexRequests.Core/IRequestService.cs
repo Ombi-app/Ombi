@@ -32,7 +32,7 @@ namespace PlexRequests.Core
 {
     public interface IRequestService
     {
-        long AddRequest(int providerId, RequestedModel model);
+        long AddRequest(RequestedModel model);
         bool CheckRequest(int providerId);
         void DeleteRequest(RequestedModel request);
         bool UpdateRequest(RequestedModel model);

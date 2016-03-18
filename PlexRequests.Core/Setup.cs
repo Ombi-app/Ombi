@@ -24,6 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Collections.Generic;
+using System.Linq;
+
 using Mono.Data.Sqlite;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -46,6 +49,7 @@ namespace PlexRequests.Core
                 CreateDefaultSettingsPage();
             }
 
+            MigrateDb();
             return Db.DbConnection().ConnectionString;
         }
 
@@ -62,6 +66,29 @@ namespace PlexRequests.Core
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
+        }
+
+        private void MigrateDb()
+        {
+            var repo = new GenericRepository<RequestedModel>(Db);
+            var records = repo.GetAll();
+            var requestedModels = records as RequestedModel[] ?? records.ToArray();
+            if(!requestedModels.Any())
+            { return; }
+
+            var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
+            var result = new List<long>();
+            foreach (var r in requestedModels)
+            {
+                var id = jsonRepo.AddRequest(r);
+                result.Add(id);
+            }
+
+            if (result.Any(x => x == -1))
+            {
+                throw new SqliteException("Could not migrate the DB!");
+            }
+            
         }
     }
 }

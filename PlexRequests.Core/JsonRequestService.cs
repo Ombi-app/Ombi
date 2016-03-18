@@ -42,7 +42,7 @@ namespace PlexRequests.Core
             Repo = repo;
         }
         private IRequestRepository Repo { get; }
-        public long AddRequest(int providerId, RequestedModel model)
+        public long AddRequest(RequestedModel model)
         {
             var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId };
             var id = Repo.Insert(entity);

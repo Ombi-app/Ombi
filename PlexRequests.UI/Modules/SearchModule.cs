@@ -225,7 +225,7 @@ namespace PlexRequests.UI.Modules
                 {
                     model.Approved = true;
                     Log.Debug("Adding movie to database requests (No approval required)");
-                    RequestService.AddRequest(movieId, model);
+                    RequestService.AddRequest(model);
 
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
@@ -235,7 +235,7 @@ namespace PlexRequests.UI.Modules
             try
             {
                 Log.Debug("Adding movie to database requests");
-                var id = RequestService.AddRequest(movieId, model);
+                var id = RequestService.AddRequest(model);
 
                 NotificationService.Publish(model.Title, model.RequestedBy);
 
@@ -307,14 +307,14 @@ namespace PlexRequests.UI.Modules
                 {
                     model.Approved = true;
                     Log.Debug("Adding tv to database requests (No approval required)");
-                    RequestService.AddRequest(showId, model);
+                    RequestService.AddRequest(model);
 
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
             }
 
-            RequestService.AddRequest(showId, model);
+            RequestService.AddRequest(model);
             NotificationService.Publish(model.Title, model.RequestedBy);
 
             return Response.AsJson(new { Result = true });
