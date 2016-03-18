@@ -75,8 +75,7 @@ namespace PlexRequests.UI
             {
                 ServerFactory = "Microsoft.Owin.Host.HttpListener"
             };
-            options.Urls.Add($"http://localhost:{port}");
-            //options.Urls.Add($"http://127.0.0.1:{port}");
+            options.Urls.Add($"http://+:{port}");
             try
             {
 
