@@ -26,6 +26,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
 using Nancy;
 using Nancy.Responses.Negotiation;
 
@@ -104,41 +107,34 @@ namespace PlexRequests.UI.Modules
         private Response SearchTvShow(string searchTerm)
         {
             Log.Trace("Searching for TV Show {0}", searchTerm);
-            var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
-
-            if (tvShow?.data == null)
+            //var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
+            var tvShow = new TvMazeApi().Search(searchTerm);
+            if (!tvShow.Any())
             {
                 Log.Trace("TV Show data is null");
                 return Response.AsJson("");
             }
             var model = new List<SearchTvShowViewModel>();
 
-            foreach (var t in tvShow.data)
+            foreach (var t in tvShow)
             {
                 model.Add(new SearchTvShowViewModel
                 {
-                    Added = t.added,
-                    AirsDayOfWeek = t.airsDayOfWeek,
-                    AirsTime = t.airsTime,
-                    Aliases = t.aliases,
                     // We are constructing the banner with the id: 
                     // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
-                    Banner = t.id.ToString(),
-                    FirstAired = t.firstAired,
-                    Genre = t.genre,
-                    Id = t.id,
-                    ImdbId = t.imdbId,
-                    LastUpdated = t.lastUpdated,
-                    Network = t.network,
-                    NetworkId = t.networkId,
-                    Overview = t.overview,
-                    Rating = t.rating,
-                    Runtime = t.runtime,
-                    SeriesId = t.id,
-                    SeriesName = t.seriesName,
-                    SiteRating = t.siteRating,
-                    Status = t.status,
-                    Zap2ItId = t.zap2itId
+                    Banner = t.show.image?.medium,
+                    FirstAired = t.show.premiered,
+                    Id = t.show.id,
+                    ImdbId = t.show.externals?.imdb,
+                    Network = t.show.network.name,
+                    NetworkId = t.show.network.id.ToString(),
+                    Overview = t.show.summary,
+                    Rating = t.score.ToString(CultureInfo.CurrentUICulture),
+                    Runtime = t.show.runtime.ToString(),
+                    SeriesId = t.show.id,
+                    SeriesName = t.show.name,
+                    
+                    Status = t.show.status,
                 });
             }
 

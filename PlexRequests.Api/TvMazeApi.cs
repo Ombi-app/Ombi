@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SearchTvShowViewModel.cs
+//    File: TvMazeApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,30 +24,37 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
+using System;
 using System.Collections.Generic;
 
-namespace PlexRequests.UI.Models
+using NLog;
+
+using PlexRequests.Api.Models.Tv;
+
+using RestSharp;
+
+namespace PlexRequests.Api
 {
-    public class SearchTvShowViewModel
+    public class TvMazeApi : TvMazeBase
     {
-        public int Id { get; set; }
-        public string SeriesName { get; set; }
-        public List<string> Aliases { get; set; }
-        public string Banner { get; set; }
-        public int SeriesId { get; set; }
-        public string Status { get; set; }
-        public string FirstAired { get; set; }
-        public string Network { get; set; }
-        public string NetworkId { get; set; }
-        public string Runtime { get; set; }
-        public List<string> Genre { get; set; }
-        public string Overview { get; set; }
-        public int LastUpdated { get; set; }
-        public string AirsDayOfWeek { get; set; }
-        public string AirsTime { get; set; }
-        public string Rating { get; set; }
-        public string ImdbId { get; set; }
-        public int SiteRating { get; set; }
+        public TvMazeApi()
+        {
+            Api = new ApiRequest();
+        }
+        private ApiRequest Api { get;  }
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+        public List<TvMazeSearch> Search(string searchTerm)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "search/shows?q={searchTerm}"
+            };
+            request.AddUrlSegment("searchTerm", searchTerm);
+            request.AddHeader("Content-Type", "application/json");
+
+            return Api.Execute<List<TvMazeSearch>>(request, new Uri(Uri));
+        }
+
     }
 }
