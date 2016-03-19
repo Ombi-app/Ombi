@@ -112,8 +112,8 @@ namespace PlexRequests.Store.Repository
 
         public bool UpdateAll(IEnumerable<RequestBlobs> entity)
         {
+            ResetCache();
             var result = new HashSet<bool>();
-
             using (var db = Db.DbConnection())
             {
                 db.Open();
