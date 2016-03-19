@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrSettings.cs
+//    File: CouchPotatoApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,45 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using System.Collections.Generic;
 
-namespace PlexRequests.Core.SettingModels
+using NLog;
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Sonarr;
+using RestSharp;
+
+namespace PlexRequests.Api
 {
-    public class SonarrSettings : Settings
+    public class SickrageApi 
     {
-        public bool Enabled { get; set; }
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string ApiKey { get; set; }
-        public string QualityProfile { get; set; }
-        public bool SeasonFolders { get; set; }
-        public string RootPath { get; set; }
-        public bool Ssl { get; set; }
-
-        [JsonIgnore]
-        public Uri FullUri
+        public SickrageApi()
         {
-            get
-            {
-                var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
-            }
+            Api = new ApiRequest();
         }
+        private ApiRequest Api { get; set; }
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+
+        public SonarrAddSeries AddSeries(int tvdbId, string status, string futureStatus, string quality, string apiKey, Uri baseUrl)
+        {
+            //localhost:8081/api/e738882774aeb0b2210f4bc578cbb584/?cmd=show.addnew&tvdbid=101501&status=skipped&future_status=wanted&initial=fullhdbluray&sdtv
+
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=show.addnew",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("tvdbid", tvdbId.ToString());
+            request.AddQueryParameter("status", status);
+            request.AddQueryParameter("future_status", futureStatus);
+            request.AddQueryParameter("initial", quality);
+            
+            var obj = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+
+            return obj;
+        }
+
     }
 }

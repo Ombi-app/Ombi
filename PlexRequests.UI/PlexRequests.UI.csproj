@@ -165,6 +165,7 @@
     <Compile Include="Validators\EmailNotificationSettingsValidator.cs" />
     <Compile Include="Validators\CouchPotatoValidator.cs" />
     <Compile Include="Validators\PlexValidator.cs" />
+    <Compile Include="Validators\SickRageValidator.cs" />
     <Compile Include="Validators\SonarrValidator.cs" />
     <Content Include="Content\bootstrap-notify.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -318,6 +319,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\PushbulletNotifications.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\Sickrage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

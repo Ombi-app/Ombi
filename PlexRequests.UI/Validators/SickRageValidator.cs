@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrSettings.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using FluentValidation;
 
-using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.UI.Validators
 {
-    public class SonarrSettings : Settings
+    public class SickRageValidator : AbstractValidator<SickRageSettings>
     {
-        public bool Enabled { get; set; }
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string ApiKey { get; set; }
-        public string QualityProfile { get; set; }
-        public bool SeasonFolders { get; set; }
-        public string RootPath { get; set; }
-        public bool Ssl { get; set; }
-
-        [JsonIgnore]
-        public Uri FullUri
+        public SickRageValidator()
         {
-            get
-            {
-                var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
-            }
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
         }
     }
 }

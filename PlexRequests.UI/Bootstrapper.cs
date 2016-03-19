@@ -73,6 +73,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
+            container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
