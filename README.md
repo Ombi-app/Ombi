@@ -21,7 +21,7 @@ I wanted to write a similar application in .Net!
 
 #Preview
 
-![Preview](http://i.imgur.com/yNztwTn.gif)
+![Preview](http://i.imgur.com/ucCFUvd.gif)
 
 #Installation
 Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
@@ -33,6 +33,8 @@ Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 To configure PlexRequests you need to register an admin user by clicking on Admin (top right) and press the Register link.
 You will then have a admin menu option once registered where you can setup Sonarr, Couchpotato and any other settings.
 
+Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
+
 # Contributors
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
@@ -40,7 +42,11 @@ We are looking for any contributions to the project! Just pick up a task, if you
 Please feed free to submit a pull request!
 
 # Donation
-If you feel like donating you can [here!](paypal.me/PlexRequestsNet)
+If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
+
+###### A massive thanks to everyone below!
+
+[heartisall](https://github.com/heartisall)
 
 
 # Sponsors
