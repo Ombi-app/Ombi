@@ -64,7 +64,10 @@ namespace PlexRequests.Api
             request.AddQueryParameter("tvdbid", tvdbId.ToString());
             request.AddQueryParameter("status", status);
             request.AddQueryParameter("future_status", futureStatus);
-            request.AddQueryParameter("initial", quality);
+            if (!quality.Equals("default", StringComparison.CurrentCultureIgnoreCase))
+            {
+                request.AddQueryParameter("initial", quality);
+            }
 
             var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 

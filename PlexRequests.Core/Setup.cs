@@ -121,6 +121,12 @@ namespace PlexRequests.Core
                 result.Add(id);
             }
 
+            foreach (var source in requestedModels.Where(x => x.Type== RequestType.Movie))
+            {
+                var id = jsonRepo.AddRequest(source);
+                result.Add(id);
+            }
+
 
             if (result.Any(x => x == -1))
             {
