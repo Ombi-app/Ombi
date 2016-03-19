@@ -59,6 +59,7 @@ namespace PlexRequests.UI.Modules
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private PushbulletApi PushbulletApi { get; }
+        private ICouchPotatoApi CpApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
@@ -70,7 +71,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<EmailNotificationSettings> email,
             IPlexApi plexApi,
             ISettingsService<PushbulletNotificationSettings> pbSettings,
-            PushbulletApi pbApi) : base("admin")
+            PushbulletApi pbApi,
+            ICouchPotatoApi cpApi) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -82,6 +84,7 @@ namespace PlexRequests.UI.Modules
             PlexApi = plexApi;
             PushbulletService = pbSettings;
             PushbulletApi = pbApi;
+            CpApi = cpApi;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -107,6 +110,7 @@ namespace PlexRequests.UI.Modules
             Post["/sonarr"] = _ => SaveSonarr();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+            Post["/cpprofiles"] = _ => GetCpProfiles();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -353,6 +357,14 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushbullet Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response GetCpProfiles()
+        {
+            var settings = this.Bind<CouchPotatoSettings>();
+            var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
+
+            return Response.AsJson(profiles);
         }
     }
 }

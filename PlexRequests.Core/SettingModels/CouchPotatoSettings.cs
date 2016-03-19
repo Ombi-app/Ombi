@@ -37,6 +37,7 @@ namespace PlexRequests.Core.SettingModels
         public int Port { get; set; }
         public string ApiKey { get; set; }
         public bool Ssl { get; set; }
+        public string ProfileId { get; set; }
 
         [JsonIgnore]
         public Uri FullUri

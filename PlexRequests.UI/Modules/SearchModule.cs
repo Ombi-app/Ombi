@@ -215,7 +215,7 @@ namespace PlexRequests.UI.Modules
             if (!settings.RequireApproval)
             {
                 Log.Info("Adding movie to CP (No approval required)");
-                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri);
+                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri,cpSettings.ProfileId);
                 Log.Debug("Adding movie to CP result {0}", result);
                 if (result)
                 {

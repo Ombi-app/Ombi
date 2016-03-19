@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Movie\CouchPotatoAdd.cs" />
+    <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />

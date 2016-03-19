@@ -127,7 +127,7 @@ namespace PlexRequests.UI.Modules
             var cpSettings = CpService.GetSettings();
             var cp = new CouchPotatoApi();
             Log.Info("Adding movie to CP : {0}", request.Title);
-            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri);
+            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, cpSettings.ProfileId);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
             {
@@ -212,7 +212,7 @@ namespace PlexRequests.UI.Modules
         private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)
         { 
             Log.Info("Adding movie to CP : {0}", r.Title);
-            var result = cp.AddMovie(r.ImdbId, settings.ApiKey, r.Title, settings.FullUri);
+            var result = cp.AddMovie(r.ImdbId, settings.ApiKey, r.Title, settings.FullUri, settings.ProfileId);
             Log.Trace("Adding movie to CP result {0}", result);
             return result;
         }

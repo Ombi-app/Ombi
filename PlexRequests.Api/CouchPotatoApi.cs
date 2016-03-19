@@ -45,9 +45,17 @@ namespace PlexRequests.Api
         private ApiRequest Api { get; set; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl)
+        public bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileId = default(string))
         {
-            var request = new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}" };
+            RestRequest request;
+            request = string.IsNullOrEmpty(profileId) 
+                ? new RestRequest {Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}"}
+                : new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}&profile_id={profileId}" };
+
+            if (!string.IsNullOrEmpty(profileId))
+            {
+                request.AddUrlSegment("profileId", profileId);
+            }
 
             request.AddUrlSegment("apikey", apiKey);
             request.AddUrlSegment("imdbid", imdbid);
@@ -92,6 +100,20 @@ namespace PlexRequests.Api
             request.AddUrlSegment("apikey", apiKey);
 
             return Api.Execute<CouchPotatoStatus>(request,url);
+        }
+
+        public CouchPotatoProfiles GetProfiles(Uri url, string apiKey)
+        {
+            Log.Trace("Getting CP Profiles, ApiKey = {0}", apiKey);
+            var request = new RestRequest
+            {
+                Resource = "api/{apikey}/profile.list/",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("apikey", apiKey);
+
+            return Api.Execute<CouchPotatoProfiles>(request, url);
         }
     }
 }
