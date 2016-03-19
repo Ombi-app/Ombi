@@ -68,15 +68,15 @@
                 <label for="profiles" class="control-label">Quality Profiles</label>
                 <div id="profiles">
                     <select class="form-control" value="selected">
-                        <option selected="selected" value="default">Use Deafult</option>
-                        <option value="sdtv">SD TV</option>
-                        <option value="sddvd">SD DVD</option>
-                        <option value="hdtv">HD TV</option>
-                        <option value="rawhdtv">Raw HD TV</option>
-                        <option value="hdwebdl">HD Web DL</option>
-                        <option value="fullhdwebdl">Full HD Web DL</option>
-                        <option value="hdbluray">HD Bluray</option>
-                        <option value="fullhdbluray">Full HD Bluray</option>
+                        <option id="default" value="default">Use Deafult</option>
+                        <option id="sdtv" value="sdtv">SD TV</option>
+                        <option id="sddvd" value="sddvd">SD DVD</option>
+                        <option id="hdtv" value="hdtv">HD TV</option>
+                        <option id="rawhdtv" value="rawhdtv">Raw HD TV</option>
+                        <option id="hdwebdl" value="hdwebdl">HD Web DL</option>
+                        <option id="fullhdwebdl" value="fullhdwebdl">Full HD Web DL</option>
+                        <option id="hdbluray" value="hdbluray">HD Bluray</option>
+                        <option id="fullhdbluray" value="fullhdbluray">Full HD Bluray</option>
                     </select>
                 </div>
             </div>
@@ -100,10 +100,17 @@
 
 
 <script>
-    $(function () {
+    $(function() {
 
-        
-        $('#save').click(function(e) {
+        @if (!string.IsNullOrEmpty(Model.QualityProfile))
+        {
+    <text>
+        var qualitySelected = '@Model.QualityProfile';
+        $('#' + qualitySelected).prop("selected", "selected");
+        </text>
+        }
+
+        $('#save').click(function (e) {
             e.preventDefault();
             var port = $('#portNumber').val();
             if (isNaN(port)) {
@@ -136,44 +143,12 @@
             });
         });
 
-        $('#getProfiles').click(function (e) {
-            e.preventDefault();
-            if (!$('#Ip').val()) {
-                generateNotify("Please enter a valid IP/Hostname.", "warning");
-                return;
-            }
-            if (!$('#portNumber').val()) {
-                generateNotify("Please enter a valid Port Number.", "warning");
-                return;
-            }
-            if (!$('#ApiKey').val()) {
-                generateNotify("Please enter a valid ApiKey.", "warning");
-                return;
-            }
-            var $form = $("#mainForm");
-            $.ajax({
-                type: $form.prop("method"),
-                data: $form.serialize(),
-                url: "sonarrprofiles",
-                dataType: "json",
-                success: function (response) {
-                    response.forEach(function (result) {
-                        $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                }
-            });
-        });
-
-        $('#testSonarr').click(function (e) {
+        $('#testSickRage').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/sonarr",
+                url: "/test/sickrage",
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

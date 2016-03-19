@@ -1,4 +1,5 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: CouchPotatoApi.cs
@@ -23,46 +24,65 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
-#endregion
-using System;
-using System.Collections.Generic;
 
+#endregion
+
+using System;
 using NLog;
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Sonarr;
+using PlexRequests.Api.Models.SickRage;
 using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class SickrageApi 
+    public class SickrageApi : ISickRageApi
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
         public SickrageApi()
         {
             Api = new ApiRequest();
         }
-        private ApiRequest Api { get; set; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        private ApiRequest Api { get; }
 
 
-        public SonarrAddSeries AddSeries(int tvdbId, string status, string futureStatus, string quality, string apiKey, Uri baseUrl)
+        public SickRageTvAdd AddSeries(int tvdbId, bool latest, string quality, string apiKey,
+            Uri baseUrl)
         {
-            //localhost:8081/api/e738882774aeb0b2210f4bc578cbb584/?cmd=show.addnew&tvdbid=101501&status=skipped&future_status=wanted&initial=fullhdbluray&sdtv
+            string status;
+            var futureStatus = SickRageStatus.Wanted;
+
+            status = latest ? SickRageStatus.Skipped : SickRageStatus.Wanted;
 
             var request = new RestRequest
             {
                 Resource = "/api/{apiKey}/?cmd=show.addnew",
                 Method = Method.GET
             };
-
+            request.AddUrlSegment("apiKey", apiKey);
             request.AddQueryParameter("tvdbid", tvdbId.ToString());
             request.AddQueryParameter("status", status);
             request.AddQueryParameter("future_status", futureStatus);
             request.AddQueryParameter("initial", quality);
-            
-            var obj = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+
+            var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 
             return obj;
         }
 
+        public SickRagePing Ping(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=sb.ping",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("apiKey", apiKey);
+            var obj = Api.ExecuteJson<SickRagePing>(request, baseUrl);
+
+            return obj;
+        }
     }
 }

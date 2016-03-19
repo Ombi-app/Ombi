@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: HtmlRemover.cs
+//    File: SickRageStatus.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,22 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System.Text.RegularExpressions;
-
-namespace PlexRequests.Helpers
+namespace PlexRequests.Api.Models.SickRage
 {
-    public static class HtmlRemover
+    public static class SickRageStatus
     {
-        public static string RemoveHtml(this string value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                return string.Empty;
-            }
-            var step1 = Regex.Replace(value, @"<[^>]+>|&nbsp;", "").Trim();
-            var step2 = Regex.Replace(step1, @"\s{2,}", " ");
-            return step2;
-        }
+        public const string Wanted = "wanted";
+        public const string Skipped = "skipped";
+        public const string Ignored = "Ignored";
     }
 }

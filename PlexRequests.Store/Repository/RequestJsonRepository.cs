@@ -74,7 +74,7 @@ namespace PlexRequests.Store.Repository
 
         public RequestBlobs Get(int id)
         {
-            var key = TypeName + "Get";
+            var key = TypeName + "Get" + id;
             var item = Cache.GetOrSet(key, () =>
             {
                 using (var con = Db.DbConnection())

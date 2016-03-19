@@ -210,7 +210,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea').html("<div>Issue: None</div>");
+                $('#issueArea'+buttonId).html("<div>Issue: None</div>");
             }
         },
         error: function (e) {
