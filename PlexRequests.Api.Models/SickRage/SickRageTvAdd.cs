@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SettingsModel.cs
+//    File: SickRageTvAdd.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Dapper.Contrib.Extensions;
-
-namespace PlexRequests.Store
+namespace PlexRequests.Api.Models.SickRage
 {
-    [Table("Settings")]
-    public class SettingsModel : Entity
+    public class SickRageTvAddData
     {
-        public int Port { get; set; }
-        public bool UserAuthentication { get; set; }
-        public string PlexAuthToken { get; set; }
+        public string name { get; set; }
     }
+
+    public class SickRageTvAdd
+    {
+        public SickRageTvAddData data { get; set; }
+        public string message { get; set; }
+        public string result { get; set; }
+    }
+
 }

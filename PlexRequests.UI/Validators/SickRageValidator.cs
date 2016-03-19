@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Interfaces
+using FluentValidation;
+
+using PlexRequests.Core.SettingModels;
+
+namespace PlexRequests.UI.Validators
 {
-    public interface IAvailabilityChecker
+    public class SickRageValidator : AbstractValidator<SickRageSettings>
     {
-        void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year);
+        public SickRageValidator()
+        {
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
+        }
     }
 }

@@ -8,36 +8,6 @@ CREATE TABLE IF NOT EXISTS User
     Password							varchar(100) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Settings
-(
-	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    Port								INTEGER NOT NULL,
-	UserAuthentication					INTEGER NOT NULL,
-	PlexAuthToken						varchar(50)				
-);
-
-
-CREATE TABLE IF NOT EXISTS Requested
-(
-	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-	Type								INTEGER NOT NULL,
-    ProviderId							INTEGER NOT NULL,
-	ImdbId								varchar(50),
-	Overview							varchar(50),
-	Title								varchar(50) NOT NULL,
-	PosterPath							varchar(50) NOT NULL,
-	ReleaseDate							varchar(50) NOT NULL,
-	Status								varchar(50) NOT NULL,
-	AdminNote							varchar(50),
-	Approved							INTEGER NOT NULL,
-	LatestTv							INTEGER NOT NULL,
-	RequestedBy							varchar(50),
-	RequestedDate						varchar(50) NOT NULL,
-	Available							INTEGER(50),
-	Issues								INTEGER,
-	OtherMessage						varchar(50)
-
-);
 
 CREATE TABLE IF NOT EXISTS GlobalSettings
 (

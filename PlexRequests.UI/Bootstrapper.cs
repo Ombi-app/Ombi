@@ -62,33 +62,34 @@ namespace PlexRequests.UI
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
             container.Register<IUserMapper, UserMapper>();
-
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
-
-            container.Register<ISettingsRepository, SettingsJsonRepository>();
             container.Register<ICacheProvider, MemoryCacheProvider>();
 
+            // Settings
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
             container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
             container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
             container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
             container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
+            container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
-            container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
-            container.Register<IRequestService, RequestService>();
 
+            // Repo's
+            container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
+            container.Register<IRequestService, JsonRequestService>();
+            container.Register<ISettingsRepository, SettingsJsonRepository>();
+
+            // Services
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
 
+            // Api's
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();
-
+            container.Register<ISickRageApi, SickrageApi>();
             container.Register<ISonarrApi, SonarrApi>();
-            //container.Register<ISonarrApi, MockSonarrApi>();
-
-
             container.Register<IPlexApi, PlexApi>();
 
             SubscribeAllObservers(container);
@@ -101,7 +102,7 @@ namespace PlexRequests.UI
             TaskManager.Initialize(new PlexRegistry());
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
-            
+
             StaticConfiguration.DisableErrorTraces = false;
 
             base.ApplicationStartup(container, pipelines);

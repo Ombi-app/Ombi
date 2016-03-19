@@ -33,7 +33,8 @@ namespace PlexRequests.Api.Interfaces
 {
     public interface ICouchPotatoApi
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl);
+        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
         CouchPotatoStatus GetStatus(Uri url, string apiKey);
+        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
     }
 }

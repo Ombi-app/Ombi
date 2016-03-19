@@ -53,7 +53,8 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return con.Insert(entity);
+                var id = con.Insert(entity);
+                return id;
             }
         }
 
@@ -73,7 +74,7 @@ namespace PlexRequests.Store.Repository
 
         public RequestBlobs Get(int id)
         {
-            var key = TypeName + "Get";
+            var key = TypeName + "Get" + id;
             var item = Cache.GetOrSet(key, () =>
             {
                 using (var con = Db.DbConnection())
@@ -111,8 +112,8 @@ namespace PlexRequests.Store.Repository
 
         public bool UpdateAll(IEnumerable<RequestBlobs> entity)
         {
+            ResetCache();
             var result = new HashSet<bool>();
-
             using (var db = Db.DbConnection())
             {
                 db.Open();

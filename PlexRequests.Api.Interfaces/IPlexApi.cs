@@ -37,6 +37,6 @@ namespace PlexRequests.Api.Interfaces
         PlexFriends GetUsers(string authToken);
         PlexSearch SearchContent(string authToken, string searchTerm, Uri plexFullHost);
         PlexStatus GetStatus(string authToken, Uri uri);
-
+        PlexAccount GetAccount(string authToken);
     }
 }

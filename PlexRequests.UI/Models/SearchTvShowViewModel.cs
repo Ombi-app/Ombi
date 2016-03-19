@@ -48,8 +48,6 @@ namespace PlexRequests.UI.Models
         public string AirsTime { get; set; }
         public string Rating { get; set; }
         public string ImdbId { get; set; }
-        public string Zap2ItId { get; set; }
-        public string Added { get; set; }
         public int SiteRating { get; set; }
     }
 }

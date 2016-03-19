@@ -24,7 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
 using Mono.Data.Sqlite;
+using PlexRequests.Api;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
@@ -46,6 +52,7 @@ namespace PlexRequests.Core
                 CreateDefaultSettingsPage();
             }
 
+            MigrateDb();
             return Db.DbConnection().ConnectionString;
         }
 
@@ -62,6 +69,83 @@ namespace PlexRequests.Core
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
+        }
+
+        private void MigrateDb() // TODO: Remove when no longer needed
+        {
+            var result = new List<long>();
+            RequestedModel[] requestedModels;
+            var repo = new GenericRepository<RequestedModel>(Db);
+            try
+            {
+                var records = repo.GetAll();
+                requestedModels = records as RequestedModel[] ?? records.ToArray();
+            }
+            catch (SqliteException)
+            {
+                // There is no requested table so they do not have an old version of the DB
+                return;
+            }
+
+            if (!requestedModels.Any())
+            { return; }
+
+            var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
+
+            var api = new TvMazeApi();
+
+            foreach (var r in requestedModels.Where(x => x.Type == RequestType.TvShow))
+            {
+                var show = api.ShowLookupByTheTvDbId(r.ProviderId);
+
+                var model = new RequestedModel
+                {
+                    Title = show.name,
+                    PosterPath = show.image?.medium,
+                    Type = RequestType.TvShow,
+                    ProviderId = show.externals.thetvdb ?? 0,
+                    ReleaseDate = r.ReleaseDate,
+                    AdminNote = r.AdminNote,
+                    Approved = r.Approved,
+                    Available = r.Available,
+                    ImdbId = show.externals.imdb,
+                    Issues = r.Issues,
+                    LatestTv = r.LatestTv,
+                    OtherMessage = r.OtherMessage,
+                    Overview = show.summary.RemoveHtml(),
+                    RequestedBy = r.RequestedBy,
+                    RequestedDate = r.ReleaseDate,
+                    Status = show.status
+                };
+                var id = jsonRepo.AddRequest(model);
+                result.Add(id);
+            }
+
+            foreach (var source in requestedModels.Where(x => x.Type== RequestType.Movie))
+            {
+                var id = jsonRepo.AddRequest(source);
+                result.Add(id);
+            }
+
+
+            if (result.Any(x => x == -1))
+            {
+                throw new SqliteException("Could not migrate the DB!");
+            }
+
+
+            if (result.Count != requestedModels.Length)
+            {
+                throw new SqliteException("Could not migrate the DB! count is different");
+            }
+
+
+            // Now delete the old requests
+            foreach (var oldRequest in requestedModels)
+            {
+                repo.Delete(oldRequest);
+            }
+
         }
     }
 }

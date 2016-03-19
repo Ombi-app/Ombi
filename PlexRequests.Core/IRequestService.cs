@@ -32,10 +32,10 @@ namespace PlexRequests.Core
 {
     public interface IRequestService
     {
-        long AddRequest(int providerId, RequestedModel model);
+        long AddRequest(RequestedModel model);
         bool CheckRequest(int providerId);
-        void DeleteRequest(int tmdbId);
-        void UpdateRequest(RequestedModel model);
+        void DeleteRequest(RequestedModel request);
+        bool UpdateRequest(RequestedModel model);
         RequestedModel Get(int id);
         IEnumerable<RequestedModel> GetAll();
         bool BatchUpdate(List<RequestedModel> model);

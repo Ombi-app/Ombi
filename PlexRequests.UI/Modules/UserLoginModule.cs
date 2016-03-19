@@ -24,6 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Nancy;
@@ -98,15 +101,28 @@ namespace PlexRequests.UI.Modules
                 var signedIn = (PlexAuthentication)Api.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
-                    Log.Debug("Correct credentials, checking if the user is in the friends list");
-                    authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
-                    Log.Debug("Friends list result = {0}", authenticated);
+                    Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
+                    if (CheckIfUserIsOwner(settings.PlexAuthToken, signedIn.user?.username))
+                    {
+                        Log.Debug("User is the account owner");
+                        authenticated = true;
+                    }
+                    else
+                    {
+                        authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                        Log.Debug("Friends list result = {0}", authenticated);
+                    }
                 }
             }
             else if(settings.UserAuthentication) // Check against the users in Plex
             {
                 Log.Debug("Need to auth");
                 authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                if (CheckIfUserIsOwner(settings.PlexAuthToken, username))
+                {
+                    Log.Debug("User is the account owner");
+                    authenticated = true;
+                }
                 Log.Debug("Friends list result = {0}", authenticated);
             }
             else if(!settings.UserAuthentication) // No auth, let them pass!
@@ -127,6 +143,8 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
         }
 
+        
+
         private Response Logout()
         {
             Log.Debug("Logging Out");
@@ -137,12 +155,23 @@ namespace PlexRequests.UI.Modules
             return Context.GetRedirect("~/userlogin");
         }
 
+        private bool CheckIfUserIsOwner(string authToken, string userName)
+        {
+            var userAccount = Api.GetAccount(authToken);
+            if (userAccount == null)
+            {
+                return false;
+            }
+            return userAccount.Username != null && userAccount.Username.Equals(userName, StringComparison.CurrentCultureIgnoreCase);
+        }
+
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
             var users = Api.GetUsers(authToken);
             Log.Debug("Plex Users: ");
             Log.Debug(users.DumpJson());
-            return users.User.Any(x => x.Username == username);
+            var allUsers = users.User?.Where(x => !string.IsNullOrEmpty(x.Username));
+            return allUsers != null && allUsers.Any(x => x.Username.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private bool IsUserInDeniedList(string username, AuthenticationSettings settings)

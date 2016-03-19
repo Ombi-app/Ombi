@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: ISickRageApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Interfaces
+
+using System;
+using PlexRequests.Api.Models.SickRage;
+
+namespace PlexRequests.Api.Interfaces
 {
-    public interface IAvailabilityChecker
+    public interface ISickRageApi
     {
-        void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year);
+        SickRageTvAdd AddSeries(int tvdbId, bool latest, string quality, string apiKey,
+            Uri baseUrl);
+
+        SickRagePing Ping(string apiKey, Uri baseUrl);
     }
 }

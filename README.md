@@ -12,7 +12,8 @@ I wanted to write a similar application in .Net!
 
 #Features
 
-* Integration with [TheMovieDB](https://www.themoviedb.org/) for all Movies and TV shows
+* Integration with [TheMovieDB](https://www.themoviedb.org/) for all Movies
+* Integration with [TVMaze](www.tvmaze.com) for all TV shows!
 * Secure authentication
 * [Sonarr](https://sonarr.tv/) integration (SickRage/Sickbeard TBD)
 * [CouchPotato](https://couchpota.to/) integration

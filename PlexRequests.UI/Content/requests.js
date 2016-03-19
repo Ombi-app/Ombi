@@ -108,7 +108,7 @@ $(".theNoteSaveButton").click(function (e) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Added Note.", "success");
                 $("#myModal").modal("hide");
-                $('#adminNotesArea').html("<div>Note from Admin: " + comment + "</div>");
+                $('#adminNotesArea' + e.target.value).html("<div>Note from Admin: " + comment + "</div>");
             }
         },
         error: function (e) {
@@ -210,7 +210,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea').html("<div>Issue: None</div>");
+                $('#issueArea'+buttonId).html("<div>Issue: None</div>");
             }
         },
         error: function (e) {

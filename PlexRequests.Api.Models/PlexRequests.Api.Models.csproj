@@ -46,9 +46,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Movie\CouchPotatoAdd.cs" />
+    <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />
+    <Compile Include="Plex\PlexAccount.cs" />
     <Compile Include="Plex\PlexAuthentication.cs" />
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />
@@ -56,10 +58,15 @@
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SickRage\SickRagePing.cs" />
+    <Compile Include="SickRage\SickRageStatus.cs" />
+    <Compile Include="SickRage\SickRageTvAdd.cs" />
     <Compile Include="Sonarr\SonarrAddSeries.cs" />
     <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />
+    <Compile Include="Tv\TvMazeSearch.cs" />
+    <Compile Include="Tv\TVMazeShow.cs" />
     <Compile Include="Tv\TvSearchResult.cs" />
     <Compile Include="Tv\TvShow.cs" />
     <Compile Include="Tv\TvShowImages.cs" />

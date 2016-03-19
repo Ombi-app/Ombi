@@ -62,7 +62,7 @@
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
                 {{#if posterPath}}
-                <img class="img-responsive" width="150" src="http://thetvdb.com/banners/_cache/posters/{{posterPath}}-1.jpg" alt="poster">
+                <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
                 {{/if}}
                 {{/if_eq}}
             </div>
@@ -95,14 +95,14 @@
                 </div>
                 <div>Requested By: {{requestedBy}}</div>
                 <div>Requested Date: {{requestedDate}}</div>
-                <div id="issueArea">
+                <div id="issueArea{{requestId}}">
                     {{#if otherMessage}}
                     <div>Message: {{otherMessage}}</div>
                     {{else}}
                     <div>Issue: {{issues}}</div>
                     {{/if}}
                 </div>
-                <div id="adminNotesArea">
+                <div id="adminNotesArea{{requestId}}">
                     {{#if adminNote}}
                     <div>Note from Admin: {{adminNote}}</div>
                     {{/if}}

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: SickRagePing.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Interfaces
+namespace PlexRequests.Api.Models.SickRage
 {
-    public interface IAvailabilityChecker
+    public class SickRagePingData
     {
-        void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year);
+        public int pid { get; set; }
+    }
+
+    public class SickRagePing
+    {
+        public SickRagePingData data { get; set; }
+        public string message { get; set; }
+        public string result { get; set; }
     }
 }

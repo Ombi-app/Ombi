@@ -40,7 +40,7 @@ namespace PlexRequests.Core
     
         private IRepository<RequestedModel> Repo { get; set; }
 
-        public long AddRequest(int providerId, RequestedModel model)
+        public long AddRequest(RequestedModel model)
         {
             return Repo.Insert(model);
         }
@@ -50,16 +50,15 @@ namespace PlexRequests.Core
             return Repo.GetAll().Any(x => x.ProviderId == providerId);
         }
 
-        public void DeleteRequest(int tmdbId)
+        public void DeleteRequest(RequestedModel model)
         {
-            var entity = Repo.GetAll().FirstOrDefault(x => x.ProviderId == tmdbId);
+            var entity = Repo.Get(model.Id);
             Repo.Delete(entity);
         }
 
-        public void UpdateRequest(RequestedModel model)
+        public bool UpdateRequest(RequestedModel model)
         {
-
-            Repo.Update(model);
+            return Repo.Update(model);
         }
 
         /// <summary>

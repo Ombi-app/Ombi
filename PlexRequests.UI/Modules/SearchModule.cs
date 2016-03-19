@@ -26,6 +26,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+
 using Nancy;
 using Nancy.Responses.Negotiation;
 
@@ -39,6 +42,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -48,7 +52,7 @@ namespace PlexRequests.UI.Modules
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ICouchPotatoApi cpApi) : base("search")
+            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -60,6 +64,8 @@ namespace PlexRequests.UI.Modules
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
             CouchPotatoApi = cpApi;
+            SickRageService = sickRageService;
+            SickrageApi = srApi;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -76,11 +82,13 @@ namespace PlexRequests.UI.Modules
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
         private TheTvDbApi TvApi { get; }
+        private ISickRageApi SickrageApi { get; }
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
+        private ISettingsService<SickRageSettings> SickRageService { get; }
         private IAvailabilityChecker Checker { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
@@ -104,41 +112,34 @@ namespace PlexRequests.UI.Modules
         private Response SearchTvShow(string searchTerm)
         {
             Log.Trace("Searching for TV Show {0}", searchTerm);
-            var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
-
-            if (tvShow?.data == null)
+            //var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
+            var tvShow = new TvMazeApi().Search(searchTerm);
+            if (!tvShow.Any())
             {
                 Log.Trace("TV Show data is null");
                 return Response.AsJson("");
             }
             var model = new List<SearchTvShowViewModel>();
 
-            foreach (var t in tvShow.data)
+            foreach (var t in tvShow)
             {
                 model.Add(new SearchTvShowViewModel
                 {
-                    Added = t.added,
-                    AirsDayOfWeek = t.airsDayOfWeek,
-                    AirsTime = t.airsTime,
-                    Aliases = t.aliases,
                     // We are constructing the banner with the id: 
                     // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
-                    Banner = t.id.ToString(),
-                    FirstAired = t.firstAired,
-                    Genre = t.genre,
-                    Id = t.id,
-                    ImdbId = t.imdbId,
-                    LastUpdated = t.lastUpdated,
-                    Network = t.network,
-                    NetworkId = t.networkId,
-                    Overview = t.overview,
-                    Rating = t.rating,
-                    Runtime = t.runtime,
-                    SeriesId = t.id,
-                    SeriesName = t.seriesName,
-                    SiteRating = t.siteRating,
-                    Status = t.status,
-                    Zap2ItId = t.zap2itId
+                    Banner = t.show.image?.medium,
+                    FirstAired = t.show.premiered,
+                    Id = t.show.externals?.thetvdb ?? 0,
+                    ImdbId = t.show.externals?.imdb,
+                    Network = t.show.network?.name,
+                    NetworkId = t.show.network?.id.ToString(),
+                    Overview = t.show.summary.RemoveHtml(),
+                    Rating = t.score.ToString(CultureInfo.CurrentUICulture),
+                    Runtime = t.show.runtime.ToString(),
+                    SeriesId = t.show.id,
+                    SeriesName = t.show.name,
+
+                    Status = t.show.status,
                 });
             }
 
@@ -190,12 +191,12 @@ namespace PlexRequests.UI.Modules
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
 
-#if !DEBUG
-            if (CheckIfTitleExistsInPlex(movieInfo.Title))
+            //#if !DEBUG
+            if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
             }
-#endif
+            //#endif
 
             var model = new RequestedModel
             {
@@ -219,13 +220,13 @@ namespace PlexRequests.UI.Modules
             if (!settings.RequireApproval)
             {
                 Log.Info("Adding movie to CP (No approval required)");
-                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri);
+                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettings.ProfileId);
                 Log.Debug("Adding movie to CP result {0}", result);
                 if (result)
                 {
                     model.Approved = true;
                     Log.Debug("Adding movie to database requests (No approval required)");
-                    RequestService.AddRequest(movieId, model);
+                    RequestService.AddRequest(model);
 
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
@@ -235,7 +236,7 @@ namespace PlexRequests.UI.Modules
             try
             {
                 Log.Debug("Adding movie to database requests");
-                var id = RequestService.AddRequest(movieId, model);
+                var id = RequestService.AddRequest(model);
 
                 NotificationService.Publish(model.Title, model.RequestedBy);
 
@@ -262,28 +263,27 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "TV Show has already been requested!" });
             }
 
-            var tvApi = new TheTvDbApi();
-            var token = GetTvDbAuthToken(tvApi);
+            var tvApi = new TvMazeApi();
 
-            var showInfo = tvApi.GetInformation(showId, token).data;
+            var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
 
-#if !DEBUG
-            if (CheckIfTitleExistsInPlex(showInfo.seriesName))
+            //#if !DEBUG
+            if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.seriesName} is already in Plex!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
             }
-#endif
+            //#endif
 
             DateTime firstAir;
-            DateTime.TryParse(showInfo.firstAired, out firstAir);
+            DateTime.TryParse(showInfo.premiered, out firstAir);
 
             var model = new RequestedModel
             {
-                ProviderId = showInfo.id,
+                ProviderId = showInfo.externals?.thetvdb ?? 0,
                 Type = RequestType.TvShow,
-                Overview = showInfo.overview,
-                PosterPath = "http://image.tmdb.org/t/p/w150/" + showInfo.banner, // This is incorrect
-                Title = showInfo.seriesName,
+                Overview = showInfo.summary.RemoveHtml(),
+                PosterPath = showInfo.image?.medium,
+                Title = showInfo.name,
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
@@ -298,36 +298,70 @@ namespace PlexRequests.UI.Modules
             if (!settings.RequireApproval)
             {
                 var sonarrSettings = SonarrService.GetSettings();
-                int qualityProfile;
-                int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
-                var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.LatestTv, sonarrSettings.ApiKey,
-                    sonarrSettings.FullUri);
-                if (result != null)
+                var sender = new TvSender(SonarrApi, SickrageApi);
+                if (sonarrSettings.Enabled)
                 {
-                    model.Approved = true;
-                    Log.Debug("Adding tv to database requests (No approval required)");
-                    RequestService.AddRequest(showId, model);
+                    var result = sender.SendToSonarr(sonarrSettings, model);
+                    if (result != null)
+                    {
+                        model.Approved = true;
+                        Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
+                        RequestService.AddRequest(model);
 
-                    return Response.AsJson(new JsonResponseModel { Result = true });
+                        return Response.AsJson(new JsonResponseModel { Result = true });
+                    }
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to Sonarr! Please check your settings." });
+
                 }
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+
+                var srSettings = SickRageService.GetSettings();
+                if (srSettings.Enabled)
+                {
+                    var result = sender.SendToSickRage(srSettings, model);
+                    if (result?.result == "success")
+                    {
+                        model.Approved = true;
+                        Log.Debug("Adding tv to database requests (No approval required & SickRage)");
+                        RequestService.AddRequest(model);
+
+                        return Response.AsJson(new JsonResponseModel { Result = true });
+                    }
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
+                }
+
+                return Response.AsJson("The request of TV Shows is not correctly set up. Please contact your admin.");
+
             }
 
-            RequestService.AddRequest(showId, model);
+            RequestService.AddRequest(model);
             NotificationService.Publish(model.Title, model.RequestedBy);
 
             return Response.AsJson(new { Result = true });
         }
-        private string GetTvDbAuthToken(TheTvDbApi api)
+
+        private bool CheckIfTitleExistsInPlex(string title, string year)
         {
-            return Cache.GetOrSet(CacheKeys.TvDbToken, api.Authenticate, 50);
+            var result = Checker.IsAvailable(title, year);
+            return result;
         }
 
-        private bool CheckIfTitleExistsInPlex(string title)
+        private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
         {
-            var result = Checker.IsAvailable(title);
-            return result;
+            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, sickRageSettings.QualityProfile,
+                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
+
+            Log.Trace("SickRage Result: ");
+            Log.Trace(result.DumpJson());
+
+            if (result?.result == "success")
+            {
+                model.Approved = true;
+                Log.Debug("Adding tv to database requests (No approval required & SickRage)");
+                RequestService.AddRequest(model);
+
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to SickRage! Please check your settings." });
         }
     }
 }

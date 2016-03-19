@@ -98,13 +98,13 @@ namespace PlexRequests.Api
 
             try
             {
-
                 var json = JsonConvert.DeserializeObject<T>(response.Content);
                 return json;
             }
             catch (Exception e)
             {
                 Log.Fatal(e);
+                Log.Info(response.Content);
                 throw;
             }
         }

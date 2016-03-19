@@ -85,9 +85,10 @@ namespace PlexRequests.Services
         /// Determines whether the specified search term is available.
         /// </summary>
         /// <param name="title">The search term.</param>
+        /// <param name="year">The year.</param>
         /// <returns></returns>
         /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
-        public bool IsAvailable(string title)
+        public bool IsAvailable(string title, string year)
         {
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
@@ -96,10 +97,21 @@ namespace PlexRequests.Services
             {
                 throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
             }
+            if (!string.IsNullOrEmpty(year))
+            {
+                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
+                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title) && x.Year == year);
+                var directoryTitle = results.Directory?.Title == title && results.Directory?.Year == year;
+                return result?.Title != null || directoryTitle;
+            }
+            else
+            {
+                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
+                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title));
+                var directoryTitle = results.Directory?.Title == title;
+                return result?.Title != null || directoryTitle;
+            }
 
-            var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-            var result = results.Video.FirstOrDefault(x => x.Title == title);
-            return result?.Title != null;
         }
 
         private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth, IEnumerable<RequestedModel> requests)

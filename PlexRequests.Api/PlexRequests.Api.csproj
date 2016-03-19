@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="Mocks\MockSonarrApi.cs" />
     <Compile Include="PushbulletApi.cs" />
+    <Compile Include="SickrageApi.cs" />
     <Compile Include="SonarrApi.cs" />
     <Compile Include="CouchPotatoApi.cs" />
     <Compile Include="MovieBase.cs" />
@@ -81,6 +82,8 @@
     <Compile Include="TvBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TheTvDbApi.cs" />
+    <Compile Include="TvMazeApi.cs" />
+    <Compile Include="TvMazeBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
