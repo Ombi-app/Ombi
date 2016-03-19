@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
 using System.Linq;
 
 using Nancy;
@@ -98,9 +100,17 @@ namespace PlexRequests.UI.Modules
                 var signedIn = (PlexAuthentication)Api.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
-                    Log.Debug("Correct credentials, checking if the user is in the friends list");
-                    authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
-                    Log.Debug("Friends list result = {0}", authenticated);
+                    Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
+                    if (CheckIfUserIsOwner(settings.PlexAuthToken, username))
+                    {
+                        Log.Debug("User is the account owner");
+                        authenticated = true;
+                    }
+                    else
+                    {
+                        authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                        Log.Debug("Friends list result = {0}", authenticated);
+                    }
                 }
             }
             else if(settings.UserAuthentication) // Check against the users in Plex
@@ -127,6 +137,8 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
         }
 
+        
+
         private Response Logout()
         {
             Log.Debug("Logging Out");
@@ -135,6 +147,12 @@ namespace PlexRequests.UI.Modules
                 Session.Delete(SessionKeys.UsernameKey);
             }
             return Context.GetRedirect("~/userlogin");
+        }
+
+        private bool CheckIfUserIsOwner(string authToken, string userName)
+        {
+            var userAccount = Api.GetAccount(authToken);
+            return userAccount.Username == userName;
         }
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)

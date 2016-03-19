@@ -134,6 +134,25 @@ namespace PlexRequests.Api
 
             return users;
         }
+
+        public PlexAccount GetAccount(string authToken)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+            };
+
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", Version);
+            request.AddHeader("X-Plex-Token", authToken);
+            request.AddHeader("Content-Type", "application/xml");
+
+            var api = new ApiRequest();
+            var account = api.ExecuteXml<PlexAccount>(request, new Uri("https://plex.tv/users/account"));
+
+            return account;
+        }
     }
 }
 

@@ -50,6 +50,7 @@
     <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />
+    <Compile Include="Plex\PlexAccount.cs" />
     <Compile Include="Plex\PlexAuthentication.cs" />
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />
