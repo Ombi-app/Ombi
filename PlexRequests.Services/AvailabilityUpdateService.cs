@@ -50,7 +50,7 @@ namespace PlexRequests.Services
         {
             ConfigurationReader = new ConfigurationReader();
             var repo = new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new RequestService(new GenericRepository<RequestedModel>(new DbConfiguration(new SqliteFactory()))), new PlexApi());
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider())), new PlexApi());
             HostingEnvironment.RegisterObject(this);
         }
 
