@@ -14,6 +14,22 @@ movieLoad();
 tvLoad();
 
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr('href');
+    if (target === "#TvShowTab") {
+        if (!$('#tvList').mixItUp('isLoaded')) {
+            $('#tvList').mixItUp({
+                layout: {
+                    display: 'block'
+                },
+                load: {
+                    filter: 'all'
+                }
+            });
+        }
+    }
+});
+
 // Approve all
 $('#approveAll').click(function () {
     $.ajax({
@@ -283,7 +299,6 @@ function movieLoad() {
                 filter: 'all'
             }
         });
-
     });
 };
 
@@ -295,14 +310,6 @@ function tvLoad() {
             var context = buildRequestContext(result, "tv");
             var html = searchTemplate(context);
             $("#tvList").append(html);
-        });
-        $('#tvList').mixItUp({
-            layout: {
-                display: 'block'
-            },
-            load: {
-                filter: 'all'
-            }
         });
     });
 };
