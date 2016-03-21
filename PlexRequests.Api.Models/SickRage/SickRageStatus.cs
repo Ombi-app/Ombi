@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: SickRageStatus.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,17 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.SickRage
 {
-    public interface ICouchPotatoApi
+    public static class SickRageStatus
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
+        public const string Wanted = "wanted";
+        public const string Skipped = "skipped";
+        public const string Ignored = "Ignored";
     }
 }

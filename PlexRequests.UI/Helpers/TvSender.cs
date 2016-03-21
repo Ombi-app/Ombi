@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AvailabilityUpdateService.cs
+//    File: TvSender.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,62 +24,54 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Reactive.Linq;
-using System.Web.Hosting;
 
-using FluentScheduler;
-
-using Mono.Data.Sqlite;
-
+using Nancy;
 using NLog;
-
-using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.SickRage;
+using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
-using PlexRequests.Store.Repository;
+using PlexRequests.UI.Models;
 
-namespace PlexRequests.Services
+namespace PlexRequests.UI.Helpers
 {
-    public class AvailabilityUpdateService : ITask, IRegisteredObject, IAvailabilityUpdateService
+    public class TvSender
     {
-        public AvailabilityUpdateService()
+        public TvSender(ISonarrApi sonarrApi, ISickRageApi srApi)
         {
-            ConfigurationReader = new ConfigurationReader();
-            var repo = new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider())), new PlexApi());
-            HostingEnvironment.RegisterObject(this);
+            SonarrApi = sonarrApi;
+            SickrageApi = srApi;
         }
-
+        private ISonarrApi SonarrApi { get; }
+        private ISickRageApi SickrageApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private IConfigurationReader ConfigurationReader { get; }
-        private IAvailabilityChecker Checker { get; }
-        private IDisposable UpdateSubscription { get; set; }
-
-        public void Start(Configuration c)
+        public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            UpdateSubscription?.Dispose();
+            int qualityProfile;
+            int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+            var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.LatestTv, sonarrSettings.ApiKey,
+                sonarrSettings.FullUri);
 
-            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(Checker.CheckAndUpdateAll);
+            Log.Trace("Sonarr Add Result: ");
+            Log.Trace(result.DumpJson());
+
+            return result;
         }
 
-        public void Execute()
+        public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
         {
-            Start(ConfigurationReader.Read());
-        }
+            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, sickRageSettings.QualityProfile,
+                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
-        public void Stop(bool immediate)
-        {
-            HostingEnvironment.UnregisterObject(this);
-        }
-    }
+            Log.Trace("SickRage Add Result: ");
+            Log.Trace(result.DumpJson());
 
-    public interface IAvailabilityUpdateService
-    {
-        void Start(Configuration c);
+            return result;
+        }
     }
 }

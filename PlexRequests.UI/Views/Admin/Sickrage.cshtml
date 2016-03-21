@@ -3,7 +3,7 @@
     int port;
     if (Model.Port == 0)
     {
-        port = 8989;
+        port = 8081;
     }
     else
     {
@@ -13,7 +13,7 @@
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
-            <legend>Sonarr Settings</legend>
+            <legend>SickRage Settings</legend>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
+                <label for="Ip" class="control-label">SickRage Hostname or IP</label>
                 <div class="">
                     <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" value="@Model.Ip">
                 </div>
@@ -45,7 +45,7 @@
 
 
             <div class="form-group">
-                <label for="ApiKey" class="control-label">Sonarr API Key</label>
+                <label for="ApiKey" class="control-label">SickRage API Key</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" value="@Model.ApiKey">
                 </div>
@@ -64,51 +64,33 @@
                     </label>
                 </div>
             </div>
+
             <div class="form-group">
-                <label for="SubDir" class="control-label">Sonarr SubDirectory</label>
+                <label for="SubDir" class="control-label">SickRage SubDirectory</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>
             </div>
             <div class="form-group">
-                <div>
-                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles</button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="select" class="control-label">Quality Profiles</label>
+                <label for="profiles" class="control-label">Quality Profiles</label>
                 <div id="profiles">
-                    <select class="form-control" id="select"></select>
+                    <select class="form-control" value="selected">
+                        <option id="default" value="default">Use Deafult</option>
+                        <option id="sdtv" value="sdtv">SD TV</option>
+                        <option id="sddvd" value="sddvd">SD DVD</option>
+                        <option id="hdtv" value="hdtv">HD TV</option>
+                        <option id="rawhdtv" value="rawhdtv">Raw HD TV</option>
+                        <option id="hdwebdl" value="hdwebdl">HD Web DL</option>
+                        <option id="fullhdwebdl" value="fullhdwebdl">Full HD Web DL</option>
+                        <option id="hdbluray" value="hdbluray">HD Bluray</option>
+                        <option id="fullhdbluray" value="fullhdbluray">Full HD Bluray</option>
+                    </select>
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="RootPath" class="control-label">Root save directory for TV shows</label>
                 <div>
-                    <input type="text" class="form-control form-control-custom " placeholder="C:\Media\Tv" id="RootPath" name="RootPath" value="@Model.RootPath">
-                    <label>Enter the root folder where tv shows are saved. For example <strong>C:\Media\TV</strong>.</label>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        @if (Model.SeasonFolders)
-                        {
-                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders" checked="checked">
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders">
-                        }
-                        <label>Enable season folders</label>
-                        <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
-                    </label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button id="testSonarr" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testSickRage" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
                 </div>
             </div>
 
@@ -125,38 +107,17 @@
 
 
 <script>
-    $(function () {
+    $(function() {
 
         @if (!string.IsNullOrEmpty(Model.QualityProfile))
         {
-            <text>
-        var qualitySelected = @Model.QualityProfile;
-        var $form = $("#mainForm");
-        $.ajax({
-            type: $form.prop("method"),
-            data: $form.serialize(),
-            url: "sonarrprofiles",
-            dataType: "json",
-            success: function(response) {
-                response.forEach(function(result) {
-                    if (result.id == qualitySelected) {
-
-                        $("#select").append("<option selected='selected' value='" + result.id + "'>" + result.name + "</option>");
-                    } else {
-                        $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
-                    }
-                });
-            },
-            error: function(e) {
-                console.log(e);
-                generateNotify("Something went wrong!", "danger");
-            }
-        });
+    <text>
+        var qualitySelected = '@Model.QualityProfile';
+        $('#' + qualitySelected).prop("selected", "selected");
         </text>
-    }
+        }
 
-
-        $('#save').click(function(e) {
+        $('#save').click(function (e) {
             e.preventDefault();
             var port = $('#portNumber').val();
             if (isNaN(port)) {
@@ -189,44 +150,12 @@
             });
         });
 
-        $('#getProfiles').click(function (e) {
-            e.preventDefault();
-            if (!$('#Ip').val()) {
-                generateNotify("Please enter a valid IP/Hostname.", "warning");
-                return;
-            }
-            if (!$('#portNumber').val()) {
-                generateNotify("Please enter a valid Port Number.", "warning");
-                return;
-            }
-            if (!$('#ApiKey').val()) {
-                generateNotify("Please enter a valid ApiKey.", "warning");
-                return;
-            }
-            var $form = $("#mainForm");
-            $.ajax({
-                type: $form.prop("method"),
-                data: $form.serialize(),
-                url: "sonarrprofiles",
-                dataType: "json",
-                success: function (response) {
-                    response.forEach(function (result) {
-                        $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
-                    });
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                }
-            });
-        });
-
-        $('#testSonarr').click(function (e) {
+        $('#testSickRage').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/sonarr",
+                url: "/test/sickrage",
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

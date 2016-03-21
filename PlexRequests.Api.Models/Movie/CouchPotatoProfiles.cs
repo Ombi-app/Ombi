@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: CouchPotatoProfiles.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,16 +25,29 @@
 //  ************************************************************************/
 #endregion
 
-using System;
+using System.Collections.Generic;
 
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Movie
 {
-    public interface ICouchPotatoApi
+    public class ProfileList
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
+        public bool core { get; set; }
+        public string _rev { get; set; }
+        public List<bool> finish { get; set; }
+        public List<string> qualities { get; set; }
+        public string _id { get; set; }
+        public string _t { get; set; }
+        public string label { get; set; }
+        public int minimum_score { get; set; }
+        public List<int> stop_after { get; set; }
+        public List<int> wait_for { get; set; }
+        public int order { get; set; }
+        public List<object> __invalid_name__3d { get; set; }
+    }
+
+    public class CouchPotatoProfiles
+    {
+        public List<ProfileList> list { get; set; }
+        public bool success { get; set; }
     }
 }

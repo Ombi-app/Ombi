@@ -1,7 +1,8 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: TvMazeApi.cs
+//    File: CouchPotatoApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -23,64 +24,68 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
+
 using System;
-using System.Collections.Generic;
-
 using NLog;
-
-using PlexRequests.Api.Models.Tv;
-
+using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.SickRage;
 using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class TvMazeApi : TvMazeBase
+    public class SickrageApi : ISickRageApi
     {
-        public TvMazeApi()
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        public SickrageApi()
         {
             Api = new ApiRequest();
         }
-        private ApiRequest Api { get;  }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-        public List<TvMazeSearch> Search(string searchTerm)
+
+        private ApiRequest Api { get; }
+
+
+        public SickRageTvAdd AddSeries(int tvdbId, bool latest, string quality, string apiKey,
+            Uri baseUrl)
+        {
+            string status;
+            var futureStatus = SickRageStatus.Wanted;
+
+            status = latest ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=show.addnew",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("apiKey", apiKey);
+            request.AddQueryParameter("tvdbid", tvdbId.ToString());
+            request.AddQueryParameter("status", status);
+            request.AddQueryParameter("future_status", futureStatus);
+            if (!quality.Equals("default", StringComparison.CurrentCultureIgnoreCase))
+            {
+                request.AddQueryParameter("initial", quality);
+            }
+
+            var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
+
+            return obj;
+        }
+
+        public SickRagePing Ping(string apiKey, Uri baseUrl)
         {
             var request = new RestRequest
             {
-                Method = Method.GET,
-                Resource = "search/shows?q={searchTerm}"
+                Resource = "/api/{apiKey}/?cmd=sb.ping",
+                Method = Method.GET
             };
-            request.AddUrlSegment("searchTerm", searchTerm);
-            request.AddHeader("Content-Type", "application/json");
 
-            return Api.Execute<List<TvMazeSearch>>(request, new Uri(Uri));
+            request.AddUrlSegment("apiKey", apiKey);
+            var obj = Api.ExecuteJson<SickRagePing>(request, baseUrl);
+
+            return obj;
         }
-
-        public TvMazeShow ShowLookup(int showId)
-        {
-            var request = new RestRequest
-            {
-                Method = Method.GET,
-                Resource = "shows/{id}"
-            };
-            request.AddUrlSegment("id", showId.ToString());
-            request.AddHeader("Content-Type", "application/json");
-
-            return Api.Execute<TvMazeShow>(request, new Uri(Uri));
-        }
-
-        public TvMazeShow ShowLookupByTheTvDbId(int theTvDbId)
-        {
-            var request = new RestRequest
-            {
-                Method = Method.GET,
-                Resource = "lookup/shows?thetvdb={id}"
-            };
-            request.AddUrlSegment("id", theTvDbId.ToString());
-            request.AddHeader("Content-Type", "application/json");
-
-            return Api.Execute<TvMazeShow>(request, new Uri(Uri));
-        }
-
     }
 }

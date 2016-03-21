@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Linq.Expressions;
 using NUnit.Framework;
 
 namespace PlexRequests.Helpers.Tests
@@ -35,7 +36,7 @@ namespace PlexRequests.Helpers.Tests
     {
         [TestCaseSource(nameof(UriData))]
         public void CreateUri1(string uri, Uri expected)
-        { 
+        {
             var result = uri.ReturnUri();
 
             Assert.That(result, Is.EqualTo(expected));
@@ -54,6 +55,14 @@ namespace PlexRequests.Helpers.Tests
         public void CreateUri2(string uri, int port, Uri expected)
         {
             var result = uri.ReturnUri(port);
+
+            Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [TestCaseSource(nameof(UriDataWithSubDir))]
+        public void CreateUriWithSubDir(string uri, int port, bool ssl, string subDir, Uri expected)
+        {
+            var result = uri.ReturnUriWithSubDir(port, ssl, subDir);
 
             Assert.That(result, Is.EqualTo(expected));
         }
@@ -83,6 +92,14 @@ namespace PlexRequests.Helpers.Tests
             new object[] {"http://www.google.com/id=2", 443, new Uri("http://www.google.com:443/id=2") },
             new object[] {"http://www.google.com/id=2", 443, new Uri("http://www.google.com:443/id=2") },
             new object[] {"https://www.google.com/id=2", 443, new Uri("https://www.google.com:443/id=2") },
+        };
+
+        static readonly object[] UriDataWithSubDir =
+{
+            new object[] {"www.google.com", 80,         false,"test", new Uri("http://www.google.com:80/test"),  },
+            new object[] {"www.google.com", 443,        false,"test", new Uri("http://www.google.com:443/test") },
+            new object[] {"http://www.google.com", 443, true,"test", new Uri("https://www.google.com:443/test") },
+            new object[] {"https://www.google.com", 443,true,"test", new Uri("https://www.google.com:443/test") },
         };
     }
 }

@@ -94,6 +94,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>PlexRequests.Api.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Api\PlexRequests.Api.csproj">
       <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
       <Name>PlexRequests.Api</Name>

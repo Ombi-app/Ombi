@@ -13,6 +13,23 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr('href');
+    if (target === "#TvShowTab") {
+        if (!$('#tvList').mixItUp('isLoaded')) {
+            $('#tvList').mixItUp({
+                layout: {
+                    display: 'block'
+                },
+                load: {
+                    filter: 'all'
+                }
+            });
+        }
+    }
+});
+
 // Approve all
 $('#approveAll').click(function () {
     $.ajax({
@@ -210,7 +227,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea').html("<div>Issue: None</div>");
+                $('#issueArea'+buttonId).html("<div>Issue: None</div>");
             }
         },
         error: function (e) {
@@ -273,6 +290,14 @@ function movieLoad() {
 
             var html = searchTemplate(context);
             $("#movieList").append(html);
+        });
+        $('#movieList').mixItUp({
+            layout: {
+                display: 'block'
+            },
+            load: {
+                filter: 'all'
+            }
         });
     });
 };

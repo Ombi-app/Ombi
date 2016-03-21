@@ -24,10 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using Mono.Data.Sqlite;
+using PlexRequests.Api;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
@@ -70,19 +73,60 @@ namespace PlexRequests.Core
 
         private void MigrateDb() // TODO: Remove when no longer needed
         {
+            var result = new List<long>();
+            RequestedModel[] requestedModels;
             var repo = new GenericRepository<RequestedModel>(Db);
-            var records = repo.GetAll();
-            var requestedModels = records as RequestedModel[] ?? records.ToArray();
-            if(!requestedModels.Any())
+            try
+            {
+                var records = repo.GetAll();
+                requestedModels = records as RequestedModel[] ?? records.ToArray();
+            }
+            catch (SqliteException)
+            {
+                // There is no requested table so they do not have an old version of the DB
+                return;
+            }
+
+            if (!requestedModels.Any())
             { return; }
 
             var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
-            var result = new List<long>();
-            foreach (var r in requestedModels)
+
+            var api = new TvMazeApi();
+
+            foreach (var r in requestedModels.Where(x => x.Type == RequestType.TvShow))
             {
-                var id = jsonRepo.AddRequest(r);
+                var show = api.ShowLookupByTheTvDbId(r.ProviderId);
+
+                var model = new RequestedModel
+                {
+                    Title = show.name,
+                    PosterPath = show.image?.medium,
+                    Type = RequestType.TvShow,
+                    ProviderId = show.externals.thetvdb ?? 0,
+                    ReleaseDate = r.ReleaseDate,
+                    AdminNote = r.AdminNote,
+                    Approved = r.Approved,
+                    Available = r.Available,
+                    ImdbId = show.externals.imdb,
+                    Issues = r.Issues,
+                    LatestTv = r.LatestTv,
+                    OtherMessage = r.OtherMessage,
+                    Overview = show.summary.RemoveHtml(),
+                    RequestedBy = r.RequestedBy,
+                    RequestedDate = r.ReleaseDate,
+                    Status = show.status
+                };
+                var id = jsonRepo.AddRequest(model);
                 result.Add(id);
             }
+
+            foreach (var source in requestedModels.Where(x => x.Type== RequestType.Movie))
+            {
+                var id = jsonRepo.AddRequest(source);
+                result.Add(id);
+            }
+
 
             if (result.Any(x => x == -1))
             {

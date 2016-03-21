@@ -43,7 +43,7 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> authSettings) : base("test")
+            ISettingsService<AuthenticationSettings> authSettings, ISickRageApi srApi) : base("test")
         {
             this.RequiresAuthentication();
             
@@ -51,10 +51,12 @@ namespace PlexRequests.UI.Modules
             SonarrApi = sonarrApi;
             PlexApi = plexApi;
             AuthSettings = authSettings;
+            SickRageApi = srApi;
 
             Post["/cp"] = _ => CouchPotatoTest();
             Post["/sonarr"] = _ => SonarrTest();
             Post["/plex"] = _ => PlexTest();
+            Post["/sickrage"] = _ => SickRageTest();
 
         }
         
@@ -62,6 +64,7 @@ namespace PlexRequests.UI.Modules
         private ISonarrApi SonarrApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IPlexApi PlexApi { get; }
+        private ISickRageApi SickRageApi { get; }
         private ISettingsService<AuthenticationSettings> AuthSettings { get; }
 
         private Response CouchPotatoTest()
@@ -99,7 +102,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Sonarr, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Sonarr's status: ");
                 Log.Warn(e);
@@ -128,7 +131,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Plex, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Plex's status: ");
                 Log.Warn(e);
@@ -136,6 +139,31 @@ namespace PlexRequests.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to Plex, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+
+        private Response SickRageTest()
+        {
+            var sickRageSettings = this.Bind<SickRageSettings>();
+           
+            try
+            {
+                var status = SickRageApi.Ping(sickRageSettings.ApiKey, sickRageSettings.FullUri);
+                return status?.result == "success"
+                    ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to SickRage successfully!" })
+               : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to SickRage, please check your settings." });
+
+            }
+            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+            {
+                Log.Warn("Exception thrown when attempting to get SickRage's status: ");
+                Log.Warn(e);
+                var message = $"Could not connect to SickRage, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to SickRage, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }

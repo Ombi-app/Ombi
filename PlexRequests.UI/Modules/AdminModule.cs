@@ -54,11 +54,13 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<PlexSettings> PlexService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
+        private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<EmailNotificationSettings> EmailService { get; }
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private PushbulletApi PushbulletApi { get; }
+        private ICouchPotatoApi CpApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
@@ -66,11 +68,13 @@ namespace PlexRequests.UI.Modules
             ISettingsService<AuthenticationSettings> auth,
             ISettingsService<PlexSettings> plex,
             ISettingsService<SonarrSettings> sonarr,
+            ISettingsService<SickRageSettings> sickrage,
             ISonarrApi sonarrApi,
             ISettingsService<EmailNotificationSettings> email,
             IPlexApi plexApi,
             ISettingsService<PushbulletNotificationSettings> pbSettings,
-            PushbulletApi pbApi) : base("admin")
+            PushbulletApi pbApi,
+            ICouchPotatoApi cpApi) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -82,6 +86,8 @@ namespace PlexRequests.UI.Modules
             PlexApi = plexApi;
             PushbulletService = pbSettings;
             PushbulletApi = pbApi;
+            CpApi = cpApi;
+            SickRageService = sickrage;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -106,7 +112,11 @@ namespace PlexRequests.UI.Modules
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
 
+            Get["/sickrage"] = _ => Sickrage();
+            Post["/sickrage"] = _ => SaveSickrage();
+
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+            Post["/cpprofiles"] = _ => GetCpProfiles();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -279,11 +289,44 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-
+            var sickRageEnabled = SickRageService.GetSettings().Enabled;
+            if (sickRageEnabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
+            }
             var result = SonarrService.SaveSettings(sonarrSettings);
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Negotiator Sickrage()
+        {
+            var settings = SickRageService.GetSettings();
+
+            return View["Sickrage", settings];
+        }
+
+        private Response SaveSickrage()
+        {
+            var sickRageSettings = this.Bind<SickRageSettings>();
+
+            var valid = this.Validate(sickRageSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+
+            var sonarrEnabled = SonarrService.GetSettings().Enabled;
+            if (sonarrEnabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sonarr is enabled, we cannot enable Sonarr and SickRage" });
+            }
+            var result = SickRageService.SaveSettings(sickRageSettings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for SickRage!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
@@ -353,6 +396,14 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushbullet Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response GetCpProfiles()
+        {
+            var settings = this.Bind<CouchPotatoSettings>();
+            var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
+
+            return Response.AsJson(profiles);
         }
     }
 }

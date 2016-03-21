@@ -1,11 +1,11 @@
-version: 1.3.{build}
+version: 1.4.{build}
 configuration: Release
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '1.3.0'
+  assembly_version: '1.4.1'
   assembly_file_version: '{version}'
-  assembly_informational_version: '1.3.0'
+  assembly_informational_version: '1.4.1'
 before_build:
 - cmd: appveyor-retry nuget restore
 build:
@@ -18,7 +18,7 @@ after_build:
     
 deploy:
 - provider: GitHub
-  release: PlexRequests $(appveyor_build_version)
+  release: PlexRequests v$(appveyor_build_version)
   auth_token:
     secure: jDpp1/WUQl3uN41fNI3VeZoRZbDiDfs3GPQ1v+C5ZNE3cWdnUvuJfCCfUbYUV1Rp
   draft: true

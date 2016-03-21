@@ -53,7 +53,10 @@ namespace PlexRequests.Helpers
         /// </summary>
         /// <param name="val">The value.</param>
         /// <param name="port">The port.</param>
+        /// <param name="ssl">if set to <c>true</c> [SSL].</param>
+        /// <param name="subdir">The subdir.</param>
         /// <returns></returns>
+        /// <exception cref="ApplicationSettingsException">The URI is null, please check your settings to make sure you have configured the applications correctly.</exception>
         /// <exception cref="System.Exception"></exception>
         public static Uri ReturnUri(this string val, int port, bool ssl = default(bool))
         {
@@ -92,6 +95,22 @@ namespace PlexRequests.Helpers
             {
                 throw new Exception(exception.Message, exception);
             }
+        }
+
+        public static Uri ReturnUriWithSubDir(this string val, int port, bool ssl, string subDir)
+        {
+            var uriBuilder = new UriBuilder(val);
+            if (ssl)
+            {
+                uriBuilder.Scheme = Uri.UriSchemeHttps;
+            }
+            if (!string.IsNullOrEmpty(subDir))
+            {
+                uriBuilder.Path = subDir;
+            }
+            uriBuilder.Port = port;
+
+            return uriBuilder.Uri;
         }
     }
 }

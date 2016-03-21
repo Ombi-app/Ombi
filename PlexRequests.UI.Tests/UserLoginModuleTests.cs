@@ -36,7 +36,6 @@ using Newtonsoft.Json;
 using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -81,7 +80,7 @@ namespace PlexRequests.UI.Tests
                 with.Header("Accept", "application/json");
                 with.FormValue("Username", "abc");
             });
-            
+
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
             Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("abc"));
 
@@ -142,6 +141,7 @@ namespace PlexRequests.UI.Tests
 
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -188,6 +188,7 @@ namespace PlexRequests.UI.Tests
 
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -245,6 +246,7 @@ namespace PlexRequests.UI.Tests
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
+            PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -376,7 +378,7 @@ namespace PlexRequests.UI.Tests
                 with.RootPathProvider<TestRootPathProvider>();
             });
 
-            bootstrapper.WithSession(new Dictionary<string, object> { {SessionKeys.UsernameKey, "abc"} });
+            bootstrapper.WithSession(new Dictionary<string, object> { { SessionKeys.UsernameKey, "abc" } });
 
             var browser = new Browser(bootstrapper);
             var result = browser.Get("/userlogin/logout", with =>
@@ -387,6 +389,109 @@ namespace PlexRequests.UI.Tests
 
             Assert.That(HttpStatusCode.SeeOther, Is.EqualTo(result.StatusCode));
             Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.Null);
+        }
+
+        [Test]
+        public void LoginWithOwnerUsernameSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+                {
+                    new UserFriends()
+                }
+            };
+
+            var account = new PlexAccount { Username = "Jamie" };
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
+            PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(new PlexAuthentication { user = new User { username = "Jamie" } });
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "Jamie");
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("Jamie"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(true));
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
+            PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+            PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
+        }
+
+        [Test]
+        public void LoginWithOwnerUsernameAndPasswordSuccessfully()
+        {
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = true, UsePassword = true, PlexAuthToken = "abc" };
+            var plexFriends = new PlexFriends
+            {
+                User = new[]
+                {
+                    new UserFriends()
+                }
+            };
+            var plexAuth = new PlexAuthentication
+            {
+                user = new User
+                {
+                    authentication_token = "abc",
+                    username = "Jamie"
+                }
+            };
+
+            var account = new PlexAccount { Username = "Jamie" };
+
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
+            PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
+            PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
+
+            bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(bootstrapper);
+            var result = browser.Post("/userlogin", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.FormValue("Username", "jamie");
+                with.FormValue("Password", "abc");
+            });
+
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            Assert.That(result.Context.Request.Session[SessionKeys.UsernameKey], Is.EqualTo("jamie"));
+
+            var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
+            Assert.That(body.Result, Is.EqualTo(true));
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
+            PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
     }
 }

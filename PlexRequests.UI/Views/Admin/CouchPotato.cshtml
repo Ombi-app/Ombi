@@ -51,6 +51,26 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="SubDir" class="control-label">CouchPotato SubDirectory</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select" class="control-label">Quality Profiles</label>
+                <div id="profiles">
+                    <select class="form-control" id="select"></select>
+                </div>
+            </div>
+            <br/>
 
             <div class="form-group">
                 <div>
@@ -75,9 +95,58 @@
 <script>
     $(function() {
 
+        @if (!string.IsNullOrEmpty(Model.ProfileId))
+         {
+             <text>
+        var qualitySelected = '@Model.ProfileId';
+        var $form = $("#mainForm");
+        $.ajax({
+            type: $form.prop("method"),
+            data: $form.serialize(),
+            url: "cpprofiles",
+            dataType: "json",
+            success: function(response) {
+                response.list.forEach(function(result) {
+                    if (result._id == qualitySelected) {
+
+                        $("#select").append("<option selected='selected' value='" + result._id + "'>" + result.label + "</option>");
+                    } else {
+                        $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
+                    }
+                });
+            },
+            error: function(e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+        </text>
+         }
+
+        $('#getProfiles').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: "cpprofiles",
+                dataType: "json",
+                success: function (response) {
+                    response.list.forEach(function (result) {
+                        $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
         $('#testCp').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
+
             $.ajax({
                 type: $form.prop("method"),
                 url: "/test/cp",
@@ -107,9 +176,13 @@
                 return;
             }
             var $form = $("#mainForm");
+            var qualityProfile = $("#profiles option:selected").val();
+            var data = $form.serialize();
+            data = data + "&profileId=" + qualityProfile;
+
             $.ajax({
                 type: $form.prop("method"),
-                data: $form.serialize(),
+                data: data,
                 url: $form.prop("action"),
                 dataType: "json",
                 success: function (response) {
@@ -125,6 +198,6 @@
                 }
             });
         });
-        
+
     });
 </script>

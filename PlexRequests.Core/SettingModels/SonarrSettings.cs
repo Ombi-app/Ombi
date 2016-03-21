@@ -33,6 +33,7 @@ namespace PlexRequests.Core.SettingModels
 {
     public class SonarrSettings : Settings
     {
+        public bool Enabled { get; set; }
         public string Ip { get; set; }
         public int Port { get; set; }
         public string ApiKey { get; set; }
@@ -40,12 +41,18 @@ namespace PlexRequests.Core.SettingModels
         public bool SeasonFolders { get; set; }
         public string RootPath { get; set; }
         public bool Ssl { get; set; }
+        public string SubDir { get; set; }
 
         [JsonIgnore]
         public Uri FullUri
         {
             get
             {
+                if (!string.IsNullOrEmpty(SubDir))
+                {
+                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
+                    return formattedSubDir;
+                }
                 var formatted = Ip.ReturnUri(Port, Ssl);
                 return formatted;
             }

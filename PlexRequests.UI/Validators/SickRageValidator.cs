@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,17 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using FluentValidation;
 
-using System;
+using PlexRequests.Core.SettingModels;
 
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.UI.Validators
 {
-    public interface ICouchPotatoApi
+    public class SickRageValidator : AbstractValidator<SickRageSettings>
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
+        public SickRageValidator()
+        {
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
+        }
     }
 }

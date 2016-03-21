@@ -22,13 +22,38 @@
     </ul>
 
     <!-- Tab panes -->
-    <div class="tab-content">
+    <div class="tab-content contentList">
+        <div class="btn-group col-sm-push-10">
+            <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                Filter
+                <i class="fa fa-filter"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="filter" data-filter="all">All</a></li>
+                <li><a href="#" class="filter" data-filter=".approved-true">Approved</a></li>
+                <li><a href="#" class="filter" data-filter=".approved-false">Not Approved</a></li>
+                <li><a href="#" class="filter" data-filter=".available-true">Available</a></li>
+                <li><a href="#" class="filter" data-filter=".available-false">Not Available</a></li>
+            </ul>
+        </div>
+        <div class="btn-group col-sm-push-10">
+            <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                Order
+                <i class="fa fa-sort"></i>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="#" class="sort" data-sort="default">Default</a></li>
+                <li><a href="#" class="sort" data-sort="requestorder:asc">Requested Date</a></li>
+            </ul>
+        </div>
         @if (Model.SearchForMovies)
         {
-    <!-- Movie tab -->
+
+            <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-                <br />
-                <br />
+
+                <br/>
+                <br/>
                 <!-- Movie content -->
                 <div id="movieList">
                 </div>
@@ -37,10 +62,11 @@
 
         @if (Model.SearchForTvShows)
         {
-    <!-- TV tab -->
+            <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
-                <br />
-                <br />
+
+                <br/>
+                <br/>
                 <!-- TV content -->
                 <div id="tvList">
                 </div>
@@ -52,7 +78,7 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
-    <div id="{{requestId}}Template">
+    <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}}">
         <div class="row">
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}
@@ -95,7 +121,7 @@
                 </div>
                 <div>Requested By: {{requestedBy}}</div>
                 <div>Requested Date: {{requestedDate}}</div>
-                <div id="issueArea">
+                <div id="issueArea{{requestId}}">
                     {{#if otherMessage}}
                     <div>Message: {{otherMessage}}</div>
                     {{else}}
@@ -118,7 +144,7 @@
                 {{/if_eq}}
                 <form method="POST" action="/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-plus"></i> Remove</button>
+                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
                 </form>
 
                 <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
@@ -129,9 +155,9 @@
                 <form method="POST" action="/requests/changeavailability" id="change{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq available true}}
-                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit">Mark Unavailable</button>
+                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit"><i class="fa fa-minus"></i> Mark Unavailable</button>
                     {{else}}
-                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change" type="submit">Mark Available</button>
+                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change" type="submit"><i class="fa fa-plus"></i> Mark Available</button>
                     {{/if_eq}}
                 </form>
 
@@ -150,16 +176,15 @@
                             <li><a id="{{requestId}}" issue-select="2" class="dropdownIssue" href="#">Wrong Content</a></li>
                             <li><a id="{{requestId}}" issue-select="3" class="dropdownIssue" href="#">Playback Issues</a></li>
                             <li><a id="{{requestId}}" issue-select="4" class="dropdownIssue" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#myModal">Other</a></li>
-                            {{#if_eq admin true}}
-                            <li><a id="{{requestId}}" issue-select="4" class="note" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#noteModal">Add Note</a></li>
 
+                            {{#if_eq admin true}}
+                                <li><a id="{{requestId}}" issue-select="4" class="note" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#noteModal">Add Note</a></li>
                             {{/if_eq}}
                         </ul>
                     </div>
                 </form>
 
             </div>
-            @* // TODO add Issues to the view *@
         </div>
         <hr />
     </div>
@@ -208,3 +233,5 @@
 </div>
 
 <script src="/Content/requests.js" type="text/javascript"></script>
+
+
