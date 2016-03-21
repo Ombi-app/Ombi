@@ -13,6 +13,7 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+
 // Approve all
 $('#approveAll').click(function () {
     $.ajax({
@@ -274,6 +275,15 @@ function movieLoad() {
             var html = searchTemplate(context);
             $("#movieList").append(html);
         });
+        $('#movieList').mixItUp({
+            layout: {
+                display: 'block'
+            },
+            load: {
+                filter: 'all'
+            }
+        });
+
     });
 };
 
@@ -285,6 +295,14 @@ function tvLoad() {
             var context = buildRequestContext(result, "tv");
             var html = searchTemplate(context);
             $("#tvList").append(html);
+        });
+        $('#tvList').mixItUp({
+            layout: {
+                display: 'block'
+            },
+            load: {
+                filter: 'all'
+            }
         });
     });
 };

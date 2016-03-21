@@ -223,6 +223,9 @@
     <Content Include="Content\jquery-2.2.1.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\jquery.mixitup.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\pace.css">
       <DependentUpon>pace.scss</DependentUpon>
     </Content>

@@ -120,3 +120,6 @@ label {
   background-color: #5cb85c !important;
   border-color: #5cb85c !important; }
 
+#movieList .mix {
+  display: none; }
+
