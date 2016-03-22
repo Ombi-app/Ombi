@@ -27,6 +27,8 @@
 using System.Dynamic;
 using System.Linq;
 
+using MarkdownSharp;
+
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
@@ -376,6 +378,8 @@ namespace PlexRequests.UI.Modules
         {
             var checker = new StatusChecker();
             var status = checker.GetStatus();
+            var md = new Markdown();
+            status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
         }
 

@@ -31,7 +31,9 @@ namespace PlexRequests.Core.Models
     {
         public string Version { get; set; }
         public bool UpdateAvailable { get; set; }
-        public int ReleasesBehind { get; set; }
         public string UpdateUri { get; set; }
+        public string DownloadUri { get; set; }
+        public string ReleaseNotes { get; set; }
+        public string ReleaseTitle { get; set; }
     }
 }
