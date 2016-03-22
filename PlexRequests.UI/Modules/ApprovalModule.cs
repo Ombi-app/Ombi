@@ -121,12 +121,12 @@ namespace PlexRequests.UI.Modules
                     Log.Info("Sent successfully, Approving request now.");
                     request.Approved = true;
                     var requestResult = Service.UpdateRequest(request);
-                    Log.Trace("Approval result: {0}",requestResult);
+                    Log.Trace("Approval result: {0}", requestResult);
                     if (requestResult)
                     {
                         return Response.AsJson(new JsonResponseModel { Result = true });
                     }
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Updated Sonarr but could not approve it in PlexRequests :("});
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Updated Sonarr but could not approve it in PlexRequests :(" });
                 }
                 return Response.AsJson(new JsonResponseModel
                 {
@@ -177,6 +177,21 @@ namespace PlexRequests.UI.Modules
             var cpSettings = CpService.GetSettings();
             var cp = new CouchPotatoApi();
             Log.Info("Adding movie to CP : {0}", request.Title);
+            if (!cpSettings.Enabled)
+            {
+                // Approve it
+                request.Approved = true;
+
+                // Update the record
+                var inserted = Service.UpdateRequest(request);
+                return Response.AsJson(inserted
+                    ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to CouchPotato because it has not been configured." }
+                    : new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "We could not approve this request. Please try again or check the logs."
+                    });
+            }
             var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, cpSettings.ProfileId);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
@@ -188,7 +203,7 @@ namespace PlexRequests.UI.Modules
                 var inserted = Service.UpdateRequest(request);
 
                 return Response.AsJson(inserted
-                    ? new JsonResponseModel {Result = true}
+                    ? new JsonResponseModel { Result = true }
                     : new JsonResponseModel
                     {
                         Result = false,
@@ -239,7 +254,7 @@ namespace PlexRequests.UI.Modules
                 }
                 if (r.Type == RequestType.TvShow)
                 {
-                    var sender = new TvSender(SonarrApi,SickRageApi);
+                    var sender = new TvSender(SonarrApi, SickRageApi);
                     var sr = SickRageSettings.GetSettings();
                     var sonarr = SonarrSettings.GetSettings();
                     if (sr.Enabled)
@@ -289,7 +304,7 @@ namespace PlexRequests.UI.Modules
         }
 
         private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)
-        { 
+        {
             Log.Info("Adding movie to CP : {0}", r.Title);
             var result = cp.AddMovie(r.ImdbId, settings.ApiKey, r.Title, settings.FullUri, settings.ProfileId);
             Log.Trace("Adding movie to CP result {0}", result);

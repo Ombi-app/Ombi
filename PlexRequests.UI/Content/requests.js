@@ -114,7 +114,7 @@ $(".theNoteSaveButton").click(function (e) {
 
     var $form = $("#noteForm");
     var data = $form.serialize();
-    
+
 
     $.ajax({
         type: $form.prop("method"),
@@ -198,7 +198,11 @@ $(document).on("click", ".approve", function (e) {
         success: function (response) {
 
             if (checkJsonResponse(response)) {
-                generateNotify("Success! Request Approved.", "success");
+                if (response.message) {
+                    generateNotify(response.message, "success");
+                } else {
+                    generateNotify("Success! Request Approved.", "success");
+                }
 
                 $("button[custom-button='" + buttonId + "']").remove();
                 $("#" + buttonId + "notapproved").prop("class", "fa fa-check");
@@ -227,7 +231,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea'+buttonId).html("<div>Issue: None</div>");
+                $('#issueArea' + buttonId).html("<div>Issue: None</div>");
             }
         },
         error: function (e) {
@@ -258,7 +262,7 @@ $(document).on("click", ".change", function (e) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Availibility changed.", "info");
                 var button = $("button[custom-availibility='" + buttonId + "']");
-                var icon = $('#availableIcon'+buttonId);
+                var icon = $('#availableIcon' + buttonId);
 
                 if (response.available) {
                     button.text("Mark Unavailable");

@@ -176,15 +176,6 @@ namespace PlexRequests.UI.Modules
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
-            var cpSettings = CpService.GetSettings();
-            if (cpSettings.ApiKey == null)
-            {
-                Log.Warn("CP apiKey is null");
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
-            }
-
-            Log.Trace("Settings: ");
-            Log.Trace(cpSettings.DumpJson);
 
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
@@ -219,6 +210,11 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
             if (!settings.RequireApproval)
             {
+                var cpSettings = CpService.GetSettings();
+
+                Log.Trace("Settings: ");
+                Log.Trace(cpSettings.DumpJson);
+
                 Log.Info("Adding movie to CP (No approval required)");
                 var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettings.ProfileId);
                 Log.Debug("Adding movie to CP result {0}", result);

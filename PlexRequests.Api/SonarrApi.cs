@@ -64,7 +64,7 @@ namespace PlexRequests.Api
             };
 
             var options = new SonarrAddSeries();
-            if (episodes == true)
+            if (episodes)
             {
                 options.addOptions = new AddOptions
                 {

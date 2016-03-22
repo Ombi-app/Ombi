@@ -33,6 +33,7 @@ namespace PlexRequests.Core.SettingModels
 {
     public class CouchPotatoSettings : Settings
     {
+        public bool Enabled { get; set; }
         public string Ip { get; set; }
         public int Port { get; set; }
         public string ApiKey { get; set; }
