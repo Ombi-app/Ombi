@@ -77,7 +77,7 @@ namespace PlexRequests.UI.Modules
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
-            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
+            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
         }
         private TheMovieDbApi MovieApi { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
@@ -259,7 +259,7 @@ namespace PlexRequests.UI.Modules
         /// <param name="showId">The show identifier.</param>
         /// <param name="latest">if set to <c>true</c> [latest].</param>
         /// <returns></returns>
-        private Response RequestTvShow(int showId, bool latest)
+        private Response RequestTvShow(int showId, string seasons)
         {
             if (RequestService.CheckRequest(showId))
             {
@@ -285,7 +285,7 @@ namespace PlexRequests.UI.Modules
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
-
+            var latest = seasons == "latest";
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -302,7 +302,12 @@ namespace PlexRequests.UI.Modules
                 LatestTv = latest,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty
             };
-
+            var seasonsList = new List<int>();
+            if (seasons == "first")
+            {
+                seasonsList.Add(1);
+            }
+            model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
             if (!settings.RequireApproval)
@@ -357,7 +362,7 @@ namespace PlexRequests.UI.Modules
 
         private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
         {
-            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, sickRageSettings.QualityProfile,
+            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, model.SeasonList, sickRageSettings.QualityProfile,
                            sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
             Log.Trace("SickRage Result: ");

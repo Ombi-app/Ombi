@@ -43,7 +43,7 @@ namespace PlexRequests.Api.Mocks
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes,
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes, int[] seasons,
             string apiKey, Uri baseUrl)
         {
             var json = MockApiData.Sonarr_AddSeriesResult;
