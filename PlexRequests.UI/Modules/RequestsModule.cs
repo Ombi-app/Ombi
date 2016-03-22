@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -37,6 +38,7 @@ using Nancy.Security;
 using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
@@ -166,6 +168,17 @@ namespace PlexRequests.UI.Modules
 
 
             var result = Service.UpdateRequest(originalRequest);
+
+            var model = new NotificationModel
+            {
+                User = Session[SessionKeys.UsernameKey].ToString(),
+                NotificationType = NotificationType.Issue,
+                Title = originalRequest.Title,
+                DateTime = DateTime.Now,
+                Body = issue == IssueState.Other ? comment : issue.Humanize()
+            };
+            NotificationService.Publish(model);
+
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });

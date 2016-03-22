@@ -77,7 +77,15 @@ namespace PlexRequests.Services.Notification
 
         private bool ValidateConfiguration()
         {
-            return !Settings.Enabled && !string.IsNullOrEmpty(Settings.AccessToken);
+            if (!Settings.Enabled)
+            {
+                return false;
+            }
+            if (string.IsNullOrEmpty(Settings.AccessToken))
+            {
+                return false;
+            }
+            return true;
         }
 
         private PushbulletNotificationSettings GetSettings()
@@ -106,8 +114,8 @@ namespace PlexRequests.Services.Notification
 
         private bool PushIssue(NotificationModel model)
         {
-            var message = $"A new issue: {model.Title} has been reported by user: {model.User} for the title: {model.Body}";
-            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Body}";
+            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
+            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
             try
             {
                 var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
