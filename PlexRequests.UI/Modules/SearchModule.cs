@@ -39,6 +39,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -176,27 +177,24 @@ namespace PlexRequests.UI.Modules
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
-            var cpSettings = CpService.GetSettings();
-            if (cpSettings.ApiKey == null)
-            {
-                Log.Warn("CP apiKey is null");
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
-            }
-
-            Log.Trace("Settings: ");
-            Log.Trace(cpSettings.DumpJson);
 
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
-
-            //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+//#if !DEBUG
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                }
             }
-            //#endif
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
+            }
+//#endif
 
             var model = new RequestedModel
             {
@@ -219,6 +217,11 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
             if (!settings.RequireApproval)
             {
+                var cpSettings = CpService.GetSettings();
+
+                Log.Trace("Settings: ");
+                Log.Trace(cpSettings.DumpJson);
+
                 Log.Info("Adding movie to CP (No approval required)");
                 var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettings.ProfileId);
                 Log.Debug("Adding movie to CP result {0}", result);
@@ -266,13 +269,19 @@ namespace PlexRequests.UI.Modules
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
-
-            //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+//#if !DEBUG
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                }
             }
-            //#endif
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
+            }
+//#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
@@ -290,7 +299,8 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                LatestTv = latest
+                LatestTv = latest,
+                ImdbId = showInfo.externals?.imdb ?? string.Empty
             };
 
 

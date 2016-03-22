@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoSettings.cs
+//    File: UserModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,36 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using Dapper.Contrib.Extensions;
 
-using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
-
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Store
 {
-    public class CouchPotatoSettings : Settings
+    [Table("Users")]
+    public class UsersModel : UserEntity
     {
-        public bool Enabled { get; set; }
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public string ApiKey { get; set; }
-        public bool Ssl { get; set; }
-        public string ProfileId { get; set; }
-        public string SubDir { get; set; }
-
-        [JsonIgnore]
-        public Uri FullUri
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(SubDir))
-                {
-                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
-                    return formattedSubDir;
-                }
-                var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
-            }
-        }
+        public byte[] Hash { get; set; }
+        public byte[] Salt { get; set; }
     }
 }

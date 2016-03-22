@@ -70,7 +70,11 @@ namespace PlexRequests.Core
             {
                 model.UpdateAvailable = true;
                 model.UpdateUri = latestRelease.Result.HtmlUrl;
-            } 
+            }
+
+            model.ReleaseNotes = latestRelease.Result.Body;
+            model.DownloadUri = latestRelease.Result.Assets[0].BrowserDownloadUrl;
+            model.ReleaseTitle = latestRelease.Result.Name;
 
             return model;
         }

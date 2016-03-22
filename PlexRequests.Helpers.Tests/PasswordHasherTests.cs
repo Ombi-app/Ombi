@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: AssemblyHelperTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,27 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Dapper.Contrib.Extensions;
+using System.Diagnostics;
 
-namespace PlexRequests.Store
+using NUnit.Framework;
+
+namespace PlexRequests.Helpers.Tests
 {
-    [Table("User")]
-    public class UserModel : Entity
+    [TestFixture]
+    public class PasswordHasherTests
     {
-        public string User { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        [Test]
+        public void TestHash()
+        {
+            var password = "abcdef";
+            var salt = PasswordHasher.GenerateSalt();
+            var hash = PasswordHasher.ComputeHash(password, salt);
+
+            Assert.That(hash, Is.Not.EqualTo(password));
+            
+            var match = PasswordHasher.VerifyPassword(password, salt, hash);
+
+            Assert.That(match, Is.True);
+        }
     }
 }

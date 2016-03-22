@@ -70,6 +70,8 @@
     <Compile Include="Repository\RequestJsonRepository.cs" />
     <Compile Include="GenericRepository.cs" />
     <Compile Include="RequestedModel.cs" />
+    <Compile Include="UserEntity.cs" />
+    <Compile Include="UsersModel.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Sql.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -77,7 +79,6 @@
       <DependentUpon>Sql.resx</DependentUpon>
     </Compile>
     <Compile Include="TableCreation.cs" />
-    <Compile Include="UserModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sqlite3.dll">

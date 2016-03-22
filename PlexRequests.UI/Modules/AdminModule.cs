@@ -27,6 +27,8 @@
 using System.Dynamic;
 using System.Linq;
 
+using MarkdownSharp;
+
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
@@ -356,8 +358,15 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
 
             var result = EmailService.SaveSettings(settings);
-            
-            NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+            }
 
             Log.Info("Saved email settings, result: {0}", result);
             return Response.AsJson(result
@@ -369,6 +378,8 @@ namespace PlexRequests.UI.Modules
         {
             var checker = new StatusChecker();
             var status = checker.GetStatus();
+            var md = new Markdown();
+            status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
         }
 
@@ -389,8 +400,14 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
 
             var result = PushbulletService.SaveSettings(settings);
-
-            NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            }
 
             Log.Info("Saved email settings, result: {0}", result);
             return Response.AsJson(result

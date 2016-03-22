@@ -30,6 +30,8 @@ using System.Dynamic;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Extensions;
+using Nancy.Responses.Negotiation;
+using Nancy.Security;
 
 using PlexRequests.Core;
 using PlexRequests.UI.Models;
@@ -81,7 +83,6 @@ namespace PlexRequests.UI.Modules
 
                     return View["Login/Register", model];
                 }
-
             };
 
             Post["/register"] = x =>
@@ -96,6 +97,30 @@ namespace PlexRequests.UI.Modules
                 Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect((Guid)userId);
             };
+
+            Get["/changepassword"] = _ => ChangePassword();
+            Post["/changepassword"] = _ => ChangePasswordPost();
+        }
+
+        private Negotiator ChangePassword()
+        {
+            this.RequiresAuthentication();
+            return View["ChangePassword"];
+        }
+
+        private Negotiator ChangePasswordPost()
+        {
+            var username = Context.CurrentUser.UserName;
+            var oldPass = Request.Form.OldPassword;
+            var newPassword = Request.Form.NewPassword;
+            var newPasswordAgain = Request.Form.NewPasswordAgain;
+            if (!newPassword.Equals(newPasswordAgain))
+            {
+                
+            }
+
+            var result = UserMapper.UpdateUser(username, oldPass, newPassword);
+            return View["ChangePassword"];
         }
     }
 }
