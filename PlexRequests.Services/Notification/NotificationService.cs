@@ -62,12 +62,9 @@ namespace PlexRequests.Services.Notification
 
         public static void Subscribe(INotification notification)
         {
-            Log.Trace("Subscribing Observer {0}", notification.NotificationName);
             INotification notificationValue;
             if (Observers.TryGetValue(notification.NotificationName, out notificationValue))
             {
-                Log.Trace("Observer {0} already exists", notification.NotificationName);
-                // Observer already exists
                 return;
             }
 
