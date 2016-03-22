@@ -328,6 +328,9 @@
     <Content Include="Views\Admin\Sickrage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Login\ChangePassword.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

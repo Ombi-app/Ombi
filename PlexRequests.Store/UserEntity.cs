@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: UserEntity.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -28,11 +28,11 @@ using Dapper.Contrib.Extensions;
 
 namespace PlexRequests.Store
 {
-    [Table("User")]
-    public class UserModel : Entity
+    public class UserEntity
     {
+        [Key]
+        public int Id { get; set; }
         public string User { get; set; }
         public string UserName { get; set; }
-        public string Password { get; set; }
     }
 }

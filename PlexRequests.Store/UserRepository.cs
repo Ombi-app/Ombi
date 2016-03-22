@@ -32,7 +32,7 @@ using Dapper.Contrib.Extensions;
 
 namespace PlexRequests.Store
 {
-    public class UserRepository<T> : IRepository<T> where T : UserModel
+    public class UserRepository<T> : IRepository<T> where T : UserEntity
     {
         public UserRepository(ISqliteConfiguration config)
         {

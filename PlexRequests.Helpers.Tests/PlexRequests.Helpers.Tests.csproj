@@ -70,6 +70,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="PasswordHasherTests.cs" />
     <Compile Include="HtmlRemoverTests.cs" />
     <Compile Include="AssemblyHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
