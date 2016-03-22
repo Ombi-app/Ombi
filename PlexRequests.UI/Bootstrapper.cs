@@ -74,6 +74,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
+            container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
 
             // Repo's
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
@@ -88,6 +89,7 @@ namespace PlexRequests.UI
             // Api's
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();
+            container.Register<IPushoverApi, PushoverApi>();
             container.Register<ISickRageApi, SickrageApi>();
             container.Register<ISonarrApi, SonarrApi>();
             container.Register<IPlexApi, PlexApi>();
@@ -137,7 +139,14 @@ namespace PlexRequests.UI
             var pushbulletSettings = pushbulletService.GetSettings();
             if (pushbulletSettings.Enabled)
             {
-                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), container.Resolve<ISettingsService<PushbulletNotificationSettings>>()));
+                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), pushbulletService));
+            }
+
+            var pushoverService = container.Resolve<ISettingsService<PushoverNotificationSettings>>();
+            var pushoverSettings = pushoverService.GetSettings();
+            if (pushoverSettings.Enabled)
+            {
+                NotificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
             }
         }
     }
