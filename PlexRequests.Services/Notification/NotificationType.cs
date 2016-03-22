@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: INotification.cs
+//    File: NotificationType.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,20 +26,12 @@
 #endregion
 namespace PlexRequests.Services.Notification
 {
-    public interface INotification
+    public enum NotificationType
     {
-        /// <summary>
-        /// Gets the name of the notification.
-        /// </summary>
-        /// <value>
-        /// The name of the notification.
-        /// </value>
-        string NotificationName { get; }
-        /// <summary>
-        /// Notifies the specified title.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        bool Notify(NotificationModel model);
+        NewRequest,
+        Issue,
+        RequestAvailable,
+        RequestApproved,
+        AdminNote,
     }
 }

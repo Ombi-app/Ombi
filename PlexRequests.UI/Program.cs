@@ -61,7 +61,6 @@ namespace PlexRequests.UI
                 }
                 port = portResult;
             }
-
             Log.Trace("Getting product version");
             WriteOutVersion();
 
@@ -126,7 +125,7 @@ namespace PlexRequests.UI
             {
                 CommandType = CommandType.Text,
                 ConnectionString = connectionString,
-                DBProvider = "Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
+                DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
                 Name = "database"
             };
 

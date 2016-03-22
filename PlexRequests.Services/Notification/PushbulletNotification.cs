@@ -39,27 +39,59 @@ namespace PlexRequests.Services.Notification
         public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings)
         {
             PushbulletApi = pushbulletApi;
-            Settings = settings;
+            SettingsService = settings;
         }
         private IPushbulletApi PushbulletApi { get;  }
-        private ISettingsService<PushbulletNotificationSettings> Settings { get; }
+        private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
+        private PushbulletNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushbulletNotification";
-        public bool Notify(string title, string requester)
+        public bool Notify(NotificationModel model)
         {
-            var settings = GetSettings();
-
-            if (!settings.Enabled)
+            if (!ValidateConfiguration())
             {
                 return false;
             }
 
-            var message = $"{title} has been requested by {requester}";
-            var pushTitle = $"Plex Requests: {title}";
+            switch (model.NotificationType)
+            {
+                case NotificationType.NewRequest:
+                    return PushNewRequest(model);
+ 
+                case NotificationType.Issue:
+                    return PushIssue(model);
+
+                case NotificationType.RequestAvailable:
+                    break;
+                case NotificationType.RequestApproved:
+                    break;
+                case NotificationType.AdminNote:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return false;
+
+        }
+
+        private bool ValidateConfiguration()
+        {
+            return !Settings.Enabled && !string.IsNullOrEmpty(Settings.AccessToken);
+        }
+
+        private PushbulletNotificationSettings GetSettings()
+        {
+            return SettingsService.GetSettings();
+        }
+
+        private bool PushNewRequest(NotificationModel model)
+        {
+            var message = $"{model.Title} has been requested by user: {model.User}";
+            var pushTitle = $"Plex Requests: {model.Title} has been requested!";
             try
             {
-                var result = PushbulletApi.Push(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
+                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
                 if (result != null)
                 {
                     return true;
@@ -72,9 +104,23 @@ namespace PlexRequests.Services.Notification
             return false;
         }
 
-        private PushbulletNotificationSettings GetSettings()
+        private bool PushIssue(NotificationModel model)
         {
-            return Settings.GetSettings();
+            var message = $"A new issue: {model.Title} has been reported by user: {model.User} for the title: {model.Body}";
+            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Body}";
+            try
+            {
+                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                if (result != null)
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+            }
+            return false;
         }
     }
 }

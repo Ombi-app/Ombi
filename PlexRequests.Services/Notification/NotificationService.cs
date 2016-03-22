@@ -44,7 +44,7 @@ namespace PlexRequests.Services.Notification
             Observers = new Dictionary<string, INotification>();
         }
 
-        public static void Publish(string title, string requester)
+        public static void Publish(NotificationModel model)
         {
             Log.Trace("Notifying all observers: ");
             Log.Trace(Observers.DumpJson());
@@ -55,7 +55,7 @@ namespace PlexRequests.Services.Notification
                 new Thread(() =>
                 {
                     Thread.CurrentThread.IsBackground = true;
-                    notification.Notify(title, requester);
+                    notification.Notify(model);
                 }).Start();
             }
         }

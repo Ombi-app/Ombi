@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: INotification.cs
+//    File: NotificationModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,22 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+
 namespace PlexRequests.Services.Notification
 {
-    public interface INotification
+    public class NotificationModel
     {
-        /// <summary>
-        /// Gets the name of the notification.
-        /// </summary>
-        /// <value>
-        /// The name of the notification.
-        /// </value>
-        string NotificationName { get; }
-        /// <summary>
-        /// Notifies the specified title.
-        /// </summary>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        bool Notify(NotificationModel model);
+        public string Title { get; set; }
+        public string Body { get; set; }
+        public DateTime DateTime { get; set; }
+        public NotificationType NotificationType { get; set; }
+        public string User { get; set; }
     }
 }

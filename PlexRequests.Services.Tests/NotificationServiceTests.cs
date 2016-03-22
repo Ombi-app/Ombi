@@ -97,7 +97,7 @@ namespace PlexRequests.Services.Tests
         {
             Assert.DoesNotThrow(
                 () =>
-                { NotificationService.Publish(string.Empty, string.Empty); });
+                { NotificationService.Publish(new NotificationModel()); });
         }
 
         [Test]
@@ -112,11 +112,11 @@ namespace PlexRequests.Services.Tests
             NotificationService.Subscribe(notificationMock2.Object);
 
             Assert.That(NotificationService.Observers.Count, Is.EqualTo(2));
+            var model = new NotificationModel {Title = "abc", Body = "test"};
+            NotificationService.Publish(model);
 
-            NotificationService.Publish("a","b");
-
-            notificationMock1.Verify(x => x.Notify("a","b"), Times.Once);
-            notificationMock2.Verify(x => x.Notify("a","b"), Times.Once);
+            notificationMock1.Verify(x => x.Notify(model), Times.Once);
+            notificationMock2.Verify(x => x.Notify(model), Times.Once);
         }
     }
 }

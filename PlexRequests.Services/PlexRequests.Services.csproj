@@ -79,7 +79,9 @@
     <Compile Include="Interfaces\IIntervals.cs" />
     <Compile Include="Notification\INotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
+    <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
+    <Compile Include="Notification\NotificationType.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
     <Compile Include="PlexAvailabilityChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

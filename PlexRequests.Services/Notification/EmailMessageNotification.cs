@@ -42,10 +42,12 @@ namespace PlexRequests.Services.Notification
             EmailNotificationSettings = settings;
         }
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
+        private EmailNotificationSettings Settings => GetConfiguration();
         public string NotificationName => "EmailMessageNotification";
-        public bool Notify(string title, string requester)
+
+        public bool Notify(NotificationModel model)
         {
             var configuration = GetConfiguration();
             if (!ValidateConfiguration(configuration))
@@ -53,33 +55,22 @@ namespace PlexRequests.Services.Notification
                 return false;
             }
 
-            var message = new MailMessage
+            switch (model.NotificationType)
             {
-                IsBodyHtml = true,
-                To = { new MailAddress(configuration.RecipientEmail) },
-                Body = $"User {requester} has requested {title}!",
-                From = new MailAddress(configuration.EmailUsername),
-                Subject = $"New Request for {title}!"
-            };
+                case NotificationType.NewRequest:
+                    return EmailNewRequest(model);
+                case NotificationType.Issue:
+                    return EmailIssue(model);
+                case NotificationType.RequestAvailable:
+                    break;
+                case NotificationType.RequestApproved:
+                    break;
+                case NotificationType.AdminNote:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
 
-            try
-            {
-                using (var smtp = new SmtpClient(configuration.EmailHost, configuration.EmailPort))
-                {
-                    smtp.Credentials = new NetworkCredential(configuration.EmailUsername, configuration.EmailPassword);
-                    smtp.EnableSsl = configuration.Ssl;
-                    smtp.Send(message);
-                    return true;
-                }
-            }
-            catch (SmtpException smtp)
-            {
-                Log.Fatal(smtp);
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-            }
             return false;
         }
 
@@ -95,14 +86,76 @@ namespace PlexRequests.Services.Notification
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.EmailUsername)
-                || string.IsNullOrEmpty(settings.EmailPassword) || string.IsNullOrEmpty(settings.RecipientEmail)
-                || string.IsNullOrEmpty(settings.EmailPort.ToString()))
+            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
             {
                 return false;
             }
 
             return true;
+        }
+
+        private bool EmailNewRequest(NotificationModel model)
+        {
+            var message = new MailMessage
+            {
+                IsBodyHtml = true,
+                To = { new MailAddress(Settings.RecipientEmail) },
+                Body = $"Hello! The user '{model.User}' has requested {model.Title}! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
+                From = new MailAddress(Settings.EmailUsername),
+                Subject = $"Plex Requests: New request for {model.Title}!"
+            };
+
+            try
+            {
+                using (var smtp = new SmtpClient(Settings.EmailHost, Settings.EmailPort))
+                {
+                    smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
+                    smtp.EnableSsl = Settings.Ssl;
+                    smtp.Send(message);
+                    return true;
+                }
+            }
+            catch (SmtpException smtp)
+            {
+                Log.Fatal(smtp);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+            }
+            return false;
+        }
+
+        private bool EmailIssue(NotificationModel model)
+        {
+            var message = new MailMessage
+            {
+                IsBodyHtml = true,
+                To = { new MailAddress(Settings.RecipientEmail) },
+                Body = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
+                From = new MailAddress(Settings.EmailUsername),
+                Subject = $"Plex Requests: New issue for {model.Title}!"
+            };
+
+            try
+            {
+                using (var smtp = new SmtpClient(Settings.EmailHost, Settings.EmailPort))
+                {
+                    smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
+                    smtp.EnableSsl = Settings.Ssl;
+                    smtp.Send(message);
+                    return true;
+                }
+            }
+            catch (SmtpException smtp)
+            {
+                Log.Fatal(smtp);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+            }
+            return false;
         }
     }
 }

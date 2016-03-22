@@ -182,7 +182,7 @@ namespace PlexRequests.UI.Modules
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
-//#if !DEBUG
+            //#if !DEBUG
             try
             {
                 if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
@@ -194,7 +194,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
             }
-//#endif
+            //#endif
 
             var model = new RequestedModel
             {
@@ -241,7 +241,8 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("Adding movie to database requests");
                 var id = RequestService.AddRequest(model);
 
-                NotificationService.Publish(model.Title, model.RequestedBy);
+                var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                NotificationService.Publish(notificationModel);
 
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
@@ -269,7 +270,7 @@ namespace PlexRequests.UI.Modules
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
-//#if !DEBUG
+            //#if !DEBUG
             try
             {
                 if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
@@ -281,7 +282,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
             }
-//#endif
+            //#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
@@ -344,7 +345,9 @@ namespace PlexRequests.UI.Modules
             }
 
             RequestService.AddRequest(model);
-            NotificationService.Publish(model.Title, model.RequestedBy);
+
+            var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+            NotificationService.Publish(notificationModel);
 
             return Response.AsJson(new { Result = true });
         }
