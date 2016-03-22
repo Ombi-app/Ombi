@@ -64,23 +64,26 @@ namespace PlexRequests.Api
             };
 
             var options = new SonarrAddSeries();
-            if (episodes)
+            if (seasons.Length == 0)
             {
-                options.addOptions = new AddOptions
+                if (episodes)
                 {
-                    ignoreEpisodesWithFiles = true,
-                    ignoreEpisodesWithoutFiles = true,
-                    searchForMissingEpisodes = false
-                };
-            }
-            else
-            {
-                options.addOptions = new AddOptions
+                    options.addOptions = new AddOptions
+                    {
+                        ignoreEpisodesWithFiles = true,
+                        ignoreEpisodesWithoutFiles = true,
+                        searchForMissingEpisodes = false
+                    };
+                }
+                else
                 {
-                    ignoreEpisodesWithFiles = false,
-                    searchForMissingEpisodes = true,
-                    ignoreEpisodesWithoutFiles = false
-                };
+                    options.addOptions = new AddOptions
+                    {
+                        ignoreEpisodesWithFiles = false,
+                        searchForMissingEpisodes = true,
+                        ignoreEpisodesWithoutFiles = false
+                    };
+                }
             }
             options.seasonFolder = seasonFolders;
             options.title = title;
