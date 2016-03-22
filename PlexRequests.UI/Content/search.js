@@ -139,7 +139,8 @@ function buildMovieContext(result) {
         voteCount: result.voteCount,
         voteAverage: result.voteAverage,
         year: year,
-        type: "movie"
+        type: "movie",
+        imdb: result.imdbId
     };
 
     return context;
@@ -154,7 +155,8 @@ function buildTvShowContext(result) {
         title: result.seriesName,
         overview: result.overview,
         year: year,
-        type: "tv"
+        type: "tv",
+        imdb: result.imdbId
     };
     return context;
 }

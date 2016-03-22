@@ -337,7 +337,8 @@ function buildRequestContext(result, type) {
         issues: result.issues,
         otherMessage: result.otherMessage,
         requestId: result.id,
-        adminNote: result.adminNotes
+        adminNote: result.adminNotes,
+        imdb: result.imdbId
     };
 
     return context;

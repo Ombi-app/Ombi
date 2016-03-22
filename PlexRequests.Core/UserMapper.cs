@@ -73,7 +73,7 @@ namespace PlexRequests.Core
                     var passwordMatch = PasswordHasher.VerifyPassword(password, u.Salt, u.Hash);
                     if (passwordMatch)
                     {
-                        return new Guid(u.User);
+                        return new Guid(u.UserGuid);
                     }
                 }
             }
@@ -93,12 +93,12 @@ namespace PlexRequests.Core
             var repo = new UserRepository<UsersModel>(Db);
             var salt = PasswordHasher.GenerateSalt();
 
-            var userModel = new UsersModel { UserName = username, User = Guid.NewGuid().ToString(), Salt = salt, Hash = PasswordHasher.ComputeHash(password, salt)};
+            var userModel = new UsersModel { UserName = username, UserGuid = Guid.NewGuid().ToString(), Salt = salt, Hash = PasswordHasher.ComputeHash(password, salt)};
             repo.Insert(userModel);
 
-            var userRecord = repo.Get(userModel.User);
+            var userRecord = repo.Get(userModel.UserGuid);
                 
-            return new Guid(userRecord.User);
+            return new Guid(userRecord.UserGuid);
         }
 
         public static bool UpdateUser(string username, string oldPassword, string newPassword)
