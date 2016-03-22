@@ -39,6 +39,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -181,13 +182,17 @@ namespace PlexRequests.UI.Modules
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
-
-            //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                }
             }
-            //#endif
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
+            }
 
             var model = new RequestedModel
             {
@@ -262,13 +267,17 @@ namespace PlexRequests.UI.Modules
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
-
-            //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                }
             }
-            //#endif
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
+            }
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
