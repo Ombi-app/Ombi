@@ -182,6 +182,7 @@ namespace PlexRequests.UI.Modules
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
+//#if !DEBUG
             try
             {
                 if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
@@ -193,6 +194,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
             }
+//#endif
 
             var model = new RequestedModel
             {
@@ -267,6 +269,7 @@ namespace PlexRequests.UI.Modules
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
+//#if !DEBUG
             try
             {
                 if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
@@ -278,6 +281,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
             }
+//#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
@@ -295,7 +299,8 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                LatestTv = latest
+                LatestTv = latest,
+                ImdbId = showInfo.externals?.imdb ?? string.Empty
             };
 
 
