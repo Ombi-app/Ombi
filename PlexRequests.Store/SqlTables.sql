@@ -6,7 +6,8 @@ CREATE TABLE IF NOT EXISTS Users
     UserGuid							varchar(50) NOT NULL ,
     UserName							varchar(50) NOT NULL,
     Salt								BLOB NOT NULL,
-    Hash								BLOB NOT NULL
+    Hash								BLOB NOT NULL,
+	Claims								BLOB NOT NULL
 );
 
 
@@ -16,6 +17,7 @@ CREATE TABLE IF NOT EXISTS GlobalSettings
     SettingsName						varchar(50) NOT NULL,
     Content								varchar(100) NOT NULL
 );
+CREATE UNIQUE INDEX IF NOT EXISTS GlobalSettings_Id ON GlobalSettings (Id);
 
 CREATE TABLE IF NOT EXISTS RequestBlobs
 (
@@ -24,12 +26,11 @@ CREATE TABLE IF NOT EXISTS RequestBlobs
     Type								INTEGER NOT NULL,
     Content								BLOB NOT NULL
 );
+CREATE UNIQUE INDEX IF NOT EXISTS RequestBlobs_Id ON RequestBlobs (Id);
 
-
-CREATE TABLE IF NOT EXISTS Log
+CREATE TABLE IF NOT EXISTS Logs
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    Username							varchar(50) NOT NULL,
     Date								varchar(100) NOT NULL,
     Level								varchar(100) NOT NULL,
     Logger								varchar(100) NOT NULL,
@@ -37,3 +38,4 @@ CREATE TABLE IF NOT EXISTS Log
     CallSite							varchar(100) NOT NULL,
     Exception							varchar(100) NOT NULL
 );
+CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
