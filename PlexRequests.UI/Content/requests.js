@@ -27,7 +27,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 load: {
                     filter: activeState.activeFilter || 'all',
                     sort: activeState.activeSort || 'default:asc'
-                }
+                },
+                layout: {
+                display: 'block'
+            }
+
             });
         }
     }
@@ -41,6 +45,9 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
                 load: {
                     filter: activeState.activeFilter || 'all',
                     sort: activeState.activeSort || 'default:asc'
+                },
+                layout: {
+                    display: 'block'
                 }
             });
         }
@@ -359,4 +366,16 @@ function buildRequestContext(result, type) {
     };
 
     return context;
+}
+
+function startFilter(elementId) {
+    $('#'+element).mixItUp({
+        load: {
+            filter: activeState.activeFilter || 'all',
+            sort: activeState.activeSort || 'default:asc'
+        },
+        layout: {
+            display: 'block'
+        }
+    });
 }
