@@ -46,7 +46,7 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ###### A massive thanks to everyone below!
 
-[heartisall](https://github.com/heartisall), Stuke00, [shiitake](https://github.com/shiitake)
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake)
 
 
 # Sponsors
