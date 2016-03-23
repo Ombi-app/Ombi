@@ -16,14 +16,31 @@ tvLoad();
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr('href');
+    var activeState = "";
     if (target === "#TvShowTab") {
+        if ($('#movieList').mixItUp('isLoaded')) {
+            activeState = $('#movieList').mixItUp('getState');
+            $('#movieList').mixItUp('destroy');
+        }
         if (!$('#tvList').mixItUp('isLoaded')) {
             $('#tvList').mixItUp({
-                layout: {
-                    display: 'block'
-                },
                 load: {
-                    filter: 'all'
+                    filter: activeState.activeFilter || 'all',
+                    sort: activeState.activeSort || 'default:asc'
+                }
+            });
+        }
+    }
+    if (target === "#MoviesTab") {
+        if ($('#tvList').mixItUp('isLoaded')) {
+            activeState = $('#tvList').mixItUp('getState');
+            $('#tvList').mixItUp('destroy');
+        }
+        if (!$('#movieList').mixItUp('isLoaded')) {
+            $('#movieList').mixItUp({
+                load: {
+                    filter: activeState.activeFilter || 'all',
+                    sort: activeState.activeSort || 'default:asc'
                 }
             });
         }
