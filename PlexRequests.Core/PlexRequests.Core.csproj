@@ -73,6 +73,7 @@
     <Compile Include="JsonRequestService.cs" />
     <Compile Include="Models\StatusModel.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
+    <Compile Include="SettingModels\PushoverNotificationSettings.cs" />
     <Compile Include="SettingModels\PushBulletNotificationSettings.cs" />
     <Compile Include="SettingModels\EmailNotificationSettings.cs" />
     <Compile Include="SettingModels\PlexSettings.cs" />

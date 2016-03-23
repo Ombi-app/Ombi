@@ -34,19 +34,19 @@ using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Services.Notification
 {
-    public class PushbulletNotification : INotification
+    public class PushoverNotification : INotification
     {
-        public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings)
+        public PushoverNotification(IPushoverApi pushoverApi, ISettingsService<PushoverNotificationSettings> settings)
         {
-            PushbulletApi = pushbulletApi;
+            PushoverApi = pushoverApi;
             SettingsService = settings;
         }
-        private IPushbulletApi PushbulletApi { get;  }
-        private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
-        private PushbulletNotificationSettings Settings => GetSettings();
+        private IPushoverApi PushoverApi { get;  }
+        private ISettingsService<PushoverNotificationSettings> SettingsService { get; }
+        private PushoverNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public string NotificationName => "PushbulletNotification";
+        public string NotificationName => "PushoverNotification";
         public bool Notify(NotificationModel model)
         {
             if (!ValidateConfiguration())
@@ -81,26 +81,25 @@ namespace PlexRequests.Services.Notification
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(Settings.AccessToken))
+            if (string.IsNullOrEmpty(Settings.AccessToken) || string.IsNullOrEmpty(Settings.UserToken))
             {
                 return false;
             }
             return true;
         }
 
-        private PushbulletNotificationSettings GetSettings()
+        private PushoverNotificationSettings GetSettings()
         {
             return SettingsService.GetSettings();
         }
 
         private bool PushNewRequest(NotificationModel model)
         {
-            var message = $"{model.Title} has been requested by user: {model.User}";
-            var pushTitle = $"Plex Requests: {model.Title} has been requested!";
+            var message = $"Plex Requests: {model.Title} has been requested by user: {model.User}";
             try
             {
-                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
-                if (result != null)
+                var result = PushoverApi.Push(Settings.AccessToken, message, Settings.UserToken);
+                if (result?.status == 1)
                 {
                     return true;
                 }
@@ -114,11 +113,10 @@ namespace PlexRequests.Services.Notification
 
         private bool PushIssue(NotificationModel model)
         {
-            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
-            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
+            var message = $"Plex Requests: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             try
             {
-                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                var result = PushoverApi.Push(Settings.AccessToken, message, Settings.UserToken);
                 if (result != null)
                 {
                     return true;
