@@ -30,6 +30,8 @@ using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
+using PlexRequests.Store.Repository;
+
 namespace PlexRequests.Store
 {
     public class UserRepository<T> : IRepository<T> where T : UserEntity

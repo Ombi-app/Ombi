@@ -26,11 +26,13 @@
 #endregion
 using System;
 
+using Dapper.Contrib.Extensions;
+
 namespace PlexRequests.Store.Models
 {
+    [Table("Logs")]
     public class LogEntity : Entity
     {
-        public string Username { get; set; }
         public DateTime Date { get; set; }
         public string Level { get; set; }
         public string Logger { get; set; }

@@ -81,7 +81,6 @@
     <Compile Include="SettingModels\CouchPotatoSettings.cs" />
     <Compile Include="SettingModels\PlexRequestSettings.cs" />
     <Compile Include="SettingModels\Settings.cs" />
-    <Compile Include="RequestService.cs" />
     <Compile Include="SettingsServiceV2.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="StatusChecker.cs" />

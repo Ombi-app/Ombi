@@ -47,6 +47,7 @@ using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
 using TaskFactory = FluentScheduler.TaskFactory;
@@ -77,6 +78,7 @@ namespace PlexRequests.UI
 
             // Repo's
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
+            container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
 

@@ -51,7 +51,7 @@ namespace PlexRequests.UI.Modules
                     model.AdminExists = adminCreated;
                     return View["Login/Index", model];
                 }
-                
+
             };
 
             Get["/logout"] = x => this.LogoutAndRedirect("~/");
@@ -76,7 +76,8 @@ namespace PlexRequests.UI.Modules
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 
-            Get["/register"] = x => {
+            Get["/register"] = x =>
+            {
                 {
                     dynamic model = new ExpandoObject();
                     model.Errored = Request.Query.error.HasValue;
@@ -87,13 +88,13 @@ namespace PlexRequests.UI.Modules
 
             Post["/register"] = x =>
             {
-                var username = (string) Request.Form.Username;
+                var username = (string)Request.Form.Username;
                 var exists = UserMapper.DoUsersExist();
                 if (exists)
                 {
-                    return Context.GetRedirect("~/register?error=true&username=" + username);
+                    return Context.GetRedirect("~/register?error=true");
                 }
-                var userId = UserMapper.CreateUser(username, Request.Form.Password);
+                var userId = UserMapper.CreateUser(username, Request.Form.Password, new[] { "Admin" });
                 Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect((Guid)userId);
             };
@@ -116,7 +117,7 @@ namespace PlexRequests.UI.Modules
             var newPasswordAgain = Request.Form.NewPasswordAgain;
             if (!newPassword.Equals(newPasswordAgain))
             {
-                
+
             }
 
             var result = UserMapper.UpdateUser(username, oldPass, newPassword);

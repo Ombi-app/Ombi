@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: ISettingsRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,47 +26,40 @@
 #endregion
 using System.Collections.Generic;
 
-namespace PlexRequests.Store
+using PlexRequests.Store.Models;
+
+namespace PlexRequests.Store.Repository
 {
-    public interface IRepository<T>
+    public interface IRequestRepository
     {
         /// <summary>
         /// Inserts the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        long Insert(T entity);
+        long Insert(RequestBlobs entity);
 
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<T> GetAll();
+        IEnumerable<RequestBlobs> GetAll();
 
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
+        RequestBlobs Get(int id);
+
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        void Delete(T entity);
+        /// <returns></returns>
+        bool Delete(RequestBlobs entity);
 
         /// <summary>
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        bool Update(T entity);
+        bool Update(RequestBlobs entity);
 
-        /// <summary>
-        /// Updates all.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool UpdateAll(IEnumerable<T> entity);
+        bool UpdateAll(IEnumerable<RequestBlobs> entity);
     }
 }

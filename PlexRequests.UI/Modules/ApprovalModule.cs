@@ -169,18 +169,14 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestMovieAndUpdateStatus(RequestedModel request)
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
-
             var cpSettings = CpService.GetSettings();
             var cp = new CouchPotatoApi();
-            Log.Info("Adding movie to CP : {0}", request.Title);
+            Log.Info("Adding movie to CouchPotato : {0}", request.Title);
             if (!cpSettings.Enabled)
             {
                 // Approve it
                 request.Approved = true;
+                Log.Warn("We approved movie: {0} but could not add it to CouchPotato because it has not been setup", request.Title);
 
                 // Update the record
                 var inserted = Service.UpdateRequest(request);
@@ -226,6 +222,11 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response ApproveAll()
         {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
+
             var requests = Service.GetAll().Where(x => x.Approved == false);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())

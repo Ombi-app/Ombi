@@ -26,6 +26,7 @@
 #endregion
 using System.Dynamic;
 using System.Linq;
+using System.Web.UI.WebControls;
 
 using MarkdownSharp;
 
@@ -44,6 +45,8 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Notification;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
@@ -63,6 +66,7 @@ namespace PlexRequests.UI.Modules
         private ISonarrApi SonarrApi { get; }
         private PushbulletApi PushbulletApi { get; }
         private ICouchPotatoApi CpApi { get; }
+        private IRepository<LogEntity> LogsRepo { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
@@ -76,7 +80,8 @@ namespace PlexRequests.UI.Modules
             IPlexApi plexApi,
             ISettingsService<PushbulletNotificationSettings> pbSettings,
             PushbulletApi pbApi,
-            ICouchPotatoApi cpApi) : base("admin")
+            ICouchPotatoApi cpApi,
+            IRepository<LogEntity> logsRepo) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -90,6 +95,7 @@ namespace PlexRequests.UI.Modules
             PushbulletApi = pbApi;
             CpApi = cpApi;
             SickRageService = sickrage;
+            LogsRepo = logsRepo;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -126,6 +132,10 @@ namespace PlexRequests.UI.Modules
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
+
+            Get["/logs"] = _ => Logs();
+            Get["/loglevel"] = _ => GetLogLevels();
+            Post["/loglevel"] = _ => UpdateLogLevels(Request.Form.level);
         }
 
         private Negotiator Authentication()
@@ -246,8 +256,8 @@ namespace PlexRequests.UI.Modules
             }
 
             var result = CpService.SaveSettings(couchPotatoSettings);
-            return Response.AsJson(result 
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" } 
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
@@ -421,6 +431,25 @@ namespace PlexRequests.UI.Modules
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
             return Response.AsJson(profiles);
+        }
+
+        private Negotiator Logs()
+        {
+            var allLogs = LogsRepo.GetAll().OrderByDescending(x => x.Id).Take(20);
+            return View["Logs", allLogs];
+        }
+
+        private Response GetLogLevels()
+        {
+            var levels = LogManager.Configuration.LoggingRules.FirstOrDefault(x => x.NameMatches("database"));
+            return Response.AsJson(levels.Levels);
+        }
+
+        private Response UpdateLogLevels(int level)
+        {
+            var newLevel = LogLevel.FromOrdinal(level);
+            LoggingHelper.ReconfigureLogLevel(newLevel);
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
         }
     }
 }

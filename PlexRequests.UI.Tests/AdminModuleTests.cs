@@ -39,6 +39,8 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 
@@ -59,6 +61,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISonarrApi> SonarrApiMock { get; set; }
         private Mock<IPushbulletApi> PushbulletApi { get; set; }
         private Mock<ICouchPotatoApi> CpApi { get; set; }
+        private Mock<IRepository<LogEntity>> LogRepo { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -83,6 +86,7 @@ namespace PlexRequests.UI.Tests
             PushbulletSettings = new Mock<ISettingsService<PushbulletNotificationSettings>>();
             CpApi = new Mock<ICouchPotatoApi>();
             SickRageSettingsMock = new Mock<ISettingsService<SickRageSettings>>();
+            LogRepo = new Mock<IRepository<LogEntity>>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -99,6 +103,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushbulletSettings.Object);
                 with.Dependency(CpApi.Object);
                 with.Dependency(SickRageSettingsMock.Object);
+                with.Dependency(LogRepo.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {

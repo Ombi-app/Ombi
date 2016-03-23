@@ -1,0 +1,118 @@
+﻿@Html.Partial("_Sidebar")
+
+<div class="col-sm-8 col-sm-push-1">
+    <fieldset>
+        <legend>Logs</legend>
+
+        <form method="post" id="mainForm" action="/admin/loglevel">
+            <div class="form-group">
+                <label for="logLevel" class="control-label">Log Level</label>
+                <div id="logLevel">
+                    <select class="form-control" id="selected">
+                        <option id="Trace" value="0">Trace</option>
+                        <option id="Debug" value="1">Debug</option>
+                        <option id="Info" value="2">Info</option>
+                        <option id="Warn" value="3">Warn</option>
+                        <option id="Error" value="4">Error</option>
+                        <option id="Fatal" value="5">Fatal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline ">Submit</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-striped table-hover table-responsive">
+            <tr>
+                <th>Message</th>
+                <th>Logger</th>
+                <th>Exception</th>
+                <th>Callsite</th>
+                <th>Log Level</th>
+                <th>Date</th>
+            </tr>
+            @foreach (var m in Model)
+            {
+                <tr>
+                    <td>
+                        @m.Message
+                    </td>
+                    <td>
+                        @m.Logger
+                    </td>
+                    <td>
+                        @m.Exception
+                    </td>
+                    <td>
+                        @m.Callsite
+                    </td>
+                    <td>
+                        @m.Level
+                    </td>
+                    <td>
+                        @m.Date
+                    </td>
+                </tr>
+            }
+        </table>
+
+
+    </fieldset>
+</div>
+
+
+
+<script>
+    $(function () {
+
+
+        $.ajax({
+            type: "get",
+            url: "/admin/loglevel",
+            dataType: "json",
+            success: function (response) {
+                $("#select > option").each(function (level) {
+                    if (response[0] == level.value) {
+                        $('#' + level.target.id).prop("selected", "selected");
+                    }
+                });
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+           
+            var logLevel = $("#logLevel option:selected").val();
+
+            var $form = $("#mainForm");
+            var data = "level=" + logLevel;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+
+    });
+</script>

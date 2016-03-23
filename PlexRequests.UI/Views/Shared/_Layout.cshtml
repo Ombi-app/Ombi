@@ -57,26 +57,26 @@
                     {
                         <li><a href="/requests">Requests</a></li>
                     }
-                    @if (Context.CurrentUser.IsAuthenticated())
-                    {
-                        if (Context.Request.Path == "/admin")
-                        {
-                            <li class="active"><a href="/admin">Admin</a></li>
-                        }
-                        else
-                        {
-                            <li><a href="/admin">Admin</a></li>
-                        }
-                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+
+
+
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
                         <li><a href="/login">Admin</a></li>
                     }
                     else
                     {
-                        <li><a href="/logout">Admin Logout</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/admin">Settings</a></li>
+                                <li><a href="#">User Management</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Logout</a></li>
+                            </ul>
+                        </li>
                     }
                     @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
                     {

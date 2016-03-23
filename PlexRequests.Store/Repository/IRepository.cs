@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISettingsRepository.cs
+//    File: IRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,45 +26,47 @@
 #endregion
 using System.Collections.Generic;
 
-using PlexRequests.Store.Models;
-
-namespace PlexRequests.Store
+namespace PlexRequests.Store.Repository
 {
-    public interface ISettingsRepository
+    public interface IRepository<T>
     {
         /// <summary>
         /// Inserts the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        long Insert(GlobalSettings entity);
+        long Insert(T entity);
 
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<GlobalSettings> GetAll();
+        IEnumerable<T> GetAll();
 
         /// <summary>
         /// Gets the specified identifier.
         /// </summary>
-        /// <param name="settingsName">Name of the settings.</param>
+        /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        GlobalSettings Get(string settingsName);
-
+        T Get(string id);
+        T Get(int id);
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Delete(GlobalSettings entity);
+        void Delete(T entity);
 
         /// <summary>
         /// Updates the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
-        bool Update(GlobalSettings entity);
+        bool Update(T entity);
 
-
+        /// <summary>
+        /// Updates all.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        bool UpdateAll(IEnumerable<T> entity);
     }
 }

@@ -6,5 +6,9 @@
   {
     "outputFile": "Content/pace.css",
     "inputFile": "Content/pace.scss"
+  },
+  {
+    "outputFile": "Content/requests.es5.js",
+    "inputFile": "Content/requests.js"
   }
 ]

@@ -25,8 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Data;
 
 using Newtonsoft.Json;
+
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace PlexRequests.Helpers
 {
@@ -54,6 +59,58 @@ namespace PlexRequests.Helpers
                 dumpTarget = JsonConvert.SerializeObject(value, Formatting.Indented);
             }
             return dumpTarget.ToString();
+        }
+
+        public static void ConfigureLogging(string connectionString)
+        {
+            LogManager.ThrowExceptions = true;
+            // Step 1. Create configuration object 
+            var config = new LoggingConfiguration();
+
+            // Step 2. Create targets and add them to the configuration 
+            var databaseTarget = new DatabaseTarget
+            {
+                CommandType = CommandType.Text,
+                ConnectionString = connectionString,
+                DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
+                Name = "database"
+            };
+            
+            var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
+            var callsiteParam = new DatabaseParameterInfo { Name = "@Callsite", Layout = "${callsite}" };
+            var levelParam = new DatabaseParameterInfo { Name = "@Level", Layout = "${level}" };
+            var dateParam = new DatabaseParameterInfo { Name = "@Date", Layout = "${date}" };
+            var loggerParam = new DatabaseParameterInfo { Name = "@Logger", Layout = "${logger}" };
+            var exceptionParam = new DatabaseParameterInfo { Name = "@Exception", Layout = "${exception:tostring}" };
+
+            databaseTarget.Parameters.Add(messageParam);
+            databaseTarget.Parameters.Add(callsiteParam);
+            databaseTarget.Parameters.Add(levelParam);
+            databaseTarget.Parameters.Add(dateParam);
+            databaseTarget.Parameters.Add(loggerParam);
+            databaseTarget.Parameters.Add(exceptionParam);
+
+            databaseTarget.CommandText = "INSERT INTO Logs (Date,Level,Logger, Message, Callsite, Exception) VALUES(@Date,@Level,@Logger, @Message, @Callsite, @Exception);";
+            config.AddTarget("database", databaseTarget);
+
+            // Step 4. Define rules
+            var rule1 = new LoggingRule("*", LogLevel.Info, databaseTarget);
+            config.LoggingRules.Add(rule1);
+
+            // Step 5. Activate the configuration
+            LogManager.Configuration = config;
+        }
+
+        public static void ReconfigureLogLevel(LogLevel level)
+        {
+            foreach (var rule in LogManager.Configuration.LoggingRules)
+            {
+                rule.EnableLoggingForLevel(level);
+            }
+
+            //Call to update existing Loggers created with GetLogger() or 
+            //GetCurrentClassLogger()
+            LogManager.ReconfigExistingLoggers();
         }
     }
 }

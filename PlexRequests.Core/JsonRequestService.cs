@@ -32,6 +32,7 @@ using Newtonsoft.Json;
 
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core
 {

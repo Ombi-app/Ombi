@@ -88,12 +88,12 @@ namespace PlexRequests.Core
             return users.Any();
         }
 
-        public static Guid? CreateUser(string username, string password)
+        public static Guid? CreateUser(string username, string password, string[] claims = default(string[]))
         {
             var repo = new UserRepository<UsersModel>(Db);
             var salt = PasswordHasher.GenerateSalt();
 
-            var userModel = new UsersModel { UserName = username, UserGuid = Guid.NewGuid().ToString(), Salt = salt, Hash = PasswordHasher.ComputeHash(password, salt)};
+            var userModel = new UsersModel { UserName = username, UserGuid = Guid.NewGuid().ToString(), Salt = salt, Hash = PasswordHasher.ComputeHash(password, salt), Claims = claims};
             repo.Insert(userModel);
 
             var userRecord = repo.Get(userModel.UserGuid);
