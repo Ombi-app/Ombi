@@ -23,5 +23,6 @@ namespace PlexRequests.Api.Models.Tv
         public string summary { get; set; }
         public int updated { get; set; }
         public Links _links { get; set; }
+        public int seasonCount { get; set; }
     }
 }

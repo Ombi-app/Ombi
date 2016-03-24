@@ -39,9 +39,14 @@ $(document).on("click", ".dropdownTv", function (e) {
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
     var seasons = $(this).attr("season-select");
-    if (seasons === "1") {
+    if (seasons === "2") {
         // Send over the latest
-        data = data + "&latest=true";
+        data = data + "&seasons=latest";
+    }
+    if (seasons === "1") {
+        // Send over the first season
+        data = data + "&seasons=first";
+
     }
 
     var type = $form.prop('method');

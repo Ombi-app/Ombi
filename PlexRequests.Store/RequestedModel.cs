@@ -23,8 +23,9 @@ namespace PlexRequests.Store
         public bool Available { get; set; }
         public IssueState Issues { get; set; }
         public string OtherMessage { get; set; }
-        public bool LatestTv { get; set; }
         public string AdminNote { get; set; }
+        public int[] SeasonList { get; set; }
+        public int SeasonCount { get; set; }
     }
 
     public enum RequestType

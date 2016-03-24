@@ -28,9 +28,11 @@
 #endregion
 
 using System;
+using System.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
+using PlexRequests.Helpers;
 using RestSharp;
 
 namespace PlexRequests.Api
@@ -47,13 +49,11 @@ namespace PlexRequests.Api
         private ApiRequest Api { get; }
 
 
-        public SickRageTvAdd AddSeries(int tvdbId, bool latest, string quality, string apiKey,
+        public SickRageTvAdd AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey,
             Uri baseUrl)
         {
-            string status;
-            var futureStatus = SickRageStatus.Wanted;
-
-            status = latest ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+            var futureStatus = seasons.Length > 0 && !seasons.Any(x => x == seasonCount) ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+            var status = seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
 
             var request = new RestRequest
             {
@@ -71,6 +71,17 @@ namespace PlexRequests.Api
 
             var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 
+            if (seasons.Length > 0 && obj.result != "failure")
+            {
+                //handle the seasons requested
+                foreach (int s in seasons)
+                {
+                    var result = AddSeason(tvdbId, s, apiKey, baseUrl);
+                    Log.Trace("SickRage adding season results: ");
+                    Log.Trace(result.DumpJson());
+                }
+            }
+
             return obj;
         }
 
@@ -84,6 +95,23 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apiKey", apiKey);
             var obj = Api.ExecuteJson<SickRagePing>(request, baseUrl);
+
+            return obj;
+        }
+
+        public SickRageTvAdd AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=episode.setstatus",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("apiKey", apiKey);
+            request.AddQueryParameter("tvdbid", tvdbId.ToString());
+            request.AddQueryParameter("season", season.ToString());
+            request.AddQueryParameter("status", SickRageStatus.Wanted);
+
+            var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 
             return obj;
         }
