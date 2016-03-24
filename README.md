@@ -17,7 +17,10 @@ I wanted to write a similar application in .Net!
 * Secure authentication
 * [Sonarr](https://sonarr.tv/) integration (SickRage/Sickbeard TBD)
 * [CouchPotato](https://couchpota.to/) integration
+* [SickRage](https://sickrage.github.io/) integration
 * Email notifications
+* Pushbullet notifications
+* Pushover notifications
 
 #Preview
 
