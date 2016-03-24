@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 
@@ -32,6 +33,7 @@ using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
 
+using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 
@@ -46,7 +48,7 @@ namespace PlexRequests.Core
         private static ISqliteConfiguration Db { get; set; }
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context)
         {
-           var repo = new UserRepository<UsersModel>(Db);
+            var repo = new UserRepository<UsersModel>(Db);
 
             var user = repo.Get(identifier.ToString());
 
@@ -58,6 +60,7 @@ namespace PlexRequests.Core
             return new UserIdentity
             {
                 UserName = user.UserName,
+                Claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims)
             };
         }
 
@@ -84,7 +87,7 @@ namespace PlexRequests.Core
         {
             var repo = new UserRepository<UsersModel>(Db);
             var users = repo.GetAll();
-            
+
             return users.Any();
         }
 
@@ -93,15 +96,23 @@ namespace PlexRequests.Core
             var repo = new UserRepository<UsersModel>(Db);
             var salt = PasswordHasher.GenerateSalt();
 
-            var userModel = new UsersModel { UserName = username, UserGuid = Guid.NewGuid().ToString(), Salt = salt, Hash = PasswordHasher.ComputeHash(password, salt), Claims = claims};
+            var userModel = new UsersModel
+            {
+                UserName = username,
+                UserGuid = Guid.NewGuid().ToString(),
+                Salt = salt,
+                Hash = PasswordHasher.ComputeHash(password, salt),
+                Claims = JsonRequestService.ReturnBytes(claims),
+                UserProperties = JsonRequestService.ReturnBytes(new UserProperties())
+            };
             repo.Insert(userModel);
 
             var userRecord = repo.Get(userModel.UserGuid);
-                
+
             return new Guid(userRecord.UserGuid);
         }
 
-        public static bool UpdateUser(string username, string oldPassword, string newPassword)
+        public static bool UpdatePassword(string username, string oldPassword, string newPassword)
         {
             var repo = new UserRepository<UsersModel>(Db);
             var users = repo.GetAll();
@@ -122,6 +133,12 @@ namespace PlexRequests.Core
             userToChange.Salt = newSalt;
 
             return repo.Update(userToChange);
+        }
+
+        public static IEnumerable<UsersModel> GetUsers()
+        {
+            var repo = new UserRepository<UsersModel>(Db);
+            return repo.GetAll();
         }
     }
 }

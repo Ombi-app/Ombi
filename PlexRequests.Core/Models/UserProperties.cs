@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: UserProperties.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,16 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Dapper.Contrib.Extensions;
-
-namespace PlexRequests.Store
+namespace PlexRequests.Core.Models
 {
-    [Table("Users")]
-    public class UsersModel : UserEntity
+    public class UserProperties
     {
-        public byte[] Hash { get; set; }
-        public byte[] Salt { get; set; }
-        public byte[] Claims { get; set; }
-        public byte[] UserProperties { get; set; }
+        public string EmailAddress { get; set; }
+        public bool NotifyOnRelease { get; set; } 
+        public bool NotifyOnApprove { get; set; } 
     }
 }

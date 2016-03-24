@@ -49,7 +49,7 @@ namespace PlexRequests.UI.Modules
                     model.Errored = Request.Query.error.HasValue;
                     var adminCreated = UserMapper.DoUsersExist();
                     model.AdminExists = adminCreated;
-                    return View["Login/Index", model];
+                    return View["Index", model];
                 }
 
             };
@@ -82,7 +82,7 @@ namespace PlexRequests.UI.Modules
                     dynamic model = new ExpandoObject();
                     model.Errored = Request.Query.error.HasValue;
 
-                    return View["Login/Register", model];
+                    return View["Register", model];
                 }
             };
 
@@ -109,7 +109,7 @@ namespace PlexRequests.UI.Modules
             return View["ChangePassword"];
         }
 
-        private Negotiator ChangePasswordPost()
+        private Response ChangePasswordPost()
         {
             var username = Context.CurrentUser.UserName;
             var oldPass = Request.Form.OldPassword;
@@ -117,11 +117,16 @@ namespace PlexRequests.UI.Modules
             var newPasswordAgain = Request.Form.NewPasswordAgain;
             if (!newPassword.Equals(newPasswordAgain))
             {
-
+                return Response.AsJson(new JsonResponseModel { Message = "The passwords do not match", Result = false });
             }
 
-            var result = UserMapper.UpdateUser(username, oldPass, newPassword);
-            return View["ChangePassword"];
+            var result = UserMapper.UpdatePassword(username, oldPass, newPassword);
+            if (result)
+            {
+                return Response.AsJson(new JsonResponseModel { Message = "Password has been changed!", Result = true });
+            }
+
+            return Response.AsJson(new JsonResponseModel { Message = "Could not update the password in the database", Result = false });
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: ByteConverterHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,16 +24,31 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Dapper.Contrib.Extensions;
+using System.Text;
 
-namespace PlexRequests.Store
+using Newtonsoft.Json;
+
+namespace PlexRequests.Helpers
 {
-    [Table("Users")]
-    public class UsersModel : UserEntity
+    public class ByteConverterHelper
     {
-        public byte[] Hash { get; set; }
-        public byte[] Salt { get; set; }
-        public byte[] Claims { get; set; }
-        public byte[] UserProperties { get; set; }
+        public static byte[] ReturnBytes(object obj)
+        {
+            var json = JsonConvert.SerializeObject(obj);
+            var bytes = Encoding.UTF8.GetBytes(json);
+
+            return bytes;
+        }
+
+        public static T ReturnObject<T>(byte[] bytes)
+        {
+            var json = Encoding.UTF8.GetString(bytes);
+            var model = JsonConvert.DeserializeObject<T>(json);
+            return model;
+        }
+        public static string ReturnFromBytes(byte[] bytes)
+        {
+            return Encoding.UTF8.GetString(bytes);
+        }
     }
 }

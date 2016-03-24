@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS Users
     UserName							varchar(50) NOT NULL,
     Salt								BLOB NOT NULL,
     Hash								BLOB NOT NULL,
-	Claims								BLOB NOT NULL
+	Claims								BLOB NOT NULL,
+	UserProperties						BLOB
 );
 
 
