@@ -101,7 +101,7 @@ namespace PlexRequests.Services.Notification
                 IsBodyHtml = true,
                 To = { new MailAddress(Settings.RecipientEmail) },
                 Body = $"Hello! The user '{model.User}' has requested {model.Title}! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
-                From = new MailAddress(Settings.EmailUsername),
+                From = new MailAddress(Settings.EmailSender),
                 Subject = $"Plex Requests: New request for {model.Title}!"
             };
 
@@ -133,7 +133,7 @@ namespace PlexRequests.Services.Notification
                 IsBodyHtml = true,
                 To = { new MailAddress(Settings.RecipientEmail) },
                 Body = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
-                From = new MailAddress(Settings.EmailUsername),
+                From = new MailAddress(Settings.RecipientEmail),
                 Subject = $"Plex Requests: New issue for {model.Title}!"
             };
 
