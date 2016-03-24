@@ -102,8 +102,8 @@ namespace PlexRequests.Core
                 UserGuid = Guid.NewGuid().ToString(),
                 Salt = salt,
                 Hash = PasswordHasher.ComputeHash(password, salt),
-                Claims = JsonRequestService.ReturnBytes(claims),
-                UserProperties = JsonRequestService.ReturnBytes(new UserProperties())
+                Claims = ByteConverterHelper.ReturnBytes(claims),
+                UserProperties = ByteConverterHelper.ReturnBytes(new UserProperties())
             };
             repo.Insert(userModel);
 
