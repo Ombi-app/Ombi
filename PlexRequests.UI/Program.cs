@@ -80,7 +80,7 @@ namespace PlexRequests.UI
 
                     if (Type.GetType("Mono.Runtime") != null)
                     {
-                        Log.Info("We are on Mono!");
+                        Log.Trace("We are on Mono!");
                         // on mono, processes will usually run as daemons - this allows you to listen
                         // for termination signals (ctrl+c, shutdown, etc) and finalize correctly
                         UnixSignal.WaitAny(
@@ -88,7 +88,7 @@ namespace PlexRequests.UI
                     }
                     else
                     {
-                        Log.Info("This is not Mono");
+                        Log.Trace("This is not Mono");
                         Console.WriteLine("Press any key to exit");
                         Console.ReadLine();
                     }

@@ -24,9 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-
+using Humanizer;
 using MarkdownSharp;
 
 using Nancy;
@@ -148,6 +150,7 @@ namespace PlexRequests.UI.Modules
             Get["/logs"] = _ => Logs();
             Get["/loglevel"] = _ => GetLogLevels();
             Post["/loglevel"] = _ => UpdateLogLevels(Request.Form.level);
+            Get["/loadlogs"] = _ => LoadLogs();
         }
 
         private Negotiator Authentication()
@@ -479,8 +482,19 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Logs()
         {
-            var allLogs = LogsRepo.GetAll().OrderByDescending(x => x.Id).Take(20);
-            return View["Logs", allLogs];
+            return View["Logs"];
+        }
+
+        private Response LoadLogs()
+        {
+            var allLogs = LogsRepo.GetAll();
+            var model = new DatatablesModel<LogEntity> {Data = new List<LogEntity>()};
+            foreach (var l in allLogs)
+            {
+                l.DateString = l.Date.ToString("G");
+                model.Data.Add(l);
+            }
+            return Response.AsJson(model);
         }
 
         private Response GetLogLevels()

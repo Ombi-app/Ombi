@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LogEntity.cs
+//    File: DatatablesModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,24 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
-using Dapper.Contrib.Extensions;
-using Newtonsoft.Json;
+using System.Collections.Generic;
 
-namespace PlexRequests.Store.Models
+namespace PlexRequests.UI.Models
 {
-    [Table("Logs")]
-    public class LogEntity : Entity
+    public class DatatablesModel<T>
     {
-        public DateTime Date { get; set; }
-        public string Level { get; set; }
-        public string Logger { get; set; }
-        public string Message { get; set; }
-        public string Callsite { get; set; }
-        public string Exception { get; set; }
-
-        [JsonIgnore]
-        public string DateString { get; set; }
+        public List<T> Data { get; set; }
     }
 }

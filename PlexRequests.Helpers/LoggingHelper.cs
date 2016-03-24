@@ -75,7 +75,7 @@ namespace PlexRequests.Helpers
                 DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
                 Name = "database"
             };
-            
+
             var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
             var callsiteParam = new DatabaseParameterInfo { Name = "@Callsite", Layout = "${callsite}" };
             var levelParam = new DatabaseParameterInfo { Name = "@Level", Layout = "${level}" };
@@ -103,14 +103,64 @@ namespace PlexRequests.Helpers
 
         public static void ReconfigureLogLevel(LogLevel level)
         {
+
             foreach (var rule in LogManager.Configuration.LoggingRules)
             {
-                rule.EnableLoggingForLevel(level);
+                // Remove all levels
+                rule.DisableLoggingForLevel(LogLevel.Trace);
+                rule.DisableLoggingForLevel(LogLevel.Info);
+                rule.DisableLoggingForLevel(LogLevel.Debug);
+                rule.DisableLoggingForLevel(LogLevel.Warn);
+                rule.DisableLoggingForLevel(LogLevel.Error);
+                rule.DisableLoggingForLevel(LogLevel.Fatal);
+
+
+                if (level == LogLevel.Trace)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Trace);
+                    rule.EnableLoggingForLevel(LogLevel.Info);
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Info)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Info);
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Debug)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Warn)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Error)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Fatal)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
             }
 
-            //Call to update existing Loggers created with GetLogger() or 
+
+            //Call to update existing Loggers created with GetLogger() or
             //GetCurrentClassLogger()
             LogManager.ReconfigExistingLoggers();
         }
     }
 }
+

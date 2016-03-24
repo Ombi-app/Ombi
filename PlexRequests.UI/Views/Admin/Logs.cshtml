@@ -1,4 +1,7 @@
 ﻿@Html.Partial("_Sidebar")
+<link rel="stylesheet" type="text/css" href="~/Content/dataTables.bootstrap.css" />
+
+<script type="text/javascript" src="~/Content/datatables.min.js"></script>
 
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
@@ -25,41 +28,17 @@
             </div>
         </form>
 
-        <table class="table table-striped table-hover table-responsive">
-            <tr>
-                <th>Message</th>
-                <th>Logger</th>
-                <th>Exception</th>
-                <th>Callsite</th>
-                <th>Log Level</th>
-                <th>Date</th>
-            </tr>
-            @foreach (var m in Model)
-            {
+        <table id="example" class="table table-striped table-hover table-responsive">
+            <thead>
                 <tr>
-                    <td>
-                        @m.Message
-                    </td>
-                    <td>
-                        @m.Logger
-                    </td>
-                    <td>
-                        @m.Exception
-                    </td>
-                    <td>
-                        @m.Callsite
-                    </td>
-                    <td>
-                        @m.Level
-                    </td>
-                    <td>
-                        @m.Date
-                    </td>
+                    <th>Message</th>
+                    <th>Area</th>
+                    <th>Log Level</th>
+                    <th>Date</th>
                 </tr>
-            }
+            </thead>
+
         </table>
-
-
     </fieldset>
 </div>
 
@@ -67,6 +46,17 @@
 
 <script>
     $(function () {
+
+        $('#example').DataTable({
+            "ajax": "/admin/loadlogs",
+            "columns": [
+                { "data": "message" },
+                { "data": "logger" },
+                { "data": "level" },
+                { "data": "dateString" }
+            ],
+            "order": [[3, "desc"]]
+        });
 
 
         $.ajax({
@@ -88,7 +78,7 @@
 
         $('#save').click(function (e) {
             e.preventDefault();
-           
+
             var logLevel = $("#logLevel option:selected").val();
 
             var $form = $("#mainForm");
