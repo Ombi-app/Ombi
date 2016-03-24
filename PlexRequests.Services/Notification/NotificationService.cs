@@ -24,64 +24,49 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
-using System.Threading;
+using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
 
 using NLog;
 
-using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
 
 namespace PlexRequests.Services.Notification
 {
-    public static class NotificationService
+    public class NotificationService : INotificationService
     {
-
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public static Dictionary<string, INotification> Observers { get; }
+        public ConcurrentDictionary<string, INotification> Observers { get; } = new ConcurrentDictionary<string, INotification>();
 
-        static NotificationService()
+        public async Task Publish(NotificationModel model)
         {
-            Observers = new Dictionary<string, INotification>();
+            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model));
+
+            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
-        public static void Publish(NotificationModel model)
+        public void Subscribe(INotification notification)
         {
-            Log.Trace("Notifying all observers: ");
-            Log.Trace(Observers.DumpJson());
-            foreach (var observer in Observers)
-            {
-                var notification = observer.Value;
-
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    notification.Notify(model);
-                }).Start();
-            }
+            Observers.TryAdd(notification.NotificationName, notification);
         }
 
-        public static void Subscribe(INotification notification)
+        public void UnSubscribe(INotification notification)
         {
-            INotification notificationValue;
-            if (Observers.TryGetValue(notification.NotificationName, out notificationValue))
-            {
-                return;
-            }
-
-            Observers[notification.NotificationName] = notification;
+            Observers.TryRemove(notification.NotificationName, out notification);
         }
 
-        public static void UnSubscribe(INotification notification)
+        private static async Task NotifyAsync(INotification notification, NotificationModel model)
         {
-            Log.Trace("Unsubscribing Observer {0}", notification.NotificationName);
-            INotification notificationValue;
-            if (!Observers.TryGetValue(notification.NotificationName, out notificationValue))
+            try
             {
-                Log.Trace("Observer {0} doesn't exist to Unsubscribe", notification.NotificationName);
-                // Observer doesn't exists
-                return;
+                await notification.NotifyAsync(model).ConfigureAwait(false);
             }
-            Observers.Remove(notification.NotificationName);
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+            }
         }
     }
 }

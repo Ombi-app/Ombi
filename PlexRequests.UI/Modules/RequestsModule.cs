@@ -26,7 +26,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using Humanizer;
@@ -35,9 +34,9 @@ using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
-using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
@@ -47,11 +46,12 @@ namespace PlexRequests.UI.Modules
     public class RequestsModule : BaseModule
     {
 
-        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex) : base("requests")
+        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
             PlexSettings = plex;
+            NotificationService = notify;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -67,6 +67,7 @@ namespace PlexRequests.UI.Modules
         }
 
         private IRequestService Service { get; }
+        private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
 

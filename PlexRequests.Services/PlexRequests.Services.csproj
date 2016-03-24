@@ -77,7 +77,8 @@
     <Compile Include="Interfaces\IAvailabilityChecker.cs" />
     <Compile Include="Interfaces\IConfigurationReader.cs" />
     <Compile Include="Interfaces\IIntervals.cs" />
-    <Compile Include="Notification\INotification.cs" />
+    <Compile Include="Interfaces\INotification.cs" />
+    <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />

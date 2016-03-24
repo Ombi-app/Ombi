@@ -27,11 +27,13 @@
 using System;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 
 using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 
 namespace PlexRequests.Services.Notification
 {
@@ -47,31 +49,35 @@ namespace PlexRequests.Services.Notification
         private EmailNotificationSettings Settings => GetConfiguration();
         public string NotificationName => "EmailMessageNotification";
 
-        public bool Notify(NotificationModel model)
+        public async Task NotifyAsync(NotificationModel model)
         {
             var configuration = GetConfiguration();
             if (!ValidateConfiguration(configuration))
             {
-                return false;
+                return;
             }
 
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    return EmailNewRequest(model);
+                    await EmailNewRequest(model);
+                    break;
                 case NotificationType.Issue:
-                    return EmailIssue(model);
+                    await EmailIssue(model);
+                    break;
                 case NotificationType.RequestAvailable:
-                    break;
+                    throw new NotImplementedException();
+
                 case NotificationType.RequestApproved:
-                    break;
+                    throw new NotImplementedException();
+
                 case NotificationType.AdminNote:
-                    break;
+                    throw new NotImplementedException();
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            return false;
+            
         }
 
         private EmailNotificationSettings GetConfiguration()
@@ -94,7 +100,7 @@ namespace PlexRequests.Services.Notification
             return true;
         }
 
-        private bool EmailNewRequest(NotificationModel model)
+        private async Task EmailNewRequest(NotificationModel model)
         {
             var message = new MailMessage
             {
@@ -111,22 +117,20 @@ namespace PlexRequests.Services.Notification
                 {
                     smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
                     smtp.EnableSsl = Settings.Ssl;
-                    smtp.Send(message);
-                    return true;
+                    await smtp.SendMailAsync(message).ConfigureAwait(false);
                 }
             }
             catch (SmtpException smtp)
             {
-                Log.Fatal(smtp);
+                Log.Error(smtp);
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
 
-        private bool EmailIssue(NotificationModel model)
+        private async Task EmailIssue(NotificationModel model)
         {
             var message = new MailMessage
             {
@@ -143,19 +147,17 @@ namespace PlexRequests.Services.Notification
                 {
                     smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
                     smtp.EnableSsl = Settings.Ssl;
-                    smtp.Send(message);
-                    return true;
+                    await smtp.SendMailAsync(message).ConfigureAwait(false);
                 }
             }
             catch (SmtpException smtp)
             {
-                Log.Fatal(smtp);
+                Log.Error(smtp);
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
     }
 }

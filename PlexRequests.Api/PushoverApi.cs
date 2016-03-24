@@ -25,7 +25,8 @@
 //  ************************************************************************/
 #endregion
 using System;
-using Nancy.Helpers;
+using System.Threading.Tasks;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Notifications;
 
@@ -35,7 +36,7 @@ namespace PlexRequests.Api
 {
     public class PushoverApi : IPushoverApi
     {
-        public PushoverResponse Push(string accessToken, string message, string userToken)
+        public async Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken)
         {
             var request = new RestRequest
             {
@@ -49,7 +50,7 @@ namespace PlexRequests.Api
 
 
             var api = new ApiRequest();
-            return api.ExecuteJson<PushoverResponse>(request, new Uri("https://api.pushover.net/1"));
+            return await Task.Run(() => api.ExecuteJson<PushoverResponse>(request, new Uri("https://api.pushover.net/1")));
         }
     }
 }

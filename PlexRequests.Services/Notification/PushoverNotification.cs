@@ -25,12 +25,14 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 
 namespace PlexRequests.Services.Notification
 {
@@ -47,21 +49,21 @@ namespace PlexRequests.Services.Notification
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushoverNotification";
-        public bool Notify(NotificationModel model)
+        public async Task NotifyAsync(NotificationModel model)
         {
             if (!ValidateConfiguration())
             {
-                return false;
+                return;
             }
 
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    return PushNewRequest(model);
- 
+                    await PushNewRequestAsync(model);
+                    break;
                 case NotificationType.Issue:
-                    return PushIssue(model);
-
+                    await PushIssueAsync(model);
+                    break;
                 case NotificationType.RequestAvailable:
                     break;
                 case NotificationType.RequestApproved:
@@ -71,8 +73,6 @@ namespace PlexRequests.Services.Notification
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return false;
-
         }
 
         private bool ValidateConfiguration()
@@ -93,40 +93,38 @@ namespace PlexRequests.Services.Notification
             return SettingsService.GetSettings();
         }
 
-        private bool PushNewRequest(NotificationModel model)
+        private async Task PushNewRequestAsync(NotificationModel model)
         {
             var message = $"Plex Requests: {model.Title} has been requested by user: {model.User}";
             try
             {
-                var result = PushoverApi.Push(Settings.AccessToken, message, Settings.UserToken);
-                if (result?.status == 1)
+                var result = await PushoverApi.PushAsync(Settings.AccessToken, message, Settings.UserToken);
+                if (result?.status != 1)
                 {
-                    return true;
+                    Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
                 }
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
 
-        private bool PushIssue(NotificationModel model)
+        private async Task PushIssueAsync(NotificationModel model)
         {
             var message = $"Plex Requests: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             try
             {
-                var result = PushoverApi.Push(Settings.AccessToken, message, Settings.UserToken);
-                if (result != null)
+                var result = await PushoverApi.PushAsync(Settings.AccessToken, message, Settings.UserToken);
+                if (result?.status != 1)
                 {
-                    return true;
+                    Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
                 }
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
     }
 }

@@ -25,12 +25,14 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 
 namespace PlexRequests.Services.Notification
 {
@@ -41,27 +43,27 @@ namespace PlexRequests.Services.Notification
             PushbulletApi = pushbulletApi;
             SettingsService = settings;
         }
-        private IPushbulletApi PushbulletApi { get;  }
+        private IPushbulletApi PushbulletApi { get; }
         private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
         private PushbulletNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushbulletNotification";
-        public bool Notify(NotificationModel model)
+        public async Task NotifyAsync(NotificationModel model)
         {
             if (!ValidateConfiguration())
             {
-                return false;
+                return;
             }
 
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    return PushNewRequest(model);
- 
+                    await PushNewRequestAsync(model);
+                    break;
                 case NotificationType.Issue:
-                    return PushIssue(model);
-
+                    await PushIssueAsync(model);
+                    break;
                 case NotificationType.RequestAvailable:
                     break;
                 case NotificationType.RequestApproved:
@@ -71,8 +73,6 @@ namespace PlexRequests.Services.Notification
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            return false;
-
         }
 
         private bool ValidateConfiguration()
@@ -93,42 +93,40 @@ namespace PlexRequests.Services.Notification
             return SettingsService.GetSettings();
         }
 
-        private bool PushNewRequest(NotificationModel model)
+        private async Task PushNewRequestAsync(NotificationModel model)
         {
             var message = $"{model.Title} has been requested by user: {model.User}";
             var pushTitle = $"Plex Requests: {model.Title} has been requested!";
             try
             {
-                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
-                if (result != null)
+                var result = await PushbulletApi.PushAsync(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                if (result == null)
                 {
-                    return true;
+                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
                 }
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
 
-        private bool PushIssue(NotificationModel model)
+        private async Task PushIssueAsync(NotificationModel model)
         {
             var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
             try
             {
-                var result = PushbulletApi.Push(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                var result = await PushbulletApi.PushAsync(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
                 if (result != null)
                 {
-                    return true;
+                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
                 }
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
+                Log.Error(e);
             }
-            return false;
         }
     }
 }

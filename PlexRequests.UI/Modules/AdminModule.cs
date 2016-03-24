@@ -26,7 +26,6 @@
 #endregion
 using System.Dynamic;
 using System.Linq;
-using System.Web.UI.WebControls;
 
 using MarkdownSharp;
 
@@ -44,6 +43,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -69,6 +69,7 @@ namespace PlexRequests.UI.Modules
         private IPushoverApi PushoverApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IRepository<LogEntity> LogsRepo { get; }
+        private INotificationService NotificationService { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> rpService,
@@ -85,7 +86,8 @@ namespace PlexRequests.UI.Modules
             ICouchPotatoApi cpApi,
             ISettingsService<PushoverNotificationSettings> pushoverSettings,
             IPushoverApi pushoverApi,
-            IRepository<LogEntity> logsRepo) : base("admin")
+            IRepository<LogEntity> logsRepo,
+            INotificationService notify) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -102,6 +104,7 @@ namespace PlexRequests.UI.Modules
             LogsRepo = logsRepo;
             PushoverService = pushoverSettings;
             PushoverApi = pushoverApi;
+            NotificationService = notify;
 
 #if !DEBUG
             this.RequiresAuthentication();

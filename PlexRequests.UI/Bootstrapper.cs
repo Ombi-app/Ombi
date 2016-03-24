@@ -96,6 +96,9 @@ namespace PlexRequests.UI
             container.Register<ISonarrApi, SonarrApi>();
             container.Register<IPlexApi, PlexApi>();
 
+            // NotificationService
+            container.Register<INotificationService, NotificationService>().AsSingleton();
+
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
         }
@@ -130,25 +133,27 @@ namespace PlexRequests.UI
 
         private void SubscribeAllObservers(TinyIoCContainer container)
         {
+            var notificationService = container.Resolve<INotificationService>();
+
             var emailSettingsService = container.Resolve<ISettingsService<EmailNotificationSettings>>();
             var emailSettings = emailSettingsService.GetSettings();
             if (emailSettings.Enabled)
             {
-                NotificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
+                notificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
             }
 
             var pushbulletService = container.Resolve<ISettingsService<PushbulletNotificationSettings>>();
             var pushbulletSettings = pushbulletService.GetSettings();
             if (pushbulletSettings.Enabled)
             {
-                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), pushbulletService));
+                notificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), pushbulletService));
             }
 
             var pushoverService = container.Resolve<ISettingsService<PushoverNotificationSettings>>();
             var pushoverSettings = pushoverService.GetSettings();
             if (pushoverSettings.Enabled)
             {
-                NotificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
+                notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
             }
         }
     }

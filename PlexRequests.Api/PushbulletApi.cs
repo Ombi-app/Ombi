@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Notifications;
@@ -35,7 +36,7 @@ namespace PlexRequests.Api
 {
     public class PushbulletApi : IPushbulletApi
     {
-        public PushbulletResponse Push(string accessToken, string title, string message, string deviceIdentifier = default(string))
+        public async Task<PushbulletResponse> PushAsync(string accessToken, string title, string message, string deviceIdentifier = default(string))
         {
             var request = new RestRequest
             {
@@ -56,7 +57,7 @@ namespace PlexRequests.Api
             request.AddJsonBody(push);
 
             var api = new ApiRequest();
-            return api.ExecuteJson<PushbulletResponse>(request, new Uri("https://api.pushbullet.com/v2/pushes"));
+            return await Task.Run(() => api.ExecuteJson<PushbulletResponse>(request, new Uri("https://api.pushbullet.com/v2/pushes")));
         }
     }
 }

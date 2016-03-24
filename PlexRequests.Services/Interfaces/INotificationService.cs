@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IPushoverApi.cs
+//    File: INotificationService.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,12 +26,15 @@
 #endregion
 using System.Threading.Tasks;
 
-using PlexRequests.Api.Models.Notifications;
+using PlexRequests.Services.Notification;
 
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Services.Interfaces
 {
-    public interface IPushoverApi
+    public interface INotificationService
     {
-        Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken);
+        Task Publish(NotificationModel model);
+        void Subscribe(INotification notification);
+        void UnSubscribe(INotification notification);
+
     }
 }

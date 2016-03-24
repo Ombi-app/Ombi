@@ -53,7 +53,8 @@ namespace PlexRequests.UI.Modules
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi) : base("search")
+            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
+            INotificationService notify) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -67,6 +68,7 @@ namespace PlexRequests.UI.Modules
             CouchPotatoApi = cpApi;
             SickRageService = sickRageService;
             SickrageApi = srApi;
+            NotificationService = notify;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -80,6 +82,7 @@ namespace PlexRequests.UI.Modules
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
         }
         private TheMovieDbApi MovieApi { get; }
+        private INotificationService NotificationService { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
         private TheTvDbApi TvApi { get; }
