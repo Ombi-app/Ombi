@@ -28,6 +28,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
@@ -48,13 +49,11 @@ namespace PlexRequests.Api
         private ApiRequest Api { get; }
 
 
-        public SickRageTvAdd AddSeries(int tvdbId, bool latest, int[] seasons, string quality, string apiKey,
+        public SickRageTvAdd AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey,
             Uri baseUrl)
         {
-            string status;
-            var futureStatus = SickRageStatus.Wanted;
-
-            status = latest || seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+            var futureStatus = seasons.Length > 0 && !seasons.Any(x => x == seasonCount) ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+            var status = seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
 
             var request = new RestRequest
             {
@@ -72,7 +71,7 @@ namespace PlexRequests.Api
 
             var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 
-            if (!latest && seasons.Length > 0 && obj.result != "failure")
+            if (seasons.Length > 0 && obj.result != "failure")
             {
                 //handle the seasons requested
                 foreach (int s in seasons)

@@ -26,7 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using NLog;
 
 using PlexRequests.Api.Models.Tv;
@@ -79,7 +79,25 @@ namespace PlexRequests.Api
             request.AddUrlSegment("id", theTvDbId.ToString());
             request.AddHeader("Content-Type", "application/json");
 
-            return Api.Execute<TvMazeShow>(request, new Uri(Uri));
+            var obj = Api.Execute<TvMazeShow>(request, new Uri(Uri));
+            obj.seasonCount = GetSeasonCount(obj.id);
+
+            return obj;
+        }
+
+        public int GetSeasonCount(int id)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "shows/{id}/seasons"
+            };
+            request.AddUrlSegment("id", id.ToString());
+            request.AddHeader("Content-Type", "application/json");
+
+            var obj = Api.Execute<List<TvMazeSeasons>>(request, new Uri(Uri));
+            var seasons = obj.Select(x => x.number > 0);
+            return seasons.Count();
         }
 
     }

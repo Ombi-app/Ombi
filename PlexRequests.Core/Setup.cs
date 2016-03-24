@@ -110,7 +110,6 @@ namespace PlexRequests.Core
                     Available = r.Available,
                     ImdbId = show.externals.imdb,
                     Issues = r.Issues,
-                    LatestTv = r.LatestTv,
                     OtherMessage = r.OtherMessage,
                     Overview = show.summary.RemoveHtml(),
                     RequestedBy = r.RequestedBy,

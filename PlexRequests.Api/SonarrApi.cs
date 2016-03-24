@@ -26,7 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
@@ -54,7 +54,7 @@ namespace PlexRequests.Api
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes, int[] seasons, string apiKey, Uri baseUrl)
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl)
         {
 
             var request = new RestRequest
@@ -64,27 +64,28 @@ namespace PlexRequests.Api
             };
 
             var options = new SonarrAddSeries();
-            if (seasons.Length == 0)
-            {
-                if (episodes)
-                {
-                    options.addOptions = new AddOptions
-                    {
-                        ignoreEpisodesWithFiles = true,
-                        ignoreEpisodesWithoutFiles = true,
-                        searchForMissingEpisodes = false
-                    };
-                }
-                else
-                {
-                    options.addOptions = new AddOptions
-                    {
-                        ignoreEpisodesWithFiles = false,
-                        searchForMissingEpisodes = true,
-                        ignoreEpisodesWithoutFiles = false
-                    };
-                }
-            }
+            
+
+            //I'm fairly certain we won't need this logic anymore since we're manually adding the seasons
+            //if (seasons.Length == 0)
+            //{
+            //    options.addOptions = new AddOptions
+            //    {
+            //        ignoreEpisodesWithFiles = true,
+            //        ignoreEpisodesWithoutFiles = true,
+            //        searchForMissingEpisodes = false
+            //    };
+            //}
+            //else
+            //{
+            //    options.addOptions = new AddOptions
+            //    {
+            //        ignoreEpisodesWithFiles = false,
+            //        ignoreEpisodesWithoutFiles = false,
+            //        searchForMissingEpisodes = true
+            //    };
+            //}
+            
             options.seasonFolder = seasonFolders;
             options.title = title;
             options.qualityProfileId = qualityId;
@@ -93,19 +94,15 @@ namespace PlexRequests.Api
             options.seasons = new List<Season>();
             options.rootFolderPath = rootPath;
 
-            if (seasons.Length > 0)
+            for (var i = 1; i <= seasonCount; i++)
             {
-                foreach (int s in seasons)
+                var season = new Season
                 {
-                    var season = new Season
-                    {
-                        seasonNumber = s,
-                        monitored = true
-                    };
-                    options.seasons.Add(season);
-                }
+                    seasonNumber = i,
+                    monitored = seasons.Length == 0 || seasons.Any(x => x == i)
+                };
+                options.seasons.Add(season);
             }
-
 
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);

@@ -285,7 +285,6 @@ namespace PlexRequests.UI.Modules
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
-            var latest = seasons == "latest";
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -299,14 +298,20 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                LatestTv = latest,
-                ImdbId = showInfo.externals?.imdb ?? string.Empty
+                ImdbId = showInfo.externals?.imdb ?? string.Empty, 
+                SeasonCount = showInfo.seasonCount
             };
             var seasonsList = new List<int>();
-            if (seasons == "first")
+            switch (seasons)
             {
-                seasonsList.Add(1);
+                case "first":
+                    seasonsList.Add(1);
+                    break;
+                case "latest":
+                    seasonsList.Add(model.SeasonCount);
+                    break;
             }
+            
             model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
@@ -360,23 +365,23 @@ namespace PlexRequests.UI.Modules
             return result;
         }
 
-        private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
-        {
-            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, model.SeasonList, sickRageSettings.QualityProfile,
-                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
+        //private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
+        //{
+        //    var result = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, sickRageSettings.QualityProfile,
+        //                   sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
-            Log.Trace("SickRage Result: ");
-            Log.Trace(result.DumpJson());
+        //    Log.Trace("SickRage Result: ");
+        //    Log.Trace(result.DumpJson());
 
-            if (result?.result == "success")
-            {
-                model.Approved = true;
-                Log.Debug("Adding tv to database requests (No approval required & SickRage)");
-                RequestService.AddRequest(model);
+        //    if (result?.result == "success")
+        //    {
+        //        model.Approved = true;
+        //        Log.Debug("Adding tv to database requests (No approval required & SickRage)");
+        //        RequestService.AddRequest(model);
 
-                return Response.AsJson(new JsonResponseModel { Result = true });
-            }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to SickRage! Please check your settings." });
-        }
+        //        return Response.AsJson(new JsonResponseModel { Result = true });
+        //    }
+        //    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to SickRage! Please check your settings." });
+        //}
     }
 }

@@ -54,7 +54,7 @@ namespace PlexRequests.UI.Helpers
             int qualityProfile;
             int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.LatestTv, model.SeasonList, sonarrSettings.ApiKey,
+                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
 
             Log.Trace("Sonarr Add Result: ");
@@ -65,7 +65,7 @@ namespace PlexRequests.UI.Helpers
 
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
         {
-            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, model.SeasonList, sickRageSettings.QualityProfile,
+            var result = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, sickRageSettings.QualityProfile,
                            sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
             Log.Trace("SickRage Add Result: ");
