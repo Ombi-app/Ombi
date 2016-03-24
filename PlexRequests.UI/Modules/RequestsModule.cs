@@ -129,7 +129,8 @@ namespace PlexRequests.UI.Modules
                 Admin = isAdmin,
                 Issues = tv.Issues.Humanize(LetterCasing.Title),
                 OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote
+                AdminNotes = tv.AdminNote,
+                TvSeriesRequestType = tv.SeasonsRequested
             }).ToList();
 
             return Response.AsJson(viewModel);

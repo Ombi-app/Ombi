@@ -261,7 +261,7 @@ namespace PlexRequests.UI.Modules
         /// Requests the tv show.
         /// </summary>
         /// <param name="showId">The show identifier.</param>
-        /// <param name="latest">if set to <c>true</c> [latest].</param>
+        /// <param name="seasons">The seasons.</param>
         /// <returns></returns>
         private Response RequestTvShow(int showId, string seasons)
         {
@@ -310,9 +310,14 @@ namespace PlexRequests.UI.Modules
             {
                 case "first":
                     seasonsList.Add(1);
+                    model.SeasonsRequested = "First";
                     break;
                 case "latest":
                     seasonsList.Add(model.SeasonCount);
+                    model.SeasonsRequested = "Latest";
+                    break;
+                default:
+                    model.SeasonsRequested = "All";
                     break;
             }
             
@@ -370,24 +375,5 @@ namespace PlexRequests.UI.Modules
             var result = Checker.IsAvailable(title, year);
             return result;
         }
-
-        //private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
-        //{
-        //    var result = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, sickRageSettings.QualityProfile,
-        //                   sickRageSettings.ApiKey, sickRageSettings.FullUri);
-
-        //    Log.Trace("SickRage Result: ");
-        //    Log.Trace(result.DumpJson());
-
-        //    if (result?.result == "success")
-        //    {
-        //        model.Approved = true;
-        //        Log.Debug("Adding tv to database requests (No approval required & SickRage)");
-        //        RequestService.AddRequest(model);
-
-        //        return Response.AsJson(new JsonResponseModel { Result = true });
-        //    }
-        //    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to SickRage! Please check your settings." });
-        //}
     }
 }

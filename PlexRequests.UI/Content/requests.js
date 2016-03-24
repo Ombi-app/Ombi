@@ -362,7 +362,8 @@ function buildRequestContext(result, type) {
         otherMessage: result.otherMessage,
         requestId: result.id,
         adminNote: result.adminNotes,
-        imdb: result.imdbId
+        imdb: result.imdbId,
+        seriesRequested: result.tvSeriesRequestType
     };
 
     return context;

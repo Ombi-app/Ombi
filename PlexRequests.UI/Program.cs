@@ -25,8 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Data;
-
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
@@ -34,9 +32,6 @@ using Mono.Unix;
 using Mono.Unix.Native;
 
 using NLog;
-using NLog.Config;
-using NLog.Targets;
-
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;

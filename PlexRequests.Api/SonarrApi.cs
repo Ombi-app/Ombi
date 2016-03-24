@@ -63,36 +63,17 @@ namespace PlexRequests.Api
                 Method = Method.POST
             };
 
-            var options = new SonarrAddSeries();
-            
+            var options = new SonarrAddSeries
+            {
+                seasonFolder = seasonFolders,
+                title = title,
+                qualityProfileId = qualityId,
+                tvdbId = tvdbId,
+                titleSlug = title,
+                seasons = new List<Season>(),
+                rootFolderPath = rootPath
+            };
 
-            //I'm fairly certain we won't need this logic anymore since we're manually adding the seasons
-            //if (seasons.Length == 0)
-            //{
-            //    options.addOptions = new AddOptions
-            //    {
-            //        ignoreEpisodesWithFiles = true,
-            //        ignoreEpisodesWithoutFiles = true,
-            //        searchForMissingEpisodes = false
-            //    };
-            //}
-            //else
-            //{
-            //    options.addOptions = new AddOptions
-            //    {
-            //        ignoreEpisodesWithFiles = false,
-            //        ignoreEpisodesWithoutFiles = false,
-            //        searchForMissingEpisodes = true
-            //    };
-            //}
-            
-            options.seasonFolder = seasonFolders;
-            options.title = title;
-            options.qualityProfileId = qualityId;
-            options.tvdbId = tvdbId;
-            options.titleSlug = title;
-            options.seasons = new List<Season>();
-            options.rootFolderPath = rootPath;
 
             for (var i = 1; i <= seasonCount; i++)
             {

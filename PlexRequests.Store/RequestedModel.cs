@@ -26,6 +26,7 @@ namespace PlexRequests.Store
         public string AdminNote { get; set; }
         public int[] SeasonList { get; set; }
         public int SeasonCount { get; set; }
+        public string SeasonsRequested { get; set; }
     }
 
     public enum RequestType

@@ -115,6 +115,13 @@ namespace PlexRequests.UI.Modules
             var oldPass = Request.Form.OldPassword;
             var newPassword = Request.Form.NewPassword;
             var newPasswordAgain = Request.Form.NewPasswordAgain;
+
+            if (string.IsNullOrEmpty(oldPass) || string.IsNullOrEmpty(newPassword) ||
+                string.IsNullOrEmpty(newPasswordAgain))
+            {
+                return Response.AsJson(new JsonResponseModel { Message = "Please fill in all fields", Result = false });
+            }
+
             if (!newPassword.Equals(newPasswordAgain))
             {
                 return Response.AsJson(new JsonResponseModel { Message = "The passwords do not match", Result = false });

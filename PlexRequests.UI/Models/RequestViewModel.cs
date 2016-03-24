@@ -48,5 +48,6 @@ namespace PlexRequests.UI.Models
         public string Issues { get; set; }
         public string OtherMessage { get; set; }
         public string AdminNotes { get; set; }
+        public string TvSeriesRequestType { get; set; }
     }
 }

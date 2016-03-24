@@ -119,6 +119,9 @@
                     <i id="availableIcon{{requestId}}" class="fa fa-check"></i>
                     {{/if_eq}}
                 </div>
+                {{#if_eq type "tv"}}
+                <div>Series Requested: {{seriesRequested}}</div>
+                {{/if_eq}}
                 <div>Requested By: {{requestedBy}}</div>
                 <div>Requested Date: {{requestedDate}}</div>
                 <div id="issueArea{{requestId}}">
