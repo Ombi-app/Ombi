@@ -214,7 +214,7 @@ $(document).on("click", ".approve", function (e) {
     var buttonId = e.target.id;
     var $form = $('#approve' + buttonId);
 
-    if ($('#' + buttonId).text === "Loading...") {
+    if ($('#' + buttonId).text() === "Loading...") {
         return;
     }
 
