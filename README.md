@@ -33,7 +33,7 @@ Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 
 #Configuration
 
-To configure PlexRequests you need to register an admin user by clicking on Admin (top right) and press the Register link.
+To configure PlexRequests you need to register an admin user by clicking on Admin (top left) and press the Register link.
 You will then have a admin menu option once registered where you can setup Sonarr, Couchpotato and any other settings.
 
 Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
