@@ -60,7 +60,7 @@ $(document).on("click", ".dropdownTv", function (e) {
 $(document).on("click", ".requestMovie", function (e) {
     var buttonId = e.target.id;
     $("#" + buttonId).prop("disabled", true);
-
+    loadingButton(buttonId, "primary");
     e.preventDefault();
 
     var $form = $('#form' + buttonId);

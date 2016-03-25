@@ -214,6 +214,12 @@ $(document).on("click", ".approve", function (e) {
     var buttonId = e.target.id;
     var $form = $('#approve' + buttonId);
 
+    if ($('#' + buttonId).text === "Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
     $.ajax({
         type: $form.prop('method'),
         url: $form.prop('action'),

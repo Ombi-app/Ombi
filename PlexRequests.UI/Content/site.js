@@ -23,3 +23,15 @@ function checkJsonResponse(response) {
         return false;
     }
 }
+
+function loadingButton(elementId, originalCss) {
+    $('#' + elementId).removeClass("btn-" + originalCss + "-outline");
+    $('#' + elementId).addClass("btn-primary-outline");
+    $('#' + elementId).html("<i class='fa fa-spinner fa-spin'></i> Loading...");
+}
+
+function finishLoading(elementId, originalCss, html) {
+    $('#' + elementId).removeClass("btn-primary-outline");
+    $('#' + elementId).addClass("btn-" + originalCss + "-outline");
+    $('#' + elementId).html(html);
+}

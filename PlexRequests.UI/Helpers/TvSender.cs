@@ -71,7 +71,7 @@ namespace PlexRequests.UI.Helpers
             Log.Trace("SickRage Add Result: ");
             Log.Trace(result.DumpJson());
 
-            return result;
+            return result.Result;
         }
     }
 }
