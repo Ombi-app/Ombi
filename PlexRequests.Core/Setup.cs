@@ -62,7 +62,8 @@ namespace PlexRequests.Core
         {
             var defaultSettings = new PlexRequestSettings
             {
-                RequireApproval = true,
+                RequireTvShowApproval = true,
+                RequireMovieApproval = true,
                 SearchForMovies = true,
                 SearchForTvShows = true,
                 WeeklyRequestLimit = 0
