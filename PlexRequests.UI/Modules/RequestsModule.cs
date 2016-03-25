@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
+using System;
 using System.Linq;
 
 using Humanizer;
@@ -34,9 +34,10 @@ using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
-using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
@@ -45,11 +46,12 @@ namespace PlexRequests.UI.Modules
     public class RequestsModule : BaseModule
     {
 
-        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex) : base("requests")
+        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
             PlexSettings = plex;
+            NotificationService = notify;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -65,6 +67,7 @@ namespace PlexRequests.UI.Modules
         }
 
         private IRequestService Service { get; }
+        private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
 
@@ -126,7 +129,8 @@ namespace PlexRequests.UI.Modules
                 Admin = isAdmin,
                 Issues = tv.Issues.Humanize(LetterCasing.Title),
                 OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote
+                AdminNotes = tv.AdminNote,
+                TvSeriesRequestType = tv.SeasonsRequested
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -166,6 +170,17 @@ namespace PlexRequests.UI.Modules
 
 
             var result = Service.UpdateRequest(originalRequest);
+
+            var model = new NotificationModel
+            {
+                User = Session[SessionKeys.UsernameKey].ToString(),
+                NotificationType = NotificationType.Issue,
+                Title = originalRequest.Title,
+                DateTime = DateTime.Now,
+                Body = issue == IssueState.Other ? comment : issue.Humanize()
+            };
+            NotificationService.Publish(model);
+
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });

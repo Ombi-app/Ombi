@@ -75,7 +75,7 @@ namespace PlexRequests.Core
         {
             var result = new List<long>();
             RequestedModel[] requestedModels;
-            var repo = new GenericRepository<RequestedModel>(Db);
+            var repo = new GenericRepository<RequestedModel>(Db, new MemoryCacheProvider());
             try
             {
                 var records = repo.GetAll();
@@ -110,7 +110,6 @@ namespace PlexRequests.Core
                     Available = r.Available,
                     ImdbId = show.externals.imdb,
                     Issues = r.Issues,
-                    LatestTv = r.LatestTv,
                     OtherMessage = r.OtherMessage,
                     Overview = show.summary.RemoveHtml(),
                     RequestedBy = r.RequestedBy,

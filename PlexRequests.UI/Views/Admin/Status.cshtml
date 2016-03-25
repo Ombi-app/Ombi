@@ -14,7 +14,7 @@
             <label class="control-label">Update Available: </label>
             @if (Model.UpdateAvailable)
             {
-                <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i> Click Here!</a></label>
+                <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
             }
             else
             {
@@ -22,6 +22,16 @@
             }
 
         </div>
+
+        @if (Model.UpdateAvailable)
+        {
+            <h2>
+                <a href="@Model.DownloadUri">@Model.ReleaseTitle</a>
+            </h2>
+            <hr/>
+            <label>Release Notes:</label>
+            @Html.Raw(Model.ReleaseNotes)
+        }
 
 
     </fieldset>

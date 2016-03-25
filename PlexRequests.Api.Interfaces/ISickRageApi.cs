@@ -26,15 +26,18 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using PlexRequests.Api.Models.SickRage;
 
 namespace PlexRequests.Api.Interfaces
 {
     public interface ISickRageApi
     {
-        SickRageTvAdd AddSeries(int tvdbId, bool latest, string quality, string apiKey,
+        Task<SickRageTvAdd> AddSeries(int tvdbId, int seasoncount, int[] seasons, string quality, string apiKey,
             Uri baseUrl);
 
         SickRagePing Ping(string apiKey, Uri baseUrl);
+
+        Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl);
     }
 }

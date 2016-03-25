@@ -30,16 +30,18 @@ using System.Linq;
 
 using Dapper.Contrib.Extensions;
 
+using PlexRequests.Store.Repository;
+
 namespace PlexRequests.Store
 {
-    public class UserRepository<T> : IRepository<T> where T : UserModel
+    public class UserRepository<T> : IRepository<T> where T : UserEntity
     {
         public UserRepository(ISqliteConfiguration config)
         {
             Config = config;
         }
 
-        private ISqliteConfiguration Config { get; set; }
+        private ISqliteConfiguration Config { get; }
         public long Insert(T entity)
         {
             using (var cnn = Config.DbConnection())
@@ -65,7 +67,7 @@ namespace PlexRequests.Store
             {
                 db.Open();
                 var result = db.GetAll<T>();
-                var selected = result.FirstOrDefault(x => x.User == id);
+                var selected = result.FirstOrDefault(x => x.UserGuid == id);
                 return selected;
             }
         }

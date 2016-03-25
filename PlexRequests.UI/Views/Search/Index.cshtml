@@ -21,7 +21,7 @@
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
                 <div class="input-group">
-                    <input id="movieSearchContent" type="text" class="form-control">
+                    <input id="movieSearchContent" type="text" class="form-control form-control-custom">
                     <div class="input-group-addon">
                         <i id="movieSearchButton" class="fa fa-search"></i>
                     </div>
@@ -40,7 +40,7 @@
     <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
                 <div class="input-group">
-                    <input id="tvSearchContent" type="text" class="form-control">
+                    <input id="tvSearchContent" type="text" class="form-control form-control-custom">
                     <div class="input-group-addon">
                         <i id="tvSearchButton" class="fa fa-search"></i>
                     </div>
@@ -76,7 +76,7 @@
         </div>
         <div class="col-sm-5 ">
             <div>
-                <a href="https://www.themoviedb.org/{{type}}/{{id}}">
+                <a href="http://www.imdb.com/title/{{imdb}}/" targe="_blank">
                     <h4>{{title}} ({{year}})</h4>
                 </a>
             </div>
@@ -84,7 +84,7 @@
         </div>
         <div class="col-sm-2 col-sm-push-3">
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />                
                 {{#if_eq type "movie"}}
                 <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
                 {{/if_eq}}
@@ -96,7 +96,8 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
-                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">Latest Season</a></li>
+                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li> 
+                        <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
                     </ul>
                 </div>
                 {{/if_eq}}

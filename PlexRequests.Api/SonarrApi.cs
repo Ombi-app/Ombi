@@ -26,7 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
@@ -54,7 +54,7 @@ namespace PlexRequests.Api
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, bool episodes, string apiKey, Uri baseUrl)
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl)
         {
 
             var request = new RestRequest
@@ -63,33 +63,27 @@ namespace PlexRequests.Api
                 Method = Method.POST
             };
 
-            var options = new SonarrAddSeries();
-            if (episodes == true)
+            var options = new SonarrAddSeries
             {
-                options.addOptions = new AddOptions
-                {
-                    ignoreEpisodesWithFiles = true,
-                    ignoreEpisodesWithoutFiles = true,
-                    searchForMissingEpisodes = false
-                };
-            }
-            else
-            {
-                options.addOptions = new AddOptions
-                {
-                    ignoreEpisodesWithFiles = false,
-                    searchForMissingEpisodes = true,
-                    ignoreEpisodesWithoutFiles = false
-                };
-            }
-            options.seasonFolder = seasonFolders;
-            options.title = title;
-            options.qualityProfileId = qualityId;
-            options.tvdbId = tvdbId;
-            options.titleSlug = title;
-            options.seasons = new List<Season>();
-            options.rootFolderPath = rootPath;
+                seasonFolder = seasonFolders,
+                title = title,
+                qualityProfileId = qualityId,
+                tvdbId = tvdbId,
+                titleSlug = title,
+                seasons = new List<Season>(),
+                rootFolderPath = rootPath
+            };
 
+
+            for (var i = 1; i <= seasonCount; i++)
+            {
+                var season = new Season
+                {
+                    seasonNumber = i,
+                    monitored = seasons.Length == 0 || seasons.Any(x => x == i)
+                };
+                options.seasons.Add(season);
+            }
 
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);

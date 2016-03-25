@@ -25,12 +25,14 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 
 namespace PlexRequests.Services.Notification
 {
@@ -39,42 +41,92 @@ namespace PlexRequests.Services.Notification
         public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings)
         {
             PushbulletApi = pushbulletApi;
-            Settings = settings;
+            SettingsService = settings;
         }
-        private IPushbulletApi PushbulletApi { get;  }
-        private ISettingsService<PushbulletNotificationSettings> Settings { get; }
+        private IPushbulletApi PushbulletApi { get; }
+        private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
+        private PushbulletNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushbulletNotification";
-        public bool Notify(string title, string requester)
+        public async Task NotifyAsync(NotificationModel model)
         {
-            var settings = GetSettings();
+            if (!ValidateConfiguration())
+            {
+                return;
+            }
 
-            if (!settings.Enabled)
+            switch (model.NotificationType)
+            {
+                case NotificationType.NewRequest:
+                    await PushNewRequestAsync(model);
+                    break;
+                case NotificationType.Issue:
+                    await PushIssueAsync(model);
+                    break;
+                case NotificationType.RequestAvailable:
+                    break;
+                case NotificationType.RequestApproved:
+                    break;
+                case NotificationType.AdminNote:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private bool ValidateConfiguration()
+        {
+            if (!Settings.Enabled)
             {
                 return false;
             }
-
-            var message = $"{title} has been requested by {requester}";
-            var pushTitle = $"Plex Requests: {title}";
-            try
+            if (string.IsNullOrEmpty(Settings.AccessToken))
             {
-                var result = PushbulletApi.Push(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
-                if (result != null)
-                {
-                    return true;
-                }
+                return false;
             }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-            }
-            return false;
+            return true;
         }
 
         private PushbulletNotificationSettings GetSettings()
         {
-            return Settings.GetSettings();
+            return SettingsService.GetSettings();
+        }
+
+        private async Task PushNewRequestAsync(NotificationModel model)
+        {
+            var message = $"{model.Title} has been requested by user: {model.User}";
+            var pushTitle = $"Plex Requests: {model.Title} has been requested!";
+            try
+            {
+                var result = await PushbulletApi.PushAsync(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                if (result == null)
+                {
+                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+        private async Task PushIssueAsync(NotificationModel model)
+        {
+            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
+            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
+            try
+            {
+                var result = await PushbulletApi.PushAsync(Settings.AccessToken, pushTitle, message, Settings.DeviceIdentifier);
+                if (result != null)
+                {
+                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
         }
     }
 }

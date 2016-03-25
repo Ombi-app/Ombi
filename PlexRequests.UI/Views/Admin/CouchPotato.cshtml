@@ -14,7 +14,20 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>CouchPotato Settings</legend>
-
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.Enabled)
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                        }
+                    </label>
+                </div>
+            </div>
             <div class="form-group">
                 <label for="Ip" class="control-label">CouchPotato Hostname or IP</label>
                 <div class="">
@@ -51,6 +64,12 @@
                     </label>
                 </div>
             </div>
+            <div class="form-group">
+                <label for="SubDir" class="control-label">CouchPotato SubDirectory</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
+                </div>
+            </div>
 
 
             <div class="form-group">
@@ -61,7 +80,7 @@
             <div class="form-group">
                 <label for="select" class="control-label">Quality Profiles</label>
                 <div id="profiles">
-                    <select class="form-control" id="select"></select>
+                    <select class="form-control form-control-custom" id="select"></select>
                 </div>
             </div>
             <br/>

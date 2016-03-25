@@ -30,6 +30,8 @@ using System.Dynamic;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Extensions;
+using Nancy.Responses.Negotiation;
+using Nancy.Security;
 
 using PlexRequests.Core;
 using PlexRequests.UI.Models;
@@ -47,9 +49,9 @@ namespace PlexRequests.UI.Modules
                     model.Errored = Request.Query.error.HasValue;
                     var adminCreated = UserMapper.DoUsersExist();
                     model.AdminExists = adminCreated;
-                    return View["Login/Index", model];
+                    return View["Index", model];
                 }
-                
+
             };
 
             Get["/logout"] = x => this.LogoutAndRedirect("~/");
@@ -74,28 +76,64 @@ namespace PlexRequests.UI.Modules
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 
-            Get["/register"] = x => {
+            Get["/register"] = x =>
+            {
                 {
                     dynamic model = new ExpandoObject();
                     model.Errored = Request.Query.error.HasValue;
 
-                    return View["Login/Register", model];
+                    return View["Register", model];
                 }
-
             };
 
             Post["/register"] = x =>
             {
-                var username = (string) Request.Form.Username;
+                var username = (string)Request.Form.Username;
                 var exists = UserMapper.DoUsersExist();
                 if (exists)
                 {
-                    return Context.GetRedirect("~/register?error=true&username=" + username);
+                    return Context.GetRedirect("~/register?error=true");
                 }
-                var userId = UserMapper.CreateUser(username, Request.Form.Password);
+                var userId = UserMapper.CreateUser(username, Request.Form.Password, new[] { "Admin" });
                 Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect((Guid)userId);
             };
+
+            Get["/changepassword"] = _ => ChangePassword();
+            Post["/changepassword"] = _ => ChangePasswordPost();
+        }
+
+        private Negotiator ChangePassword()
+        {
+            this.RequiresAuthentication();
+            return View["ChangePassword"];
+        }
+
+        private Response ChangePasswordPost()
+        {
+            var username = Context.CurrentUser.UserName;
+            var oldPass = Request.Form.OldPassword;
+            var newPassword = Request.Form.NewPassword;
+            var newPasswordAgain = Request.Form.NewPasswordAgain;
+
+            if (string.IsNullOrEmpty(oldPass) || string.IsNullOrEmpty(newPassword) ||
+                string.IsNullOrEmpty(newPasswordAgain))
+            {
+                return Response.AsJson(new JsonResponseModel { Message = "Please fill in all fields", Result = false });
+            }
+
+            if (!newPassword.Equals(newPasswordAgain))
+            {
+                return Response.AsJson(new JsonResponseModel { Message = "The passwords do not match", Result = false });
+            }
+
+            var result = UserMapper.UpdatePassword(username, oldPass, newPassword);
+            if (result)
+            {
+                return Response.AsJson(new JsonResponseModel { Message = "Password has been changed!", Result = true });
+            }
+
+            return Response.AsJson(new JsonResponseModel { Message = "Could not update the password in the database", Result = false });
         }
     }
 }

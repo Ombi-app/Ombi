@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISettingsRepository.cs
+//    File: NotificationModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,47 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System;
 
-using PlexRequests.Store.Models;
-
-namespace PlexRequests.Store
+namespace PlexRequests.Services.Notification
 {
-    public interface ISettingsRepository
+    public class NotificationModel
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(GlobalSettings entity);
-
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<GlobalSettings> GetAll();
-
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="settingsName">Name of the settings.</param>
-        /// <returns></returns>
-        GlobalSettings Get(string settingsName);
-
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Delete(GlobalSettings entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(GlobalSettings entity);
-
-
+        public string Title { get; set; }
+        public string Body { get; set; }
+        public DateTime DateTime { get; set; }
+        public NotificationType NotificationType { get; set; }
+        public string User { get; set; }
     }
 }

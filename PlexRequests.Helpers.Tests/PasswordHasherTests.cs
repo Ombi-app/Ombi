@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISettingsRepository.cs
+//    File: AssemblyHelperTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,27 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System.Diagnostics;
 
-using PlexRequests.Store.Models;
+using NUnit.Framework;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Helpers.Tests
 {
-    public interface IRequestRepository
+    [TestFixture]
+    public class PasswordHasherTests
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(RequestBlobs entity);
+        [Test]
+        public void TestHash()
+        {
+            var password = "abcdef";
+            var salt = PasswordHasher.GenerateSalt();
+            var hash = PasswordHasher.ComputeHash(password, salt);
 
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<RequestBlobs> GetAll();
+            Assert.That(hash, Is.Not.EqualTo(password));
+            
+            var match = PasswordHasher.VerifyPassword(password, salt, hash);
 
-        RequestBlobs Get(int id);
-
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Delete(RequestBlobs entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(RequestBlobs entity);
-
-        bool UpdateAll(IEnumerable<RequestBlobs> entity);
+            Assert.That(match, Is.True);
+        }
     }
 }

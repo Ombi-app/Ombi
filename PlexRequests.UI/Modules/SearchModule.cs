@@ -39,6 +39,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -52,7 +53,8 @@ namespace PlexRequests.UI.Modules
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi) : base("search")
+            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
+            INotificationService notify) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -66,6 +68,7 @@ namespace PlexRequests.UI.Modules
             CouchPotatoApi = cpApi;
             SickRageService = sickRageService;
             SickrageApi = srApi;
+            NotificationService = notify;
 
             Get["/"] = parameters => RequestLoad();
 
@@ -76,9 +79,10 @@ namespace PlexRequests.UI.Modules
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
-            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (bool)Request.Form.latest);
+            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
         }
         private TheMovieDbApi MovieApi { get; }
+        private INotificationService NotificationService { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
         private TheTvDbApi TvApi { get; }
@@ -176,25 +180,22 @@ namespace PlexRequests.UI.Modules
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
-            var cpSettings = CpService.GetSettings();
-            if (cpSettings.ApiKey == null)
-            {
-                Log.Warn("CP apiKey is null");
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is not yet configured, If you are the Admin, please log in." });
-            }
-
-            Log.Trace("Settings: ");
-            Log.Trace(cpSettings.DumpJson);
 
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
-
             //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                }
+            }
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
             }
             //#endif
 
@@ -219,6 +220,11 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
             if (!settings.RequireApproval)
             {
+                var cpSettings = CpService.GetSettings();
+
+                Log.Trace("Settings: ");
+                Log.Trace(cpSettings.DumpJson);
+
                 Log.Info("Adding movie to CP (No approval required)");
                 var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettings.ProfileId);
                 Log.Debug("Adding movie to CP result {0}", result);
@@ -238,7 +244,8 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("Adding movie to database requests");
                 var id = RequestService.AddRequest(model);
 
-                NotificationService.Publish(model.Title, model.RequestedBy);
+                var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                NotificationService.Publish(notificationModel);
 
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
@@ -254,9 +261,9 @@ namespace PlexRequests.UI.Modules
         /// Requests the tv show.
         /// </summary>
         /// <param name="showId">The show identifier.</param>
-        /// <param name="latest">if set to <c>true</c> [latest].</param>
+        /// <param name="seasons">The seasons.</param>
         /// <returns></returns>
-        private Response RequestTvShow(int showId, bool latest)
+        private Response RequestTvShow(int showId, string seasons)
         {
             if (RequestService.CheckRequest(showId))
             {
@@ -266,17 +273,22 @@ namespace PlexRequests.UI.Modules
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
-
             //#if !DEBUG
-            if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                }
+            }
+            catch (ApplicationSettingsException)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
             }
             //#endif
 
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
-
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -290,9 +302,26 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                LatestTv = latest
+                ImdbId = showInfo.externals?.imdb ?? string.Empty, 
+                SeasonCount = showInfo.seasonCount
             };
-
+            var seasonsList = new List<int>();
+            switch (seasons)
+            {
+                case "first":
+                    seasonsList.Add(1);
+                    model.SeasonsRequested = "First";
+                    break;
+                case "latest":
+                    seasonsList.Add(model.SeasonCount);
+                    model.SeasonsRequested = "Latest";
+                    break;
+                default:
+                    model.SeasonsRequested = "All";
+                    break;
+            }
+            
+            model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
             if (!settings.RequireApproval)
@@ -334,7 +363,9 @@ namespace PlexRequests.UI.Modules
             }
 
             RequestService.AddRequest(model);
-            NotificationService.Publish(model.Title, model.RequestedBy);
+
+            var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+            NotificationService.Publish(notificationModel);
 
             return Response.AsJson(new { Result = true });
         }
@@ -343,25 +374,6 @@ namespace PlexRequests.UI.Modules
         {
             var result = Checker.IsAvailable(title, year);
             return result;
-        }
-
-        private Response SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
-        {
-            var result = SickrageApi.AddSeries(model.ProviderId, model.LatestTv, sickRageSettings.QualityProfile,
-                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
-
-            Log.Trace("SickRage Result: ");
-            Log.Trace(result.DumpJson());
-
-            if (result?.result == "success")
-            {
-                model.Approved = true;
-                Log.Debug("Adding tv to database requests (No approval required & SickRage)");
-                RequestService.AddRequest(model);
-
-                return Response.AsJson(new JsonResponseModel { Result = true });
-            }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to SickRage! Please check your settings." });
         }
     }
 }

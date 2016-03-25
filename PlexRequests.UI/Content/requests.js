@@ -13,6 +13,47 @@ var tvimer = 0;
 movieLoad();
 tvLoad();
 
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr('href');
+    var activeState = "";
+    if (target === "#TvShowTab") {
+        if ($('#movieList').mixItUp('isLoaded')) {
+            activeState = $('#movieList').mixItUp('getState');
+            $('#movieList').mixItUp('destroy');
+        }
+        if (!$('#tvList').mixItUp('isLoaded')) {
+            $('#tvList').mixItUp({
+                load: {
+                    filter: activeState.activeFilter || 'all',
+                    sort: activeState.activeSort || 'default:asc'
+                },
+                layout: {
+                display: 'block'
+            }
+
+            });
+        }
+    }
+    if (target === "#MoviesTab") {
+        if ($('#tvList').mixItUp('isLoaded')) {
+            activeState = $('#tvList').mixItUp('getState');
+            $('#tvList').mixItUp('destroy');
+        }
+        if (!$('#movieList').mixItUp('isLoaded')) {
+            $('#movieList').mixItUp({
+                load: {
+                    filter: activeState.activeFilter || 'all',
+                    sort: activeState.activeSort || 'default:asc'
+                },
+                layout: {
+                    display: 'block'
+                }
+            });
+        }
+    }
+});
+
 // Approve all
 $('#approveAll').click(function () {
     $.ajax({
@@ -97,7 +138,7 @@ $(".theNoteSaveButton").click(function (e) {
 
     var $form = $("#noteForm");
     var data = $form.serialize();
-    
+
 
     $.ajax({
         type: $form.prop("method"),
@@ -173,6 +214,12 @@ $(document).on("click", ".approve", function (e) {
     var buttonId = e.target.id;
     var $form = $('#approve' + buttonId);
 
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
     $.ajax({
         type: $form.prop('method'),
         url: $form.prop('action'),
@@ -181,7 +228,11 @@ $(document).on("click", ".approve", function (e) {
         success: function (response) {
 
             if (checkJsonResponse(response)) {
-                generateNotify("Success! Request Approved.", "success");
+                if (response.message) {
+                    generateNotify(response.message, "success");
+                } else {
+                    generateNotify("Success! Request Approved.", "success");
+                }
 
                 $("button[custom-button='" + buttonId + "']").remove();
                 $("#" + buttonId + "notapproved").prop("class", "fa fa-check");
@@ -210,7 +261,7 @@ $(document).on("click", ".clear", function (e) {
 
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea'+buttonId).html("<div>Issue: None</div>");
+                $('#issueArea' + buttonId).html("<div>Issue: None</div>");
             }
         },
         error: function (e) {
@@ -241,7 +292,7 @@ $(document).on("click", ".change", function (e) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! Availibility changed.", "info");
                 var button = $("button[custom-availibility='" + buttonId + "']");
-                var icon = $('#availableIcon'+buttonId);
+                var icon = $('#availableIcon' + buttonId);
 
                 if (response.available) {
                     button.text("Mark Unavailable");
@@ -273,6 +324,14 @@ function movieLoad() {
 
             var html = searchTemplate(context);
             $("#movieList").append(html);
+        });
+        $('#movieList').mixItUp({
+            layout: {
+                display: 'block'
+            },
+            load: {
+                filter: 'all'
+            }
         });
     });
 };
@@ -308,8 +367,22 @@ function buildRequestContext(result, type) {
         issues: result.issues,
         otherMessage: result.otherMessage,
         requestId: result.id,
-        adminNote: result.adminNotes
+        adminNote: result.adminNotes,
+        imdb: result.imdbId,
+        seriesRequested: result.tvSeriesRequestType
     };
 
     return context;
+}
+
+function startFilter(elementId) {
+    $('#'+element).mixItUp({
+        load: {
+            filter: activeState.activeFilter || 'all',
+            sort: activeState.activeSort || 'default:asc'
+        },
+        layout: {
+            display: 'block'
+        }
+    });
 }

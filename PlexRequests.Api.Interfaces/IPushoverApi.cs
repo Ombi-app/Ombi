@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: IPushoverApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Dapper.Contrib.Extensions;
+using System.Threading.Tasks;
 
-namespace PlexRequests.Store
+using PlexRequests.Api.Models.Notifications;
+
+namespace PlexRequests.Api.Interfaces
 {
-    [Table("User")]
-    public class UserModel : Entity
+    public interface IPushoverApi
     {
-        public string User { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
+        Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken);
     }
 }

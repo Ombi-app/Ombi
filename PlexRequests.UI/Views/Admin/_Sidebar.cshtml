@@ -71,6 +71,15 @@
             <a class="list-group-item" href="/admin/pushbulletnotification">Pushbullet Notifications</a>
         }
 
+        @if (Context.Request.Path == "/admin/pushovernotification")
+        {
+            <a class="list-group-item active" href="/admin/pushovernotification">Pushover Notifications</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/pushovernotification">Pushover Notifications</a>
+        }
+
         @if (Context.Request.Path == "/admin/status")
         {
             <a class="list-group-item active" href="/admin/status">Status</a>

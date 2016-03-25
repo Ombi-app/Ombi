@@ -47,6 +47,7 @@ using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Jobs;
 using TaskFactory = FluentScheduler.TaskFactory;
@@ -74,9 +75,11 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
+            container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
 
             // Repo's
             container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
+            container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
 
@@ -88,9 +91,13 @@ namespace PlexRequests.UI
             // Api's
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();
+            container.Register<IPushoverApi, PushoverApi>();
             container.Register<ISickRageApi, SickrageApi>();
             container.Register<ISonarrApi, SonarrApi>();
             container.Register<IPlexApi, PlexApi>();
+
+            // NotificationService
+            container.Register<INotificationService, NotificationService>().AsSingleton();
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
@@ -126,18 +133,27 @@ namespace PlexRequests.UI
 
         private void SubscribeAllObservers(TinyIoCContainer container)
         {
+            var notificationService = container.Resolve<INotificationService>();
+
             var emailSettingsService = container.Resolve<ISettingsService<EmailNotificationSettings>>();
             var emailSettings = emailSettingsService.GetSettings();
             if (emailSettings.Enabled)
             {
-                NotificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
+                notificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
             }
 
             var pushbulletService = container.Resolve<ISettingsService<PushbulletNotificationSettings>>();
             var pushbulletSettings = pushbulletService.GetSettings();
             if (pushbulletSettings.Enabled)
             {
-                NotificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), container.Resolve<ISettingsService<PushbulletNotificationSettings>>()));
+                notificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), pushbulletService));
+            }
+
+            var pushoverService = container.Resolve<ISettingsService<PushoverNotificationSettings>>();
+            var pushoverSettings = pushoverService.GetSettings();
+            if (pushoverSettings.Enabled)
+            {
+                notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
             }
         }
     }

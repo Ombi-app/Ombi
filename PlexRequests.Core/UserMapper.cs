@@ -25,12 +25,16 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security;
 
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
 
+using PlexRequests.Core.Models;
+using PlexRequests.Helpers;
 using PlexRequests.Store;
 
 namespace PlexRequests.Core
@@ -44,7 +48,7 @@ namespace PlexRequests.Core
         private static ISqliteConfiguration Db { get; set; }
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context)
         {
-           var repo = new UserRepository<UserModel>(Db);
+            var repo = new UserRepository<UsersModel>(Db);
 
             var user = repo.Get(identifier.ToString());
 
@@ -56,40 +60,85 @@ namespace PlexRequests.Core
             return new UserIdentity
             {
                 UserName = user.UserName,
+                Claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims)
             };
         }
 
         public static Guid? ValidateUser(string username, string password)
         {
-            var repo = new UserRepository<UserModel>(Db);
+            var repo = new UserRepository<UsersModel>(Db);
             var users = repo.GetAll();
-            var userRecord = users.FirstOrDefault(u => u.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase) && u.Password.Equals(password)); // TODO hashing
 
-            if (userRecord == null)
+            foreach (var u in users)
             {
-                return null;
+                if (username == u.UserName)
+                {
+                    var passwordMatch = PasswordHasher.VerifyPassword(password, u.Salt, u.Hash);
+                    if (passwordMatch)
+                    {
+                        return new Guid(u.UserGuid);
+                    }
+                }
             }
-
-            return new Guid(userRecord.User);
+            return null;
         }
 
         public static bool DoUsersExist()
         {
-            var repo = new UserRepository<UserModel>(Db);
+            var repo = new UserRepository<UsersModel>(Db);
             var users = repo.GetAll();
+
             return users.Any();
         }
 
-        public static Guid? CreateUser(string username, string password)
+        public static Guid? CreateUser(string username, string password, string[] claims = default(string[]))
         {
-            var repo = new UserRepository<UserModel>(Db);
+            var repo = new UserRepository<UsersModel>(Db);
+            var salt = PasswordHasher.GenerateSalt();
 
-            var userModel = new UserModel { UserName = username, User = Guid.NewGuid().ToString(), Password = password };
+            var userModel = new UsersModel
+            {
+                UserName = username,
+                UserGuid = Guid.NewGuid().ToString(),
+                Salt = salt,
+                Hash = PasswordHasher.ComputeHash(password, salt),
+                Claims = ByteConverterHelper.ReturnBytes(claims),
+                UserProperties = ByteConverterHelper.ReturnBytes(new UserProperties())
+            };
             repo.Insert(userModel);
 
-            var userRecord = repo.Get(userModel.User);
-                
-            return new Guid(userRecord.User);
+            var userRecord = repo.Get(userModel.UserGuid);
+
+            return new Guid(userRecord.UserGuid);
+        }
+
+        public static bool UpdatePassword(string username, string oldPassword, string newPassword)
+        {
+            var repo = new UserRepository<UsersModel>(Db);
+            var users = repo.GetAll();
+            var userToChange = users.FirstOrDefault(x => x.UserName == username);
+            if (userToChange == null)
+                return false;
+
+            var passwordMatch = PasswordHasher.VerifyPassword(oldPassword, userToChange.Salt, userToChange.Hash);
+            if (!passwordMatch)
+            {
+                throw new SecurityException("Password does not match");
+            }
+
+            var newSalt = PasswordHasher.GenerateSalt();
+            var newHash = PasswordHasher.ComputeHash(newPassword, newSalt);
+
+            userToChange.Hash = newHash;
+            userToChange.Salt = newSalt;
+
+            return repo.Update(userToChange);
+        }
+
+        public static IEnumerable<UsersModel> GetUsers()
+        {
+            var repo = new UserRepository<UsersModel>(Db);
+            return repo.GetAll();
         }
     }
 }

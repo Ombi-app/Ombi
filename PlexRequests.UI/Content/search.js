@@ -39,9 +39,14 @@ $(document).on("click", ".dropdownTv", function (e) {
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
     var seasons = $(this).attr("season-select");
-    if (seasons === "1") {
+    if (seasons === "2") {
         // Send over the latest
-        data = data + "&latest=true";
+        data = data + "&seasons=latest";
+    }
+    if (seasons === "1") {
+        // Send over the first season
+        data = data + "&seasons=first";
+
     }
 
     var type = $form.prop('method');
@@ -55,7 +60,7 @@ $(document).on("click", ".dropdownTv", function (e) {
 $(document).on("click", ".requestMovie", function (e) {
     var buttonId = e.target.id;
     $("#" + buttonId).prop("disabled", true);
-
+    loadingButton(buttonId, "primary");
     e.preventDefault();
 
     var $form = $('#form' + buttonId);
@@ -139,7 +144,8 @@ function buildMovieContext(result) {
         voteCount: result.voteCount,
         voteAverage: result.voteAverage,
         year: year,
-        type: "movie"
+        type: "movie",
+        imdb: result.imdbId
     };
 
     return context;
@@ -154,7 +160,8 @@ function buildTvShowContext(result) {
         title: result.seriesName,
         overview: result.overview,
         year: year,
-        type: "tv"
+        type: "tv",
+        imdb: result.imdbId
     };
     return context;
 }

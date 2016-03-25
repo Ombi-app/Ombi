@@ -24,23 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Notification
+using System.Threading.Tasks;
+
+using PlexRequests.Services.Notification;
+
+namespace PlexRequests.Services.Interfaces
 {
     public interface INotification
     {
-        /// <summary>
-        /// Gets the name of the notification.
-        /// </summary>
-        /// <value>
-        /// The name of the notification.
-        /// </value>
         string NotificationName { get; }
-        /// <summary>
-        /// Notifies the specified title.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <param name="requester">The requester.</param>
-        /// <returns></returns>
-        bool Notify(string title, string requester);
+
+        Task NotifyAsync(NotificationModel model);
     }
 }

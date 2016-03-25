@@ -17,7 +17,10 @@ I wanted to write a similar application in .Net!
 * Secure authentication
 * [Sonarr](https://sonarr.tv/) integration (SickRage/Sickbeard TBD)
 * [CouchPotato](https://couchpota.to/) integration
+* [SickRage](https://sickrage.github.io/) integration
 * Email notifications
+* Pushbullet notifications
+* Pushover notifications
 
 #Preview
 
@@ -30,7 +33,7 @@ Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 
 #Configuration
 
-To configure PlexRequests you need to register an admin user by clicking on Admin (top right) and press the Register link.
+To configure PlexRequests you need to register an admin user by clicking on Admin (top left) and press the Register link.
 You will then have a admin menu option once registered where you can setup Sonarr, Couchpotato and any other settings.
 
 Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
@@ -46,7 +49,7 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ###### A massive thanks to everyone below!
 
-[heartisall](https://github.com/heartisall)
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake)
 
 
 # Sponsors

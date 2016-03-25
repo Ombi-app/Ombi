@@ -30,8 +30,10 @@ using System.Text;
 
 using Newtonsoft.Json;
 
+using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core
 {
@@ -44,13 +46,13 @@ namespace PlexRequests.Core
         private IRequestRepository Repo { get; }
         public long AddRequest(RequestedModel model)
         {
-            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId };
+            var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId };
             var id = Repo.Insert(entity);
 
             // TODO Keep an eye on this, since we are now doing 2 DB update for 1 single request, inserting and then updating
             model.Id = (int)id;
 
-            entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id };
+            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id };
             var result = Repo.Update(entity);
 
             return result ? id : -1;
@@ -70,15 +72,14 @@ namespace PlexRequests.Core
 
         public bool UpdateRequest(RequestedModel model)
         {
-            var entity = new RequestBlobs { Type = model.Type, Content = ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
+            var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
             return Repo.Update(entity);
         }
 
         public RequestedModel Get(int id)
         {
             var blob = Repo.Get(id);
-            var json = Encoding.UTF8.GetString(blob.Content);
-            var model = JsonConvert.DeserializeObject<RequestedModel>(json);
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
             return model;
         }
 
@@ -92,16 +93,8 @@ namespace PlexRequests.Core
 
         public bool BatchUpdate(List<RequestedModel> model)
         {
-            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
             return Repo.UpdateAll(entities);
-        }
-
-        public byte[] ReturnBytes(object obj)
-        {
-            var json = JsonConvert.SerializeObject(obj);
-            var bytes = Encoding.UTF8.GetBytes(json);
-
-            return bytes;
         }
     }
 }

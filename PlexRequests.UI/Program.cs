@@ -25,16 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Data;
-
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
+using Mono.Unix;
+using Mono.Unix.Native;
 
 using NLog;
-using NLog.Config;
-using NLog.Targets;
-
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -55,18 +52,18 @@ namespace PlexRequests.UI
                 int portResult;
                 if (!int.TryParse(args[0], out portResult))
                 {
-                    Console.WriteLine("Incorrect Port format. Press Any Key to shut down.");
+                    Console.WriteLine("Incorrect Port format. Press any key.");
                     Console.ReadLine();
                     Environment.Exit(1);
                 }
                 port = portResult;
             }
-
             Log.Trace("Getting product version");
             WriteOutVersion();
 
             var s = new Setup();
-            s.SetupDb();
+            var cn = s.SetupDb();
+            ConfigureTargets(cn);
 
             if (port == -1)
                 port = GetStartupPort();
@@ -77,18 +74,29 @@ namespace PlexRequests.UI
             };
             try
             {
+                using (WebApp.Start<Startup>(options))
+                {
+                    Console.WriteLine($"Request Plex is running on the following: http://+:{port}/");
 
-            using (WebApp.Start<Startup>(options))
-            {
-                Console.WriteLine($"Request Plex is running on the following port: {port}");
-                Console.WriteLine("Press any key to exit");
-                Console.ReadLine();
-            }
-
+                    if (Type.GetType("Mono.Runtime") != null)
+                    {
+                        Log.Trace("We are on Mono!");
+                        // on mono, processes will usually run as daemons - this allows you to listen
+                        // for termination signals (ctrl+c, shutdown, etc) and finalize correctly
+                        UnixSignal.WaitAny(
+                            new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM), new UnixSignal(Signum.SIGQUIT), new UnixSignal(Signum.SIGHUP) });
+                    }
+                    else
+                    {
+                        Log.Trace("This is not Mono");
+                        Console.WriteLine("Press any key to exit");
+                        Console.ReadLine();
+                    }
+                }
             }
             catch (Exception e)
             {
-                var a = e.Message;
+                Log.Fatal(e);
                 throw;
             }
         }
@@ -117,59 +125,7 @@ namespace PlexRequests.UI
 
         private static void ConfigureTargets(string connectionString)
         {
-            LogManager.ThrowExceptions = true;
-            // Step 1. Create configuration object 
-            var config = new LoggingConfiguration();
-
-            // Step 2. Create targets and add them to the configuration 
-            var databaseTarget = new DatabaseTarget
-            {
-                CommandType = CommandType.Text,
-                ConnectionString = connectionString,
-                DBProvider = "Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
-                Name = "database"
-            };
-
-
-            var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
-            var callsiteParam = new DatabaseParameterInfo { Name = "@Callsite", Layout = "${callsite}" };
-            var levelParam = new DatabaseParameterInfo { Name = "@Level", Layout = "${level}" };
-            var usernameParam = new DatabaseParameterInfo { Name = "@Username", Layout = "${identity}" };
-            var dateParam = new DatabaseParameterInfo { Name = "@Date", Layout = "${date}" };
-            var loggerParam = new DatabaseParameterInfo { Name = "@Logger", Layout = "${logger}" };
-            var exceptionParam = new DatabaseParameterInfo { Name = "@Exception", Layout = "${exception:tostring}" };
-
-            databaseTarget.Parameters.Add(messageParam);
-            databaseTarget.Parameters.Add(callsiteParam);
-            databaseTarget.Parameters.Add(levelParam);
-            databaseTarget.Parameters.Add(usernameParam);
-            databaseTarget.Parameters.Add(dateParam);
-            databaseTarget.Parameters.Add(loggerParam);
-            databaseTarget.Parameters.Add(exceptionParam);
-
-            databaseTarget.CommandText = "INSERT INTO Log (Username,Date,Level,Logger, Message, Callsite, Exception) VALUES(@Username,@Date,@Level,@Logger, @Message, @Callsite, @Exception);";
-            config.AddTarget("database", databaseTarget);
-
-            // Step 4. Define rules
-            var rule1 = new LoggingRule("*", LogLevel.Error, databaseTarget);
-            config.LoggingRules.Add(rule1);
-
-            try
-            {
-
-                // Step 5. Activate the configuration
-                LogManager.Configuration = config;
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-            // Example usage
-            Logger logger = LogManager.GetLogger("Example");
-
-            logger.Error("error log message");
+            LoggingHelper.ConfigureLogging(connectionString);
         }
     }
 }
