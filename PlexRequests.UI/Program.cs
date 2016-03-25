@@ -37,6 +37,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Diagnostics;
 
 namespace PlexRequests.UI
 {
@@ -68,7 +69,7 @@ namespace PlexRequests.UI
             if (port == -1)
                 port = GetStartupPort();
 
-            var options = new StartOptions($"http://+:{port}")
+            var options = new StartOptions(Debugger.IsAttached ? $"http://localhost:{port}" : $"http://+:{port}")
             {
                 ServerFactory = "Microsoft.Owin.Host.HttpListener"
             };
