@@ -224,22 +224,54 @@ namespace PlexRequests.UI.Modules
 
                 Log.Trace("Settings: ");
                 Log.Trace(cpSettings.DumpJson);
+                if (cpSettings.Enabled)
+                {
+                    Log.Info("Adding movie to CP (No approval required)");
+                    var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title,
+                        cpSettings.FullUri, cpSettings.ProfileId);
+                    Log.Debug("Adding movie to CP result {0}", result);
+                    if (result)
+                    {
+                        model.Approved = true;
+                        Log.Debug("Adding movie to database requests (No approval required)");
+                        RequestService.AddRequest(model);
 
-                Log.Info("Adding movie to CP (No approval required)");
-                var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettings.ProfileId);
-                Log.Debug("Adding movie to CP result {0}", result);
-                if (result)
+                        var notificationModel = new NotificationModel
+                        {
+                            Title = model.Title,
+                            User = model.RequestedBy,
+                            DateTime = DateTime.Now,
+                            NotificationType = NotificationType.NewRequest
+                        };
+                        NotificationService.Publish(notificationModel);
+
+                        return Response.AsJson(new JsonResponseModel {Result = true});
+                    }
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = false,
+                            Message =
+                                "Something went wrong adding the movie to CouchPotato! Please check your settings."
+                        });
+                }
+                else
                 {
                     model.Approved = true;
                     Log.Debug("Adding movie to database requests (No approval required)");
                     RequestService.AddRequest(model);
 
-                    var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                    var notificationModel = new NotificationModel
+                    {
+                        Title = model.Title,
+                        User = model.RequestedBy,
+                        DateTime = DateTime.Now,
+                        NotificationType = NotificationType.NewRequest
+                    };
                     NotificationService.Publish(notificationModel);
 
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
             }
 
             try
@@ -305,7 +337,7 @@ namespace PlexRequests.UI.Modules
                 Approved = false,
                 RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
                 Issues = IssueState.None,
-                ImdbId = showInfo.externals?.imdb ?? string.Empty, 
+                ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
             };
             var seasonsList = new List<int>();
@@ -323,7 +355,7 @@ namespace PlexRequests.UI.Modules
                     model.SeasonsRequested = "All";
                     break;
             }
-            
+
             model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();

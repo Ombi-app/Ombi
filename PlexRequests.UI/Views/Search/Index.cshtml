@@ -76,9 +76,15 @@
         </div>
         <div class="col-sm-5 ">
             <div>
-                <a href="http://www.imdb.com/title/{{imdb}}/" targe="_blank">
+                {{#if_eq type "movie"}}
+                <a href="https://www.themoviedb.org/movie/{{id}}/" target="_blank">
                     <h4>{{title}} ({{year}})</h4>
                 </a>
+                {{else}}
+                <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
+                    <h4>{{title}} ({{year}})</h4>
+                </a>
+                {{/if_eq}}
             </div>
             <p>{{overview}}</p>
         </div>

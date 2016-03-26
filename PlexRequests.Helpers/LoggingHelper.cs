@@ -97,6 +97,18 @@ namespace PlexRequests.Helpers
             var rule1 = new LoggingRule("*", LogLevel.Info, databaseTarget);
             config.LoggingRules.Add(rule1);
 
+
+            var fileTarget = new FileTarget
+            {
+                Name = "file",
+                FileName = "logs/${shortdate}.log",
+                Layout = "${date} ${logger} ${level}: ${message} ${exception:tostring}",
+                CreateDirs = true
+            };
+            config.AddTarget(fileTarget);
+            var rule2 = new LoggingRule("*", LogLevel.Trace, fileTarget);
+            config.LoggingRules.Add(rule2);
+
             // Step 5. Activate the configuration
             LogManager.Configuration = config;
         }

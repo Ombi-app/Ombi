@@ -31,10 +31,15 @@ $("#tvSearchContent").on("input", function () {
 
 // Click TV dropdown option
 $(document).on("click", ".dropdownTv", function (e) {
-    var buttonId = e.target.id;
-    $("#" + buttonId).prop("disabled", true);
-
     e.preventDefault();
+    var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
+    $("#" + buttonId).prop("disabled", true);
+    loadingButton(buttonId, "primary");
+
 
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
@@ -53,15 +58,19 @@ $(document).on("click", ".dropdownTv", function (e) {
     var url = $form.prop('action');
 
     sendRequestAjax(data, type, url, buttonId);
-    $("#" + buttonId).prop("disabled", false);
 });
 
 // Click Request for movie
 $(document).on("click", ".requestMovie", function (e) {
+    e.preventDefault();
     var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
     $("#" + buttonId).prop("disabled", true);
     loadingButton(buttonId, "primary");
-    e.preventDefault();
+
 
     var $form = $('#form' + buttonId);
 
@@ -70,7 +79,7 @@ $(document).on("click", ".requestMovie", function (e) {
     var data = $form.serialize();
 
     sendRequestAjax(data, type, url, buttonId);
-     $("#" + buttonId).prop("disabled", false);
+    
 });
 
 function sendRequestAjax(data, type, url, buttonId) {
@@ -90,6 +99,9 @@ function sendRequestAjax(data, type, url, buttonId) {
                 $('#' + buttonId).addClass("btn-success-outline");
             } else {
                 generateNotify(response.message, "warning");
+                $('#' + buttonId).html("<i class='fa fa-plus'></i> Request");
+                $('#' + buttonId).attr("data-toggle", "dropdown");
+                $("#" + buttonId).removeAttr("disabled");
             }
         },
         error: function (e) {
