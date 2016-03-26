@@ -218,7 +218,7 @@ namespace PlexRequests.UI.Modules
 
             var settings = PrService.GetSettings();
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireApproval)
+            if (!settings.RequireMovieApproval)
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -233,6 +233,9 @@ namespace PlexRequests.UI.Modules
                     model.Approved = true;
                     Log.Debug("Adding movie to database requests (No approval required)");
                     RequestService.AddRequest(model);
+
+                    var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                    NotificationService.Publish(notificationModel);
 
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
@@ -324,7 +327,7 @@ namespace PlexRequests.UI.Modules
             model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
-            if (!settings.RequireApproval)
+            if (!settings.RequireTvShowApproval)
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
@@ -339,6 +342,9 @@ namespace PlexRequests.UI.Modules
 
                         return Response.AsJson(new JsonResponseModel { Result = true });
                     }
+                    var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                    NotificationService.Publish(notify1);
+
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to Sonarr! Please check your settings." });
 
                 }
@@ -352,6 +358,9 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         RequestService.AddRequest(model);
+
+                        var notify2 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        NotificationService.Publish(notify2);
 
                         return Response.AsJson(new JsonResponseModel { Result = true });
                     }

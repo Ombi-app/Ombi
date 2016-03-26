@@ -468,7 +468,7 @@ namespace PlexRequests.UI.Modules
 
             Log.Info("Saved email settings, result: {0}", result);
             return Response.AsJson(result
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushbullet Notifications!" }
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushover Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
