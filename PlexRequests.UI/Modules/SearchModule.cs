@@ -282,7 +282,7 @@ namespace PlexRequests.UI.Modules
                 var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                 NotificationService.Publish(notificationModel);
 
-                return Response.AsJson(new JsonResponseModel { Result = true });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{model.Title} was successfully added!" });
             }
             catch (Exception e)
             {
@@ -408,7 +408,7 @@ namespace PlexRequests.UI.Modules
             var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
             NotificationService.Publish(notificationModel);
 
-            return Response.AsJson(new { Result = true });
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{model.Title} was successfully added!" });
         }
 
         private bool CheckIfTitleExistsInPlex(string title, string year)
