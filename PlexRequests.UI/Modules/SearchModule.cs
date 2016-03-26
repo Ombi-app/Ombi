@@ -234,6 +234,9 @@ namespace PlexRequests.UI.Modules
                     Log.Debug("Adding movie to database requests (No approval required)");
                     RequestService.AddRequest(model);
 
+                    var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                    NotificationService.Publish(notificationModel);
+
                     return Response.AsJson(new JsonResponseModel { Result = true });
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
@@ -339,6 +342,9 @@ namespace PlexRequests.UI.Modules
 
                         return Response.AsJson(new JsonResponseModel { Result = true });
                     }
+                    var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                    NotificationService.Publish(notify1);
+
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to Sonarr! Please check your settings." });
 
                 }
@@ -352,6 +358,9 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         RequestService.AddRequest(model);
+
+                        var notify2 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        NotificationService.Publish(notify2);
 
                         return Response.AsJson(new JsonResponseModel { Result = true });
                     }
