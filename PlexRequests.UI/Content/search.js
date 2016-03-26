@@ -91,7 +91,7 @@ function sendRequestAjax(data, type, url, buttonId) {
         success: function (response) {
             console.log(response);
             if (response.result === true) {
-                generateNotify("Success!", "success");
+                generateNotify(response.message || "Success!", "success");
 
                 $('#' + buttonId).html("<i class='fa fa-check'></i> Requested");
                 $('#' + buttonId).removeClass("btn-primary-outline");
