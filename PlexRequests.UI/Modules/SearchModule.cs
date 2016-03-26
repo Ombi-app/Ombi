@@ -218,7 +218,7 @@ namespace PlexRequests.UI.Modules
 
             var settings = PrService.GetSettings();
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireApproval)
+            if (!settings.RequireMovieApproval)
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -327,7 +327,7 @@ namespace PlexRequests.UI.Modules
             model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
-            if (!settings.RequireApproval)
+            if (!settings.RequireTvShowApproval)
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);

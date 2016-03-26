@@ -55,13 +55,28 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        @if (Model.RequireApproval)
+                        @if (Model.RequireMovieApproval)
                         {
-                            <input type="checkbox" id="RequireApproval" name="RequireApproval" checked="checked"><text>Require approval of requests</text>
+                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><text>Require approval of Movie requests</text>
                         }
                         else
                         {
-                            <input type="checkbox" id="RequireApproval" name="RequireApproval"><text>Require approval of requests</text>
+                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><text>Require approval of Movie requests</text>
+                        }
+                    </label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.RequireTvShowApproval)
+                        {
+                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><text>Require approval of TV show requests</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><text>Require approval of TV show requests</text>
                         }
                     </label>
 
