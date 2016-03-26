@@ -172,30 +172,32 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestMovie(int movieId)
         {
+            var movieApi = new TheMovieDbApi();
+            var movieInfo = movieApi.GetMovieInformation(movieId).Result;
+            string fullMovieName = string.Format("{0}{1}", movieInfo.Title, movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty);
+            Log.Trace("Getting movie info from TheMovieDb");
+            Log.Trace(movieInfo.DumpJson);
+            //#if !DEBUG
+
             Log.Info("Requesting movie with id {0}", movieId);
             if (RequestService.CheckRequest(movieId))
             {
                 Log.Trace("movie with id {0} exists", movieId);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Movie has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} has already been requested!" });
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
 
-            var movieApi = new TheMovieDbApi();
-            var movieInfo = movieApi.GetMovieInformation(movieId).Result;
-            Log.Trace("Getting movie info from TheMovieDb");
-            Log.Trace(movieInfo.DumpJson);
-            //#if !DEBUG
             try
             {
                 if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
                 {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{movieInfo.Title} is already in Plex!" });
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} is already in Plex!" });
                 }
             }
             catch (ApplicationSettingsException)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {movieInfo.Title} is in Plex, are you sure it's correctly setup?" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullMovieName} is in Plex, are you sure it's correctly setup?" });
             }
             //#endif
 
@@ -282,7 +284,7 @@ namespace PlexRequests.UI.Modules
                 var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                 NotificationService.Publish(notificationModel);
 
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{model.Title} was successfully added!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
             }
             catch (Exception e)
             {
@@ -300,30 +302,33 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response RequestTvShow(int showId, string seasons)
         {
-            if (RequestService.CheckRequest(showId))
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "TV Show has already been requested!" });
-            }
-
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
+            DateTime firstAir;
+            DateTime.TryParse(showInfo.premiered, out firstAir);
+            string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
+
+            if (RequestService.CheckRequest(showId))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} has already been requested!" });
+            }
+
             try
             {
                 if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
                 {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{showInfo.name} is already in Plex!" });
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
             }
             catch (ApplicationSettingsException)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {showInfo.name} is in Plex, are you sure it's correctly setup?" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullShowName} is in Plex, are you sure it's correctly setup?" });
             }
             //#endif
 
-            DateTime firstAir;
-            DateTime.TryParse(showInfo.premiered, out firstAir);
+            
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -372,7 +377,7 @@ namespace PlexRequests.UI.Modules
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
 
-                        return Response.AsJson(new JsonResponseModel { Result = true });
+                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
                     var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                     NotificationService.Publish(notify1);
@@ -394,7 +399,7 @@ namespace PlexRequests.UI.Modules
                         var notify2 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                         NotificationService.Publish(notify2);
 
-                        return Response.AsJson(new JsonResponseModel { Result = true });
+                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
                 }
@@ -408,7 +413,7 @@ namespace PlexRequests.UI.Modules
             var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
             NotificationService.Publish(notificationModel);
 
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{model.Title} was successfully added!" });
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
         private bool CheckIfTitleExistsInPlex(string title, string year)
