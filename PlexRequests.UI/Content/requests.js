@@ -20,8 +20,7 @@ var mixItUpDefault = {
     }
 };
 
-movieLoad();
-tvLoad();
+initLoad();
 
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -51,7 +50,17 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 // Approve all
-$('#approveAll').click(function () {
+$('#approveAll').click(function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
     $.ajax({
         type: 'post',
         url: '/approval/approveall',
@@ -59,11 +68,75 @@ $('#approveAll').click(function () {
         success: function (response) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! All requests approved!", "success");
+                initLoad();
             }
         },
         error: function (e) {
             console.log(e);
             generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml)
+        }
+    });
+});
+$('#approveMovies').click(function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
+    $.ajax({
+        type: 'post',
+        url: '/approval/approveallmovies',
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All Movie requests approved!", "success");
+                movieLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml)
+        }
+    });
+});
+$('#approveTVShows').click(function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
+    $.ajax({
+        type: 'post',
+        url: '/approval/approvealltvshows',
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All TV Show requests approved!", "success");
+                tvLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml)
         }
     });
 });
@@ -321,29 +394,44 @@ function mixItUpConfig(activeState) {
     return conf;
 };
 
+function initLoad() {
+    movieLoad();
+    tvLoad();
+}
+
 function movieLoad() {
-    $("#movieList").html("");
+    var $ml = $('#movieList');
+    if ($ml.mixItUp('isLoaded')) {
+        activeState = $ml.mixItUp('getState');
+        $ml.mixItUp('destroy');
+    }
+    $ml.html("");
 
     $.ajax("/requests/movies/").success(function (results) {
         results.forEach(function (result) {
             var context = buildRequestContext(result, "movie");
             var html = searchTemplate(context);
-            $("#movieList").append(html);
+            $ml.append(html);
         });
-        $('#movieList').mixItUp(mixItUpConfig());
+        $ml.mixItUp(mixItUpConfig());
     });
 };
 
 function tvLoad() {
-    $("#tvList").html("");
+    var $tvl = $('#tvList');
+    if ($tvl.mixItUp('isLoaded')) {
+        activeState = $tvl.mixItUp('getState');
+        $tvl.mixItUp('destroy');
+    }
+    $tvl.html("");
 
     $.ajax("/requests/tvshows/").success(function (results) {
         results.forEach(function (result) {
             var context = buildRequestContext(result, "tv");
             var html = searchTemplate(context);
-            $("#tvList").append(html);
+            $tvl.append(html);
         });
-        $('#tvList').mixItUp(mixItUpConfig());
+        $tvl.mixItUp(mixItUpConfig());
     });
 };
 
@@ -374,16 +462,4 @@ function buildRequestContext(result, type) {
     };
 
     return context;
-}
-
-function startFilter(elementId) {
-    $('#' + element).mixItUp({
-        load: {
-            filter: activeState.activeFilter || 'all',
-            sort: activeState.activeSort || 'default:asc'
-        },
-        layout: {
-            display: 'block'
-        }
-    });
 }
