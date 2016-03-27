@@ -9,6 +9,16 @@ var searchSource = $("#search-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
 var movieTimer = 0;
 var tvimer = 0;
+var mixItUpDefault = {
+    animation: { enable: true },
+    load: {
+        filter: 'all',
+        sort: 'default:asc'
+    },
+    layout: {
+        display: 'block'
+    }
+};
 
 movieLoad();
 tvLoad();
@@ -17,40 +27,26 @@ tvLoad();
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr('href');
     var activeState = "";
-    if (target === "#TvShowTab") {
-        if ($('#movieList').mixItUp('isLoaded')) {
-            activeState = $('#movieList').mixItUp('getState');
-            $('#movieList').mixItUp('destroy');
-        }
-        if (!$('#tvList').mixItUp('isLoaded')) {
-            $('#tvList').mixItUp({
-                load: {
-                    filter: activeState.activeFilter || 'all',
-                    sort: activeState.activeSort || 'default:asc'
-                },
-                layout: {
-                display: 'block'
-            }
 
-            });
+    var $ml = $('#movieList');
+    var $tvl = $('#tvList');
+
+    if (target === "#TvShowTab") {
+        
+        if ($ml.mixItUp('isLoaded')) {
+            activeState = $ml.mixItUp('getState');
+            $ml.mixItUp('destroy');
         }
+        if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
+        $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
     if (target === "#MoviesTab") {
-        if ($('#tvList').mixItUp('isLoaded')) {
-            activeState = $('#tvList').mixItUp('getState');
-            $('#tvList').mixItUp('destroy');
+        if ($tvl.mixItUp('isLoaded')) {
+            activeState = $tvl.mixItUp('getState');
+            $tvl.mixItUp('destroy');
         }
-        if (!$('#movieList').mixItUp('isLoaded')) {
-            $('#movieList').mixItUp({
-                load: {
-                    filter: activeState.activeFilter || 'all',
-                    sort: activeState.activeSort || 'default:asc'
-                },
-                layout: {
-                    display: 'block'
-                }
-            });
-        }
+        if ($ml.mixItUp('isLoaded')) $ml.mixItUp('destroy');
+        $ml.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
 });
 
@@ -315,24 +311,26 @@ $(document).on("click", ".change", function (e) {
 
 });
 
+function mixItUpConfig(activeState) {
+    var conf = mixItUpDefault;
+
+    if (activeState) {
+        if (activeState.activeFilter) conf['load']['filter'] = activeState.activeFilter;
+        if (activeState.activeSort) conf['load']['sort'] = activeState.activeSort;
+    }
+    return conf;
+};
+
 function movieLoad() {
     $("#movieList").html("");
 
     $.ajax("/requests/movies/").success(function (results) {
         results.forEach(function (result) {
             var context = buildRequestContext(result, "movie");
-
             var html = searchTemplate(context);
             $("#movieList").append(html);
         });
-        $('#movieList').mixItUp({
-            layout: {
-                display: 'block'
-            },
-            load: {
-                filter: 'all'
-            }
-        });
+        $('#movieList').mixItUp(mixItUpConfig());
     });
 };
 
@@ -345,6 +343,7 @@ function tvLoad() {
             var html = searchTemplate(context);
             $("#tvList").append(html);
         });
+        $('#tvList').mixItUp(mixItUpConfig());
     });
 };
 
@@ -359,9 +358,11 @@ function buildRequestContext(result, type) {
         type: type,
         status: result.status,
         releaseDate: result.releaseDate,
+        releaseDateTicks: result.releaseDateTicks,
         approved: result.approved,
         requestedBy: result.requestedBy,
         requestedDate: result.requestedDate,
+        requestedDateTicks: result.requestedDateTicks,
         available: result.available,
         admin: result.admin,
         issues: result.issues,
@@ -376,7 +377,7 @@ function buildRequestContext(result, type) {
 }
 
 function startFilter(elementId) {
-    $('#'+element).mixItUp({
+    $('#' + element).mixItUp({
         load: {
             filter: activeState.activeFilter || 'all',
             sort: activeState.activeSort || 'default:asc'

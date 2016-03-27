@@ -43,7 +43,10 @@
             </a>
             <ul class="dropdown-menu">
                 <li><a href="#" class="sort" data-sort="default">Default</a></li>
-                <li><a href="#" class="sort" data-sort="requestorder:asc">Requested Date</a></li>
+                <li><a href="#" class="sort" data-sort="requestorder:asc">Requested Date (asc)</a></li>
+                <li><a href="#" class="sort" data-sort="requestorder:desc">Requested Date (desc)</a></li>
+                <li><a href="#" class="sort" data-sort="releaseorder:asc">Release Date (asc)</a></li>
+                <li><a href="#" class="sort" data-sort="releaseorder:desc">Release Date (desc)</a></li>
             </ul>
         </div>
         @if (Model.SearchForMovies)
@@ -78,7 +81,7 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
-    <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}}">
+    <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}}" data-requestorder="{{requestedDateTicks}}" data-releaseorder="{{releaseDateTicks}}">
         <div class="row">
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}
