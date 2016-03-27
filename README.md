@@ -59,6 +59,7 @@ Create an upstart script to auto-start PlexRequests with your system (using port
 * sudo nano /etc/init/plexrequests.conf
 * paste in the following:
 
+```
 start on runlevel [2345]
 stop on runlevel [016]
 
@@ -72,6 +73,7 @@ end script
 script
     exec /usr/bin/mono /opt/PlexRequests/PlexRequests.exe 80
 end script
+```
 
 Reboot and open up your browser to check that it's running!
 * sudo shutdown -r 00
