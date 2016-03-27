@@ -42,29 +42,29 @@ Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has cr
 
 To configure PlexRequests to run on debian/ubuntu and set it to start up with the system, do the following (via terminal):
 
-###Create a location to drop the files (up to you, we'll ues /opt/PlexRequests as an example)
+####Create a location to drop the files (up to you, we'll use /opt/PlexRequests as an example)
 
 ```sudo mkdir /opt/PlexRequests```
 
-###Download the release zip
+####Download the release zip
 ```
 sudo wget {release zip file url}
 sudo unzip PlexRequests.zip -d /opt/PlexRequests
 ```
 
-###Install Mono (this app will be used to actually run the .net libraries and executable)
+####Install Mono (this app will be used to actually run the .net libraries and executable)
 
 ```sudo apt-get install mono-devel```
 
-###Verify Mono properly runs PlexRequests
+####Verify Mono properly runs PlexRequests
 
 ```sudo /usr/bin/mono /opt/PlexRequests/PlexRequests.exe```
 
-###Create an upstart script to auto-start PlexRequests with your system (using port 80 in this example)
+####Create an upstart script to auto-start PlexRequests with your system (using port 80 in this example)
 
 ```sudo nano /etc/init/plexrequests.conf```
 
-####Paste in the following:
+#####Paste in the following:
 
 ```
 start on runlevel [2345]
@@ -82,7 +82,7 @@ script
 end script
 ```
 
-###Reboot, then open up your browser to check that it's running!
+####Reboot, then open up your browser to check that it's running!
 
 ```sudo shutdown -r 00```
 
