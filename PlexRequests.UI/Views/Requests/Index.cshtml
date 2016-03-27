@@ -5,8 +5,7 @@
     @if (Context.CurrentUser.IsAuthenticated())
     {
         <button id="approveAll" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve All</button>
-        <button id="approveMovies" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve Movies</button>
-        <button id="approveTVShows" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve TV Shows</button>
+
         <br />
         <br />
     }
@@ -22,10 +21,25 @@
         }
 
     </ul>
+    <br />
+
 
     <!-- Tab panes -->
     <div class="tab-content contentList">
-        <div class="btn-group col-sm-push-10">
+        <div class="btn-group col-sm-2">
+            @if (Context.CurrentUser.IsAuthenticated())
+            {
+                @if (Model.SearchForMovies)
+                {
+                    <button id="approveMovies" class="btn btn-success-outline approve-category" type="submit"><i class="fa fa-plus"></i> Approve Movies</button>
+                }
+                @if (Model.SearchForTvShows)
+                {
+                    <button id="approveTVShows" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve TV Shows</button>
+                }
+            }
+        </div>
+        <div class="btn-group col-sm-push-8">
             <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 Filter
                 <i class="fa fa-filter"></i>
@@ -38,7 +52,7 @@
                 <li><a href="#" class="filter" data-filter=".available-false">Not Available</a></li>
             </ul>
         </div>
-        <div class="btn-group col-sm-push-10">
+        <div class="btn-group col-sm-push-8">
             <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                 Order
                 <i class="fa fa-sort"></i>
@@ -52,13 +66,13 @@
             </ul>
         </div>
         @if (Model.SearchForMovies)
-        {
+            {
 
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <!-- Movie content -->
                 <div id="movieList">
                 </div>
@@ -66,12 +80,12 @@
         }
 
         @if (Model.SearchForTvShows)
-        {
+            {
             <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
 
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <!-- TV content -->
                 <div id="tvList">
                 </div>
@@ -186,7 +200,7 @@
                             <li><a id="{{requestId}}" issue-select="4" class="dropdownIssue" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#myModal">Other</a></li>
 
                             {{#if_eq admin true}}
-                                <li><a id="{{requestId}}" issue-select="4" class="note" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#noteModal">Add Note</a></li>
+                            <li><a id="{{requestId}}" issue-select="4" class="note" data-identifier="{{requestId}}" href="#" data-toggle="modal" data-target="#noteModal">Add Note</a></li>
                             {{/if_eq}}
                         </ul>
                     </div>

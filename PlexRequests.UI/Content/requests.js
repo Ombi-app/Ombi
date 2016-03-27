@@ -29,9 +29,10 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
     var $ml = $('#movieList');
     var $tvl = $('#tvList');
-
-    if (target === "#TvShowTab") {
         
+    $('.approve-category').hide();
+    if (target === "#TvShowTab") {
+        $('#approveTVShows').show();
         if ($ml.mixItUp('isLoaded')) {
             activeState = $ml.mixItUp('getState');
             $ml.mixItUp('destroy');
@@ -40,6 +41,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
     if (target === "#MoviesTab") {
+        $('#approveMovies').show();
         if ($tvl.mixItUp('isLoaded')) {
             activeState = $tvl.mixItUp('getState');
             $tvl.mixItUp('destroy');
