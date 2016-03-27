@@ -58,7 +58,7 @@ sudo unzip PlexRequests.zip -d /opt/PlexRequests
 
 ####Verify Mono properly runs PlexRequests
 
-```sudo /usr/bin/mono /opt/PlexRequests/PlexRequests.exe```
+```sudo /usr/bin/mono /opt/PlexRequests/Release/PlexRequests.exe```
 
 ####Create an upstart script to auto-start PlexRequests with your system (using port 80 in this example)
 
@@ -78,7 +78,7 @@ pre-start script
 end script
 
 script
-    exec /usr/bin/mono /opt/PlexRequests/PlexRequests.exe 80
+    exec /usr/bin/mono /opt/PlexRequests/Release/PlexRequests.exe 80
 end script
 ```
 
