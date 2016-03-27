@@ -38,6 +38,44 @@ You will then have a admin menu option once registered where you can setup Sonar
 
 Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
 
+#Debian/Ubuntu
+
+To configure PlexRequests to run on debian/ubuntu and set it to start up with the system, do the following (via terminal):
+
+Create a location to drop the files (up to you, we'll ues /opt/PlexRequests as an example)
+* sudo mkdir /opt/PlexRequests
+
+Download the release zip
+* sudo wget {release zip file url}
+* sudo unzip PlexRequests.zip -d /opt/PlexRequests
+
+Install Mono (this app will be used to actually run the .net libraries and executable)
+* sudo apt-get install mono-devel
+
+Verify Mono properly runs PlexRequests
+* sudo /usr/bin/mono /opt/PlexRequests/PlexRequests.exe
+
+Create an upstart script to auto-start PlexRequests with your system (using port 80 in this example)
+* sudo nano /etc/init/plexrequests.conf
+* paste in the following:
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+respawn
+expect fork
+
+pre-start script
+    # echo ""
+end script
+
+script
+    exec /usr/bin/mono /opt/PlexRequests/PlexRequests.exe 80
+end script
+
+Reboot and open up your browser to check that it's running!
+* sudo shutdown -r 00
+
 # Contributors
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
