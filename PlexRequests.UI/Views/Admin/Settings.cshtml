@@ -90,16 +90,31 @@
                     <input type="text" class="form-control-custom form-control " id="NoApprovalUsers" name="NoApprovalUsers" placeholder="e.g. John, Bobby" value="@Model.NoApprovalUsers">
                 </div>
             </div>
-            <br />
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.UsersCanViewOnlyOwnRequests)
+                        {
+                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked"><text>Users can view their own requests only</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><text>Users can view their own requests only</text>
+                        }
+                    </label>
+
+                </div>
+            </div>
 
             @*<div class="form-group">
-                <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
-                <div>
-                    <label>
-                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
-                    </label>
-                </div>
-            </div> //TODO: Need to implement this*@
+                    <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
+                    <div>
+                        <label>
+                            <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
+                        </label>
+                    </div>
+                </div> //TODO: Need to implement this*@
 
             <div>
             </div>
@@ -111,4 +126,3 @@
         </fieldset>
     </form>
 </div>
-

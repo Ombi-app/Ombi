@@ -79,8 +79,14 @@ namespace PlexRequests.UI.Modules
 
         private Response GetMovies()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            {
+                dbMovies = dbMovies.Where(x => x.RequestedBy.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase));
+            }
+
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
                 ProviderId = movie.ProviderId,
@@ -110,8 +116,14 @@ namespace PlexRequests.UI.Modules
 
         private Response GetTvShows()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            {
+                dbTv = dbTv.Where(x => x.RequestedBy.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase));
+            }
+
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
                 ProviderId = tv.ProviderId,
