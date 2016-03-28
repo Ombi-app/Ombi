@@ -220,7 +220,7 @@ namespace PlexRequests.UI.Modules
 
             var settings = PrService.GetSettings();
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireMovieApproval)
+            if (!settings.RequireMovieApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -247,7 +247,7 @@ namespace PlexRequests.UI.Modules
                         };
                         NotificationService.Publish(notificationModel);
 
-                        return Response.AsJson(new JsonResponseModel {Result = true});
+                        return Response.AsJson(new JsonResponseModel {Result = true, Message = $"{fullMovieName} was successfully added!" });
                     }
                     return
                         Response.AsJson(new JsonResponseModel
@@ -272,7 +272,7 @@ namespace PlexRequests.UI.Modules
                     };
                     NotificationService.Publish(notificationModel);
 
-                    return Response.AsJson(new JsonResponseModel { Result = true });
+                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                 }
             }
 
@@ -364,7 +364,7 @@ namespace PlexRequests.UI.Modules
             model.SeasonList = seasonsList.ToArray();
 
             var settings = PrService.GetSettings();
-            if (!settings.RequireTvShowApproval)
+            if (!settings.RequireTvShowApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
