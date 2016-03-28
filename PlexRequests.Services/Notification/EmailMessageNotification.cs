@@ -60,10 +60,7 @@ namespace PlexRequests.Services.Notification
 
             var emailSettings = (EmailNotificationSettings)settings;
 
-            if (!ValidateConfiguration(emailSettings))
-            {
-                return;
-            }
+            if (!ValidateConfiguration(emailSettings)) return;
 
             switch (model.NotificationType)
             {
