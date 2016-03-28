@@ -17,6 +17,11 @@ var mixItUpDefault = {
     },
     layout: {
         display: 'block'
+    },
+    callbacks: {
+        onMixStart: function (state, futureState) {
+            $('.mix', this).removeAttr('data-bound').removeData('bound'); // fix for animation issues in other tabs
+        }
     }
 };
 
@@ -29,7 +34,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
     var $ml = $('#movieList');
     var $tvl = $('#tvList');
-        
+
     $('.approve-category').hide();
     if (target === "#TvShowTab") {
         $('#approveTVShows').show();
@@ -49,6 +54,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if ($ml.mixItUp('isLoaded')) $ml.mixItUp('destroy');
         $ml.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
+    //$('.mix[data-bound]').removeAttr('data-bound');
 });
 
 // Approve all
