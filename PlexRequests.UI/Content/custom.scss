@@ -71,6 +71,14 @@ label {
     background: #4e5d6c;
 }
 
+.navbar .nav a .fa {
+    font-size: 130%;
+    top: 1px;
+    position: relative;
+    display: inline-block;
+    margin-right: 5px;
+}
+
 .btn-danger-outline {
     color: $danger-colour $i;
     background-color: transparent;
