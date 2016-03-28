@@ -65,6 +65,12 @@ label {
     font-size: 16px $i;
 }
 
+.nav-tabs > li.active > a, 
+.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a:focus {
+    background: #4e5d6c;
+}
+
 .btn-danger-outline {
     color: $danger-colour $i;
     background-color: transparent;
