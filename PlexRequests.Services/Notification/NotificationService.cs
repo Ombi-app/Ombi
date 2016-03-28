@@ -48,7 +48,7 @@ namespace PlexRequests.Services.Notification
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
-        public async Task Publish(NotificationModel model, EmailNotificationSettings settings)
+        public async Task Publish(NotificationModel model, Settings settings)
         {
             var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model, settings));
 
@@ -72,7 +72,7 @@ namespace PlexRequests.Services.Notification
 
         }
 
-        private static async Task NotifyAsync(INotification notification, NotificationModel model, EmailNotificationSettings settings)
+        private static async Task NotifyAsync(INotification notification, NotificationModel model, Settings settings)
         {
             try
             {

@@ -54,11 +54,13 @@ namespace PlexRequests.Services.Notification
             await NotifyAsync(model, configuration);
         }
 
-        public async Task NotifyAsync(NotificationModel model, EmailNotificationSettings settings)
+        public async Task NotifyAsync(NotificationModel model, Settings settings)
         {
             if (settings == null) await NotifyAsync(model);
 
-            if (!ValidateConfiguration(settings))
+            var emailSettings = (EmailNotificationSettings)settings;
+
+            if (!ValidateConfiguration(emailSettings))
             {
                 return;
             }
@@ -66,10 +68,10 @@ namespace PlexRequests.Services.Notification
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    await EmailNewRequest(model, settings);
+                    await EmailNewRequest(model, emailSettings);
                     break;
                 case NotificationType.Issue:
-                    await EmailIssue(model, settings);
+                    await EmailIssue(model, emailSettings);
                     break;
                 case NotificationType.RequestAvailable:
                     throw new NotImplementedException();
@@ -81,7 +83,7 @@ namespace PlexRequests.Services.Notification
                     throw new NotImplementedException();
 
                 case NotificationType.Test:
-                    await EmailTest(model, settings);
+                    await EmailTest(model, emailSettings);
                     break;
 
                 default:

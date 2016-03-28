@@ -129,7 +129,7 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        public Task NotifyAsync(NotificationModel model, EmailNotificationSettings settings)
+        public Task NotifyAsync(NotificationModel model, Settings settings)
         {
             throw new NotImplementedException();
         }

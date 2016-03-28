@@ -37,6 +37,6 @@ namespace PlexRequests.Services.Interfaces
 
         Task NotifyAsync(NotificationModel model);
 
-        Task NotifyAsync(NotificationModel model, EmailNotificationSettings settings);
+        Task NotifyAsync(NotificationModel model, Settings settings);
     }
 }
