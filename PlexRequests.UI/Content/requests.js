@@ -13,7 +13,7 @@ var mixItUpDefault = {
     animation: { enable: true },
     load: {
         filter: 'all',
-        sort: 'default:asc'
+        sort: 'requestorder:desc'
     },
     layout: {
         display: 'block'
@@ -147,6 +147,13 @@ $('#approveTVShows').click(function (e) {
             finishLoading(buttonId, "success", origHtml)
         }
     });
+});
+
+// filtering/sorting
+$('.filter,.sort', '.dropdown-menu').click(function (e) {
+    var $this = $(this);
+    $('.fa-square', $this.parents('.dropdown-menu:first')).removeClass('fa-square').addClass('fa-square-o');
+    $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-square');
 });
 
 

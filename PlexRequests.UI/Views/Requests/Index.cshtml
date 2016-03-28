@@ -45,11 +45,11 @@
                 <i class="fa fa-filter"></i>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="#" class="filter" data-filter="all">All</a></li>
-                <li><a href="#" class="filter" data-filter=".approved-true">Approved</a></li>
-                <li><a href="#" class="filter" data-filter=".approved-false">Not Approved</a></li>
-                <li><a href="#" class="filter" data-filter=".available-true">Available</a></li>
-                <li><a href="#" class="filter" data-filter=".available-false">Not Available</a></li>
+                <li><a href="#" class="filter" data-filter="all"><i class="fa fa-square"></i>  All</a></li>
+                <li><a href="#" class="filter" data-filter=".approved-true"><i class="fa fa-square-o"></i>  Approved</a></li>
+                <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i>  Not Approved</a></li>
+                <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i>  Available</a></li>
+                <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i>  Not Available</a></li>
             </ul>
         </div>
         <div class="btn-group col-sm-push-8">
@@ -58,11 +58,10 @@
                 <i class="fa fa-sort"></i>
             </a>
             <ul class="dropdown-menu">
-                <li><a href="#" class="sort" data-sort="default">Default</a></li>
-                <li><a href="#" class="sort" data-sort="requestorder:asc">Requested Date (asc)</a></li>
-                <li><a href="#" class="sort" data-sort="requestorder:desc">Requested Date (desc)</a></li>
-                <li><a href="#" class="sort" data-sort="releaseorder:asc">Release Date (asc)</a></li>
-                <li><a href="#" class="sort" data-sort="releaseorder:desc">Release Date (desc)</a></li>
+                <li><a href="#" class="sort" data-sort="requestorder:desc"><i class="fa fa-square"></i>  Recent Requests</a></li>
+                <li><a href="#" class="sort" data-sort="requestorder:asc"><i class="fa fa-square-o"></i>  Older Requests</a></li>
+                <li><a href="#" class="sort" data-sort="releaseorder:desc"><i class="fa fa-square-o"></i>  Recent Releases</a></li>
+                <li><a href="#" class="sort" data-sort="releaseorder:asc"><i class="fa fa-square-o"></i>  Older Releases</a></li>
             </ul>
         </div>
         @if (Model.SearchForMovies)
