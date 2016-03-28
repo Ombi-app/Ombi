@@ -128,5 +128,10 @@ namespace PlexRequests.Services.Notification
                 Log.Error(e);
             }
         }
+
+        public Task NotifyAsync(NotificationModel model, EmailNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

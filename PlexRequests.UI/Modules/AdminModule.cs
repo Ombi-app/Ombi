@@ -51,6 +51,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using System;
 
 namespace PlexRequests.UI.Modules
 {
@@ -139,6 +140,7 @@ namespace PlexRequests.UI.Modules
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
+            Post["/testemailnotification"] = _ => TestEmailNotifications();
             Get["/status"] = _ => Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
@@ -370,6 +372,19 @@ namespace PlexRequests.UI.Modules
         {
             var settings = EmailService.GetSettings();
             return View["EmailNotifications", settings];
+        }
+
+        private Response TestEmailNotifications()
+        {
+            var settings = this.Bind<EmailNotificationSettings>();
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            NotificationService.Publish(notificationModel, settings);
+            Log.Info("Sent email notification test");
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
         }
 
         private Response SaveEmailNotifications()

@@ -27,12 +27,14 @@
 using System.Threading.Tasks;
 
 using PlexRequests.Services.Notification;
+using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Services.Interfaces
 {
     public interface INotificationService
     {
         Task Publish(NotificationModel model);
+        Task Publish(NotificationModel model, EmailNotificationSettings settings);
         void Subscribe(INotification notification);
         void UnSubscribe(INotification notification);
 

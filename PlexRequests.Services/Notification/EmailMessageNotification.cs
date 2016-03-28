@@ -46,13 +46,19 @@ namespace PlexRequests.Services.Notification
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        private EmailNotificationSettings Settings => GetConfiguration();
         public string NotificationName => "EmailMessageNotification";
 
         public async Task NotifyAsync(NotificationModel model)
         {
             var configuration = GetConfiguration();
-            if (!ValidateConfiguration(configuration))
+            await NotifyAsync(model, configuration);
+        }
+
+        public async Task NotifyAsync(NotificationModel model, EmailNotificationSettings settings)
+        {
+            if (settings == null) await NotifyAsync(model);
+
+            if (!ValidateConfiguration(settings))
             {
                 return;
             }
@@ -60,10 +66,10 @@ namespace PlexRequests.Services.Notification
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    await EmailNewRequest(model);
+                    await EmailNewRequest(model, settings);
                     break;
                 case NotificationType.Issue:
-                    await EmailIssue(model);
+                    await EmailIssue(model, settings);
                     break;
                 case NotificationType.RequestAvailable:
                     throw new NotImplementedException();
@@ -73,6 +79,10 @@ namespace PlexRequests.Services.Notification
 
                 case NotificationType.AdminNote:
                     throw new NotImplementedException();
+
+                case NotificationType.Test:
+                    await EmailTest(model, settings);
+                    break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -100,23 +110,23 @@ namespace PlexRequests.Services.Notification
             return true;
         }
 
-        private async Task EmailNewRequest(NotificationModel model)
+        private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
             var message = new MailMessage
             {
                 IsBodyHtml = true,
-                To = { new MailAddress(Settings.RecipientEmail) },
+                To = { new MailAddress(settings.RecipientEmail) },
                 Body = $"Hello! The user '{model.User}' has requested {model.Title}! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
-                From = new MailAddress(Settings.EmailSender),
+                From = new MailAddress(settings.EmailSender),
                 Subject = $"Plex Requests: New request for {model.Title}!"
             };
 
             try
             {
-                using (var smtp = new SmtpClient(Settings.EmailHost, Settings.EmailPort))
+                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
                 {
-                    smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
-                    smtp.EnableSsl = Settings.Ssl;
+                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
+                    smtp.EnableSsl = settings.Ssl;
                     await smtp.SendMailAsync(message).ConfigureAwait(false);
                 }
             }
@@ -130,23 +140,53 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        private async Task EmailIssue(NotificationModel model)
+        private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
         {
             var message = new MailMessage
             {
                 IsBodyHtml = true,
-                To = { new MailAddress(Settings.RecipientEmail) },
+                To = { new MailAddress(settings.RecipientEmail) },
                 Body = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
-                From = new MailAddress(Settings.RecipientEmail),
+                From = new MailAddress(settings.RecipientEmail),
                 Subject = $"Plex Requests: New issue for {model.Title}!"
             };
 
             try
             {
-                using (var smtp = new SmtpClient(Settings.EmailHost, Settings.EmailPort))
+                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
                 {
-                    smtp.Credentials = new NetworkCredential(Settings.EmailUsername, Settings.EmailPassword);
-                    smtp.EnableSsl = Settings.Ssl;
+                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
+                    smtp.EnableSsl = settings.Ssl;
+                    await smtp.SendMailAsync(message).ConfigureAwait(false);
+                }
+            }
+            catch (SmtpException smtp)
+            {
+                Log.Error(smtp);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+        private async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
+        {
+            var message = new MailMessage
+            {
+                IsBodyHtml = true,
+                To = { new MailAddress(settings.RecipientEmail) },
+                Body = "This is just a test! Success!",
+                From = new MailAddress(settings.RecipientEmail),
+                Subject = "Plex Requests: Test Message!"
+            };
+
+            try
+            {
+                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
+                {
+                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
+                    smtp.EnableSsl = settings.Ssl;
                     await smtp.SendMailAsync(message).ConfigureAwait(false);
                 }
             }
