@@ -59,7 +59,9 @@
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SickRage\SickRageBase.cs" />
     <Compile Include="SickRage\SickRagePing.cs" />
+    <Compile Include="SickRage\SickRageSeasonList.cs" />
     <Compile Include="SickRage\SickRageShowInformation.cs" />
     <Compile Include="SickRage\SickRageStatus.cs" />
     <Compile Include="SickRage\SickRageTvAdd.cs" />
