@@ -123,6 +123,7 @@ namespace PlexRequests.UI
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             ServicePointManager.ServerCertificateValidationCallback +=
                  (sender, certificate, chain, sslPolicyErrors) => true;
 
