@@ -397,8 +397,21 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
-            NotificationService.Publish(notificationModel, settings);
-            Log.Info("Sent email notification test");
+            try
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent email notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Email Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+            } 
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
         }
 
@@ -483,8 +496,21 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
-            NotificationService.Publish(notificationModel, settings);
-            Log.Info("Sent pushbullet notification test");
+            try
+            {
+                NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushbullet notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushbullet Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushbullet Notification!" });
         }
 
@@ -533,8 +559,21 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
-            NotificationService.Publish(notificationModel, settings);
-            Log.Info("Sent pushover notification test");
+            try
+            {
+                NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushover notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushover Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+            }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
         }
 
