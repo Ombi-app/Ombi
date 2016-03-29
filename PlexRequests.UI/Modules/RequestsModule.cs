@@ -87,28 +87,34 @@ namespace PlexRequests.UI.Modules
                 dbMovies = dbMovies.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
             }
 
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
-            {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate.Humanize(),
-                ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                RequestedDate = movie.RequestedDate.Humanize(),
-                RequestedDateTicks = movie.RequestedDate.Ticks,
-                Approved = movie.Available || movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedUsers = isAdmin ? movie.RequestedUsers.ToArray() : new string[] { },
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = isAdmin,
-                Issues = movie.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote
+            var viewModel = dbMovies.Select(movie => {
+                if (!string.IsNullOrEmpty(movie.RequestedBy) && !movie.RequestedUsers.Any(x => x.Equals(movie.RequestedBy, StringComparison.OrdinalIgnoreCase)))
+                {
+                    movie.RequestedUsers.Add(movie.RequestedBy);
+                }
+                return new RequestViewModel
+                {
+                    ProviderId = movie.ProviderId,
+                    Type = movie.Type,
+                    Status = movie.Status,
+                    ImdbId = movie.ImdbId,
+                    Id = movie.Id,
+                    PosterPath = movie.PosterPath,
+                    ReleaseDate = movie.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                    RequestedDate = movie.RequestedDate.Humanize(),
+                    RequestedDateTicks = movie.RequestedDate.Ticks,
+                    Approved = movie.Available || movie.Approved,
+                    Title = movie.Title,
+                    Overview = movie.Overview,
+                    RequestedUsers = isAdmin ? movie.RequestedUsers.ToArray() : new string[] { },
+                    ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                    Available = movie.Available,
+                    Admin = isAdmin,
+                    Issues = movie.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = movie.OtherMessage,
+                    AdminNotes = movie.AdminNote
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -124,29 +130,35 @@ namespace PlexRequests.UI.Modules
                 dbTv = dbTv.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
             }
 
-            var viewModel = dbTv.Select(tv => new RequestViewModel
-            {
-                ProviderId = tv.ProviderId,
-                Type = tv.Type,
-                Status = tv.Status,
-                ImdbId = tv.ImdbId,
-                Id = tv.Id,
-                PosterPath = tv.PosterPath,
-                ReleaseDate = tv.ReleaseDate.Humanize(),
-                ReleaseDateTicks = tv.ReleaseDate.Ticks,
-                RequestedDate = tv.RequestedDate.Humanize(),
-                RequestedDateTicks = tv.RequestedDate.Ticks,
-                Approved = tv.Available || tv.Approved,
-                Title = tv.Title,
-                Overview = tv.Overview,
-                RequestedUsers = isAdmin ? tv.RequestedUsers.ToArray() : new string[] { },
-                ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                Available = tv.Available,
-                Admin = isAdmin,
-                Issues = tv.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote,
-                TvSeriesRequestType = tv.SeasonsRequested
+            var viewModel = dbTv.Select(tv => {
+                if (!string.IsNullOrEmpty(tv.RequestedBy) && !tv.RequestedUsers.Any(x => x.Equals(tv.RequestedBy, StringComparison.OrdinalIgnoreCase)))
+                {
+                    tv.RequestedUsers.Add(tv.RequestedBy);
+                }
+                return new RequestViewModel
+                {
+                    ProviderId = tv.ProviderId,
+                    Type = tv.Type,
+                    Status = tv.Status,
+                    ImdbId = tv.ImdbId,
+                    Id = tv.Id,
+                    PosterPath = tv.PosterPath,
+                    ReleaseDate = tv.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = tv.ReleaseDate.Ticks,
+                    RequestedDate = tv.RequestedDate.Humanize(),
+                    RequestedDateTicks = tv.RequestedDate.Ticks,
+                    Approved = tv.Available || tv.Approved,
+                    Title = tv.Title,
+                    Overview = tv.Overview,
+                    RequestedUsers = isAdmin ? tv.RequestedUsers.ToArray() : new string[] { },
+                    ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                    Available = tv.Available,
+                    Admin = isAdmin,
+                    Issues = tv.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = tv.OtherMessage,
+                    AdminNotes = tv.AdminNote,
+                    TvSeriesRequestType = tv.SeasonsRequested
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
