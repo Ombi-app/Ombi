@@ -27,6 +27,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Newtonsoft.Json;
+
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
@@ -93,15 +96,19 @@ namespace PlexRequests.Api
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
-            var obj = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
-
-            if (obj == null)
+            SonarrAddSeries result;
+            try
             {
+                result = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
                 var error = Api.ExecuteJson<SonarrError>(request, baseUrl);
-                obj = new SonarrAddSeries { ErrorMessage = error.errorMessage };
+                result = new SonarrAddSeries { ErrorMessage = error.errorMessage };
             }
 
-            return obj;
+            return result;
         }
 
         public SystemStatus SystemStatus(string apiKey, Uri baseUrl)
