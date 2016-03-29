@@ -53,7 +53,7 @@ namespace PlexRequests.Services
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private IRequestService RequestService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private IPlexApi PlexApi { get; set; }
+        private IPlexApi PlexApi { get; }
 
 
         public void CheckAndUpdateAll(long check)
@@ -63,7 +63,7 @@ namespace PlexRequests.Services
             var requests = RequestService.GetAll();
 
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
-            if (!ValidateSettings(plexSettings, authSettings, requestedModels))
+            if (!ValidateSettings(plexSettings, authSettings) || !requestedModels.Any())
             {
                 return;
             }
@@ -112,21 +112,6 @@ namespace PlexRequests.Services
                 return result?.Title != null || directoryTitle;
             }
 
-        }
-
-        private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth, IEnumerable<RequestedModel> requests)
-        {
-            if (plex.Ip == null || auth.PlexAuthToken == null || requests == null)
-            {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
-                return false;
-            }
-            if (!requests.Any())
-            {
-                Log.Info("We have no requests to check if they are available on Plex.");
-                return false;
-            }
-            return true;
         }
 
         private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth)

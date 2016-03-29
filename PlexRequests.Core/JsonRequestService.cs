@@ -79,6 +79,10 @@ namespace PlexRequests.Core
         public RequestedModel Get(int id)
         {
             var blob = Repo.Get(id);
+            if (blob == null)
+            {
+                return new RequestedModel();
+            }
             var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
             return model;
         }

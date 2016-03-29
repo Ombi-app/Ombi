@@ -84,6 +84,10 @@
       <Project>{566EFA49-68F8-4716-9693-A6B3F2624DEA}</Project>
       <Name>PlexRequests.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
+      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
+      <Name>PlexRequests.Store</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
