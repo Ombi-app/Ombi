@@ -22,7 +22,9 @@
 
 .form-control-custom {
   background-color: #4e5d6c !important;
-  color: white !important; }
+  color: white !important;
+  border-radius: 0;
+  box-shadow: 0 0 0 !important; }
 
 h1 {
   font-size: 3.5rem !important;
@@ -137,4 +139,15 @@ label {
 
 #tvList .mix {
   display: none; }
+
+.no-search-results {
+  text-align: center; }
+
+.no-search-results .no-search-results-icon {
+  font-size: 10em;
+  color: #4e5d6c; }
+
+.no-search-results .no-search-results-text {
+  margin: 20px 0;
+  color: #ccc; }
 

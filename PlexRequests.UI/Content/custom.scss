@@ -5,7 +5,9 @@ $info-colour: #5bc0de;
 $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
-$i:!important;
+$i:
+!important
+;
 
 @media (min-width: 768px ) {
     .row {
@@ -42,6 +44,8 @@ $i:!important;
 .form-control-custom {
     background-color: $form-color $i;
     color: white $i;
+    border-radius: 0;
+    box-shadow: 0 0 0 !important;
 }
 
 
@@ -65,8 +69,8 @@ label {
     font-size: 16px $i;
 }
 
-.nav-tabs > li.active > a, 
-.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
     background: #4e5d6c;
 }
@@ -170,9 +174,24 @@ label {
     border-color: $success-colour $i;
 }
 
-#movieList .mix{
-	display: none;
+#movieList .mix {
+    display: none;
 }
-#tvList .mix{
-	display: none;
+
+#tvList .mix {
+    display: none;
+}
+
+.no-search-results {
+    text-align: center;
+}
+
+.no-search-results .no-search-results-icon {
+    font-size: 10em;
+    color: $form-color;
+}
+
+.no-search-results .no-search-results-text {
+    margin: 20px 0;
+    color: #ccc;
 }
