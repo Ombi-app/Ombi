@@ -28,6 +28,8 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Web.UI.HtmlControls;
+
 using Humanizer;
 using MarkdownSharp;
 
@@ -65,6 +67,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<EmailNotificationSettings> EmailService { get; }
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesSerivce { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private IPushbulletApi PushbulletApi { get; }
@@ -89,7 +92,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PushoverNotificationSettings> pushoverSettings,
             IPushoverApi pushoverApi,
             IRepository<LogEntity> logsRepo,
-            INotificationService notify) : base("admin")
+            INotificationService notify,
+            ISettingsService<HeadphonesSettings> headphones) : base("admin")
         {
             RpService = rpService;
             CpService = cpService;
@@ -107,6 +111,7 @@ namespace PlexRequests.UI.Modules
             PushoverService = pushoverSettings;
             PushoverApi = pushoverApi;
             NotificationService = notify;
+            HeadphonesSerivce = headphones;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -151,6 +156,9 @@ namespace PlexRequests.UI.Modules
             Get["/loglevel"] = _ => GetLogLevels();
             Post["/loglevel"] = _ => UpdateLogLevels(Request.Form.level);
             Get["/loadlogs"] = _ => LoadLogs();
+
+            Get["/headphones"] = _ => Headphones();
+            Post["/headphones"] = _ => SaveHeadphones();
         }
 
         private Negotiator Authentication()
@@ -508,6 +516,33 @@ namespace PlexRequests.UI.Modules
             var newLevel = LogLevel.FromOrdinal(level);
             LoggingHelper.ReconfigureLogLevel(newLevel);
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
+        }
+
+        private Negotiator Headphones()
+        {
+            var settings = HeadphonesSerivce.GetSettings();
+            return View["Headphones", settings];
+        }
+
+        private Response SaveHeadphones()
+        {
+            var settings = this.Bind<HeadphonesSettings>();
+
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                var error = valid.SendJsonError();
+                Log.Info("Error validating Headphones settings, message: {0}", error.Message);
+                return Response.AsJson(error);
+            }
+            Log.Trace(settings.DumpJson());
+
+            var result = HeadphonesSerivce.SaveSettings(settings);
+            
+            Log.Info("Saved headphones settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
     }
 }
