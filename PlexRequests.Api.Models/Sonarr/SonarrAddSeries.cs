@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 namespace PlexRequests.Api.Models.Sonarr
 {
     public class Season
@@ -23,6 +25,8 @@ namespace PlexRequests.Api.Models.Sonarr
         public string imdbId { get; set; }
         public string titleSlug { get; set; }
         public int id { get; set; }
+        [JsonIgnore]
+        public string ErrorMessage { get; set; }
     }
 
     public class AddOptions

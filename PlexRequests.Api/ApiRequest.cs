@@ -26,13 +26,9 @@
 #endregion
 using System;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using NLog;
 
@@ -99,17 +95,18 @@ namespace PlexRequests.Api
             try
             {
                 var json = JsonConvert.DeserializeObject<T>(response.Content);
+
                 return json;
             }
             catch (Exception e)
             {
-                Log.Fatal(e);
-                Log.Info(response.Content);
+                Log.Error(e);
+                Log.Error(response.Content);
                 throw;
             }
         }
 
-        public T DeserializeXml<T>(string input)
+        private T DeserializeXml<T>(string input)
              where T : class
         {
             var ser = new XmlSerializer(typeof(T));

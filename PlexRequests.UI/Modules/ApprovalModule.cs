@@ -131,7 +131,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel
                 {
                     Result = false,
-                    Message = "Could not add the series to Sonarr"
+                    Message = result.ErrorMessage ?? "Could not add the series to Sonarr"
                 });
             }
 
@@ -276,7 +276,7 @@ namespace PlexRequests.UI.Modules
                     if (sonarr.Enabled)
                     {
                         var result = sender.SendToSonarr(sonarr, r);
-                        if (result != null)
+                        if (!string.IsNullOrEmpty(result?.title))
                         {
                             r.Approved = true;
                             updatedRequests.Add(r);
@@ -284,6 +284,7 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
+                            Log.Error("Error message: {0}", result?.ErrorMessage);
                         }
                     }
                 }

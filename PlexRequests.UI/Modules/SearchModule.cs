@@ -371,18 +371,19 @@ namespace PlexRequests.UI.Modules
                 if (sonarrSettings.Enabled)
                 {
                     var result = sender.SendToSonarr(sonarrSettings, model);
-                    if (result != null)
+                    if (result != null && !string.IsNullOrEmpty(result.title))
                     {
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
+                        var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        NotificationService.Publish(notify1);
 
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
-                    var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
-                    NotificationService.Publish(notify1);
 
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to Sonarr! Please check your settings." });
+
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.ErrorMessage ?? "Something went wrong adding the movie to Sonarr! Please check your settings." });
 
                 }
 
