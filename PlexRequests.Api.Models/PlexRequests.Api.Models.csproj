@@ -64,6 +64,7 @@
     <Compile Include="SickRage\SickRageStatus.cs" />
     <Compile Include="SickRage\SickRageTvAdd.cs" />
     <Compile Include="Sonarr\SonarrAddSeries.cs" />
+    <Compile Include="Sonarr\SonarrError.cs" />
     <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />

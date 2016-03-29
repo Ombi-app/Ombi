@@ -27,12 +27,11 @@
 using System;
 using System.Data;
 using System.IO;
+using System.Windows.Forms;
 
 using Mono.Data.Sqlite;
 
 using NLog;
-using PlexRequests.Helpers;
-using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Store
 {
@@ -44,12 +43,14 @@ namespace PlexRequests.Store
             Factory = provider;
         }
 
-        private SqliteFactory Factory { get; set; }
+        private SqliteFactory Factory { get; }
+        private string CurrentPath =>Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, DbFile);
 
         public virtual bool CheckDb()
         {
             Log.Trace("Checking DB");
-            if (!File.Exists(DbFile))
+            Console.WriteLine(CurrentPath);
+            if (!File.Exists(CurrentPath))
             {
                 Log.Trace("DB doesn't exist, creating a new one");
                 CreateDatabase();
@@ -59,7 +60,7 @@ namespace PlexRequests.Store
         }
 
         public string DbFile = "PlexRequests.sqlite";
-        
+
         /// <summary>
         /// Gets the database connection.
         /// </summary>
@@ -72,7 +73,7 @@ namespace PlexRequests.Store
             {
                 throw new SqliteException("Factory returned null");
             }
-            fact.ConnectionString = "Data Source=" + DbFile;
+            fact.ConnectionString = "Data Source=" + CurrentPath;
             return fact;
         }
 
@@ -83,7 +84,7 @@ namespace PlexRequests.Store
         {
             try
             {
-                using (File.Create(DbFile))
+                using (File.Create(CurrentPath))
                 {
                 }
             }

@@ -58,36 +58,6 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 });
 
 // Approve all
-$('#approveAll').click(function (e) {
-    e.preventDefault();
-    var buttonId = e.target.id;
-    var origHtml = $(this).html();
-
-    if ($('#' + buttonId).text() === " Loading...") {
-        return;
-    }
-
-    loadingButton(buttonId, "success");
-
-    $.ajax({
-        type: 'post',
-        url: '/approval/approveall',
-        dataType: "json",
-        success: function (response) {
-            if (checkJsonResponse(response)) {
-                generateNotify("Success! All requests approved!", "success");
-                initLoad();
-            }
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
-        },
-        complete: function (e) {
-            finishLoading(buttonId, "success", origHtml)
-        }
-    });
-});
 $('#approveMovies').click(function (e) {
     e.preventDefault();
     var buttonId = e.target.id;

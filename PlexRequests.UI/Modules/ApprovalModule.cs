@@ -133,7 +133,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel
                 {
                     Result = false,
-                    Message = "Could not add the series to Sonarr"
+                    Message = result.ErrorMessage ?? "Could not add the series to Sonarr"
                 });
             }
 
@@ -340,7 +340,7 @@ namespace PlexRequests.UI.Modules
                     if (sonarr.Enabled)
                     {
                         var res = sender.SendToSonarr(sonarr, r);
-                        if (res != null)
+                        if (!string.IsNullOrEmpty(res?.title))
                         {
                             r.Approved = true;
                             updatedRequests.Add(r);
@@ -348,14 +348,24 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
+                            Log.Error("Error message: {0}", res?.ErrorMessage);
                         }
                     }
                 }
             }
-             var result = Service.BatchUpdate(updatedRequests);
+            try
+            {
+
+                var result = Service.BatchUpdate(updatedRequests);
              return Response.AsJson(result
                  ? new JsonResponseModel { Result = true }
                  : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });
+        }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
         }
 
         private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)

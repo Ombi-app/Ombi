@@ -76,9 +76,9 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
+            container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
 
             // Repo's
-            container.Register<IRepository<RequestedModel>, GenericRepository<RequestedModel>>();
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
@@ -101,13 +101,13 @@ namespace PlexRequests.UI
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
+
+            TaskManager.TaskFactory = new PlexTaskFactory();
+            TaskManager.Initialize(new PlexRegistry());
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
-            TaskManager.TaskFactory = new PlexTaskFactory();
-            TaskManager.Initialize(new PlexRegistry());
-
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
 
             StaticConfiguration.DisableErrorTraces = false;
@@ -123,11 +123,12 @@ namespace PlexRequests.UI
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
 
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             ServicePointManager.ServerCertificateValidationCallback +=
                  (sender, certificate, chain, sslPolicyErrors) => true;
 
         }
-
+        
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
 

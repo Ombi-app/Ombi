@@ -27,9 +27,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using Newtonsoft.Json;
+
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
+using PlexRequests.Helpers;
+
 using RestSharp;
 
 namespace PlexRequests.Api
@@ -56,7 +61,8 @@ namespace PlexRequests.Api
 
         public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl)
         {
-
+            Log.Debug("Adding series {0}", title);
+            Log.Debug("Seasons = {0}, out of {1} seasons", seasons.DumpJson(), seasonCount);
             var request = new RestRequest
             {
                 Resource = "/api/Series?",
@@ -74,7 +80,6 @@ namespace PlexRequests.Api
                 rootFolderPath = rootPath
             };
 
-
             for (var i = 1; i <= seasonCount; i++)
             {
                 var season = new Season
@@ -85,12 +90,25 @@ namespace PlexRequests.Api
                 options.seasons.Add(season);
             }
 
+            Log.Debug("Sonarr API Options:");
+            Log.Debug(options.DumpJson());
+
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
-            var obj = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+            SonarrAddSeries result;
+            try
+            {
+                result = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                var error = Api.ExecuteJson<SonarrError>(request, baseUrl);
+                result = new SonarrAddSeries { ErrorMessage = error.errorMessage };
+            }
 
-            return obj;
+            return result;
         }
 
         public SystemStatus SystemStatus(string apiKey, Uri baseUrl)

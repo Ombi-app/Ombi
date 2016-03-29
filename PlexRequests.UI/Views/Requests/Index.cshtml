@@ -2,13 +2,8 @@
 <div>
     <h1>Requests</h1>
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
-    @if (Context.CurrentUser.IsAuthenticated())
-    {
-        <button id="approveAll" class="btn btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve All</button>
+    <br />
 
-        <br />
-        <br />
-    }
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         @if (Model.SearchForMovies)
@@ -23,10 +18,9 @@
     </ul>
     <br />
 
-
     <!-- Tab panes -->
     <div class="tab-content contentList">
-        <div class="btn-group col-sm-2">
+        <div class="btn-group col-sm-push-8">
             @if (Context.CurrentUser.IsAuthenticated())
             {
                 @if (Model.SearchForMovies)
