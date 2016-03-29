@@ -67,7 +67,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<EmailNotificationSettings> EmailService { get; }
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
-        private ISettingsService<HeadphonesSettings> HeadphonesSerivce { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private IPushbulletApi PushbulletApi { get; }
@@ -111,7 +111,7 @@ namespace PlexRequests.UI.Modules
             PushoverService = pushoverSettings;
             PushoverApi = pushoverApi;
             NotificationService = notify;
-            HeadphonesSerivce = headphones;
+            HeadphonesService = headphones;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -520,7 +520,7 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Headphones()
         {
-            var settings = HeadphonesSerivce.GetSettings();
+            var settings = HeadphonesService.GetSettings();
             return View["Headphones", settings];
         }
 
@@ -537,7 +537,7 @@ namespace PlexRequests.UI.Modules
             }
             Log.Trace(settings.DumpJson());
 
-            var result = HeadphonesSerivce.SaveSettings(settings);
+            var result = HeadphonesService.SaveSettings(settings);
             
             Log.Info("Saved headphones settings, result: {0}", result);
             return Response.AsJson(result
