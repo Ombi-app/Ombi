@@ -24,6 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,17 +98,16 @@ namespace PlexRequests.Services
             {
                 throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
             }
+            var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
             if (!string.IsNullOrEmpty(year))
             {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title) && x.Year == year);
+                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
                 var directoryTitle = results.Directory?.Title == title && results.Directory?.Year == year;
                 return result?.Title != null || directoryTitle;
             }
             else
             {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title));
+                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
                 var directoryTitle = results.Directory?.Title == title;
                 return result?.Title != null || directoryTitle;
             }
