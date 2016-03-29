@@ -58,10 +58,11 @@ namespace PlexRequests.Core
             return result ? id : -1;
         }
 
-        public bool CheckRequest(int providerId)
+        public RequestedModel CheckRequest(int providerId)
         {
             var blobs = Repo.GetAll();
-            return blobs.Any(x => x.ProviderId == providerId);
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
 
         public void DeleteRequest(RequestedModel request)

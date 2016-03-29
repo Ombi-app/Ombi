@@ -179,11 +179,20 @@ namespace PlexRequests.UI.Modules
             Log.Trace(movieInfo.DumpJson);
             //#if !DEBUG
 
+            var settings = PrService.GetSettings();
+
+            // check if the movie has already been requested
             Log.Info("Requesting movie with id {0}", movieId);
-            if (RequestService.CheckRequest(movieId))
+            var existingRequest = RequestService.CheckRequest(movieId);
+            if (existingRequest != null)
             {
-                Log.Trace("movie with id {0} exists", movieId);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} has already been requested!" });
+                // check if the current user is already marked as a requester for this movie, if not, add them
+                if (!existingRequest.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()))
+                {
+                    existingRequest.RequestedUsers.Add(Session[SessionKeys.UsernameKey].ToString());
+                    RequestService.UpdateRequest(existingRequest);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
@@ -213,12 +222,10 @@ namespace PlexRequests.UI.Modules
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                RequestedUsers = new List<string>() { Session[SessionKeys.UsernameKey].ToString() },
                 Issues = IssueState.None,
             };
 
-
-            var settings = PrService.GetSettings();
             Log.Trace(settings.DumpJson());
             if (!settings.RequireMovieApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
             {
@@ -310,9 +317,20 @@ namespace PlexRequests.UI.Modules
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
 
-            if (RequestService.CheckRequest(showId))
+            var settings = PrService.GetSettings();
+
+            // check if the show has already been requested
+            Log.Info("Requesting tv show with id {0}", showId);
+            var existingRequest = RequestService.CheckRequest(showId);
+            if (existingRequest != null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} has already been requested!" });
+                // check if the current user is already marked as a requester for this show, if not, add them
+                if (!existingRequest.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()))
+                {
+                    existingRequest.RequestedUsers.Add(Session[SessionKeys.UsernameKey].ToString());
+                    RequestService.UpdateRequest(existingRequest);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
             }
 
             try
@@ -340,7 +358,7 @@ namespace PlexRequests.UI.Modules
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                RequestedUsers = new List<string>() { Session[SessionKeys.UsernameKey].ToString() },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
@@ -363,7 +381,6 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            var settings = PrService.GetSettings();
             if (!settings.RequireTvShowApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();

@@ -41,7 +41,7 @@ namespace PlexRequests.UI.Models
         public RequestType Type { get; set; }
         public string Status { get; set; }
         public bool Approved { get; set; }
-        public string RequestedBy { get; set; }
+        public string[] RequestedUsers { get; set; }
         public string RequestedDate { get; set; }
         public long RequestedDateTicks { get; set; }
         public string ReleaseYear { get; set; }

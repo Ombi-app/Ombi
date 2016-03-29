@@ -433,7 +433,7 @@ function buildRequestContext(result, type) {
         releaseDate: result.releaseDate,
         releaseDateTicks: result.releaseDateTicks,
         approved: result.approved,
-        requestedBy: result.requestedBy,
+        requestedUsers: result.requestedUsers ? result.requestedUsers.join(', ') : '',
         requestedDate: result.requestedDate,
         requestedDateTicks: result.requestedDateTicks,
         available: result.available,

@@ -84,7 +84,7 @@ namespace PlexRequests.UI.Modules
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                dbMovies = dbMovies.Where(x => x.RequestedBy.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase));
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
             }
 
             var viewModel = dbMovies.Select(movie => new RequestViewModel
@@ -102,7 +102,7 @@ namespace PlexRequests.UI.Modules
                 Approved = movie.Available || movie.Approved,
                 Title = movie.Title,
                 Overview = movie.Overview,
-                RequestedBy = movie.RequestedBy,
+                RequestedUsers = isAdmin ? movie.RequestedUsers.ToArray() : new string[] { },
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
                 Admin = isAdmin,
@@ -121,7 +121,7 @@ namespace PlexRequests.UI.Modules
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                dbTv = dbTv.Where(x => x.RequestedBy.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase));
+                dbTv = dbTv.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
             }
 
             var viewModel = dbTv.Select(tv => new RequestViewModel
@@ -139,7 +139,7 @@ namespace PlexRequests.UI.Modules
                 Approved = tv.Available || tv.Approved,
                 Title = tv.Title,
                 Overview = tv.Overview,
-                RequestedBy = tv.RequestedBy,
+                RequestedUsers = isAdmin ? tv.RequestedUsers.ToArray() : new string[] { },
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
                 Available = tv.Available,
                 Admin = isAdmin,
