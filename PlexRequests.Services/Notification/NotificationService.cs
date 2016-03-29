@@ -67,8 +67,14 @@ namespace PlexRequests.Services.Notification
 
         private static async Task NotifyAsync(INotification notification, NotificationModel model)
         {
-
-            await NotifyAsync(notification, model, null);
+            try
+            {
+                await notification.NotifyAsync(model).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+            }
 
         }
 
