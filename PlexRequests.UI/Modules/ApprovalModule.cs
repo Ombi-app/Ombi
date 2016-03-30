@@ -225,7 +225,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
             }
 
-            var requests = Service.GetAll().Where(x => x.Approved == false && x.Type == RequestType.Movie);
+            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.Movie);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -250,7 +250,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
             }
 
-            var requests = Service.GetAll().Where(x => x.Approved == false && x.Type == RequestType.TvShow);
+            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.TvShow);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -279,7 +279,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
             }
 
-            var requests = Service.GetAll().Where(x => x.Approved == false);
+            var requests = Service.GetAll().Where(x => x.CanApprove);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {

@@ -59,6 +59,15 @@ namespace PlexRequests.Store
             }
         }
 
+        [JsonIgnore]
+        public bool CanApprove
+        {
+            get
+            {
+                return !Approved && !Available;
+            }
+        }
+
         public bool UserHasRequested(string username)
         {
             return AllUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase));
