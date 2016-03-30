@@ -131,7 +131,8 @@ namespace PlexRequests.UI.Modules
             }
 
             var viewModel = dbTv.Select(tv => {
-                if (!string.IsNullOrEmpty(tv.RequestedBy) && !tv.RequestedUsers.Any(x => x.Equals(tv.RequestedBy, StringComparison.OrdinalIgnoreCase)))
+                if (!string.IsNullOrEmpty(tv.RequestedBy) && 
+                    !tv.RequestedUsers.Any(x => x.Equals(tv.RequestedBy, StringComparison.OrdinalIgnoreCase)))
                 {
                     tv.RequestedUsers.Add(tv.RequestedBy);
                 }

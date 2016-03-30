@@ -170,7 +170,7 @@ namespace PlexRequests.UI.Modules
             var users = Api.GetUsers(authToken);
             Log.Debug("Plex Users: ");
             Log.Debug(users.DumpJson());
-            var allUsers = users.User?.Where(x => !string.IsNullOrEmpty(x.Username));
+            var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Username));
             return allUsers != null && allUsers.Any(x => x.Username.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
 

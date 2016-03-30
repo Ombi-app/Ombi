@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        private ISettingsService<PlexRequestSettings> RpService { get; }
+        private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<PlexSettings> PlexService { get; }
@@ -78,7 +78,7 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public AdminModule(ISettingsService<PlexRequestSettings> rpService,
+        public AdminModule(ISettingsService<PlexRequestSettings> prService,
             ISettingsService<CouchPotatoSettings> cpService,
             ISettingsService<AuthenticationSettings> auth,
             ISettingsService<PlexSettings> plex,
@@ -96,7 +96,7 @@ namespace PlexRequests.UI.Modules
             INotificationService notify,
             ISettingsService<HeadphonesSettings> headphones) : base("admin")
         {
-            RpService = rpService;
+            PrService = prService;
             CpService = cpService;
             AuthService = auth;
             PlexService = plex;
@@ -186,7 +186,7 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Admin()
         {
-            var settings = RpService.GetSettings();
+            var settings = PrService.GetSettings();
             Log.Trace("Getting Settings:");
             Log.Trace(settings.DumpJson());
 
@@ -197,7 +197,7 @@ namespace PlexRequests.UI.Modules
         {
             var model = this.Bind<PlexRequestSettings>();
 
-            RpService.SaveSettings(model);
+            PrService.SaveSettings(model);
 
 
             return Context.GetRedirect("~/admin");

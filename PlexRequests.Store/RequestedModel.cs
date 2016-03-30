@@ -10,6 +10,11 @@ namespace PlexRequests.Store
     [Table("Requested")]
     public class RequestedModel : Entity
     {
+        public RequestedModel()
+        {
+            RequestedUsers = new List<string>();
+        }
+
         // ReSharper disable once IdentifierTypo
         public int ProviderId { get; set; }
         public string ImdbId { get; set; }
@@ -48,7 +53,8 @@ namespace PlexRequests.Store
     public enum RequestType
     {
         Movie,
-        TvShow
+        TvShow,
+        Album
     }
 
     public enum IssueState
