@@ -32,7 +32,8 @@ namespace PlexRequests.Store
     public enum RequestType
     {
         Movie,
-        TvShow
+        TvShow,
+        Album
     }
 
     public enum IssueState

@@ -32,8 +32,10 @@ namespace PlexRequests.Core.SettingModels
        
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
+        public bool SearchForMusic { get; set; }
         public bool RequireMovieApproval { get; set; }
         public bool RequireTvShowApproval { get; set; }
+        public bool RequireMusicApproval { get; set; }
         public int WeeklyRequestLimit { get; set; }
     }
 }

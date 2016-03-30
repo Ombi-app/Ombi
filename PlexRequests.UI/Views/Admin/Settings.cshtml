@@ -55,6 +55,20 @@
             <div class="form-group">
                 <div class="checkbox">
                     <label>
+                        @if (Model.SearchForMusic)
+                        {
+                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><text>Search for Music</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><text>Search for Music</text>
+}
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
                         @if (Model.RequireMovieApproval)
                         {
                             <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><text>Require approval of Movie requests</text>
@@ -82,7 +96,22 @@
 
                 </div>
             </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        @if (Model.RequireMusicApproval)
+                        {
+                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><text>Require approval of Music requests</text>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><text>Require approval of Music requests</text>
+                        }
+                    </label>
 
+                </div>
+            </div>
+            
             @*<div class="form-group">
                 <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
                 <div>

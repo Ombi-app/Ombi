@@ -33,7 +33,7 @@ namespace PlexRequests.Core.SettingModels
 {
     public class HeadphonesSettings : Settings
     {
-        public string Enabled { get; set; }
+        public bool Enabled { get; set; }
         public string Ip { get; set; }
         public int Port { get; set; }
         public int ApiKey { get; set; }

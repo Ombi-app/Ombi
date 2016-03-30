@@ -69,7 +69,7 @@ namespace PlexRequests.UI
             if (port == -1)
                 port = GetStartupPort();
 
-            var options = new StartOptions(Debugger.IsAttached ? $"http://localhost:{port}" : $"http://+:{port}")
+            var options = new StartOptions( $"http://+:{port}")
             {
                 ServerFactory = "Microsoft.Owin.Host.HttpListener"
             };
