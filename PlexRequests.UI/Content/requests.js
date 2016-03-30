@@ -9,6 +9,8 @@ var searchSource = $("#search-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
 var movieTimer = 0;
 var tvimer = 0;
+var noResultsHtml = "<div class='no-search-results'>" +
+    "<i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, there are no {0} requests yet!</div></div>";
 var mixItUpDefault = {
     animation: { enable: true },
     load: {
@@ -393,11 +395,16 @@ function movieLoad() {
     $ml.html("");
 
     $.ajax("/requests/movies/").success(function (results) {
-        results.forEach(function (result) {
-            var context = buildRequestContext(result, "movie");
-            var html = searchTemplate(context);
-            $ml.append(html);
-        });
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "movie");
+                var html = searchTemplate(context);
+                $ml.append(html);
+            });
+        }
+        else {
+            $ml.html(noResultsHtml.format("movie"));
+        }
         $ml.mixItUp(mixItUpConfig());
     });
 };
@@ -411,11 +418,16 @@ function tvLoad() {
     $tvl.html("");
 
     $.ajax("/requests/tvshows/").success(function (results) {
-        results.forEach(function (result) {
-            var context = buildRequestContext(result, "tv");
-            var html = searchTemplate(context);
-            $tvl.append(html);
-        });
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "tv");
+                var html = searchTemplate(context);
+                $tvl.append(html);
+            });
+        }
+        else {
+            $tvl.html(noResultsHtml.format("tv show"));
+        }
         $tvl.mixItUp(mixItUpConfig());
     });
 };
