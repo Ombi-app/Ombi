@@ -84,7 +84,7 @@ namespace PlexRequests.UI.Modules
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
             if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                dbMovies = dbMovies.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username));
             }
 
             var viewModel = dbMovies.Select(movie => {
@@ -127,7 +127,7 @@ namespace PlexRequests.UI.Modules
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
             if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                dbTv = dbTv.Where(x => x.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()));
+                dbTv = dbTv.Where(x => x.UserHasRequested(Username));
             }
 
             var viewModel = dbTv.Select(tv => {
@@ -194,7 +194,7 @@ namespace PlexRequests.UI.Modules
             }
             originalRequest.Issues = issue;
             originalRequest.OtherMessage = !string.IsNullOrEmpty(comment)
-                ? $"{Session[SessionKeys.UsernameKey]} - {comment}"
+                ? $"{Username} - {comment}"
                 : string.Empty;
 
 
@@ -202,7 +202,7 @@ namespace PlexRequests.UI.Modules
 
             var model = new NotificationModel
             {
-                User = Session[SessionKeys.UsernameKey].ToString(),
+                User = Username,
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,

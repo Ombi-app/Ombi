@@ -187,9 +187,9 @@ namespace PlexRequests.UI.Modules
             if (existingRequest != null)
             {
                 // check if the current user is already marked as a requester for this movie, if not, add them
-                if (!existingRequest.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()))
+                if (!existingRequest.UserHasRequested(Username))
                 {
-                    existingRequest.RequestedUsers.Add(Session[SessionKeys.UsernameKey].ToString());
+                    existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
@@ -222,12 +222,12 @@ namespace PlexRequests.UI.Modules
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedUsers = new List<string>() { Session[SessionKeys.UsernameKey].ToString() },
+                RequestedUsers = new List<string>() { Username },
                 Issues = IssueState.None,
             };
 
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireMovieApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
+            if (!settings.RequireMovieApproval || settings.NoApprovalUserList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -325,9 +325,9 @@ namespace PlexRequests.UI.Modules
             if (existingRequest != null)
             {
                 // check if the current user is already marked as a requester for this show, if not, add them
-                if (!existingRequest.UserHasRequested(Session[SessionKeys.UsernameKey].ToString()))
+                if (!existingRequest.UserHasRequested(Username))
                 {
-                    existingRequest.RequestedUsers.Add(Session[SessionKeys.UsernameKey].ToString());
+                    existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
@@ -358,7 +358,7 @@ namespace PlexRequests.UI.Modules
                 Status = showInfo.status,
                 RequestedDate = DateTime.Now,
                 Approved = false,
-                RequestedUsers = new List<string>() { Session[SessionKeys.UsernameKey].ToString() },
+                RequestedUsers = new List<string>() { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
@@ -381,7 +381,7 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            if (!settings.RequireTvShowApproval || settings.NoApprovalUserList.Any(x => x.Equals(Session[SessionKeys.UsernameKey].ToString(), StringComparison.OrdinalIgnoreCase)))
+            if (!settings.RequireTvShowApproval || settings.NoApprovalUserList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);

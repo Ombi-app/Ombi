@@ -33,16 +33,30 @@ namespace PlexRequests.UI.Modules
 {
     public class BaseModule : NancyModule
     {
+        private string _username;
+
+        protected string Username
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_username))
+                {
+                    _username = Session[SessionKeys.UsernameKey].ToString();
+                }
+                return _username;
+            }
+        }
+
         public BaseModule()
         {
-            Before += (ctx)=> CheckAuth();
+            Before += (ctx) => CheckAuth();
         }
 
         public BaseModule(string modulePath) : base(modulePath)
         {
             Before += (ctx) => CheckAuth();
         }
-        
+
 
         private Response CheckAuth()
         {
