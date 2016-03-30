@@ -7,6 +7,8 @@
 
 var searchSource = $("#search-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
+var noResultsHtml = "<div class='no-search-results'>" +
+    "<i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div></div>";
 var movieTimer = 0;
 var tvimer = 0;
 
@@ -124,6 +126,9 @@ function movieSearch() {
                 $("#movieList").append(html);
             });
         }
+        else {
+            $("#movieList").html(noResultsHtml);
+        }
         $('#movieSearchButton').attr("class","fa fa-search");
     });
 };
@@ -139,6 +144,9 @@ function tvSearch() {
                 var html = searchTemplate(context);
                 $("#tvList").append(html);
             });
+        }
+        else {
+            $("#tvList").html(noResultsHtml);
         }
         $('#tvSearchButton').attr("class", "fa fa-search");
     });

@@ -79,28 +79,38 @@ namespace PlexRequests.UI.Modules
 
         private Response GetMovies()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate.Humanize(),
-                RequestedDate = movie.RequestedDate.Humanize(),
-                Approved = movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedBy = movie.RequestedBy,
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = isAdmin,
-                Issues = movie.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbMovies.Select(movie => {
+                return new RequestViewModel
+                {
+                    ProviderId = movie.ProviderId,
+                    Type = movie.Type,
+                    Status = movie.Status,
+                    ImdbId = movie.ImdbId,
+                    Id = movie.Id,
+                    PosterPath = movie.PosterPath,
+                    ReleaseDate = movie.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                    RequestedDate = movie.RequestedDate.Humanize(),
+                    RequestedDateTicks = movie.RequestedDate.Ticks,
+                    Approved = movie.Available || movie.Approved,
+                    Title = movie.Title,
+                    Overview = movie.Overview,
+                    RequestedUsers = isAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                    Available = movie.Available,
+                    Admin = isAdmin,
+                    Issues = movie.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = movie.OtherMessage,
+                    AdminNotes = movie.AdminNote
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -108,29 +118,39 @@ namespace PlexRequests.UI.Modules
 
         private Response GetTvShows()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
-            var viewModel = dbTv.Select(tv => new RequestViewModel
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                ProviderId = tv.ProviderId,
-                Type = tv.Type,
-                Status = tv.Status,
-                ImdbId = tv.ImdbId,
-                Id = tv.Id,
-                PosterPath = tv.PosterPath,
-                ReleaseDate = tv.ReleaseDate.Humanize(),
-                RequestedDate = tv.RequestedDate.Humanize(),
-                Approved = tv.Approved,
-                Title = tv.Title,
-                Overview = tv.Overview,
-                RequestedBy = tv.RequestedBy,
-                ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                Available = tv.Available,
-                Admin = isAdmin,
-                Issues = tv.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote,
-                TvSeriesRequestType = tv.SeasonsRequested
+                dbTv = dbTv.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbTv.Select(tv => {
+                return new RequestViewModel
+                {
+                    ProviderId = tv.ProviderId,
+                    Type = tv.Type,
+                    Status = tv.Status,
+                    ImdbId = tv.ImdbId,
+                    Id = tv.Id,
+                    PosterPath = tv.PosterPath,
+                    ReleaseDate = tv.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = tv.ReleaseDate.Ticks,
+                    RequestedDate = tv.RequestedDate.Humanize(),
+                    RequestedDateTicks = tv.RequestedDate.Ticks,
+                    Approved = tv.Available || tv.Approved,
+                    Title = tv.Title,
+                    Overview = tv.Overview,
+                    RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                    Available = tv.Available,
+                    Admin = isAdmin,
+                    Issues = tv.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = tv.OtherMessage,
+                    AdminNotes = tv.AdminNote,
+                    TvSeriesRequestType = tv.SeasonsRequested
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -165,7 +185,7 @@ namespace PlexRequests.UI.Modules
             }
             originalRequest.Issues = issue;
             originalRequest.OtherMessage = !string.IsNullOrEmpty(comment)
-                ? $"{Session[SessionKeys.UsernameKey]} - {comment}"
+                ? $"{Username} - {comment}"
                 : string.Empty;
 
 
@@ -173,7 +193,7 @@ namespace PlexRequests.UI.Modules
 
             var model = new NotificationModel
             {
-                User = Session[SessionKeys.UsernameKey].ToString(),
+                User = Username,
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,

@@ -53,6 +53,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using System;
 
 namespace PlexRequests.UI.Modules
 {
@@ -144,13 +145,16 @@ namespace PlexRequests.UI.Modules
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
+            Post["/testemailnotification"] = _ => TestEmailNotifications();
             Get["/status"] = _ => Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
+            Post["/testpushbulletnotification"] = _ => TestPushbulletNotifications();
 
             Get["/pushovernotification"] = _ => PushoverNotifications();
             Post["/pushovernotification"] = _ => SavePushoverNotifications();
+            Post["/testpushovernotification"] = _ => TestPushoverNotifications();
 
             Get["/logs"] = _ => Logs();
             Get["/loglevel"] = _ => GetLogLevels();
@@ -380,6 +384,37 @@ namespace PlexRequests.UI.Modules
             return View["EmailNotifications", settings];
         }
 
+        private Response TestEmailNotifications()
+        {
+            var settings = this.Bind<EmailNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent email notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Email Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+            } 
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
+        }
+
         private Response SaveEmailNotifications()
         {
             var settings = this.Bind<EmailNotificationSettings>();
@@ -448,6 +483,37 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
+        private Response TestPushbulletNotifications()
+        {
+            var settings = this.Bind<PushbulletNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushbullet notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushbullet Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushbullet Notification!" });
+        }
+
         private Negotiator PushoverNotifications()
         {
             var settings = PushoverService.GetSettings();
@@ -478,6 +544,37 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushover Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response TestPushoverNotifications()
+        {
+            var settings = this.Bind<PushoverNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushover notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushover Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
         }
 
         private Response GetCpProfiles()

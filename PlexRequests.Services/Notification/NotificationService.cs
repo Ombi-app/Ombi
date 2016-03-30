@@ -32,6 +32,7 @@ using System.Threading.Tasks;
 using NLog;
 
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Services.Notification
 {
@@ -43,6 +44,13 @@ namespace PlexRequests.Services.Notification
         public async Task Publish(NotificationModel model)
         {
             var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model));
+
+            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
+        }
+
+        public async Task Publish(NotificationModel model, Settings settings)
+        {
+            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model, settings));
 
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
@@ -62,6 +70,19 @@ namespace PlexRequests.Services.Notification
             try
             {
                 await notification.NotifyAsync(model).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+            }
+
+        }
+
+        private static async Task NotifyAsync(INotification notification, NotificationModel model, Settings settings)
+        {
+            try
+            {
+                await notification.NotifyAsync(model, settings).ConfigureAwait(false);
             }
             catch (Exception ex)
             {

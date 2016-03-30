@@ -22,7 +22,9 @@
 
 .form-control-custom {
   background-color: #4e5d6c !important;
-  color: white !important; }
+  color: white !important;
+  border-radius: 0;
+  box-shadow: 0 0 0 !important; }
 
 h1 {
   font-size: 3.5rem !important;
@@ -39,6 +41,18 @@ label {
   display: inline-block !important;
   margin-bottom: 0.5rem !important;
   font-size: 16px !important; }
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  background: #4e5d6c; }
+
+.navbar .nav a .fa {
+  font-size: 130%;
+  top: 1px;
+  position: relative;
+  display: inline-block;
+  margin-right: 5px; }
 
 .btn-danger-outline {
   color: #d9534f !important;
@@ -161,4 +175,15 @@ label {
 
 .scroll-top-wrapper i.fa {
   line-height: inherit; }
+
+.no-search-results {
+  text-align: center; }
+
+.no-search-results .no-search-results-icon {
+  font-size: 10em;
+  color: #4e5d6c; }
+
+.no-search-results .no-search-results-text {
+  margin: 20px 0;
+  color: #ccc; }
 
