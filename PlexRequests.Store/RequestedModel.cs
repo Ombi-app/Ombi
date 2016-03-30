@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 
 namespace PlexRequests.Store
 {
@@ -39,14 +40,28 @@ namespace PlexRequests.Store
         public string SeasonsRequested { get; set; }
         public List<string> RequestedUsers { get; set; }
 
+        [JsonIgnore]
+        public List<string> AllUsers
+        {
+            get
+            {
+                var u = new List<string>();
+                if (!string.IsNullOrEmpty(RequestedBy))
+                {
+                    u.Add(RequestedBy);
+                }
+
+                if (RequestedUsers.Any())
+                {
+                    u.AddRange(RequestedUsers.Where(requestedUser => requestedUser != RequestedBy));
+                }
+                return u;
+            }
+        }
+
         public bool UserHasRequested(string username)
         {
-            bool alreadyRequested = !string.IsNullOrEmpty(RequestedBy) && RequestedBy.Equals(username, StringComparison.OrdinalIgnoreCase);
-            if (!alreadyRequested && RequestedUsers != null && RequestedUsers.Count > 0)
-            {
-                alreadyRequested = RequestedUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase)); 
-            }
-            return alreadyRequested;
+            return AllUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase));
         }
     }
 

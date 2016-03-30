@@ -88,10 +88,6 @@ namespace PlexRequests.UI.Modules
             }
 
             var viewModel = dbMovies.Select(movie => {
-                if (!string.IsNullOrEmpty(movie.RequestedBy) && !movie.RequestedUsers.Any(x => x.Equals(movie.RequestedBy, StringComparison.OrdinalIgnoreCase)))
-                {
-                    movie.RequestedUsers.Add(movie.RequestedBy);
-                }
                 return new RequestViewModel
                 {
                     ProviderId = movie.ProviderId,
@@ -107,7 +103,7 @@ namespace PlexRequests.UI.Modules
                     Approved = movie.Available || movie.Approved,
                     Title = movie.Title,
                     Overview = movie.Overview,
-                    RequestedUsers = isAdmin ? movie.RequestedUsers.ToArray() : new string[] { },
+                    RequestedUsers = isAdmin ? movie.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = movie.ReleaseDate.Year.ToString(),
                     Available = movie.Available,
                     Admin = isAdmin,
@@ -131,11 +127,6 @@ namespace PlexRequests.UI.Modules
             }
 
             var viewModel = dbTv.Select(tv => {
-                if (!string.IsNullOrEmpty(tv.RequestedBy) && 
-                    !tv.RequestedUsers.Any(x => x.Equals(tv.RequestedBy, StringComparison.OrdinalIgnoreCase)))
-                {
-                    tv.RequestedUsers.Add(tv.RequestedBy);
-                }
                 return new RequestViewModel
                 {
                     ProviderId = tv.ProviderId,
@@ -151,7 +142,7 @@ namespace PlexRequests.UI.Modules
                     Approved = tv.Available || tv.Approved,
                     Title = tv.Title,
                     Overview = tv.Overview,
-                    RequestedUsers = isAdmin ? tv.RequestedUsers.ToArray() : new string[] { },
+                    RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = tv.ReleaseDate.Year.ToString(),
                     Available = tv.Available,
                     Admin = isAdmin,
