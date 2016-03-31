@@ -66,7 +66,7 @@ namespace PlexRequests.Services
             Log.Trace("Getting all the requests");
             var requests = RequestService.GetAll();
 
-            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
             Log.Trace("Requests Count {0}", requestedModels.Length);
 
             if (!ValidateSettings(plexSettings, authSettings) || !requestedModels.Any())
@@ -107,7 +107,9 @@ namespace PlexRequests.Services
                 Log.Trace("The result from Plex where the title matches for the video : {0}", videoResult != null);
                 Log.Trace("The result from Plex where the title matches for the directory : {0}", directoryResult != null);
 
-                if (videoResult != null || directoryResult != null)
+                var directoryResultVal = directoryResult ?? false;
+
+                if (videoResult != null || directoryResultVal)
                 {
                     r.Available = true;
                     modifiedModel.Add(r);
@@ -120,7 +122,9 @@ namespace PlexRequests.Services
             Log.Trace("Updating the requests now");
             Log.Trace("Requests that will be updates:");
             Log.Trace(modifiedModel.SelectMany(x => x.Title).DumpJson());
-            RequestService.BatchUpdate(modifiedModel);
+
+            if(modifiedModel.Any())
+            { RequestService.BatchUpdate(modifiedModel);}
         }
 
         /// <summary>

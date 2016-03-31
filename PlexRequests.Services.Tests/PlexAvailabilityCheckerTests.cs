@@ -284,8 +284,7 @@ namespace PlexRequests.Services.Tests
 
 
         [Test]
-        [Ignore("Need to work out Plex Directory vs Video objects")]
-        public void CheckAndUpdateRequestsTest()
+        public void CheckAndUpdateRequestsThatDoNotExistInPlexTest()
         {
 
             var requests = new List<RequestedModel> {
@@ -315,7 +314,26 @@ namespace PlexRequests.Services.Tests
                 }
             };
 
-            var search = new PlexSearch { };
+            var search = new PlexSearch
+            {
+                Video = new List<Video>
+                {
+                    new Video
+                    {
+                        Title = "Title4",
+                        Year = "2012"
+                    },
+                    new Video
+                    {
+                        Title = "Title2",
+                    }
+                },
+                Directory = new Directory1
+                {
+                    Title = "Title9",
+                    Year = "1978"
+                }
+            };
 
             var settingsMock = new Mock<ISettingsService<PlexSettings>>();
             var authMock = new Mock<ISettingsService<AuthenticationSettings>>();
@@ -324,14 +342,88 @@ namespace PlexRequests.Services.Tests
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "192.168.1.1" });
             authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
             requestMock.Setup(x => x.GetAll()).Returns(requests);
-
+            plexMock.Setup(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>())).Returns(search);
             Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
 
             Checker.CheckAndUpdateAll(1);
 
             requestMock.Verify(x => x.BatchUpdate(It.IsAny<List<RequestedModel>>()), Times.Never);
             requestMock.Verify(x => x.Get(It.IsAny<int>()), Times.Never);
-            plexMock.Verify(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>()), Times.Never);
+            plexMock.Verify(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>()), Times.Exactly(3));
+        }
+
+        [Test]
+        public void CheckAndUpdateRequestsAllRequestsTest()
+        {
+
+            var requests = new List<RequestedModel> {
+                new RequestedModel
+                {
+                    Id = 123,
+                    Title = "title1",
+                    Available = false,
+                },
+                new RequestedModel
+                {
+                    Id=222,
+                    Title = "title3",
+                    Available = false
+                },
+                new RequestedModel
+                {
+                    Id = 333,
+                    Title= "missingTitle",
+                    Available = false
+                },
+                new RequestedModel
+                {
+                    Id= 444,
+                    Title = "Hi",
+                    Available = false
+                }
+            };
+
+            var search = new PlexSearch
+            {
+                Video = new List<Video>
+                {
+                    new Video
+                    {
+                        Title = "title1",
+                        Year = "2012"
+                    },
+                    new Video
+                    {
+                        Title = "Title3",
+                    }
+                    ,
+                    new Video
+                    {
+                        Title = "Hi",
+                    }
+                },
+                Directory = new Directory1
+                {
+                    Title = "missingTitle",
+                    Year = "1978"
+                }
+            };
+
+            var settingsMock = new Mock<ISettingsService<PlexSettings>>();
+            var authMock = new Mock<ISettingsService<AuthenticationSettings>>();
+            var requestMock = new Mock<IRequestService>();
+            var plexMock = new Mock<IPlexApi>();
+            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "192.168.1.1" });
+            authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });
+            requestMock.Setup(x => x.GetAll()).Returns(requests);
+            plexMock.Setup(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>())).Returns(search);
+            Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object);
+
+            Checker.CheckAndUpdateAll(1);
+
+            requestMock.Verify(x => x.BatchUpdate(It.IsAny<List<RequestedModel>>()), Times.Once);
+            requestMock.Verify(x => x.Get(It.IsAny<int>()), Times.Never);
+            plexMock.Verify(x => x.SearchContent(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Uri>()), Times.Exactly(4));
         }
     }
 }
