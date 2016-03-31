@@ -26,8 +26,18 @@
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
                 <div class="input-group">
-                    <input id="movieSearchContent" type="text" class="form-control form-control-custom">
+                    <input id="movieSearchContent" type="text" class="form-control form-control-custom form-control-withbuttons">
                     <div class="input-group-addon">
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                Suggestions
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="moviesComingSoon" href="#">Coming Soon</a></li>
+                                <li><a id="moviesInTheaters" href="#">In Theaters</a></li>
+                            </ul>
+                        </div>
                         <i id="movieSearchButton" class="fa fa-search"></i>
                     </div>
                 </div>

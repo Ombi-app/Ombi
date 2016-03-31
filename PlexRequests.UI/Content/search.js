@@ -22,6 +22,16 @@ $("#movieSearchContent").on("input", function () {
 
 });
 
+$('#moviesComingSoon').on('click', function (e) {
+    e.preventDefault();
+    moviesComingSoon();
+});
+
+$('#moviesInTheaters').on('click', function (e) {
+    e.preventDefault();
+    moviesInTheaters();
+});
+
 // Type in TV search
 $("#tvSearchContent").on("input", function () {
     if (tvimer) {
@@ -114,10 +124,23 @@ function sendRequestAjax(data, type, url, buttonId) {
 }
 
 function movieSearch() {
-    $("#movieList").html("");
     var query = $("#movieSearchContent").val();
+    getMovies("/search/movie/" + query);
+}
 
-    $.ajax("/search/movie/" + query).success(function (results) {
+function moviesComingSoon() {
+    getMovies("/search/movie/upcoming");
+}
+
+function moviesInTheaters() {
+    getMovies("/search/movie/playing")
+}
+
+function getMovies(url) {
+    $("#movieList").html("");
+    
+
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function(result) {
                 var context = buildMovieContext(result);
@@ -133,11 +156,15 @@ function movieSearch() {
     });
 };
 
-function tvSearch() {
-    $("#tvList").html("");
+function tvShowSearch() {
     var query = $("#tvSearchContent").val();
+    getTvShows("/search/tv/" + query);
+}
 
-    $.ajax("/search/tv/" + query).success(function (results) {
+function getTvShows(url) {
+    $("#tvList").html("");
+
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function(result) {
                 var context = buildTvShowContext(result);

@@ -244,3 +244,20 @@ $border-radius: 10px;
     margin: 20px 0;
     color: #ccc;
 }
+
+.form-control-withbuttons {
+    padding-right: 105px;
+}
+
+.input-group-addon .btn-group {
+    position: absolute;
+    right: 45px;
+    z-index: 2;
+    top: 6px;
+}
+
+.input-group-addon .btn-group .btn {
+    border: 1px solid rgba(255,255,255,.7) !important;
+    padding: 3px 12px;
+    color: rgba(255,255,255,.7) !important;
+}
