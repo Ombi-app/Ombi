@@ -31,8 +31,10 @@ using System.Linq;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
@@ -58,27 +60,66 @@ namespace PlexRequests.Services
 
         public void CheckAndUpdateAll(long check)
         {
+            Log.Trace("Getting the settings");
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
+            Log.Trace("Getting all the requests");
             var requests = RequestService.GetAll();
 
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            Log.Trace("Requests Count {0}", requestedModels.Length);
+
             if (!ValidateSettings(plexSettings, authSettings) || !requestedModels.Any())
             {
+                Log.Info("Validation of the settings failed or there is no requests.");
                 return;
             }
 
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
-                var result = results.Video.FirstOrDefault(x => x.Title == r.Title);
-                var originalRequest = RequestService.Get(r.Id);
+                Log.Trace("We are going to see if Plex has the following title: {0}", r.Title);
+                PlexSearch results;
+                try
+                {
+                    results = PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("We failed to search Plex for the following request:");
+                    Log.Error(r.DumpJson());
+                    Log.Error(e);
+                    break; // Let's finish processing and not crash the process, there is a reason why we cannot connect.
+                }
 
-                originalRequest.Available = result != null;
-                modifiedModel.Add(originalRequest);
+                if (results == null)
+                {
+                    Log.Trace("Could not find any matching result for this title.");
+                    continue;
+                }
+
+                Log.Trace("Search results from Plex for the following request: {0}", r.Title);
+                Log.Trace(results.DumpJson());
+
+                var videoResult = results.Video.FirstOrDefault(x => x.Title == r.Title);
+                var directoryResult = results.Directory?.Title.Equals(r.Title, StringComparison.CurrentCultureIgnoreCase);
+
+                Log.Trace("The result from Plex where the title matches for the video : {0}", videoResult != null);
+                Log.Trace("The result from Plex where the title matches for the directory : {0}", directoryResult != null);
+
+                if (videoResult != null || directoryResult != null)
+                {
+                    r.Available = true;
+                    modifiedModel.Add(r);
+                    continue;
+                }
+                
+                Log.Trace("The result from Plex where the title's match was null, so that means the content is not yet in Plex.");
             }
 
+            Log.Trace("Updating the requests now");
+            Log.Trace("Requests that will be updates:");
+            Log.Trace(modifiedModel.SelectMany(x => x.Title).DumpJson());
             RequestService.BatchUpdate(modifiedModel);
         }
 
@@ -91,24 +132,26 @@ namespace PlexRequests.Services
         /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
         public bool IsAvailable(string title, string year)
         {
+            Log.Trace("Checking if the following {0} {1} is available in Plex", title, year);
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
+                Log.Warn("The settings are not configured");
                 throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
             }
             var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
             if (!string.IsNullOrEmpty(year))
             {
                 var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
-                var directoryTitle = results.Directory?.Title == title && results.Directory?.Year == year;
+                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase) && results.Directory?.Year == year;
                 return result?.Title != null || directoryTitle;
             }
             else
             {
                 var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
-                var directoryTitle = results.Directory?.Title == title;
+                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase);
                 return result?.Title != null || directoryTitle;
             }
 
