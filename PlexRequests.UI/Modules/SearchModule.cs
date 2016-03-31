@@ -192,7 +192,7 @@ namespace PlexRequests.UI.Modules
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
@@ -330,7 +330,7 @@ namespace PlexRequests.UI.Modules
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
             }
 
             try

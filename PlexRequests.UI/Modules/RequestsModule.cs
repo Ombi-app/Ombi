@@ -109,7 +109,7 @@ namespace PlexRequests.UI.Modules
                     Admin = isAdmin,
                     Issues = movie.Issues.Humanize(LetterCasing.Title),
                     OtherMessage = movie.OtherMessage,
-                    AdminNotes = movie.AdminNote
+                    AdminNotes = movie.AdminNote,
                 };
             }).ToList();
 

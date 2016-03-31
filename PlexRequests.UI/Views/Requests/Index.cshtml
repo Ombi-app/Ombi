@@ -140,7 +140,9 @@
                 {{#if_eq type "tv"}}
                 <div>Series Requested: {{seriesRequested}}</div>
                 {{/if_eq}}
+                {{#if requestedUsers}}
                 <div>Requested By: {{requestedUsers}}</div>
+                {{/if}}
                 <div>Requested Date: {{requestedDate}}</div>
                 <div id="issueArea{{requestId}}">
                     {{#if otherMessage}}
