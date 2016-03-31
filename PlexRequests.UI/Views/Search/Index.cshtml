@@ -12,6 +12,10 @@
         {
             <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
         }
+        @if (Model.SearchForMusic)
+        {
+            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Music</a></li>
+        }
 
     </ul>
 
@@ -53,11 +57,30 @@
                 </div>
             </div>
         }
+
+        @if (Model.SearchForMusic)
+        {
+            <!-- Music tab -->
+            <div role="tabpanel" class="tab-pane" id="MusicTab">
+                <div class="input-group">
+                    <input id="musicSearchContent" type="text" class="form-control form-control-custom">
+                    <div class="input-group-addon">
+                        <i id="musicSearchButton" class="fa fa-search"></i>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <!-- Music content -->
+                <div id="musicList">
+                </div>
+            </div>
+        }
     </div>
 
 
 </div>
 
+<!-- Movie and TV Results template -->
 <script id="search-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-sm-2">
@@ -90,7 +113,7 @@
         </div>
         <div class="col-sm-2 col-sm-push-3">
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />                
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq type "movie"}}
                 <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
                 {{/if_eq}}
@@ -102,7 +125,7 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
-                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li> 
+                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li>
                         <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
                     </ul>
                 </div>
@@ -115,6 +138,42 @@
                 <small class="row">Vote Average: {{voteAverage}}</small>
                 <small class="row">Vote Count: {{voteCount}}</small>
                 {{/if}}
+            </form>
+        </div>
+
+    </div>
+    <hr />
+</script>
+
+
+<!-- Music Results template -->
+<script id="music-template" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-sm-2">
+
+            <img class="img-responsive" src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+
+            <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
+
+        </div>
+        <div class="col-sm-5 ">
+            <div>
+
+                <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
+                    <h4>{{title}} ({{year}})</h4>
+                </a>
+            </div>
+            <p>{{overview}}</p>
+        </div>
+        <div class="col-sm-2 col-sm-push-3">
+            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
+
+                <br />
+                <br />
+                <br />
             </form>
         </div>
 

@@ -14,7 +14,10 @@
         {
             <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
         }
-
+        @if (Model.SearchForMusic)
+        {
+            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Music</a></li>
+        }
     </ul>
     <br />
 
@@ -33,6 +36,10 @@
                             @if (Model.SearchForTvShows)
                             {
                                 <button id="approveTVShows" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve TV Shows</button>
+                            }
+                            @if (Model.SearchForMusic)
+                            {
+                                <button id="approveMusic" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve Music</button>
                             }
                         }
                     </div>
@@ -87,6 +94,19 @@
                 <br />
                 <!-- TV content -->
                 <div id="tvList">
+                </div>
+            </div>
+        }
+
+        @if (Model.SearchForMusic)
+            {
+            <!-- Music tab -->
+            <div role="tabpanel" class="tab-pane" id="MusicTab">
+
+                <br />
+                <br />
+                <!-- TV content -->
+                <div id="MusicList">
                 </div>
             </div>
         }
