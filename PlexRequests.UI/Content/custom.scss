@@ -245,6 +245,10 @@ $border-radius: 10px;
     color: #ccc;
 }
 
+.form-control-search {
+    padding: 25px 105px 25px 16px;
+}
+
 .form-control-withbuttons {
     padding-right: 105px;
 }
@@ -253,7 +257,8 @@ $border-radius: 10px;
     position: absolute;
     right: 45px;
     z-index: 2;
-    top: 6px;
+    top: 13px;
+    box-shadow: 0 0 0;
 }
 
 .input-group-addon .btn-group .btn {
