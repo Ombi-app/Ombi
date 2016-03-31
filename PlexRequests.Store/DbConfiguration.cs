@@ -49,7 +49,7 @@ namespace PlexRequests.Store
         public virtual bool CheckDb()
         {
             Log.Trace("Checking DB");
-            Console.WriteLine(CurrentPath);
+            Console.WriteLine("Location of the database: {0}",CurrentPath);
             if (!File.Exists(CurrentPath))
             {
                 Log.Trace("DB doesn't exist, creating a new one");
@@ -90,7 +90,7 @@ namespace PlexRequests.Store
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Log.Error(e);
             }
         }
     }

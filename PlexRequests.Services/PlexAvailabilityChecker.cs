@@ -60,6 +60,7 @@ namespace PlexRequests.Services
 
         public void CheckAndUpdateAll(long check)
         {
+            Log.Trace("This is check no. {0}", check);
             Log.Trace("Getting the settings");
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
