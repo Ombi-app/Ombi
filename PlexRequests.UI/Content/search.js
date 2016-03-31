@@ -156,7 +156,7 @@ function getMovies(url) {
     });
 };
 
-function tvShowSearch() {
+function tvSearch() {
     var query = $("#tvSearchContent").val();
     getTvShows("/search/tv/" + query);
 }
