@@ -47,12 +47,16 @@ label {
 .nav-tabs > li.active > a:focus {
   background: #4e5d6c; }
 
-.navbar .nav a .fa {
+.navbar .nav a .fa,
+.dropdown-menu a .fa {
   font-size: 130%;
   top: 1px;
   position: relative;
   display: inline-block;
   margin-right: 5px; }
+
+.dropdown-menu a .fa {
+  top: 2px; }
 
 .btn-danger-outline {
   color: #d9534f !important;

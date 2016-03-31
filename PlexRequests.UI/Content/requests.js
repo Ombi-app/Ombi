@@ -124,8 +124,8 @@ $('#approveTVShows').click(function (e) {
 // filtering/sorting
 $('.filter,.sort', '.dropdown-menu').click(function (e) {
     var $this = $(this);
-    $('.fa-square', $this.parents('.dropdown-menu:first')).removeClass('fa-square').addClass('fa-square-o');
-    $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-square');
+    $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
+    $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');
 });
 
 
