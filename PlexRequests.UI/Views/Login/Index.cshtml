@@ -6,6 +6,7 @@
     Remember Me <input name="RememberMe" type="checkbox" value="True"/>
     <br/><br/>
     <input class="btn btn-success-outline" type="submit" value="Login"/>
+    <input type="hidden" id="DateTimeOffset" name="DateTimeOffset" />
 </form>
 @if (!Model.AdminExists)
 {
@@ -19,3 +20,9 @@
     </div>
 }
 
+<script>
+    $(function () {
+        var dtOffset = new Date().getTimezoneOffset();
+        $('#DateTimeOffset').val(dtOffset);
+    });
+</script>

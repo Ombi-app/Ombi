@@ -38,10 +38,14 @@
         $('#loginBtn').click(function (e) {
             e.preventDefault();
             var $form = $("#loginForm");
+            var formData = $form.serialize();
+            var dtOffset = new Date().getTimezoneOffset();
+            formData += ('&DateTimeOffset=' + dtOffset)
+
             $.ajax({
                 type: $form.prop("method"),
                 url: $form.prop("action"),
-                data: $form.serialize(),
+                data: formData,
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

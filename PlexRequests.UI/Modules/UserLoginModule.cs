@@ -68,6 +68,7 @@ namespace PlexRequests.UI.Modules
 
         private Response LoginUser()
         {
+            var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
             Log.Debug("Username \"{0}\" attempting to login",username);
             if (string.IsNullOrWhiteSpace(username))
@@ -137,6 +138,12 @@ namespace PlexRequests.UI.Modules
                 // Add to the session (Used in the BaseModules)
                 Session[SessionKeys.UsernameKey] = (string)username;
             }
+
+            Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
+
+            int z = 240;
+
+
 
             return Response.AsJson(authenticated 
                 ? new JsonResponseModel { Result = true } 

@@ -40,12 +40,12 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseModule
     {
-
         public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
         {
             Service = service;
@@ -98,8 +98,8 @@ namespace PlexRequests.UI.Modules
                     PosterPath = movie.PosterPath,
                     ReleaseDate = movie.ReleaseDate.Humanize(),
                     ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                    RequestedDate = movie.RequestedDate.Humanize(),
-                    RequestedDateTicks = movie.RequestedDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
                     Approved = movie.Available || movie.Approved,
                     Title = movie.Title,
                     Overview = movie.Overview,
@@ -137,8 +137,8 @@ namespace PlexRequests.UI.Modules
                     PosterPath = tv.PosterPath,
                     ReleaseDate = tv.ReleaseDate.Humanize(),
                     ReleaseDateTicks = tv.ReleaseDate.Ticks,
-                    RequestedDate = tv.RequestedDate.Humanize(),
-                    RequestedDateTicks = tv.RequestedDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
                     Approved = tv.Available || tv.Approved,
                     Title = tv.Title,
                     Overview = tv.Overview,

@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="AssemblyHelper.cs" />
     <Compile Include="ByteConverterHelper.cs" />
+    <Compile Include="DateTimeHelper.cs" />
     <Compile Include="Exceptions\ApplicationSettingsException.cs" />
     <Compile Include="HtmlRemover.cs" />
     <Compile Include="ICacheProvider.cs" />
