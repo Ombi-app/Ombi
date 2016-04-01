@@ -161,17 +161,16 @@
     <div class="row">
         <div class="col-sm-2">
 
-            <img class="img-responsive" src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+            @*<img class="img-responsive" src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">*@
 
-            <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
 
         </div>
         <div class="col-sm-5 ">
             <div>
 
-                <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
+                @*<a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">*@
                     <h4>{{title}} ({{year}})</h4>
-                </a>
+                @*</a>*@
             </div>
             <p>{{overview}}</p>
         </div>
@@ -179,7 +178,7 @@
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
 
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMusic" type="submit"><i class="fa fa-plus"></i> Request</button>
 
                 <br />
                 <br />

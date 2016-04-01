@@ -74,6 +74,7 @@ namespace PlexRequests.UI.Modules
 
             Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
             Get["tv/{searchTerm}"] = parameters => SearchTvShow((string)parameters.searchTerm);
+            Get["music/{searchTerm}"] = parameters => SearchMusic((string)parameters.searchTerm);
 
             Get["movie/upcoming"] = parameters => UpcomingMovies();
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
@@ -152,6 +153,13 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
+        private Response SearchMusic(string searchTerm)
+        {
+            var api = new MusicBrainsApi();
+            var albums = api.SearchAlbum(searchTerm);
+            return Response.AsJson(albums);
+        }
+
         private Response UpcomingMovies() // TODO : Not used
         {
             var movies = MovieApi.GetUpcomingMovies();
@@ -174,7 +182,7 @@ namespace PlexRequests.UI.Modules
         {
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
-            string fullMovieName = string.Format("{0}{1}", movieInfo.Title, movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty);
+            var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
             //#if !DEBUG
@@ -192,6 +200,7 @@ namespace PlexRequests.UI.Modules
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
+
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
             }
 
