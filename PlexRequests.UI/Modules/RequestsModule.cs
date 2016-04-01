@@ -56,6 +56,7 @@ namespace PlexRequests.UI.Modules
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
             Get["/tvshows"] = _ => GetTvShows();
+            Get["/albums"] = _ => GetAlbumRequests();
             Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
             Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
@@ -150,6 +151,47 @@ namespace PlexRequests.UI.Modules
                     OtherMessage = tv.OtherMessage,
                     AdminNotes = tv.AdminNote,
                     TvSeriesRequestType = tv.SeasonsRequested
+                };
+            }).ToList();
+
+            return Response.AsJson(viewModel);
+        }
+
+        private Response GetAlbumRequests()
+        {
+            var settings = PrSettings.GetSettings();
+            var isAdmin = Context.CurrentUser.IsAuthenticated();
+            var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            {
+                dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbAlbum.Select(album => {
+                return new RequestViewModel
+                {
+                    ProviderId = album.ProviderId,
+                    Type = album.Type,
+                    Status = album.Status,
+                    ImdbId = album.ImdbId,
+                    Id = album.Id,
+                    PosterPath = album.PosterPath,
+                    ReleaseDate = album.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = album.ReleaseDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = album.Available || album.Approved,
+                    Title = album.Title,
+                    Overview = album.Overview,
+                    RequestedUsers = isAdmin ? album.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = album.ReleaseDate.Year.ToString(),
+                    Available = album.Available,
+                    Admin = isAdmin,
+                    Issues = album.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = album.OtherMessage,
+                    AdminNotes = album.AdminNote,
+                    TvSeriesRequestType = album.SeasonsRequested,
+                    MusicBrainzId = album.MusicBrainzId
                 };
             }).ToList();
 

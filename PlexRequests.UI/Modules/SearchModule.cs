@@ -512,7 +512,8 @@ namespace PlexRequests.UI.Modules
                 Type = RequestType.Album,
                 ProviderId = 0,
                 RequestedUsers = new List<string>() { Username },
-                Status = albumInfo.status
+                Status = albumInfo.status,
+                Issues = IssueState.None
             };
 
 

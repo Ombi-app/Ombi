@@ -9,10 +9,7 @@ var searchSource = $("#search-template").html();
 var musicSource = $("#music-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
 var musicTemplate = Handlebars.compile(musicSource);
-var noResultsHtml = "<div class='no-search-results'>" +
-    "<i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div></div>";
-var noResultsMusic = "<div class='no-search-results'>" +
-    "<i class='fa fa-headphones no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div></div>";
+
 var searchTimer = 0;
 
 // Type in movie search

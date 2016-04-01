@@ -51,5 +51,6 @@ namespace PlexRequests.UI.Models
         public string OtherMessage { get; set; }
         public string AdminNotes { get; set; }
         public string TvSeriesRequestType { get; set; }
+        public string MusicBrainzId { get; set; }
     }
 }

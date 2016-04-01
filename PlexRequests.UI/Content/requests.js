@@ -6,11 +6,12 @@
 });
 
 var searchSource = $("#search-template").html();
+var albumSource = $("#album-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
+var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
-var noResultsHtml = "<div class='no-search-results'>" +
-    "<i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, there are no {0} requests yet!</div></div>";
+
 var mixItUpDefault = {
     animation: { enable: true },
     load: {
@@ -86,7 +87,7 @@ $('#approveMovies').click(function (e) {
             generateNotify("Something went wrong!", "danger");
         },
         complete: function (e) {
-            finishLoading(buttonId, "success", origHtml)
+            finishLoading(buttonId, "success", origHtml);
         }
     });
 });
@@ -116,7 +117,7 @@ $('#approveTVShows').click(function (e) {
             generateNotify("Something went wrong!", "danger");
         },
         complete: function (e) {
-            finishLoading(buttonId, "success", origHtml)
+            finishLoading(buttonId, "success", origHtml);
         }
     });
 });
@@ -384,6 +385,8 @@ function mixItUpConfig(activeState) {
 function initLoad() {
     movieLoad();
     tvLoad();
+    albumLoad();
+    //noResultsMusic
 }
 
 function movieLoad() {
@@ -432,6 +435,29 @@ function tvLoad() {
     });
 };
 
+function albumLoad() {
+    var $albumL = $('#MusicList');
+    if ($albumL.mixItUp('isLoaded')) {
+        activeState = $albumL.mixItUp('getState');
+        $albumL.mixItUp('destroy');
+    }
+    $albumL.html("");
+
+    $.ajax("/requests/albums/").success(function (results) {
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "album");
+                var html = searchTemplate(context);
+                $albumL.append(html);
+            });
+        }
+        else {
+            $albumL.html(noResultsMusic.format("albums"));
+        }
+        $albumL.mixItUp(mixItUpConfig());
+    });
+};
+
 // Builds the request context.
 function buildRequestContext(result, type) {
     var context = {
@@ -455,8 +481,11 @@ function buildRequestContext(result, type) {
         requestId: result.id,
         adminNote: result.adminNotes,
         imdb: result.imdbId,
-        seriesRequested: result.tvSeriesRequestType
+        seriesRequested: result.tvSeriesRequestType,
+        coverArtUrl: result.coverArtUrl,
+
     };
 
     return context;
 }
+
