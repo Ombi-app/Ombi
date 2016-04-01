@@ -66,5 +66,27 @@ namespace PlexRequests.Api
                 return new MusicBrainzSearchResults(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
             }
         }
+
+        public MusicBrainzCoverArt GetCoverArt(string releaseId)
+        {
+            Log.Trace("Getting cover art for release: {0}", releaseId);
+            var request = new RestRequest
+            {
+                Resource = "release/{releaseId}",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("releaseId", releaseId);
+
+            try
+            {
+                return Api.Execute<MusicBrainzCoverArt>(request, new Uri("http://coverartarchive.org/"));
+            }
+            catch (Exception e)
+            {
+                Log.Warn(e);
+                return new MusicBrainzCoverArt(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
+
     }
 }

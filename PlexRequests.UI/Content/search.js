@@ -201,8 +201,8 @@ function getMusic(url) {
     $("#musicList").html("");
     
     $.ajax(url).success(function (results) {
-        if (results.count > 0) {
-            results.releases.forEach(function (result) {
+        if (results.length > 0) {
+            results.forEach(function (result) {
                 var context = buildMusicContext(result);
 
                 var html = musicTemplate(context);
@@ -254,9 +254,14 @@ function buildMusicContext(result) {
     var context = {
         id: result.id,
         title: result.title,
-        overview: result.disambiguation,
-        year: result.date,
-        type: "music"
+        overview: result.overview,
+        year: result.releaseDate,
+        type: "album",
+        trackCount: result.trackCount,
+        coverArtUrl: result.coverArtUrl,
+        artist: result.artist,
+        releaseType: result.releaseType,
+        country: result.country
     };
 
     return context;

@@ -14,7 +14,7 @@
         }
         @if (Model.SearchForMusic)
         {
-            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Music</a></li>
+            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Albums</a></li>
         }
 
     </ul>
@@ -73,7 +73,7 @@
             <!-- Music tab -->
             <div role="tabpanel" class="tab-pane" id="MusicTab">
                 <div class="input-group">
-                    <input id="musicSearchContent" type="text" class="form-control form-control-custom">
+                    <input id="musicSearchContent" type="text" class="form-control form-control-custom form-control-search">
                     <div class="input-group-addon">
                         <i id="musicSearchButton" class="fa fa-search"></i>
                     </div>
@@ -160,17 +160,21 @@
 <script id="music-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-sm-2">
-
-            @*<img class="img-responsive" src="http://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">*@
-
-
+            {{#if coverArtUrl}}
+            <img class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
+            {{/if}}
         </div>
         <div class="col-sm-5 ">
             <div>
+                <a href="https://musicbrainz.org/release/{{id}}" target="_blank">
+                <h4>
+                    {{artist}} - {{title}}
+                    {{#if year}}
+                    ({{year}})
+                    {{/if}}
+                </h4>
+                </a>
 
-                @*<a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">*@
-                    <h4>{{title}} ({{year}})</h4>
-                @*</a>*@
             </div>
             <p>{{overview}}</p>
         </div>
@@ -179,10 +183,9 @@
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
 
                 <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMusic" type="submit"><i class="fa fa-plus"></i> Request</button>
-
                 <br />
-                <br />
-                <br />
+                <small class="row">Track Count: {{trackCount}}</small>
+                <small class="row">Country: {{country}}</small>
             </form>
         </div>
 

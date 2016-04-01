@@ -36,6 +36,7 @@ using NLog;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Music;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -81,6 +82,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
+            Post["request/album"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
         }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
@@ -157,7 +159,32 @@ namespace PlexRequests.UI.Modules
         {
             var api = new MusicBrainsApi();
             var albums = api.SearchAlbum(searchTerm);
-            return Response.AsJson(albums);
+            var releases = albums.releases ?? new List<Release>();
+            var model = new List<SearchMusicViewModel>();
+            foreach (var a in releases)
+            {
+                var coverArt = api.GetCoverArt(a.id);
+                var firstImage = coverArt?.images?.FirstOrDefault();
+                var img = string.Empty;
+                
+                if (firstImage != null)
+                {
+                    img = firstImage.thumbnails?.small ?? firstImage.image;
+                }
+                model.Add(new SearchMusicViewModel
+                {
+                    Title = a.title,
+                    Id = a.id,
+                    Artist = a.ArtistCredit?.Select(x => x.artist?.name).FirstOrDefault(),
+                    Overview = a.disambiguation,
+                    ReleaseDate = a.date,
+                    TrackCount = a.TrackCount,
+                    CoverArtUrl = img,
+                    ReleaseType = a.status,
+                    Country = a.country
+                });
+            }
+            return Response.AsJson(model);
         }
 
         private Response UpcomingMovies() // TODO : Not used
@@ -447,6 +474,13 @@ namespace PlexRequests.UI.Modules
         {
             var result = Checker.IsAvailable(title, year);
             return result;
+        }
+
+        private Response RequestAlbum(string releaseId)
+        {
+            // TODO need to send to Headphones
+
+            return Response.AsJson("");
         }
     }
 }

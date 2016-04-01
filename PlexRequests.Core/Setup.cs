@@ -72,7 +72,7 @@ namespace PlexRequests.Core
             s.SaveSettings(defaultSettings);
         }
 
-        private void MigrateDb() // TODO: Remove when no longer needed
+        private void MigrateDb() // TODO: Remove in v1.7
         {
             var result = new List<long>();
             RequestedModel[] requestedModels;
