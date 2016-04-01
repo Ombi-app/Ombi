@@ -141,10 +141,6 @@ namespace PlexRequests.UI.Modules
 
             Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
 
-            int z = 240;
-
-
-
             return Response.AsJson(authenticated 
                 ? new JsonResponseModel { Result = true } 
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
