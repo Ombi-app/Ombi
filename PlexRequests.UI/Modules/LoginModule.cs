@@ -73,6 +73,7 @@ namespace PlexRequests.UI.Modules
                 {
                     expiry = DateTime.Now.AddDays(7);
                 }
+                Session[SessionKeys.UsernameKey] = username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
