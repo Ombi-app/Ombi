@@ -486,7 +486,7 @@ namespace PlexRequests.UI.Modules
                 MusicBrainzId = albumInfo.id,
                 Overview = albumInfo.disambiguation,
                 PosterPath = img,
-                Type = RequestType.Album
+                Type = RequestType.Album,
             };
             
             // TODO need to send to Headphones

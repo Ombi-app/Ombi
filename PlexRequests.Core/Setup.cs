@@ -80,7 +80,7 @@ namespace PlexRequests.Core
                 connection.UpdateSchemaVersion(SchemaVersion);
                 try
                 {
-                    TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "INTEGER");
+                    TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
                 }
                 catch (Exception e)
                 {

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Security.Cryptography;
-
 using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System.Linq;
