@@ -51,6 +51,7 @@
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
     <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
     <Compile Include="Music\MusicBrainzCoverArt.cs" />
+    <Compile Include="Music\MusicBrainzReleaseInfo.cs" />
     <Compile Include="Music\MusicBrainzSearchResults.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />

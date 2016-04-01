@@ -38,6 +38,7 @@ namespace PlexRequests.Store
         public int[] SeasonList { get; set; }
         public int SeasonCount { get; set; }
         public string SeasonsRequested { get; set; }
+        public string MusicBrainzId { get; set; }
         public List<string> RequestedUsers { get; set; }
 
         [JsonIgnore]

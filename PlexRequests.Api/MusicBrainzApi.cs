@@ -30,15 +30,16 @@ using Newtonsoft.Json;
 
 using NLog;
 
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Music;
 
 using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class MusicBrainsApi
+    public class MusicBrainzApi : IMusicBrainzApi
     {
-        public MusicBrainsApi()
+        public MusicBrainzApi()
         {
             Api = new ApiRequest();
         }
@@ -64,6 +65,27 @@ namespace PlexRequests.Api
             {
                 Log.Warn(jse);
                 return new MusicBrainzSearchResults(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
+
+        public MusicBrainzReleaseInfo GetAlbum(string releaseId)
+        {
+            Log.Trace("Getting album: {0}", releaseId);
+            var request = new RestRequest
+            {
+                Resource = "release/{albumId}?fmt=json",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("albumId", releaseId);
+
+            try
+            {
+                return Api.Execute<MusicBrainzReleaseInfo>(request, BaseUri);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Warn(jse);
+                return new MusicBrainzReleaseInfo(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
             }
         }
 

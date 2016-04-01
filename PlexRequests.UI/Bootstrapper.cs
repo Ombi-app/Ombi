@@ -95,6 +95,8 @@ namespace PlexRequests.UI
             container.Register<ISickRageApi, SickrageApi>();
             container.Register<ISonarrApi, SonarrApi>();
             container.Register<IPlexApi, PlexApi>();
+            container.Register<IMusicBrainzApi, MusicBrainzApi>();
+            container.Register<IHeadphonesApi, HeadphonesApi>();
 
             // NotificationService
             container.Register<INotificationService, NotificationService>().AsSingleton();

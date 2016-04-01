@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoApi.cs
+//    File: HeadphonesApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,51 +26,26 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Newtonsoft.Json;
 
 using NLog;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Music;
-using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Helpers;
 
 using RestSharp;
 
 namespace PlexRequests.Api
 {
-    public class HeadphonesApi
+    public class HeadphonesApi : IHeadphonesApi
     {
         public HeadphonesApi()
         {
             Api = new ApiRequest();
         }
         private ApiRequest Api { get; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public List<HeadphonesAlbumSearchResult> SearchAlbum(string apiKey, Uri baseUrl, string searchTerm)
-        {
-            Log.Trace("Searching for album: {0}", searchTerm);
-            var request = new RestRequest
-            {
-                Resource = "/api?cmd=findAlbum&name={searchTerm}",
-                Method = Method.GET
-            };
-
-            request.AddQueryParameter("apikey", apiKey);
-            request.AddUrlSegment("searchTerm", searchTerm);
-
-            try
-            {
-                return Api.ExecuteJson<List<HeadphonesAlbumSearchResult>>(request, baseUrl);
-            }
-            catch (JsonSerializationException jse)
-            {
-                Log.Warn(jse);
-                return new List<HeadphonesAlbumSearchResult>(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
-            }
-        }
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public bool AddAlbum(string apiKey, Uri baseUrl, string albumId)
         {

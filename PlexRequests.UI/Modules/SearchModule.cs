@@ -55,7 +55,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
-            INotificationService notify) : base("search")
+            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -70,6 +70,10 @@ namespace PlexRequests.UI.Modules
             SickRageService = sickRageService;
             SickrageApi = srApi;
             NotificationService = notify;
+            MusicBrainzApi = mbApi;
+            HeadphonesApi = hpApi;
+            HeadphonesService = hpService;
+
 
             Get["/"] = parameters => RequestLoad();
 
@@ -96,9 +100,11 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IAvailabilityChecker Checker { get; }
+        private IMusicBrainzApi MusicBrainzApi { get; }
+        private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
         {
@@ -157,20 +163,12 @@ namespace PlexRequests.UI.Modules
 
         private Response SearchMusic(string searchTerm)
         {
-            var api = new MusicBrainsApi();
-            var albums = api.SearchAlbum(searchTerm);
+            var albums = MusicBrainzApi.SearchAlbum(searchTerm);
             var releases = albums.releases ?? new List<Release>();
             var model = new List<SearchMusicViewModel>();
             foreach (var a in releases)
             {
-                var coverArt = api.GetCoverArt(a.id);
-                var firstImage = coverArt?.images?.FirstOrDefault();
-                var img = string.Empty;
-                
-                if (firstImage != null)
-                {
-                    img = firstImage.thumbnails?.small ?? firstImage.image;
-                }
+                var img = GetMusicBrainzCoverArt(a.id);
                 model.Add(new SearchMusicViewModel
                 {
                     Title = a.title,
@@ -478,9 +476,36 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestAlbum(string releaseId)
         {
+            var settings = HeadphonesService.GetSettings();
+
+            var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
+            var img = GetMusicBrainzCoverArt(albumInfo.id);
+            var model = new RequestedModel
+            {
+                Title = albumInfo.title,
+                MusicBrainzId = albumInfo.id,
+                Overview = albumInfo.disambiguation,
+                PosterPath = img,
+                Type = RequestType.Album
+            };
+            
             // TODO need to send to Headphones
 
             return Response.AsJson("");
+        }
+
+        private string GetMusicBrainzCoverArt(string id)
+        {
+            var coverArt = MusicBrainzApi.GetCoverArt(id);
+            var firstImage = coverArt?.images?.FirstOrDefault();
+            var img = string.Empty;
+
+            if (firstImage != null)
+            {
+                img = firstImage.thumbnails?.small ?? firstImage.image;
+            }
+
+            return img;
         }
     }
 }
