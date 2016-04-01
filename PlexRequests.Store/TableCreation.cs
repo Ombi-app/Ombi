@@ -25,7 +25,7 @@
 //  ***********************************************************************
 #endregion
 using System.Data;
-
+using System.Linq;
 using Dapper;
 using Dapper.Contrib.Extensions;
 
@@ -44,6 +44,57 @@ namespace PlexRequests.Store
             connection.Close();
         }
 
+        public static void AlterTable(IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
+        {
+            connection.Open();
+            var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
+            if (result.Any(x => x.name == newColumn))
+            {
+                return;
+            }
+
+            var query = $"ALTER TABLE {tableName} {alterType} {newColumn} {dataType}";
+            if (isNullable)
+            {
+                query = query + " NOT NULL";
+            }
+
+            connection.Execute(query);
+
+            connection.Close();
+        }
+
+        public static DbInfo GetSchemaVersion(this IDbConnection con)
+        {
+            con.Open();
+            var result = con.Query<DbInfo>("SELECT * FROM DBInfo");
+            con.Close();
+
+            return result.FirstOrDefault();
+        }
+
+        public static void UpdateSchemaVersion(this IDbConnection con, int version)
+        {
+            con.Open();
+            con.Query($"UPDATE DBInfo SET SchemaVersion = {version}");
+            con.Close();
+        }
+
+        public static void CreateSchema(this IDbConnection con)
+        {
+            con.Open();
+            con.Query("INSERT INTO DBInfo (SchemaVersion) values (0)");
+            con.Close();
+        }
+
+
+
+        [Table("DBInfo")]
+        public class DbInfo
+        {
+            public int SchemaVersion { get; set; }
+        }
+
         [Table("sqlite_master")]
         public class SqliteMasterTable
         {
@@ -54,5 +105,17 @@ namespace PlexRequests.Store
             public long rootpage { get; set; }
             public string sql { get; set; }
         }
+
+        [Table("table_info")]
+        public class TableInfo
+        {
+            public int cid { get; set; }
+            public string name { get; set; }
+            public int notnull { get; set; }
+            public string dflt_value { get; set; }
+            public int pk { get; set; }
+        }
+
+
     }
 }

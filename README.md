@@ -84,7 +84,9 @@ end script
 
 ####Reboot, then open up your browser to check that it's running!
 
-```sudo shutdown -r 00```
+```
+sudo shutdown -r 00
+```
 
 # Contributors
 
@@ -97,4 +99,4 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ## A massive thanks to everyone below for all their help!
 
-[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727)
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat

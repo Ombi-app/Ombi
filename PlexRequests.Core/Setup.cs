@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Mono.Data.Sqlite;
+using NLog;
 using PlexRequests.Api;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -40,6 +41,9 @@ namespace PlexRequests.Core
 {
     public class Setup
     {
+        public const int SchemaVersion = 1;
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private static DbConfiguration Db { get; set; }
         public string SetupDb()
         {
@@ -53,10 +57,39 @@ namespace PlexRequests.Core
             }
 
             MigrateDb();
+            CheckSchema();
             return Db.DbConnection().ConnectionString;
         }
 
         public static string ConnectionString => Db.DbConnection().ConnectionString;
+
+
+        private void CheckSchema()
+        {
+            var connection = Db.DbConnection();
+            var schema = connection.GetSchemaVersion();
+            if (schema == null)
+            {
+                connection.CreateSchema(); // Set the default.
+                schema = connection.GetSchemaVersion();
+            }
+
+            var version = schema.SchemaVersion;
+            if (version == 0)
+            {
+                connection.UpdateSchemaVersion(SchemaVersion);
+                try
+                {
+                    TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "INTEGER");
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Tried updating the schema to version 1");
+                    Log.Error(e);
+                }
+                return;
+            }
+        }
 
         private void CreateDefaultSettingsPage()
         {
@@ -74,6 +107,7 @@ namespace PlexRequests.Core
 
         private void MigrateDb() // TODO: Remove in v1.7
         {
+
             var result = new List<long>();
             RequestedModel[] requestedModels;
             var repo = new GenericRepository<RequestedModel>(Db, new MemoryCacheProvider());
@@ -121,7 +155,7 @@ namespace PlexRequests.Core
                 result.Add(id);
             }
 
-            foreach (var source in requestedModels.Where(x => x.Type== RequestType.Movie))
+            foreach (var source in requestedModels.Where(x => x.Type == RequestType.Movie))
             {
                 var id = jsonRepo.AddRequest(source);
                 result.Add(id);

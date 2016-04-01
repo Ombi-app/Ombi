@@ -40,3 +40,9 @@ CREATE TABLE IF NOT EXISTS Logs
     Exception							varchar(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
+
+CREATE TABLE IF NOT EXISTS DBInfo
+(
+    SchemaVersion									INTEGER
+
+);
