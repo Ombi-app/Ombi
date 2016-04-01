@@ -45,7 +45,7 @@ namespace PlexRequests.Core.SettingModels
         public string NoApprovalUsers { get; set; }
 
         [JsonIgnore]
-        public List<string> NoApprovalUserList
+        public List<string> ApprovalWhiteList
         {
             get
             {

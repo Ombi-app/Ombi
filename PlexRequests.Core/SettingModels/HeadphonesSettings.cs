@@ -36,7 +36,7 @@ namespace PlexRequests.Core.SettingModels
         public bool Enabled { get; set; }
         public string Ip { get; set; }
         public int Port { get; set; }
-        public int ApiKey { get; set; }
+        public string ApiKey { get; set; }
         public bool Ssl { get; set; }
         public string SubDir { get; set; }
        

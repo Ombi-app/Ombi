@@ -86,7 +86,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
-            Post["request/album"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
+            Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
         }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
@@ -261,7 +261,7 @@ namespace PlexRequests.UI.Modules
             };
 
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireMovieApproval || settings.NoApprovalUserList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (!settings.RequireMovieApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -288,7 +288,7 @@ namespace PlexRequests.UI.Modules
                         };
                         NotificationService.Publish(notificationModel);
 
-                        return Response.AsJson(new JsonResponseModel {Result = true, Message = $"{fullMovieName} was successfully added!" });
+                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                     }
                     return
                         Response.AsJson(new JsonResponseModel
@@ -380,7 +380,7 @@ namespace PlexRequests.UI.Modules
             }
             //#endif
 
-            
+
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -415,7 +415,7 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            if (!settings.RequireTvShowApproval || settings.NoApprovalUserList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (!settings.RequireTvShowApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
@@ -476,10 +476,33 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestAlbum(string releaseId)
         {
-            var settings = HeadphonesService.GetSettings();
+            var settings = PrService.GetSettings();
+            var existingRequest = RequestService.CheckRequest(releaseId);
+            Log.Debug("Checking for an existing request");
+
+            if (existingRequest != null)
+            {
+                Log.Debug("We do have an existing album request");
+                if (!existingRequest.UserHasRequested(Username))
+                {
+                    Log.Debug("Not in the requested list so adding them and updating the request. User: {0}", Username);
+                    existingRequest.RequestedUsers.Add(Username);
+                    RequestService.UpdateRequest(existingRequest);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{existingRequest.Title} was successfully added!" : $"{existingRequest.Title} has already been requested!" });
+            }
+
+
+            Log.Debug("This is a new request");
 
             var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
             var img = GetMusicBrainzCoverArt(albumInfo.id);
+
+            Log.Trace("Album Details:");
+            Log.Trace(albumInfo.DumpJson());
+            Log.Trace("CoverArt Details:");
+            Log.Trace(img.DumpJson());
+
             var model = new RequestedModel
             {
                 Title = albumInfo.title,
@@ -487,11 +510,59 @@ namespace PlexRequests.UI.Modules
                 Overview = albumInfo.disambiguation,
                 PosterPath = img,
                 Type = RequestType.Album,
+                ProviderId = 0,
+                RequestedUsers = new List<string>() { Username },
+                Status = albumInfo.status
             };
-            
-            // TODO need to send to Headphones
 
-            return Response.AsJson("");
+
+            if (!settings.RequireMusicApproval ||
+                settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            {
+                Log.Debug("We don't require approval OR the user is in the whitelist");
+                var hpSettings = HeadphonesService.GetSettings();
+
+                Log.Trace("Headphone Settings:");
+                Log.Trace(hpSettings.DumpJson());
+
+                if (!hpSettings.Enabled)
+                {
+                    RequestService.AddRequest(model);
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = true,
+                            Message = $"{model.Title} was successfully added!"
+                        });
+                }
+
+                var headphonesResult = HeadphonesApi.AddAlbum(hpSettings.ApiKey, hpSettings.FullUri, model.MusicBrainzId);
+                Log.Info("Result from adding album to Headphones = {0}", headphonesResult);
+                RequestService.AddRequest(model);
+                if (headphonesResult)
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = true,
+                            Message = $"{model.Title} was successfully added!"
+                        });
+                }
+
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = $"There was a problem adding {model.Title}. Please contact your admin!"
+                    });
+            }
+            
+            var result = RequestService.AddRequest(model);
+            return Response.AsJson(new JsonResponseModel
+            {
+                Result = true,
+                Message = $"{model.Title} was successfully added!"
+            });
         }
 
         private string GetMusicBrainzCoverArt(string id)

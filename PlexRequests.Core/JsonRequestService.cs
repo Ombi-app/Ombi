@@ -65,6 +65,13 @@ namespace PlexRequests.Core
             return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
 
+        public RequestedModel CheckRequest(string musicId)
+        {
+            var blobs = Repo.GetAll();
+            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+        }
+
         public void DeleteRequest(RequestedModel request)
         {
             var blob = Repo.Get(request.Id);

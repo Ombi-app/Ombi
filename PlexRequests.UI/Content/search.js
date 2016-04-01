@@ -107,6 +107,28 @@ $(document).on("click", ".requestMovie", function (e) {
     
 });
 
+// Click Request for album
+$(document).on("click", ".requestAlbum", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
+    $("#" + buttonId).prop("disabled", true);
+    loadingButton(buttonId, "primary");
+
+
+    var $form = $('#form' + buttonId);
+
+    var type = $form.prop('method');
+    var url = $form.prop('action');
+    var data = $form.serialize();
+
+    sendRequestAjax(data, type, url, buttonId);
+
+});
+
 function sendRequestAjax(data, type, url, buttonId) {
     $.ajax({
         type: type,
