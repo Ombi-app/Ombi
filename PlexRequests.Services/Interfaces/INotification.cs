@@ -27,6 +27,7 @@
 using System.Threading.Tasks;
 
 using PlexRequests.Services.Notification;
+using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Services.Interfaces
 {
@@ -35,5 +36,7 @@ namespace PlexRequests.Services.Interfaces
         string NotificationName { get; }
 
         Task NotifyAsync(NotificationModel model);
+
+        Task NotifyAsync(NotificationModel model, Settings settings);
     }
 }

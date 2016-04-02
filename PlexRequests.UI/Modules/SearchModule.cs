@@ -36,6 +36,7 @@ using NLog;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Music;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -54,7 +55,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
-            INotificationService notify) : base("search")
+            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -69,17 +70,23 @@ namespace PlexRequests.UI.Modules
             SickRageService = sickRageService;
             SickrageApi = srApi;
             NotificationService = notify;
+            MusicBrainzApi = mbApi;
+            HeadphonesApi = hpApi;
+            HeadphonesService = hpService;
+
 
             Get["/"] = parameters => RequestLoad();
 
             Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
             Get["tv/{searchTerm}"] = parameters => SearchTvShow((string)parameters.searchTerm);
+            Get["music/{searchTerm}"] = parameters => SearchMusic((string)parameters.searchTerm);
 
             Get["movie/upcoming"] = parameters => UpcomingMovies();
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
+            Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
         }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
@@ -93,9 +100,11 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IAvailabilityChecker Checker { get; }
+        private IMusicBrainzApi MusicBrainzApi { get; }
+        private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private string AuthToken => Cache.GetOrSet(CacheKeys.TvDbToken, TvApi.Authenticate, 50);
 
         private Negotiator RequestLoad()
         {
@@ -152,6 +161,30 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
+        private Response SearchMusic(string searchTerm)
+        {
+            var albums = MusicBrainzApi.SearchAlbum(searchTerm);
+            var releases = albums.releases ?? new List<Release>();
+            var model = new List<SearchMusicViewModel>();
+            foreach (var a in releases)
+            {
+                var img = GetMusicBrainzCoverArt(a.id);
+                model.Add(new SearchMusicViewModel
+                {
+                    Title = a.title,
+                    Id = a.id,
+                    Artist = a.ArtistCredit?.Select(x => x.artist?.name).FirstOrDefault(),
+                    Overview = a.disambiguation,
+                    ReleaseDate = a.date,
+                    TrackCount = a.TrackCount,
+                    CoverArtUrl = img,
+                    ReleaseType = a.status,
+                    Country = a.country
+                });
+            }
+            return Response.AsJson(model);
+        }
+
         private Response UpcomingMovies() // TODO : Not used
         {
             var movies = MovieApi.GetUpcomingMovies();
@@ -174,16 +207,26 @@ namespace PlexRequests.UI.Modules
         {
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
-            string fullMovieName = string.Format("{0}{1}", movieInfo.Title, movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty);
+            var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
             Log.Trace(movieInfo.DumpJson);
             //#if !DEBUG
 
+            var settings = PrService.GetSettings();
+
+            // check if the movie has already been requested
             Log.Info("Requesting movie with id {0}", movieId);
-            if (RequestService.CheckRequest(movieId))
+            var existingRequest = RequestService.CheckRequest(movieId);
+            if (existingRequest != null)
             {
-                Log.Trace("movie with id {0} exists", movieId);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} has already been requested!" });
+                // check if the current user is already marked as a requester for this movie, if not, add them
+                if (!existingRequest.UserHasRequested(Username))
+                {
+                    existingRequest.RequestedUsers.Add(Username);
+                    RequestService.UpdateRequest(existingRequest);
+                }
+
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
             }
 
             Log.Debug("movie with id {0} doesnt exists", movieId);
@@ -211,16 +254,14 @@ namespace PlexRequests.UI.Modules
                 Title = movieInfo.Title,
                 ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
                 Status = movieInfo.Status,
-                RequestedDate = DateTime.Now,
+                RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                RequestedUsers = new List<string>() { Username },
                 Issues = IssueState.None,
             };
 
-
-            var settings = PrService.GetSettings();
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireMovieApproval)
+            if (!settings.RequireMovieApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -247,7 +288,7 @@ namespace PlexRequests.UI.Modules
                         };
                         NotificationService.Publish(notificationModel);
 
-                        return Response.AsJson(new JsonResponseModel {Result = true});
+                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                     }
                     return
                         Response.AsJson(new JsonResponseModel
@@ -272,7 +313,7 @@ namespace PlexRequests.UI.Modules
                     };
                     NotificationService.Publish(notificationModel);
 
-                    return Response.AsJson(new JsonResponseModel { Result = true });
+                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                 }
             }
 
@@ -310,9 +351,20 @@ namespace PlexRequests.UI.Modules
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
 
-            if (RequestService.CheckRequest(showId))
+            var settings = PrService.GetSettings();
+
+            // check if the show has already been requested
+            Log.Info("Requesting tv show with id {0}", showId);
+            var existingRequest = RequestService.CheckRequest(showId);
+            if (existingRequest != null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} has already been requested!" });
+                // check if the current user is already marked as a requester for this show, if not, add them
+                if (!existingRequest.UserHasRequested(Username))
+                {
+                    existingRequest.RequestedUsers.Add(Username);
+                    RequestService.UpdateRequest(existingRequest);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
             }
 
             try
@@ -328,7 +380,7 @@ namespace PlexRequests.UI.Modules
             }
             //#endif
 
-            
+
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -338,9 +390,9 @@ namespace PlexRequests.UI.Modules
                 Title = showInfo.name,
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
-                RequestedDate = DateTime.Now,
+                RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedBy = Session[SessionKeys.UsernameKey].ToString(),
+                RequestedUsers = new List<string>() { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
@@ -363,26 +415,26 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            var settings = PrService.GetSettings();
-            if (!settings.RequireTvShowApproval)
+            if (!settings.RequireTvShowApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
                 if (sonarrSettings.Enabled)
                 {
                     var result = sender.SendToSonarr(sonarrSettings, model);
-                    if (result != null)
+                    if (result != null && !string.IsNullOrEmpty(result.title))
                     {
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
+                        var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        NotificationService.Publish(notify1);
 
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
-                    var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
-                    NotificationService.Publish(notify1);
 
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to Sonarr! Please check your settings." });
+
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.ErrorMessage ?? "Something went wrong adding the movie to Sonarr! Please check your settings." });
 
                 }
 
@@ -420,6 +472,112 @@ namespace PlexRequests.UI.Modules
         {
             var result = Checker.IsAvailable(title, year);
             return result;
+        }
+
+        private Response RequestAlbum(string releaseId)
+        {
+            var settings = PrService.GetSettings();
+            var existingRequest = RequestService.CheckRequest(releaseId);
+            Log.Debug("Checking for an existing request");
+
+            if (existingRequest != null)
+            {
+                Log.Debug("We do have an existing album request");
+                if (!existingRequest.UserHasRequested(Username))
+                {
+                    Log.Debug("Not in the requested list so adding them and updating the request. User: {0}", Username);
+                    existingRequest.RequestedUsers.Add(Username);
+                    RequestService.UpdateRequest(existingRequest);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{existingRequest.Title} was successfully added!" : $"{existingRequest.Title} has already been requested!" });
+            }
+
+
+            Log.Debug("This is a new request");
+
+            var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
+            var img = GetMusicBrainzCoverArt(albumInfo.id);
+
+            Log.Trace("Album Details:");
+            Log.Trace(albumInfo.DumpJson());
+            Log.Trace("CoverArt Details:");
+            Log.Trace(img.DumpJson());
+
+            var model = new RequestedModel
+            {
+                Title = albumInfo.title,
+                MusicBrainzId = albumInfo.id,
+                Overview = albumInfo.disambiguation,
+                PosterPath = img,
+                Type = RequestType.Album,
+                ProviderId = 0,
+                RequestedUsers = new List<string>() { Username },
+                Status = albumInfo.status,
+                Issues = IssueState.None
+            };
+
+
+            if (!settings.RequireMusicApproval ||
+                settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            {
+                Log.Debug("We don't require approval OR the user is in the whitelist");
+                var hpSettings = HeadphonesService.GetSettings();
+
+                Log.Trace("Headphone Settings:");
+                Log.Trace(hpSettings.DumpJson());
+
+                if (!hpSettings.Enabled)
+                {
+                    RequestService.AddRequest(model);
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = true,
+                            Message = $"{model.Title} was successfully added!"
+                        });
+                }
+
+                var headphonesResult = HeadphonesApi.AddAlbum(hpSettings.ApiKey, hpSettings.FullUri, model.MusicBrainzId);
+                Log.Info("Result from adding album to Headphones = {0}", headphonesResult);
+                RequestService.AddRequest(model);
+                if (headphonesResult)
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = true,
+                            Message = $"{model.Title} was successfully added!"
+                        });
+                }
+
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = $"There was a problem adding {model.Title}. Please contact your admin!"
+                    });
+            }
+            
+            var result = RequestService.AddRequest(model);
+            return Response.AsJson(new JsonResponseModel
+            {
+                Result = true,
+                Message = $"{model.Title} was successfully added!"
+            });
+        }
+
+        private string GetMusicBrainzCoverArt(string id)
+        {
+            var coverArt = MusicBrainzApi.GetCoverArt(id);
+            var firstImage = coverArt?.images?.FirstOrDefault();
+            var img = string.Empty;
+
+            if (firstImage != null)
+            {
+                img = firstImage.thumbnails?.small ?? firstImage.image;
+            }
+
+            return img;
         }
     }
 }

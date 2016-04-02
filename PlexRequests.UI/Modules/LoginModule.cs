@@ -60,6 +60,7 @@ namespace PlexRequests.UI.Modules
             {
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
+                var dtOffset = (int)Request.Form.DateTimeOffset;
 
                 var userId = UserMapper.ValidateUser(username, password);
 
@@ -73,6 +74,7 @@ namespace PlexRequests.UI.Modules
                     expiry = DateTime.Now.AddDays(7);
                 }
                 Session[SessionKeys.UsernameKey] = username;
+                Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 

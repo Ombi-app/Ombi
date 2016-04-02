@@ -10,19 +10,19 @@
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
 
-#Features
+# Features
 
-* Integration with [TheMovieDB](https://www.themoviedb.org/) for all Movies
-* Integration with [TVMaze](www.tvmaze.com) for all TV shows!
-* Secure authentication
-* [Sonarr](https://sonarr.tv/) integration (SickRage/Sickbeard TBD)
-* [CouchPotato](https://couchpota.to/) integration
-* [SickRage](https://sickrage.github.io/) integration
-* Email notifications
-* Pushbullet notifications
-* Pushover notifications
+* Movie and TV Show searching, can't find something on Plex? Just request it! 
+* Notifications! Get notified via Email, Pushbullet and Pushover for new requests and issue reports!
+* Send your TV Shows to either [Sonarr](https://sonarr.tv/) or [SickRage](http://www.sickrage.ca/)!
+* Secure authentication so you don't have to worry about those script kiddies
+* We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
+* We have allowed the ability for a user to add a custom note on a request
+* It automatically update the status of requests when they are available on Plex
+* Sick, responsive and mobile friendly UI
+* Headphones integration will be comming soon!
 
-#Preview
+# Preview (Needs updating)
 
 ![Preview](http://i.imgur.com/ucCFUvd.gif)
 
@@ -31,10 +31,10 @@ Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/relea
 Extract the .zip file (Unblock if on Windows! Right Click > Properties > Unblock).
 Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
 
-#Configuration
+# FAQ
+Do you have an issue or a question? if so check out our [FAQ!](https://github.com/tidusjar/PlexRequests.Net/wiki/FAQ)
 
-To configure PlexRequests you need to register an admin user by clicking on Admin (top left) and press the Register link.
-You will then have a admin menu option once registered where you can setup Sonarr, Couchpotato and any other settings.
+# Docker
 
 Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
 
@@ -84,7 +84,9 @@ end script
 
 ####Reboot, then open up your browser to check that it's running!
 
-```sudo shutdown -r 00```
+```
+sudo shutdown -r 00
+```
 
 # Contributors
 
@@ -95,14 +97,6 @@ Please feed free to submit a pull request!
 # Donation
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
-###### A massive thanks to everyone below!
+## A massive thanks to everyone below for all their help!
 
-[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake)
-
-
-# Sponsors
-- [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools!!!
-    - [ReSharper](http://www.jetbrains.com/resharper/) 
-    - [dotTrace] (https://www.jetbrains.com/profiler/) 
-    - [dotMemory] (https://www.jetbrains.com/dotmemory/) 
-    - [dotCover] (https://www.jetbrains.com/dotcover/) 
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat

@@ -28,21 +28,50 @@
 using Nancy;
 using Nancy.Extensions;
 using PlexRequests.UI.Models;
+using System;
 
 namespace PlexRequests.UI.Modules
 {
     public class BaseModule : NancyModule
     {
+        private string _username;
+        private int _dateTimeOffset = -1;
+
+        protected string Username
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_username))
+                {
+                    _username = Session[SessionKeys.UsernameKey].ToString();
+                }
+                return _username;
+            }
+        }
+
+        protected int DateTimeOffset
+        {
+            get
+            {
+                if (_dateTimeOffset == -1)
+                {
+                    _dateTimeOffset = Session[SessionKeys.ClientDateTimeOffsetKey] != null ?
+                        (int)Session[SessionKeys.ClientDateTimeOffsetKey] : (new DateTimeOffset().Offset).Minutes;
+                }
+                return _dateTimeOffset;
+            }
+        }
+
         public BaseModule()
         {
-            Before += (ctx)=> CheckAuth();
+            Before += (ctx) => CheckAuth();
         }
 
         public BaseModule(string modulePath) : base(modulePath)
         {
             Before += (ctx) => CheckAuth();
         }
-        
+
 
         private Response CheckAuth()
         {

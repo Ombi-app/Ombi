@@ -48,6 +48,11 @@
     <Compile Include="Movie\CouchPotatoAdd.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
+    <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
+    <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
+    <Compile Include="Music\MusicBrainzCoverArt.cs" />
+    <Compile Include="Music\MusicBrainzReleaseInfo.cs" />
+    <Compile Include="Music\MusicBrainzSearchResults.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />
     <Compile Include="Notifications\PushoverResponse.cs" />
@@ -66,6 +71,7 @@
     <Compile Include="SickRage\SickRageStatus.cs" />
     <Compile Include="SickRage\SickRageTvAdd.cs" />
     <Compile Include="Sonarr\SonarrAddSeries.cs" />
+    <Compile Include="Sonarr\SonarrError.cs" />
     <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />

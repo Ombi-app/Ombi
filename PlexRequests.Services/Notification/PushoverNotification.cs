@@ -51,18 +51,25 @@ namespace PlexRequests.Services.Notification
         public string NotificationName => "PushoverNotification";
         public async Task NotifyAsync(NotificationModel model)
         {
-            if (!ValidateConfiguration())
-            {
-                return;
-            }
+            var configuration = GetSettings();
+            await NotifyAsync(model, configuration);
+        }
+
+        public async Task NotifyAsync(NotificationModel model, Settings settings)
+        {
+            if (settings == null) await NotifyAsync(model);
+
+            var pushSettings = (PushoverNotificationSettings)settings;
+
+            if (!ValidateConfiguration(pushSettings)) return;
 
             switch (model.NotificationType)
             {
                 case NotificationType.NewRequest:
-                    await PushNewRequestAsync(model);
+                    await PushNewRequestAsync(model, pushSettings);
                     break;
                 case NotificationType.Issue:
-                    await PushIssueAsync(model);
+                    await PushIssueAsync(model, pushSettings);
                     break;
                 case NotificationType.RequestAvailable:
                     break;
@@ -70,18 +77,21 @@ namespace PlexRequests.Services.Notification
                     break;
                 case NotificationType.AdminNote:
                     break;
+                case NotificationType.Test:
+                    await PushTestAsync(model, pushSettings);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        private bool ValidateConfiguration()
+        private bool ValidateConfiguration(PushoverNotificationSettings settings)
         {
-            if (!Settings.Enabled)
+            if (!settings.Enabled)
             {
                 return false;
             }
-            if (string.IsNullOrEmpty(Settings.AccessToken) || string.IsNullOrEmpty(Settings.UserToken))
+            if (string.IsNullOrEmpty(settings.AccessToken) || string.IsNullOrEmpty(settings.UserToken))
             {
                 return false;
             }
@@ -93,12 +103,12 @@ namespace PlexRequests.Services.Notification
             return SettingsService.GetSettings();
         }
 
-        private async Task PushNewRequestAsync(NotificationModel model)
+        private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Plex Requests: {model.Title} has been requested by user: {model.User}";
             try
             {
-                var result = await PushoverApi.PushAsync(Settings.AccessToken, message, Settings.UserToken);
+                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
                 if (result?.status != 1)
                 {
                     Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
@@ -110,12 +120,29 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        private async Task PushIssueAsync(NotificationModel model)
+        private async Task PushIssueAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Plex Requests: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             try
             {
-                var result = await PushoverApi.PushAsync(Settings.AccessToken, message, Settings.UserToken);
+                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
+                if (result?.status != 1)
+                {
+                    Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+        private async Task PushTestAsync(NotificationModel model, PushoverNotificationSettings settings)
+        {
+            var message = $"Plex Requests: Test Message!";
+            try
+            {
+                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
                 if (result?.status != 1)
                 {
                     Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");

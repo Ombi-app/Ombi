@@ -52,16 +52,24 @@ namespace PlexRequests.Core
             // TODO Keep an eye on this, since we are now doing 2 DB update for 1 single request, inserting and then updating
             model.Id = (int)id;
 
-            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id };
+            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id, MusicId = model.MusicBrainzId};
             var result = Repo.Update(entity);
 
             return result ? id : -1;
         }
 
-        public bool CheckRequest(int providerId)
+        public RequestedModel CheckRequest(int providerId)
         {
             var blobs = Repo.GetAll();
-            return blobs.Any(x => x.ProviderId == providerId);
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+        }
+
+        public RequestedModel CheckRequest(string musicId)
+        {
+            var blobs = Repo.GetAll();
+            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
 
         public void DeleteRequest(RequestedModel request)
@@ -79,6 +87,10 @@ namespace PlexRequests.Core
         public RequestedModel Get(int id)
         {
             var blob = Repo.Get(id);
+            if (blob == null)
+            {
+                return new RequestedModel();
+            }
             var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
             return model;
         }

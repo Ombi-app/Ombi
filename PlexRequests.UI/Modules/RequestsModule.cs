@@ -40,12 +40,12 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseModule
     {
-
         public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
         {
             Service = service;
@@ -56,6 +56,7 @@ namespace PlexRequests.UI.Modules
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
             Get["/tvshows"] = _ => GetTvShows();
+            Get["/albums"] = _ => GetAlbumRequests();
             Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
             Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
@@ -79,28 +80,38 @@ namespace PlexRequests.UI.Modules
 
         private Response GetMovies()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate.Humanize(),
-                RequestedDate = movie.RequestedDate.Humanize(),
-                Approved = movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedBy = movie.RequestedBy,
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = isAdmin,
-                Issues = movie.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbMovies.Select(movie => {
+                return new RequestViewModel
+                {
+                    ProviderId = movie.ProviderId,
+                    Type = movie.Type,
+                    Status = movie.Status,
+                    ImdbId = movie.ImdbId,
+                    Id = movie.Id,
+                    PosterPath = movie.PosterPath,
+                    ReleaseDate = movie.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = movie.Available || movie.Approved,
+                    Title = movie.Title,
+                    Overview = movie.Overview,
+                    RequestedUsers = isAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                    Available = movie.Available,
+                    Admin = isAdmin,
+                    Issues = movie.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = movie.OtherMessage,
+                    AdminNotes = movie.AdminNote,
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -108,29 +119,80 @@ namespace PlexRequests.UI.Modules
 
         private Response GetTvShows()
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
-            var viewModel = dbTv.Select(tv => new RequestViewModel
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
-                ProviderId = tv.ProviderId,
-                Type = tv.Type,
-                Status = tv.Status,
-                ImdbId = tv.ImdbId,
-                Id = tv.Id,
-                PosterPath = tv.PosterPath,
-                ReleaseDate = tv.ReleaseDate.Humanize(),
-                RequestedDate = tv.RequestedDate.Humanize(),
-                Approved = tv.Approved,
-                Title = tv.Title,
-                Overview = tv.Overview,
-                RequestedBy = tv.RequestedBy,
-                ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                Available = tv.Available,
-                Admin = isAdmin,
-                Issues = tv.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote,
-                TvSeriesRequestType = tv.SeasonsRequested
+                dbTv = dbTv.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbTv.Select(tv => {
+                return new RequestViewModel
+                {
+                    ProviderId = tv.ProviderId,
+                    Type = tv.Type,
+                    Status = tv.Status,
+                    ImdbId = tv.ImdbId,
+                    Id = tv.Id,
+                    PosterPath = tv.PosterPath,
+                    ReleaseDate = tv.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = tv.ReleaseDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = tv.Available || tv.Approved,
+                    Title = tv.Title,
+                    Overview = tv.Overview,
+                    RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                    Available = tv.Available,
+                    Admin = isAdmin,
+                    Issues = tv.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = tv.OtherMessage,
+                    AdminNotes = tv.AdminNote,
+                    TvSeriesRequestType = tv.SeasonsRequested
+                };
+            }).ToList();
+
+            return Response.AsJson(viewModel);
+        }
+
+        private Response GetAlbumRequests()
+        {
+            var settings = PrSettings.GetSettings();
+            var isAdmin = Context.CurrentUser.IsAuthenticated();
+            var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            {
+                dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbAlbum.Select(album => {
+                return new RequestViewModel
+                {
+                    ProviderId = album.ProviderId,
+                    Type = album.Type,
+                    Status = album.Status,
+                    ImdbId = album.ImdbId,
+                    Id = album.Id,
+                    PosterPath = album.PosterPath,
+                    ReleaseDate = album.ReleaseDate.Humanize(),
+                    ReleaseDateTicks = album.ReleaseDate.Ticks,
+                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = album.Available || album.Approved,
+                    Title = album.Title,
+                    Overview = album.Overview,
+                    RequestedUsers = isAdmin ? album.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = album.ReleaseDate.Year.ToString(),
+                    Available = album.Available,
+                    Admin = isAdmin,
+                    Issues = album.Issues.Humanize(LetterCasing.Title),
+                    OtherMessage = album.OtherMessage,
+                    AdminNotes = album.AdminNote,
+                    TvSeriesRequestType = album.SeasonsRequested,
+                    MusicBrainzId = album.MusicBrainzId
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -165,7 +227,7 @@ namespace PlexRequests.UI.Modules
             }
             originalRequest.Issues = issue;
             originalRequest.OtherMessage = !string.IsNullOrEmpty(comment)
-                ? $"{Session[SessionKeys.UsernameKey]} - {comment}"
+                ? $"{Username} - {comment}"
                 : string.Empty;
 
 
@@ -173,7 +235,7 @@ namespace PlexRequests.UI.Modules
 
             var model = new NotificationModel
             {
-                User = Session[SessionKeys.UsernameKey].ToString(),
+                User = Username,
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,

@@ -48,9 +48,12 @@ namespace PlexRequests.Services
     {
         public AvailabilityUpdateService()
         {
+            var memCache = new MemoryCacheProvider();
+            var dbConfig = new DbConfiguration(new SqliteFactory());
+            var repo = new SettingsJsonRepository(dbConfig, memCache);
+
             ConfigurationReader = new ConfigurationReader();
-            var repo = new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider())), new PlexApi());
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(dbConfig, memCache)), new PlexApi());
             HostingEnvironment.RegisterObject(this);
         }
 

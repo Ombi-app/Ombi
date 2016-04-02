@@ -57,6 +57,7 @@ namespace PlexRequests.UI.Modules
             Post["/sonarr"] = _ => SonarrTest();
             Post["/plex"] = _ => PlexTest();
             Post["/sickrage"] = _ => SickRageTest();
+            Post["/headphones"] = _ => HeadphonesTest();
 
         }
         
@@ -167,6 +168,11 @@ namespace PlexRequests.UI.Modules
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }
+        }
+
+        private Response HeadphonesTest()
+        {
+            throw new NotImplementedException(); //TODO
         }
     }
 }

@@ -37,13 +37,11 @@ namespace PlexRequests.Store.Repository
     public class RequestJsonRepository : IRequestRepository
     {
         private ICacheProvider Cache { get; }
-
-        private string TypeName { get; }
+        
         public RequestJsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
         {
             Db = config;
             Cache = cacheProvider;
-            TypeName = typeof(RequestJsonRepository).Name;
         }
 
         private ISqliteConfiguration Db { get; }
@@ -60,7 +58,7 @@ namespace PlexRequests.Store.Repository
 
         public IEnumerable<RequestBlobs> GetAll()
         {
-            var key = TypeName + "GetAll";
+            var key = "GetAll";
             var item = Cache.GetOrSet(key, () =>
             {
                 using (var con = Db.DbConnection())
@@ -74,7 +72,7 @@ namespace PlexRequests.Store.Repository
 
         public RequestBlobs Get(int id)
         {
-            var key = TypeName + "Get" + id;
+            var key = "Get" + id;
             var item = Cache.GetOrSet(key, () =>
             {
                 using (var con = Db.DbConnection())
@@ -107,7 +105,7 @@ namespace PlexRequests.Store.Repository
         private void ResetCache()
         {
             Cache.Remove("Get");
-            Cache.Remove(TypeName + "GetAll");
+            Cache.Remove("GetAll");
         }
 
         public bool UpdateAll(IEnumerable<RequestBlobs> entity)

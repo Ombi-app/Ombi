@@ -32,7 +32,7 @@ namespace PlexRequests.Services
 {
     public class UpdateInterval : IIntervals
     {
-        public TimeSpan Notification => TimeSpan.FromMinutes(5);
+        public TimeSpan Notification => TimeSpan.FromMinutes(10);
 
     }
 }

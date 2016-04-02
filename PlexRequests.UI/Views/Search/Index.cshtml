@@ -1,6 +1,7 @@
 ﻿<div>
     <h1>Search</h1>
     <h4>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
+    <br />
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         @if (Model.SearchForMovies)
@@ -10,6 +11,10 @@
         @if (Model.SearchForTvShows)
         {
             <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+        }
+        @if (Model.SearchForMusic)
+        {
+            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Albums</a></li>
         }
 
     </ul>
@@ -21,8 +26,18 @@
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
                 <div class="input-group">
-                    <input id="movieSearchContent" type="text" class="form-control form-control-custom">
+                    <input id="movieSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
                     <div class="input-group-addon">
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                Suggestions
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="moviesComingSoon" href="#">Coming Soon</a></li>
+                                <li><a id="moviesInTheaters" href="#">In Theaters</a></li>
+                            </ul>
+                        </div>
                         <i id="movieSearchButton" class="fa fa-search"></i>
                     </div>
                 </div>
@@ -40,7 +55,7 @@
     <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
                 <div class="input-group">
-                    <input id="tvSearchContent" type="text" class="form-control form-control-custom">
+                    <input id="tvSearchContent" type="text" class="form-control form-control-custom form-control-search">
                     <div class="input-group-addon">
                         <i id="tvSearchButton" class="fa fa-search"></i>
                     </div>
@@ -52,12 +67,30 @@
                 </div>
             </div>
         }
+
+        @if (Model.SearchForMusic)
+        {
+            <!-- Music tab -->
+            <div role="tabpanel" class="tab-pane" id="MusicTab">
+                <div class="input-group">
+                    <input id="musicSearchContent" type="text" class="form-control form-control-custom form-control-search">
+                    <div class="input-group-addon">
+                        <i id="musicSearchButton" class="fa fa-search"></i>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <!-- Music content -->
+                <div id="musicList">
+                </div>
+            </div>
+        }
     </div>
 
 
 </div>
 
-
+<!-- Movie and TV Results template -->
 <script id="search-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-sm-2">
@@ -90,7 +123,7 @@
         </div>
         <div class="col-sm-2 col-sm-push-3">
             <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />                
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq type "movie"}}
                 <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
                 {{/if_eq}}
@@ -102,7 +135,7 @@
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                         <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
-                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li> 
+                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li>
                         <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
                     </ul>
                 </div>
@@ -115,6 +148,44 @@
                 <small class="row">Vote Average: {{voteAverage}}</small>
                 <small class="row">Vote Count: {{voteCount}}</small>
                 {{/if}}
+            </form>
+        </div>
+
+    </div>
+    <hr />
+</script>
+
+
+<!-- Music Results template -->
+<script id="music-template" type="text/x-handlebars-template">
+    <div class="row">
+        <div class="col-sm-2">
+            {{#if coverArtUrl}}
+            <img class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
+            {{/if}}
+        </div>
+        <div class="col-sm-5 ">
+            <div>
+                <a href="https://musicbrainz.org/release/{{id}}" target="_blank">
+                <h4>
+                    {{artist}} - {{title}}
+                    {{#if year}}
+                    ({{year}})
+                    {{/if}}
+                </h4>
+                </a>
+
+            </div>
+            <p>{{overview}}</p>
+        </div>
+        <div class="col-sm-2 col-sm-push-3">
+            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
+                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestAlbum" type="submit"><i class="fa fa-plus"></i> Request</button>
+                <br />
+                <small class="row">Track Count: {{trackCount}}</small>
+                <small class="row">Country: {{country}}</small>
             </form>
         </div>
 
