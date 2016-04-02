@@ -99,4 +99,4 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ## A massive thanks to everyone below for all their help!
 
-[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat, [EddiYo](https://github.com/tidusjar/PlexRequests.Net/issues/created_by/EddiYo)
