@@ -31,10 +31,7 @@ namespace PlexRequests.Api.Models.SickRage
         public int pid { get; set; }
     }
 
-    public class SickRagePing
+    public class SickRagePing : SickRageBase<SickRagePingData>
     {
-        public SickRagePingData data { get; set; }
-        public string message { get; set; }
-        public string result { get; set; }
     }
 }
