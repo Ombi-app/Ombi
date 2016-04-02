@@ -60,11 +60,19 @@
 
 
             <div class="form-group">
+                <label for="EmailSender" class="control-label">Email Sender</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="EmailSender" name="EmailSender" value="@Model.EmailSender">
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="RecipientEmail" class="control-label">Email Recipient</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="RecipientEmail" name="RecipientEmail" value="@Model.RecipientEmail">
                 </div>
             </div>
+
+
 
             <div class="form-group">
                 <label for="EmailUsername" class="control-label">Username</label>
@@ -80,6 +88,11 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <div>
+                    <button id="testEmail" type="submit" class="btn btn-primary-outline">Test</button>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div>
@@ -120,7 +133,32 @@
             });
         });
 
-
+        $('#testEmail').click(function (e) {
+            e.preventDefault();
+            var port = $('#EmailPort').val();
+            if (isNaN(port)) {
+                generateNotify("You must specify a valid Port.", "warning");
+                return;
+            }
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: '/admin/testemailnotification',
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
 
 
     });

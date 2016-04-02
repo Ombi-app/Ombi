@@ -26,16 +26,22 @@
 #endregion
 using System;
 
+using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
+
 namespace PlexRequests.Store.Models
 {
+    [Table("Logs")]
     public class LogEntity : Entity
     {
-        public string Username { get; set; }
         public DateTime Date { get; set; }
         public string Level { get; set; }
         public string Logger { get; set; }
         public string Message { get; set; }
         public string Callsite { get; set; }
         public string Exception { get; set; }
+
+        [JsonIgnore]
+        public string DateString { get; set; }
     }
 }

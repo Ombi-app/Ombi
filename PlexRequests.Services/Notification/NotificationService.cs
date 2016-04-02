@@ -24,64 +24,70 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
-using System.Threading;
+using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
 
 using NLog;
 
-using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Services.Notification
 {
-    public static class NotificationService
+    public class NotificationService : INotificationService
     {
-
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public static Dictionary<string, INotification> Observers { get; }
+        public ConcurrentDictionary<string, INotification> Observers { get; } = new ConcurrentDictionary<string, INotification>();
 
-        static NotificationService()
+        public async Task Publish(NotificationModel model)
         {
-            Observers = new Dictionary<string, INotification>();
+            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model));
+
+            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
-        public static void Publish(string title, string requester)
+        public async Task Publish(NotificationModel model, Settings settings)
         {
-            Log.Trace("Notifying all observers: ");
-            Log.Trace(Observers.DumpJson());
-            foreach (var observer in Observers)
-            {
-                var notification = observer.Value;
+            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model, settings));
 
-                new Thread(() =>
-                {
-                    Thread.CurrentThread.IsBackground = true;
-                    notification.Notify(title, requester);
-                }).Start();
-            }
+            await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
-        public static void Subscribe(INotification notification)
+        public void Subscribe(INotification notification)
         {
-            INotification notificationValue;
-            if (Observers.TryGetValue(notification.NotificationName, out notificationValue))
-            {
-                return;
-            }
-
-            Observers[notification.NotificationName] = notification;
+            Observers.TryAdd(notification.NotificationName, notification);
         }
 
-        public static void UnSubscribe(INotification notification)
+        public void UnSubscribe(INotification notification)
         {
-            Log.Trace("Unsubscribing Observer {0}", notification.NotificationName);
-            INotification notificationValue;
-            if (!Observers.TryGetValue(notification.NotificationName, out notificationValue))
+            Observers.TryRemove(notification.NotificationName, out notification);
+        }
+
+        private static async Task NotifyAsync(INotification notification, NotificationModel model)
+        {
+            try
             {
-                Log.Trace("Observer {0} doesn't exist to Unsubscribe", notification.NotificationName);
-                // Observer doesn't exists
-                return;
+                await notification.NotifyAsync(model).ConfigureAwait(false);
             }
-            Observers.Remove(notification.NotificationName);
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+            }
+
+        }
+
+        private static async Task NotifyAsync(INotification notification, NotificationModel model, Settings settings)
+        {
+            try
+            {
+                await notification.NotifyAsync(model, settings).ConfigureAwait(false);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+            }
         }
     }
 }

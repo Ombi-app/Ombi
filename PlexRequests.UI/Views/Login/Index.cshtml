@@ -1,11 +1,12 @@
 ﻿<form method="POST">
-    Username <input class="form-control" type="text" name="Username"/>
+    Username <input class="form-control form-control-custom" type="text" name="Username"/>
     <br/>
-    Password <input class="form-control" name="Password" type="password"/>
+    Password <input class="form-control form-control-custom" name="Password" type="password"/>
     <br/>
     Remember Me <input name="RememberMe" type="checkbox" value="True"/>
-    <br/>
+    <br/><br/>
     <input class="btn btn-success-outline" type="submit" value="Login"/>
+    <input type="hidden" id="DateTimeOffset" name="DateTimeOffset" />
 </form>
 @if (!Model.AdminExists)
 {
@@ -19,3 +20,9 @@
     </div>
 }
 
+<script>
+    $(function () {
+        var dtOffset = new Date().getTimezoneOffset();
+        $('#DateTimeOffset').val(dtOffset);
+    });
+</script>

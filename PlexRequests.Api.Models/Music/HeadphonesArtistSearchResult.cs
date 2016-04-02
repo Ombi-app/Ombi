@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: INotification.cs
+//    File: HeadphonesSearchResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,23 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Notification
+namespace PlexRequests.Api.Models.Music
 {
-    public interface INotification
+    public class HeadphonesArtistSearchResult
     {
-        /// <summary>
-        /// Gets the name of the notification.
-        /// </summary>
-        /// <value>
-        /// The name of the notification.
-        /// </value>
-        string NotificationName { get; }
-        /// <summary>
-        /// Notifies the specified title.
-        /// </summary>
-        /// <param name="title">The title.</param>
-        /// <param name="requester">The requester.</param>
-        /// <returns></returns>
-        bool Notify(string title, string requester);
+        public string url { get; set; } // MusicBrainz url
+        public int score { get; set; } // Search Match score?
+        public string name { get; set; } // Artist Name
+        public string uniquename { get; set; } // Artist Unique Name
+        public string id { get; set; } // Artist Unique ID for MusicBrainz
     }
 }

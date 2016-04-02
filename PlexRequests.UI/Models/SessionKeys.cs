@@ -29,5 +29,6 @@ namespace PlexRequests.UI.Models
     public class SessionKeys
     {
         public const string UsernameKey = "Username";
+        public const string ClientDateTimeOffsetKey = "ClientDateTimeOffset";
     }
 }

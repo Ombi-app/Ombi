@@ -42,12 +42,17 @@
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -58,17 +63,17 @@
   <ItemGroup>
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="Entity.cs" />
-    <Compile Include="IRequestRepository.cs" />
-    <Compile Include="ISettingsRepository.cs" />
+    <Compile Include="Repository\IRequestRepository.cs" />
+    <Compile Include="Repository\ISettingsRepository.cs" />
     <Compile Include="ISqliteConfiguration.cs" />
-    <Compile Include="IRepository.cs" />
+    <Compile Include="Repository\IRepository.cs" />
     <Compile Include="Models\GlobalSettings.cs" />
     <Compile Include="Models\LogEntity.cs" />
     <Compile Include="Models\RequestBlobs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repository\SettingsJsonRepository.cs" />
     <Compile Include="Repository\RequestJsonRepository.cs" />
-    <Compile Include="GenericRepository.cs" />
+    <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />
     <Compile Include="UsersModel.cs" />

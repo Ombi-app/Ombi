@@ -6,46 +6,127 @@
 });
 
 var searchSource = $("#search-template").html();
+var albumSource = $("#album-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
+var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
 
-movieLoad();
-tvLoad();
+var mixItUpDefault = {
+    animation: { enable: true },
+    load: {
+        filter: 'all',
+        sort: 'requestorder:desc'
+    },
+    layout: {
+        display: 'block'
+    },
+    callbacks: {
+        onMixStart: function (state, futureState) {
+            $('.mix', this).removeAttr('data-bound').removeData('bound'); // fix for animation issues in other tabs
+        }
+    }
+};
+
+initLoad();
 
 
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr('href');
+    var activeState = "";
+
+    var $ml = $('#movieList');
+    var $tvl = $('#tvList');
+
+    $('.approve-category').hide();
     if (target === "#TvShowTab") {
-        if (!$('#tvList').mixItUp('isLoaded')) {
-            $('#tvList').mixItUp({
-                layout: {
-                    display: 'block'
-                },
-                load: {
-                    filter: 'all'
-                }
-            });
+        $('#approveTVShows').show();
+        if ($ml.mixItUp('isLoaded')) {
+            activeState = $ml.mixItUp('getState');
+            $ml.mixItUp('destroy');
         }
+        if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
+        $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
+    if (target === "#MoviesTab") {
+        $('#approveMovies').show();
+        if ($tvl.mixItUp('isLoaded')) {
+            activeState = $tvl.mixItUp('getState');
+            $tvl.mixItUp('destroy');
+        }
+        if ($ml.mixItUp('isLoaded')) $ml.mixItUp('destroy');
+        $ml.mixItUp(mixItUpConfig(activeState)); // init or reinit
+    }
+    //$('.mix[data-bound]').removeAttr('data-bound');
 });
 
 // Approve all
-$('#approveAll').click(function () {
+$('#approveMovies').click(function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
     $.ajax({
         type: 'post',
-        url: '/approval/approveall',
+        url: '/approval/approveallmovies',
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
-                generateNotify("Success! All requests approved!", "success");
+                generateNotify("Success! All Movie requests approved!", "success");
+                movieLoad();
             }
         },
         error: function (e) {
             console.log(e);
             generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml);
         }
     });
+});
+$('#approveTVShows').click(function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
+    $.ajax({
+        type: 'post',
+        url: '/approval/approvealltvshows',
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All TV Show requests approved!", "success");
+                tvLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml);
+        }
+    });
+});
+
+// filtering/sorting
+$('.filter,.sort', '.dropdown-menu').click(function (e) {
+    var $this = $(this);
+    $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
+    $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');
 });
 
 
@@ -190,6 +271,12 @@ $(document).on("click", ".approve", function (e) {
     var buttonId = e.target.id;
     var $form = $('#approve' + buttonId);
 
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "success");
+
     $.ajax({
         type: $form.prop('method'),
         url: $form.prop('action'),
@@ -285,36 +372,89 @@ $(document).on("click", ".change", function (e) {
 
 });
 
+function mixItUpConfig(activeState) {
+    var conf = mixItUpDefault;
+
+    if (activeState) {
+        if (activeState.activeFilter) conf['load']['filter'] = activeState.activeFilter;
+        if (activeState.activeSort) conf['load']['sort'] = activeState.activeSort;
+    }
+    return conf;
+};
+
+function initLoad() {
+    movieLoad();
+    tvLoad();
+    albumLoad();
+    //noResultsMusic
+}
+
 function movieLoad() {
-    $("#movieList").html("");
+    var $ml = $('#movieList');
+    if ($ml.mixItUp('isLoaded')) {
+        activeState = $ml.mixItUp('getState');
+        $ml.mixItUp('destroy');
+    }
+    $ml.html("");
 
     $.ajax("/requests/movies/").success(function (results) {
-        results.forEach(function (result) {
-            var context = buildRequestContext(result, "movie");
-
-            var html = searchTemplate(context);
-            $("#movieList").append(html);
-        });
-        $('#movieList').mixItUp({
-            layout: {
-                display: 'block'
-            },
-            load: {
-                filter: 'all'
-            }
-        });
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "movie");
+                var html = searchTemplate(context);
+                $ml.append(html);
+            });
+        }
+        else {
+            $ml.html(noResultsHtml.format("movie"));
+        }
+        $ml.mixItUp(mixItUpConfig());
     });
 };
 
 function tvLoad() {
-    $("#tvList").html("");
+    var $tvl = $('#tvList');
+    if ($tvl.mixItUp('isLoaded')) {
+        activeState = $tvl.mixItUp('getState');
+        $tvl.mixItUp('destroy');
+    }
+    $tvl.html("");
 
     $.ajax("/requests/tvshows/").success(function (results) {
-        results.forEach(function (result) {
-            var context = buildRequestContext(result, "tv");
-            var html = searchTemplate(context);
-            $("#tvList").append(html);
-        });
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "tv");
+                var html = searchTemplate(context);
+                $tvl.append(html);
+            });
+        }
+        else {
+            $tvl.html(noResultsHtml.format("tv show"));
+        }
+        $tvl.mixItUp(mixItUpConfig());
+    });
+};
+
+function albumLoad() {
+    var $albumL = $('#MusicList');
+    if ($albumL.mixItUp('isLoaded')) {
+        activeState = $albumL.mixItUp('getState');
+        $albumL.mixItUp('destroy');
+    }
+    $albumL.html("");
+
+    $.ajax("/requests/albums/").success(function (results) {
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "album");
+                var html = searchTemplate(context);
+                $albumL.append(html);
+            });
+        }
+        else {
+            $albumL.html(noResultsMusic.format("albums"));
+        }
+        $albumL.mixItUp(mixItUpConfig());
     });
 };
 
@@ -329,17 +469,23 @@ function buildRequestContext(result, type) {
         type: type,
         status: result.status,
         releaseDate: result.releaseDate,
+        releaseDateTicks: result.releaseDateTicks,
         approved: result.approved,
-        requestedBy: result.requestedBy,
+        requestedUsers: result.requestedUsers ? result.requestedUsers.join(', ') : '',
         requestedDate: result.requestedDate,
+        requestedDateTicks: result.requestedDateTicks,
         available: result.available,
         admin: result.admin,
         issues: result.issues,
         otherMessage: result.otherMessage,
         requestId: result.id,
         adminNote: result.adminNotes,
-        imdb: result.imdbId
+        imdb: result.imdbId,
+        seriesRequested: result.tvSeriesRequestType,
+        coverArtUrl: result.coverArtUrl,
+
     };
 
     return context;
 }
+

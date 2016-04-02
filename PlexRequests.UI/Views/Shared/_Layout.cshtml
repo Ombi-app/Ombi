@@ -7,8 +7,8 @@
     <title>Plex Requests</title>
     <!-- Styles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="~/Content/custom.min.css" type="text/css"/>
     <link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" href="~/Content/custom.min.css" type="text/css" />
     <link rel="stylesheet" href="~/Content/font-awesome.css" type="text/css"/>
     <link rel="stylesheet" href="~/Content/pace.min.css" type="text/css"/>
 
@@ -34,61 +34,90 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">Plex Requests</a>
+                <a class="navbar-brand" href="/search">Plex Requests</a>
             </div>
             
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     @if (Context.Request.Path == "/search")
                     {
-                        <li class="active"><a href="/search">Search</a></li>
+                        <li class="active"><a href="/search"><i class="fa fa-search"></i> Search</a></li>
                     }
                     else
                     {
-                        <li><a href="/search">Search</a></li>
+                        <li><a href="/search"><i class="fa fa-search"></i> Search</a></li>
                     }
 
 
                     @if (Context.Request.Path == "/requests")
                     {
-                        <li class="active"><a href="/requests">Requests</a></li>
+                        <li class="active"><a href="/requests"><i class="fa fa-plus-circle"></i> Requests</a></li>
                     }
                     else
                     {
-                        <li><a href="/requests">Requests</a></li>
-                    }
-                    @if (Context.CurrentUser.IsAuthenticated())
-                    {
-                        if (Context.Request.Path == "/admin")
-                        {
-                            <li class="active"><a href="/admin">Admin</a></li>
-                        }
-                        else
-                        {
-                            <li><a href="/admin">Admin</a></li>
-                        }
+                        <li><a href="/requests"><i class="fa fa-plus-circle"></i> Requests</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
+
+
+
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><a href="/login">Admin</a></li>
+                        <li><a href="/login"><i class="fa fa-user"></i> Admin</a></li>
                     }
                     else
                     {
-                        <li><a href="/logout">Admin Logout</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Admin <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/admin"><i class="fa fa-cog"></i> Settings</a></li>
+                                <li><a href="/changepassword"><i class="fa fa-key"></i> Change password</a></li>
+                                <li class="divider"></li>
+                                <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                            </ul>
+                        </li>
                     }
                     @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
                     {
-                        <li><a href="/userlogin/logout">Logout</a></li>
+                        <li><a href="/userlogin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                     }
                 </ul>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-        @RenderBody()
+<div class="container">
+    @RenderBody()
+</div>
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
+            <i class="fa fa-2x fa-arrow-circle-up"></i>
+        </span>
     </div>
 </body>
 </html>
+<script>
+
+    $(function () {
+
+        $(document).on('scroll', function () {
+
+            if ($(window).scrollTop() > 100) {
+                $('.scroll-top-wrapper').addClass('show');
+            } else {
+                $('.scroll-top-wrapper').removeClass('show');
+            }
+        });
+
+        $('.scroll-top-wrapper').on('click', scrollToTop);
+    });
+
+    function scrollToTop() {
+        verticalOffset = typeof (verticalOffset) != 'undefined' ? verticalOffset : 0;
+        element = $('body');
+        offset = element.offset();
+        offsetTop = offset.top;
+        $('html, body').animate({ scrollTop: offsetTop }, 500, 'linear');
+    }
+</script>

@@ -47,8 +47,11 @@
   <ItemGroup>
     <Compile Include="IApiRequest.cs" />
     <Compile Include="ICouchPotatoApi.cs" />
+    <Compile Include="IHeadphonesApi.cs" />
+    <Compile Include="IMusicBrainzApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="IPushbulletApi.cs" />
+    <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
     <Compile Include="ISonarrApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

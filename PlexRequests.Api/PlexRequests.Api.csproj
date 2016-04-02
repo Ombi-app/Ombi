@@ -66,14 +66,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
+    <Compile Include="MusicBrainzApi.cs" />
     <Compile Include="MockApiData.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MockApiData.resx</DependentUpon>
     </Compile>
     <Compile Include="Mocks\MockSonarrApi.cs" />
+    <Compile Include="PushoverApi.cs" />
     <Compile Include="PushbulletApi.cs" />
     <Compile Include="SickrageApi.cs" />
+    <Compile Include="HeadphonesApi.cs" />
     <Compile Include="SonarrApi.cs" />
     <Compile Include="CouchPotatoApi.cs" />
     <Compile Include="MovieBase.cs" />

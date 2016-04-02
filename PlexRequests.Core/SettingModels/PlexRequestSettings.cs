@@ -24,6 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+
 namespace PlexRequests.Core.SettingModels
 {
     public class PlexRequestSettings : Settings
@@ -32,7 +36,33 @@ namespace PlexRequests.Core.SettingModels
        
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
-        public bool RequireApproval { get; set; }
+        public bool SearchForMusic { get; set; }
+        public bool RequireMovieApproval { get; set; }
+        public bool RequireTvShowApproval { get; set; }
+        public bool RequireMusicApproval { get; set; }
+        public bool UsersCanViewOnlyOwnRequests { get; set; }
         public int WeeklyRequestLimit { get; set; }
+        public string NoApprovalUsers { get; set; }
+
+        [JsonIgnore]
+        public List<string> ApprovalWhiteList
+        {
+            get
+            {
+                var users = new List<string>();
+                if (string.IsNullOrEmpty(NoApprovalUsers))
+                {
+                    return users;
+                }
+
+                var splitUsers = NoApprovalUsers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (var user in splitUsers)
+                {
+                    if (!string.IsNullOrWhiteSpace(user))
+                        users.Add(user.Trim());
+                }
+                return users;
+            }
+        }
     }
 }

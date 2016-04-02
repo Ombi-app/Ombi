@@ -52,6 +52,14 @@
         {
             <a class="list-group-item" href="/admin/sickrage">SickRage</a>
         }
+        @if (Context.Request.Path == "/admin/headphones")
+        {
+            <a class="list-group-item active" href="/admin/headphones">Headphones</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/headphones">Headphones</a>
+        }
 
         @if (Context.Request.Path == "/admin/emailnotification")
         {
@@ -69,6 +77,23 @@
         else
         {
             <a class="list-group-item" href="/admin/pushbulletnotification">Pushbullet Notifications</a>
+        }
+
+        @if (Context.Request.Path == "/admin/pushovernotification")
+        {
+            <a class="list-group-item active" href="/admin/pushovernotification">Pushover Notifications</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/pushovernotification">Pushover Notifications</a>
+        }
+        @if (Context.Request.Path == "/admin/logs")
+        {
+            <a class="list-group-item active" href="/admin/logs">Logs</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/logs">Logs</a>
         }
 
         @if (Context.Request.Path == "/admin/status")

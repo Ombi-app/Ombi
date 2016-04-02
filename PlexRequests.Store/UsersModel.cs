@@ -33,5 +33,7 @@ namespace PlexRequests.Store
     {
         public byte[] Hash { get; set; }
         public byte[] Salt { get; set; }
+        public byte[] Claims { get; set; }
+        public byte[] UserProperties { get; set; }
     }
 }

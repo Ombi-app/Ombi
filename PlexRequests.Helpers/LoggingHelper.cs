@@ -25,8 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Data;
 
 using Newtonsoft.Json;
+
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace PlexRequests.Helpers
 {
@@ -55,5 +60,119 @@ namespace PlexRequests.Helpers
             }
             return dumpTarget.ToString();
         }
+
+        public static void ConfigureLogging(string connectionString)
+        {
+            LogManager.ThrowExceptions = true;
+            // Step 1. Create configuration object 
+            var config = new LoggingConfiguration();
+
+            // Step 2. Create targets and add them to the configuration 
+            var databaseTarget = new DatabaseTarget
+            {
+                CommandType = CommandType.Text,
+                ConnectionString = connectionString,
+                DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
+                Name = "database"
+            };
+
+            var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
+            var callsiteParam = new DatabaseParameterInfo { Name = "@Callsite", Layout = "${callsite}" };
+            var levelParam = new DatabaseParameterInfo { Name = "@Level", Layout = "${level}" };
+            var dateParam = new DatabaseParameterInfo { Name = "@Date", Layout = "${date}" };
+            var loggerParam = new DatabaseParameterInfo { Name = "@Logger", Layout = "${logger}" };
+            var exceptionParam = new DatabaseParameterInfo { Name = "@Exception", Layout = "${exception:tostring}" };
+
+            databaseTarget.Parameters.Add(messageParam);
+            databaseTarget.Parameters.Add(callsiteParam);
+            databaseTarget.Parameters.Add(levelParam);
+            databaseTarget.Parameters.Add(dateParam);
+            databaseTarget.Parameters.Add(loggerParam);
+            databaseTarget.Parameters.Add(exceptionParam);
+
+            databaseTarget.CommandText = "INSERT INTO Logs (Date,Level,Logger, Message, Callsite, Exception) VALUES(@Date,@Level,@Logger, @Message, @Callsite, @Exception);";
+            config.AddTarget("database", databaseTarget);
+
+            // Step 4. Define rules
+            var rule1 = new LoggingRule("*", LogLevel.Info, databaseTarget);
+            config.LoggingRules.Add(rule1);
+
+
+            var fileTarget = new FileTarget
+            {
+                Name = "file",
+                FileName = "logs/${shortdate}.log",
+                Layout = "${date} ${logger} ${level}: ${message} ${exception:tostring}",
+                CreateDirs = true
+            };
+            config.AddTarget(fileTarget);
+            var rule2 = new LoggingRule("*", LogLevel.Trace, fileTarget);
+            config.LoggingRules.Add(rule2);
+
+            // Step 5. Activate the configuration
+            LogManager.Configuration = config;
+        }
+
+        public static void ReconfigureLogLevel(LogLevel level)
+        {
+
+            foreach (var rule in LogManager.Configuration.LoggingRules)
+            {
+                // Remove all levels
+                rule.DisableLoggingForLevel(LogLevel.Trace);
+                rule.DisableLoggingForLevel(LogLevel.Info);
+                rule.DisableLoggingForLevel(LogLevel.Debug);
+                rule.DisableLoggingForLevel(LogLevel.Warn);
+                rule.DisableLoggingForLevel(LogLevel.Error);
+                rule.DisableLoggingForLevel(LogLevel.Fatal);
+
+
+                if (level == LogLevel.Trace)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Trace);
+                    rule.EnableLoggingForLevel(LogLevel.Info);
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Info)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Info);
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Debug)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Debug);
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Warn)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Warn);
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Error)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Error);
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+                if (level == LogLevel.Fatal)
+                {
+                    rule.EnableLoggingForLevel(LogLevel.Fatal);
+                }
+            }
+
+
+            //Call to update existing Loggers created with GetLogger() or
+            //GetCurrentClassLogger()
+            LogManager.ReconfigExistingLoggers();
+        }
     }
 }
+

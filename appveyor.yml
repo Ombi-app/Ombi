@@ -1,11 +1,11 @@
-version: 1.4.{build}
+version: 1.5.{build}
 configuration: Release
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '1.4.1'
+  assembly_version: '1.5.2'
   assembly_file_version: '{version}'
-  assembly_informational_version: '1.4.1'
+  assembly_informational_version: '1.5.2'
 before_build:
 - cmd: appveyor-retry nuget restore
 build:

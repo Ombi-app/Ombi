@@ -117,6 +117,10 @@
       <Project>{566EFA49-68F8-4716-9693-A6B3F2624DEA}</Project>
       <Name>PlexRequests.Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
+      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
+      <Name>PlexRequests.Store</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.UI\PlexRequests.UI.csproj">
       <Project>{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}</Project>
       <Name>PlexRequests.UI</Name>

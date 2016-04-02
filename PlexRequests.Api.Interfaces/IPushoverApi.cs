@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISettingsRepository.cs
+//    File: IPushoverApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,47 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
+using System.Threading.Tasks;
 
-using PlexRequests.Store.Models;
+using PlexRequests.Api.Models.Notifications;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Api.Interfaces
 {
-    public interface ISettingsRepository
+    public interface IPushoverApi
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(GlobalSettings entity);
-
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<GlobalSettings> GetAll();
-
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="settingsName">Name of the settings.</param>
-        /// <returns></returns>
-        GlobalSettings Get(string settingsName);
-
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Delete(GlobalSettings entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(GlobalSettings entity);
-
-
+        Task<PushoverResponse> PushAsync(string accessToken, string message, string userToken);
     }
 }

@@ -61,6 +61,8 @@ namespace PlexRequests.UI.Modules
 
             Post["/approve"] = parameters => Approve((int)Request.Form.requestid);
             Post["/approveall"] = x => ApproveAll();
+            Post["/approveallmovies"] = x => ApproveAllMovies();
+            Post["/approvealltvshows"] = x => ApproveAllTVShows();
         }
 
         private IRequestService Service { get; }
@@ -131,7 +133,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel
                 {
                     Result = false,
-                    Message = "Could not add the series to Sonarr"
+                    Message = result.ErrorMessage ?? "Could not add the series to Sonarr"
                 });
             }
 
@@ -169,18 +171,14 @@ namespace PlexRequests.UI.Modules
 
         private Response RequestMovieAndUpdateStatus(RequestedModel request)
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
-
             var cpSettings = CpService.GetSettings();
             var cp = new CouchPotatoApi();
-            Log.Info("Adding movie to CP : {0}", request.Title);
+            Log.Info("Adding movie to CouchPotato : {0}", request.Title);
             if (!cpSettings.Enabled)
             {
                 // Approve it
                 request.Approved = true;
+                Log.Warn("We approved movie: {0} but could not add it to CouchPotato because it has not been setup", request.Title);
 
                 // Update the record
                 var inserted = Service.UpdateRequest(request);
@@ -220,29 +218,96 @@ namespace PlexRequests.UI.Modules
                     });
         }
 
+        private Response ApproveAllMovies()
+        {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
+
+            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.Movie);
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!requestedModels.Any())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no movie requests to approve. Please refresh." });
+            }
+
+            try
+            {
+                return UpdateRequests(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+        }
+
+        private Response ApproveAllTVShows()
+        {
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
+
+            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.TvShow);
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!requestedModels.Any())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no tv show requests to approve. Please refresh." });
+            }
+
+            try
+            {
+                return UpdateRequests(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+        }
+
         /// <summary>
         /// Approves all.
         /// </summary>
         /// <returns></returns>
         private Response ApproveAll()
         {
-            var requests = Service.GetAll().Where(x => x.Approved == false);
+            if (!Context.CurrentUser.IsAuthenticated())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
+            }
+
+            var requests = Service.GetAll().Where(x => x.CanApprove);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no requests to approve. Please refresh." });
             }
 
+            try
+            {
+                return UpdateRequests(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+
+        }
+
+        private Response UpdateRequests(RequestedModel[] requestedModels)
+        {
             var cpSettings = CpService.GetSettings();
-
-
             var updatedRequests = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
                 if (r.Type == RequestType.Movie)
                 {
-                    var result = SendMovie(cpSettings, r, CpApi);
-                    if (result)
+                    var res = SendMovie(cpSettings, r, CpApi);
+                    if (res)
                     {
                         r.Approved = true;
                         updatedRequests.Add(r);
@@ -259,8 +324,8 @@ namespace PlexRequests.UI.Modules
                     var sonarr = SonarrSettings.GetSettings();
                     if (sr.Enabled)
                     {
-                        var result = sender.SendToSickRage(sr, r);
-                        if (result?.result == "success")
+                        var res = sender.SendToSickRage(sr, r);
+                        if (res?.result == "success")
                         {
                             r.Approved = true;
                             updatedRequests.Add(r);
@@ -268,14 +333,14 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to SickRage!", r.Title);
-                            Log.Error("SickRage Message: {0}", result?.message);
+                            Log.Error("SickRage Message: {0}", res?.message);
                         }
                     }
 
                     if (sonarr.Enabled)
                     {
-                        var result = sender.SendToSonarr(sonarr, r);
-                        if (result != null)
+                        var res = sender.SendToSonarr(sonarr, r);
+                        if (!string.IsNullOrEmpty(res?.title))
                         {
                             r.Approved = true;
                             updatedRequests.Add(r);
@@ -283,6 +348,7 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
+                            Log.Error("Error message: {0}", res?.ErrorMessage);
                         }
                     }
                 }
@@ -290,17 +356,16 @@ namespace PlexRequests.UI.Modules
             try
             {
 
-                var result = Service.BatchUpdate(updatedRequests); return Response.AsJson(result
+                var result = Service.BatchUpdate(updatedRequests);
+             return Response.AsJson(result
                  ? new JsonResponseModel { Result = true }
                  : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });
-
-            }
+        }
             catch (Exception e)
             {
                 Log.Fatal(e);
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
             }
-
         }
 
         private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)

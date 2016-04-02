@@ -24,9 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Web.UI.HtmlControls;
 
+using Humanizer;
 using MarkdownSharp;
 
 using Nancy;
@@ -43,15 +47,19 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using System;
 
 namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
     {
-        private ISettingsService<PlexRequestSettings> RpService { get; }
+        private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<PlexSettings> PlexService { get; }
@@ -59,13 +67,18 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<EmailNotificationSettings> EmailService { get; }
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
+        private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
-        private PushbulletApi PushbulletApi { get; }
+        private IPushbulletApi PushbulletApi { get; }
+        private IPushoverApi PushoverApi { get; }
         private ICouchPotatoApi CpApi { get; }
+        private IRepository<LogEntity> LogsRepo { get; }
+        private INotificationService NotificationService { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public AdminModule(ISettingsService<PlexRequestSettings> rpService,
+        public AdminModule(ISettingsService<PlexRequestSettings> prService,
             ISettingsService<CouchPotatoSettings> cpService,
             ISettingsService<AuthenticationSettings> auth,
             ISettingsService<PlexSettings> plex,
@@ -76,9 +89,14 @@ namespace PlexRequests.UI.Modules
             IPlexApi plexApi,
             ISettingsService<PushbulletNotificationSettings> pbSettings,
             PushbulletApi pbApi,
-            ICouchPotatoApi cpApi) : base("admin")
+            ICouchPotatoApi cpApi,
+            ISettingsService<PushoverNotificationSettings> pushoverSettings,
+            IPushoverApi pushoverApi,
+            IRepository<LogEntity> logsRepo,
+            INotificationService notify,
+            ISettingsService<HeadphonesSettings> headphones) : base("admin")
         {
-            RpService = rpService;
+            PrService = prService;
             CpService = cpService;
             AuthService = auth;
             PlexService = plex;
@@ -90,6 +108,11 @@ namespace PlexRequests.UI.Modules
             PushbulletApi = pbApi;
             CpApi = cpApi;
             SickRageService = sickrage;
+            LogsRepo = logsRepo;
+            PushoverService = pushoverSettings;
+            PushoverApi = pushoverApi;
+            NotificationService = notify;
+            HeadphonesService = headphones;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -122,10 +145,24 @@ namespace PlexRequests.UI.Modules
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
+            Post["/testemailnotification"] = _ => TestEmailNotifications();
             Get["/status"] = _ => Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
+            Post["/testpushbulletnotification"] = _ => TestPushbulletNotifications();
+
+            Get["/pushovernotification"] = _ => PushoverNotifications();
+            Post["/pushovernotification"] = _ => SavePushoverNotifications();
+            Post["/testpushovernotification"] = _ => TestPushoverNotifications();
+
+            Get["/logs"] = _ => Logs();
+            Get["/loglevel"] = _ => GetLogLevels();
+            Post["/loglevel"] = _ => UpdateLogLevels(Request.Form.level);
+            Get["/loadlogs"] = _ => LoadLogs();
+
+            Get["/headphones"] = _ => Headphones();
+            Post["/headphones"] = _ => SaveHeadphones();
         }
 
         private Negotiator Authentication()
@@ -149,7 +186,7 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Admin()
         {
-            var settings = RpService.GetSettings();
+            var settings = PrService.GetSettings();
             Log.Trace("Getting Settings:");
             Log.Trace(settings.DumpJson());
 
@@ -160,7 +197,7 @@ namespace PlexRequests.UI.Modules
         {
             var model = this.Bind<PlexRequestSettings>();
 
-            RpService.SaveSettings(model);
+            PrService.SaveSettings(model);
 
 
             return Context.GetRedirect("~/admin");
@@ -347,6 +384,37 @@ namespace PlexRequests.UI.Modules
             return View["EmailNotifications", settings];
         }
 
+        private Response TestEmailNotifications()
+        {
+            var settings = this.Bind<EmailNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new EmailMessageNotification(EmailService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent email notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Email Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+            } 
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
+        }
+
         private Response SaveEmailNotifications()
         {
             var settings = this.Bind<EmailNotificationSettings>();
@@ -415,12 +483,163 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
+        private Response TestPushbulletNotifications()
+        {
+            var settings = this.Bind<PushbulletNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushbullet notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushbullet Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushbullet Notification!" });
+        }
+
+        private Negotiator PushoverNotifications()
+        {
+            var settings = PushoverService.GetSettings();
+            return View["PushoverNotifications", settings];
+        }
+
+        private Response SavePushoverNotifications()
+        {
+            var settings = this.Bind<PushoverNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            Log.Trace(settings.DumpJson());
+
+            var result = PushoverService.SaveSettings(settings);
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+            }
+
+            Log.Info("Saved email settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Pushover Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response TestPushoverNotifications()
+        {
+            var settings = this.Bind<PushoverNotificationSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent pushover notification test");
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to subscribe and publish test Pushover Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
+        }
+
         private Response GetCpProfiles()
         {
             var settings = this.Bind<CouchPotatoSettings>();
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
             return Response.AsJson(profiles);
+        }
+
+        private Negotiator Logs()
+        {
+            return View["Logs"];
+        }
+
+        private Response LoadLogs()
+        {
+            var allLogs = LogsRepo.GetAll();
+            var model = new DatatablesModel<LogEntity> {Data = new List<LogEntity>()};
+            foreach (var l in allLogs)
+            {
+                l.DateString = l.Date.ToString("G");
+                model.Data.Add(l);
+            }
+            return Response.AsJson(model);
+        }
+
+        private Response GetLogLevels()
+        {
+            var levels = LogManager.Configuration.LoggingRules.FirstOrDefault(x => x.NameMatches("database"));
+            return Response.AsJson(levels.Levels);
+        }
+
+        private Response UpdateLogLevels(int level)
+        {
+            var newLevel = LogLevel.FromOrdinal(level);
+            LoggingHelper.ReconfigureLogLevel(newLevel);
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
+        }
+
+        private Negotiator Headphones()
+        {
+            var settings = HeadphonesService.GetSettings();
+            return View["Headphones", settings];
+        }
+
+        private Response SaveHeadphones()
+        {
+            var settings = this.Bind<HeadphonesSettings>();
+
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                var error = valid.SendJsonError();
+                Log.Info("Error validating Headphones settings, message: {0}", error.Message);
+                return Response.AsJson(error);
+            }
+            Log.Trace(settings.DumpJson());
+
+            var result = HeadphonesService.SaveSettings(settings);
+            
+            Log.Info("Saved headphones settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
     }
 }

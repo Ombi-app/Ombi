@@ -33,7 +33,9 @@ namespace PlexRequests.Core
     public interface IRequestService
     {
         long AddRequest(RequestedModel model);
-        bool CheckRequest(int providerId);
+        RequestedModel CheckRequest(int providerId);
+        RequestedModel CheckRequest(string musicId);
+        
         void DeleteRequest(RequestedModel request);
         bool UpdateRequest(RequestedModel model);
         RequestedModel Get(int id);

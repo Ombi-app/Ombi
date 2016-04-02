@@ -6,35 +6,52 @@
 });
 
 var searchSource = $("#search-template").html();
+var musicSource = $("#music-template").html();
 var searchTemplate = Handlebars.compile(searchSource);
-var movieTimer = 0;
-var tvimer = 0;
+var musicTemplate = Handlebars.compile(musicSource);
+
+var searchTimer = 0;
 
 // Type in movie search
 $("#movieSearchContent").on("input", function () {
-    if (movieTimer) {
-        clearTimeout(movieTimer);
+    if (searchTimer) {
+        clearTimeout(searchTimer);
     }
     $('#movieSearchButton').attr("class","fa fa-spinner fa-spin");
-    movieTimer = setTimeout(movieSearch, 400);
+    searchTimer = setTimeout(movieSearch, 400);
 
+});
+
+$('#moviesComingSoon').on('click', function (e) {
+    e.preventDefault();
+    moviesComingSoon();
+});
+
+$('#moviesInTheaters').on('click', function (e) {
+    e.preventDefault();
+    moviesInTheaters();
 });
 
 // Type in TV search
 $("#tvSearchContent").on("input", function () {
-    if (tvimer) {
-        clearTimeout(tvimer);
+    if (searchTimer) {
+        clearTimeout(searchTimer);
     }
     $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
-    tvimer = setTimeout(tvSearch, 400);
+    searchTimer = setTimeout(tvSearch, 400);
 });
 
 // Click TV dropdown option
 $(document).on("click", ".dropdownTv", function (e) {
-    var buttonId = e.target.id;
-    $("#" + buttonId).prop("disabled", true);
-
     e.preventDefault();
+    var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
+    $("#" + buttonId).prop("disabled", true);
+    loadingButton(buttonId, "primary");
+
 
     var $form = $('#form' + buttonId);
     var data = $form.serialize();
@@ -53,15 +70,29 @@ $(document).on("click", ".dropdownTv", function (e) {
     var url = $form.prop('action');
 
     sendRequestAjax(data, type, url, buttonId);
-    $("#" + buttonId).prop("disabled", false);
+});
+
+// Search Music
+$("#musicSearchContent").on("input", function () {
+    if (searchTimer) {
+        clearTimeout(searchTimer);
+    }
+    $('#musicSearchButton').attr("class", "fa fa-spinner fa-spin");
+    searchTimer = setTimeout(musicSearch, 400);
+
 });
 
 // Click Request for movie
 $(document).on("click", ".requestMovie", function (e) {
-    var buttonId = e.target.id;
-    $("#" + buttonId).prop("disabled", true);
-
     e.preventDefault();
+    var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
+    $("#" + buttonId).prop("disabled", true);
+    loadingButton(buttonId, "primary");
+
 
     var $form = $('#form' + buttonId);
 
@@ -70,7 +101,29 @@ $(document).on("click", ".requestMovie", function (e) {
     var data = $form.serialize();
 
     sendRequestAjax(data, type, url, buttonId);
-     $("#" + buttonId).prop("disabled", false);
+    
+});
+
+// Click Request for album
+$(document).on("click", ".requestAlbum", function (e) {
+    e.preventDefault();
+    var buttonId = e.target.id;
+    if ($("#" + buttonId).attr('disabled')) {
+        return;
+    }
+
+    $("#" + buttonId).prop("disabled", true);
+    loadingButton(buttonId, "primary");
+
+
+    var $form = $('#form' + buttonId);
+
+    var type = $form.prop('method');
+    var url = $form.prop('action');
+    var data = $form.serialize();
+
+    sendRequestAjax(data, type, url, buttonId);
+
 });
 
 function sendRequestAjax(data, type, url, buttonId) {
@@ -82,7 +135,7 @@ function sendRequestAjax(data, type, url, buttonId) {
         success: function (response) {
             console.log(response);
             if (response.result === true) {
-                generateNotify("Success!", "success");
+                generateNotify(response.message || "Success!", "success");
 
                 $('#' + buttonId).html("<i class='fa fa-check'></i> Requested");
                 $('#' + buttonId).removeClass("btn-primary-outline");
@@ -90,6 +143,9 @@ function sendRequestAjax(data, type, url, buttonId) {
                 $('#' + buttonId).addClass("btn-success-outline");
             } else {
                 generateNotify(response.message, "warning");
+                $('#' + buttonId).html("<i class='fa fa-plus'></i> Request");
+                $('#' + buttonId).attr("data-toggle", "dropdown");
+                $("#" + buttonId).removeAttr("disabled");
             }
         },
         error: function (e) {
@@ -100,10 +156,23 @@ function sendRequestAjax(data, type, url, buttonId) {
 }
 
 function movieSearch() {
-    $("#movieList").html("");
     var query = $("#movieSearchContent").val();
+    getMovies("/search/movie/" + query);
+}
 
-    $.ajax("/search/movie/" + query).success(function (results) {
+function moviesComingSoon() {
+    getMovies("/search/movie/upcoming");
+}
+
+function moviesInTheaters() {
+    getMovies("/search/movie/playing");
+}
+
+function getMovies(url) {
+    $("#movieList").html("");
+    
+
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function(result) {
                 var context = buildMovieContext(result);
@@ -112,15 +181,22 @@ function movieSearch() {
                 $("#movieList").append(html);
             });
         }
+        else {
+            $("#movieList").html(noResultsHtml);
+        }
         $('#movieSearchButton').attr("class","fa fa-search");
     });
 };
 
 function tvSearch() {
-    $("#tvList").html("");
     var query = $("#tvSearchContent").val();
+    getTvShows("/search/tv/" + query);
+}
 
-    $.ajax("/search/tv/" + query).success(function (results) {
+function getTvShows(url) {
+    $("#tvList").html("");
+
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function(result) {
                 var context = buildTvShowContext(result);
@@ -128,10 +204,36 @@ function tvSearch() {
                 $("#tvList").append(html);
             });
         }
+        else {
+            $("#tvList").html(noResultsHtml);
+        }
         $('#tvSearchButton').attr("class", "fa fa-search");
     });
 };
 
+function musicSearch() {
+    var query = $("#musicSearchContent").val();
+    getMusic("/search/music/" + query);
+}
+
+function getMusic(url) {
+    $("#musicList").html("");
+    
+    $.ajax(url).success(function (results) {
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildMusicContext(result);
+
+                var html = musicTemplate(context);
+                $("#musicList").append(html);
+            });
+        }
+        else {
+            $("#musicList").html(noResultsMusic);
+        }
+        $('#musicSearchButton').attr("class", "fa fa-search");
+    });
+};
 
 function buildMovieContext(result) {
     var date = new Date(result.releaseDate);
@@ -163,5 +265,23 @@ function buildTvShowContext(result) {
         type: "tv",
         imdb: result.imdbId
     };
+    return context;
+}
+
+function buildMusicContext(result) {
+
+    var context = {
+        id: result.id,
+        title: result.title,
+        overview: result.overview,
+        year: result.releaseDate,
+        type: "album",
+        trackCount: result.trackCount,
+        coverArtUrl: result.coverArtUrl,
+        artist: result.artist,
+        releaseType: result.releaseType,
+        country: result.country
+    };
+
     return context;
 }

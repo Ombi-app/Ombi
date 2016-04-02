@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestService.cs
+//    File: ISettingsRepository.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,61 +24,47 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using System.Collections.Generic;
-using System.Linq;
-using PlexRequests.Store;
 
-namespace PlexRequests.Core
+using PlexRequests.Store.Models;
+
+namespace PlexRequests.Store.Repository
 {
-    public class RequestService : IRequestService
+    public interface ISettingsRepository
     {
-        public RequestService(IRepository<RequestedModel> db)
-        {
-            Repo = db;
-        }
-    
-        private IRepository<RequestedModel> Repo { get; set; }
-
-        public long AddRequest(RequestedModel model)
-        {
-            return Repo.Insert(model);
-        }
-
-        public bool CheckRequest(int providerId)
-        {
-            return Repo.GetAll().Any(x => x.ProviderId == providerId);
-        }
-
-        public void DeleteRequest(RequestedModel model)
-        {
-            var entity = Repo.Get(model.Id);
-            Repo.Delete(entity);
-        }
-
-        public bool UpdateRequest(RequestedModel model)
-        {
-            return Repo.Update(model);
-        }
+        /// <summary>
+        /// Inserts the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        long Insert(GlobalSettings entity);
 
         /// <summary>
-        /// Updates all the entities. NOTE: we need to Id to be the original entity
+        /// Gets all.
         /// </summary>
-        /// <param name="model">The model.</param>
         /// <returns></returns>
-        public bool BatchUpdate(List<RequestedModel> model)
-        {
-           return Repo.UpdateAll(model);
-        }
+        IEnumerable<GlobalSettings> GetAll();
 
-        public RequestedModel Get(int id)
-        {
-            return Repo.Get(id);
-        }
+        /// <summary>
+        /// Gets the specified identifier.
+        /// </summary>
+        /// <param name="settingsName">Name of the settings.</param>
+        /// <returns></returns>
+        GlobalSettings Get(string settingsName);
 
-        public IEnumerable<RequestedModel> GetAll()
-        {
-            return Repo.GetAll();
-        }
+        /// <summary>
+        /// Deletes the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        bool Delete(GlobalSettings entity);
+
+        /// <summary>
+        /// Updates the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity.</param>
+        /// <returns></returns>
+        bool Update(GlobalSettings entity);
+
+
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IRepository.cs
+//    File: NotificationType.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,49 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
-
-namespace PlexRequests.Store
+namespace PlexRequests.Services.Notification
 {
-    public interface IRepository<T>
+    public enum NotificationType
     {
-        /// <summary>
-        /// Inserts the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        long Insert(T entity);
-
-        /// <summary>
-        /// Gets all.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<T> GetAll();
-
-        /// <summary>
-        /// Gets the specified identifier.
-        /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns></returns>
-        T Get(string id);
-        T Get(int id);
-        /// <summary>
-        /// Deletes the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        void Delete(T entity);
-
-        /// <summary>
-        /// Updates the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool Update(T entity);
-
-        /// <summary>
-        /// Updates all.
-        /// </summary>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        bool UpdateAll(IEnumerable<T> entity);
+        NewRequest,
+        Issue,
+        RequestAvailable,
+        RequestApproved,
+        AdminNote,
+        Test
     }
 }

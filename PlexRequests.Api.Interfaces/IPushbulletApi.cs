@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Threading.Tasks;
+
 using PlexRequests.Api.Models.Notifications;
 
 namespace PlexRequests.Api.Interfaces
@@ -38,6 +40,6 @@ namespace PlexRequests.Api.Interfaces
         /// <param name="message">The message.</param>
         /// <param name="deviceIdentifier">The device identifier.</param>
         /// <returns></returns>
-        PushbulletResponse Push(string accessToken, string title, string message, string deviceIdentifier = default(string));
+        Task<PushbulletResponse> PushAsync(string accessToken, string title, string message, string deviceIdentifier = default(string));
     }
 }

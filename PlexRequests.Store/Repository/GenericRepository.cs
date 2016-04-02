@@ -34,20 +34,23 @@ using NLog;
 
 using PlexRequests.Helpers;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Store.Repository
 {
     public class GenericRepository<T> : IRepository<T> where T : Entity
     {
-        public GenericRepository(ISqliteConfiguration config)
+        private ICacheProvider Cache { get; }
+        public GenericRepository(ISqliteConfiguration config, ICacheProvider cache)
         {
             Config = config;
+            Cache = cache;
         }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private ISqliteConfiguration Config { get; set; }
+        private ISqliteConfiguration Config { get; }
         public long Insert(T entity)
         {
+            ResetCache();
             using (var cnn = Config.DbConnection())
             {
                 cnn.Open();
@@ -57,12 +60,14 @@ namespace PlexRequests.Store
 
         public IEnumerable<T> GetAll()
         {
+
             using (var db = Config.DbConnection())
             {
                 db.Open();
                 var result = db.GetAll<T>();
                 return result;
             }
+
         }
 
         public T Get(string id)
@@ -72,15 +77,23 @@ namespace PlexRequests.Store
 
         public T Get(int id)
         {
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                return db.Get<T>(id);
-            }
+            var key = "Get" + id;
+            var item = Cache.GetOrSet(
+                key,
+                () =>
+                {
+                    using (var db = Config.DbConnection())
+                    {
+                        db.Open();
+                        return db.Get<T>(id);
+                    }
+                });
+            return item;
         }
 
         public void Delete(T entity)
         {
+            ResetCache();
             using (var db = Config.DbConnection())
             {
                 db.Open();
@@ -90,6 +103,7 @@ namespace PlexRequests.Store
 
         public bool Update(T entity)
         {
+            ResetCache();
             Log.Trace("Updating entity");
             Log.Trace(entity.DumpJson());
             using (var db = Config.DbConnection())
@@ -101,6 +115,7 @@ namespace PlexRequests.Store
 
         public bool UpdateAll(IEnumerable<T> entity)
         {
+            ResetCache();
             Log.Trace("Updating all entities");
             var result = new HashSet<bool>();
 
@@ -113,6 +128,12 @@ namespace PlexRequests.Store
                 }
             }
             return result.All(x => true);
+        }
+
+        private void ResetCache()
+        {
+            Cache.Remove("Get");
+            Cache.Remove("GetAll");
         }
     }
 }

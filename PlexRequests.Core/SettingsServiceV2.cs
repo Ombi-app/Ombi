@@ -30,6 +30,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core
 {

@@ -24,17 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Nancy;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
-using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Helpers
 {
@@ -71,7 +67,7 @@ namespace PlexRequests.UI.Helpers
             Log.Trace("SickRage Add Result: ");
             Log.Trace(result.DumpJson());
 
-            return result;
+            return result.Result;
         }
     }
 }
