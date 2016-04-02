@@ -80,10 +80,10 @@ namespace PlexRequests.Store
             con.Close();
         }
 
-        public static void CreateSchema(this IDbConnection con)
+        public static void CreateSchema(this IDbConnection con, int version)
         {
             con.Open();
-            con.Query("INSERT INTO DBInfo (SchemaVersion) values (0)");
+            con.Query(string.Format("INSERT INTO DBInfo (SchemaVersion) values ({0})", version));
             con.Close();
         }
 

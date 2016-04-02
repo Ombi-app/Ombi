@@ -282,7 +282,7 @@ namespace PlexRequests.UI.Modules
                         var notificationModel = new NotificationModel
                         {
                             Title = model.Title,
-                            User = model.RequestedBy,
+                            User = Username,
                             DateTime = DateTime.Now,
                             NotificationType = NotificationType.NewRequest
                         };
@@ -307,7 +307,7 @@ namespace PlexRequests.UI.Modules
                     var notificationModel = new NotificationModel
                     {
                         Title = model.Title,
-                        User = model.RequestedBy,
+                        User = Username,
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.NewRequest
                     };
@@ -322,7 +322,7 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("Adding movie to database requests");
                 var id = RequestService.AddRequest(model);
 
-                var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                 NotificationService.Publish(notificationModel);
 
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
@@ -427,7 +427,7 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
-                        var notify1 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        var notify1 = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                         NotificationService.Publish(notify1);
 
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
@@ -448,7 +448,7 @@ namespace PlexRequests.UI.Modules
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         RequestService.AddRequest(model);
 
-                        var notify2 = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                        var notify2 = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
                         NotificationService.Publish(notify2);
 
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
@@ -462,7 +462,7 @@ namespace PlexRequests.UI.Modules
 
             RequestService.AddRequest(model);
 
-            var notificationModel = new NotificationModel { Title = model.Title, User = model.RequestedBy, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+            var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
             NotificationService.Publish(notificationModel);
 
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
