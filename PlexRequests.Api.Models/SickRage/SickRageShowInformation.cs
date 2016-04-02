@@ -75,11 +75,8 @@ namespace PlexRequests.Api.Models.SickRage
         public int tvdbid { get; set; }
     }
 
-    public class SickRageShowInformation
+    public class SickRageShowInformation : SickRageBase<Data>
     {
-        public Data data { get; set; }
-        public string message { get; set; }
-        public string result { get; set; }
     }
 
 }

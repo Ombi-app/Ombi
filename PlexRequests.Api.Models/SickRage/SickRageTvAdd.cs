@@ -31,11 +31,8 @@ namespace PlexRequests.Api.Models.SickRage
         public string name { get; set; }
     }
 
-    public class SickRageTvAdd
+    public class SickRageTvAdd : SickRageBase<SickRageTvAddData>
     {
-        public SickRageTvAddData data { get; set; }
-        public string message { get; set; }
-        public string result { get; set; }
     }
 
 }
