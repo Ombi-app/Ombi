@@ -70,5 +70,27 @@ namespace PlexRequests.Api
                 return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
             }
         }
+
+        public HeadphonesVersion GetVersion(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("apikey", apiKey);
+            request.AddQueryParameter("cmd", "getVersion");
+
+            try
+            {
+                return Api.ExecuteJson<HeadphonesVersion>(request, baseUrl);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Warn(jse);
+                return new HeadphonesVersion(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
     }
 }

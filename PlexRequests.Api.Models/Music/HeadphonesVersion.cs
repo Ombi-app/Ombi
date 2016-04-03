@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IHeadphonesApi.cs
+//    File: HeadphonesVersion.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,14 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using PlexRequests.Api.Models.Music;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Music
 {
-    public interface IHeadphonesApi
+    public class HeadphonesVersion
     {
-        bool AddAlbum(string apiKey, Uri baseUrl, string albumId);
-        HeadphonesVersion GetVersion(string apiKey, Uri baseUrl);
+        public string install_type { get; set; }
+        public object current_version { get; set; }
+        public string git_path { get; set; }
+        public string latest_version { get; set; }
+        public int commits_behind { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 
 namespace PlexRequests.Helpers
@@ -15,6 +16,21 @@ namespace PlexRequests.Helpers
             var utcOffset = tzi.GetUtcOffset(utcDateTime);
             var newDate = utcDateTime + utcOffset;
             return new DateTimeOffset(newDate.Ticks, utcOffset);
+        }
+
+        public static void CustomParse(string date, out DateTime dt)
+        {
+            // Try and parse it
+            if (DateTime.TryParse(date, out dt))
+            {
+                return;
+            }
+
+            // Maybe it's only a year?
+            if (DateTime.TryParseExact(date, "yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out dt))
+            {
+                return;
+            }           
         }
 
         private static TimeZoneInfo FindTimeZoneFromOffset(int minuteOffset)

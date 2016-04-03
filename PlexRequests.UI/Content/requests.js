@@ -485,7 +485,7 @@ function albumLoad() {
         if (results.length > 0) {
             results.forEach(function (result) {
                 var context = buildRequestContext(result, "album");
-                var html = searchTemplate(context);
+                var html = albumTemplate(context);
                 $albumL.append(html);
             });
         }
@@ -520,6 +520,9 @@ function buildRequestContext(result, type) {
         adminNote: result.adminNotes,
         imdb: result.imdbId,
         seriesRequested: result.tvSeriesRequestType,
+        coverArtUrl: result.coverArtUrl,
+        qualities: result.qualities,
+        hasQualities: result.qualities && result.qualities.length > 0,
         coverArtUrl: result.coverArtUrl,
         qualities: result.qualities,
         hasQualities: result.qualities && result.qualities.length > 0

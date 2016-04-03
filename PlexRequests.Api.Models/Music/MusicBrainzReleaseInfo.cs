@@ -59,7 +59,7 @@ namespace PlexRequests.Api.Models.Music
         public string disambiguation { get; set; }
 
         [JsonProperty(PropertyName = "release-events")]
-        public List<ReleaseEvent> ReleaseRvents { get; set; }
+        public List<ReleaseEvent> ReleaseEvents { get; set; }
         public string id { get; set; }
     }
 
