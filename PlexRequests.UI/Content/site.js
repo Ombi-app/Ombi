@@ -35,15 +35,25 @@ function checkJsonResponse(response) {
 }
 
 function loadingButton(elementId, originalCss) {
-    $('#' + elementId).removeClass("btn-" + originalCss + "-outline");
-    $('#' + elementId).addClass("btn-primary-outline");
-    $('#' + elementId).html("<i class='fa fa-spinner fa-spin'></i> Loading...");
+    var $element = $('#' + elementId);
+    $element.removeClass("btn-" + originalCss + "-outline").addClass("btn-primary-outline").addClass('disabled').html("<i class='fa fa-spinner fa-spin'></i> Loading...");
+
+    // handle split-buttons
+    var $dropdown = $element.next('.dropdown-toggle')
+    if ($dropdown.length > 0) {
+        $dropdown.removeClass("btn-" + originalCss + "-outline").addClass("btn-primary-outline").addClass('disabled');
+    }
 }
 
 function finishLoading(elementId, originalCss, html) {
-    $('#' + elementId).removeClass("btn-primary-outline");
-    $('#' + elementId).addClass("btn-" + originalCss + "-outline");
-    $('#' + elementId).html(html);
+    var $element = $('#' + elementId);
+    $element.removeClass("btn-primary-outline").removeClass('disabled').addClass("btn-" + originalCss + "-outline").html(html);
+
+    // handle split-buttons
+    var $dropdown = $element.next('.dropdown-toggle')
+    if ($dropdown.length > 0) {
+        $dropdown.removeClass("btn-primary-outline").removeClass('disabled').addClass("btn-" + originalCss + "-outline");
+    }
 }
 
 var noResultsHtml = "<div class='no-search-results'>" +

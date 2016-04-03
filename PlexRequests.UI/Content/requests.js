@@ -1,8 +1,8 @@
 ﻿Handlebars.registerHelper('if_eq', function (a, b, opts) {
     if (a == b)
-        return opts.fn(this);
+        return !opts ? null : opts.fn(this);
     else
-        return opts.inverse(this);
+        return !opts ? null : opts.inverse(this);
 });
 
 var searchSource = $("#search-template").html();
@@ -268,37 +268,44 @@ $(document).on("click", ".delete", function (e) {
 // Approve single request
 $(document).on("click", ".approve", function (e) {
     e.preventDefault();
-    var buttonId = e.target.id;
-    var $form = $('#approve' + buttonId);
+    var $this = $(this);
+    var $form = $this.parents('form').first();
 
-    if ($('#' + buttonId).text() === " Loading...") {
+    if ($this.text() === " Loading...") {
         return;
     }
 
-    loadingButton(buttonId, "success");
+    loadingButton($this.attr('id'), "success");
 
-    $.ajax({
-        type: $form.prop('method'),
-        url: $form.prop('action'),
-        data: $form.serialize(),
-        dataType: "json",
-        success: function (response) {
-
-            if (checkJsonResponse(response)) {
-                if (response.message) {
-                    generateNotify(response.message, "success");
-                } else {
-                    generateNotify("Success! Request Approved.", "success");
-                }
-
-                $("button[custom-button='" + buttonId + "']").remove();
-                $("#" + buttonId + "notapproved").prop("class", "fa fa-check");
-            }
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
+    approveRequest($form, null, function () {
+        $("#" + $this.attr('id') + "notapproved").prop("class", "fa fa-check");
+        
+        var $group = $this.parent('.btn-split');
+        if ($group.length > 0) {
+            $group.remove();
         }
+        else {
+            $this.remove();
+        }              
+    });
+});
+
+$(document).on("click", ".approve-with-quality", function (e) {
+    e.preventDefault();
+    var $this = $(this);
+    var $button = $this.parents('.btn-split').children('.approve').first();
+    var qualityId = e.target.id
+    var $form = $this.parents('form').first();
+    
+    if ($button.text() === " Loading...") {
+        return;
+    }
+
+    loadingButton($button.attr('id'), "success");
+
+    approveRequest($form, qualityId, function () {
+        $("#" + $button.attr('id') + "notapproved").prop("class", "fa fa-check");
+        $this.parents('.btn-split').remove();
     });
 
 });
@@ -371,6 +378,37 @@ $(document).on("click", ".change", function (e) {
     });
 
 });
+
+function approveRequest($form, qualityId, successCallback) {
+
+    var formData = $form.serialize();
+    if (qualityId) formData += ("&qualityId=" + qualityId);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                if (response.message) {
+                    generateNotify(response.message, "success");
+                } else {
+                    generateNotify("Success! Request Approved.", "success");
+                }
+
+                if (successCallback) {
+                    successCallback();
+                }
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+}
 
 function mixItUpConfig(activeState) {
     var conf = mixItUpDefault;
@@ -483,7 +521,8 @@ function buildRequestContext(result, type) {
         imdb: result.imdbId,
         seriesRequested: result.tvSeriesRequestType,
         coverArtUrl: result.coverArtUrl,
-
+        qualities: result.qualities,
+        hasQualities: result.qualities && result.qualities.length > 0
     };
 
     return context;

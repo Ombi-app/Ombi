@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Modules
             SickRageApi = srApi;
             SickRageSettings = srSettings;
 
-            Post["/approve"] = parameters => Approve((int)Request.Form.requestid);
+            Post["/approve"] = parameters => Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/approveall"] = x => ApproveAll();
             Post["/approveallmovies"] = x => ApproveAllMovies();
             Post["/approvealltvshows"] = x => ApproveAllTVShows();
@@ -80,7 +80,7 @@ namespace PlexRequests.UI.Modules
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        private Response Approve(int requestId)
+        private Response Approve(int requestId, string qualityId)
         {
             Log.Info("approving request {0}", requestId);
             if (!Context.CurrentUser.IsAuthenticated())
@@ -99,15 +99,15 @@ namespace PlexRequests.UI.Modules
             switch (request.Type)
             {
                 case RequestType.Movie:
-                    return RequestMovieAndUpdateStatus(request);
+                    return RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
-                    return RequestTvAndUpdateStatus(request);
+                    return RequestTvAndUpdateStatus(request, qualityId);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
         }
 
-        private Response RequestTvAndUpdateStatus(RequestedModel request)
+        private Response RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
         {
             var sender = new TvSender(SonarrApi, SickRageApi);
 
@@ -115,7 +115,7 @@ namespace PlexRequests.UI.Modules
             if (sonarrSettings.Enabled)
             {
                 Log.Trace("Sending to Sonarr");
-                var result = sender.SendToSonarr(sonarrSettings, request);
+                var result = sender.SendToSonarr(sonarrSettings, request, qualityId);
                 Log.Trace("Sonarr Result: ");
                 Log.Trace(result.DumpJson());
                 if (!string.IsNullOrEmpty(result.title))
@@ -141,7 +141,7 @@ namespace PlexRequests.UI.Modules
             if (srSettings.Enabled)
             {
                 Log.Trace("Sending to SickRage");
-                var result = sender.SendToSickRage(srSettings, request);
+                var result = sender.SendToSickRage(srSettings, request, qualityId);
                 Log.Trace("SickRage Result: ");
                 Log.Trace(result.DumpJson());
                 if (result?.result == "success")
@@ -169,7 +169,7 @@ namespace PlexRequests.UI.Modules
             });
         }
 
-        private Response RequestMovieAndUpdateStatus(RequestedModel request)
+        private Response RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
         {
             var cpSettings = CpService.GetSettings();
             var cp = new CouchPotatoApi();
@@ -190,7 +190,8 @@ namespace PlexRequests.UI.Modules
                         Message = "We could not approve this request. Please try again or check the logs."
                     });
             }
-            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, cpSettings.ProfileId);
+            
+            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
             {

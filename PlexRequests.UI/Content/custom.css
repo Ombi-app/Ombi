@@ -209,3 +209,13 @@ label {
   padding: 3px 12px;
   color: rgba(255, 255, 255, 0.7) !important; }
 
+.btn-split .btn {
+  border-radius: 0 !important; }
+
+.btn-split .btn:not(.dropdown-toggle) {
+  border-radius: 0.25rem 0 0 0.25rem !important; }
+
+.btn-split .btn.dropdown-toggle {
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+  padding: 12px 8px; }
+

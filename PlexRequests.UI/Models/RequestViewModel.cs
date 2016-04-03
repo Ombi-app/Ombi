@@ -52,5 +52,6 @@ namespace PlexRequests.UI.Models
         public string AdminNotes { get; set; }
         public string TvSeriesRequestType { get; set; }
         public string MusicBrainzId { get; set; }
+        public QualityModel[] Qualities { get; set; }
     }
 }

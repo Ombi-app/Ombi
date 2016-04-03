@@ -41,17 +41,36 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 using PlexRequests.Helpers;
+using System.Collections.Generic;
+using PlexRequests.Api.Interfaces;
+using System.Threading.Tasks;
 
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseModule
     {
-        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
+        public RequestsModule(
+            IRequestService service,
+            ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<PlexSettings> plex,
+            INotificationService notify,
+            ISettingsService<SonarrSettings> sonarrSettings,
+            ISettingsService<SickRageSettings> sickRageSettings,
+            ISettingsService<CouchPotatoSettings> cpSettings,
+            ICouchPotatoApi cpApi,
+            ISonarrApi sonarrApi,
+            ISickRageApi sickRageApi) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
             PlexSettings = plex;
             NotificationService = notify;
+            SonarrSettings = sonarrSettings;
+            SickRageSettings = sickRageSettings;
+            CpSettings = cpSettings;
+            SonarrApi = sonarrApi;
+            SickRageApi = sickRageApi;
+            CpApi = cpApi;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -71,6 +90,12 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private ISettingsService<SickRageSettings> SickRageSettings { get; }
+        private ISettingsService<CouchPotatoSettings> CpSettings { get; }
+        private ISonarrApi SonarrApi { get; }
+        private ISickRageApi SickRageApi { get; }
+        private ICouchPotatoApi CpApi { get; }
 
         private Negotiator LoadRequests()
         {
@@ -78,17 +103,51 @@ namespace PlexRequests.UI.Modules
             return View["Index", settings];
         }
 
-        private Response GetMovies()
+        private Response GetMovies() // TODO: async await the API calls
         {
             var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
-            var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
-            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+
+            List<Task> taskList = new List<Task>();
+
+            List<RequestedModel> dbMovies = new List<RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
-                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username));
+                return Service.GetAll().Where(x => x.Type == RequestType.Movie);
+
+            }).ContinueWith((t) =>
+            {
+                dbMovies = t.Result.ToList();
+
+                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+                {
+                    dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
+                }
+            }));
+
+
+
+            List<QualityModel> qualities = new List<QualityModel>();
+
+            if (isAdmin)
+            {
+                var cpSettings = CpSettings.GetSettings();
+                if (cpSettings.Enabled)
+                {
+                    taskList.Add(Task.Factory.StartNew(() =>
+                    {
+                        return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey).list.Select(x => new QualityModel() { Id = x._id, Name = x.label }); // TODO: cache this!
+                    }).ContinueWith((t) =>
+                    {
+                        qualities = t.Result.ToList();
+                    }));
+                }
             }
 
-            var viewModel = dbMovies.Select(movie => {
+            Task.WaitAll(taskList.ToArray());
+
+            var viewModel = dbMovies.Select(movie =>
+            {
                 return new RequestViewModel
                 {
                     ProviderId = movie.ProviderId,
@@ -111,23 +170,69 @@ namespace PlexRequests.UI.Modules
                     Issues = movie.Issues.Humanize(LetterCasing.Title),
                     OtherMessage = movie.OtherMessage,
                     AdminNotes = movie.AdminNote,
+                    Qualities = qualities.ToArray()
                 };
             }).ToList();
 
             return Response.AsJson(viewModel);
         }
 
-        private Response GetTvShows()
+        private Response GetTvShows() // TODO: async await the API calls
         {
             var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
-            var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
-            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+
+            List<Task> taskList = new List<Task>();
+
+            List<RequestedModel> dbTv = new List<RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
-                dbTv = dbTv.Where(x => x.UserHasRequested(Username));
+                return Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+
+            }).ContinueWith((t) =>
+            {
+                dbTv = t.Result.ToList();
+
+                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+                {
+                    dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
+                }
+            }));
+
+            List<QualityModel> qualities = new List<QualityModel>();
+            if (isAdmin)
+            {
+                var sonarrSettings = SonarrSettings.GetSettings();
+                if (sonarrSettings.Enabled)
+                {
+                    taskList.Add(Task.Factory.StartNew(() =>
+                    {
+                        return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri).Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }); // TODO: cache this!
+                    }).ContinueWith((t) =>
+                    {
+                        qualities = t.Result.ToList();
+                    }));
+                }
+                else {
+                    var sickRageSettings = SickRageSettings.GetSettings();
+                    if (sickRageSettings.Enabled)
+                    {
+                        taskList.Add(Task.Factory.StartNew(() =>
+                        {
+                            return sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }); // TODO: cache this!
+                        }).ContinueWith((t) =>
+                        {
+                            qualities = t.Result.ToList();
+                        }));
+                    }
+
+                }
             }
 
-            var viewModel = dbTv.Select(tv => {
+            Task.WaitAll(taskList.ToArray());
+
+            var viewModel = dbTv.Select(tv =>
+            {
                 return new RequestViewModel
                 {
                     ProviderId = tv.ProviderId,
@@ -150,7 +255,8 @@ namespace PlexRequests.UI.Modules
                     Issues = tv.Issues.Humanize(LetterCasing.Title),
                     OtherMessage = tv.OtherMessage,
                     AdminNotes = tv.AdminNote,
-                    TvSeriesRequestType = tv.SeasonsRequested
+                    TvSeriesRequestType = tv.SeasonsRequested,
+                    Qualities = qualities.ToArray()
                 };
             }).ToList();
 
@@ -167,7 +273,8 @@ namespace PlexRequests.UI.Modules
                 dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
             }
 
-            var viewModel = dbAlbum.Select(album => {
+            var viewModel = dbAlbum.Select(album =>
+            {
                 return new RequestViewModel
                 {
                     ProviderId = album.ProviderId,

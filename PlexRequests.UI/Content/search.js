@@ -20,6 +20,10 @@ $(function () {
         $tabs.first().children('a:first-child').tab('show');
     }
 
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        focusSearch($($(e.target).attr('href')))
+    });
+    focusSearch($('li.active a', '#nav-tabs').first().attr('href'));
 
     // Type in movie search
     $("#movieSearchContent").on("input", function () {
@@ -132,8 +136,13 @@ $(function () {
         var data = $form.serialize();
 
         sendRequestAjax(data, type, url, buttonId);
-
     });
+
+    function focusSearch($content) {
+        if ($content.length > 0) {
+            $('input[type=text].form-control', $content).first().focus();
+        }
+    }
 
     function sendRequestAjax(data, type, url, buttonId) {
         $.ajax({

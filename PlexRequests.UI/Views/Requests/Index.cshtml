@@ -177,12 +177,27 @@
                     {{/if}}
                 </div>
             </div>
-            <div class="col-sm-2 col-sm-push-3">
+            <div class="col-sm-3 col-sm-push-3">
                 {{#if_eq admin true}}
                 {{#if_eq approved false}}
                 <form method="POST" action="/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    {{#if_eq hasQualities true}}
+                        <div class="btn-group btn-split">
+                            <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}"><i class="fa fa-plus"></i> Approve</button>
+                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                {{#each qualities}}
+                                    <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
+                                {{/each}}
+                            </ul>
+                        </div>
+                    {{else}}
+                        <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    {{/if_eq}}
                 </form>
                 {{/if_eq}}
                 <form method="POST" action="/requests/delete" id="delete{{requestId}}">
