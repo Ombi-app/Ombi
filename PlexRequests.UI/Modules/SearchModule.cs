@@ -503,6 +503,9 @@ namespace PlexRequests.UI.Modules
             Log.Trace("CoverArt Details:");
             Log.Trace(img.DumpJson());
 
+            DateTime release;
+            DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
+
             var model = new RequestedModel
             {
                 Title = albumInfo.title,
@@ -513,7 +516,10 @@ namespace PlexRequests.UI.Modules
                 ProviderId = 0,
                 RequestedUsers = new List<string>() { Username },
                 Status = albumInfo.status,
-                Issues = IssueState.None
+                Issues = IssueState.None,
+                RequestedDate = DateTime.UtcNow,
+                ReleaseDate = release,
+                Artist = albumInfo.
             };
 
 

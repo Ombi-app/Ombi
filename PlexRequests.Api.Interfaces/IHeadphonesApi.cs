@@ -25,11 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
+using PlexRequests.Api.Models.Music;
 
 namespace PlexRequests.Api.Interfaces
 {
     public interface IHeadphonesApi
     {
         bool AddAlbum(string apiKey, Uri baseUrl, string albumId);
+        HeadphonesVersion GetVersion(string apiKey, Uri baseUrl);
     }
 }
