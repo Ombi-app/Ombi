@@ -519,7 +519,7 @@ namespace PlexRequests.UI.Modules
                 Issues = IssueState.None,
                 RequestedDate = DateTime.UtcNow,
                 ReleaseDate = release,
-                Artist = albumInfo.
+                // Artist = albumInfo.
             };
 
 
