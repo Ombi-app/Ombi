@@ -36,13 +36,12 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Text.RegularExpressions;
 
 namespace PlexRequests.Core
 {
     public class Setup
     {
-        public const int SchemaVersion = 1;
-
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private static DbConfiguration Db { get; set; }
         public string SetupDb()
@@ -55,29 +54,39 @@ namespace PlexRequests.Core
             {
                 CreateDefaultSettingsPage();
             }
+            
+            var version = CheckSchema();
+            if (version > 0)
+            {
+                if (version > 1300 && version <= 1699)
+                {
+                    MigrateDbFrom1300();
+                }
+            }
 
-            MigrateDb();
-            CheckSchema();
             return Db.DbConnection().ConnectionString;
         }
 
         public static string ConnectionString => Db.DbConnection().ConnectionString;
 
 
-        private void CheckSchema()
+        private int CheckSchema()
         {
+            var checker = new StatusChecker();
+            var status = checker.GetStatus();
+
             var connection = Db.DbConnection();
             var schema = connection.GetSchemaVersion();
             if (schema == null)
             {
-                connection.CreateSchema(); // Set the default.
+                connection.CreateSchema(status.DBVersion); // Set the default.
                 schema = connection.GetSchemaVersion();
             }
 
             var version = schema.SchemaVersion;
             if (version == 0)
             {
-                connection.UpdateSchemaVersion(SchemaVersion);
+                connection.UpdateSchemaVersion(status.DBVersion);
                 try
                 {
                     TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
@@ -86,9 +95,10 @@ namespace PlexRequests.Core
                 {
                     Log.Error("Tried updating the schema to version 1");
                     Log.Error(e);
+                    return -1;
                 }
-                return;
             }
+            return version;
         }
 
         private void CreateDefaultSettingsPage()
@@ -105,7 +115,7 @@ namespace PlexRequests.Core
             s.SaveSettings(defaultSettings);
         }
 
-        private void MigrateDb() // TODO: Remove in v1.7
+        private void MigrateDbFrom1300() // TODO: Remove in v1.7
         {
 
             var result = new List<long>();
@@ -147,7 +157,7 @@ namespace PlexRequests.Core
                     Issues = r.Issues,
                     OtherMessage = r.OtherMessage,
                     Overview = show.summary.RemoveHtml(),
-                    RequestedBy = r.RequestedBy,
+                    RequestedUsers = r.AllUsers, // should pull in the RequestedBy property and merge with RequestedUsers
                     RequestedDate = r.ReleaseDate,
                     Status = show.status
                 };
