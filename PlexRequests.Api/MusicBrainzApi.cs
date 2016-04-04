@@ -73,10 +73,12 @@ namespace PlexRequests.Api
             Log.Trace("Getting album: {0}", releaseId);
             var request = new RestRequest
             {
-                Resource = "release/{albumId}?fmt=json",
+                Resource = "release/{albumId}",
                 Method = Method.GET
             };
             request.AddUrlSegment("albumId", releaseId);
+            request.AddQueryParameter("fmt", "json");
+            request.AddQueryParameter("inc", "artists");
 
             try
             {

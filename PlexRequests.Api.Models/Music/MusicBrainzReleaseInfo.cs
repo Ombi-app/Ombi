@@ -42,6 +42,8 @@ namespace PlexRequests.Api.Models.Music
 
     public class MusicBrainzReleaseInfo
     {
+        [JsonProperty(PropertyName = "artist-credit")]
+        public List<ArtistCredit> ArtistCredits { get; set; }
         public string date { get; set; }
         public string status { get; set; }
         public string asin { get; set; }

@@ -47,7 +47,8 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
-            ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings) : base("approval")
+            ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi) : base("approval")
         {
             this.RequiresAuthentication();
 
@@ -58,6 +59,8 @@ namespace PlexRequests.UI.Modules
             SonarrSettings = sonarrSettings;
             SickRageApi = srApi;
             SickRageSettings = srSettings;
+            HeadphonesSettings = hpSettings;
+            HeadphoneApi = hpApi;
 
             Post["/approve"] = parameters => Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/approveall"] = x => ApproveAll();
@@ -71,9 +74,11 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
+        private ISettingsService<HeadphonesSettings> HeadphonesSettings { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
+        private IHeadphonesApi HeadphoneApi { get; }
 
         /// <summary>
         /// Approves the specified request identifier.
@@ -102,6 +107,8 @@ namespace PlexRequests.UI.Modules
                     return RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
                     return RequestTvAndUpdateStatus(request, qualityId);
+                case RequestType.Album:
+                    return RequestAlbumAndUpdateStatus(request);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
@@ -190,7 +197,7 @@ namespace PlexRequests.UI.Modules
                         Message = "We could not approve this request. Please try again or check the logs."
                     });
             }
-            
+
             var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
@@ -217,6 +224,34 @@ namespace PlexRequests.UI.Modules
                         Message =
                             "Something went wrong adding the movie to CouchPotato! Please check your settings."
                     });
+        }
+
+        private Response RequestAlbumAndUpdateStatus(RequestedModel request)
+        {
+            var hpSettings = HeadphonesSettings.GetSettings();
+            Log.Info("Adding album to Headphones : {0}", request.Title);
+            if (!hpSettings.Enabled)
+            {
+                // Approve it
+                request.Approved = true;
+                Log.Warn("We approved Album: {0} but could not add it to Headphones because it has not been setup", request.Title);
+
+                // Update the record
+                var inserted = Service.UpdateRequest(request);
+                return Response.AsJson(inserted
+                    ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to Headphones because it has not been configured." }
+                    : new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "We could not approve this request. Please try again or check the logs."
+                    });
+            }
+
+            var sender = new HeadphonesSender(HeadphoneApi, hpSettings, Service);
+            var result = sender.AddAlbum(request);
+            
+
+            return Response.AsJson( new JsonResponseModel { Result = true, Message = "We have sent the approval to Headphones for processing, This can take a few minutes."} );
         }
 
         private Response ApproveAllMovies()
@@ -358,10 +393,10 @@ namespace PlexRequests.UI.Modules
             {
 
                 var result = Service.BatchUpdate(updatedRequests);
-             return Response.AsJson(result
-                 ? new JsonResponseModel { Result = true }
-                 : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });
-        }
+                return Response.AsJson(result
+                    ? new JsonResponseModel { Result = true }
+                    : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });
+            }
             catch (Exception e)
             {
                 Log.Fatal(e);

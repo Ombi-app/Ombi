@@ -63,6 +63,8 @@ namespace PlexRequests.Api.Models.Music
     public class ArtistCredit
     {
         public Artist artist { get; set; }
+        public string name { get; set; }
+        public string joinphrase { get; set; }
     }
 
     public class ReleaseGroup

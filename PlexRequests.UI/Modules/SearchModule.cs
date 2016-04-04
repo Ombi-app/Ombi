@@ -505,6 +505,12 @@ namespace PlexRequests.UI.Modules
             DateTime release;
             DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
 
+            var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
+            if (artist == null)
+            {
+                return Response.AsJson("We could not find the artist on MusicBrainz. Please try again later or contact your admin");
+            }
+
             var model = new RequestedModel
             {
                 Title = albumInfo.title,
@@ -513,12 +519,13 @@ namespace PlexRequests.UI.Modules
                 PosterPath = img,
                 Type = RequestType.Album,
                 ProviderId = 0,
-                RequestedUsers = new List<string>() { Username },
+                RequestedUsers = new List<string> { Username },
                 Status = albumInfo.status,
                 Issues = IssueState.None,
                 RequestedDate = DateTime.UtcNow,
                 ReleaseDate = release,
-                // Artist = albumInfo.
+                ArtistName = artist.name,
+                ArtistId = artist.id
             };
 
 
@@ -542,24 +549,14 @@ namespace PlexRequests.UI.Modules
                         });
                 }
 
-                var headphonesResult = HeadphonesApi.AddAlbum(hpSettings.ApiKey, hpSettings.FullUri, model.MusicBrainzId);
-                Log.Info("Result from adding album to Headphones = {0}", headphonesResult);
-                RequestService.AddRequest(model);
-                if (headphonesResult)
-                {
-                    return
-                        Response.AsJson(new JsonResponseModel
-                        {
-                            Result = true,
-                            Message = $"{model.Title} was successfully added!"
-                        });
-                }
+                var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
+                sender.AddAlbum(model);
 
                 return
                     Response.AsJson(new JsonResponseModel
                     {
-                        Result = false,
-                        Message = $"There was a problem adding {model.Title}. Please contact your admin!"
+                        Result = true,
+                        Message = $"{model.Title} was successfully added!"
                     });
             }
             

@@ -64,6 +64,21 @@ namespace PlexRequests.Api
 
         }
 
+        public IRestResponse Execute(IRestRequest request, Uri baseUri)
+        {
+            var client = new RestClient { BaseUrl = baseUri };
+
+            var response = client.Execute(request);
+
+            if (response.ErrorException != null)
+            {
+                var message = "Error retrieving response. Check inner details for more info.";
+                throw new ApplicationException(message, response.ErrorException);
+            }
+
+            return response;
+        }
+
         public T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class
         {
             var client = new RestClient { BaseUrl = baseUri };

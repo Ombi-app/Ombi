@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -33,6 +34,7 @@ using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Music;
+using PlexRequests.Helpers;
 
 using RestSharp;
 
@@ -47,7 +49,7 @@ namespace PlexRequests.Api
         private ApiRequest Api { get; }
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public bool AddAlbum(string apiKey, Uri baseUrl, string albumId)
+        public async Task<bool> AddAlbum(string apiKey, Uri baseUrl, string albumId)
         {
             Log.Trace("Adding album: {0}", albumId);
             var request = new RestRequest
@@ -61,12 +63,91 @@ namespace PlexRequests.Api
 
             try
             {
-                //var result = Api.Execute<string>(request, baseUrl);
-                return false;
+                var result = await Task.Run(() => Api.Execute(request, baseUrl)).ConfigureAwait(false);
+                Log.Trace("Add Album Result: {0}", result.DumpJson());
+
+                var albumResult = result.Content.Equals("OK", StringComparison.CurrentCultureIgnoreCase);
+                Log.Info("Album add result {0}", albumResult);
+
+                return albumResult;
             }
             catch (JsonSerializationException jse)
             {
-                Log.Warn(jse);
+                Log.Error(jse);
+                return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
+        public async Task<List<HeadphonesGetIndex>> GetIndex(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("apikey", apiKey);
+            request.AddQueryParameter("cmd", "getIndex");
+
+            try
+            {
+                var result = await Task.Run(() => Api.ExecuteJson<List<HeadphonesGetIndex>>(request, baseUrl)).ConfigureAwait(false);
+
+                return result;
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                return new List<HeadphonesGetIndex>();
+            }
+        }
+        public async Task<bool> AddArtist(string apiKey, Uri baseUrl, string artistId)
+        {
+            Log.Trace("Adding Artist: {0}", artistId);
+            var request = new RestRequest
+            {
+                Resource = "/api",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("apikey", apiKey);
+            request.AddQueryParameter("cmd", "addArtist");
+            request.AddQueryParameter("id", artistId);
+            
+            try
+            {
+                var result = await Task.Run(() => Api.Execute(request, baseUrl)).ConfigureAwait(false);
+                Log.Info("Add Artist Result: {0}", result.Content);
+                Log.Trace("Add Artist Result: {0}", result.DumpJson());
+                return result.Content.Equals("OK", StringComparison.CurrentCultureIgnoreCase);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
+        public async Task<bool> QueueAlbum(string apiKey, Uri baseUrl, string albumId)
+        {
+            Log.Trace("Queing album: {0}", albumId);
+            var request = new RestRequest
+            {
+                Resource = "/api?cmd=queueAlbum&id={albumId}",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("apikey", apiKey);
+            request.AddUrlSegment("albumId", albumId);
+
+            try
+            {
+                var result = await Task.Run(() => Api.Execute(request, baseUrl)).ConfigureAwait(false);
+                Log.Info("Queue Result: {0}", result.Content);
+                Log.Trace("Queue Result: {0}", result.DumpJson());
+                return result.Content.Equals("OK", StringComparison.CurrentCultureIgnoreCase);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
                 return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
             }
         }
@@ -88,7 +169,7 @@ namespace PlexRequests.Api
             }
             catch (JsonSerializationException jse)
             {
-                Log.Warn(jse);
+                Log.Error(jse);
                 return new HeadphonesVersion(); // If there is no matching result we do not get returned a JSON string, it just returns "false".
             }
         }

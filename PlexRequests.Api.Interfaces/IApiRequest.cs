@@ -33,6 +33,7 @@ namespace PlexRequests.Api.Interfaces
     public interface IApiRequest
     {
         T Execute<T>(IRestRequest request, Uri baseUri) where T : new();
+        IRestResponse Execute(IRestRequest request, Uri baseUri);
         T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class;
         T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new();
     }

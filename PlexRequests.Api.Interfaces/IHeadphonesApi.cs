@@ -25,13 +25,19 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using PlexRequests.Api.Models.Music;
 
 namespace PlexRequests.Api.Interfaces
 {
     public interface IHeadphonesApi
     {
-        bool AddAlbum(string apiKey, Uri baseUrl, string albumId);
+        Task<bool> AddAlbum(string apiKey, Uri baseUrl, string albumId);
         HeadphonesVersion GetVersion(string apiKey, Uri baseUrl);
+        Task<bool> AddArtist(string apiKey, Uri baseUrl, string artistId);
+        Task<bool> QueueAlbum(string apiKey, Uri baseUrl, string albumId);
+        Task<List<HeadphonesGetIndex>> GetIndex(string apiKey, Uri baseUrl);
     }
 }
