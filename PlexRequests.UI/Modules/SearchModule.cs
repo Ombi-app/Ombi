@@ -516,7 +516,7 @@ namespace PlexRequests.UI.Modules
             var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
             if (artist == null)
             {
-                return Response.AsJson("We could not find the artist on MusicBrainz. Please try again later or contact your admin");
+                return Response.AsJson(new JsonResponseModel {Result = false, Message = "We could not find the artist on MusicBrainz. Please try again later or contact your admin"});
             }
 
             var model = new RequestedModel
