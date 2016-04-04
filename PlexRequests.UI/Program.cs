@@ -63,8 +63,8 @@ namespace PlexRequests.UI
             WriteOutVersion();
 
             var s = new Setup();
-            s.CacheQualityProfiles();
             var cn = s.SetupDb();
+            s.CacheQualityProfiles();
             ConfigureTargets(cn);
             
 
