@@ -126,7 +126,7 @@ namespace PlexRequests.UI.Modules
             }));
 
 
-
+            var mc = new MemoryCacheProvider();
             List<QualityModel> qualities = new List<QualityModel>();
 
             if (isAdmin)
@@ -136,10 +136,13 @@ namespace PlexRequests.UI.Modules
                 {
                     taskList.Add(Task.Factory.StartNew(() =>
                     {
-                        return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey).list.Select(x => new QualityModel() { Id = x._id, Name = x.label }); // TODO: cache this!
+                        return mc.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
+                        {
+                            return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey); // TODO: cache this!
+                        });
                     }).ContinueWith((t) =>
                     {
-                        qualities = t.Result.ToList();
+                        qualities = t.Result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
                     }));
                 }
             }
@@ -199,6 +202,7 @@ namespace PlexRequests.UI.Modules
                 }
             }));
 
+            var mc = new MemoryCacheProvider();
             List<QualityModel> qualities = new List<QualityModel>();
             if (isAdmin)
             {
@@ -207,25 +211,22 @@ namespace PlexRequests.UI.Modules
                 {
                     taskList.Add(Task.Factory.StartNew(() =>
                     {
-                        return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri).Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }); // TODO: cache this!
+                        return mc.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
+                        {
+                            return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri); // TODO: cache this!
+
+                    });
                     }).ContinueWith((t) =>
                     {
-                        qualities = t.Result.ToList();
+                        qualities = t.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
                     }));
                 }
                 else {
                     var sickRageSettings = SickRageSettings.GetSettings();
                     if (sickRageSettings.Enabled)
                     {
-                        taskList.Add(Task.Factory.StartNew(() =>
-                        {
-                            return sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }); // TODO: cache this!
-                        }).ContinueWith((t) =>
-                        {
-                            qualities = t.Result.ToList();
-                        }));
+                        qualities = sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }).ToList();
                     }
-
                 }
             }
 

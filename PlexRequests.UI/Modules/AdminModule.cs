@@ -374,6 +374,13 @@ namespace PlexRequests.UI.Modules
             var settings = this.Bind<SonarrSettings>();
             var profiles = SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
 
+            // set the cache
+            if (profiles != null)
+            {
+                var cache = new MemoryCacheProvider();
+                cache.Set(CacheKeys.SonarrQualityProfiles, profiles);
+            }
+
             return Response.AsJson(profiles);
         }
 
@@ -581,6 +588,13 @@ namespace PlexRequests.UI.Modules
         {
             var settings = this.Bind<CouchPotatoSettings>();
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
+
+            // set the cache
+            if (profiles != null)
+            {
+                var cache = new MemoryCacheProvider();
+                cache.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
+            }
 
             return Response.AsJson(profiles);
         }

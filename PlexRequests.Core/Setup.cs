@@ -37,6 +37,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Core
 {
@@ -113,6 +114,52 @@ namespace PlexRequests.Core
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
+        }
+
+        public async void CacheQualityProfiles()
+        {
+            var mc = new MemoryCacheProvider();
+
+            try
+            {
+                CacheSonarrQualityProfiles(mc);
+                CacheCouchPotatoQualityProfiles(mc);
+                // we don't need to cache sickrage profiles, those are static
+                // TODO: cache headphones profiles?
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to cache quality profiles on startup!");
+            }
+        }
+
+        private async void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
+        {
+            var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var sonarrSettings = sonarrSettingsService.GetSettings();
+            if (sonarrSettings.Enabled) {
+                cacheProvider.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
+                {
+                    SonarrApi sonarrApi = new SonarrApi();
+                    return sonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+    
+                });
+            }
+        }
+
+        private async void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
+        {
+            var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var cpSettings = cpSettingsService.GetSettings();
+            if (cpSettings.Enabled)
+            {
+                cacheProvider.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
+                {
+                    CouchPotatoApi cpApi = new CouchPotatoApi();
+                    return cpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey);
+
+                });
+            }
         }
 
         private void MigrateDbFrom1300() // TODO: Remove in v1.7
