@@ -268,7 +268,7 @@ namespace PlexRequests.UI.Modules
             };
 
             Log.Trace(settings.DumpJson());
-            if (IsAdmin || !settings.RequireMovieApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (ShouldAutoApprove(RequestType.Movie, settings))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -422,7 +422,7 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            if (IsAdmin || !settings.RequireTvShowApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (ShouldAutoApprove(RequestType.TvShow, settings))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
@@ -537,8 +537,7 @@ namespace PlexRequests.UI.Modules
             };
 
 
-            if (IsAdmin || !settings.RequireMusicApproval ||
-                settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (ShouldAutoApprove(RequestType.Album, settings))
             {
                 Log.Debug("We don't require approval OR the user is in the whitelist");
                 var hpSettings = HeadphonesService.GetSettings();
@@ -588,6 +587,25 @@ namespace PlexRequests.UI.Modules
             }
 
             return img;
+        }
+
+        private bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings)
+        {
+            // if the user is an admin or they are whitelisted, they go ahead and allow auto-approval
+            if (IsAdmin || prSettings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase))) return true;
+
+            // check by request type if the category requires approval or not
+            switch (requestType)
+            {
+                case RequestType.Movie:
+                    return !prSettings.RequireMovieApproval;
+                case RequestType.TvShow:
+                    return !prSettings.RequireTvShowApproval;
+                case RequestType.Album:
+                    return !prSettings.RequireMusicApproval;
+                default:
+                    return false;
+            }
         }
     }
 }

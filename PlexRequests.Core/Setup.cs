@@ -121,30 +121,45 @@ namespace PlexRequests.Core
 
         private async void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
         {
-            var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            var sonarrSettings = sonarrSettingsService.GetSettings();
-            if (sonarrSettings.Enabled) {
-                cacheProvider.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
+            try
+            {
+                Log.Info("Executing GetSettings call to Sonarr for quality profiles");
+                var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var sonarrSettings = sonarrSettingsService.GetSettings();
+                if (sonarrSettings.Enabled)
                 {
+                    Log.Info("Begin executing GetProfiles call to Sonarr for quality profiles");
                     SonarrApi sonarrApi = new SonarrApi();
-                    return sonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri);
-    
-                });
+                    var profiles = sonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    cacheProvider.Set(CacheKeys.SonarrQualityProfiles, profiles);
+                    Log.Info("Finished executing GetProfiles call to Sonarr for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to cache Sonarr quality profiles!", ex);
             }
         }
 
         private async void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
         {
-            var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            var cpSettings = cpSettingsService.GetSettings();
-            if (cpSettings.Enabled)
+            try
             {
-                cacheProvider.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
+                Log.Info("Executing GetSettings call to CouchPotato for quality profiles");
+                var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var cpSettings = cpSettingsService.GetSettings();
+                if (cpSettings.Enabled)
                 {
+                    Log.Info("Begin executing GetProfiles call to CouchPotato for quality profiles");
                     CouchPotatoApi cpApi = new CouchPotatoApi();
-                    return cpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey);
-
-                });
+                    var profiles = cpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey);
+                    cacheProvider.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
+                    Log.Info("Finished executing GetProfiles call to CouchPotato for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to cache CouchPotato quality profiles!", ex);
             }
         }
 

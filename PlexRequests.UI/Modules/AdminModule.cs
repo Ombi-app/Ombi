@@ -76,6 +76,7 @@ namespace PlexRequests.UI.Modules
         private ICouchPotatoApi CpApi { get; }
         private IRepository<LogEntity> LogsRepo { get; }
         private INotificationService NotificationService { get; }
+        private ICacheProvider Cache { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -94,7 +95,8 @@ namespace PlexRequests.UI.Modules
             IPushoverApi pushoverApi,
             IRepository<LogEntity> logsRepo,
             INotificationService notify,
-            ISettingsService<HeadphonesSettings> headphones) : base("admin")
+            ISettingsService<HeadphonesSettings> headphones,
+            ICacheProvider cache) : base("admin")
         {
             PrService = prService;
             CpService = cpService;
@@ -113,6 +115,7 @@ namespace PlexRequests.UI.Modules
             PushoverApi = pushoverApi;
             NotificationService = notify;
             HeadphonesService = headphones;
+            Cache = cache;
 
 #if !DEBUG
             this.RequiresAuthentication();
@@ -377,8 +380,7 @@ namespace PlexRequests.UI.Modules
             // set the cache
             if (profiles != null)
             {
-                var cache = new MemoryCacheProvider();
-                cache.Set(CacheKeys.SonarrQualityProfiles, profiles);
+                Cache.Set(CacheKeys.SonarrQualityProfiles, profiles);
             }
 
             return Response.AsJson(profiles);
@@ -592,8 +594,7 @@ namespace PlexRequests.UI.Modules
             // set the cache
             if (profiles != null)
             {
-                var cache = new MemoryCacheProvider();
-                cache.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
+                Cache.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
             }
 
             return Response.AsJson(profiles);

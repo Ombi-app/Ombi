@@ -59,7 +59,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<CouchPotatoSettings> cpSettings,
             ICouchPotatoApi cpApi,
             ISonarrApi sonarrApi,
-            ISickRageApi sickRageApi) : base("requests")
+            ISickRageApi sickRageApi,
+            ICacheProvider cache) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
@@ -71,6 +72,7 @@ namespace PlexRequests.UI.Modules
             SonarrApi = sonarrApi;
             SickRageApi = sickRageApi;
             CpApi = cpApi;
+            Cache = cache;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
@@ -96,6 +98,7 @@ namespace PlexRequests.UI.Modules
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
+        private ICacheProvider Cache { get; }
 
         private Negotiator LoadRequests()
         {
@@ -126,7 +129,6 @@ namespace PlexRequests.UI.Modules
             }));
 
 
-            var mc = new MemoryCacheProvider();
             List<QualityModel> qualities = new List<QualityModel>();
 
             if (isAdmin)
@@ -136,7 +138,7 @@ namespace PlexRequests.UI.Modules
                 {
                     taskList.Add(Task.Factory.StartNew(() =>
                     {
-                        return mc.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
+                        return Cache.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
                         {
                             return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey); // TODO: cache this!
                         });
@@ -202,7 +204,6 @@ namespace PlexRequests.UI.Modules
                 }
             }));
 
-            var mc = new MemoryCacheProvider();
             List<QualityModel> qualities = new List<QualityModel>();
             if (isAdmin)
             {
@@ -211,7 +212,7 @@ namespace PlexRequests.UI.Modules
                 {
                     taskList.Add(Task.Factory.StartNew(() =>
                     {
-                        return mc.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
+                        return Cache.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
                         {
                             return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri); // TODO: cache this!
 
