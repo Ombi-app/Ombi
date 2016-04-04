@@ -36,6 +36,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Core
 {
@@ -102,14 +103,14 @@ namespace PlexRequests.Core
             s.SaveSettings(defaultSettings);
         }
 
-        public async void CacheQualityProfiles()
+        public void CacheQualityProfiles()
         {
             var mc = new MemoryCacheProvider();
 
             try
             {
-                CacheSonarrQualityProfiles(mc);
-                CacheCouchPotatoQualityProfiles(mc);
+                Task.Run(() => { CacheSonarrQualityProfiles(mc); });
+                Task.Run(() => { CacheCouchPotatoQualityProfiles(mc); });
                 // we don't need to cache sickrage profiles, those are static
                 // TODO: cache headphones profiles?
             }
@@ -119,7 +120,7 @@ namespace PlexRequests.Core
             }
         }
 
-        private async void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
+        private void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
         {
             try
             {
@@ -141,7 +142,7 @@ namespace PlexRequests.Core
             }
         }
 
-        private async void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
+        private void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
         {
             try
             {

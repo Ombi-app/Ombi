@@ -44,6 +44,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Tests
 {
@@ -67,6 +68,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ICouchPotatoApi> CpApi { get; set; }
         private Mock<IRepository<LogEntity>> LogRepo { get; set; }
         private Mock<INotificationService> NotificationService { get; set; }
+        private Mock<ICacheProvider> Cache { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -96,6 +98,7 @@ namespace PlexRequests.UI.Tests
             PushoverApi = new Mock<IPushoverApi>();
             NotificationService = new Mock<INotificationService>();
             HeadphonesSettings = new Mock<ISettingsService<HeadphonesSettings>>();
+            Cache = new Mock<ICacheProvider>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -117,6 +120,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
                 with.Dependency(HeadphonesSettings.Object);
+                with.Dependencies(Cache.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {
