@@ -82,7 +82,7 @@ namespace PlexRequests.Api
 
             try
             {
-                return Api.Execute<MusicBrainzReleaseInfo>(request, BaseUri);
+                return Api.ExecuteJson<MusicBrainzReleaseInfo>(request, BaseUri);
             }
             catch (JsonSerializationException jse)
             {
