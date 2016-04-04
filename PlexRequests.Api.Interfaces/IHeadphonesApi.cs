@@ -39,5 +39,6 @@ namespace PlexRequests.Api.Interfaces
         Task<bool> AddArtist(string apiKey, Uri baseUrl, string artistId);
         Task<bool> QueueAlbum(string apiKey, Uri baseUrl, string albumId);
         Task<List<HeadphonesGetIndex>> GetIndex(string apiKey, Uri baseUrl);
+        Task<bool> RefreshArtist(string apiKey, Uri baseUrl, string artistId);
     }
 }

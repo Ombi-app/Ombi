@@ -24,7 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,8 +49,8 @@ namespace PlexRequests.UI.Helpers
             RequestService = request;
         }
 
-        private int WaitTime => 1000;
-        private int CounterMax => 30;
+        private int WaitTime => 2000;
+        private int CounterMax => 60;
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         private IHeadphonesApi Api { get; }
@@ -103,11 +106,22 @@ namespace PlexRequests.UI.Helpers
                 counter++;
                 Log.Trace("Artist is still not present in the index. Counter = {0}", counter);
                 index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
+                //Fetch failed name
                 if (counter > CounterMax)
                 {
                     Log.Trace("Artist is still not present in the index. Counter = {0}. Returning false", counter);
                     return false;
                 }
+            }
+            var addedArtist = index.FirstOrDefault(x => x.ArtistID == request.ArtistId);
+            var artistName = addedArtist?.ArtistName ?? string.Empty;
+            while (artistName.Contains("Fetch failed"))
+            {
+                await Api.RefreshArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
+
+                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
+
+                artistName = index?.FirstOrDefault(x => x.ArtistID == request.ArtistId)?.ArtistName ?? string.Empty;
             }
 
             counter = 0;

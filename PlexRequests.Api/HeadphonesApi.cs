@@ -152,6 +152,33 @@ namespace PlexRequests.Api
             }
         }
 
+        public async Task<bool> RefreshArtist(string apiKey, Uri baseUrl, string artistId)
+        {
+            Log.Trace("Refreshing artist: {0}", artistId);
+            var request = new RestRequest
+            {
+                Resource = "/api",
+                Method = Method.GET
+            };
+
+            request.AddQueryParameter("apikey", apiKey);
+            request.AddQueryParameter("cmd", "queueAlbum");
+            request.AddQueryParameter("id", artistId);
+
+            try
+            {
+                var result = await Task.Run(() => Api.Execute(request, baseUrl)).ConfigureAwait(false);
+                Log.Info("Artist refresh Result: {0}", result.Content);
+                Log.Trace("Artist refresh Result: {0}", result.DumpJson());
+                return result.Content.Equals("OK", StringComparison.CurrentCultureIgnoreCase);
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
+            }
+        }
+
         public HeadphonesVersion GetVersion(string apiKey, Uri baseUrl)
         {
             var request = new RestRequest
