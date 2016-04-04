@@ -60,6 +60,7 @@ namespace PlexRequests.Core
                 if (version > 1300 && version <= 1699)
                 {
                     MigrateDbFrom1300();
+                    UpdateRequestBlobsTable();
                 }
             }
 
@@ -83,20 +84,7 @@ namespace PlexRequests.Core
             }
 
             var version = schema.SchemaVersion;
-            if (version == 0)
-            {
-                connection.UpdateSchemaVersion(status.DBVersion);
-                try
-                {
-                    TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Tried updating the schema to version 1");
-                    Log.Error(e);
-                    return -1;
-                }
-            }
+
             return version;
         }
 
@@ -160,6 +148,18 @@ namespace PlexRequests.Core
             }
         }
 
+        private void UpdateRequestBlobsTable() // TODO: Remove in v1.7
+        {
+            try
+            {
+                TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Tried updating the schema to alter the request blobs table");
+                Log.Error(e);
+            }
+        }
         private void MigrateDbFrom1300() // TODO: Remove in v1.7
         {
 
