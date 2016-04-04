@@ -36,8 +36,6 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace PlexRequests.Core
 {
