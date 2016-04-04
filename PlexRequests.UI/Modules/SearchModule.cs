@@ -31,6 +31,7 @@ using System.Linq;
 
 using Nancy;
 using Nancy.Responses.Negotiation;
+using Nancy.Security;
 
 using NLog;
 
@@ -106,6 +107,13 @@ namespace PlexRequests.UI.Modules
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        private bool IsAdmin {
+            get
+            {
+                return Context.CurrentUser.IsAuthenticated();
+            }
+        }
 
         private Negotiator RequestLoad()
         {
@@ -260,7 +268,7 @@ namespace PlexRequests.UI.Modules
             };
 
             Log.Trace(settings.DumpJson());
-            if (!settings.RequireMovieApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (IsAdmin || !settings.RequireMovieApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var cpSettings = CpService.GetSettings();
 
@@ -414,7 +422,7 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
-            if (!settings.RequireTvShowApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
+            if (IsAdmin || !settings.RequireTvShowApproval || settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 var sonarrSettings = SonarrService.GetSettings();
                 var sender = new TvSender(SonarrApi, SickrageApi);
@@ -529,7 +537,7 @@ namespace PlexRequests.UI.Modules
             };
 
 
-            if (!settings.RequireMusicApproval ||
+            if (IsAdmin || !settings.RequireMusicApproval ||
                 settings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase)))
             {
                 Log.Debug("We don't require approval OR the user is in the whitelist");
