@@ -80,6 +80,7 @@ namespace PlexRequests.UI.Modules
             Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
             Get["tv/{searchTerm}"] = parameters => SearchTvShow((string)parameters.searchTerm);
             Get["music/{searchTerm}"] = parameters => SearchMusic((string)parameters.searchTerm);
+            Get["music/coverArt/{id}"] = p => GetMusicBrainzCoverArt((string)p.id);
 
             Get["movie/upcoming"] = parameters => UpcomingMovies();
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
@@ -168,7 +169,6 @@ namespace PlexRequests.UI.Modules
             var model = new List<SearchMusicViewModel>();
             foreach (var a in releases)
             {
-                var img = GetMusicBrainzCoverArt(a.id);
                 model.Add(new SearchMusicViewModel
                 {
                     Title = a.title,
@@ -177,7 +177,6 @@ namespace PlexRequests.UI.Modules
                     Overview = a.disambiguation,
                     ReleaseDate = a.date,
                     TrackCount = a.TrackCount,
-                    CoverArtUrl = img,
                     ReleaseType = a.status,
                     Country = a.country
                 });

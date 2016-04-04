@@ -159,9 +159,9 @@
 <!-- Music Results template -->
 <script id="music-template" type="text/x-handlebars-template">
     <div class="row">
-        <div class="col-sm-2">
+        <div id="{{id}}imageDiv" class="col-sm-2">
             {{#if coverArtUrl}}
-            <img class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
+            <img id="{{id}}cover" class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
             {{/if}}
         </div>
         <div class="col-sm-5 ">

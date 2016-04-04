@@ -244,12 +244,21 @@ $(function () {
 
                     var html = musicTemplate(context);
                     $("#musicList").append(html);
+                     getCoverArt(context.id);
                 });
             }
             else {
                 $("#musicList").html(noResultsMusic);
             }
             $('#musicSearchButton').attr("class", "fa fa-search");
+        });
+    };
+
+    function getCoverArt(artistId) {
+        $.ajax("/search/music/coverart/" + artistId).success(function (result) {
+            if (result) {
+                $('#' + artistId + "imageDiv").html(" <img class='img-responsive' src='" + result + "' width='150' alt='poster'>");
+            }
         });
     };
 
