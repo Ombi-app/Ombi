@@ -24,10 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -106,10 +103,11 @@ namespace PlexRequests.UI.Helpers
                 counter++;
                 Log.Trace("Artist is still not present in the index. Counter = {0}", counter);
                 index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
-                //Fetch failed name
+
                 if (counter > CounterMax)
                 {
                     Log.Trace("Artist is still not present in the index. Counter = {0}. Returning false", counter);
+                    Log.Warn("We have tried adding the artist but it seems they are still not in headphones.");
                     return false;
                 }
             }
@@ -117,11 +115,18 @@ namespace PlexRequests.UI.Helpers
             var artistName = addedArtist?.ArtistName ?? string.Empty;
             while (artistName.Contains("Fetch failed"))
             {
+                Thread.Sleep(WaitTime);
                 await Api.RefreshArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
 
                 index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
 
                 artistName = index?.FirstOrDefault(x => x.ArtistID == request.ArtistId)?.ArtistName ?? string.Empty;
+                if (counter > CounterMax)
+                {
+                    Log.Trace("Artist fetch has failed. Counter = {0}. Returning false", counter);
+                    Log.Warn("Artist in headphones fetch has failed, we have tried refreshing the artist but no luck.");
+                    return false;
+                }
             }
 
             counter = 0;
@@ -136,6 +141,7 @@ namespace PlexRequests.UI.Helpers
                 if (counter > CounterMax)
                 {
                     Log.Trace("Artist status is still not active. Counter = {0}. Returning false", counter);
+                    Log.Warn("The artist status is still not Active. We have waited long enough, seems to be a big delay in headphones.");
                     return false;
                 }
             }
@@ -156,6 +162,7 @@ namespace PlexRequests.UI.Helpers
                 if (counter > CounterMax)
                 {
                     Log.Trace("Album status is still not active. Counter = {0}. Returning false", counter);
+                    Log.Warn("We tried to se the status for the album but headphones didn't want to snatch it.");
                     return false;
                 }
             }
