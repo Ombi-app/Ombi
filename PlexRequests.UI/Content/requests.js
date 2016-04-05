@@ -77,7 +77,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             activeState = $ml.mixItUp('getState');
             $ml.mixItUp('destroy');
         }
-        if ($musicL.mixItUp('isLoaded')) $ml.mixItUp('destroy');
+        if ($musicL.mixItUp('isLoaded')) $musicL.mixItUp('destroy');
         $musicL.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
 });
