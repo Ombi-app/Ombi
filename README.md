@@ -56,7 +56,11 @@ sudo unzip PlexRequests.zip -d /opt/PlexRequests
 
 ```sudo apt-get install mono-devel```
 
-if apt-get does not install mono v4.x, uninstall it, and check here for instructions:
+####Check your Mono version
+
+```sudo mono --version```
+
+if you don't see v4.x, uninstall it, and check here for instructions:
 http://www.mono-project.com/docs/getting-started/install/linux/
 
 ####Verify Mono properly runs PlexRequests
