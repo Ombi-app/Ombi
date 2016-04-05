@@ -559,6 +559,7 @@ namespace PlexRequests.UI.Modules
 
                 var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
                 sender.AddAlbum(model);
+                RequestService.AddRequest(model);
 
                 return
                     Response.AsJson(new JsonResponseModel
