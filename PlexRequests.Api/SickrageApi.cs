@@ -132,9 +132,16 @@ namespace PlexRequests.Api
             request.AddUrlSegment("apiKey", apiKey);
             request.AddQueryParameter("tvdbid", tvdbId.ToString());
 
-            var obj = Api.ExecuteJson<SickRageSeasonList>(request, baseUrl);
-
-            return obj;
+            try
+            {
+                var obj = Api.ExecuteJson<SickRageSeasonList>(request, baseUrl);
+                return obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new SickRageSeasonList();
+            }
         }
 
         public async Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl)

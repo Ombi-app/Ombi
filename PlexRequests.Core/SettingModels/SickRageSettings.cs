@@ -47,7 +47,7 @@ namespace PlexRequests.Core.SettingModels
             {
                 return new Dictionary<string, string>() {
                     { "default", "Use Deafult" },
-                    { "sdtv", ">SD TV" },
+                    { "sdtv", "SD TV" },
                     { "sddvd", "SD DVD" },
                     { "hdtv", "HD TV" },
                     { "rawhdtv", "Raw HD TV" },
