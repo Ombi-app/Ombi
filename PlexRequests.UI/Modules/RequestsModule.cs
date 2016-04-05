@@ -28,8 +28,6 @@
 using System;
 using System.Linq;
 
-using Humanizer;
-
 using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
@@ -41,6 +39,7 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 using System.Collections.Generic;
 using PlexRequests.Api.Interfaces;
 using System.Threading.Tasks;
@@ -161,9 +160,9 @@ namespace PlexRequests.UI.Modules
                     ImdbId = movie.ImdbId,
                     Id = movie.Id,
                     PosterPath = movie.PosterPath,
-                    ReleaseDate = movie.ReleaseDate.Humanize(),
+                    ReleaseDate = movie.ReleaseDate,
                     ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDate = movie.RequestedDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
                     Approved = movie.Available || movie.Approved,
                     Title = movie.Title,
@@ -172,7 +171,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseYear = movie.ReleaseDate.Year.ToString(),
                     Available = movie.Available,
                     Admin = isAdmin,
-                    Issues = movie.Issues.Humanize(LetterCasing.Title),
+                    Issues = movie.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = movie.OtherMessage,
                     AdminNotes = movie.AdminNote,
                     Qualities = qualities.ToArray()
@@ -243,9 +242,9 @@ namespace PlexRequests.UI.Modules
                     ImdbId = tv.ImdbId,
                     Id = tv.Id,
                     PosterPath = tv.PosterPath,
-                    ReleaseDate = tv.ReleaseDate.Humanize(),
+                    ReleaseDate = tv.ReleaseDate,
                     ReleaseDateTicks = tv.ReleaseDate.Ticks,
-                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDate = tv.RequestedDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
                     Approved = tv.Available || tv.Approved,
                     Title = tv.Title,
@@ -254,7 +253,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseYear = tv.ReleaseDate.Year.ToString(),
                     Available = tv.Available,
                     Admin = isAdmin,
-                    Issues = tv.Issues.Humanize(LetterCasing.Title),
+                    Issues = tv.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = tv.OtherMessage,
                     AdminNotes = tv.AdminNote,
                     TvSeriesRequestType = tv.SeasonsRequested,
@@ -285,9 +284,9 @@ namespace PlexRequests.UI.Modules
                     ImdbId = album.ImdbId,
                     Id = album.Id,
                     PosterPath = album.PosterPath,
-                    ReleaseDate = album.ReleaseDate.Humanize(),
+                    ReleaseDate = album.ReleaseDate,
                     ReleaseDateTicks = album.ReleaseDate.Ticks,
-                    RequestedDate = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Humanize(),
+                    RequestedDate = album.RequestedDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Ticks,
                     Approved = album.Available || album.Approved,
                     Title = album.Title,
@@ -296,7 +295,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseYear = album.ReleaseDate.Year.ToString(),
                     Available = album.Available,
                     Admin = isAdmin,
-                    Issues = album.Issues.Humanize(LetterCasing.Title),
+                    Issues = album.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = album.OtherMessage,
                     AdminNotes = album.AdminNote,
                     TvSeriesRequestType = album.SeasonsRequested,
@@ -350,7 +349,7 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,
-                Body = issue == IssueState.Other ? comment : issue.Humanize()
+                Body = issue == IssueState.Other ? comment : issue.ToString().CamelCaseToWords()
             };
             NotificationService.Publish(model);
 

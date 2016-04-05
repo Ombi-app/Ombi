@@ -28,16 +28,12 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using System.Web.UI.HtmlControls;
-
-using Humanizer;
 using MarkdownSharp;
 
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
-using Nancy.Security;
 using Nancy.Validation;
 
 using NLog;

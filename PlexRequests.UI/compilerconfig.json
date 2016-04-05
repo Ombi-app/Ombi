@@ -6,5 +6,9 @@
   {
     "outputFile": "Content/pace.css",
     "inputFile": "Content/pace.scss"
+  },
+  {
+    "outputFile": "Content/moment.min.es5.js",
+    "inputFile": "Content/moment.min.js"
   }
 ]
