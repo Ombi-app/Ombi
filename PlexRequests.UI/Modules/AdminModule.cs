@@ -52,6 +52,7 @@ using PlexRequests.UI.Models;
 using System;
 
 using Nancy.Json;
+using Nancy.Security;
 
 namespace PlexRequests.UI.Modules
 {
