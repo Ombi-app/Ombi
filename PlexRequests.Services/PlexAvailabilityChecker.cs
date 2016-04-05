@@ -102,13 +102,14 @@ namespace PlexRequests.Services
                 Log.Trace("Search results from Plex for the following request: {0}", r.Title);
                 Log.Trace(results.DumpJson());
                 bool matchResult;
+                var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
                 switch (r.Type)
                 {
                     case RequestType.Movie:
-                        matchResult = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
+                        matchResult = MovieTvSearch(results, r.Title, releaseDate);
                         break;
                     case RequestType.TvShow:
-                        matchResult = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
+                        matchResult = MovieTvSearch(results, r.Title, releaseDate);
                         break;
                     case RequestType.Album:
                         matchResult = MusicSearch(results, r.Title, r.ArtistName);
