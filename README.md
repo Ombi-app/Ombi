@@ -52,9 +52,12 @@ sudo wget {release zip file url}
 sudo unzip PlexRequests.zip -d /opt/PlexRequests
 ```
 
-####Install Mono (this app will be used to actually run the .net libraries and executable)
+####Install Mono (must be on v4.x for compatibility)
 
 ```sudo apt-get install mono-devel```
+
+if you're not installing v4.x, check here for instructions:
+http://www.mono-project.com/docs/getting-started/install/linux/
 
 ####Verify Mono properly runs PlexRequests
 
