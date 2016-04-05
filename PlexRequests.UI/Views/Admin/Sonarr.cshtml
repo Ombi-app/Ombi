@@ -131,6 +131,9 @@
         {
             <text>
         var qualitySelected = @Model.QualityProfile;
+        if (!qualitySelected) {
+            return;
+        }
         var $form = $("#mainForm");
         $.ajax({
             type: $form.prop("method"),

@@ -300,7 +300,9 @@ namespace PlexRequests.UI.Modules
                     OtherMessage = album.OtherMessage,
                     AdminNotes = album.AdminNote,
                     TvSeriesRequestType = album.SeasonsRequested,
-                    MusicBrainzId = album.MusicBrainzId
+                    MusicBrainzId = album.MusicBrainzId,
+                    ArtistName = album.ArtistName
+
                 };
             }).ToList();
 
