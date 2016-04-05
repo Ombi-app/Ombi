@@ -8,6 +8,12 @@
     return s;
 }
 
+function Humanize(date) {
+    var mNow = moment();
+    var mDate = moment(date).local();
+    return moment.duration(mNow - mDate).humanize() + (mNow.isBefore(mDate) ? ' from now' : ' ago');
+}
+
 function generateNotify(message, type) {
     // type = danger, warning, info, successs
     $.notify({
