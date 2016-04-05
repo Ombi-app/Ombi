@@ -37,6 +37,7 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
     var $ml = $('#movieList');
     var $tvl = $('#tvList');
+    var $musicL = $('#musicList');
 
     $('.approve-category').hide();
     if (target === "#TvShowTab") {
@@ -57,7 +58,16 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if ($ml.mixItUp('isLoaded')) $ml.mixItUp('destroy');
         $ml.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
-    //$('.mix[data-bound]').removeAttr('data-bound');
+
+    if (target === "#MusicTab") {
+        $('#approveMusic').show();
+        if ($musicL.mixItUp('isLoaded')) {
+            activeState = $musicL.mixItUp('getState');
+            $musicL.mixItUp('destroy');
+        }
+        if ($musicL.mixItUp('isLoaded')) $ml.mixItUp('destroy');
+        $musicL.mixItUp(mixItUpConfig(activeState)); // init or reinit
+    }
 });
 
 // Approve all
@@ -424,7 +434,6 @@ function initLoad() {
     movieLoad();
     tvLoad();
     albumLoad();
-    //noResultsMusic
 }
 
 function movieLoad() {
