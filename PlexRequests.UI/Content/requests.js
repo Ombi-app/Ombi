@@ -46,6 +46,10 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             activeState = $ml.mixItUp('getState');
             $ml.mixItUp('destroy');
         }
+        if ($musicL.mixItUp('isLoaded')) {
+            activeState = $musicL.mixItUp('getState');
+            $musicL.mixItUp('destroy');
+        }
         if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
         $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
@@ -55,15 +59,23 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             activeState = $tvl.mixItUp('getState');
             $tvl.mixItUp('destroy');
         }
+        if ($musicL.mixItUp('isLoaded')) {
+            activeState = $musicL.mixItUp('getState');
+            $musicL.mixItUp('destroy');
+        }
         if ($ml.mixItUp('isLoaded')) $ml.mixItUp('destroy');
         $ml.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
 
     if (target === "#MusicTab") {
         $('#approveMusic').show();
-        if ($musicL.mixItUp('isLoaded')) {
-            activeState = $musicL.mixItUp('getState');
-            $musicL.mixItUp('destroy');
+        if ($tvl.mixItUp('isLoaded')) {
+            activeState = $tvl.mixItUp('getState');
+            $tvl.mixItUp('destroy');
+        }
+        if ($ml.mixItUp('isLoaded')) {
+            activeState = $ml.mixItUp('getState');
+            $ml.mixItUp('destroy');
         }
         if ($musicL.mixItUp('isLoaded')) $ml.mixItUp('destroy');
         $musicL.mixItUp(mixItUpConfig(activeState)); // init or reinit

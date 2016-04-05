@@ -108,7 +108,7 @@ namespace PlexRequests.Services.Tests
             var requestMock = new Mock<IRequestService>();
             var plexMock = new Mock<IPlexApi>();
 
-            var searchResult = new PlexSearch { Directory = new List<Directory1> { new Directory1 { Title = "title2", Year = "1992", ParentTitle = "dIzZy" } } };
+            var searchResult = new PlexSearch { Directory = new List<Directory1> { new Directory1 { Title = "titale2", Year = "1992", ParentTitle = "dIzZy" } } };
 
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings { Ip = "abc" });
             authMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings { PlexAuthToken = "abc" });

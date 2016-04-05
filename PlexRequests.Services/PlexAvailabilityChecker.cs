@@ -235,7 +235,7 @@ namespace PlexRequests.Services
             {
                 foreach (var r in results.Directory)
                 {
-                    var titleMatch = r.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase);
+                    var titleMatch = r.Title.Contains(title);
                     var artistMatch = r.ParentTitle.Equals(artist, StringComparison.CurrentCultureIgnoreCase);
                     if (titleMatch && artistMatch)
                     {
