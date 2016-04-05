@@ -495,7 +495,7 @@ function tvLoad() {
 };
 
 function albumLoad() {
-    var $albumL = $('#MusicList');
+    var $albumL = $('#musicList');
     if ($albumL.mixItUp('isLoaded')) {
         activeState = $albumL.mixItUp('getState');
         $albumL.mixItUp('destroy');
