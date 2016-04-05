@@ -55,6 +55,8 @@ using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System;
 
+using Nancy.Json;
+
 namespace PlexRequests.UI.Modules
 {
     public class AdminModule : NancyModule
@@ -607,7 +609,8 @@ namespace PlexRequests.UI.Modules
 
         private Response LoadLogs()
         {
-            var allLogs = LogsRepo.GetAll();
+            JsonSettings.MaxJsonLength = int.MaxValue;
+            var allLogs = LogsRepo.GetAll().OrderByDescending(x => x.Id).Take(200);
             var model = new DatatablesModel<LogEntity> {Data = new List<LogEntity>()};
             foreach (var l in allLogs)
             {
