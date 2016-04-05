@@ -527,7 +527,7 @@ function buildRequestContext(result, type) {
         year: result.releaseYear,
         type: type,
         status: result.status,
-        releaseDate: result.releaseDate,
+        releaseDate: moment.duration(moment() - moment(result.releaseDate).local()).humanize() + ' ago',
         releaseDateTicks: result.releaseDateTicks,
         approved: result.approved,
         requestedUsers: result.requestedUsers ? result.requestedUsers.join(', ') : '',
