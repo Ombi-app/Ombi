@@ -303,6 +303,8 @@ namespace PlexRequests.Api.Models.Plex
         public string AddedAt { get; set; }
         [XmlAttribute(AttributeName = "updatedAt")]
         public string UpdatedAt { get; set; }
+        [XmlAttribute(AttributeName = "parentTitle")]
+        public string ParentTitle { get; set; }
     }
 
 
@@ -310,7 +312,7 @@ namespace PlexRequests.Api.Models.Plex
     public class PlexSearch
     {
         [XmlElement(ElementName = "Directory")]
-        public Directory1 Directory { get; set; }
+        public List<Directory1> Directory { get; set; }
         [XmlElement(ElementName = "Video")]
         public List<Video> Video { get; set; }
         [XmlElement(ElementName = "Provider")]

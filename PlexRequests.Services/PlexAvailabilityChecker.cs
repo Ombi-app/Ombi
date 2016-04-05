@@ -101,23 +101,23 @@ namespace PlexRequests.Services
 
                 Log.Trace("Search results from Plex for the following request: {0}", r.Title);
                 Log.Trace(results.DumpJson());
-                var directoryResultVal = false;
+                bool matchResult;
                 switch (r.Type)
                 {
                     case RequestType.Movie:
-                        directoryResultVal = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
+                        matchResult = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
                         break;
                     case RequestType.TvShow:
-                        directoryResultVal = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
+                        matchResult = MovieTvSearch(results, r.Title, r.ReleaseDate.ToString("yyyy"));
                         break;
                     case RequestType.Album:
-                        directoryResultVal = MusicSearch(results, r.Title, r.ArtistName);
+                        matchResult = MusicSearch(results, r.Title, r.ArtistName);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
 
-                if (directoryResultVal)
+                if (matchResult)
                 {
                     r.Available = true;
                     modifiedModel.Add(r);
@@ -134,39 +134,6 @@ namespace PlexRequests.Services
             if (modifiedModel.Any())
             {
                 RequestService.BatchUpdate(modifiedModel);
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified search term is available.
-        /// </summary>
-        /// <param name="title">The search term.</param>
-        /// <param name="year">The year.</param>
-        /// <returns></returns>
-        /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
-        public bool IsAvailable(string title, string year)
-        {
-            Log.Trace("Checking if the following {0} {1} is available in Plex", title, year);
-            var plexSettings = Plex.GetSettings();
-            var authSettings = Auth.GetSettings();
-
-            if (!ValidateSettings(plexSettings, authSettings))
-            {
-                Log.Warn("The settings are not configured");
-                throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
-            }
-            var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-            if (!string.IsNullOrEmpty(year))
-            {
-                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
-                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase) && results.Directory?.Year == year;
-                return result?.Title != null || directoryTitle;
-            }
-            else
-            {
-                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
-                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase);
-                return result?.Title != null || directoryTitle;
             }
         }
 
@@ -218,14 +185,29 @@ namespace PlexRequests.Services
             if (!string.IsNullOrEmpty(year))
             {
                 var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
-                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase) && results.Directory?.Year == year;
-                return result?.Title != null || directoryTitle;
+
+                var directoryResult = false;
+                if (results.Directory != null)
+                {
+                    if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && d.Year == year))
+                    {
+                        directoryResult = true;
+                    }
+                }
+                return result?.Title != null || directoryResult;
             }
             else
             {
                 var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
-                var directoryTitle = string.Equals(results.Directory?.Title, title, StringComparison.CurrentCultureIgnoreCase);
-                return result?.Title != null || directoryTitle;
+                var directoryResult = false;
+                if (results.Directory != null)
+                {
+                    if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        directoryResult = true;
+                    }
+                }
+                return result?.Title != null || directoryResult;
             }
         }
 
@@ -238,7 +220,15 @@ namespace PlexRequests.Services
         /// <returns></returns>
         private bool MusicSearch(PlexSearch results, string title, string artist)
         {
-            //TODO
+            foreach (var r in results.Directory)
+            {
+                var titleMatch = r.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase);
+                var artistMatch = r.ParentTitle.Equals(artist, StringComparison.CurrentCultureIgnoreCase);
+                if (titleMatch && artistMatch)
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
