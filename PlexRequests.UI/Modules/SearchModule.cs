@@ -42,6 +42,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Exceptions;
+using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -240,7 +241,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString(),null, PlexType.Movie))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} is already in Plex!" });
                 }
@@ -376,7 +377,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4))) // Take only the year Format = 2014-01-01
+                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4), null, PlexType.TvShow)) // Take only the year Format = 2014-01-01
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
@@ -475,9 +476,9 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
-        private bool CheckIfTitleExistsInPlex(string title, string year)
+        private bool CheckIfTitleExistsInPlex(string title, string year, string artist, PlexType type)
         {
-            var result = Checker.IsAvailable(title, year);
+            var result = Checker.IsAvailable(title, year, artist, type);
             return result;
         }
 
