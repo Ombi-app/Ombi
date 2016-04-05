@@ -112,7 +112,7 @@ namespace PlexRequests.Services
                         matchResult = MovieTvSearch(results, r.Title, releaseDate);
                         break;
                     case RequestType.Album:
-                        matchResult = MusicSearch(results, r.Title, r.ArtistName);
+                        matchResult = AlbumSearch(results, r.Title, r.ArtistName);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -168,7 +168,7 @@ namespace PlexRequests.Services
                 case PlexType.TvShow:
                     return MovieTvSearch(results, title, year);
                 case PlexType.Music:
-                    return MusicSearch(results, title, artist);
+                    return AlbumSearch(results, title, artist);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -183,32 +183,42 @@ namespace PlexRequests.Services
         /// <returns></returns>
         private bool MovieTvSearch(PlexSearch results, string title, string year)
         {
-            if (!string.IsNullOrEmpty(year))
+            try
             {
-                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
 
-                var directoryResult = false;
-                if (results.Directory != null)
+                if (!string.IsNullOrEmpty(year))
                 {
-                    if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && d.Year == year))
+                    var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
+
+                    var directoryResult = false;
+                    if (results.Directory != null)
                     {
-                        directoryResult = true;
+                        if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && d.Year == year))
+                        {
+                            directoryResult = true;
+                        }
                     }
+                    return result?.Title != null || directoryResult;
                 }
-                return result?.Title != null || directoryResult;
+                else
+                {
+                    var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
+                    var directoryResult = false;
+                    if (results.Directory != null)
+                    {
+                        if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            directoryResult = true;
+                        }
+                    }
+                    return result?.Title != null || directoryResult;
+                }
             }
-            else
+            catch (Exception e)
             {
-                var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
-                var directoryResult = false;
-                if (results.Directory != null)
-                {
-                    if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
-                    {
-                        directoryResult = true;
-                    }
-                }
-                return result?.Title != null || directoryResult;
+                Log.Error("Could not finish the Movie/TV check in Plex because of an exception:");
+                Log.Error(e);
+                return false;
             }
         }
 
@@ -219,16 +229,24 @@ namespace PlexRequests.Services
         /// <param name="title">The title.</param>
         /// <param name="artist">The artist.</param>
         /// <returns></returns>
-        private bool MusicSearch(PlexSearch results, string title, string artist)
+        private bool AlbumSearch(PlexSearch results, string title, string artist)
         {
-            foreach (var r in results.Directory)
+            try
             {
-                var titleMatch = r.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase);
-                var artistMatch = r.ParentTitle.Equals(artist, StringComparison.CurrentCultureIgnoreCase);
-                if (titleMatch && artistMatch)
+                foreach (var r in results.Directory)
                 {
-                    return true;
+                    var titleMatch = r.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase);
+                    var artistMatch = r.ParentTitle.Equals(artist, StringComparison.CurrentCultureIgnoreCase);
+                    if (titleMatch && artistMatch)
+                    {
+                        return true;
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Could not finish the Album check in Plex because of an exception:");
+                Log.Error(e);
             }
             return false;
         }
