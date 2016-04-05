@@ -111,24 +111,7 @@ namespace PlexRequests.UI.Helpers
                     return false;
                 }
             }
-            var addedArtist = index.FirstOrDefault(x => x.ArtistID == request.ArtistId);
-            var artistName = addedArtist?.ArtistName ?? string.Empty;
-            while (artistName.Contains("Fetch failed"))
-            {
-                Thread.Sleep(WaitTime);
-                await Api.RefreshArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
-
-                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
-
-                artistName = index?.FirstOrDefault(x => x.ArtistID == request.ArtistId)?.ArtistName ?? string.Empty;
-                if (counter > CounterMax)
-                {
-                    Log.Trace("Artist fetch has failed. Counter = {0}. Returning false", counter);
-                    Log.Warn("Artist in headphones fetch has failed, we have tried refreshing the artist but no luck.");
-                    return false;
-                }
-            }
-
+            
             counter = 0;
             var artistStatus = index.Where(x => x.ArtistID == request.ArtistId).Select(x => x.Status).FirstOrDefault();
             while (artistStatus != "Active")
@@ -145,6 +128,27 @@ namespace PlexRequests.UI.Helpers
                     return false;
                 }
             }
+
+            var addedArtist = index.FirstOrDefault(x => x.ArtistID == request.ArtistId);
+            var artistName = addedArtist?.ArtistName ?? string.Empty;
+            counter = 0;
+            while (artistName.Contains("Fetch failed"))
+            {
+                Thread.Sleep(WaitTime);
+                await Api.RefreshArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
+
+                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
+
+                artistName = index?.FirstOrDefault(x => x.ArtistID == request.ArtistId)?.ArtistName ?? string.Empty;
+                counter++;
+                if (counter > CounterMax)
+                {
+                    Log.Trace("Artist fetch has failed. Counter = {0}. Returning false", counter);
+                    Log.Warn("Artist in headphones fetch has failed, we have tried refreshing the artist but no luck.");
+                    return false;
+                }
+            }
+
             return true;
         }
 

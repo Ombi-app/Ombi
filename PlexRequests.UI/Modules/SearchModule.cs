@@ -502,8 +502,28 @@ namespace PlexRequests.UI.Modules
 
 
             Log.Debug("This is a new request");
-
+            
             var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
+            DateTime release;
+            DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
+
+            var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
+            if (artist == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "We could not find the artist on MusicBrainz. Please try again later or contact your admin" });
+            }
+
+            var alreadyInPlex = CheckIfTitleExistsInPlex(albumInfo.title, release.ToString("yyyy"), artist.name, PlexType.Music);
+
+            if (alreadyInPlex)
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = $"{albumInfo.title} is already in Plex!"
+                });
+            }
+
             var img = GetMusicBrainzCoverArt(albumInfo.id);
 
             Log.Trace("Album Details:");
@@ -511,14 +531,6 @@ namespace PlexRequests.UI.Modules
             Log.Trace("CoverArt Details:");
             Log.Trace(img.DumpJson());
 
-            DateTime release;
-            DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
-
-            var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
-            if (artist == null)
-            {
-                return Response.AsJson(new JsonResponseModel {Result = false, Message = "We could not find the artist on MusicBrainz. Please try again later or contact your admin"});
-            }
 
             var model = new RequestedModel
             {
@@ -559,6 +571,7 @@ namespace PlexRequests.UI.Modules
 
                 var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
                 sender.AddAlbum(model);
+                model.Approved = true;
                 RequestService.AddRequest(model);
 
                 return

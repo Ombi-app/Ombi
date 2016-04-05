@@ -26,8 +26,6 @@
 #endregion
 using System;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 
 using Octokit;
@@ -62,7 +60,10 @@ namespace PlexRequests.Core
             };
 
             var latestRelease = GetLatestRelease();
-
+            if (latestRelease.Result == null)
+            {
+                return new StatusModel { Version = "Unknown" };
+            }
             var latestVersionArray = latestRelease.Result.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
             var latestVersion = latestVersionArray.Length > 1 ? latestVersionArray[1] : string.Empty;
 
