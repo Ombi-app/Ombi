@@ -25,7 +25,8 @@ CREATE TABLE IF NOT EXISTS RequestBlobs
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     ProviderId							INTEGER NOT NULL,
     Type								INTEGER NOT NULL,
-    Content								BLOB NOT NULL
+    Content								BLOB NOT NULL,
+	MusicId								TEXT
 );
 CREATE UNIQUE INDEX IF NOT EXISTS RequestBlobs_Id ON RequestBlobs (Id);
 
@@ -40,3 +41,9 @@ CREATE TABLE IF NOT EXISTS Logs
     Exception							varchar(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
+
+CREATE TABLE IF NOT EXISTS DBInfo
+(
+    SchemaVersion									INTEGER
+
+);

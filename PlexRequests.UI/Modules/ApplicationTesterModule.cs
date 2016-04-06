@@ -43,7 +43,7 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> authSettings, ISickRageApi srApi) : base("test")
+            ISettingsService<AuthenticationSettings> authSettings, ISickRageApi srApi, IHeadphonesApi hpApi) : base("test")
         {
             this.RequiresAuthentication();
             
@@ -52,11 +52,13 @@ namespace PlexRequests.UI.Modules
             PlexApi = plexApi;
             AuthSettings = authSettings;
             SickRageApi = srApi;
+            HeadphonesApi = hpApi;
 
             Post["/cp"] = _ => CouchPotatoTest();
             Post["/sonarr"] = _ => SonarrTest();
             Post["/plex"] = _ => PlexTest();
             Post["/sickrage"] = _ => SickRageTest();
+            Post["/headphones"] = _ => HeadphonesTest();
 
         }
         
@@ -65,6 +67,7 @@ namespace PlexRequests.UI.Modules
         private ICouchPotatoApi CpApi { get; }
         private IPlexApi PlexApi { get; }
         private ISickRageApi SickRageApi { get; }
+        private IHeadphonesApi HeadphonesApi { get; }
         private ISettingsService<AuthenticationSettings> AuthSettings { get; }
 
         private Response CouchPotatoTest()
@@ -166,6 +169,36 @@ namespace PlexRequests.UI.Modules
                     message = $"Could not connect to SickRage, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+
+        private Response HeadphonesTest()
+        {
+            var settings = this.Bind<HeadphonesSettings>();
+            try
+            {
+                var result = HeadphonesApi.GetVersion(settings.ApiKey, settings.FullUri);
+                if (!string.IsNullOrEmpty(result.latest_version))
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = true,
+                            Message = "Connected to Headphones successfully!"
+                        });
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Headphones, please check your settings." });
+            }
+            catch (ApplicationException e)
+            {
+                Log.Warn("Exception thrown when attempting to get Headphones's status: ");
+                Log.Warn(e);
+                var message = $"Could not connect to Headphones, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to Headphones, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message }); ;
             }
         }
     }

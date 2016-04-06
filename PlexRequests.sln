@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI", "PlexRequests.UI\PlexRequests.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
@@ -17,7 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
 		appveyor.yml = appveyor.yml
-		.github\ISSUE_TEMPLATE.md = .github\ISSUE_TEMPLATE.md
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -33,8 +32,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api.Models", "PlexRequests.Api.Models\PlexRequests.Api.Models.csproj", "{CB37A5F8-6DFC-4554-99D3-A42B502E4591}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Services.Tests", "PlexRequests.Services.Tests\PlexRequests.Services.Tests.csproj", "{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers.Tests", "PlexRequests.Helpers.Tests\PlexRequests.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -86,10 +83,6 @@ Global
 		{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

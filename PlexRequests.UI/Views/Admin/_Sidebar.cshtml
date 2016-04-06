@@ -52,6 +52,14 @@
         {
             <a class="list-group-item" href="/admin/sickrage">SickRage</a>
         }
+        @if (Context.Request.Path == "/admin/headphones")
+        {
+            <a class="list-group-item active" href="/admin/headphones">Headphones (Beta)</a>
+        }
+        else
+        {
+            <a class="list-group-item" href="/admin/headphones">Headphones (Beta)</a>
+        }
 
         @if (Context.Request.Path == "/admin/emailnotification")
         {

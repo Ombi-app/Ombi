@@ -83,7 +83,7 @@ namespace PlexRequests.Helpers
         /// <param name="key">The key.</param>
         /// <param name="data">The object we want to store.</param>
         /// <param name="cacheTime">The amount of time we want to cache the object.</param>
-        public void Set(string key, object data, int cacheTime)
+        public void Set(string key, object data, int cacheTime = 20)
         {
             var policy = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime) };
             Cache.Add(new CacheItem(key, data), policy);

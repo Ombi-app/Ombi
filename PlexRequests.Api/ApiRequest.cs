@@ -26,13 +26,9 @@
 #endregion
 using System;
 using System.IO;
-using System.Net;
-using System.Text;
-using System.Xml;
 using System.Xml.Serialization;
 
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 using NLog;
 
@@ -68,6 +64,21 @@ namespace PlexRequests.Api
 
         }
 
+        public IRestResponse Execute(IRestRequest request, Uri baseUri)
+        {
+            var client = new RestClient { BaseUrl = baseUri };
+
+            var response = client.Execute(request);
+
+            if (response.ErrorException != null)
+            {
+                var message = "Error retrieving response. Check inner details for more info.";
+                throw new ApplicationException(message, response.ErrorException);
+            }
+
+            return response;
+        }
+
         public T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class
         {
             var client = new RestClient { BaseUrl = baseUri };
@@ -96,20 +107,13 @@ namespace PlexRequests.Api
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-            try
-            {
-                var json = JsonConvert.DeserializeObject<T>(response.Content);
-                return json;
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-                Log.Info(response.Content);
-                throw;
-            }
+
+            var json = JsonConvert.DeserializeObject<T>(response.Content);
+
+            return json;
         }
 
-        public T DeserializeXml<T>(string input)
+        private T DeserializeXml<T>(string input)
              where T : class
         {
             var ser = new XmlSerializer(typeof(T));

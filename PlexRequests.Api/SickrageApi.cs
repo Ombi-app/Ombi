@@ -74,17 +74,18 @@ namespace PlexRequests.Api
 
             var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
 
-
             if (obj.result != "failure")
             {
                 var sw = new Stopwatch();
                 sw.Start();
 
-                // Check to see if it's been added yet.
-                var showInfo = new SickRageShowInformation { message = "Show not found" };
-                while (showInfo.message.Equals("Show not found", StringComparison.CurrentCultureIgnoreCase))
+                var seasonIncrement = 0;
+                var seasonList = new SickRageSeasonList();
+                while (seasonIncrement < seasonCount)
                 {
-                    showInfo = CheckShowHasBeenAdded(tvdbId, apiKey, baseUrl);
+                    seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
+                    seasonIncrement = seasonList.data?.Length ?? 0;
+                    
                     if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
                     {
                         Log.Warn("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
@@ -93,8 +94,6 @@ namespace PlexRequests.Api
                 }
                 sw.Stop();
             }
-
-
             if (seasons.Length > 0)
             {
                 //handle the seasons requested
@@ -123,6 +122,28 @@ namespace PlexRequests.Api
             return obj;
         }
 
+        public SickRageSeasonList VerifyShowHasLoaded(int tvdbId, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=show.seasonlist",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("apiKey", apiKey);
+            request.AddQueryParameter("tvdbid", tvdbId.ToString());
+
+            try
+            {
+                var obj = Api.ExecuteJson<SickRageSeasonList>(request, baseUrl);
+                return obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new SickRageSeasonList();
+            }
+        }
+
         public async Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl)
         {
             var request = new RestRequest
@@ -137,22 +158,6 @@ namespace PlexRequests.Api
 
             await Task.Run(() => Thread.Sleep(2000));
             return await Task.Run(() => Api.Execute<SickRageTvAdd>(request, baseUrl)).ConfigureAwait(false);
-        }
-
-
-        public SickRageShowInformation CheckShowHasBeenAdded(int tvdbId, string apiKey, Uri baseUrl)
-        {
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=show",
-                Method = Method.GET
-            };
-            request.AddUrlSegment("apiKey", apiKey);
-            request.AddQueryParameter("tvdbid", tvdbId.ToString());
-
-            var obj = Api.Execute<SickRageShowInformation>(request, baseUrl);
-
-            return obj;
         }
     }
 }

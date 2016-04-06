@@ -30,16 +30,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 using Mono.Data.Sqlite;
+using NLog;
 using PlexRequests.Api;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Core
 {
     public class Setup
     {
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private static DbConfiguration Db { get; set; }
         public string SetupDb()
         {
@@ -51,12 +54,40 @@ namespace PlexRequests.Core
             {
                 CreateDefaultSettingsPage();
             }
+            
+            var version = CheckSchema();
+            if (version > 0)
+            {
+                if (version > 1300 && version <= 1699)
+                {
+                    MigrateDbFrom1300();
+                    UpdateRequestBlobsTable();
+                }
+            }
 
-            MigrateDb();
             return Db.DbConnection().ConnectionString;
         }
 
         public static string ConnectionString => Db.DbConnection().ConnectionString;
+
+
+        private int CheckSchema()
+        {
+            var checker = new StatusChecker();
+            var status = checker.GetStatus();
+
+            var connection = Db.DbConnection();
+            var schema = connection.GetSchemaVersion();
+            if (schema == null)
+            {
+                connection.CreateSchema(status.DBVersion); // Set the default.
+                schema = connection.GetSchemaVersion();
+            }
+
+            var version = schema.SchemaVersion;
+
+            return version;
+        }
 
         private void CreateDefaultSettingsPage()
         {
@@ -72,8 +103,82 @@ namespace PlexRequests.Core
             s.SaveSettings(defaultSettings);
         }
 
-        private void MigrateDb() // TODO: Remove when no longer needed
+        public void CacheQualityProfiles()
         {
+            var mc = new MemoryCacheProvider();
+
+            try
+            {
+                Task.Run(() => { CacheSonarrQualityProfiles(mc); });
+                Task.Run(() => { CacheCouchPotatoQualityProfiles(mc); });
+                // we don't need to cache sickrage profiles, those are static
+                // TODO: cache headphones profiles?
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to cache quality profiles on startup!");
+            }
+        }
+
+        private void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
+        {
+            try
+            {
+                Log.Info("Executing GetSettings call to Sonarr for quality profiles");
+                var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var sonarrSettings = sonarrSettingsService.GetSettings();
+                if (sonarrSettings.Enabled)
+                {
+                    Log.Info("Begin executing GetProfiles call to Sonarr for quality profiles");
+                    SonarrApi sonarrApi = new SonarrApi();
+                    var profiles = sonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    cacheProvider.Set(CacheKeys.SonarrQualityProfiles, profiles);
+                    Log.Info("Finished executing GetProfiles call to Sonarr for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to cache Sonarr quality profiles!", ex);
+            }
+        }
+
+        private void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
+        {
+            try
+            {
+                Log.Info("Executing GetSettings call to CouchPotato for quality profiles");
+                var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var cpSettings = cpSettingsService.GetSettings();
+                if (cpSettings.Enabled)
+                {
+                    Log.Info("Begin executing GetProfiles call to CouchPotato for quality profiles");
+                    CouchPotatoApi cpApi = new CouchPotatoApi();
+                    var profiles = cpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey);
+                    cacheProvider.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
+                    Log.Info("Finished executing GetProfiles call to CouchPotato for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Failed to cache CouchPotato quality profiles!", ex);
+            }
+        }
+
+        private void UpdateRequestBlobsTable() // TODO: Remove in v1.7
+        {
+            try
+            {
+                TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Tried updating the schema to alter the request blobs table");
+                Log.Error(e);
+            }
+        }
+        private void MigrateDbFrom1300() // TODO: Remove in v1.7
+        {
+
             var result = new List<long>();
             RequestedModel[] requestedModels;
             var repo = new GenericRepository<RequestedModel>(Db, new MemoryCacheProvider());
@@ -113,7 +218,7 @@ namespace PlexRequests.Core
                     Issues = r.Issues,
                     OtherMessage = r.OtherMessage,
                     Overview = show.summary.RemoveHtml(),
-                    RequestedBy = r.RequestedBy,
+                    RequestedUsers = r.AllUsers, // should pull in the RequestedBy property and merge with RequestedUsers
                     RequestedDate = r.ReleaseDate,
                     Status = show.status
                 };
@@ -121,7 +226,7 @@ namespace PlexRequests.Core
                 result.Add(id);
             }
 
-            foreach (var source in requestedModels.Where(x => x.Type== RequestType.Movie))
+            foreach (var source in requestedModels.Where(x => x.Type == RequestType.Movie))
             {
                 var id = jsonRepo.AddRequest(source);
                 result.Add(id);

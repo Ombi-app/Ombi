@@ -24,17 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Nancy;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
-using PlexRequests.UI.Models;
+using System.Linq;
 
 namespace PlexRequests.UI.Helpers
 {
@@ -51,8 +48,18 @@ namespace PlexRequests.UI.Helpers
 
         public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
+            return SendToSonarr(sonarrSettings, model, string.Empty);
+        }
+
+        public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
+        {
             int qualityProfile;
-            int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+            
+            if (!string.IsNullOrEmpty(qualityId) || !int.TryParse(qualityId, out qualityProfile)) // try to parse the passed in quality, otherwise use the settings default quality
+            {
+                int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+            }
+            
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
@@ -65,13 +72,24 @@ namespace PlexRequests.UI.Helpers
 
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
         {
-            var result = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, sickRageSettings.QualityProfile,
+            return SendToSickRage(sickRageSettings, model, sickRageSettings.QualityProfile);
+        }
+
+        public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model, string qualityId)
+        {
+            if (!sickRageSettings.Qualities.Any(x => x.Key == qualityId))
+            {
+                qualityId = sickRageSettings.QualityProfile;
+            }
+
+            var apiResult = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, qualityId,
                            sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
+            var result = apiResult.Result;
             Log.Trace("SickRage Add Result: ");
             Log.Trace(result.DumpJson());
 
-            return result.Result;
+            return result;
         }
     }
 }

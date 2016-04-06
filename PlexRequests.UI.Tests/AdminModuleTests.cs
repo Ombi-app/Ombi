@@ -44,6 +44,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Tests
 {
@@ -59,6 +60,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<EmailNotificationSettings>> EmailMock { get; set; }
         private Mock<ISettingsService<PushbulletNotificationSettings>> PushbulletSettings { get; set; }
         private Mock<ISettingsService<PushoverNotificationSettings>> PushoverSettings { get; set; }
+        private Mock<ISettingsService<HeadphonesSettings>> HeadphonesSettings { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
         private Mock<ISonarrApi> SonarrApiMock { get; set; }
         private Mock<IPushbulletApi> PushbulletApi { get; set; }
@@ -66,6 +68,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ICouchPotatoApi> CpApi { get; set; }
         private Mock<IRepository<LogEntity>> LogRepo { get; set; }
         private Mock<INotificationService> NotificationService { get; set; }
+        private Mock<ICacheProvider> Cache { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -94,6 +97,8 @@ namespace PlexRequests.UI.Tests
             PushoverSettings = new Mock<ISettingsService<PushoverNotificationSettings>>();
             PushoverApi = new Mock<IPushoverApi>();
             NotificationService = new Mock<INotificationService>();
+            HeadphonesSettings = new Mock<ISettingsService<HeadphonesSettings>>();
+            Cache = new Mock<ICacheProvider>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -114,6 +119,8 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverSettings.Object);
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
+                with.Dependency(HeadphonesSettings.Object);
+                with.Dependencies(Cache.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {

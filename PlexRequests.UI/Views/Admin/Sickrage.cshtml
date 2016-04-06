@@ -75,15 +75,10 @@
                 <label for="profiles" class="control-label ">Quality Profiles</label>
                 <div id="profiles">
                     <select class="form-control form-control-custom" value="selected">
-                        <option id="default" value="default">Use Deafult</option>
-                        <option id="sdtv" value="sdtv">SD TV</option>
-                        <option id="sddvd" value="sddvd">SD DVD</option>
-                        <option id="hdtv" value="hdtv">HD TV</option>
-                        <option id="rawhdtv" value="rawhdtv">Raw HD TV</option>
-                        <option id="hdwebdl" value="hdwebdl">HD Web DL</option>
-                        <option id="fullhdwebdl" value="fullhdwebdl">Full HD Web DL</option>
-                        <option id="hdbluray" value="hdbluray">HD Bluray</option>
-                        <option id="fullhdbluray" value="fullhdbluray">Full HD Bluray</option>
+                        @foreach (var quality in Model.Qualities)
+                        {
+                            <option id="@quality.Key" value="@quality.Key">@quality.Value</option>
+                        }
                     </select>
                 </div>
             </div>

@@ -12,12 +12,12 @@ namespace PlexRequests.UI.Jobs
             //typeof(AvailabilityUpdateService);
             var container = TinyIoCContainer.Current;
 
-            var a= container.ResolveAll(typeof(T));
+            var a= container.Resolve(typeof(T));
 
             object outT;
             container.TryResolve(typeof(T), out outT);
 
-            return (T)outT;
+            return (T)a;
         }
     }
 }

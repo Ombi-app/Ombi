@@ -55,7 +55,7 @@ namespace PlexRequests.Helpers
         /// <param name="key">The key.</param>
         /// <param name="data">The object we want to store.</param>
         /// <param name="cacheTime">The amount of time we want to cache the object.</param>
-        void Set(string key, object data, int cacheTime);
+        void Set(string key, object data, int cacheTime = 20);
 
         /// <summary>
         /// Removes the specified object from the cache.

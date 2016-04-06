@@ -69,10 +69,6 @@
       <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Humanizer, Version=2.0.1.0, Culture=neutral, PublicKeyToken=979442b78dfc278e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Humanizer.Core.2.0.1\lib\dotnet\Humanizer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
       <Private>True</Private>
@@ -168,9 +164,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\QualityModel.cs" />
+    <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />
     <Compile Include="Validators\EmailNotificationSettingsValidator.cs" />
@@ -246,6 +246,15 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\jquery.mixitup.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\moment.min.es5.js">
+      <DependentUpon>moment.min.js</DependentUpon>
+    </Content>
+    <Content Include="Content\moment.min.es5.min.js">
+      <DependentUpon>moment.min.es5.js</DependentUpon>
+    </Content>
+    <Content Include="Content\moment.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\pace.css">
@@ -369,6 +378,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\PushoverNotifications.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\Headphones.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

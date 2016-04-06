@@ -24,14 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using NLog;
 
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
@@ -52,81 +55,200 @@ namespace PlexRequests.Services
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private IRequestService RequestService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        private IPlexApi PlexApi { get; set; }
+        private IPlexApi PlexApi { get; }
 
 
         public void CheckAndUpdateAll(long check)
         {
+            Log.Trace("This is check no. {0}", check);
+            Log.Trace("Getting the settings");
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
+            Log.Trace("Getting all the requests");
             var requests = RequestService.GetAll();
 
-            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
-            if (!ValidateSettings(plexSettings, authSettings, requestedModels))
+            var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
+            Log.Trace("Requests Count {0}", requestedModels.Length);
+
+            if (!ValidateSettings(plexSettings, authSettings) || !requestedModels.Any())
             {
+                Log.Info("Validation of the settings failed or there is no requests.");
                 return;
             }
 
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
-                var result = results.Video.FirstOrDefault(x => x.Title == r.Title);
-                var originalRequest = RequestService.Get(r.Id);
+                Log.Trace("We are going to see if Plex has the following title: {0}", r.Title);
+                PlexSearch results;
+                try
+                {
+                    results = PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri);
+                }
+                catch (Exception e)
+                {
+                    Log.Error("We failed to search Plex for the following request:");
+                    Log.Error(r.DumpJson());
+                    Log.Error(e);
+                    break; // Let's finish processing and not crash the process, there is a reason why we cannot connect.
+                }
 
-                originalRequest.Available = result != null;
-                modifiedModel.Add(originalRequest);
+                if (results == null)
+                {
+                    Log.Trace("Could not find any matching result for this title.");
+                    continue;
+                }
+
+                Log.Trace("Search results from Plex for the following request: {0}", r.Title);
+                Log.Trace(results.DumpJson());
+                bool matchResult;
+                var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
+                switch (r.Type)
+                {
+                    case RequestType.Movie:
+                        matchResult = MovieTvSearch(results, r.Title, releaseDate);
+                        break;
+                    case RequestType.TvShow:
+                        matchResult = MovieTvSearch(results, r.Title, releaseDate);
+                        break;
+                    case RequestType.Album:
+                        matchResult = AlbumSearch(results, r.Title, r.ArtistName);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                if (matchResult)
+                {
+                    r.Available = true;
+                    modifiedModel.Add(r);
+                    continue;
+                }
+
+                Log.Trace("The result from Plex where the title's match was null, so that means the content is not yet in Plex.");
             }
 
-            RequestService.BatchUpdate(modifiedModel);
+            Log.Trace("Updating the requests now");
+            Log.Trace("Requests that will be updates:");
+            Log.Trace(modifiedModel.SelectMany(x => x.Title).DumpJson());
+
+            if (modifiedModel.Any())
+            {
+                RequestService.BatchUpdate(modifiedModel);
+            }
         }
 
         /// <summary>
-        /// Determines whether the specified search term is available.
+        /// Determines whether the specified title is available.
         /// </summary>
-        /// <param name="title">The search term.</param>
+        /// <param name="title">The title.</param>
         /// <param name="year">The year.</param>
+        /// <param name="artist">The artist.</param>
+        /// <param name="type">The type.</param>
         /// <returns></returns>
         /// <exception cref="ApplicationSettingsException">The settings are not configured for Plex or Authentication</exception>
-        public bool IsAvailable(string title, string year)
+        /// <exception cref="System.ArgumentOutOfRangeException">null</exception>
+        public bool IsAvailable(string title, string year, string artist, PlexType type)
         {
+            Log.Trace("Checking if the following {0} {1} is available in Plex", title, year);
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
+                Log.Warn("The settings are not configured");
                 throw new ApplicationSettingsException("The settings are not configured for Plex or Authentication");
             }
-            if (!string.IsNullOrEmpty(year))
-            {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title) && x.Year == year);
-                var directoryTitle = results.Directory?.Title == title && results.Directory?.Year == year;
-                return result?.Title != null || directoryTitle;
-            }
-            else
-            {
-                var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
-                var result = results.Video?.FirstOrDefault(x => x.Title.Contains(title));
-                var directoryTitle = results.Directory?.Title == title;
-                return result?.Title != null || directoryTitle;
-            }
+            var results = PlexApi.SearchContent(authSettings.PlexAuthToken, title, plexSettings.FullUri);
 
+            switch (type)
+            {
+                case PlexType.Movie:
+                    return MovieTvSearch(results, title, year);
+                case PlexType.TvShow:
+                    return MovieTvSearch(results, title, year);
+                case PlexType.Music:
+                    return AlbumSearch(results, title, artist);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
         }
 
-        private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth, IEnumerable<RequestedModel> requests)
+        /// <summary>
+        /// Searches the movies and TV shows on Plex.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="year">The year.</param>
+        /// <returns></returns>
+        private bool MovieTvSearch(PlexSearch results, string title, string year)
         {
-            if (plex.Ip == null || auth.PlexAuthToken == null || requests == null)
+            try
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+
+                if (!string.IsNullOrEmpty(year))
+                {
+                    var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase) && x.Year == year);
+
+                    var directoryResult = false;
+                    if (results.Directory != null)
+                    {
+                        if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && d.Year == year))
+                        {
+                            directoryResult = true;
+                        }
+                    }
+                    return result?.Title != null || directoryResult;
+                }
+                else
+                {
+                    var result = results.Video?.FirstOrDefault(x => x.Title.Equals(title, StringComparison.InvariantCultureIgnoreCase));
+                    var directoryResult = false;
+                    if (results.Directory != null)
+                    {
+                        if (results.Directory.Any(d => d.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase)))
+                        {
+                            directoryResult = true;
+                        }
+                    }
+                    return result?.Title != null || directoryResult;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Could not finish the Movie/TV check in Plex because of an exception:");
+                Log.Error(e);
                 return false;
             }
-            if (!requests.Any())
+        }
+
+        /// <summary>
+        /// Searches the music on Plex.
+        /// </summary>
+        /// <param name="results">The results.</param>
+        /// <param name="title">The title.</param>
+        /// <param name="artist">The artist.</param>
+        /// <returns></returns>
+        private bool AlbumSearch(PlexSearch results, string title, string artist)
+        {
+            try
             {
-                Log.Info("We have no requests to check if they are available on Plex.");
-                return false;
+                foreach (var r in results.Directory)
+                {
+                    var titleMatch = r.Title.Contains(title);
+                    var artistMatch = r.ParentTitle.Equals(artist, StringComparison.CurrentCultureIgnoreCase);
+                    if (titleMatch && artistMatch)
+                    {
+                        return true;
+                    }
+                }
             }
-            return true;
+            catch (Exception e)
+            {
+                Log.Error("Could not finish the Album check in Plex because of an exception:");
+                Log.Error(e);
+            }
+            return false;
         }
 
         private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth)

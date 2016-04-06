@@ -22,7 +22,9 @@
 
 .form-control-custom {
   background-color: #4e5d6c !important;
-  color: white !important; }
+  color: white !important;
+  border-radius: 0;
+  box-shadow: 0 0 0 !important; }
 
 h1 {
   font-size: 3.5rem !important;
@@ -39,6 +41,22 @@ label {
   display: inline-block !important;
   margin-bottom: 0.5rem !important;
   font-size: 16px !important; }
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  background: #4e5d6c; }
+
+.navbar .nav a .fa,
+.dropdown-menu a .fa {
+  font-size: 130%;
+  top: 1px;
+  position: relative;
+  display: inline-block;
+  margin-right: 5px; }
+
+.dropdown-menu a .fa {
+  top: 2px; }
 
 .btn-danger-outline {
   color: #d9534f !important;
@@ -125,4 +143,79 @@ label {
 
 #tvList .mix {
   display: none; }
+
+.scroll-top-wrapper {
+  position: fixed;
+  opacity: 0;
+  visibility: hidden;
+  overflow: hidden;
+  text-align: center;
+  z-index: 99999999;
+  background-color: #4e5d6c;
+  color: #eeeeee;
+  width: 50px;
+  height: 48px;
+  line-height: 48px;
+  right: 30px;
+  bottom: 30px;
+  padding-top: 2px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out; }
+
+.scroll-top-wrapper:hover {
+  background-color: #637689; }
+
+.scroll-top-wrapper.show {
+  visibility: visible;
+  cursor: pointer;
+  opacity: 1.0; }
+
+.scroll-top-wrapper i.fa {
+  line-height: inherit; }
+
+.no-search-results {
+  text-align: center; }
+
+.no-search-results .no-search-results-icon {
+  font-size: 10em;
+  color: #4e5d6c; }
+
+.no-search-results .no-search-results-text {
+  margin: 20px 0;
+  color: #ccc; }
+
+.form-control-search {
+  padding: 25px 105px 25px 16px; }
+
+.form-control-withbuttons {
+  padding-right: 105px; }
+
+.input-group-addon .btn-group {
+  position: absolute;
+  right: 45px;
+  z-index: 3;
+  top: 13px;
+  box-shadow: 0 0 0; }
+
+.input-group-addon .btn-group .btn {
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  padding: 3px 12px;
+  color: rgba(255, 255, 255, 0.7) !important; }
+
+.btn-split .btn {
+  border-radius: 0 !important; }
+
+.btn-split .btn:not(.dropdown-toggle) {
+  border-radius: 0.25rem 0 0 0.25rem !important; }
+
+.btn-split .btn.dropdown-toggle {
+  border-radius: 0 0.25rem 0.25rem 0 !important;
+  padding: 12px 8px; }
 

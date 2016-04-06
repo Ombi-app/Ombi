@@ -28,6 +28,7 @@
 using System;
 using Newtonsoft.Json;
 using PlexRequests.Helpers;
+using System.Collections.Generic;
 
 namespace PlexRequests.Core.SettingModels
 {
@@ -40,6 +41,23 @@ namespace PlexRequests.Core.SettingModels
         public string QualityProfile { get; set; }
         public bool Ssl { get; set; }
         public string SubDir { get; set; }
+        public Dictionary<string, string> Qualities
+        {
+            get
+            {
+                return new Dictionary<string, string>() {
+                    { "default", "Use Deafult" },
+                    { "sdtv", "SD TV" },
+                    { "sddvd", "SD DVD" },
+                    { "hdtv", "HD TV" },
+                    { "rawhdtv", "Raw HD TV" },
+                    { "hdwebdl", "HD Web DL" },
+                    { "fullhdwebdl", "Full HD Web DL" },
+                    { "hdbluray", "HD Bluray" },
+                    { "fullhdbluray", "Full HD Bluray" }
+                };
+            }
+        }
 
         [JsonIgnore]
         public Uri FullUri

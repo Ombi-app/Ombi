@@ -28,8 +28,6 @@
 using System;
 using System.Linq;
 
-using Humanizer;
-
 using Nancy;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
@@ -40,22 +38,45 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
+using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
+using System.Collections.Generic;
+using PlexRequests.Api.Interfaces;
+using System.Threading.Tasks;
 
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseModule
     {
-
-        public RequestsModule(IRequestService service, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<PlexSettings> plex, INotificationService notify) : base("requests")
+        public RequestsModule(
+            IRequestService service,
+            ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<PlexSettings> plex,
+            INotificationService notify,
+            ISettingsService<SonarrSettings> sonarrSettings,
+            ISettingsService<SickRageSettings> sickRageSettings,
+            ISettingsService<CouchPotatoSettings> cpSettings,
+            ICouchPotatoApi cpApi,
+            ISonarrApi sonarrApi,
+            ISickRageApi sickRageApi,
+            ICacheProvider cache) : base("requests")
         {
             Service = service;
             PrSettings = prSettings;
             PlexSettings = plex;
             NotificationService = notify;
+            SonarrSettings = sonarrSettings;
+            SickRageSettings = sickRageSettings;
+            CpSettings = cpSettings;
+            SonarrApi = sonarrApi;
+            SickRageApi = sickRageApi;
+            CpApi = cpApi;
+            Cache = cache;
 
             Get["/"] = _ => LoadRequests();
             Get["/movies"] = _ => GetMovies();
             Get["/tvshows"] = _ => GetTvShows();
+            Get["/albums"] = _ => GetAlbumRequests();
             Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
             Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
@@ -70,6 +91,13 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private ISettingsService<SickRageSettings> SickRageSettings { get; }
+        private ISettingsService<CouchPotatoSettings> CpSettings { get; }
+        private ISonarrApi SonarrApi { get; }
+        private ISickRageApi SickRageApi { get; }
+        private ICouchPotatoApi CpApi { get; }
+        private ICacheProvider Cache { get; }
 
         private Negotiator LoadRequests()
         {
@@ -77,60 +105,204 @@ namespace PlexRequests.UI.Modules
             return View["Index", settings];
         }
 
-        private Response GetMovies()
+        private Response GetMovies() // TODO: async await the API calls
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
-            var dbMovies = Service.GetAll().Where(x => x.Type == RequestType.Movie);
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
+
+            List<Task> taskList = new List<Task>();
+
+            List<RequestedModel> dbMovies = new List<RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate.Humanize(),
-                RequestedDate = movie.RequestedDate.Humanize(),
-                Approved = movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedBy = movie.RequestedBy,
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = isAdmin,
-                Issues = movie.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote
+                return Service.GetAll().Where(x => x.Type == RequestType.Movie);
+
+            }).ContinueWith((t) =>
+            {
+                dbMovies = t.Result.ToList();
+
+                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+                {
+                    dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
+                }
+            }));
+
+
+            List<QualityModel> qualities = new List<QualityModel>();
+
+            if (isAdmin)
+            {
+                var cpSettings = CpSettings.GetSettings();
+                if (cpSettings.Enabled)
+                {
+                    taskList.Add(Task.Factory.StartNew(() =>
+                    {
+                        return Cache.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
+                        {
+                            return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey); // TODO: cache this!
+                        });
+                    }).ContinueWith((t) =>
+                    {
+                        qualities = t.Result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
+                    }));
+                }
+            }
+
+            Task.WaitAll(taskList.ToArray());
+
+            var viewModel = dbMovies.Select(movie =>
+            {
+                return new RequestViewModel
+                {
+                    ProviderId = movie.ProviderId,
+                    Type = movie.Type,
+                    Status = movie.Status,
+                    ImdbId = movie.ImdbId,
+                    Id = movie.Id,
+                    PosterPath = movie.PosterPath,
+                    ReleaseDate = movie.ReleaseDate,
+                    ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                    RequestedDate = movie.RequestedDate,
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = movie.Available || movie.Approved,
+                    Title = movie.Title,
+                    Overview = movie.Overview,
+                    RequestedUsers = isAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                    Available = movie.Available,
+                    Admin = isAdmin,
+                    Issues = movie.Issues.ToString().CamelCaseToWords(),
+                    OtherMessage = movie.OtherMessage,
+                    AdminNotes = movie.AdminNote,
+                    Qualities = qualities.ToArray()
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
         }
 
-        private Response GetTvShows()
+        private Response GetTvShows() // TODO: async await the API calls
         {
+            var settings = PrSettings.GetSettings();
             var isAdmin = Context.CurrentUser.IsAuthenticated();
-            var dbTv = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
-            var viewModel = dbTv.Select(tv => new RequestViewModel
+
+            List<Task> taskList = new List<Task>();
+
+            List<RequestedModel> dbTv = new List<RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
-                ProviderId = tv.ProviderId,
-                Type = tv.Type,
-                Status = tv.Status,
-                ImdbId = tv.ImdbId,
-                Id = tv.Id,
-                PosterPath = tv.PosterPath,
-                ReleaseDate = tv.ReleaseDate.Humanize(),
-                RequestedDate = tv.RequestedDate.Humanize(),
-                Approved = tv.Approved,
-                Title = tv.Title,
-                Overview = tv.Overview,
-                RequestedBy = tv.RequestedBy,
-                ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                Available = tv.Available,
-                Admin = isAdmin,
-                Issues = tv.Issues.Humanize(LetterCasing.Title),
-                OtherMessage = tv.OtherMessage,
-                AdminNotes = tv.AdminNote,
-                TvSeriesRequestType = tv.SeasonsRequested
+                return Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+
+            }).ContinueWith((t) =>
+            {
+                dbTv = t.Result.ToList();
+
+                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+                {
+                    dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
+                }
+            }));
+
+            List<QualityModel> qualities = new List<QualityModel>();
+            if (isAdmin)
+            {
+                var sonarrSettings = SonarrSettings.GetSettings();
+                if (sonarrSettings.Enabled)
+                {
+                    taskList.Add(Task.Factory.StartNew(() =>
+                    {
+                        return Cache.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
+                        {
+                            return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri); // TODO: cache this!
+
+                    });
+                    }).ContinueWith((t) =>
+                    {
+                        qualities = t.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
+                    }));
+                }
+                else {
+                    var sickRageSettings = SickRageSettings.GetSettings();
+                    if (sickRageSettings.Enabled)
+                    {
+                        qualities = sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }).ToList();
+                    }
+                }
+            }
+
+            Task.WaitAll(taskList.ToArray());
+
+            var viewModel = dbTv.Select(tv =>
+            {
+                return new RequestViewModel
+                {
+                    ProviderId = tv.ProviderId,
+                    Type = tv.Type,
+                    Status = tv.Status,
+                    ImdbId = tv.ImdbId,
+                    Id = tv.Id,
+                    PosterPath = tv.PosterPath,
+                    ReleaseDate = tv.ReleaseDate,
+                    ReleaseDateTicks = tv.ReleaseDate.Ticks,
+                    RequestedDate = tv.RequestedDate,
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = tv.Available || tv.Approved,
+                    Title = tv.Title,
+                    Overview = tv.Overview,
+                    RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                    Available = tv.Available,
+                    Admin = isAdmin,
+                    Issues = tv.Issues.ToString().CamelCaseToWords(),
+                    OtherMessage = tv.OtherMessage,
+                    AdminNotes = tv.AdminNote,
+                    TvSeriesRequestType = tv.SeasonsRequested,
+                    Qualities = qualities.ToArray()
+                };
+            }).ToList();
+
+            return Response.AsJson(viewModel);
+        }
+
+        private Response GetAlbumRequests()
+        {
+            var settings = PrSettings.GetSettings();
+            var isAdmin = Context.CurrentUser.IsAuthenticated();
+            var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
+            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            {
+                dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
+            }
+
+            var viewModel = dbAlbum.Select(album =>
+            {
+                return new RequestViewModel
+                {
+                    ProviderId = album.ProviderId,
+                    Type = album.Type,
+                    Status = album.Status,
+                    ImdbId = album.ImdbId,
+                    Id = album.Id,
+                    PosterPath = album.PosterPath,
+                    ReleaseDate = album.ReleaseDate,
+                    ReleaseDateTicks = album.ReleaseDate.Ticks,
+                    RequestedDate = album.RequestedDate,
+                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Ticks,
+                    Approved = album.Available || album.Approved,
+                    Title = album.Title,
+                    Overview = album.Overview,
+                    RequestedUsers = isAdmin ? album.AllUsers.ToArray() : new string[] { },
+                    ReleaseYear = album.ReleaseDate.Year.ToString(),
+                    Available = album.Available,
+                    Admin = isAdmin,
+                    Issues = album.Issues.ToString().CamelCaseToWords(),
+                    OtherMessage = album.OtherMessage,
+                    AdminNotes = album.AdminNote,
+                    TvSeriesRequestType = album.SeasonsRequested,
+                    MusicBrainzId = album.MusicBrainzId,
+                    ArtistName = album.ArtistName
+
+                };
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -165,7 +337,7 @@ namespace PlexRequests.UI.Modules
             }
             originalRequest.Issues = issue;
             originalRequest.OtherMessage = !string.IsNullOrEmpty(comment)
-                ? $"{Session[SessionKeys.UsernameKey]} - {comment}"
+                ? $"{Username} - {comment}"
                 : string.Empty;
 
 
@@ -173,11 +345,11 @@ namespace PlexRequests.UI.Modules
 
             var model = new NotificationModel
             {
-                User = Session[SessionKeys.UsernameKey].ToString(),
+                User = Username,
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,
-                Body = issue == IssueState.Other ? comment : issue.Humanize()
+                Body = issue == IssueState.Other ? comment : issue.ToString().CamelCaseToWords()
             };
             NotificationService.Publish(model);
 
