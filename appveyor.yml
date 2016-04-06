@@ -5,7 +5,7 @@ assembly_info:
   file: '**\AssemblyInfo.*'
   assembly_version: '1.6.0'
   assembly_file_version: '{version}'
-  assembly_informational_version: '1.6.0'
+  assembly_informational_version: '1.6.0' 
 before_build:
 - cmd: appveyor-retry nuget restore
 build:

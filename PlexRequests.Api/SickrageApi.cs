@@ -84,7 +84,7 @@ namespace PlexRequests.Api
                 while (seasonIncrement < seasonCount)
                 {
                     seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
-                    seasonIncrement = seasonList.data?.Length ?? 0;
+                    seasonIncrement = seasonList.Data?.Length ?? 0;
                     
                     if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
                     {

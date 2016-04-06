@@ -87,6 +87,12 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>PlexRequests.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

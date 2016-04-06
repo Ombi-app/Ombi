@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -33,13 +34,19 @@ using Newtonsoft.Json;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
-
+using PlexRequests.Helpers;
 using RestSharp;
 
 namespace PlexRequests.Api
 {
     public class ApiRequest : IApiRequest
     {
+        private JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore
+        };
+
         private static Logger Log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// An API request handler
@@ -108,7 +115,7 @@ namespace PlexRequests.Api
             }
 
 
-            var json = JsonConvert.DeserializeObject<T>(response.Content);
+            var json = JsonConvert.DeserializeObject<T>(response.Content, Settings);
 
             return json;
         }
@@ -129,4 +136,6 @@ namespace PlexRequests.Api
             }
         }
     }
+
+   
 }
