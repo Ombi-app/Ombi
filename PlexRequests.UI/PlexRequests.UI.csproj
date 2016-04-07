@@ -169,8 +169,11 @@
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
+    <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />
     <Compile Include="Validators\EmailNotificationSettingsValidator.cs" />

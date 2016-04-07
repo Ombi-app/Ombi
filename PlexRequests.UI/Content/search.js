@@ -30,7 +30,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#movieSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(movieSearch, 400);
 
     });
@@ -50,7 +49,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(tvSearch, 400);
     });
 
@@ -90,7 +88,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#musicSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(musicSearch, 400);
 
     });
@@ -175,7 +172,7 @@ $(function () {
 
     function movieSearch() {
         var query = $("#movieSearchContent").val();
-        getMovies("/search/movie/" + query);
+        query ? getMovies("/search/movie/" + query) : resetMovies();
     }
 
     function moviesComingSoon() {
@@ -187,9 +184,9 @@ $(function () {
     }
 
     function getMovies(url) {
-        $("#movieList").html("");
+        resetMovies();
 
-
+        $('#movieSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -206,14 +203,19 @@ $(function () {
         });
     };
 
+    function resetMovies() {
+        $("#movieList").html("");
+    }
+
     function tvSearch() {
         var query = $("#tvSearchContent").val();
-        getTvShows("/search/tv/" + query);
+        query ? getTvShows("/search/tv/" + query) : resetTvShows();
     }
 
     function getTvShows(url) {
-        $("#tvList").html("");
+        resetTvShows();
 
+        $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -229,14 +231,19 @@ $(function () {
         });
     };
 
+    function resetTvShows() {
+        $("#tvList").html("");
+    }
+
     function musicSearch() {
         var query = $("#musicSearchContent").val();
-        getMusic("/search/music/" + query);
+        query ? getMusic("/search/music/" + query) : resetMusic();
     }
 
     function getMusic(url) {
-        $("#musicList").html("");
+        resetMusic();
 
+        $('#musicSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -253,6 +260,10 @@ $(function () {
             $('#musicSearchButton').attr("class", "fa fa-search");
         });
     };
+
+    function resetMusic() {
+        $("#musicList").html("");
+    }
 
     function getCoverArt(artistId) {
         $.ajax("/search/music/coverart/" + artistId).success(function (result) {
@@ -274,7 +285,10 @@ $(function () {
             voteAverage: result.voteAverage,
             year: year,
             type: "movie",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;
@@ -290,7 +304,10 @@ $(function () {
             overview: result.overview,
             year: year,
             type: "tv",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
         return context;
     }
@@ -307,7 +324,10 @@ $(function () {
             coverArtUrl: result.coverArtUrl,
             artist: result.artist,
             releaseType: result.releaseType,
-            country: result.country
+            country: result.country,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;
