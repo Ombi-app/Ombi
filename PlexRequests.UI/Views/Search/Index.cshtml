@@ -128,7 +128,7 @@
                 <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
                 {{else}}
                     {{#if_eq requested true}}
-                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
+                    <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
                     {{else}}
                         {{#if_eq type "movie"}}
                             <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
