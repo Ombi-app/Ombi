@@ -51,6 +51,7 @@ using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 using TMDbLib.Objects.Search;
 using PlexRequests.Api.Models.Tv;
+using TMDbLib.Objects.General;
 
 namespace PlexRequests.UI.Modules
 {
@@ -131,77 +132,59 @@ namespace PlexRequests.UI.Modules
         private Response UpcomingMovies()
         {
             Log.Trace("Loading upcoming movies");
-
-            return ProcessMovies(new Task<List<SearchMovie>>(() =>
-            {
-                return MovieApi.GetUpcomingMovies().Result.Select(x => new SearchMovie()
-                {
-                    Adult = x.Adult,
-                    BackdropPath = x.BackdropPath,
-                    GenreIds = x.GenreIds,
-                    Id = x.Id,
-                    OriginalLanguage = x.OriginalLanguage,
-                    OriginalTitle = x.OriginalTitle,
-                    Overview = x.Overview,
-                    Popularity = x.Popularity,
-                    PosterPath = x.PosterPath,
-                    ReleaseDate = x.ReleaseDate,
-                    Title = x.Title,
-                    Video = x.Video,
-                    VoteAverage = x.VoteAverage,
-                    VoteCount = x.VoteCount
-                }).ToList();
-            }));
+            return ProcessMovies(MovieSearchType.Upcoming, string.Empty);
         }
 
         private Response CurrentlyPlayingMovies()
         {
             Log.Trace("Loading currently playing movies");
-
-            return ProcessMovies(new Task<List<SearchMovie>>(() =>
-            {
-                return MovieApi.GetCurrentPlayingMovies().Result.Select(x => new SearchMovie()
-                {
-                    Adult = x.Adult,
-                    BackdropPath = x.BackdropPath,
-                    GenreIds = x.GenreIds,
-                    Id = x.Id,
-                    OriginalLanguage = x.OriginalLanguage,
-                    OriginalTitle = x.OriginalTitle,
-                    Overview = x.Overview,
-                    Popularity = x.Popularity,
-                    PosterPath = x.PosterPath,
-                    ReleaseDate = x.ReleaseDate,
-                    Title = x.Title,
-                    Video = x.Video,
-                    VoteAverage = x.VoteAverage,
-                    VoteCount = x.VoteCount
-                }).ToList();
-            }));
+            return ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
         }
 
         private Response SearchMovie(string searchTerm)
         {
             Log.Trace("Searching for Movie {0}", searchTerm);
-
-            return ProcessMovies(new Task<List<SearchMovie>>(() =>
-            {
-                return MovieApi.SearchMovie(searchTerm).Result;
-            }));
+            return ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
-        private Response ProcessMovies(Task<List<SearchMovie>> apiTask)
+        private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
             List<Task> taskList = new List<Task>();
 
-            List<SearchMovie> apiMovies = new List<SearchMovie>();
-
-            apiTask.ContinueWith((t) =>
+            List<MovieResult> apiMovies = new List<MovieResult>();
+            taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
+            {
+                switch(searchType)
+                {
+                    case MovieSearchType.Search:
+                        return MovieApi.SearchMovie(searchTerm).Result.Select(x => new MovieResult()
+                        {
+                            Adult = x.Adult,
+                            BackdropPath = x.BackdropPath,
+                            GenreIds = x.GenreIds,
+                            Id = x.Id,
+                            OriginalLanguage = x.OriginalLanguage,
+                            OriginalTitle = x.OriginalTitle,
+                            Overview = x.Overview,
+                            Popularity = x.Popularity,
+                            PosterPath = x.PosterPath,
+                            ReleaseDate = x.ReleaseDate,
+                            Title = x.Title,
+                            Video = x.Video,
+                            VoteAverage = x.VoteAverage,
+                            VoteCount = x.VoteCount
+                        }).ToList();
+                    case MovieSearchType.CurrentlyPlaying:
+                        return MovieApi.GetCurrentPlayingMovies().Result.ToList();
+                    case MovieSearchType.Upcoming:
+                        return MovieApi.GetUpcomingMovies().Result.ToList();
+                    default:
+                        return new List<MovieResult>();
+                }
+            }).ContinueWith((t) =>
             {
                 apiMovies = t.Result;
-            });
-            taskList.Add(apiTask);
-            apiTask.Start();
+            }));
 
             Dictionary<int, RequestedModel> dbMovies = new Dictionary<int, RequestedModel>();
             taskList.Add(Task.Factory.StartNew(() =>
@@ -216,7 +199,7 @@ namespace PlexRequests.UI.Modules
             Task.WaitAll(taskList.ToArray());
 
             List<SearchMovieViewModel> viewMovies = new List<SearchMovieViewModel>();
-            foreach (SearchMovie movie in apiMovies)
+            foreach (MovieResult movie in apiMovies)
             {
                 var viewMovie = new SearchMovieViewModel()
                 {
