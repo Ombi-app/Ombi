@@ -92,19 +92,32 @@ namespace PlexRequests.Api
                 var seasonIncrement = 0;
                 var seasonList = new SickRageSeasonList();
                 Log.Trace("while (seasonIncrement < seasonCount) where seasonCount = {0}", seasonCount);
-                while (seasonIncrement < seasonCount)
+                try
                 {
-                    seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
-                    seasonIncrement = seasonList.Data?.Length ?? 0;
-                    Log.Trace("New seasonIncrement -> {0}", seasonIncrement);
-
-                    if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
+                    while (seasonIncrement < seasonCount)
                     {
-                        Log.Warn("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
-                        break;
+                        seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
+                        if (seasonList.result.Equals("failure"))
+                        {
+                            Thread.Sleep(3000);
+                            continue;
+                        }
+                        seasonIncrement = seasonList.Data?.Length ?? 0;
+                        Log.Trace("New seasonIncrement -> {0}", seasonIncrement);
+
+                        if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
+                        {
+                            Log.Warn("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
+                            break;
+                        }
                     }
+                    sw.Stop();
                 }
-                sw.Stop();
+                catch (Exception e)
+                {
+                    Log.Error("Exception thrown when getting the seasonList");
+                    Log.Error(e);
+                }
             }
             Log.Trace("seasons.Length > 0 where seasons.Len -> {0}", seasons.Length);
             try
