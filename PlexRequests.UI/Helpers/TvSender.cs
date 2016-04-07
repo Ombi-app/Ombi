@@ -77,11 +77,16 @@ namespace PlexRequests.UI.Helpers
 
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model, string qualityId)
         {
+            Log.Info("Sending to SickRage {0}", model.Title);
             if (!sickRageSettings.Qualities.Any(x => x.Key == qualityId))
             {
                 qualityId = sickRageSettings.QualityProfile;
             }
 
+            Log.Trace("Calling `AddSeries` with the following settings:");
+            Log.Trace(sickRageSettings.DumpJson());
+            Log.Trace("And the following `model`:");
+            Log.Trace(model.DumpJson());
             var apiResult = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, qualityId,
                            sickRageSettings.ApiKey, sickRageSettings.FullUri);
 

@@ -105,7 +105,9 @@ namespace PlexRequests.Api
             {
                 Log.Error(jse);
                 var error = Api.ExecuteJson<List<SonarrError>>(request, baseUrl);
-                result = new SonarrAddSeries { ErrorMessages = error.Select(x => x.errorMessage).ToList() };
+                var messages = error?.Select(x => x.errorMessage).ToList();
+                messages?.ForEach(x => Log.Error(x));
+                result = new SonarrAddSeries { ErrorMessages = messages };
             }
 
             return result;

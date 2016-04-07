@@ -60,6 +60,8 @@ namespace PlexRequests.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute<T>(request);
+            Log.Trace("Api Content Response:");
+            Log.Trace(response.Content);
 
             if (response.ErrorException != null)
             {
@@ -68,7 +70,6 @@ namespace PlexRequests.Api
             }
 
             return response.Data;
-
         }
 
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
@@ -107,15 +108,17 @@ namespace PlexRequests.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute(request);
-
+            Log.Trace("Api Content Response:");
+            Log.Trace(response.Content);
             if (response.ErrorException != null)
             {
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-
+            Log.Trace("Deserialzing Object");
             var json = JsonConvert.DeserializeObject<T>(response.Content, Settings);
+            Log.Trace("Finished Deserialzing Object");
 
             return json;
         }
