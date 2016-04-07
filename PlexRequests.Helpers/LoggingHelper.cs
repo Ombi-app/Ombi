@@ -106,7 +106,7 @@ namespace PlexRequests.Helpers
                 CreateDirs = true
             };
             config.AddTarget(fileTarget);
-            var rule2 = new LoggingRule("*", LogLevel.Trace, fileTarget);
+            var rule2 = new LoggingRule("*", LogLevel.Info, fileTarget);
             config.LoggingRules.Add(rule2);
 
             // Step 5. Activate the configuration
