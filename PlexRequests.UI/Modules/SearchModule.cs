@@ -442,7 +442,7 @@ namespace PlexRequests.UI.Modules
                     }
 
 
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.ErrorMessage ?? "Something went wrong adding the movie to Sonarr! Please check your settings." });
+                    return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages));
 
                 }
 

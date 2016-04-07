@@ -24,13 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
+using Newtonsoft.Json;
+
 namespace PlexRequests.Api.Models.Sonarr
 {
     public class SonarrError
     {
         public string propertyName { get; set; }
         public string errorMessage { get; set; }
-        public string attemptedValue { get; set; }
-        public string[] formattedMessageArguments { get; set; } 
+        public object attemptedValue { get; set; }
+        public FormattedMessagePlaceholderValues formattedMessagePlaceholderValues { get; set; }
+       }
+    public class FormattedMessagePlaceholderValues
+    {
+        public string propertyName { get; set; }
+        public object propertyValue { get; set; }
     }
 }

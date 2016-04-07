@@ -100,7 +100,7 @@ namespace PlexRequests.UI.Modules
             try
             {
                 var status = SonarrApi.SystemStatus(sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                return status != null
+                return status?.version != null
                ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Sonarr successfully!" })
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Sonarr, please check your settings." });
 

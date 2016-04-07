@@ -24,8 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Linq;
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using Nancy.Validation;
 
 
@@ -54,6 +56,32 @@ namespace PlexRequests.UI.Helpers
                     Message = modelValidationError.ErrorMessage
                 })
                 .FirstOrDefault();
+        }
+
+        public static JsonResponseModel SendSonarrError(List<string> result)
+        {
+            var model = new JsonResponseModel {Result = false};
+            if (!result.Any())
+            {
+                return model;
+            }
+            var sb = new StringBuilder();
+            sb.AppendLine("Errors from Sonarr: ");
+            for (var i = 0; i < result.Count; i++)
+            {
+                if (i != result.Count - 1)
+                {
+                    sb.AppendLine(result[i] + ",");
+                }
+                else
+                {
+                    sb.AppendLine(result[i]);
+                }
+            }
+
+            model.Message = sb.ToString();
+
+            return model;
         }
     }
 }

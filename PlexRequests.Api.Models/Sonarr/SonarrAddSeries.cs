@@ -26,7 +26,7 @@ namespace PlexRequests.Api.Models.Sonarr
         public string titleSlug { get; set; }
         public int id { get; set; }
         [JsonIgnore]
-        public string ErrorMessage { get; set; }
+        public List<string> ErrorMessages { get; set; }
     }
 
     public class AddOptions

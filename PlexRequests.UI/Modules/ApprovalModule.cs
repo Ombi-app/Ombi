@@ -133,15 +133,17 @@ namespace PlexRequests.UI.Modules
                     Log.Trace("Approval result: {0}", requestResult);
                     if (requestResult)
                     {
-                        return Response.AsJson(new JsonResponseModel { Result = true });
+                        return Response.AsJson(new JsonResponseModel {Result = true});
                     }
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Updated Sonarr but could not approve it in PlexRequests :(" });
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = false,
+                            Message = "Updated Sonarr but could not approve it in PlexRequests :("
+                        });
                 }
-                return Response.AsJson(new JsonResponseModel
-                {
-                    Result = false,
-                    Message = result.ErrorMessage ?? "Could not add the series to Sonarr"
-                });
+                return Response.AsJson(ValidationHelper.SendSonarrError(result.ErrorMessages));
+
             }
 
             var srSettings = SickRageSettings.GetSettings();
@@ -384,7 +386,7 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
-                            Log.Error("Error message: {0}", res?.ErrorMessage);
+                            res?.ErrorMessages.ForEach(x => Log.Error("Error messages: {0}", x));
                         }
                     }
                 }

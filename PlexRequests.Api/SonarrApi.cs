@@ -104,8 +104,8 @@ namespace PlexRequests.Api
             catch (JsonSerializationException jse)
             {
                 Log.Error(jse);
-                var error = Api.ExecuteJson<SonarrError>(request, baseUrl);
-                result = new SonarrAddSeries { ErrorMessage = error.errorMessage };
+                var error = Api.ExecuteJson<List<SonarrError>>(request, baseUrl);
+                result = new SonarrAddSeries { ErrorMessages = error.Select(x => x.errorMessage).ToList() };
             }
 
             return result;
