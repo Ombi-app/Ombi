@@ -274,7 +274,10 @@ $(function () {
             voteAverage: result.voteAverage,
             year: year,
             type: "movie",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;
@@ -290,7 +293,10 @@ $(function () {
             overview: result.overview,
             year: year,
             type: "tv",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
         return context;
     }
@@ -307,7 +313,10 @@ $(function () {
             coverArtUrl: result.coverArtUrl,
             artist: result.artist,
             releaseType: result.releaseType,
-            country: result.country
+            country: result.country,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;
