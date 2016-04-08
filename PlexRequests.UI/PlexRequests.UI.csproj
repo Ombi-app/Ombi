@@ -168,6 +168,7 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Jobs\MediaCacheRegistry.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: PlexRegistry.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,17 +25,17 @@
 //  ************************************************************************/
 #endregion
 
-using System;
+using FluentScheduler;
 
-using PlexRequests.Api.Models.Movie;
+using PlexRequests.Services;
 
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.UI.Jobs
 {
-    public interface ICouchPotatoApi
+    public class MediaCacheRegistry : Registry
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
-        CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status);
+        public MediaCacheRegistry()
+        {
+            Schedule<MediaCacheService>().ToRunNow();
+        }
     }
 }

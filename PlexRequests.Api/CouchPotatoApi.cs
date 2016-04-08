@@ -115,5 +115,16 @@ namespace PlexRequests.Api
 
             return Api.Execute<CouchPotatoProfiles>(request, url);
         }
+
+        public CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status)
+        {
+            RestRequest request;
+            request = new RestRequest { Resource = "/api/{apikey}/movie.list?status={status}" };
+
+            request.AddUrlSegment("apikey", apiKey);
+            request.AddUrlSegment("status", string.Join(",", status));
+
+            return Api.Execute<CouchPotatoMovies>(request, baseUrl);
+        }
     }
 }

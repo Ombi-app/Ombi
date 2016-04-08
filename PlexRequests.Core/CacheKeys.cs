@@ -31,6 +31,8 @@ namespace PlexRequests.Core
         public const string TvDbToken = "TheTvDbApiToken";
         public const string SonarrQualityProfiles = "SonarrQualityProfiles";
         public const string SickRageQualityProfiles = "SickRageQualityProfiles";
+
         public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
+        public const string CouchPotatoQueued = "CouchPotatoQueued";
     }
 }

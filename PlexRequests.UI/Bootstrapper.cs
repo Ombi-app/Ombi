@@ -85,6 +85,7 @@ namespace PlexRequests.UI
 
             // Services
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
+            container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
 
@@ -106,6 +107,7 @@ namespace PlexRequests.UI
 
             TaskManager.TaskFactory = new PlexTaskFactory();
             TaskManager.Initialize(new PlexRegistry());
+            TaskManager.Initialize(new MediaCacheRegistry());
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

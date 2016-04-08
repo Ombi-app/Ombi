@@ -61,7 +61,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
-            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService) : base("search")
+            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService, ICouchPotatoCacher cpCacher) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -69,6 +69,7 @@ namespace PlexRequests.UI.Modules
             TvApi = new TheTvDbApi();
             Cache = cache;
             Checker = checker;
+            CpCacher = cpCacher;
             RequestService = request;
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
@@ -109,6 +110,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IAvailabilityChecker Checker { get; }
+        private ICouchPotatoCacher CpCacher { get; }
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -150,6 +152,8 @@ namespace PlexRequests.UI.Modules
         private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
             List<Task> taskList = new List<Task>();
+            var z = CpService.GetSettings();
+            CouchPotatoApi.GetMovies(z.FullUri, z.ApiKey, new[] { "active" });
 
             List<MovieResult> apiMovies = new List<MovieResult>();
             taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
@@ -198,6 +202,8 @@ namespace PlexRequests.UI.Modules
 
             Task.WaitAll(taskList.ToArray());
 
+            int[] cpCached = CpCacher.QueuedIds();
+
             List<SearchMovieViewModel> viewMovies = new List<SearchMovieViewModel>();
             foreach (MovieResult movie in apiMovies)
             {
@@ -219,13 +225,17 @@ namespace PlexRequests.UI.Modules
                     VoteCount = movie.VoteCount
                 };
 
-                if (dbMovies.ContainsKey(movie.Id))
+                if (dbMovies.ContainsKey(movie.Id)) // compare to the requests db
                 {
                     var dbm = dbMovies[movie.Id];
 
                     viewMovie.Requested = true;
                     viewMovie.Approved = dbm.Approved;
                     viewMovie.Available = dbm.Available;
+                }
+                else if (cpCached.Contains(movie.Id)) // compare to the couchpotato db
+                {
+                    viewMovie.Requested = true;
                 }
 
                 viewMovies.Add(viewMovie);

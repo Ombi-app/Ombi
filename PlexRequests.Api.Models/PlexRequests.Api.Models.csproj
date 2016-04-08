@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Movie\CouchPotatoAdd.cs" />
+    <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
