@@ -63,7 +63,9 @@ namespace PlexRequests.UI
                         int portResult;
                         if (!int.TryParse(a, out portResult))
                         {
-                            Console.WriteLine("Didn't pass in a port");
+                            Console.WriteLine("Didn't pass in a valid port");
+                            Console.ReadLine();
+                            Environment.Exit(1);
                         }
                         else
                         {
