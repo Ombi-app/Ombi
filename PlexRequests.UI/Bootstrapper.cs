@@ -89,6 +89,8 @@ namespace PlexRequests.UI
             // Services
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
+            container.Register<ISonarrCacher, SonarrCacher>();
+            container.Register<ISickRageCacher, SickRageCacher>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
 

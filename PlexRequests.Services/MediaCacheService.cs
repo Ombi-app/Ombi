@@ -55,6 +55,8 @@ namespace PlexRequests.Services
 
             ConfigurationReader = new ConfigurationReader();
             CpCacher = new CouchPotatoCacher(new SettingsServiceV2<CouchPotatoSettings>(repo), new CouchPotatoApi(), memCache);
+            SonarrCacher = new SonarrCacher(new SettingsServiceV2<SonarrSettings>(repo), new SonarrApi(), memCache);
+            SickRageCacher = new SickRageCacher(new SettingsServiceV2<SickRageSettings>(repo), new SickrageApi(), memCache);
             HostingEnvironment.RegisterObject(this);
         }
 
@@ -62,6 +64,8 @@ namespace PlexRequests.Services
 
         private IConfigurationReader ConfigurationReader { get; }
         private ICouchPotatoCacher CpCacher { get; }
+        private ISonarrCacher SonarrCacher { get; }
+        private ISickRageCacher SickRageCacher { get; }
         private IDisposable UpdateSubscription { get; set; }
 
         public void Start(Configuration c)
@@ -69,7 +73,11 @@ namespace PlexRequests.Services
             UpdateSubscription?.Dispose();
 
             Task.Factory.StartNew(() => CpCacher.Queued(-1));
+            Task.Factory.StartNew(() => SonarrCacher.Queued(-1));
+            Task.Factory.StartNew(() => SickRageCacher.Queued(-1));
             UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(CpCacher.Queued);
+            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SonarrCacher.Queued);
+            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SickRageCacher.Queued);
         }
 
         public void Execute()

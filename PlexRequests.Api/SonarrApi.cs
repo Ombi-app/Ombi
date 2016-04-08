@@ -36,6 +36,7 @@ using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Helpers;
 
 using RestSharp;
+using Newtonsoft.Json.Linq;
 
 namespace PlexRequests.Api
 {
@@ -121,6 +122,14 @@ namespace PlexRequests.Api
             var obj = Api.ExecuteJson<SystemStatus>(request, baseUrl);
 
             return obj;
+        }
+
+        public List<Series> GetSeries(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/series", Method = Method.GET };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            return Api.Execute<List<Series>>(request, baseUrl);
         }
     }
 }

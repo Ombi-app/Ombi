@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: MockSonarrApi.cs
+//    File: PlexAvailabilityChecker.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,41 +24,54 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
 
-using Newtonsoft.Json;
+using NLog;
 
 using PlexRequests.Api.Interfaces;
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
+using System.Linq;
+using System.Collections.Generic;
 using PlexRequests.Api.Models.Sonarr;
 
-namespace PlexRequests.Api.Mocks
+namespace PlexRequests.Services
 {
-    public class MockSonarrApi : ISonarrApi
+    public class SonarrCacher : ISonarrCacher
     {
-        public List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl)
+        public SonarrCacher(ISettingsService<SonarrSettings> sonarrSettings, ISonarrApi sonarrApi, ICacheProvider cache)
         {
-            var json = MockApiData.Sonarr_Profiles;
-            var obj = JsonConvert.DeserializeObject<List<SonarrProfile>>(json);
-            return obj;
+            SonarrSettings = sonarrSettings;
+            SonarrApi = sonarrApi;
+            Cache = cache;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons,
-            string apiKey, Uri baseUrl)
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private ICacheProvider Cache { get; }
+        private ISonarrApi SonarrApi { get; }
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        public void Queued(long check)
         {
-            var json = MockApiData.Sonarr_AddSeriesResult;
-            var obj = JsonConvert.DeserializeObject<SonarrAddSeries>(json);
-            return obj;
+            Log.Trace("This is check no. {0}", check);
+            Log.Trace("Getting the settings");
+
+            var settings = SonarrSettings.GetSettings();
+            if (settings.Enabled)
+            {
+                Log.Trace("Getting all tv series from Sonarr");
+                var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
+                Cache.Set(CacheKeys.SonarrQueued, series, 10);
+            }
         }
 
-        public SystemStatus SystemStatus(string apiKey, Uri baseUrl)
+        // we do not want to set here...
+        public int[] QueuedIds()
         {
-            throw new NotImplementedException();
-        }
-
-        public List<Series> GetSeries(string apiKey, Uri baseUrl)
-        {
-            throw new NotImplementedException();
+            var series = Cache.Get<List<Series>>(CacheKeys.SonarrQueued);
+            return series != null ? series.Select(x => x.tvdbId).ToArray() : new int[] { };
         }
     }
 }

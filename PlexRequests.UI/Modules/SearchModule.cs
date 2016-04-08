@@ -61,7 +61,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
-            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService, ICouchPotatoCacher cpCacher) : base("search")
+            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService, 
+            ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher) : base("search")
         {
             CpService = cpSettings;
             PrService = prSettings;
@@ -70,6 +71,8 @@ namespace PlexRequests.UI.Modules
             Cache = cache;
             Checker = checker;
             CpCacher = cpCacher;
+            SonarrCacher = sonarrCacher;
+            SickRageCacher = sickRageCacher;
             RequestService = request;
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
@@ -111,6 +114,8 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IAvailabilityChecker Checker { get; }
         private ICouchPotatoCacher CpCacher { get; }
+        private ISonarrCacher SonarrCacher { get; }
+        private ISickRageCacher SickRageCacher { get; }
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -277,6 +282,8 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson("");
             }
 
+            int[] sonarrCached = SonarrCacher.QueuedIds();
+            int[] sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
 
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
@@ -299,13 +306,22 @@ namespace PlexRequests.UI.Modules
                     Status = t.show.status
                 };
 
-                if (t.show.externals.thetvdb != null && dbTv.ContainsKey((int)t.show.externals.thetvdb))
+                if (t.show.externals.thetvdb != null)
                 {
-                    var dbt = dbTv[(int)t.show.externals.thetvdb];
+                    int tvdbid = (int)t.show.externals.thetvdb;
 
-                    viewT.Requested = true;
-                    viewT.Approved = dbt.Approved;
-                    viewT.Available = dbt.Available;
+                    if (dbTv.ContainsKey(tvdbid))
+                    {
+                        var dbt = dbTv[tvdbid];
+
+                        viewT.Requested = true;
+                        viewT.Approved = dbt.Approved;
+                        viewT.Available = dbt.Available;
+                    }
+                    else if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
+                    {
+                        viewT.Requested = true;
+                    }
                 }
 
                 viewTv.Add(viewT);

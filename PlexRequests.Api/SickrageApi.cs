@@ -38,6 +38,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Helpers;
 using RestSharp;
+using Newtonsoft.Json.Linq;
 
 namespace PlexRequests.Api
 {
@@ -205,6 +206,26 @@ namespace PlexRequests.Api
                 Log.Trace("Exiting `Execute<SickRageTvAdd>` and yeilding `Task<T>` result");
                 return result;
             }).ConfigureAwait(false);
+        }
+
+        public async Task<SickRageTvAdd> GetShows(string apiKey, Uri baseUrl) // TODO: get the correct response/models from SR
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=shows",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("apiKey", apiKey);
+
+            //await Task.Run(() => Thread.Sleep(2000));
+            //return await Task.Run(() =>
+            //{
+                //Log.Trace("Entering `Execute<SickRageTvAdd>` in a new `Task<T>`");
+                var result = Api.ExecuteJson<JObject>(request, baseUrl);
+
+                //Log.Trace("Exiting `Execute<SickRageTvAdd>` and yeilding `Task<T>` result");
+                return null;
+            //}).ConfigureAwait(false);
         }
     }
 }
