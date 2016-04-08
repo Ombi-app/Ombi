@@ -31,11 +31,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BouncyCastle, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.1.2.22\lib\net45\BouncyCastle.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="FluentScheduler, Version=3.1.46.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentScheduler.3.1.46\lib\net40\FluentScheduler.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailKit.1.2.21\lib\net451\MailKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="MimeKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814, processorArchitecture=MSIL">
+      <HintPath>..\packages\MimeKit.1.2.22\lib\net45\MimeKit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
@@ -62,6 +74,7 @@
       <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Security" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -71,9 +84,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MediaCacheService.cs" />
     <Compile Include="AvailabilityUpdateService.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ConfigurationReader.cs" />
+    <Compile Include="Interfaces\ICouchPotatoCacher.cs" />
     <Compile Include="Interfaces\IAvailabilityChecker.cs" />
     <Compile Include="Interfaces\IConfigurationReader.cs" />
     <Compile Include="Interfaces\IIntervals.cs" />
@@ -85,6 +100,7 @@
     <Compile Include="Notification\NotificationType.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
+    <Compile Include="CouchPotatoCacher.cs" />
     <Compile Include="PlexAvailabilityChecker.cs" />
     <Compile Include="PlexType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
