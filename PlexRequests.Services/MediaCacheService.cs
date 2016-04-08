@@ -66,18 +66,22 @@ namespace PlexRequests.Services
         private ICouchPotatoCacher CpCacher { get; }
         private ISonarrCacher SonarrCacher { get; }
         private ISickRageCacher SickRageCacher { get; }
-        private IDisposable UpdateSubscription { get; set; }
+        private IDisposable CpSubscription { get; set; }
+        private IDisposable SonarrSubscription { get; set; }
+        private IDisposable SickRageSubscription { get; set; }
 
         public void Start(Configuration c)
         {
-            UpdateSubscription?.Dispose();
+            CpSubscription?.Dispose();
+            SonarrSubscription?.Dispose();
+            SickRageSubscription?.Dispose();
 
             Task.Factory.StartNew(() => CpCacher.Queued(-1));
             Task.Factory.StartNew(() => SonarrCacher.Queued(-1));
             Task.Factory.StartNew(() => SickRageCacher.Queued(-1));
-            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(CpCacher.Queued);
-            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SonarrCacher.Queued);
-            UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SickRageCacher.Queued);
+            CpSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(CpCacher.Queued);
+            SonarrSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SonarrCacher.Queued);
+            SickRageSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(SickRageCacher.Queued);
         }
 
         public void Execute()
