@@ -50,30 +50,32 @@ namespace PlexRequests.UI
             var port = -1;
             if (args.Length > 0)
             {
-                foreach (var a in args)
+                for (int i = 0; i < args.Length; i++)
                 {
-                    if (a.StartsWith("-base", StringComparison.CurrentCultureIgnoreCase))
+                    var arg = args[i].ToLowerInvariant().Substring(1);
+                    switch (arg)
                     {
-                        Console.WriteLine("Settings URL Base");
-                        assetLocation = args[0];
-                    }
-                    else
-                    {
-                        Log.Info("We are going to use port {0} that was passed in", a);
-                        int portResult;
-                        if (!int.TryParse(a, out portResult))
-                        {
-                            Console.WriteLine("Didn't pass in a valid port");
-                            Console.ReadLine();
-                            Environment.Exit(1);
-                        }
-                        else
-                        {
-                            port = portResult;
-                        }
+                        case "base":
+                            i++;
+                            var value = args[i];
+                            Console.WriteLine("Settings URL Base");
+                            assetLocation = value;
+                            break;
+                        default:
+                            int portResult;
+                            if (!int.TryParse(args[i], out portResult))
+                            {
+                                Console.WriteLine("Didn't pass in a valid port");
+                                Console.ReadLine();
+                                Environment.Exit(1);
+                            }
+                            else
+                            {
+                                port = portResult;
+                            }
+                            break;
                     }
                 }
-                
             }
             Log.Trace("Getting product version");
             WriteOutVersion();
@@ -82,7 +84,7 @@ namespace PlexRequests.UI
             var cn = s.SetupDb(assetLocation);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
-            
+
 
             if (port == -1)
                 port = GetStartupPort();
