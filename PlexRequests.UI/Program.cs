@@ -46,6 +46,7 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
+            var assetLocation = "assets";
             var port = -1;
             if (args.Length > 0)
             {
@@ -53,17 +54,20 @@ namespace PlexRequests.UI
                 int portResult;
                 if (!int.TryParse(args[0], out portResult))
                 {
-                    Console.WriteLine("Incorrect Port format. Press any key.");
-                    Console.ReadLine();
-                    Environment.Exit(1);
+                    Console.WriteLine("Didn't pass in a port");
+                    Console.WriteLine("Must be the URL Base");
+                    assetLocation = args[0];
                 }
-                port = portResult;
+                else
+                {
+                    port = portResult;
+                }
             }
             Log.Trace("Getting product version");
             WriteOutVersion();
 
             var s = new Setup();
-            var cn = s.SetupDb();
+            var cn = s.SetupDb(assetLocation);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
             

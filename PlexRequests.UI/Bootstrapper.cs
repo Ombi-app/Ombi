@@ -32,6 +32,7 @@ using Mono.Data.Sqlite;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
 using Nancy.Session;
@@ -59,6 +60,8 @@ namespace PlexRequests.UI
         // The bootstrapper enables you to reconfigure the composition of the framework,
         // by overriding the various methods and properties.
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
+
+        private TinyIoCContainer _container;
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
@@ -108,6 +111,7 @@ namespace PlexRequests.UI
             TaskManager.TaskFactory = new PlexTaskFactory();
             TaskManager.Initialize(new PlexRegistry());
             TaskManager.Initialize(new MediaCacheRegistry());
+            _container = container;
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
@@ -132,7 +136,17 @@ namespace PlexRequests.UI
                  (sender, certificate, chain, sslPolicyErrors) => true;
 
         }
-        
+
+        protected override void ConfigureConventions(NancyConventions nancyConventions)
+        {
+            base.ConfigureConventions(nancyConventions);
+
+            var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()),new MemoryCacheProvider()));
+            var assetLocation = settings.GetSettings().AssetLocation;
+            nancyConventions.StaticContentsConventions.Add(
+                    StaticContentConventionBuilder.AddDirectory("assets", $"{assetLocation}/Content")
+                );
+        }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
 

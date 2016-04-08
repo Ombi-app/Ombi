@@ -33,7 +33,7 @@ namespace PlexRequests.Core.SettingModels
     public class PlexRequestSettings : Settings
     {
         public int Port { get; set; }
-       
+        public string AssetLocation { get; set; }
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
         public bool SearchForMusic { get; set; }
