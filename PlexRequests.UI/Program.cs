@@ -50,18 +50,28 @@ namespace PlexRequests.UI
             var port = -1;
             if (args.Length > 0)
             {
-                Log.Info("We are going to use port {0} that was passed in", args[0]);
-                int portResult;
-                if (!int.TryParse(args[0], out portResult))
+                foreach (var a in args)
                 {
-                    Console.WriteLine("Didn't pass in a port");
-                    Console.WriteLine("Must be the URL Base");
-                    assetLocation = args[0];
+                    if (a.StartsWith("-base", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        Console.WriteLine("Settings URL Base");
+                        assetLocation = args[0];
+                    }
+                    else
+                    {
+                        Log.Info("We are going to use port {0} that was passed in", a);
+                        int portResult;
+                        if (!int.TryParse(a, out portResult))
+                        {
+                            Console.WriteLine("Didn't pass in a port");
+                        }
+                        else
+                        {
+                            port = portResult;
+                        }
+                    }
                 }
-                else
-                {
-                    port = portResult;
-                }
+                
             }
             Log.Trace("Getting product version");
             WriteOutVersion();
