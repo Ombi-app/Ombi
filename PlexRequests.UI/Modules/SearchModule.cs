@@ -152,8 +152,7 @@ namespace PlexRequests.UI.Modules
         private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
             List<Task> taskList = new List<Task>();
-            var z = CpService.GetSettings();
-            CouchPotatoApi.GetMovies(z.FullUri, z.ApiKey, new[] { "active" });
+            var cpSettings = CpService.GetSettings();
 
             List<MovieResult> apiMovies = new List<MovieResult>();
             taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
