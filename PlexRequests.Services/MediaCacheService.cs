@@ -41,6 +41,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Services
 {
@@ -67,7 +68,7 @@ namespace PlexRequests.Services
         {
             UpdateSubscription?.Dispose();
 
-            CpCacher.Queued(-1);
+            Task.Factory.StartNew(() => CpCacher.Queued(-1));
             UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(CpCacher.Queued);
         }
 
