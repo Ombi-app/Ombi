@@ -84,6 +84,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\PlexAlbum.cs" />
+    <Compile Include="Models\PlexMovie.cs" />
+    <Compile Include="Models\PlexTvShow.cs" />
     <Compile Include="SickRageCacher.cs" />
     <Compile Include="Interfaces\ISickRageCacher.cs" />
     <Compile Include="SonarrCacher.cs" />

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CacheKeys.cs
+//    File: PlexType.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core
+namespace PlexRequests.Services
 {
-    public class CacheKeys
+    public enum PlexMediaType 
     {
-        public const string PlexLibaries = "PlexLibaries";
-
-        public const string TvDbToken = "TheTvDbApiToken";
-
-        public const string SonarrQualityProfiles = "SonarrQualityProfiles";
-        public const string SonarrQueued = "SonarrQueued";
-
-        public const string SickRageQualityProfiles = "SickRageQualityProfiles";
-        public const string SickRageQueued = "SickRageQueued";
-
-        public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
-        public const string CouchPotatoQueued = "CouchPotatoQueued";
+        Movie,
+        Show,
+        Music // double check this one
     }
 }

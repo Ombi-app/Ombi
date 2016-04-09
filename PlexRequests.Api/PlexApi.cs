@@ -32,6 +32,8 @@ using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
 
 using RestSharp;
+using System.Xml;
+using System.Collections.Generic;
 
 namespace PlexRequests.Api
 {
@@ -58,10 +60,7 @@ namespace PlexRequests.Api
                 Method = Method.POST
             };
 
-            request.AddHeader("X-Plex-Client-Identifier", "Test213"); // TODO need something unique to the users version/installation
-            request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("Content-Type", "application/json");
+            AddHeaders(ref request);
 
             request.AddJsonBody(userModel);
 
@@ -76,11 +75,7 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("X-Plex-Token", authToken);
-            request.AddHeader("Content-Type", "application/xml");
+            AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
             var users = api.ExecuteXml<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all"));
@@ -104,11 +99,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("searchTerm", searchTerm);
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("X-Plex-Token", authToken);
-            request.AddHeader("Content-Type", "application/xml");
+            AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
             var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
@@ -123,11 +114,7 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("X-Plex-Token", authToken);
-            request.AddHeader("Content-Type", "application/xml");
+            AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
             var users = api.ExecuteXml<PlexStatus>(request, uri);
@@ -142,16 +129,61 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("X-Plex-Token", authToken);
-            request.AddHeader("Content-Type", "application/xml");
+            AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
             var account = api.ExecuteXml<PlexAccount>(request, new Uri("https://plex.tv/users/account"));
 
             return account;
+        }
+
+        public PlexLibraries GetLibrarySections(string authToken, Uri plexFullHost)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/sections"
+            };
+
+            AddHeaders(ref request, authToken);
+
+            var api = new ApiRequest();
+            var sections = api.ExecuteXml<PlexLibraries>(request, plexFullHost);
+
+            var x = GetLibrary(authToken, plexFullHost, sections.Directories[0].Key);
+
+            return sections;
+        }
+
+        public PlexSearch GetLibrary(string authToken, Uri plexFullHost, string libraryId)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/sections/{libraryId}/all"
+            };
+
+            request.AddUrlSegment("libraryId", libraryId.ToString());
+            AddHeaders(ref request, authToken);
+
+            var api = new ApiRequest();
+            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+
+            return search;
+        }
+
+        private void AddHeaders(ref RestRequest request, string authToken)
+        {
+            request.AddHeader("X-Plex-Token", authToken);
+            AddHeaders(ref request);
+        }
+
+        private void AddHeaders(ref RestRequest request)
+        {
+            request.AddHeader("X-Plex-Client-Identifier", "Test213");
+            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Version", Version);
+            request.AddHeader("Content-Type", "application/xml");
         }
     }
 }

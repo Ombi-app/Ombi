@@ -38,5 +38,7 @@ namespace PlexRequests.Api.Interfaces
         PlexSearch SearchContent(string authToken, string searchTerm, Uri plexFullHost);
         PlexStatus GetStatus(string authToken, Uri uri);
         PlexAccount GetAccount(string authToken);
+        PlexLibraries GetLibrarySections(string authToken, Uri plexFullHost);
+        PlexSearch GetLibrary(string authToken, Uri plexFullHost, string libraryId);
     }
 }

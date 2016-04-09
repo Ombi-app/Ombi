@@ -16,6 +16,8 @@ namespace PlexRequests.Api.Models.Plex
         public string Key { get; set; }
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
+        [XmlAttribute(AttributeName = "type")]
+        public string type { get; set; }
     }
 
     [XmlRoot(ElementName = "MediaContainer")]

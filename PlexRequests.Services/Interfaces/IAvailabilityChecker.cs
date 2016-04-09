@@ -24,11 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using PlexRequests.Services.Models;
+using System.Collections.Generic;
+
 namespace PlexRequests.Services.Interfaces
 {
     public interface IAvailabilityChecker
     {
         void CheckAndUpdateAll(long check);
-        bool IsAvailable(string title, string year, string artist, PlexType type);
+        List<PlexMovie> GetPlexMovies();
+        bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year);
+        List<PlexTvShow> GetPlexTvShows();
+        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year);
+        List<PlexAlbum> GetPlexAlbums();
+        bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
     }
 }

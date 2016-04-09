@@ -41,6 +41,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Services
 {
@@ -53,7 +54,7 @@ namespace PlexRequests.Services
             var repo = new SettingsJsonRepository(dbConfig, memCache);
 
             ConfigurationReader = new ConfigurationReader();
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(dbConfig, memCache)), new PlexApi());
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(dbConfig, memCache)), new PlexApi(), memCache);
             HostingEnvironment.RegisterObject(this);
         }
 
@@ -67,6 +68,7 @@ namespace PlexRequests.Services
         {
             UpdateSubscription?.Dispose();
 
+            Task.Factory.StartNew(() => Checker.CheckAndUpdateAll(-1)); // cache the libraries and run the availability checks
             UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(Checker.CheckAndUpdateAll);
         }
 
