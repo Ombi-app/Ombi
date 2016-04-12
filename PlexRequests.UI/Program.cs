@@ -92,9 +92,6 @@ namespace PlexRequests.UI
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
 
-            SetupSchedulers();
-            
-
             if (port == -1)
                 port = GetStartupPort();
 
@@ -106,6 +103,8 @@ namespace PlexRequests.UI
             {
                 using (WebApp.Start<Startup>(options))
                 {
+                    SetupSchedulers();
+
                     Console.WriteLine($"Request Plex is running on the following: http://+:{port}/");
 
                     if (Type.GetType("Mono.Runtime") != null)
