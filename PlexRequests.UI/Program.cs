@@ -25,6 +25,8 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
@@ -38,6 +40,11 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Diagnostics;
+
+using FluentScheduler;
+
+using PlexRequests.Services;
+using PlexRequests.UI.Jobs;
 
 namespace PlexRequests.UI
 {
@@ -84,6 +91,9 @@ namespace PlexRequests.UI
             var cn = s.SetupDb(assetLocation);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
+
+            SetupSchedulers();
+
 
 
             if (port == -1)
@@ -132,7 +142,7 @@ namespace PlexRequests.UI
         private static int GetStartupPort()
         {
             Log.Trace("Getting startup Port");
-            var port = 3579;
+            var port = 8080;
             var service = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
             Log.Trace("Port: {0}", settings.Port);
@@ -147,6 +157,13 @@ namespace PlexRequests.UI
         private static void ConfigureTargets(string connectionString)
         {
             LoggingHelper.ConfigureLogging(connectionString);
+        }
+
+        private static void SetupSchedulers()
+        {
+            TaskManager.TaskFactory = new PlexTaskFactory();
+            TaskManager.Initialize(new PlexRegistry());
+            TaskManager.Initialize(new MediaCacheRegistry());
         }
     }
 }

@@ -110,10 +110,7 @@ namespace PlexRequests.UI
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
 
-            TaskManager.TaskFactory = new PlexTaskFactory();
-            TaskManager.Initialize(new PlexRegistry());
-            TaskManager.Initialize(new MediaCacheRegistry());
-            _container = container;
+  
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
