@@ -33,6 +33,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
@@ -208,7 +209,7 @@ namespace PlexRequests.Api
             }).ConfigureAwait(false);
         }
 
-        public async Task<SickRageTvAdd> GetShows(string apiKey, Uri baseUrl) // TODO: get the correct response/models from SR
+        public async Task<SickrageShows> GetShows(string apiKey, Uri baseUrl) 
         {
             var request = new RestRequest
             {
@@ -216,16 +217,8 @@ namespace PlexRequests.Api
                 Method = Method.GET
             };
             request.AddUrlSegment("apiKey", apiKey);
-
-            //await Task.Run(() => Thread.Sleep(2000));
-            //return await Task.Run(() =>
-            //{
-                //Log.Trace("Entering `Execute<SickRageTvAdd>` in a new `Task<T>`");
-                var result = Api.ExecuteJson<JObject>(request, baseUrl);
-
-                //Log.Trace("Exiting `Execute<SickRageTvAdd>` and yeilding `Task<T>` result");
-                return null;
-            //}).ConfigureAwait(false);
+            
+            return await Task.Run(() => Api.Execute<SickrageShows>(request, baseUrl)).ConfigureAwait(false);
         }
     }
 }

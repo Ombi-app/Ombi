@@ -71,7 +71,7 @@ namespace PlexRequests.Services
         public int[] QueuedIds()
         {
             var series = Cache.Get<List<Series>>(CacheKeys.SonarrQueued);
-            return series != null ? series.Select(x => x.tvdbId).ToArray() : new int[] { };
+            return series?.Select(x => x.tvdbId).ToArray() ?? new int[] { };
         }
     }
 }

@@ -88,7 +88,7 @@
     <Compile Include="Models\PlexMovie.cs" />
     <Compile Include="Models\PlexTvShow.cs" />
     <Compile Include="SickRageCacher.cs" />
-    <Compile Include="Interfaces\ISickRageCacher.cs" />
+    <Compile Include="Interfaces\ITvCacher.cs" />
     <Compile Include="SonarrCacher.cs" />
     <Compile Include="Interfaces\ISonarrCacher.cs" />
     <Compile Include="MediaCacheService.cs" />

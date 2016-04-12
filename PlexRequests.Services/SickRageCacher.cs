@@ -71,8 +71,9 @@ namespace PlexRequests.Services
         // we do not want to set here...
         public int[] QueuedIds()
         {
-            var tv = Cache.Get<SickRageTvAdd>(CacheKeys.SickRageQueued);
-            return new int[] { }; //tv != null ? tv.Select(x => x.info.tmdb_id).ToArray() : new int[] { }; // TODO: return the array of tvdb IDs from SR
+            var tv = Cache.Get<SickrageShows>(CacheKeys.SickRageQueued);
+            var values = tv?.data.Values.Select(x => x.tvdbid).ToArray();
+            return values;
         }
     }
 }

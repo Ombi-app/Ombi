@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISickRageApi.cs
+//    File: SickrageShows.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,20 +26,17 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
-using PlexRequests.Api.Models.SickRage;
+using System.Collections.Generic;
 
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.SickRage
 {
-    public interface ISickRageApi
+    public class SickrageShows : SickRageBase<Dictionary<int, Item>>
     {
-        Task<SickRageTvAdd> AddSeries(int tvdbId, int seasoncount, int[] seasons, string quality, string apiKey,
-            Uri baseUrl);
+         
+    }
 
-        SickRagePing Ping(string apiKey, Uri baseUrl);
-
-        Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl);
-
-        Task<SickrageShows> GetShows(string apiKey, Uri baseUrl);
+    public class Item
+    {
+        public int tvdbid { get; set; }
     }
 }
