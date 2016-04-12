@@ -93,8 +93,7 @@ namespace PlexRequests.UI
             ConfigureTargets(cn);
 
             SetupSchedulers();
-
-
+            
 
             if (port == -1)
                 port = GetStartupPort();
