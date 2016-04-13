@@ -150,8 +150,6 @@ namespace PlexRequests.Api
             var api = new ApiRequest();
             var sections = api.ExecuteXml<PlexLibraries>(request, plexFullHost);
 
-            var x = GetLibrary(authToken, plexFullHost, sections.Directories[0].Key);
-
             return sections;
         }
 
