@@ -40,7 +40,7 @@
             var $form = $("#loginForm");
             var formData = $form.serialize();
             var dtOffset = new Date().getTimezoneOffset();
-            formData += ('&DateTimeOffset=' + dtOffset)
+            formData += ('&DateTimeOffset=' + dtOffset);
 
             $.ajax({
                 type: $form.prop("method"),
@@ -50,7 +50,9 @@
                 success: function (response) {
                     console.log(response);
                     if (response.result === true) {
-                        window.location.replace("/search");
+
+                            window.location.replace("/search");
+             
                     } else {
                         generateNotify(response.message, "warning");
                     }
@@ -61,8 +63,5 @@
                 }
             });
         });
-
-
-
     });
 </script>

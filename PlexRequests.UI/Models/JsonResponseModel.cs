@@ -29,6 +29,8 @@ namespace PlexRequests.UI.Models
     public class JsonResponseModel
     {
         public bool Result { get; set; }
-        public string Message { get; set; } 
+        public string Message { get; set; }
+        public string BaseUrl { get; set; }
+        public bool HasBase => !string.IsNullOrEmpty(BaseUrl);
     }
 }
