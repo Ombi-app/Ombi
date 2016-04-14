@@ -103,7 +103,7 @@ namespace PlexRequests.UI.Helpers
         
         private static string GetContentUrl(string assetLocation)
         {
-            return string.IsNullOrEmpty(assetLocation) ? "~" : $"/{assetLocation}";
+            return string.IsNullOrEmpty(assetLocation) ? string.Empty : $"/{assetLocation}";
         }
     }
 }
