@@ -109,8 +109,6 @@ namespace PlexRequests.UI
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
-            var loc = ServiceLocator.Instance;
-            loc.SetContainer(container);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
