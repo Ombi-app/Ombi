@@ -34,7 +34,7 @@ namespace PlexRequests.UI.Modules
 {
     public class BaseModule : NancyModule
     {
-        private ServiceLocator Locator => ServiceLocator.Instance;
+        protected ServiceLocator Locator => ServiceLocator.Instance;
         public BaseModule()
         {
             var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();

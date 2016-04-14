@@ -30,6 +30,9 @@ using Nancy.Extensions;
 using PlexRequests.UI.Models;
 using System;
 
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+
 namespace PlexRequests.UI.Modules
 {
     public class BaseAuthModule : BaseModule
@@ -74,11 +77,14 @@ namespace PlexRequests.UI.Modules
 
         private Response CheckAuth()
         {
-            if (Session[SessionKeys.UsernameKey] == null)
-            {
-                return Context.GetRedirect("~/test/userlogin");
-            }
-            return null;
+            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var baseUrl = settings.BaseUrl;
+
+            var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
+
+            return Session[SessionKeys.UsernameKey] == null 
+                ? Context.GetRedirect(redirectPath) 
+                : null;
         }
 
     }
