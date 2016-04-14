@@ -52,6 +52,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap.min.js\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-notify.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/site.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/pace.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/jquery.mixitup.js\"></script>");
