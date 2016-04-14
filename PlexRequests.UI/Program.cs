@@ -53,7 +53,7 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-            var baseUrl = "assets";
+            var baseUrl = string.Empty;
             var port = -1;
             if (args.Length > 0)
             {
@@ -140,7 +140,7 @@ namespace PlexRequests.UI
         private static int GetStartupPort()
         {
             Log.Trace("Getting startup Port");
-            var port = 8080;
+            var port = 3579;
             var service = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = service.GetSettings();
             Log.Trace("Port: {0}", settings.Port);
