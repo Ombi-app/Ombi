@@ -50,6 +50,7 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
 using TaskFactory = FluentScheduler.TaskFactory;
 
@@ -61,7 +62,6 @@ namespace PlexRequests.UI
         // by overriding the various methods and properties.
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
 
-        private TinyIoCContainer _container;
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
@@ -109,8 +109,8 @@ namespace PlexRequests.UI
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
-
-  
+            var loc = ServiceLocator.Instance;
+            loc.SetContainer(container);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
@@ -121,10 +121,14 @@ namespace PlexRequests.UI
 
             base.ApplicationStartup(container, pipelines);
 
+            var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var baseUrl = settings.GetSettings().BaseUrl;
+            var redirect = string.IsNullOrEmpty(baseUrl) ? "~/login" : $"~/{baseUrl}/login";
+            
             // Enable forms auth
             var formsAuthConfiguration = new FormsAuthenticationConfiguration
             {
-                RedirectUrl = "~/login",
+                RedirectUrl = redirect,
                 UserMapper = container.Resolve<IUserMapper>()
             };
 
@@ -141,9 +145,9 @@ namespace PlexRequests.UI
             base.ConfigureConventions(nancyConventions);
 
             var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()),new MemoryCacheProvider()));
-            var assetLocation = settings.GetSettings().AssetLocation;
+            var assetLocation = settings.GetSettings().BaseUrl;
             nancyConventions.StaticContentsConventions.Add(
-                    StaticContentConventionBuilder.AddDirectory("assets", $"{assetLocation}/Content")
+                    StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content", "Content")
                 );
         }
 

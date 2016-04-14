@@ -29,7 +29,7 @@ using Nancy.Extensions;
 
 namespace PlexRequests.UI.Modules
 {
-    public class IndexModule : BaseModule
+    public class IndexModule : BaseAuthModule
     {
         public IndexModule()
         {

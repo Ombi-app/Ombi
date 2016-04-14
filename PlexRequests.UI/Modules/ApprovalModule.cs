@@ -43,7 +43,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class ApprovalModule : BaseModule
+    public class ApprovalModule : BaseAuthModule
     {
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,

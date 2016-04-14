@@ -1,5 +1,6 @@
 ﻿@using Nancy.Security
 @using Nancy.Session
+@using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
 <html>
@@ -7,21 +8,7 @@
     <title>Plex Requests</title>
     <!-- Styles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="~/assets/bootstrap.css" type="text/css"/>
-    <link rel="stylesheet" href="~/assets/custom.min.css" type="text/css" />
-    <link rel="stylesheet" href="~/assets/font-awesome.css" type="text/css"/>
-    <link rel="stylesheet" href="~/assets/pace.min.css" type="text/css"/>
-
-
-    <!-- Scripts -->
-    <script src="~/assets/jquery-2.2.1.min.js"></script>
-    <script src="~/assets/handlebars.min.js"></script>
-    <script src="~/assets/bootstrap.min.js"></script>
-    <script src="~/assets/bootstrap-notify.min.js"></script>
-    <script src="~/assets/site.js"></script>
-    <script src="~/assets/pace.min.js"></script>
-    <script src="~/assets/jquery.mixitup.js"></script>
-    <script src="~/assets/moment.min.js"></script>
+    @Html.LoadAssets()
 </head>
 <body>
 

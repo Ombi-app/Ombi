@@ -39,7 +39,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class ApplicationTesterModule : BaseModule
+    public class ApplicationTesterModule : BaseAuthModule
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,

@@ -24,63 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
 using Nancy;
-using Nancy.Extensions;
-using PlexRequests.UI.Models;
-using System;
+
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class BaseModule : NancyModule
     {
-        private string _username;
-        private int _dateTimeOffset = -1;
-
-        protected string Username
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_username))
-                {
-                    _username = Session[SessionKeys.UsernameKey].ToString();
-                }
-                return _username;
-            }
-        }
-
-        protected int DateTimeOffset
-        {
-            get
-            {
-                if (_dateTimeOffset == -1)
-                {
-                    _dateTimeOffset = Session[SessionKeys.ClientDateTimeOffsetKey] != null ?
-                        (int)Session[SessionKeys.ClientDateTimeOffsetKey] : (new DateTimeOffset().Offset).Minutes;
-                }
-                return _dateTimeOffset;
-            }
-        }
-
+        private ServiceLocator Locator => ServiceLocator.Instance;
         public BaseModule()
         {
-            Before += (ctx) => CheckAuth();
+            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var baseUrl = settings.BaseUrl;
+
+            var modulePath = string.IsNullOrEmpty(baseUrl) ? string.Empty : baseUrl;
+
+            ModulePath = modulePath;
         }
 
-        public BaseModule(string modulePath) : base(modulePath)
+        public BaseModule(string modulePath) 
         {
-            Before += (ctx) => CheckAuth();
+            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var baseUrl = settings.BaseUrl;
+
+            var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
+
+            ModulePath = settingModulePath;
         }
-
-
-        private Response CheckAuth()
-        {
-            if (Session[SessionKeys.UsernameKey] == null)
-            {
-                return Context.GetRedirect("~/userlogin");
-            }
-            return null;
-        }
-
     }
 }

@@ -1,7 +1,6 @@
-﻿@Html.Partial("_Sidebar")
-<link rel="stylesheet" type="text/css" href="~/assets/dataTables.bootstrap.css" />
-
-<script type="text/javascript" src="~/assets/datatables.min.js"></script>
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
+@Html.LoadLogsAssets()
 
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>

@@ -53,7 +53,7 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-            var assetLocation = "assets";
+            var baseUrl = "assets";
             var port = -1;
             if (args.Length > 0)
             {
@@ -65,8 +65,8 @@ namespace PlexRequests.UI
                         case "base":
                             i++;
                             var value = args[i];
-                            Console.WriteLine("Settings URL Base");
-                            assetLocation = value;
+                            Console.WriteLine($"Using a Base URL {args[i]}");
+                            baseUrl = value;
                             break;
                         default:
                             int portResult;
@@ -88,7 +88,7 @@ namespace PlexRequests.UI
             WriteOutVersion();
 
             var s = new Setup();
-            var cn = s.SetupDb(assetLocation);
+            var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
 

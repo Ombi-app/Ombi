@@ -44,7 +44,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class UserLoginModule : NancyModule
+    public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api) : base("userlogin")
         {

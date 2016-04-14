@@ -1,4 +1,5 @@
-﻿<div>
+﻿@using PlexRequests.UI.Helpers
+<div>
     <h1>Search</h1>
     <h4>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
     <br />
@@ -209,4 +210,4 @@
 </script>
 
 
-<script src="~/assets/search.js" type="text/javascript"></script>
+@Html.LoadSearchAssets()

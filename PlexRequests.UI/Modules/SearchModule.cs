@@ -55,7 +55,7 @@ using TMDbLib.Objects.General;
 
 namespace PlexRequests.UI.Modules
 {
-    public class SearchModule : BaseModule
+    public class SearchModule : BaseAuthModule
     {
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
