@@ -155,7 +155,9 @@ namespace PlexRequests.UI.Modules
             {
                 Session.Delete(SessionKeys.UsernameKey);
             }
-            return Context.GetRedirect("~/userlogin");
+            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) 
+                ? $"~/{BaseUrl}/userlogin" 
+                : "~/userlogin");
         }
 
         private bool CheckIfUserIsOwner(string authToken, string userName)

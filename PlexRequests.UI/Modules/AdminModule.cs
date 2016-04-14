@@ -56,7 +56,7 @@ using Nancy.Security;
 
 namespace PlexRequests.UI.Modules
 {
-    public class AdminModule : NancyModule
+    public class AdminModule : BaseModule
     {
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
@@ -181,7 +181,15 @@ namespace PlexRequests.UI.Modules
             var result = AuthService.SaveSettings(model);
             if (result)
             {
+                if (!string.IsNullOrEmpty(BaseUrl))
+                {
+                    return Context.GetRedirect($"~/{BaseUrl}/admin/authentication");
+                }
                 return Context.GetRedirect("~/admin/authentication");
+            }
+            if (!string.IsNullOrEmpty(BaseUrl))
+            {
+                return Context.GetRedirect($"~/{BaseUrl}/error"); //TODO create error page
             }
             return Context.GetRedirect("~/error"); //TODO create error page
         }
@@ -201,8 +209,7 @@ namespace PlexRequests.UI.Modules
 
             PrService.SaveSettings(model);
 
-
-            return Context.GetRedirect("~/admin");
+            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/admin" : "~/admin");
         }
 
         private Response RequestAuthToken()

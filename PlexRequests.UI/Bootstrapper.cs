@@ -26,7 +26,7 @@
 #endregion
 
 using System.Net;
-using FluentScheduler;
+
 using Mono.Data.Sqlite;
 
 using Nancy;
@@ -40,7 +40,6 @@ using Nancy.TinyIoc;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Mocks;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -51,8 +50,6 @@ using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Jobs;
-using TaskFactory = FluentScheduler.TaskFactory;
 
 namespace PlexRequests.UI
 {
@@ -67,7 +64,7 @@ namespace PlexRequests.UI
         {
             container.Register<IUserMapper, UserMapper>();
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
-            container.Register<ICacheProvider, MemoryCacheProvider>();
+            container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
 
             // Settings
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
@@ -109,6 +106,8 @@ namespace PlexRequests.UI
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
+            var loc = ServiceLocator.Instance;
+            loc.SetContainer(container);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)

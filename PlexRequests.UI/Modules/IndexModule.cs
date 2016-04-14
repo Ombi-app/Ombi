@@ -33,8 +33,9 @@ namespace PlexRequests.UI.Modules
     {
         public IndexModule()
         {
-            Get["/"] = parameters => Context.GetRedirect("~/search");
-            Get["/Index"] = parameters => Context.GetRedirect("~/search");
+            Get["/"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
+
+            Get["/Index"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
         }
     }
 }

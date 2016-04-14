@@ -35,9 +35,13 @@ namespace PlexRequests.UI.Helpers
             Singleton = new ServiceLocator();
         }
         private static ServiceLocator Singleton { get; }
-        private TinyIoCContainer Container => TinyIoCContainer.Current;
+        private TinyIoCContainer Container { get; set; }
         public static ServiceLocator Instance => Singleton;
 
+        public void SetContainer(TinyIoCContainer con)
+        {
+            Container = con;
+        }
         public T Resolve<T>() where T : class
         {
             if (Container != null)

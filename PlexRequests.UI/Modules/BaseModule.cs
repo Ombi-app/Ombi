@@ -35,10 +35,12 @@ namespace PlexRequests.UI.Modules
     public class BaseModule : NancyModule
     {
         protected ServiceLocator Locator => ServiceLocator.Instance;
+        protected string BaseUrl { get; set; }
         public BaseModule()
         {
             var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var baseUrl = settings.BaseUrl;
+            BaseUrl = baseUrl;
 
             var modulePath = string.IsNullOrEmpty(baseUrl) ? string.Empty : baseUrl;
 
@@ -49,6 +51,7 @@ namespace PlexRequests.UI.Modules
         {
             var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var baseUrl = settings.BaseUrl;
+            BaseUrl = baseUrl;
 
             var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
 
