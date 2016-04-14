@@ -2,11 +2,19 @@
 @Html.Partial("_Sidebar")
 @Html.LoadLogsAssets()
 
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = "/admin/loglevel";
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString() + formAction;
+    }
+}
+
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
         <legend>Logs</legend>
-
-        <form method="post" id="mainForm" action="/admin/loglevel">
+        <form method="post" id="mainForm" action="@formAction">
             <div class="form-group">
                 <label for="logLevel" class="control-label">Log Level</label>
                 <div id="logLevel">
@@ -45,9 +53,12 @@
 
 <script>
     $(function () {
+        var baseUrl = '@Html.GetBaseUrl()';
 
+        var logsUrl = "/admin/loadlogs";
+        var url = createBaseUrl(baseUrl, logsUrl);
         $('#example').DataTable({
-            "ajax": "/admin/loadlogs",
+            "ajax": url,
             "columns": [
                 { "data": "message" },
                 { "data": "logger" },
@@ -58,9 +69,11 @@
         });
 
 
+        var logUrl = "/admin/loglevel";
+        logUrl = createBaseUrl(baseUrl, logUrl);
         $.ajax({
             type: "get",
-            url: "/admin/loglevel",
+            url: logUrl,
             dataType: "json",
             success: function (response) {
                 $("#select > option").each(function (level) {

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AssetHelper.cs
+//    File: BaseUrlHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,8 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Text;
 
+using System.IO;
+using System.Text;
+using Nancy;
 using Nancy.ViewEngines.Razor;
 
 using PlexRequests.Core;
@@ -33,14 +35,13 @@ using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.UI.Helpers
 {
-    public static class AssetHelper
+    public static class BaseUrlHelper
     {
         private static ServiceLocator Locator => ServiceLocator.Instance;
         public static IHtmlString LoadAssets(this HtmlHelpers helper)
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var sb = new StringBuilder();
-            var assetLocation = settings.BaseUrl;
+            var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
 
@@ -64,9 +65,8 @@ namespace PlexRequests.UI.Helpers
 
         public static IHtmlString LoadSearchAssets(this HtmlHelpers helper)
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var sb = new StringBuilder();
-            var assetLocation = settings.BaseUrl;
+            var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
 
@@ -77,9 +77,8 @@ namespace PlexRequests.UI.Helpers
 
         public static IHtmlString LoadRequestAssets(this HtmlHelpers helper)
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var sb = new StringBuilder();
-            var assetLocation = settings.BaseUrl;
+            var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
 
@@ -90,9 +89,8 @@ namespace PlexRequests.UI.Helpers
 
         public static IHtmlString LoadLogsAssets(this HtmlHelpers helper)
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
             var sb = new StringBuilder();
-            var assetLocation = settings.BaseUrl;
+            var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
 
@@ -101,7 +99,43 @@ namespace PlexRequests.UI.Helpers
 
             return helper.Raw(sb.ToString());
         }
-        
+
+        public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
+        {
+            var returnString = string.Empty;
+            var content = GetLinkUrl(GetBaseUrl());
+            if (!string.IsNullOrEmpty(content))
+            {
+                url = $"/{content}{url}";
+            }
+            if (context.Request.Path == url)
+            {
+                returnString = $"<a class=\"list-group-item active\" href=\"{url}\">{title}</a>";
+            }
+            else
+            {
+                returnString = $"<a class=\"list-group-item\" href=\"{url}\">{title}</a>";
+            }
+
+            return helper.Raw(returnString);
+        }
+
+        public static IHtmlString GetBaseUrl(this HtmlHelpers helper)
+        {
+            return helper.Raw(GetBaseUrl());
+        }
+
+        private static string GetBaseUrl()
+        {
+            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var assetLocation = settings.BaseUrl;
+            return assetLocation;
+        }
+
+        private static string GetLinkUrl(string assetLocation)
+        {
+            return string.IsNullOrEmpty(assetLocation) ? string.Empty : $"{assetLocation}";
+        }
         private static string GetContentUrl(string assetLocation)
         {
             return string.IsNullOrEmpty(assetLocation) ? string.Empty : $"/{assetLocation}";

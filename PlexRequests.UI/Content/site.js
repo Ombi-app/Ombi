@@ -62,6 +62,17 @@ function finishLoading(elementId, originalCss, html) {
     }
 }
 
+function createBaseUrl(base, url) {
+    if (base) {
+        if (url.charAt(0) === "/") {
+            url = "/" + base + url;
+        } else {
+            url = "/" + base + "/" + url;
+        }
+    }
+    return url;
+}
+
 var noResultsHtml = "<div class='no-search-results'>" +
     "<i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div></div>";
 var noResultsMusic = "<div class='no-search-results'>" +
