@@ -35,7 +35,6 @@ using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Services.Models;
@@ -67,14 +66,10 @@ namespace PlexRequests.Services
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
             Log.Trace("Getting all the requests");
-            var requests = RequestService.GetAll();
-
-            var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
-            Log.Trace("Requests Count {0}", requestedModels.Length);
-
-            if (!ValidateSettings(plexSettings, authSettings) || !requestedModels.Any())
+            
+            if (!ValidateSettings(plexSettings, authSettings))
             {
-                Log.Info("Validation of the settings failed or there is no requests.");
+                Log.Info("Validation of the plex settings failed.");
                 return;
             }
 
@@ -83,6 +78,16 @@ namespace PlexRequests.Services
             var shows = GetPlexTvShows().ToArray();
             var albums = GetPlexAlbums().ToArray();
 
+            var requests = RequestService.GetAll();
+            var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
+            Log.Trace("Requests Count {0}", requestedModels.Length);
+
+            if (!requestedModels.Any())
+            {
+                Log.Info("There are no requests to check.");
+                return;
+            }
+            
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
