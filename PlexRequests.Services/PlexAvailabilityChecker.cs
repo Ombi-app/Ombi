@@ -199,7 +199,9 @@ namespace PlexRequests.Services
 
         public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year)
         {
-            return plexShows.Any(x => x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
+            return plexShows.Any(x => 
+            (x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) || x.Title.StartsWith(title, StringComparison.CurrentCultureIgnoreCase)) && 
+            x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
         }
 
         public List<PlexAlbum> GetPlexAlbums()
