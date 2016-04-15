@@ -11,6 +11,7 @@ var searchTemplate = Handlebars.compile(searchSource);
 var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
+var base = $('#baseUrl').val();
 
 var mixItUpDefault = {
     animation: { enable: true },
@@ -94,9 +95,10 @@ $('#approveMovies').click(function (e) {
 
     loadingButton(buttonId, "success");
 
+    var url = createBaseUrl(base, '/approval/approveallmovies');
     $.ajax({
         type: 'post',
-        url: '/approval/approveallmovies',
+        url: url,
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
@@ -123,10 +125,10 @@ $('#approveTVShows').click(function (e) {
     }
 
     loadingButton(buttonId, "success");
-
+    var url = createBaseUrl(base, '/approval/approvealltvshows');
     $.ajax({
         type: 'post',
-        url: '/approval/approvealltvshows',
+        url: url,
         dataType: "json",
         success: function (response) {
             if (checkJsonResponse(response)) {
@@ -456,7 +458,8 @@ function movieLoad() {
     }
     $ml.html("");
 
-    $.ajax("/requests/movies/").success(function (results) {
+    var url = createBaseUrl(base, '/requests/movies');
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function (result) {
                 var context = buildRequestContext(result, "movie");
@@ -478,8 +481,8 @@ function tvLoad() {
         $tvl.mixItUp('destroy');
     }
     $tvl.html("");
-
-    $.ajax("/requests/tvshows/").success(function (results) {
+    var url = createBaseUrl(base, '/requests/tvshows');
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function (result) {
                 var context = buildRequestContext(result, "tv");
@@ -501,8 +504,8 @@ function albumLoad() {
         $albumL.mixItUp('destroy');
     }
     $albumL.html("");
-
-    $.ajax("/requests/albums/").success(function (results) {
+    var url = createBaseUrl(base, '/requests/albums');
+    $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function (result) {
                 var context = buildRequestContext(result, "album");

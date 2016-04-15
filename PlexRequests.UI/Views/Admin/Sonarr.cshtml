@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -223,13 +224,15 @@
                 }
             });
         });
-
+        var base = '@Html.GetBaseUrl()';
         $('#testSonarr').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
+            
+            var url = createBaseUrl(base, '/test/sonarr');
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/sonarr",
+                url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

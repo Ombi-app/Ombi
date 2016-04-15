@@ -1,5 +1,13 @@
 ﻿@using Nancy.Security
 @using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString();
+    }
+}
 <div>
     <h1>Requests</h1>
     <h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
@@ -181,7 +189,7 @@
             <div class="col-sm-3 col-sm-push-3">
                 {{#if_eq admin true}}
                 {{#if_eq approved false}}
-                <form method="POST" action="/approval/approve" id="approve{{requestId}}">
+                <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq hasQualities true}}
                         <div class="btn-group btn-split">
@@ -201,17 +209,17 @@
                     {{/if_eq}}
                 </form>
                 {{/if_eq}}
-                <form method="POST" action="/requests/delete" id="delete{{requestId}}">
+                <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
                 </form>
 
-                <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
+                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
 
-                <form method="POST" action="/requests/changeavailability" id="change{{requestId}}">
+                <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq available true}}
                     <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit"><i class="fa fa-minus"></i> Mark Unavailable</button>
@@ -222,7 +230,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -309,22 +317,22 @@
             <div class="col-sm-2 col-sm-push-3">
                 {{#if_eq admin true}}
                 {{#if_eq approved false}}
-                <form method="POST" action="/approval/approve" id="approve{{requestId}}">
+                <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
                 {{/if_eq}}
-                <form method="POST" action="/requests/delete" id="delete{{requestId}}">
+                <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
                 </form>
 
-                <form method="POST" action="/requests/clearissues" id="clear{{requestId}}">
+                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
 
-                <form method="POST" action="/requests/changeavailability" id="change{{requestId}}">
+                <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq available true}}
                     <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit"><i class="fa fa-minus"></i> Mark Unavailable</button>
@@ -335,7 +343,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -369,7 +377,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
                 <h4 class="modal-title">Add issue/comment</h4>
             </div>
-            <form method="POST" action="/requests/reportissuecomment" id="commentForm">
+            <form method="POST" action="@formAction/requests/reportissuecomment" id="commentForm">
                 <div class="modal-body">
                     <input name="requestId" class="requestId" type="text" hidden="hidden" value="" />
                     <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
@@ -390,9 +398,9 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
                 <h4 class="modal-title">Add a note</h4>
             </div>
-            <form method="POST" action="/requests/addnote" id="noteForm">
+            <form method="POST" action="@formAction/requests/addnote" id="noteForm">
                 <div class="modal-body">
-                    <input name="requestId" class="noteId" type="text" hidden="hidden" value="" />
+                    <input name="requestId" class="noteId" type="text" hidden="hidden" value=""/>
                     <textarea class="form-control form-control-custom" rows="3" id="noteArea" name="noteArea"></textarea>
                 </div>
                 <div class="modal-footer">
@@ -403,6 +411,7 @@
         </div>
     </div>
 </div>
+<div id="baseUrl" value="@Html.GetBaseUrl()"></div>
 
 @Html.LoadRequestAssets()
 
