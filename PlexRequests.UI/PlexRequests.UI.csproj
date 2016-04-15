@@ -164,7 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Helpers\AssetHelper.cs" />
+    <Compile Include="Helpers\BaseUrlHelper.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\StringHelper.cs" />

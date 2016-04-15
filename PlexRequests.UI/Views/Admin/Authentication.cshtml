@@ -1,7 +1,16 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = "/admin/authentication";
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString() + formAction;
+    }
+}
 <div class="col-sm-8 col-sm-push-1">
-    <form class="form-horizontal" method="POST" action="/admin/authentication" id="mainForm">
+    <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
         <fieldset>
             <legend>Authentication Settings</legend>
 
@@ -100,21 +109,24 @@
 <script>
     $(function () {
 
+        var base = '@Html.GetBaseUrl()';
+
         if ($('#PlexAuthToken')) {
             loadUserList();
         }
 
-        $('#refreshUsers').click(function () {
+        $('#refreshUsers').click(function (e) {
             e.preventDefault();
             loadUserList();
         });
 
         $('#requestToken').click(function (e) {
             e.preventDefault();
+            var url = createBaseUrl(base, "admin/requestauth");
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
-                url: "requestauth",
+                url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {
@@ -136,9 +148,12 @@
 
 
         function loadUserList() {
+            $('#users').html("");
+            var url = "admin/getusers";
+            url = createBaseUrl(base, url);
             $.ajax({
                 type: "Get",
-                url: "getusers",
+                url: url,
                 dataType: "json",
                 success: function (response) {
                     if (response.length > 1) {
