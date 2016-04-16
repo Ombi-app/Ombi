@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 using Newtonsoft.Json;
+using System;
 
 namespace PlexRequests.Api.Models.Sonarr
 {
@@ -8,6 +9,17 @@ namespace PlexRequests.Api.Models.Sonarr
     {
         public int seasonNumber { get; set; }
         public bool monitored { get; set; }
+        public Statistics statistics { get; set; }
+    }
+
+    public class Statistics
+    {
+        public int episodeFileCount { get; set; }
+        public int episodeCount { get; set; }
+        public int totalEpisodeCount { get; set; }
+        public long sizeOnDisk { get; set; }
+        public float percentOfEpisodes { get; set; }
+        public DateTime previousAiring { get; set; }
     }
 
     public class SonarrAddSeries
@@ -26,7 +38,7 @@ namespace PlexRequests.Api.Models.Sonarr
         public string titleSlug { get; set; }
         public int id { get; set; }
         [JsonIgnore]
-        public string ErrorMessage { get; set; }
+        public List<string> ErrorMessages { get; set; }
     }
 
     public class AddOptions
@@ -35,7 +47,4 @@ namespace PlexRequests.Api.Models.Sonarr
         public bool ignoreEpisodesWithoutFiles { get; set; }
         public bool searchForMissingEpisodes { get; set; }
     }
-
-
-    
 }

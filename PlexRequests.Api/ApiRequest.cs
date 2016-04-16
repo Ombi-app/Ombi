@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -33,13 +34,19 @@ using Newtonsoft.Json;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
-
+using PlexRequests.Helpers;
 using RestSharp;
 
 namespace PlexRequests.Api
 {
     public class ApiRequest : IApiRequest
     {
+        private JsonSerializerSettings Settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            MissingMemberHandling = MissingMemberHandling.Ignore
+        };
+
         private static Logger Log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// An API request handler
@@ -53,6 +60,8 @@ namespace PlexRequests.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute<T>(request);
+            Log.Trace("Api Content Response:");
+            Log.Trace(response.Content);
 
             if (response.ErrorException != null)
             {
@@ -61,7 +70,6 @@ namespace PlexRequests.Api
             }
 
             return response.Data;
-
         }
 
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
@@ -100,15 +108,17 @@ namespace PlexRequests.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute(request);
-
+            Log.Trace("Api Content Response:");
+            Log.Trace(response.Content);
             if (response.ErrorException != null)
             {
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApplicationException(message, response.ErrorException);
             }
 
-
-            var json = JsonConvert.DeserializeObject<T>(response.Content);
+            Log.Trace("Deserialzing Object");
+            var json = JsonConvert.DeserializeObject<T>(response.Content, Settings);
+            Log.Trace("Finished Deserialzing Object");
 
             return json;
         }
@@ -129,4 +139,6 @@ namespace PlexRequests.Api
             }
         }
     }
+
+   
 }

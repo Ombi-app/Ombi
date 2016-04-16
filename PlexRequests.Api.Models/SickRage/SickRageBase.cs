@@ -1,6 +1,6 @@
 ﻿namespace PlexRequests.Api.Models.SickRage
 {
-    public class SickRageBase<T>
+    public abstract class SickRageBase<T>
     {
         public T data { get; set; }
         public string message { get; set; }

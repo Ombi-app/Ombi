@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -54,6 +55,7 @@
 <script>
     $(function () {
 
+        var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
             e.preventDefault();
 
@@ -80,11 +82,12 @@
         $('#testPushover').click(function (e) {
             e.preventDefault();
 
+            var url = createBaseUrl(base, '/admin/testpushovernotification');
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
                 data: $form.serialize(),
-                url: '/admin/testpushovernotification',
+                url: url,
                 dataType: "json",
                 success: function (response) {
                     if (response.result === true) {

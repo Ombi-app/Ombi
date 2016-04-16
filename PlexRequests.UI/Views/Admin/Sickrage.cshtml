@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -103,7 +104,7 @@
 
 <script>
     $(function() {
-
+        var base = '@Html.GetBaseUrl()';
         @if (!string.IsNullOrEmpty(Model.QualityProfile))
         {
     <text>
@@ -147,11 +148,18 @@
 
         $('#testSickRage').click(function (e) {
             e.preventDefault();
+            var qualityProfile = $("#profiles option:selected").val();
+
             var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&qualityProfile=" + qualityProfile;
+
+            var url = createBaseUrl(base, '/test/sickrage');
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/sickrage",
-                data: $form.serialize(),
+                url: url,
+                data: data,
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

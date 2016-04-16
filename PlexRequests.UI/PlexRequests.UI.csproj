@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlexRequests.UI</RootNamespace>
     <AssemblyName>PlexRequests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -164,13 +164,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Helpers\BaseUrlHelper.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
+    <Compile Include="Jobs\MediaCacheRegistry.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
+    <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
+    <Compile Include="Models\SearchMovieViewModel.cs" />
+    <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />
     <Compile Include="Validators\EmailNotificationSettingsValidator.cs" />
@@ -193,7 +201,7 @@
     <Compile Include="Models\SessionKeys.cs" />
     <Compile Include="Modules\AdminModule.cs" />
     <Compile Include="Modules\ApplicationTesterModule.cs" />
-    <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\BaseAuthModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
     <Compile Include="Modules\ApprovalModule.cs" />
     <Compile Include="Modules\UserLoginModule.cs" />
@@ -458,6 +466,10 @@
       <ReferenceCopyLocalPaths Remove="@(ReferenceSatellitePaths)" />
     </ItemGroup>
   </Target>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -67,13 +68,14 @@
 
 <script>
     $(function () {
-
+        var base = '@Html.GetBaseUrl()';
         $('#testPlex').click(function (e) {
             e.preventDefault();
+            var url = createBaseUrl(base, '/test/plex');
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/plex",
+                url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

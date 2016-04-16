@@ -5,12 +5,16 @@
         return opts.inverse(this);
 });
 
+
+
 $(function () {
 
     var searchSource = $("#search-template").html();
     var musicSource = $("#music-template").html();
     var searchTemplate = Handlebars.compile(searchSource);
     var musicTemplate = Handlebars.compile(musicSource);
+
+    var base = $('#baseUrl').text();
 
     var searchTimer = 0;
 
@@ -21,7 +25,7 @@ $(function () {
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        focusSearch($($(e.target).attr('href')))
+        focusSearch($($(e.target).attr('href')));
     });
     focusSearch($('li.active a', '#nav-tabs').first().attr('href'));
 
@@ -30,7 +34,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#movieSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(movieSearch, 400);
 
     });
@@ -50,7 +53,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(tvSearch, 400);
     });
 
@@ -90,7 +92,6 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        $('#musicSearchButton').attr("class", "fa fa-spinner fa-spin");
         searchTimer = setTimeout(musicSearch, 400);
 
     });
@@ -175,21 +176,24 @@ $(function () {
 
     function movieSearch() {
         var query = $("#movieSearchContent").val();
-        getMovies("/search/movie/" + query);
+        var url = createBaseUrl(base, '/search/movie/');
+        query ? getMovies(url + query) : resetMovies();
     }
 
     function moviesComingSoon() {
-        getMovies("/search/movie/upcoming");
+        var url = createBaseUrl(base, '/search/movie/upcoming');
+        getMovies(url);
     }
 
     function moviesInTheaters() {
-        getMovies("/search/movie/playing");
+        var url = createBaseUrl(base, '/search/movie/playing');
+        getMovies(url);
     }
 
     function getMovies(url) {
-        $("#movieList").html("");
+        resetMovies();
 
-
+        $('#movieSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -206,14 +210,21 @@ $(function () {
         });
     };
 
+    function resetMovies() {
+        $("#movieList").html("");
+    }
+
     function tvSearch() {
         var query = $("#tvSearchContent").val();
-        getTvShows("/search/tv/" + query);
+
+        var url = createBaseUrl(base, '/search/tv/');
+        query ? getTvShows(url + query) : resetTvShows();
     }
 
     function getTvShows(url) {
-        $("#tvList").html("");
+        resetTvShows();
 
+        $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -229,14 +240,20 @@ $(function () {
         });
     };
 
+    function resetTvShows() {
+        $("#tvList").html("");
+    }
+
     function musicSearch() {
+        var url = createBaseUrl(base, '/search/music/');
         var query = $("#musicSearchContent").val();
-        getMusic("/search/music/" + query);
+        query ? getMusic(url + query) : resetMusic();
     }
 
     function getMusic(url) {
-        $("#musicList").html("");
+        resetMusic();
 
+        $('#musicSearchButton').attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
@@ -254,8 +271,14 @@ $(function () {
         });
     };
 
+    function resetMusic() {
+        $("#musicList").html("");
+    }
+
     function getCoverArt(artistId) {
-        $.ajax("/search/music/coverart/" + artistId).success(function (result) {
+
+        var url = createBaseUrl(base, '/search/music/coverart/');
+        $.ajax(url + artistId).success(function (result) {
             if (result) {
                 $('#' + artistId + "imageDiv").html(" <img class='img-responsive' src='" + result + "' width='150' alt='poster'>");
             }
@@ -274,7 +297,10 @@ $(function () {
             voteAverage: result.voteAverage,
             year: year,
             type: "movie",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;
@@ -290,7 +316,10 @@ $(function () {
             overview: result.overview,
             year: year,
             type: "tv",
-            imdb: result.imdbId
+            imdb: result.imdbId,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
         return context;
     }
@@ -307,7 +336,10 @@ $(function () {
             coverArtUrl: result.coverArtUrl,
             artist: result.artist,
             releaseType: result.releaseType,
-            country: result.country
+            country: result.country,
+            requested: result.requested,
+            approved: result.approved,
+            available: result.available
         };
 
         return context;

@@ -46,7 +46,7 @@ using System.Threading.Tasks;
 
 namespace PlexRequests.UI.Modules
 {
-    public class RequestsModule : BaseModule
+    public class RequestsModule : BaseAuthModule
     {
         public RequestsModule(
             IRequestService service,

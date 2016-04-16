@@ -26,12 +26,13 @@
 #endregion
 
 using System.Net;
-using FluentScheduler;
+
 using Mono.Data.Sqlite;
 
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
 using Nancy.Session;
@@ -39,7 +40,6 @@ using Nancy.TinyIoc;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Mocks;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
@@ -49,8 +49,7 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
-using PlexRequests.UI.Jobs;
-using TaskFactory = FluentScheduler.TaskFactory;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI
 {
@@ -60,11 +59,12 @@ namespace PlexRequests.UI
         // by overriding the various methods and properties.
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
 
+
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
             container.Register<IUserMapper, UserMapper>();
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
-            container.Register<ICacheProvider, MemoryCacheProvider>();
+            container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
 
             // Settings
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
@@ -85,6 +85,9 @@ namespace PlexRequests.UI
 
             // Services
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
+            container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
+            container.Register<ISonarrCacher, SonarrCacher>();
+            container.Register<ISickRageCacher, SickRageCacher>();
             container.Register<IConfigurationReader, ConfigurationReader>();
             container.Register<IIntervals, UpdateInterval>();
 
@@ -103,9 +106,8 @@ namespace PlexRequests.UI
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
-
-            TaskManager.TaskFactory = new PlexTaskFactory();
-            TaskManager.Initialize(new PlexRegistry());
+            var loc = ServiceLocator.Instance;
+            loc.SetContainer(container);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
@@ -116,10 +118,14 @@ namespace PlexRequests.UI
 
             base.ApplicationStartup(container, pipelines);
 
+            var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var baseUrl = settings.GetSettings().BaseUrl;
+            var redirect = string.IsNullOrEmpty(baseUrl) ? "~/login" : $"~/{baseUrl}/login";
+            
             // Enable forms auth
             var formsAuthConfiguration = new FormsAuthenticationConfiguration
             {
-                RedirectUrl = "~/login",
+                RedirectUrl = redirect,
                 UserMapper = container.Resolve<IUserMapper>()
             };
 
@@ -130,7 +136,17 @@ namespace PlexRequests.UI
                  (sender, certificate, chain, sslPolicyErrors) => true;
 
         }
-        
+
+        protected override void ConfigureConventions(NancyConventions nancyConventions)
+        {
+            base.ConfigureConventions(nancyConventions);
+
+            var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()),new MemoryCacheProvider()));
+            var assetLocation = settings.GetSettings().BaseUrl;
+            nancyConventions.StaticContentsConventions.Add(
+                    StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content", "Content")
+                );
+        }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
 

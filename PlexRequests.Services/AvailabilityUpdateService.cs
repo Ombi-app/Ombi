@@ -25,6 +25,8 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Web.Hosting;
 
@@ -41,19 +43,22 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Services
 {
     public class AvailabilityUpdateService : ITask, IRegisteredObject, IAvailabilityUpdateService
     {
+
         public AvailabilityUpdateService()
         {
+
             var memCache = new MemoryCacheProvider();
             var dbConfig = new DbConfiguration(new SqliteFactory());
             var repo = new SettingsJsonRepository(dbConfig, memCache);
 
             ConfigurationReader = new ConfigurationReader();
-            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(dbConfig, memCache)), new PlexApi());
+            Checker = new PlexAvailabilityChecker(new SettingsServiceV2<PlexSettings>(repo), new SettingsServiceV2<AuthenticationSettings>(repo), new JsonRequestService(new RequestJsonRepository(dbConfig, memCache)), new PlexApi(), memCache);
             HostingEnvironment.RegisterObject(this);
         }
 
@@ -66,7 +71,7 @@ namespace PlexRequests.Services
         public void Start(Configuration c)
         {
             UpdateSubscription?.Dispose();
-
+            Task.Factory.StartNew(() => Checker.CheckAndUpdateAll(-1)); // cache the libraries and run the availability checks
             UpdateSubscription = Observable.Interval(c.Intervals.Notification).Subscribe(Checker.CheckAndUpdateAll);
         }
 

@@ -36,6 +36,7 @@ using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Helpers;
 
 using RestSharp;
+using Newtonsoft.Json.Linq;
 
 namespace PlexRequests.Api
 {
@@ -104,8 +105,10 @@ namespace PlexRequests.Api
             catch (JsonSerializationException jse)
             {
                 Log.Error(jse);
-                var error = Api.ExecuteJson<SonarrError>(request, baseUrl);
-                result = new SonarrAddSeries { ErrorMessage = error.errorMessage };
+                var error = Api.ExecuteJson<List<SonarrError>>(request, baseUrl);
+                var messages = error?.Select(x => x.errorMessage).ToList();
+                messages?.ForEach(x => Log.Error(x));
+                result = new SonarrAddSeries { ErrorMessages = messages };
             }
 
             return result;
@@ -119,6 +122,14 @@ namespace PlexRequests.Api
             var obj = Api.ExecuteJson<SystemStatus>(request, baseUrl);
 
             return obj;
+        }
+
+        public List<Series> GetSeries(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/series", Method = Method.GET };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            return Api.Execute<List<Series>>(request, baseUrl);
         }
     }
 }

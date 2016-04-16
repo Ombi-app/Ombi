@@ -44,7 +44,7 @@ namespace PlexRequests.Core
     {
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private static DbConfiguration Db { get; set; }
-        public string SetupDb()
+        public string SetupDb(string urlBase)
         {
             Db = new DbConfiguration(new SqliteFactory());
             var created = Db.CheckDb();
@@ -52,7 +52,7 @@ namespace PlexRequests.Core
 
             if (created)
             {
-                CreateDefaultSettingsPage();
+                CreateDefaultSettingsPage(urlBase);
             }
             
             var version = CheckSchema();
@@ -89,7 +89,7 @@ namespace PlexRequests.Core
             return version;
         }
 
-        private void CreateDefaultSettingsPage()
+        private void CreateDefaultSettingsPage(string baseUrl)
         {
             var defaultSettings = new PlexRequestSettings
             {
@@ -97,7 +97,8 @@ namespace PlexRequests.Core
                 RequireMovieApproval = true,
                 SearchForMovies = true,
                 SearchForTvShows = true,
-                WeeklyRequestLimit = 0
+                WeeklyRequestLimit = 0,
+                BaseUrl = baseUrl ?? string.Empty
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);

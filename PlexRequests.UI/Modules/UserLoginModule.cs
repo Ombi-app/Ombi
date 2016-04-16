@@ -44,7 +44,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class UserLoginModule : NancyModule
+    public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api) : base("userlogin")
         {
@@ -142,7 +142,7 @@ namespace PlexRequests.UI.Modules
             Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
 
             return Response.AsJson(authenticated 
-                ? new JsonResponseModel { Result = true } 
+                ? new JsonResponseModel { Result = true, BaseUrl = BaseUrl} 
                 : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
         }
 
@@ -155,7 +155,9 @@ namespace PlexRequests.UI.Modules
             {
                 Session.Delete(SessionKeys.UsernameKey);
             }
-            return Context.GetRedirect("~/userlogin");
+            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) 
+                ? $"~/{BaseUrl}/userlogin" 
+                : "~/userlogin");
         }
 
         private bool CheckIfUserIsOwner(string authToken, string userName)

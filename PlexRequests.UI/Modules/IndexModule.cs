@@ -29,12 +29,13 @@ using Nancy.Extensions;
 
 namespace PlexRequests.UI.Modules
 {
-    public class IndexModule : BaseModule
+    public class IndexModule : BaseAuthModule
     {
         public IndexModule()
         {
-            Get["/"] = parameters => Context.GetRedirect("~/search");
-            Get["/Index"] = parameters => Context.GetRedirect("~/search");
+            Get["/"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
+
+            Get["/Index"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
         }
     }
 }

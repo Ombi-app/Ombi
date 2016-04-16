@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PlexRequests.Helpers</RootNamespace>
     <AssemblyName>PlexRequests.Helpers</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -56,6 +56,7 @@
     <Compile Include="Exceptions\ApplicationSettingsException.cs" />
     <Compile Include="HtmlRemover.cs" />
     <Compile Include="ICacheProvider.cs" />
+    <Compile Include="JsonConvertHelper.cs" />
     <Compile Include="LoggingHelper.cs" />
     <Compile Include="MemoryCacheProvider.cs" />
     <Compile Include="ObjectCopier.cs" />

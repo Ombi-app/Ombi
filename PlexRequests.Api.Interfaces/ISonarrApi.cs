@@ -39,5 +39,7 @@ namespace PlexRequests.Api.Interfaces
             int seasonCount, int[] seasons, string apiKey, Uri baseUrl);
 
         SystemStatus SystemStatus(string apiKey, Uri baseUrl);
+
+        List<Series> GetSeries(string apiKey, Uri baseUrl);
     }
 }

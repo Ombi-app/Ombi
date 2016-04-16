@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -10,9 +11,17 @@
         port = Model.Port;
     }
 
+
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = "/admin";
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString() + formAction;
+    }
+
 }
 <div class="col-sm-8 col-sm-push-1">
-    <form class="form-horizontal" method="POST" action="/admin" id="mainForm">
+    <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
         <fieldset>
             <legend>Request Plex Settings</legend>
             <div class="form-group">
@@ -23,6 +32,16 @@
                 </div>
             </div>
             <small class="control-label">You will have to restart after changing the port.</small>
+
+            <div class="form-group">
+                <label for="BaseUrl" class="control-label">Base Url</label>
+
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="BaseUrl" name="BaseUrl" placeholder="Base Url" value="@Model.BaseUrl">
+                </div>
+            </div>
+            <small class="control-label">You will have to restart after changing the url base.</small>
+
             <div class="form-group">
                 <div class="checkbox">
                     <label>
@@ -62,7 +81,7 @@
                         else
                         {
                             <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><text>Search for Music</text>
-}
+                        }
                     </label>
                 </div>
             </div>
@@ -137,13 +156,13 @@
             </div>
 
             @*<div class="form-group">
-                <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
-                <div>
-                    <label>
-                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
-                    </label>
-                </div>
-            </div> //TODO: Need to implement this*@
+                    <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
+                    <div>
+                        <label>
+                            <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
+                        </label>
+                    </div>
+                </div> //TODO: Need to implement this*@
 
             <div>
             </div>

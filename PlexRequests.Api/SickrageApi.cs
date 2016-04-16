@@ -28,15 +28,18 @@
 #endregion
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Helpers;
 using RestSharp;
+using Newtonsoft.Json.Linq;
 
 namespace PlexRequests.Api
 {
@@ -55,8 +58,12 @@ namespace PlexRequests.Api
         public async Task<SickRageTvAdd> AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey,
             Uri baseUrl)
         {
+
             var futureStatus = seasons.Length > 0 && !seasons.Any(x => x == seasonCount) ? SickRageStatus.Skipped : SickRageStatus.Wanted;
             var status = seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
+
+            Log.Trace("Future Status: {0}", futureStatus);
+            Log.Trace("Current Status: {0}", status);
 
             var request = new RestRequest
             {
@@ -69,10 +76,15 @@ namespace PlexRequests.Api
             request.AddQueryParameter("future_status", futureStatus);
             if (!quality.Equals("default", StringComparison.CurrentCultureIgnoreCase))
             {
+                Log.Trace("Settings quality to {0}", quality);
                 request.AddQueryParameter("initial", quality);
             }
 
+            Log.Trace("Entering `Execute<SickRageTvAdd>`");
             var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
+            Log.Trace("Exiting `Execute<SickRageTvAdd>`");
+            Log.Trace("obj Result:");
+            Log.Trace(obj.DumpJson());
 
             if (obj.result != "failure")
             {
@@ -81,30 +93,57 @@ namespace PlexRequests.Api
 
                 var seasonIncrement = 0;
                 var seasonList = new SickRageSeasonList();
-                while (seasonIncrement < seasonCount)
+                Log.Trace("while (seasonIncrement < seasonCount) where seasonCount = {0}", seasonCount);
+                try
                 {
-                    seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
-                    seasonIncrement = seasonList.data?.Length ?? 0;
-                    
-                    if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
+                    while (seasonIncrement < seasonCount)
                     {
-                        Log.Warn("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
-                        break;
+                        seasonList = VerifyShowHasLoaded(tvdbId, apiKey, baseUrl);
+                        if (seasonList.result.Equals("failure"))
+                        {
+                            Thread.Sleep(3000);
+                            continue;
+                        }
+                        seasonIncrement = seasonList.Data?.Length ?? 0;
+                        Log.Trace("New seasonIncrement -> {0}", seasonIncrement);
+
+                        if (sw.ElapsedMilliseconds > 30000) // Break out after 30 seconds, it's not going to get added
+                        {
+                            Log.Warn("Couldn't find out if the show had been added after 10 seconds. I doubt we can change the status to wanted.");
+                            break;
+                        }
+                    }
+                    sw.Stop();
+                }
+                catch (Exception e)
+                {
+                    Log.Error("Exception thrown when getting the seasonList");
+                    Log.Error(e);
+                }
+            }
+            Log.Trace("seasons.Length > 0 where seasons.Len -> {0}", seasons.Length);
+            try
+            {
+                if (seasons.Length > 0)
+                {
+                    //handle the seasons requested
+                    foreach (var s in seasons)
+                    {
+                        Log.Trace("Adding season {0}", s);
+                        var result = await AddSeason(tvdbId, s, apiKey, baseUrl);
+                        Log.Trace("SickRage adding season results: ");
+                        Log.Trace(result.DumpJson());
                     }
                 }
-                sw.Stop();
             }
-            if (seasons.Length > 0)
+            catch (Exception e)
             {
-                //handle the seasons requested
-                foreach (var s in seasons)
-                {
-                    var result = await AddSeason(tvdbId, s, apiKey, baseUrl);
-                    Log.Trace("SickRage adding season results: ");
-                    Log.Trace(result.DumpJson());
-                }
+                Log.Trace("Exception when adding seasons:");
+                Log.Error(e);
+                throw;
             }
 
+            Log.Trace("Finished with the API, returning the obj");
             return obj;
         }
 
@@ -124,6 +163,7 @@ namespace PlexRequests.Api
 
         public SickRageSeasonList VerifyShowHasLoaded(int tvdbId, string apiKey, Uri baseUrl)
         {
+            Log.Trace("Entered `VerifyShowHasLoaded({0} <- id)`", tvdbId);
             var request = new RestRequest
             {
                 Resource = "/api/{apiKey}/?cmd=show.seasonlist",
@@ -134,7 +174,9 @@ namespace PlexRequests.Api
 
             try
             {
+                Log.Trace("Entering `ExecuteJson<SickRageSeasonList>`");
                 var obj = Api.ExecuteJson<SickRageSeasonList>(request, baseUrl);
+                Log.Trace("Exited `ExecuteJson<SickRageSeasonList>`");
                 return obj;
             }
             catch (Exception e)
@@ -157,7 +199,26 @@ namespace PlexRequests.Api
             request.AddQueryParameter("status", SickRageStatus.Wanted);
 
             await Task.Run(() => Thread.Sleep(2000));
-            return await Task.Run(() => Api.Execute<SickRageTvAdd>(request, baseUrl)).ConfigureAwait(false);
+            return await Task.Run(() =>
+            {
+                Log.Trace("Entering `Execute<SickRageTvAdd>` in a new `Task<T>`");
+                var result = Api.Execute<SickRageTvAdd>(request, baseUrl);
+
+                Log.Trace("Exiting `Execute<SickRageTvAdd>` and yeilding `Task<T>` result");
+                return result;
+            }).ConfigureAwait(false);
+        }
+
+        public async Task<SickrageShows> GetShows(string apiKey, Uri baseUrl) 
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/{apiKey}/?cmd=shows",
+                Method = Method.GET
+            };
+            request.AddUrlSegment("apiKey", apiKey);
+            
+            return await Task.Run(() => Api.Execute<SickrageShows>(request, baseUrl)).ConfigureAwait(false);
         }
     }
 }

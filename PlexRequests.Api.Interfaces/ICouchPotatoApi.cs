@@ -36,5 +36,6 @@ namespace PlexRequests.Api.Interfaces
         bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
         CouchPotatoStatus GetStatus(Uri url, string apiKey);
         CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
+        CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status);
     }
 }

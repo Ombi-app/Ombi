@@ -38,7 +38,7 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class LoginModule : NancyModule
+    public class LoginModule : BaseModule
     {
         public LoginModule()
         {
@@ -54,7 +54,7 @@ namespace PlexRequests.UI.Modules
 
             };
 
-            Get["/logout"] = x => this.LogoutAndRedirect("~/");
+            Get["/logout"] = x => this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
 
             Post["/login"] = x =>
             {
@@ -66,7 +66,7 @@ namespace PlexRequests.UI.Modules
 
                 if (userId == null)
                 {
-                    return Context.GetRedirect("~/login?error=true&username=" + username);
+                    return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/login?error=true&username=" + username : "~/login?error=true&username=" + username);
                 }
                 DateTime? expiry = null;
                 if (Request.Form.RememberMe.HasValue)
@@ -75,6 +75,11 @@ namespace PlexRequests.UI.Modules
                 }
                 Session[SessionKeys.UsernameKey] = username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
+                if (!string.IsNullOrEmpty(BaseUrl))
+                {
+
+                    return this.LoginAndRedirect(userId.Value, expiry, $"/{BaseUrl}");
+                }
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 
@@ -94,7 +99,7 @@ namespace PlexRequests.UI.Modules
                 var exists = UserMapper.DoUsersExist();
                 if (exists)
                 {
-                    return Context.GetRedirect("~/register?error=true");
+                    return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/register?error=true" : "~/register?error=true");
                 }
                 var userId = UserMapper.CreateUser(username, Request.Form.Password, new[] { "Admin" });
                 Session[SessionKeys.UsernameKey] = username;

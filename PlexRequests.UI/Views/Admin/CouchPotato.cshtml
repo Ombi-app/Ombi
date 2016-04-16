@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -108,15 +109,19 @@
 <script>
     $(function() {
 
+        var baseUrl = '@Html.GetBaseUrl()';
+
         @if (!string.IsNullOrEmpty(Model.ProfileId))
          {
              <text>
         var qualitySelected = '@Model.ProfileId';
         var $form = $("#mainForm");
+        var url = '/admin/cpprofiles';
+        url = createBaseUrl(baseUrl, url);
         $.ajax({
             type: $form.prop("method"),
             data: $form.serialize(),
-            url: "cpprofiles",
+            url: url,
             dataType: "json",
             success: function(response) {
                 response.list.forEach(function(result) {
@@ -139,12 +144,17 @@
         $('#getProfiles').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
+            var url = createBaseUrl(baseUrl, "/admin/cpprofiles");
             $.ajax({
                 type: $form.prop("method"),
                 data: $form.serialize(),
-                url: "cpprofiles",
+                url: url,
                 dataType: "json",
                 success: function (response) {
+                    if (response.message) {
+                        generateNotify(response.message, "warning");
+                        return;
+                    }
                     response.list.forEach(function (result) {
                         $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
                     });
@@ -159,10 +169,10 @@
         $('#testCp').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
-
+            var url = createBaseUrl(baseUrl,"/test/cp");
             $.ajax({
                 type: $form.prop("method"),
-                url: "/test/cp",
+                url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

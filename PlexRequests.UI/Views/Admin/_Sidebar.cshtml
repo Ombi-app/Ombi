@@ -1,108 +1,17 @@
-﻿<div class="col-lg-3 col-md-3 col-sm-4">
+﻿@using PlexRequests.UI.Helpers
+<div class="col-lg-3 col-md-3 col-sm-4">
     <div class="list-group table-of-contents">
-        @if (Context.Request.Path == "/admin")
-        {
-            <a class="list-group-item active" href="/admin">Plex Request</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin">Plex Request</a>
-        }
-        @if (Context.Request.Path == "/admin/authentication")
-        {
-
-            <a class="list-group-item active" href="/admin/authentication">Authentication</a>
-        }
-        else
-        {
-
-            <a class="list-group-item" href="/admin/authentication">Authentication</a>
-        }
-
-        @if (Context.Request.Path == "/admin/plex")
-        {
-            <a class="list-group-item active" href="/admin/plex">Plex</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/plex">Plex</a>
-        }
-        @if (Context.Request.Path == "/admin/couchpotato")
-        {
-            <a class="list-group-item active" href="/admin/couchpotato">CouchPotato</a>
-        }
-        else
-        {
-
-            <a class="list-group-item" href="/admin/couchpotato">CouchPotato</a>
-        }
-        @if (Context.Request.Path == "/admin/sonarr")
-        {
-            <a class="list-group-item active" href="/admin/sonarr">Sonarr</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/sonarr">Sonarr</a>
-        }
-        @if (Context.Request.Path == "/admin/sickrage")
-        {
-            <a class="list-group-item active" href="/admin/sickrage">SickRage</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/sickrage">SickRage</a>
-        }
-        @if (Context.Request.Path == "/admin/headphones")
-        {
-            <a class="list-group-item active" href="/admin/headphones">Headphones (Beta)</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/headphones">Headphones (Beta)</a>
-        }
-
-        @if (Context.Request.Path == "/admin/emailnotification")
-        {
-            <a class="list-group-item active" href="/admin/emailnotification">Email Notifications</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/emailnotification">Email Notifications</a>
-        }
-
-        @if (Context.Request.Path == "/admin/pushbulletnotification")
-        {
-            <a class="list-group-item active" href="/admin/pushbulletnotification">Pushbullet Notifications</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/pushbulletnotification">Pushbullet Notifications</a>
-        }
-
-        @if (Context.Request.Path == "/admin/pushovernotification")
-        {
-            <a class="list-group-item active" href="/admin/pushovernotification">Pushover Notifications</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/pushovernotification">Pushover Notifications</a>
-        }
-        @if (Context.Request.Path == "/admin/logs")
-        {
-            <a class="list-group-item active" href="/admin/logs">Logs</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/logs">Logs</a>
-        }
-
-        @if (Context.Request.Path == "/admin/status")
-        {
-            <a class="list-group-item active" href="/admin/status">Status</a>
-        }
-        else
-        {
-            <a class="list-group-item" href="/admin/status">Status</a>
-        }
+        @Html.GetSidebarUrl(Context, "/admin", "Plex Request")
+        @Html.GetSidebarUrl(Context, "/admin/authentication", "Authentication")
+        @Html.GetSidebarUrl(Context, "/admin/plex", "Plex")
+        @Html.GetSidebarUrl(Context, "/admin/couchpotato", "CouchPotato")
+        @Html.GetSidebarUrl(Context, "/admin/sonarr", "Sonarr")
+        @Html.GetSidebarUrl(Context, "/admin/sickrage", "SickRage")
+        @Html.GetSidebarUrl(Context, "/admin/headphones", "Headphones (Beta)")
+        @Html.GetSidebarUrl(Context, "/admin/emailnotification", "Email Notifications")
+        @Html.GetSidebarUrl(Context, "/admin/pushbulletnotification", "Pushbullet Notifications")
+        @Html.GetSidebarUrl(Context, "/admin/pushovernotification", "Pushover Notifications")
+        @Html.GetSidebarUrl(Context, "/admin/logs", "Logs")
+        @Html.GetSidebarUrl(Context, "/admin/status", "Status")
     </div>
 </div>

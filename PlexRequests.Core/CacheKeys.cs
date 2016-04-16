@@ -28,9 +28,19 @@ namespace PlexRequests.Core
 {
     public class CacheKeys
     {
+        public const string PlexLibaries = "PlexLibaries";
+
         public const string TvDbToken = "TheTvDbApiToken";
+
         public const string SonarrQualityProfiles = "SonarrQualityProfiles";
+        public const string SonarrQueued = "SonarrQueued";
+
         public const string SickRageQualityProfiles = "SickRageQualityProfiles";
+        public const string SickRageQueued = "SickRageQueued";
+
         public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
+        public const string CouchPotatoQueued = "CouchPotatoQueued";
+
+        public const string GetBaseUrl = "GetBaseUrl";
     }
 }

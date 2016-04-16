@@ -48,23 +48,35 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using System.Threading.Tasks;
+using TMDbLib.Objects.Search;
+using PlexRequests.Api.Models.Tv;
+using TMDbLib.Objects.General;
 
 namespace PlexRequests.UI.Modules
 {
-    public class SearchModule : BaseModule
+    public class SearchModule : BaseAuthModule
     {
         public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
-            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService) : base("search")
+            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService, 
+            ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi, 
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth) : base("search")
         {
+            Auth = auth;
+            PlexService = plexService;
+            PlexApi = plexApi;
             CpService = cpSettings;
             PrService = prSettings;
             MovieApi = new TheMovieDbApi();
             TvApi = new TheTvDbApi();
             Cache = cache;
             Checker = checker;
+            CpCacher = cpCacher;
+            SonarrCacher = sonarrCacher;
+            SickRageCacher = sickRageCacher;
             RequestService = request;
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
@@ -91,6 +103,7 @@ namespace PlexRequests.UI.Modules
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
         }
+        private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
@@ -99,17 +112,23 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickrageApi { get; }
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
+        private ISettingsService<AuthenticationSettings> Auth { get; }
+        private ISettingsService<PlexSettings> PlexService { get; }
         private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private IAvailabilityChecker Checker { get; }
+        private ICouchPotatoCacher CpCacher { get; }
+        private ISonarrCacher SonarrCacher { get; }
+        private ISickRageCacher SickRageCacher { get; }
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private bool IsAdmin {
+        private bool IsAdmin
+        {
             get
             {
                 return Context.CurrentUser.IsAuthenticated();
@@ -124,29 +143,165 @@ namespace PlexRequests.UI.Modules
             return View["Search/Index", settings];
         }
 
+        private Response UpcomingMovies()
+        {
+            Log.Trace("Loading upcoming movies");
+            return ProcessMovies(MovieSearchType.Upcoming, string.Empty);
+        }
+
+        private Response CurrentlyPlayingMovies()
+        {
+            Log.Trace("Loading currently playing movies");
+            return ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
+        }
+
         private Response SearchMovie(string searchTerm)
         {
             Log.Trace("Searching for Movie {0}", searchTerm);
-            var movies = MovieApi.SearchMovie(searchTerm);
-            var result = movies.Result;
-            return Response.AsJson(result);
+            return ProcessMovies(MovieSearchType.Search, searchTerm);
+        }
+
+        private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
+        {
+            List<Task> taskList = new List<Task>();
+            var cpSettings = CpService.GetSettings();
+
+            List<MovieResult> apiMovies = new List<MovieResult>();
+            taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
+            {
+                switch(searchType)
+                {
+                    case MovieSearchType.Search:
+                        return MovieApi.SearchMovie(searchTerm).Result.Select(x => new MovieResult()
+                        {
+                            Adult = x.Adult,
+                            BackdropPath = x.BackdropPath,
+                            GenreIds = x.GenreIds,
+                            Id = x.Id,
+                            OriginalLanguage = x.OriginalLanguage,
+                            OriginalTitle = x.OriginalTitle,
+                            Overview = x.Overview,
+                            Popularity = x.Popularity,
+                            PosterPath = x.PosterPath,
+                            ReleaseDate = x.ReleaseDate,
+                            Title = x.Title,
+                            Video = x.Video,
+                            VoteAverage = x.VoteAverage,
+                            VoteCount = x.VoteCount
+                        }).ToList();
+                    case MovieSearchType.CurrentlyPlaying:
+                        return MovieApi.GetCurrentPlayingMovies().Result.ToList();
+                    case MovieSearchType.Upcoming:
+                        return MovieApi.GetUpcomingMovies().Result.ToList();
+                    default:
+                        return new List<MovieResult>();
+                }
+            }).ContinueWith((t) =>
+            {
+                apiMovies = t.Result;
+            }));
+
+            Dictionary<int, RequestedModel> dbMovies = new Dictionary<int, RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
+            {
+                return RequestService.GetAll().Where(x => x.Type == RequestType.Movie);
+
+            }).ContinueWith((t) =>
+            {
+                dbMovies = t.Result.ToDictionary(x => x.ProviderId);
+            }));
+
+            Task.WaitAll(taskList.ToArray());
+
+            int[] cpCached = CpCacher.QueuedIds();
+            var plexMovies = Checker.GetPlexMovies();
+
+            List<SearchMovieViewModel> viewMovies = new List<SearchMovieViewModel>();
+            foreach (MovieResult movie in apiMovies)
+            {
+                var viewMovie = new SearchMovieViewModel()
+                {
+                    Adult = movie.Adult,
+                    BackdropPath = movie.BackdropPath,
+                    GenreIds = movie.GenreIds,
+                    Id = movie.Id,
+                    OriginalLanguage = movie.OriginalLanguage,
+                    OriginalTitle = movie.OriginalTitle,
+                    Overview = movie.Overview,
+                    Popularity = movie.Popularity,
+                    PosterPath = movie.PosterPath,
+                    ReleaseDate = movie.ReleaseDate,
+                    Title = movie.Title,
+                    Video = movie.Video,
+                    VoteAverage = movie.VoteAverage,
+                    VoteCount = movie.VoteCount
+                };
+
+                if (Checker.IsMovieAvailable(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString()))
+                {
+                    viewMovie.Available = true;
+                }
+                else if (dbMovies.ContainsKey(movie.Id)) // compare to the requests db
+                {
+                    var dbm = dbMovies[movie.Id];
+
+                    viewMovie.Requested = true;
+                    viewMovie.Approved = dbm.Approved;
+                    viewMovie.Available = dbm.Available;
+                }
+                else if (cpCached.Contains(movie.Id)) // compare to the couchpotato db
+                {
+                    viewMovie.Requested = true;
+                }
+
+                viewMovies.Add(viewMovie);
+            }
+
+            return Response.AsJson(viewMovies);
         }
 
         private Response SearchTvShow(string searchTerm)
         {
             Log.Trace("Searching for TV Show {0}", searchTerm);
-            //var tvShow = TvApi.SearchTv(searchTerm, AuthToken);
-            var tvShow = new TvMazeApi().Search(searchTerm);
-            if (!tvShow.Any())
+
+            List<Task> taskList = new List<Task>();
+
+            List<TvMazeSearch> apiTv = new List<TvMazeSearch>();
+            taskList.Add(Task.Factory.StartNew(() =>
+            {
+                return new TvMazeApi().Search(searchTerm);
+
+            }).ContinueWith((t) =>
+            {
+                apiTv = t.Result;
+            }));
+
+            Dictionary<int, RequestedModel> dbTv = new Dictionary<int, RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
+            {
+                return RequestService.GetAll().Where(x => x.Type == RequestType.TvShow);
+
+            }).ContinueWith((t) =>
+            {
+                dbTv = t.Result.ToDictionary(x => x.ProviderId);
+            }));
+
+            Task.WaitAll(taskList.ToArray());
+
+            if (!apiTv.Any())
             {
                 Log.Trace("TV Show data is null");
                 return Response.AsJson("");
             }
-            var model = new List<SearchTvShowViewModel>();
 
-            foreach (var t in tvShow)
+            int[] sonarrCached = SonarrCacher.QueuedIds();
+            int[] sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
+            var plexTvShows = Checker.GetPlexTvShows();
+
+            var viewTv = new List<SearchTvShowViewModel>();
+            foreach (var t in apiTv)
             {
-                model.Add(new SearchTvShowViewModel
+                var viewT = new SearchTvShowViewModel
                 {
                     // We are constructing the banner with the id: 
                     // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
@@ -161,24 +316,71 @@ namespace PlexRequests.UI.Modules
                     Runtime = t.show.runtime.ToString(),
                     SeriesId = t.show.id,
                     SeriesName = t.show.name,
+                    Status = t.show.status
+                };
 
-                    Status = t.show.status,
-                });
+                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4)))
+                {
+                    viewT.Available = true;
+                }
+                else if (t.show.externals.thetvdb != null)
+                {
+                    int tvdbid = (int)t.show.externals.thetvdb;
+
+                    if (dbTv.ContainsKey(tvdbid))
+                    {
+                        var dbt = dbTv[tvdbid];
+
+                        viewT.Requested = true;
+                        viewT.Approved = dbt.Approved;
+                        viewT.Available = dbt.Available;
+                    }
+                    else if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
+                    {
+                        viewT.Requested = true;
+                    }
+                }
+
+                viewTv.Add(viewT);
             }
 
             Log.Trace("Returning TV Show results: ");
-            Log.Trace(model.DumpJson());
-            return Response.AsJson(model);
+            Log.Trace(viewTv.DumpJson());
+            return Response.AsJson(viewTv);
         }
 
         private Response SearchMusic(string searchTerm)
         {
-            var albums = MusicBrainzApi.SearchAlbum(searchTerm);
-            var releases = albums.releases ?? new List<Release>();
-            var model = new List<SearchMusicViewModel>();
-            foreach (var a in releases)
+            List<Task> taskList = new List<Task>();
+
+            List<Release> apiAlbums = new List<Release>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
-                model.Add(new SearchMusicViewModel
+                return MusicBrainzApi.SearchAlbum(searchTerm);
+
+            }).ContinueWith((t) =>
+            {
+                apiAlbums = t.Result.releases ?? new List<Release>();
+            }));
+
+            Dictionary<string, RequestedModel> dbAlbum = new Dictionary<string, RequestedModel>();
+            taskList.Add(Task.Factory.StartNew(() =>
+            {
+                return RequestService.GetAll().Where(x => x.Type == RequestType.Album);
+
+            }).ContinueWith((t) =>
+            {
+                dbAlbum = t.Result.ToDictionary(x => x.MusicBrainzId);
+            }));
+
+            Task.WaitAll(taskList.ToArray());
+
+            var plexAlbums = Checker.GetPlexAlbums();
+
+            var viewAlbum = new List<SearchMusicViewModel>();
+            foreach (var a in apiAlbums)
+            {
+                var viewA = new SearchMusicViewModel
                 {
                     Title = a.title,
                     Id = a.id,
@@ -188,27 +390,27 @@ namespace PlexRequests.UI.Modules
                     TrackCount = a.TrackCount,
                     ReleaseType = a.status,
                     Country = a.country
-                });
+                };
+
+                DateTime release;
+                DateTimeHelper.CustomParse(a.ReleaseEvents?.FirstOrDefault()?.date, out release);
+                var artist = a.ArtistCredit?.FirstOrDefault()?.artist;
+                if (Checker.IsAlbumAvailable(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist.name))
+                {
+                    viewA.Available = true;
+                }
+                if (!string.IsNullOrEmpty(a.id) && dbAlbum.ContainsKey(a.id))
+                {
+                    var dba = dbAlbum[a.id];
+
+                    viewA.Requested = true;
+                    viewA.Approved = dba.Approved;
+                    viewA.Available = dba.Available;
+                }
+
+                viewAlbum.Add(viewA);
             }
-            return Response.AsJson(model);
-        }
-
-        private Response UpcomingMovies() // TODO : Not used
-        {
-            var movies = MovieApi.GetUpcomingMovies();
-            var result = movies.Result;
-            Log.Trace("Movie Upcoming Results: ");
-            Log.Trace(result.DumpJson());
-            return Response.AsJson(result);
-        }
-
-        private Response CurrentlyPlayingMovies() // TODO : Not used
-        {
-            var movies = MovieApi.GetCurrentPlayingMovies();
-            var result = movies.Result;
-            Log.Trace("Movie Currently Playing Results: ");
-            Log.Trace(result.DumpJson());
-            return Response.AsJson(result);
+            return Response.AsJson(viewAlbum);
         }
 
         private Response RequestMovie(int movieId)
@@ -241,7 +443,8 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (CheckIfTitleExistsInPlex(movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString(),null, PlexType.Movie))
+                var movies = Checker.GetPlexMovies();
+                if (Checker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} is already in Plex!" });
                 }
@@ -377,7 +580,8 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (CheckIfTitleExistsInPlex(showInfo.name, showInfo.premiered?.Substring(0, 4), null, PlexType.TvShow)) // Take only the year Format = 2014-01-01
+                var shows = Checker.GetPlexTvShows();
+                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4)))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
@@ -442,7 +646,7 @@ namespace PlexRequests.UI.Modules
                     }
 
 
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.ErrorMessage ?? "Something went wrong adding the movie to Sonarr! Please check your settings." });
+                    return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages));
 
                 }
 
@@ -476,12 +680,6 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
-        private bool CheckIfTitleExistsInPlex(string title, string year, string artist, PlexType type)
-        {
-            var result = Checker.IsAvailable(title, year, artist, type);
-            return result;
-        }
-
         private Response RequestAlbum(string releaseId)
         {
             var settings = PrService.GetSettings();
@@ -502,7 +700,7 @@ namespace PlexRequests.UI.Modules
 
 
             Log.Debug("This is a new request");
-            
+
             var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
             DateTime release;
             DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
@@ -513,7 +711,8 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "We could not find the artist on MusicBrainz. Please try again later or contact your admin" });
             }
 
-            var alreadyInPlex = CheckIfTitleExistsInPlex(albumInfo.title, release.ToString("yyyy"), artist.name, PlexType.Music);
+            var albums = Checker.GetPlexAlbums();
+            var alreadyInPlex = Checker.IsAlbumAvailable(albums.ToArray(), albumInfo.title, release.ToString("yyyy"), artist.name);
 
             if (alreadyInPlex)
             {
@@ -581,7 +780,7 @@ namespace PlexRequests.UI.Modules
                         Message = $"{model.Title} was successfully added!"
                     });
             }
-            
+
             var result = RequestService.AddRequest(model);
             return Response.AsJson(new JsonResponseModel
             {

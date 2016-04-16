@@ -25,6 +25,8 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+
 using Microsoft.Owin.Hosting;
 
 using Mono.Data.Sqlite;
@@ -39,6 +41,11 @@ using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Diagnostics;
 
+using FluentScheduler;
+
+using PlexRequests.Services;
+using PlexRequests.UI.Jobs;
+
 namespace PlexRequests.UI
 {
     class Program
@@ -46,27 +53,44 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
+            var baseUrl = string.Empty;
             var port = -1;
             if (args.Length > 0)
             {
-                Log.Info("We are going to use port {0} that was passed in", args[0]);
-                int portResult;
-                if (!int.TryParse(args[0], out portResult))
+                for (int i = 0; i < args.Length; i++)
                 {
-                    Console.WriteLine("Incorrect Port format. Press any key.");
-                    Console.ReadLine();
-                    Environment.Exit(1);
+                    var arg = args[i].ToLowerInvariant().Substring(1);
+                    switch (arg)
+                    {
+                        case "base":
+                            i++;
+                            var value = args[i];
+                            Console.WriteLine($"Using a Base URL {args[i]}");
+                            baseUrl = value;
+                            break;
+                        default:
+                            int portResult;
+                            if (!int.TryParse(args[i], out portResult))
+                            {
+                                Console.WriteLine("Didn't pass in a valid port");
+                                Console.ReadLine();
+                                Environment.Exit(1);
+                            }
+                            else
+                            {
+                                port = portResult;
+                            }
+                            break;
+                    }
                 }
-                port = portResult;
             }
             Log.Trace("Getting product version");
             WriteOutVersion();
 
             var s = new Setup();
-            var cn = s.SetupDb();
+            var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
-            
 
             if (port == -1)
                 port = GetStartupPort();
@@ -79,6 +103,8 @@ namespace PlexRequests.UI
             {
                 using (WebApp.Start<Startup>(options))
                 {
+                    SetupSchedulers();
+
                     Console.WriteLine($"Request Plex is running on the following: http://+:{port}/");
 
                     if (Type.GetType("Mono.Runtime") != null)
@@ -129,6 +155,13 @@ namespace PlexRequests.UI
         private static void ConfigureTargets(string connectionString)
         {
             LoggingHelper.ConfigureLogging(connectionString);
+        }
+
+        private static void SetupSchedulers()
+        {
+            TaskManager.TaskFactory = new PlexTaskFactory();
+            TaskManager.Initialize(new PlexRegistry());
+            TaskManager.Initialize(new MediaCacheRegistry());
         }
     }
 }

@@ -1,27 +1,24 @@
 ﻿@using Nancy.Security
 @using Nancy.Session
+@using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        url = "/" + baseUrl.ToHtmlString();
+    }
+}
 <html>
+<div hidden="hidden" id="baseUrl">@baseUrl.ToHtmlString()</div>
 <head>
     <title>Plex Requests</title>
     <!-- Styles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="~/Content/bootstrap.css" type="text/css"/>
-    <link rel="stylesheet" href="~/Content/custom.min.css" type="text/css" />
-    <link rel="stylesheet" href="~/Content/font-awesome.css" type="text/css"/>
-    <link rel="stylesheet" href="~/Content/pace.min.css" type="text/css"/>
 
-
-    <!-- Scripts -->
-    <script src="/Content/jquery-2.2.1.min.js"></script>
-    <script src="/Content/handlebars.min.js"></script>
-    <script src="/Content/bootstrap.min.js"></script>
-    <script src="/Content/bootstrap-notify.min.js"></script>
-    <script src="/Content/site.js"></script>
-    <script src="/Content/pace.min.js"></script>
-    <script src="/Content/jquery.mixitup.js"></script>
-    <script src="/Content/moment.min.js"></script>
+    @Html.LoadAssets()
 </head>
 <body>
 
@@ -35,53 +32,36 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/search">Plex Requests</a>
+                <a class="navbar-brand" href="@url/search">Plex Requests</a>
             </div>
             
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    @if (Context.Request.Path == "/search")
-                    {
-                        <li class="active"><a href="/search"><i class="fa fa-search"></i> Search</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="/search"><i class="fa fa-search"></i> Search</a></li>
-                    }
-
-
-                    @if (Context.Request.Path == "/requests")
-                    {
-                        <li class="active"><a href="/requests"><i class="fa fa-plus-circle"></i> Requests</a></li>
-                    }
-                    else
-                    {
-                        <li><a href="/requests"><i class="fa fa-plus-circle"></i> Requests</a></li>
-                    }
+                    @Html.GetNavbarUrl(Context, "/search", "Search", "search")
+                    @Html.GetNavbarUrl(Context, "/requests", "Requests", "plus-circle")
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
-
-
+                    
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><a href="/login"><i class="fa fa-user"></i> Admin</a></li>
+                        <li><a href="@url/login"><i class="fa fa-user"></i> Admin</a></li>
                     }
                     else
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Admin <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="/admin"><i class="fa fa-cog"></i> Settings</a></li>
-                                <li><a href="/changepassword"><i class="fa fa-key"></i> Change password</a></li>
+                                <li><a href="@url/admin"><i class="fa fa-cog"></i> Settings</a></li>
+                                <li><a href="@url/changepassword"><i class="fa fa-key"></i> Change password</a></li>
                                 <li class="divider"></li>
-                                <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                <li><a href="@url/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                             </ul>
                         </li>
                     }
                     @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
                     {
-                        <li><a href="/userlogin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                     }
                 </ul>
             </div>
@@ -91,11 +71,11 @@
 <div class="container">
     @RenderBody()
 </div>
-    <div class="scroll-top-wrapper ">
-        <span class="scroll-top-inner">
+<div class="scroll-top-wrapper ">
+    <span class="scroll-top-inner">
             <i class="fa fa-2x fa-arrow-circle-up"></i>
         </span>
-    </div>
+</div>
 </body>
 </html>
 <script>

@@ -55,5 +55,10 @@ namespace PlexRequests.Api.Mocks
         {
             throw new NotImplementedException();
         }
+
+        public List<Series> GetSeries(string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

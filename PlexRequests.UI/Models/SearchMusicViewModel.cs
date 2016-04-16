@@ -26,7 +26,7 @@
 #endregion
 namespace PlexRequests.UI.Models
 {
-    public class SearchMusicViewModel
+    public class SearchMusicViewModel : SearchViewModel
     {
         public string Id { get; set; }
         public string Overview { get; set; }

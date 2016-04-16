@@ -39,5 +39,7 @@ namespace PlexRequests.Api.Interfaces
         SickRagePing Ping(string apiKey, Uri baseUrl);
 
         Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl);
+
+        Task<SickrageShows> GetShows(string apiKey, Uri baseUrl);
     }
 }

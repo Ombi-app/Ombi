@@ -1,4 +1,5 @@
-﻿<div class="home">
+﻿@using PlexRequests.UI.Helpers
+<div class="home">
     <h1>Login</h1>
     <div>
         <p>
@@ -34,14 +35,15 @@
 
 <script>
     $(function () {
-
+        var base = '@Html.GetBaseUrl()';
         $('#loginBtn').click(function (e) {
             e.preventDefault();
             var $form = $("#loginForm");
             var formData = $form.serialize();
             var dtOffset = new Date().getTimezoneOffset();
-            formData += ('&DateTimeOffset=' + dtOffset)
+            formData += ('&DateTimeOffset=' + dtOffset);
 
+            var url = createBaseUrl(base, '/search');
             $.ajax({
                 type: $form.prop("method"),
                 url: $form.prop("action"),
@@ -50,7 +52,9 @@
                 success: function (response) {
                     console.log(response);
                     if (response.result === true) {
-                        window.location.replace("/search");
+
+                        window.location.replace(url);
+             
                     } else {
                         generateNotify(response.message, "warning");
                     }
@@ -61,8 +65,5 @@
                 }
             });
         });
-
-
-
     });
 </script>

@@ -29,7 +29,7 @@ using System.Collections.Generic;
 
 namespace PlexRequests.UI.Models
 {
-    public class SearchTvShowViewModel
+    public class SearchTvShowViewModel : SearchViewModel
     {
         public int Id { get; set; }
         public string SeriesName { get; set; }
