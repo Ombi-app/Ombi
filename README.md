@@ -38,63 +38,6 @@ Do you have an issue or a question? if so check out our [FAQ!](https://github.co
 
 Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has created a docker image for us, You can find it [here](https://github.com/rogueosb/docker-plexrequestsnet) :smile:
 
-#Debian/Ubuntu
-
-To configure PlexRequests to run on debian/ubuntu and set it to start up with the system, do the following (via terminal):
-
-####Create a location to drop the files (up to you, we'll use /opt/PlexRequests as an example)
-
-```sudo mkdir /opt/PlexRequests```
-
-####Download the release zip
-```
-sudo wget {release zip file url}
-sudo unzip PlexRequests.zip -d /opt/PlexRequests
-```
-
-####Install Mono (must be on v4.x or above for compatibility)
-
-```sudo apt-get install mono-devel```
-
-####Check your Mono version
-
-```sudo mono --version```
-
-if you don't see v4.x or above, uninstall it, and check here for instructions:
-http://www.mono-project.com/docs/getting-started/install/linux/
-
-####Verify Mono properly runs PlexRequests
-
-```sudo /usr/bin/mono /opt/PlexRequests/Release/PlexRequests.exe```
-
-####Create an upstart script to auto-start PlexRequests with your system (using port 80 in this example)
-
-```sudo nano /etc/init/plexrequests.conf```
-
-#####Paste in the following:
-
-```
-start on runlevel [2345]
-stop on runlevel [016]
-
-respawn
-expect fork
-
-pre-start script
-    # echo ""
-end script
-
-script
-    exec /usr/bin/mono /opt/PlexRequests/Release/PlexRequests.exe 80
-end script
-```
-
-####Reboot, then open up your browser to check that it's running!
-
-```
-sudo shutdown -r 00
-```
-
 # Contributors
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
