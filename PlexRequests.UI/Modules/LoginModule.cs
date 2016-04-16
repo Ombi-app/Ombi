@@ -75,6 +75,11 @@ namespace PlexRequests.UI.Modules
                 }
                 Session[SessionKeys.UsernameKey] = username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
+                if (!string.IsNullOrEmpty(BaseUrl))
+                {
+
+                    return this.LoginAndRedirect(userId.Value, expiry, $"/{BaseUrl}");
+                }
                 return this.LoginAndRedirect(userId.Value, expiry);
             };
 

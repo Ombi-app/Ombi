@@ -148,13 +148,18 @@
 
         $('#testSickRage').click(function (e) {
             e.preventDefault();
+            var qualityProfile = $("#profiles option:selected").val();
+
             var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&qualityProfile=" + qualityProfile;
 
             var url = createBaseUrl(base, '/test/sickrage');
             $.ajax({
                 type: $form.prop("method"),
                 url: url,
-                data: $form.serialize(),
+                data: data,
                 dataType: "json",
                 success: function (response) {
                     console.log(response);

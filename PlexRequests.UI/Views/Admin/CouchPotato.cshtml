@@ -116,7 +116,7 @@
              <text>
         var qualitySelected = '@Model.ProfileId';
         var $form = $("#mainForm");
-        var url = 'cpprofiles';
+        var url = '/admin/cpprofiles';
         url = createBaseUrl(baseUrl, url);
         $.ajax({
             type: $form.prop("method"),
@@ -144,14 +144,17 @@
         $('#getProfiles').click(function (e) {
             e.preventDefault();
             var $form = $("#mainForm");
-            var url = "admin/cpprofiles";
-            url = createBaseUrl(baseUrl, url);
+            var url = createBaseUrl(baseUrl, "/admin/cpprofiles");
             $.ajax({
                 type: $form.prop("method"),
                 data: $form.serialize(),
                 url: url,
                 dataType: "json",
                 success: function (response) {
+                    if (response.message) {
+                        generateNotify(response.message, "warning");
+                        return;
+                    }
                     response.list.forEach(function (result) {
                         $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
                     });
@@ -167,7 +170,6 @@
             e.preventDefault();
             var $form = $("#mainForm");
             var url = createBaseUrl(baseUrl,"/test/cp");
-            url = createBaseUrl(baseUrl, url);
             $.ajax({
                 type: $form.prop("method"),
                 url: url,

@@ -1,4 +1,12 @@
 ﻿@using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        url = "/" + baseUrl.ToHtmlString();
+    }
+}
 <div>
     <h1>Search</h1>
     <h4>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
@@ -19,7 +27,7 @@
         }
 
     </ul>
-
+    
     <!-- Tab panes -->
     <div class="tab-content">
         @if (Model.SearchForMovies)
@@ -123,7 +131,7 @@
             <p>{{overview}}</p>
         </div>
         <div class="col-sm-2 col-sm-push-3">
-            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
+            <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq available true}}
                 <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
@@ -188,7 +196,7 @@
             <p>{{overview}}</p>
         </div>
         <div class="col-sm-2 col-sm-push-3">
-            <form method="POST" action="/search/request/{{type}}" id="form{{id}}">
+            <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq available true}}
                 <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>

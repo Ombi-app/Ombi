@@ -11,7 +11,7 @@ var searchTemplate = Handlebars.compile(searchSource);
 var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
-var base = $('#baseUrl').val();
+var base = $('#baseUrl').text();
 
 var mixItUpDefault = {
     animation: { enable: true },
@@ -381,16 +381,20 @@ $(document).on("click", ".change", function (e) {
                 generateNotify("Success! Availibility changed.", "info");
                 var button = $("button[custom-availibility='" + buttonId + "']");
                 var icon = $('#availableIcon' + buttonId);
+                var approvedIcon = $("#"+buttonId + "notapproved");
 
                 if (response.available) {
                     button.text("Mark Unavailable");
                     button.val("false");
                     button.prop("class", "btn btn-sm btn-info-outline change");
                     icon.prop("class", "fa fa-check");
+                    approvedIcon.prop("class", "fa fa-check");
+
                 } else {
                     button.text("Mark Available");
                     button.prop("class", "btn btn-sm btn-success-outline change");
                     icon.prop("class", "fa fa-times");
+                    approvedIcon.prop("class", "fa fa-times");
                     button.val("true");
                 }
             }

@@ -44,11 +44,7 @@ namespace PlexRequests.UI.Helpers
         }
         public T Resolve<T>() where T : class
         {
-            if (Container != null)
-            {
-                return Container.Resolve<T>();
-            }
-            return null;
+            return Container?.Resolve<T>();
         }
     }
 }

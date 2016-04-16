@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CacheKeys.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,23 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core
+using FluentValidation;
+
+using PlexRequests.Core.SettingModels;
+
+namespace PlexRequests.UI.Validators
 {
-    public class CacheKeys
+    public class HeadphonesValidator : AbstractValidator<HeadphonesSettings>
     {
-        public const string PlexLibaries = "PlexLibaries";
-
-        public const string TvDbToken = "TheTvDbApiToken";
-
-        public const string SonarrQualityProfiles = "SonarrQualityProfiles";
-        public const string SonarrQueued = "SonarrQueued";
-
-        public const string SickRageQualityProfiles = "SickRageQualityProfiles";
-        public const string SickRageQueued = "SickRageQueued";
-
-        public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
-        public const string CouchPotatoQueued = "CouchPotatoQueued";
-
-        public const string GetBaseUrl = "GetBaseUrl";
+        public HeadphonesValidator()
+        {
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+        }
     }
 }

@@ -32,12 +32,20 @@ using Nancy.ViewEngines.Razor;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Helpers
 {
     public static class BaseUrlHelper
     {
-        private static ServiceLocator Locator => ServiceLocator.Instance;
+        static BaseUrlHelper()
+        {
+            Locator = ServiceLocator.Instance;
+            Cache = Locator.Resolve<ICacheProvider>();
+        }
+        private static ICacheProvider Cache { get; }
+        private static ServiceLocator Locator { get; }
+
         public static IHtmlString LoadAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
@@ -120,6 +128,26 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(returnString);
         }
 
+        public static IHtmlString GetNavbarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string fontIcon)
+        {
+            var returnString = string.Empty;
+            var content = GetLinkUrl(GetBaseUrl());
+            if (!string.IsNullOrEmpty(content))
+            {
+                url = $"/{content}{url}";
+            }
+            if (context.Request.Path == url)
+            {
+                returnString = $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
+            }
+            else
+            {
+                returnString = $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
+            }
+
+            return helper.Raw(returnString);
+        }
+
         public static IHtmlString GetBaseUrl(this HtmlHelpers helper)
         {
             return helper.Raw(GetBaseUrl());
@@ -127,9 +155,13 @@ namespace PlexRequests.UI.Helpers
 
         private static string GetBaseUrl()
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
-            var assetLocation = settings.BaseUrl;
-            return assetLocation;
+            var returnValue = Cache.GetOrSet(CacheKeys.GetBaseUrl, () =>
+            {
+                var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+                var assetLocation = settings.BaseUrl;
+                return assetLocation;
+            });
+            return returnValue;
         }
 
         private static string GetLinkUrl(string assetLocation)

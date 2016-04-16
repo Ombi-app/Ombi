@@ -5,12 +5,16 @@
         return opts.inverse(this);
 });
 
+
+
 $(function () {
 
     var searchSource = $("#search-template").html();
     var musicSource = $("#music-template").html();
     var searchTemplate = Handlebars.compile(searchSource);
     var musicTemplate = Handlebars.compile(musicSource);
+
+    var base = $('#baseUrl').text();
 
     var searchTimer = 0;
 
@@ -21,7 +25,7 @@ $(function () {
     }
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        focusSearch($($(e.target).attr('href')))
+        focusSearch($($(e.target).attr('href')));
     });
     focusSearch($('li.active a', '#nav-tabs').first().attr('href'));
 
@@ -172,15 +176,18 @@ $(function () {
 
     function movieSearch() {
         var query = $("#movieSearchContent").val();
-        query ? getMovies("/search/movie/" + query) : resetMovies();
+        var url = createBaseUrl(base, '/search/movie/');
+        query ? getMovies(url + query) : resetMovies();
     }
 
     function moviesComingSoon() {
-        getMovies("/search/movie/upcoming");
+        var url = createBaseUrl(base, '/search/movie/upcoming');
+        getMovies(url);
     }
 
     function moviesInTheaters() {
-        getMovies("/search/movie/playing");
+        var url = createBaseUrl(base, '/search/movie/playing');
+        getMovies(url);
     }
 
     function getMovies(url) {
@@ -209,7 +216,9 @@ $(function () {
 
     function tvSearch() {
         var query = $("#tvSearchContent").val();
-        query ? getTvShows("/search/tv/" + query) : resetTvShows();
+
+        var url = createBaseUrl(base, '/search/tv/');
+        query ? getTvShows(url + query) : resetTvShows();
     }
 
     function getTvShows(url) {
@@ -236,8 +245,9 @@ $(function () {
     }
 
     function musicSearch() {
+        var url = createBaseUrl(base, '/search/music/');
         var query = $("#musicSearchContent").val();
-        query ? getMusic("/search/music/" + query) : resetMusic();
+        query ? getMusic(url + query) : resetMusic();
     }
 
     function getMusic(url) {
@@ -266,7 +276,9 @@ $(function () {
     }
 
     function getCoverArt(artistId) {
-        $.ajax("/search/music/coverart/" + artistId).success(function (result) {
+
+        var url = createBaseUrl(base, '/search/music/coverart/');
+        $.ajax(url + artistId).success(function (result) {
             if (result) {
                 $('#' + artistId + "imageDiv").html(" <img class='img-responsive' src='" + result + "' width='150' alt='poster'>");
             }

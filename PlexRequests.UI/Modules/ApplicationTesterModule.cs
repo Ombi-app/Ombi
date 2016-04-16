@@ -29,12 +29,13 @@ using System;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
-
+using Nancy.Validation;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -73,6 +74,11 @@ namespace PlexRequests.UI.Modules
         private Response CouchPotatoTest()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
+            var valid = this.Validate(couchPotatoSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             try
             {
                 var status = CpApi.GetStatus(couchPotatoSettings.FullUri, couchPotatoSettings.ApiKey);
@@ -97,6 +103,11 @@ namespace PlexRequests.UI.Modules
         private Response SonarrTest()
         {
             var sonarrSettings = this.Bind<SonarrSettings>();
+            var valid = this.Validate(sonarrSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             try
             {
                 var status = SonarrApi.SystemStatus(sonarrSettings.ApiKey, sonarrSettings.FullUri);
@@ -121,6 +132,11 @@ namespace PlexRequests.UI.Modules
         private Response PlexTest()
         {
             var plexSettings = this.Bind<PlexSettings>();
+            var valid = this.Validate(plexSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             var settings = AuthSettings.GetSettings();
             if (settings?.PlexAuthToken == null)
             {
@@ -150,7 +166,11 @@ namespace PlexRequests.UI.Modules
         private Response SickRageTest()
         {
             var sickRageSettings = this.Bind<SickRageSettings>();
-           
+            var valid = this.Validate(sickRageSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             try
             {
                 var status = SickRageApi.Ping(sickRageSettings.ApiKey, sickRageSettings.FullUri);
@@ -175,6 +195,11 @@ namespace PlexRequests.UI.Modules
         private Response HeadphonesTest()
         {
             var settings = this.Bind<HeadphonesSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             try
             {
                 var result = HeadphonesApi.GetVersion(settings.ApiKey, settings.FullUri);

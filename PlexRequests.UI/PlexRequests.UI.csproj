@@ -178,6 +178,7 @@
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />
     <Compile Include="Validators\EmailNotificationSettingsValidator.cs" />

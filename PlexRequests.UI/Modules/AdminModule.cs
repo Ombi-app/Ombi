@@ -595,6 +595,11 @@ namespace PlexRequests.UI.Modules
         private Response GetCpProfiles()
         {
             var settings = this.Bind<CouchPotatoSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
             // set the cache
