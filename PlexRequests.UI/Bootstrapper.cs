@@ -50,6 +50,7 @@ using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
+using Nancy.Json;
 
 namespace PlexRequests.UI
 {
@@ -103,6 +104,8 @@ namespace PlexRequests.UI
 
             // NotificationService
             container.Register<INotificationService, NotificationService>().AsSingleton();
+
+            JsonSettings.MaxJsonLength = int.MaxValue;
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
