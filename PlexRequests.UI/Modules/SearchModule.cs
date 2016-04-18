@@ -668,7 +668,7 @@ namespace PlexRequests.UI.Modules
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
                 }
 
-                return Response.AsJson("The request of TV Shows is not correctly set up. Please contact your admin.");
+                return Response.AsJson(new JsonResponseModel { Result=false, Message = "The request of TV Shows is not correctly set up. Please contact your admin."});
 
             }
 
