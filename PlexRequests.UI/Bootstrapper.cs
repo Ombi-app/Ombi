@@ -78,6 +78,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
             container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
+            container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();

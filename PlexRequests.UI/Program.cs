@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
 
 using Microsoft.Owin.Hosting;
 
@@ -42,8 +41,6 @@ using PlexRequests.Store.Repository;
 using System.Diagnostics;
 
 using FluentScheduler;
-
-using PlexRequests.Services;
 using PlexRequests.UI.Jobs;
 
 namespace PlexRequests.UI
@@ -91,6 +88,7 @@ namespace PlexRequests.UI
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
+            SetupLogging();
 
             if (port == -1)
                 port = GetStartupPort();
@@ -155,6 +153,17 @@ namespace PlexRequests.UI
         private static void ConfigureTargets(string connectionString)
         {
             LoggingHelper.ConfigureLogging(connectionString);
+        }
+
+        private static void SetupLogging()
+        {
+            var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var logSettings = settingsService.GetSettings();
+
+            if (logSettings != null)
+            {
+                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
+            }
         }
 
         private static void SetupSchedulers()

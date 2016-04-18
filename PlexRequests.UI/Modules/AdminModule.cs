@@ -68,6 +68,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
+        private ISettingsService<LogSettings> LogService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private IPushbulletApi PushbulletApi { get; }
@@ -95,6 +96,7 @@ namespace PlexRequests.UI.Modules
             IRepository<LogEntity> logsRepo,
             INotificationService notify,
             ISettingsService<HeadphonesSettings> headphones,
+            ISettingsService<LogSettings> logs,
             ICacheProvider cache) : base("admin")
         {
             PrService = prService;
@@ -114,6 +116,7 @@ namespace PlexRequests.UI.Modules
             PushoverApi = pushoverApi;
             NotificationService = notify;
             HeadphonesService = headphones;
+            LogService = logs;
             Cache = cache;
 
 #if !DEBUG
@@ -637,8 +640,16 @@ namespace PlexRequests.UI.Modules
 
         private Response UpdateLogLevels(int level)
         {
+            var settings = LogService.GetSettings();
+
+            // apply the level
             var newLevel = LogLevel.FromOrdinal(level);
             LoggingHelper.ReconfigureLogLevel(newLevel);
+
+            //save the log settings
+            settings.Level = level;
+            LogService.SaveSettings(settings);
+
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
         }
 
