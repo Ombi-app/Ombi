@@ -130,34 +130,40 @@
 
         @if (!string.IsNullOrEmpty(Model.QualityProfile))
         {
-            <text>
-        var qualitySelected = @Model.QualityProfile;
-        if (!qualitySelected) {
-            return;
-        }
-        var $form = $("#mainForm");
-        $.ajax({
-            type: $form.prop("method"),
-            data: $form.serialize(),
-            url: "sonarrprofiles",
-            dataType: "json",
-            success: function(response) {
-                response.forEach(function(result) {
-                    if (result.id == qualitySelected) {
 
-                        $("#select").append("<option selected='selected' value='" + result.id + "'>" + result.name + "</option>");
-                    } else {
-                        $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
-                    }
-                });
-            },
-            error: function(e) {
-                console.log(e);
-                generateNotify("Something went wrong!", "danger");
+            <text>
+
+        preLoad();
+
+        function preLoad() {
+            var qualitySelected = @Model.QualityProfile;
+            if (!qualitySelected) {
+                return;
             }
-        });
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: "sonarrprofiles",
+                dataType: "json",
+                success: function(response) {
+                    response.forEach(function(result) {
+                        if (result.id == qualitySelected) {
+
+                            $("#select").append("<option selected='selected' value='" + result.id + "'>" + result.name + "</option>");
+                        } else {
+                            $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
+                        }
+                    });
+                },
+                error: function(e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        }
         </text>
-    }
+        }
 
 
         $('#save').click(function(e) {
