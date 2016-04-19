@@ -64,7 +64,10 @@ namespace PlexRequests.Services.Jobs
             {
                 Log.Trace("Getting all tv series from Sonarr");
                 var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
-                Cache.Set(CacheKeys.SonarrQueued, series, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                if (series != null)
+                {
+                    Cache.Set(CacheKeys.SonarrQueued, series, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                }
             }
         }
 

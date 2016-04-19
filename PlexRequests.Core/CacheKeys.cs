@@ -30,7 +30,7 @@ namespace PlexRequests.Core
     {
         public struct TimeFrameMinutes
         {
-            public const int SchedulerCaching = 10;
+            public const int SchedulerCaching = 60;
         }
 
         public const string PlexLibaries = "PlexLibaries";

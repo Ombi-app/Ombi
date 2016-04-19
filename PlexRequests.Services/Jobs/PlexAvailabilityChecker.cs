@@ -256,7 +256,10 @@ namespace PlexRequests.Services.Jobs
                 results = GetLibraries(authSettings, plexSettings);
 
                 Log.Trace("Plex Lib Cache Set Call");
-                Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                if (results != null)
+                {
+                    Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                }
             } 
             else
             {
