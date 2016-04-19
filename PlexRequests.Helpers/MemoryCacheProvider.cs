@@ -73,8 +73,8 @@ namespace PlexRequests.Helpers
         /// <returns></returns>
         public T Get<T>(string key) where T : class
         {
-            var item = Cache.Get(key) as T;
-            return item;
+            lock (key)
+                return Cache.Get(key) as T;
         }
 
         /// <summary>
@@ -86,7 +86,11 @@ namespace PlexRequests.Helpers
         public void Set(string key, object data, int cacheTime = 20)
         {
             var policy = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime) };
-            Cache.Add(new CacheItem(key, data), policy);
+            lock (key)
+            {
+                Cache.Remove(key);
+                Cache.Add(new CacheItem(key, data), policy);
+            }
         }
 
         /// <summary>
@@ -98,7 +102,10 @@ namespace PlexRequests.Helpers
             var keys = Cache.Where(x => x.Key.Contains(key));
             foreach (var k in keys)
             {
-                Cache.Remove(k.Key);
+                lock (key)
+                {
+                    Cache.Remove(k.Key);
+                }
             }
         }
     }

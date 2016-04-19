@@ -63,7 +63,7 @@ namespace PlexRequests.Services.Jobs
             {
                 Log.Trace("Getting all shows from SickRage");
                 var movies = SrApi.GetShows(settings.ApiKey, settings.FullUri);
-                Cache.Set(CacheKeys.SickRageQueued, movies.Result);
+                Cache.Set(CacheKeys.SickRageQueued, movies.Result, CacheKeys.TimeFrameMinutes.SchedulerCaching);
             }
         }
 

@@ -28,6 +28,11 @@ namespace PlexRequests.Core
 {
     public class CacheKeys
     {
+        public struct TimeFrameMinutes
+        {
+            public const int SchedulerCaching = 10;
+        }
+
         public const string PlexLibaries = "PlexLibaries";
 
         public const string TvDbToken = "TheTvDbApiToken";
