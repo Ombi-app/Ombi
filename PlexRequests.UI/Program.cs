@@ -40,9 +40,6 @@ using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Diagnostics;
 
-using FluentScheduler;
-using PlexRequests.UI.Jobs;
-
 namespace PlexRequests.UI
 {
     class Program
@@ -54,7 +51,7 @@ namespace PlexRequests.UI
             var port = -1;
             if (args.Length > 0)
             {
-                for (int i = 0; i < args.Length; i++)
+                for (var i = 0; i < args.Length; i++)
                 {
                     var arg = args[i].ToLowerInvariant().Substring(1);
                     switch (arg)
@@ -101,8 +98,6 @@ namespace PlexRequests.UI
             {
                 using (WebApp.Start<Startup>(options))
                 {
-                    SetupSchedulers();
-
                     Console.WriteLine($"Request Plex is running on the following: http://+:{port}/");
 
                     if (Type.GetType("Mono.Runtime") != null)
@@ -164,13 +159,6 @@ namespace PlexRequests.UI
             {
                 LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
             }
-        }
-
-        private static void SetupSchedulers()
-        {
-            TaskManager.TaskFactory = new PlexTaskFactory();
-            TaskManager.Initialize(new PlexRegistry());
-            TaskManager.Initialize(new MediaCacheRegistry());
         }
     }
 }

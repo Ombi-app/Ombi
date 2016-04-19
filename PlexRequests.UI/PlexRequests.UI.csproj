@@ -57,12 +57,16 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentScheduler, Version=3.1.46.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentScheduler.3.1.46\lib\net40\FluentScheduler.dll</HintPath>
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -137,6 +141,10 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net452\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -170,7 +178,8 @@
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
-    <Compile Include="Jobs\MediaCacheRegistry.cs" />
+    <Compile Include="Jobs\CustomJobFactory.cs" />
+    <Compile Include="Jobs\Scheduler.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
@@ -192,8 +201,6 @@
     <Content Include="Content\bootstrap.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Jobs\PlexRegistry.cs" />
-    <Compile Include="Jobs\PlexTaskFactory.cs" />
     <Compile Include="Models\JsonResponseModel.cs" />
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
@@ -304,6 +311,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\pace.scss" />
+    <None Include="job_scheduling_data_2_0.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

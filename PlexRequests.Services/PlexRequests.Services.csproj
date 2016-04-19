@@ -35,8 +35,12 @@
       <HintPath>..\packages\MimeKit.1.2.22\lib\net45\BouncyCastle.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentScheduler, Version=3.1.46.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentScheduler.3.1.46\lib\net40\FluentScheduler.dll</HintPath>
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b, processorArchitecture=MSIL">
@@ -54,6 +58,10 @@
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.3\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -84,20 +92,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jobs\CouchPotatoCacher.cs" />
+    <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
+    <Compile Include="Jobs\SickRageCacher.cs" />
+    <Compile Include="Jobs\SonarrCacher.cs" />
     <Compile Include="Models\PlexAlbum.cs" />
     <Compile Include="Models\PlexMovie.cs" />
     <Compile Include="Models\PlexTvShow.cs" />
-    <Compile Include="SickRageCacher.cs" />
-    <Compile Include="Interfaces\ITvCacher.cs" />
-    <Compile Include="SonarrCacher.cs" />
+    <Compile Include="Interfaces\ISickRageCacher.cs" />
     <Compile Include="Interfaces\ISonarrCacher.cs" />
-    <Compile Include="MediaCacheService.cs" />
-    <Compile Include="AvailabilityUpdateService.cs" />
-    <Compile Include="Configuration.cs" />
-    <Compile Include="ConfigurationReader.cs" />
     <Compile Include="Interfaces\ICouchPotatoCacher.cs" />
     <Compile Include="Interfaces\IAvailabilityChecker.cs" />
-    <Compile Include="Interfaces\IConfigurationReader.cs" />
     <Compile Include="Interfaces\IIntervals.cs" />
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
@@ -107,11 +112,7 @@
     <Compile Include="Notification\NotificationType.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
-    <Compile Include="CouchPotatoCacher.cs" />
-    <Compile Include="PlexAvailabilityChecker.cs" />
-    <Compile Include="PlexType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateInterval.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

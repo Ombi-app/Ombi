@@ -52,6 +52,11 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using Nancy.Json;
 
+using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Jobs;
+
+using Quartz.Spi;
+
 namespace PlexRequests.UI
 {
     public class Bootstrapper : DefaultNancyBootstrapper
@@ -90,8 +95,7 @@ namespace PlexRequests.UI
             container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
             container.Register<ISonarrCacher, SonarrCacher>();
             container.Register<ISickRageCacher, SickRageCacher>();
-            container.Register<IConfigurationReader, ConfigurationReader>();
-            container.Register<IIntervals, UpdateInterval>();
+            container.Register<IJobFactory, CustomJobFactory>();
 
             // Api's
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
@@ -105,7 +109,7 @@ namespace PlexRequests.UI
 
             // NotificationService
             container.Register<INotificationService, NotificationService>().AsSingleton();
-
+            
             JsonSettings.MaxJsonLength = int.MaxValue;
 
             SubscribeAllObservers(container);

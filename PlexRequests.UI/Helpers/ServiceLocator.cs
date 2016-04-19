@@ -24,11 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+
 using Nancy.TinyIoc;
 
 namespace PlexRequests.UI.Helpers
 {
-    public class ServiceLocator
+    public class ServiceLocator : IServiceLocator
     {
         static ServiceLocator()
         {
@@ -46,5 +48,16 @@ namespace PlexRequests.UI.Helpers
         {
             return Container?.Resolve<T>();
         }
+
+        public object Resolve(Type type)
+        {
+            return Container.Resolve(type);
+        }
+    }
+
+    public interface IServiceLocator
+    {
+        T Resolve<T>() where T : class;
+        object Resolve(Type type);
     }
 }
