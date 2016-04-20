@@ -164,7 +164,6 @@ namespace PlexRequests.UI.Modules
         private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
             List<Task> taskList = new List<Task>();
-            var cpSettings = CpService.GetSettings();
 
             List<MovieResult> apiMovies = new List<MovieResult>();
             taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
@@ -264,9 +263,9 @@ namespace PlexRequests.UI.Modules
         {
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
-            List<Task> taskList = new List<Task>();
+           var taskList = new List<Task>();
 
-            List<TvMazeSearch> apiTv = new List<TvMazeSearch>();
+            var apiTv = new List<TvMazeSearch>();
             taskList.Add(Task.Factory.StartNew(() =>
             {
                 return new TvMazeApi().Search(searchTerm);
@@ -276,7 +275,7 @@ namespace PlexRequests.UI.Modules
                 apiTv = t.Result;
             }));
 
-            Dictionary<int, RequestedModel> dbTv = new Dictionary<int, RequestedModel>();
+            var dbTv = new Dictionary<int, RequestedModel>();
             taskList.Add(Task.Factory.StartNew(() =>
             {
                 return RequestService.GetAll().Where(x => x.Type == RequestType.TvShow);

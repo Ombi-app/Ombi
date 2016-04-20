@@ -139,7 +139,7 @@ namespace PlexRequests.Core
             }
             catch (Exception ex)
             {
-                Log.Error("Failed to cache Sonarr quality profiles!", ex);
+                Log.Error(ex, "Failed to cache Sonarr quality profiles!");
             }
         }
 
@@ -161,7 +161,7 @@ namespace PlexRequests.Core
             }
             catch (Exception ex)
             {
-                Log.Error("Failed to cache CouchPotato quality profiles!", ex);
+                Log.Error(ex, "Failed to cache CouchPotato quality profiles!");
             }
         }
 

@@ -96,8 +96,8 @@ namespace PlexRequests.Services.Jobs
 
                 if (libraries == null)
                 {
-                    libraries = new List<PlexSearch>() { PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri) };
-                    if (libraries == null)
+                    libraries = new List<PlexSearch> { PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri) };
+                    if (libraries.Count == 0)
                     {
                         Log.Trace("Could not find any matching result for this title.");
                         continue;
@@ -105,7 +105,6 @@ namespace PlexRequests.Services.Jobs
                 }
 
                 Log.Trace("Search results from Plex for the following request: {0}", r.Title);
-                //Log.Trace(results.DumpJson());
 
                 var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
 
@@ -136,8 +135,7 @@ namespace PlexRequests.Services.Jobs
             }
 
             Log.Trace("Updating the requests now");
-            Log.Trace("Requests that will be updates:");
-            Log.Trace(modifiedModel.SelectMany(x => x.Title).DumpJson());
+            Log.Trace("Requests that will be updated count {0}", modifiedModel.Count);
 
             if (modifiedModel.Any())
             {
@@ -257,9 +255,7 @@ namespace PlexRequests.Services.Jobs
             } 
             else
             {
-                results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => {
-                    return GetLibraries(authSettings, plexSettings);
-                }, 10);
+                results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => GetLibraries(authSettings, plexSettings), 10);
             }
             return results;
         }
