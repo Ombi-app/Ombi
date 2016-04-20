@@ -238,7 +238,7 @@ namespace PlexRequests.Services.Jobs
 
         private List<PlexSearch> CachedLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings, bool setCache)
         {
-            Log.Trace("Obtaining library sections from Plex for the following request");
+            Log.Trace("Obtaining library sections from Plex");
 
             List<PlexSearch> results = new List<PlexSearch>();
 
@@ -250,12 +250,22 @@ namespace PlexRequests.Services.Jobs
 
             if (setCache)
             {
-               results = GetLibraries(authSettings, plexSettings);
-               Cache.Set(CacheKeys.PlexLibaries, results, 10);
+                Log.Trace("Plex Lib API Call");
+                results = GetLibraries(authSettings, plexSettings);
+
+                Log.Trace("Plex Lib Cache Set Call");
+                if (results != null)
+                {
+                    Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                }
             } 
             else
             {
-                results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => GetLibraries(authSettings, plexSettings), 10);
+                Log.Trace("Plex Lib GetSet Call");
+                results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => {
+                    Log.Trace("Plex Lib API Call (inside getset)");
+                    return GetLibraries(authSettings, plexSettings);
+                }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
             }
             return results;
         }
@@ -278,6 +288,7 @@ namespace PlexRequests.Services.Jobs
                 }
             }
 
+            Log.Trace("Returning Plex Libs");
             return libs;
         } 
 

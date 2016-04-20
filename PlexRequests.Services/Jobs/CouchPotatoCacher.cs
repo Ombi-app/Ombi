@@ -63,7 +63,10 @@ namespace PlexRequests.Services.Jobs
             {
                 Log.Trace("Getting all movies from CouchPotato");
                 var movies = CpApi.GetMovies(settings.FullUri, settings.ApiKey, new[] { "active" });
-                Cache.Set(CacheKeys.CouchPotatoQueued, movies, 10);
+                if (movies != null)
+                {
+                    Cache.Set(CacheKeys.CouchPotatoQueued, movies, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                }
             }
         }
 
