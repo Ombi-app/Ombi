@@ -163,10 +163,10 @@ namespace PlexRequests.UI.Modules
 
         private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-            List<Task> taskList = new List<Task>();
+            var taskList = new List<Task>();
 
-            List<MovieResult> apiMovies = new List<MovieResult>();
-            taskList.Add(Task.Factory.StartNew<List<MovieResult>>(() =>
+            var apiMovies = new List<MovieResult>();
+            taskList.Add(Task.Factory.StartNew(() =>
             {
                 switch(searchType)
                 {
@@ -212,13 +212,13 @@ namespace PlexRequests.UI.Modules
 
             Task.WaitAll(taskList.ToArray());
 
-            int[] cpCached = CpCacher.QueuedIds();
+            var cpCached = CpCacher.QueuedIds();
             var plexMovies = Checker.GetPlexMovies();
 
-            List<SearchMovieViewModel> viewMovies = new List<SearchMovieViewModel>();
+            var viewMovies = new List<SearchMovieViewModel>();
             foreach (MovieResult movie in apiMovies)
             {
-                var viewMovie = new SearchMovieViewModel()
+                var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
                     BackdropPath = movie.BackdropPath,
@@ -293,8 +293,8 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson("");
             }
 
-            int[] sonarrCached = SonarrCacher.QueuedIds();
-            int[] sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
+            var sonarrCached = SonarrCacher.QueuedIds();
+            var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
             var plexTvShows = Checker.GetPlexTvShows();
 
             var viewTv = new List<SearchTvShowViewModel>();
@@ -322,7 +322,7 @@ namespace PlexRequests.UI.Modules
                 {
                     viewT.Available = true;
                 }
-                else if (t.show.externals.thetvdb != null)
+                else if (t.show?.externals?.thetvdb != null)
                 {
                     int tvdbid = (int)t.show.externals.thetvdb;
 
@@ -350,9 +350,9 @@ namespace PlexRequests.UI.Modules
 
         private Response SearchMusic(string searchTerm)
         {
-            List<Task> taskList = new List<Task>();
+            var taskList = new List<Task>();
 
-            List<Release> apiAlbums = new List<Release>();
+            var apiAlbums = new List<Release>();
             taskList.Add(Task.Factory.StartNew(() =>
             {
                 return MusicBrainzApi.SearchAlbum(searchTerm);
@@ -362,7 +362,7 @@ namespace PlexRequests.UI.Modules
                 apiAlbums = t.Result.releases ?? new List<Release>();
             }));
 
-            Dictionary<string, RequestedModel> dbAlbum = new Dictionary<string, RequestedModel>();
+            var dbAlbum = new Dictionary<string, RequestedModel>();
             taskList.Add(Task.Factory.StartNew(() =>
             {
                 return RequestService.GetAll().Where(x => x.Type == RequestType.Album);
@@ -486,7 +486,7 @@ namespace PlexRequests.UI.Modules
                     if (result)
                     {
                         model.Approved = true;
-                        Log.Debug("Adding movie to database requests (No approval required)");
+                        Log.Info("Adding movie to database (No approval required)");
                         RequestService.AddRequest(model);
 
                         var notificationModel = new NotificationModel
@@ -511,7 +511,7 @@ namespace PlexRequests.UI.Modules
                 else
                 {
                     model.Approved = true;
-                    Log.Debug("Adding movie to database requests (No approval required)");
+                    Log.Info("Adding movie to database (No approval required)");
                     RequestService.AddRequest(model);
 
                     var notificationModel = new NotificationModel
@@ -529,7 +529,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                Log.Debug("Adding movie to database requests");
+                Log.Info("Adding movie to database");
                 var id = RequestService.AddRequest(model);
 
                 var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
