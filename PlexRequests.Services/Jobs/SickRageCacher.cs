@@ -62,10 +62,17 @@ namespace PlexRequests.Services.Jobs
             if (settings.Enabled)
             {
                 Log.Trace("Getting all shows from SickRage");
-                var shows = SrApi.GetShows(settings.ApiKey, settings.FullUri);
-                if (shows != null)
+                try
                 {
-                    Cache.Set(CacheKeys.SickRageQueued, shows.Result, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    var shows = SrApi.GetShows(settings.ApiKey, settings.FullUri);
+                    if (shows != null)
+                    {
+                        Cache.Set(CacheKeys.SickRageQueued, shows.Result, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Error(ex, "Failed caching queued items from SickRage");
                 }
             }
         }

@@ -75,6 +75,13 @@ namespace PlexRequests.Services.Jobs
             }
 
             var libraries = CachedLibraries(authSettings, plexSettings, true); //force setting the cache (10 min intervals via scheduler)
+
+            if (libraries == null || !libraries.Any())
+            {
+                Log.Info("Did not find any libraries in Plex.");
+                return;
+            }
+
             var movies = GetPlexMovies().ToArray();
             var shows = GetPlexTvShows().ToArray();
             var albums = GetPlexAlbums().ToArray();
@@ -248,25 +255,33 @@ namespace PlexRequests.Services.Jobs
                 return results; // don't error out here, just let it go!
             }
 
-            if (setCache)
+            try
             {
-                Log.Trace("Plex Lib API Call");
-                results = GetLibraries(authSettings, plexSettings);
-
-                Log.Trace("Plex Lib Cache Set Call");
-                if (results != null)
+                if (setCache)
                 {
-                    Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    Log.Trace("Plex Lib API Call");
+                    results = GetLibraries(authSettings, plexSettings);
+
+                    Log.Trace("Plex Lib Cache Set Call");
+                    if (results != null)
+                    {
+                        Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    }
                 }
-            } 
-            else
-            {
-                Log.Trace("Plex Lib GetSet Call");
-                results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => {
-                    Log.Trace("Plex Lib API Call (inside getset)");
-                    return GetLibraries(authSettings, plexSettings);
-                }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                else
+                {
+                    Log.Trace("Plex Lib GetSet Call");
+                    results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => {
+                        Log.Trace("Plex Lib API Call (inside getset)");
+                        return GetLibraries(authSettings, plexSettings);
+                    }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to obtain Plex libraries");
+            }
+            
             return results;
         }
 

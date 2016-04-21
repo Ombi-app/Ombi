@@ -62,10 +62,17 @@ namespace PlexRequests.Services.Jobs
             if (settings.Enabled)
             {
                 Log.Trace("Getting all movies from CouchPotato");
-                var movies = CpApi.GetMovies(settings.FullUri, settings.ApiKey, new[] { "active" });
-                if (movies != null)
+                try
                 {
-                    Cache.Set(CacheKeys.CouchPotatoQueued, movies, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    var movies = CpApi.GetMovies(settings.FullUri, settings.ApiKey, new[] { "active" });
+                    if (movies != null)
+                    {
+                        Cache.Set(CacheKeys.CouchPotatoQueued, movies, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Error(ex, "Failed caching queued items from CouchPotato");
                 }
             }
         }
