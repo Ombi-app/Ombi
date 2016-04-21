@@ -26,14 +26,14 @@
 #endregion
 using System;
 
+using NLog;
+
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
-using System.Xml;
-using System.Collections.Generic;
 
 namespace PlexRequests.Api
 {
@@ -43,6 +43,8 @@ namespace PlexRequests.Api
         {
             Version = AssemblyHelper.GetAssemblyVersion();
         }
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private static string Version { get; }
 
         public PlexAuthentication SignIn(string username, string password)
@@ -148,9 +150,16 @@ namespace PlexRequests.Api
             AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
-            var sections = api.ExecuteXml<PlexLibraries>(request, plexFullHost);
+            try
+            {
 
-            return sections;
+                return api.ExecuteXml<PlexLibraries>(request, plexFullHost);
+            }
+            catch (ApiRequestException)
+            {
+                Log.Error("There has been a API Exception when attempting to get the Plex Libraries");
+                return new PlexLibraries();
+            }
         }
 
         public PlexSearch GetLibrary(string authToken, Uri plexFullHost, string libraryId)
@@ -161,13 +170,20 @@ namespace PlexRequests.Api
                 Resource = "library/sections/{libraryId}/all"
             };
 
-            request.AddUrlSegment("libraryId", libraryId.ToString());
+            request.AddUrlSegment("libraryId", libraryId);
             AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
-            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+            try
+            {
 
-            return search;
+                return api.ExecuteXml<PlexSearch>(request, plexFullHost);
+            }
+            catch (ApiRequestException)
+            {
+                Log.Error("There has been a API Exception when attempting to get the Plex Library");
+                return new PlexSearch();
+            }
         }
 
         private void AddHeaders(ref RestRequest request, string authToken)

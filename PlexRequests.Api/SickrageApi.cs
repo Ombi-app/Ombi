@@ -41,6 +41,8 @@ using PlexRequests.Helpers;
 using RestSharp;
 using Newtonsoft.Json.Linq;
 
+using PlexRequests.Helpers.Exceptions;
+
 namespace PlexRequests.Api
 {
     public class SickrageApi : ISickRageApi
@@ -218,7 +220,20 @@ namespace PlexRequests.Api
             };
             request.AddUrlSegment("apiKey", apiKey);
             
-            return await Task.Run(() => Api.Execute<SickrageShows>(request, baseUrl)).ConfigureAwait(false);
+            return await Task.Run(
+                () =>
+                {
+                    try
+                    {
+                        return Api.Execute<SickrageShows>(request, baseUrl);
+                    }
+                    catch (ApiRequestException)
+                    {
+                        Log.Error("There has been a API exception when Getting the Sickrage shows");
+                        return null;
+                    }
+
+                }).ConfigureAwait(false);
         }
     }
 }

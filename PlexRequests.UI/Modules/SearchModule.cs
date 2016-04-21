@@ -49,7 +49,6 @@ using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System.Threading.Tasks;
-using TMDbLib.Objects.Search;
 using PlexRequests.Api.Models.Tv;
 using TMDbLib.Objects.General;
 
@@ -71,7 +70,6 @@ namespace PlexRequests.UI.Modules
             CpService = cpSettings;
             PrService = prSettings;
             MovieApi = new TheMovieDbApi();
-            TvApi = new TheTvDbApi();
             Cache = cache;
             Checker = checker;
             CpCacher = cpCacher;
@@ -108,7 +106,6 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
         private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
-        private TheTvDbApi TvApi { get; }
         private ISickRageApi SickrageApi { get; }
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }

@@ -77,6 +77,9 @@ namespace PlexRequests.UI.Tests
                 with.RootPathProvider<TestRootPathProvider>();
             });
 
+            var loc = ServiceLocator.Instance;
+            loc.SetContainer(TinyIoCContainer.Current);
+
             bootstrapper.WithSession(new Dictionary<string, object>());
 
             var browser = new Browser(bootstrapper);

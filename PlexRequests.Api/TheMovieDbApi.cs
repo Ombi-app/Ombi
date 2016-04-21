@@ -50,7 +50,7 @@ namespace PlexRequests.Api
             return results.Results;
         }
 
-        [Obsolete("Should use TheTvDbApi for TV")]
+        [Obsolete("Should use TvMaze for TV")]
         public async Task<List<SearchTv>> SearchTv(string searchTerm)
         {
             var results = await Client.SearchTvShow(searchTerm);
@@ -74,7 +74,7 @@ namespace PlexRequests.Api
             return movies;
         }
 
-        [Obsolete("Should use TheTvDbApi for TV")]
+        [Obsolete("Should use TvMaze for TV")]
         public async Task<TvShow> GetTvShowInformation(int tmdbId)
         {
             var show = await Client.GetTvShow(tmdbId);

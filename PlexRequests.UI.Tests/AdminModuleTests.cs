@@ -45,6 +45,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Tests
 {
@@ -121,7 +122,13 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
                 with.Dependency(HeadphonesSettings.Object);
-                with.Dependencies(Cache.Object);
+                with.Dependency(Cache.Object);
+                with.ApplicationStartup(
+                    (container, pipelines) =>
+                    {
+                        var loc = ServiceLocator.Instance;
+                        loc.SetContainer(container);
+                    });
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {

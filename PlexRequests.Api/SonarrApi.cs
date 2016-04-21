@@ -38,6 +38,8 @@ using PlexRequests.Helpers;
 using RestSharp;
 using Newtonsoft.Json.Linq;
 
+using PlexRequests.Helpers.Exceptions;
+
 namespace PlexRequests.Api
 {
     public class SonarrApi : ISonarrApi
@@ -128,8 +130,16 @@ namespace PlexRequests.Api
         {
             var request = new RestRequest { Resource = "/api/series", Method = Method.GET };
             request.AddHeader("X-Api-Key", apiKey);
+            try
+            {
 
-            return Api.Execute<List<Series>>(request, baseUrl);
+                return Api.Execute<List<Series>>(request, baseUrl);
+            }
+            catch (ApiRequestException)
+            {
+                Log.Error("There has been an API exception when getting the Sonarr Series");
+                return null;
+            }
         }
     }
 }
