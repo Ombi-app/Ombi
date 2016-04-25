@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @{
-    var baseUrl = Html.GetBaseUrl();
+    var baseUrl = Html.GetBaseUrl().ToHtmlString();
     var url = string.Empty;
     if (!string.IsNullOrEmpty(baseUrl))
     {
