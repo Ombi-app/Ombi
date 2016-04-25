@@ -3,3 +3,19 @@
 ################################################################################
 
 /.vs
+/packages
+/PlexRequests.Api
+/PlexRequests.Api.Interfaces
+/PlexRequests.Api.Models
+/PlexRequests.Core
+/PlexRequests.Core.Tests
+/PlexRequests.Helpers
+/PlexRequests.Helpers.Tests
+/PlexRequests.Services
+/PlexRequests.Services.Tests
+/PlexRequests.UI.Tests
+/PlexRequests.UI
+/PlexRequests.Store
+/_NCrunch_PlexRequests
+/PlexRequests.v2.ncrunchsolution
+/PlexRequests.ncrunchsolution.user
