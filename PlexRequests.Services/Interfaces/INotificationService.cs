@@ -33,7 +33,18 @@ namespace PlexRequests.Services.Interfaces
 {
     public interface INotificationService
     {
+        /// <summary>
+        /// Sends a notification to the user. This one is used in normal notification scenarios 
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         Task Publish(NotificationModel model);
+        /// <summary>
+        /// Sends a notification to the user, this is usually for testing the settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
         Task Publish(NotificationModel model, Settings settings);
         void Subscribe(INotification notification);
         void UnSubscribe(INotification notification);

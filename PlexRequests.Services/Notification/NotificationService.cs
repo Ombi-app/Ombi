@@ -41,6 +41,11 @@ namespace PlexRequests.Services.Notification
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public ConcurrentDictionary<string, INotification> Observers { get; } = new ConcurrentDictionary<string, INotification>();
 
+        /// <summary>
+        /// Sends a notification to the user. This one is used in normal notification scenarios 
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public async Task Publish(NotificationModel model)
         {
             var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model));
@@ -48,6 +53,12 @@ namespace PlexRequests.Services.Notification
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Sends a notification to the user, this is usually for testing the settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
         public async Task Publish(NotificationModel model, Settings settings)
         {
             var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model, settings));

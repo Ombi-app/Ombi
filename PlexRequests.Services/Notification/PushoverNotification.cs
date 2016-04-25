@@ -45,7 +45,6 @@ namespace PlexRequests.Services.Notification
         }
         private IPushoverApi PushoverApi { get;  }
         private ISettingsService<PushoverNotificationSettings> SettingsService { get; }
-        private PushoverNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushoverNotification";
@@ -106,40 +105,23 @@ namespace PlexRequests.Services.Notification
         private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Plex Requests: {model.Title} has been requested by user: {model.User}";
-            try
-            {
-                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
-                if (result?.status != 1)
-                {
-                    Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Push(settings, message);
         }
 
         private async Task PushIssueAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Plex Requests: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
-            try
-            {
-                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
-                if (result?.status != 1)
-                {
-                    Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Push(settings, message);
         }
 
         private async Task PushTestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Plex Requests: Test Message!";
+            await Push(settings, message);
+        }
+
+        private async Task Push(PushoverNotificationSettings settings, string message)
+        {
             try
             {
                 var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);

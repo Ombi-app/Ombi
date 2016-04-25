@@ -37,6 +37,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 
 using Quartz;
@@ -45,13 +46,15 @@ namespace PlexRequests.Services.Jobs
 {
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
-        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex, ICacheProvider cache)
+        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex, ICacheProvider cache,
+            INotificationService notify)
         {
             Plex = plexSettings;
             Auth = auth;
             RequestService = request;
             PlexApi = plex;
             Cache = cache;
+            Notification = notify;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -60,6 +63,7 @@ namespace PlexRequests.Services.Jobs
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private IPlexApi PlexApi { get; }
         private ICacheProvider Cache { get; }
+        private INotificationService Notification { get; }
 
         public void CheckAndUpdateAll()
         {
@@ -67,7 +71,7 @@ namespace PlexRequests.Services.Jobs
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
             Log.Trace("Getting all the requests");
-            
+
             if (!ValidateSettings(plexSettings, authSettings))
             {
                 Log.Info("Validation of the plex settings failed.");
@@ -95,21 +99,11 @@ namespace PlexRequests.Services.Jobs
                 Log.Info("There are no requests to check.");
                 return;
             }
-            
+
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
                 Log.Trace("We are going to see if Plex has the following title: {0}", r.Title);
-
-                if (libraries == null)
-                {
-                    libraries = new List<PlexSearch> { PlexApi.SearchContent(authSettings.PlexAuthToken, r.Title, plexSettings.FullUri) };
-                    if (libraries.Count == 0)
-                    {
-                        Log.Trace("Could not find any matching result for this title.");
-                        continue;
-                    }
-                }
 
                 Log.Trace("Search results from Plex for the following request: {0}", r.Title);
 
@@ -130,7 +124,7 @@ namespace PlexRequests.Services.Jobs
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                
+
                 if (matchResult)
                 {
                     r.Available = true;
@@ -146,8 +140,10 @@ namespace PlexRequests.Services.Jobs
 
             if (modifiedModel.Any())
             {
+                NotifyUsers(modifiedModel, authSettings.PlexAuthToken);
                 RequestService.BatchUpdate(modifiedModel);
             }
+
         }
 
         public List<PlexMovie> GetPlexMovies()
@@ -205,8 +201,8 @@ namespace PlexRequests.Services.Jobs
 
         public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year)
         {
-            return plexShows.Any(x => 
-            (x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) || x.Title.StartsWith(title, StringComparison.CurrentCultureIgnoreCase)) && 
+            return plexShows.Any(x =>
+            (x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) || x.Title.StartsWith(title, StringComparison.CurrentCultureIgnoreCase)) &&
             x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
         }
 
@@ -237,8 +233,8 @@ namespace PlexRequests.Services.Jobs
 
         public bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist)
         {
-            return plexAlbums.Any(x => 
-                x.Title.Contains(title) && 
+            return plexAlbums.Any(x =>
+                x.Title.Contains(title) &&
                 //x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase) &&
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
@@ -271,7 +267,8 @@ namespace PlexRequests.Services.Jobs
                 else
                 {
                     Log.Trace("Plex Lib GetSet Call");
-                    results = Cache.GetOrSet(CacheKeys.PlexLibaries, () => {
+                    results = Cache.GetOrSet(CacheKeys.PlexLibaries, () =>
+                    {
                         Log.Trace("Plex Lib API Call (inside getset)");
                         return GetLibraries(authSettings, plexSettings);
                     }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
@@ -281,7 +278,7 @@ namespace PlexRequests.Services.Jobs
             {
                 Log.Error(ex, "Failed to obtain Plex libraries");
             }
-            
+
             return results;
         }
 
@@ -305,7 +302,7 @@ namespace PlexRequests.Services.Jobs
 
             Log.Trace("Returning Plex Libs");
             return libs;
-        } 
+        }
 
         private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth)
         {
@@ -317,9 +314,49 @@ namespace PlexRequests.Services.Jobs
             return true;
         }
 
+        private void NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey)
+        {
+            try
+            {
+                var plexUser = PlexApi.GetUsers(apiKey);
+                if (plexUser?.User == null || plexUser.User.Length == 0)
+                {
+                    return;
+                }
+
+                foreach (var model in modelChanged)
+                {
+                    var usersToNotify = model.UsersToNotify; // Users that selected the notification button when requesting a movie/tv show
+                    foreach (var user in usersToNotify)
+                    {
+                        var email = plexUser.User.FirstOrDefault(x => x.Username == user);
+                        if (email == null)
+                        {
+                            // We do not have a plex user that requested this!
+                            continue;
+                        }
+                        var notificationModel = new NotificationModel
+                        {
+                            User = email.Username,
+                            UserEmail = email.Email,
+                            NotificationType = NotificationType.RequestAvailable,
+                            Title = model.Title
+                        };
+
+                        // Send the notification to the user.
+                        Notification.Publish(notificationModel);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
         public void Execute(IJobExecutionContext context)
         {
-           CheckAndUpdateAll();
+            CheckAndUpdateAll();
         }
     }
 }

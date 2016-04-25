@@ -71,8 +71,8 @@ namespace PlexRequests.Services.Notification
                     await EmailIssue(model, emailSettings);
                     break;
                 case NotificationType.RequestAvailable:
-                    throw new NotImplementedException();
-
+                    await EmailAvailableRequest(model, emailSettings);
+                    break;
                 case NotificationType.RequestApproved:
                     throw new NotImplementedException();
 
@@ -120,23 +120,7 @@ namespace PlexRequests.Services.Notification
                 Subject = $"Plex Requests: New request for {model.Title}!"
             };
 
-            try
-            {
-                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
-                {
-                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
-                    smtp.EnableSsl = settings.Ssl;
-                    await smtp.SendMailAsync(message).ConfigureAwait(false);
-                }
-            }
-            catch (SmtpException smtp)
-            {
-                Log.Error(smtp);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Send(message, settings);
         }
 
         private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
@@ -146,10 +130,34 @@ namespace PlexRequests.Services.Notification
                 IsBodyHtml = true,
                 To = { new MailAddress(settings.RecipientEmail) },
                 Body = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
-                From = new MailAddress(settings.RecipientEmail),
+                From = new MailAddress(settings.EmailSender),
                 Subject = $"Plex Requests: New issue for {model.Title}!"
             };
 
+            await Send(message, settings);
+        }
+
+        private async Task EmailAvailableRequest(NotificationModel model, EmailNotificationSettings settings)
+        {
+            if (!settings.EnableUserEmailNotifications)
+            {
+                await Task.FromResult(false);
+            }
+
+            var message = new MailMessage
+            {
+                IsBodyHtml = true,
+                To = { new MailAddress(model.UserEmail) },
+                Body = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
+                From = new MailAddress(settings.EmailSender),
+                Subject = $"Plex Requests: {model.Title} is now available!"
+            };
+
+            await Send(message, settings);
+        }
+
+        private async Task Send(MailMessage message, EmailNotificationSettings settings)
+        {
             try
             {
                 using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
@@ -176,27 +184,11 @@ namespace PlexRequests.Services.Notification
                 IsBodyHtml = true,
                 To = { new MailAddress(settings.RecipientEmail) },
                 Body = "This is just a test! Success!",
-                From = new MailAddress(settings.RecipientEmail),
+                From = new MailAddress(settings.EmailSender),
                 Subject = "Plex Requests: Test Message!"
             };
 
-            try
-            {
-                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
-                {
-                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
-                    smtp.EnableSsl = settings.Ssl;
-                    await smtp.SendMailAsync(message).ConfigureAwait(false);
-                }
-            }
-            catch (SmtpException smtp)
-            {
-                Log.Error(smtp);
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Send(message, settings);
         }
     }
 }
