@@ -99,7 +99,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId, (bool)Request.Form.notify);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons, (bool)Request.Form.notify);
-            Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
+            Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId, (bool)Request.Form.notify);
         }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
@@ -706,7 +706,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
-        private Response RequestAlbum(string releaseId)
+        private Response RequestAlbum(string releaseId, bool notify)
         {
             var settings = PrService.GetSettings();
             var existingRequest = RequestService.CheckRequest(releaseId);
@@ -717,6 +717,10 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("We do have an existing album request");
                 if (!existingRequest.UserHasRequested(Username))
                 {
+                    if (notify)
+                    {
+                        existingRequest.AddUserToNotification(Username);
+                    }
                     Log.Debug("Not in the requested list so adding them and updating the request. User: {0}", Username);
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
@@ -774,7 +778,10 @@ namespace PlexRequests.UI.Modules
                 ArtistId = artist.id
             };
 
-
+            if (notify)
+            {
+                existingRequest.AddUserToNotification(Username);
+            }
             if (ShouldAutoApprove(RequestType.Album, settings))
             {
                 Log.Debug("We don't require approval OR the user is in the whitelist");
