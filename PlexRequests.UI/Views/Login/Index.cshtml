@@ -1,4 +1,13 @@
-﻿<form method="POST">
+﻿@using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        url = "/" + baseUrl;
+    }
+}
+<form method="POST">
     Username <input class="form-control form-control-custom" type="text" name="Username"/>
     <br/>
     Password <input class="form-control form-control-custom" name="Password" type="password"/>
@@ -10,7 +19,7 @@
 </form>
 @if (!Model.AdminExists)
 {
-    <div>If you have not yet created an Admin account you can do here: <a href="/register">Register</a></div>
+    <div>If you have not yet created an Admin account you can do here: <a href="@url/register">Register</a></div>
 }
 @if (Model.Errored)
 {
