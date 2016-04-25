@@ -97,7 +97,7 @@ namespace PlexRequests.UI.Modules
             Get["movie/upcoming"] = parameters => UpcomingMovies();
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
-            Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
+            Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId, (bool)Request.Form.notify);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
         }
@@ -211,7 +211,7 @@ namespace PlexRequests.UI.Modules
 
             var cpCached = CpCacher.QueuedIds();
             var plexMovies = Checker.GetPlexMovies();
-
+            var settings = PrService.GetSettings();
             var viewMovies = new List<SearchMovieViewModel>();
             foreach (MovieResult movie in apiMovies)
             {
@@ -232,12 +232,12 @@ namespace PlexRequests.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
-
+                var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
                 if (Checker.IsMovieAvailable(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString()))
                 {
                     viewMovie.Available = true;
                 }
-                else if (dbMovies.ContainsKey(movie.Id)) // compare to the requests db
+                else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
                     var dbm = dbMovies[movie.Id];
 
@@ -245,7 +245,7 @@ namespace PlexRequests.UI.Modules
                     viewMovie.Approved = dbm.Approved;
                     viewMovie.Available = dbm.Available;
                 }
-                else if (cpCached.Contains(movie.Id)) // compare to the couchpotato db
+                else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
                 {
                     viewMovie.Requested = true;
                 }
@@ -254,6 +254,17 @@ namespace PlexRequests.UI.Modules
             }
 
             return Response.AsJson(viewMovies);
+        }
+
+        private bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests, Dictionary<int, RequestedModel> moviesInDb)
+        {
+            if (usersCanViewOnlyOwnRequests)
+            {
+                var result = moviesInDb.FirstOrDefault(x => x.Value.ProviderId == movieId);
+                return result.Value != null && result.Value.UserHasRequested(Username);
+            }
+
+            return true;
         }
 
         private Response SearchTvShow(string searchTerm)
@@ -409,7 +420,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewAlbum);
         }
 
-        private Response RequestMovie(int movieId)
+        private Response RequestMovie(int movieId, bool notify = false)
         {
             var movieApi = new TheMovieDbApi();
             var movieInfo = movieApi.GetMovieInformation(movieId).Result;
@@ -428,6 +439,10 @@ namespace PlexRequests.UI.Modules
                 // check if the current user is already marked as a requester for this movie, if not, add them
                 if (!existingRequest.UserHasRequested(Username))
                 {
+                    if (notify)
+                    {
+                        existingRequest.AddUserToNotification(Username);
+                    }
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
@@ -463,9 +478,15 @@ namespace PlexRequests.UI.Modules
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string>() { Username },
+                RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
+                
             };
+
+            if (notify)
+            {
+                model.AddUserToNotification(Username);
+            }
 
             Log.Trace(settings.DumpJson());
             if (ShouldAutoApprove(RequestType.Movie, settings))

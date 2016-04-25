@@ -114,6 +114,10 @@ $(function () {
         var url = $form.prop('action');
         var data = $form.serialize();
 
+        var $notify = $('#notifyUser').is(':checked');
+
+        data = data + "&notify=" + $notify;
+
         sendRequestAjax(data, type, url, buttonId);
 
     });
