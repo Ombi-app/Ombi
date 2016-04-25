@@ -98,7 +98,7 @@ namespace PlexRequests.UI.Modules
             Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId, (bool)Request.Form.notify);
-            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
+            Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons, (bool)Request.Form.notify);
             Post["request/album"] = parameters => RequestAlbum((string)Request.Form.albumId);
         }
         private IPlexApi PlexApi { get; }
@@ -568,8 +568,9 @@ namespace PlexRequests.UI.Modules
         /// </summary>
         /// <param name="showId">The show identifier.</param>
         /// <param name="seasons">The seasons.</param>
+        /// <param name="notify">if set to <c>true</c> [notify].</param>
         /// <returns></returns>
-        private Response RequestTvShow(int showId, string seasons)
+        private Response RequestTvShow(int showId, string seasons, bool notify)
         {
             var tvApi = new TvMazeApi();
 
@@ -589,6 +590,10 @@ namespace PlexRequests.UI.Modules
                 // check if the current user is already marked as a requester for this show, if not, add them
                 if (!existingRequest.UserHasRequested(Username))
                 {
+                    if (notify)
+                    {
+                        existingRequest.AddUserToNotification(Username);
+                    }
                     existingRequest.RequestedUsers.Add(Username);
                     RequestService.UpdateRequest(existingRequest);
                 }
@@ -626,6 +631,10 @@ namespace PlexRequests.UI.Modules
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
             };
+            if (notify)
+            {
+                model.AddUserToNotification(Username);
+            }
             var seasonsList = new List<int>();
             switch (seasons)
             {

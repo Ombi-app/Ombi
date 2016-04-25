@@ -78,8 +78,11 @@ $(function () {
         if (seasons === "1") {
             // Send over the first season
             data = data + "&seasons=first";
-
         }
+
+        var $notify = $('#notifyUser').is(':checked');
+
+        data = data + "&notify=" + $notify;
 
         var type = $form.prop('method');
         var url = $form.prop('action');
