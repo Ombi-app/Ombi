@@ -58,10 +58,9 @@ namespace PlexRequests.Core
             var version = CheckSchema();
             if (version > 0)
             {
-                if (version > 1300 && version <= 1699)
+                if (version > 1700 && version <= 1799)
                 {
-                    MigrateDbFrom1300();
-                    UpdateRequestBlobsTable();
+                    MigrateToVersion1700();
                 }
             }
 
@@ -164,94 +163,11 @@ namespace PlexRequests.Core
                 Log.Error(ex, "Failed to cache CouchPotato quality profiles!");
             }
         }
-
-        private void UpdateRequestBlobsTable() // TODO: Remove in v1.7
+        public void MigrateToVersion1700()
         {
-            try
-            {
-                TableCreation.AlterTable(Db.DbConnection(), "RequestBlobs", "ADD COLUMN", "MusicId", false, "TEXT");
-            }
-            catch (Exception e)
-            {
-                Log.Error("Tried updating the schema to alter the request blobs table");
-                Log.Error(e);
-            }
-        }
-        private void MigrateDbFrom1300() // TODO: Remove in v1.7
-        {
-
-            var result = new List<long>();
-            RequestedModel[] requestedModels;
-            var repo = new GenericRepository<RequestedModel>(Db, new MemoryCacheProvider());
-            try
-            {
-                var records = repo.GetAll();
-                requestedModels = records as RequestedModel[] ?? records.ToArray();
-            }
-            catch (SqliteException)
-            {
-                // There is no requested table so they do not have an old version of the DB
-                return;
-            }
-
-            if (!requestedModels.Any())
-            { return; }
-
-            var jsonRepo = new JsonRequestService(new RequestJsonRepository(Db, new MemoryCacheProvider()));
-
-            var api = new TvMazeApi();
-
-            foreach (var r in requestedModels.Where(x => x.Type == RequestType.TvShow))
-            {
-                var show = api.ShowLookupByTheTvDbId(r.ProviderId);
-
-                var model = new RequestedModel
-                {
-                    Title = show.name,
-                    PosterPath = show.image?.medium,
-                    Type = RequestType.TvShow,
-                    ProviderId = show.externals.thetvdb ?? 0,
-                    ReleaseDate = r.ReleaseDate,
-                    AdminNote = r.AdminNote,
-                    Approved = r.Approved,
-                    Available = r.Available,
-                    ImdbId = show.externals.imdb,
-                    Issues = r.Issues,
-                    OtherMessage = r.OtherMessage,
-                    Overview = show.summary.RemoveHtml(),
-                    RequestedUsers = r.AllUsers, // should pull in the RequestedBy property and merge with RequestedUsers
-                    RequestedDate = r.ReleaseDate,
-                    Status = show.status
-                };
-                var id = jsonRepo.AddRequest(model);
-                result.Add(id);
-            }
-
-            foreach (var source in requestedModels.Where(x => x.Type == RequestType.Movie))
-            {
-                var id = jsonRepo.AddRequest(source);
-                result.Add(id);
-            }
-
-
-            if (result.Any(x => x == -1))
-            {
-                throw new SqliteException("Could not migrate the DB!");
-            }
-
-
-            if (result.Count != requestedModels.Length)
-            {
-                throw new SqliteException("Could not migrate the DB! count is different");
-            }
-
-
-            // Now delete the old requests
-            foreach (var oldRequest in requestedModels)
-            {
-                repo.Delete(oldRequest);
-            }
-
+            // Drop old tables
+            TableCreation.DropTable(Db.DbConnection(), "User");
+            TableCreation.DropTable(Db.DbConnection(), "Log");
         }
     }
 }

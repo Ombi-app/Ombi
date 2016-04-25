@@ -44,7 +44,18 @@ namespace PlexRequests.Store
             connection.Close();
         }
 
-        public static void AlterTable(IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
+        public static void DropTable(IDbConnection con, string tableName)
+        {
+            using (con)
+            {
+                con.Open();
+                var query = $"DROP TABLE IF EXISTS {tableName}";
+                con.Execute(query);
+                con.Close();
+            }
+        }
+
+        public static void AddColumn(IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
@@ -83,7 +94,7 @@ namespace PlexRequests.Store
         public static void CreateSchema(this IDbConnection con, int version)
         {
             con.Open();
-            con.Query(string.Format("INSERT INTO DBInfo (SchemaVersion) values ({0})", version));
+            con.Query($"INSERT INTO DBInfo (SchemaVersion) values ({version})");
             con.Close();
         }
 
@@ -115,7 +126,5 @@ namespace PlexRequests.Store
             public string dflt_value { get; set; }
             public int pk { get; set; }
         }
-
-
     }
 }
