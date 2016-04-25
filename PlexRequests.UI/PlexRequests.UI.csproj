@@ -57,6 +57,10 @@
     </StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=2.0.275.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.2.0.275-beta\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
       <Private>True</Private>
@@ -187,6 +191,7 @@
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />
