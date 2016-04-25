@@ -780,7 +780,7 @@ namespace PlexRequests.UI.Modules
 
             if (notify)
             {
-                existingRequest.AddUserToNotification(Username);
+                model.AddUserToNotification(Username);
             }
             if (ShouldAutoApprove(RequestType.Album, settings))
             {
