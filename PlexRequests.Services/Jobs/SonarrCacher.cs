@@ -63,10 +63,17 @@ namespace PlexRequests.Services.Jobs
             if (settings.Enabled)
             {
                 Log.Trace("Getting all tv series from Sonarr");
-                var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
-                if (series != null)
+                try
                 {
-                    Cache.Set(CacheKeys.SonarrQueued, series, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
+                    if (series != null)
+                    {
+                        Cache.Set(CacheKeys.SonarrQueued, series, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    }
+                }
+                catch (System.Exception ex)
+                {
+                    Log.Error(ex, "Failed caching queued items from Sonarr");
                 }
             }
         }
