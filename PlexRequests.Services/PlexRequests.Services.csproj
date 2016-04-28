@@ -84,6 +84,7 @@
     </Reference>
     <Reference Include="System.Security" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -92,6 +93,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Jobs\StoreBackup.cs" />
     <Compile Include="Jobs\CouchPotatoCacher.cs" />
     <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
     <Compile Include="Jobs\SickRageCacher.cs" />

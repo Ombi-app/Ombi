@@ -44,7 +44,7 @@ namespace PlexRequests.Store
         }
 
         private SqliteFactory Factory { get; }
-        private string CurrentPath =>Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, DbFile);
+        public string CurrentPath =>Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, DbFile);
 
         public virtual bool CheckDb()
         {
@@ -59,7 +59,7 @@ namespace PlexRequests.Store
             return false;
         }
 
-        public string DbFile = "PlexRequests.sqlite";
+        public const string DbFile = "PlexRequests.sqlite";
 
         /// <summary>
         /// Gets the database connection.

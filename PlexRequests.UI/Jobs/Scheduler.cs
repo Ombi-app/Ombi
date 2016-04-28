@@ -56,11 +56,13 @@ namespace PlexRequests.UI.Jobs
             var sickrage = JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build();
             var sonarr = JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build();
             var cp = JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build();
+            var store = JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Backup").Build();
 
             jobs.Add(plex);
             jobs.Add(sickrage);
             jobs.Add(sonarr);
             jobs.Add(cp);
+            jobs.Add(store);
 
             return jobs;
         }
@@ -125,11 +127,19 @@ namespace PlexRequests.UI.Jobs
                               .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever())
                               .Build();
 
+            var storeBackup =
+                TriggerBuilder.Create()
+                              .WithIdentity("StoreBackup", "Backup")
+                              .StartNow()
+                              .WithSimpleSchedule(x => x.WithIntervalInHours(24).RepeatForever())
+                              .Build();
+
 
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
             triggers.Add(sonarrCacher);
             triggers.Add(cpCacher);
+            triggers.Add(storeBackup);
 
             return triggers;
         }
