@@ -173,10 +173,10 @@ namespace PlexRequests.UI.Modules
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
             var users = Api.GetUsers(authToken);
-            Log.Debug("Plex Users: ");
-            Log.Debug(users.DumpJson());
-            var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Username));
-            return allUsers != null && allUsers.Any(x => x.Username.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            Log.Trace("Plex Users: ");
+            Log.Trace(users.DumpJson());
+            var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
+            return allUsers != null && allUsers.Any(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
 
         private bool IsUserInDeniedList(string username, AuthenticationSettings settings)
