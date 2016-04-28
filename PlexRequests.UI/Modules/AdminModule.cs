@@ -270,7 +270,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(string.Empty);
             }
 
-            var usernames = users.User.Select(x => x.Username);
+            var usernames = users.User.Select(x => x.Title);
             return Response.AsJson(usernames);
         }
 
