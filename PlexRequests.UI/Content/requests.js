@@ -540,6 +540,7 @@ function buildRequestContext(result, type) {
         requestedUsers: result.requestedUsers ? result.requestedUsers.join(', ') : '',
         requestedDate: Humanize(result.requestedDate),
         requestedDateTicks: result.requestedDateTicks,
+        released: result.released,
         available: result.available,
         admin: result.admin,
         issues: result.issues,
