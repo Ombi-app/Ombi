@@ -39,6 +39,7 @@ namespace PlexRequests.UI.Models
         public string PosterPath { get; set; }
         public DateTime ReleaseDate { get; set; }
         public long ReleaseDateTicks { get; set; }
+        public bool Released { get; set; }
         public RequestType Type { get; set; }
         public string Status { get; set; }
         public bool Approved { get; set; }

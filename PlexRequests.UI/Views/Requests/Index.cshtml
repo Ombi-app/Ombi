@@ -63,6 +63,8 @@
                             <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i>  Not Approved</a></li>
                             <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i>  Available</a></li>
                             <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i>  Not Available</a></li>
+                            <li><a href="#" class="filter" data-filter=".released-true"><i class="fa fa-square-o"></i>  Released</a></li>
+                            <li><a href="#" class="filter" data-filter=".released-false"><i class="fa fa-square-o"></i>  Not Released</a></li>
                         </ul>
                     </div>
                     <div class="btn-group">
@@ -125,7 +127,7 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
-    <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}}" data-requestorder="{{requestedDateTicks}}" data-releaseorder="{{releaseDateTicks}}">
+    <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}} released-{{released}}" data-requestorder="{{requestedDateTicks}}" data-releaseorder="{{releaseDateTicks}}">
         <div class="row">
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}

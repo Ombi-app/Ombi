@@ -152,8 +152,10 @@ namespace PlexRequests.UI.Modules
 
             var viewModel = dbMovies.Select(movie =>
             {
+
                 return new RequestViewModel
                 {
+					
                     ProviderId = movie.ProviderId,
                     Type = movie.Type,
                     Status = movie.Status,
@@ -163,6 +165,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseDate = movie.ReleaseDate,
                     ReleaseDateTicks = movie.ReleaseDate.Ticks,
                     RequestedDate = movie.RequestedDate,
+					Released = DateTime.Now > movie.ReleaseDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
                     Approved = movie.Available || movie.Approved,
                     Title = movie.Title,
@@ -246,7 +249,8 @@ namespace PlexRequests.UI.Modules
                     ReleaseDateTicks = tv.ReleaseDate.Ticks,
                     RequestedDate = tv.RequestedDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
-                    Approved = tv.Available || tv.Approved,
+					Released = DateTime.Now > tv.ReleaseDate,
+					Approved = tv.Available || tv.Approved,
                     Title = tv.Title,
                     Overview = tv.Overview,
                     RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
@@ -288,6 +292,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseDateTicks = album.ReleaseDate.Ticks,
                     RequestedDate = album.RequestedDate,
                     RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(album.RequestedDate, DateTimeOffset).Ticks,
+                    Released = DateTime.Now > album.ReleaseDate,
                     Approved = album.Available || album.Approved,
                     Title = album.Title,
                     Overview = album.Overview,
