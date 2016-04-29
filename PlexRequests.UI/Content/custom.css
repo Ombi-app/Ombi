@@ -222,5 +222,6 @@ label {
 
 #updateAvailable {
   background-color: #ffa400;
-  text-align: center; }
+  text-align: center;
+  font-size: 15px; }
 

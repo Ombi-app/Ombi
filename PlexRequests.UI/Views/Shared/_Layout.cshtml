@@ -92,7 +92,7 @@
             success: function (response) {
                 if (response.updateAvailable) {
                     var status = createBaseUrl(urlBase, '/admin/status');
-                    $('#updateAvailable').html("There is a new update available! Click <a style='color: white' href='"+status+"'>Here!</a>");
+                    $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> There is a new update available! Click <a style='color: white' href='"+status+"'>Here!</a>");
                     $('#updateAvailable').removeAttr("hidden");
                 }
             },

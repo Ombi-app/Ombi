@@ -61,12 +61,9 @@ namespace PlexRequests.UI.Modules
                 var checker = new StatusChecker();
                 var release = Cache.GetOrSet(CacheKeys.LastestProductVersion, () => checker.GetStatus(), 30);
 
-                if (release.UpdateAvailable)
-                {
-                    return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = true});
-                }
-
-                return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
+                return Response.AsJson(release.UpdateAvailable 
+                    ? new JsonUpdateAvailableModel { UpdateAvailable = true} 
+                    : new JsonUpdateAvailableModel { UpdateAvailable = false });
             }
             catch (Exception e)
             {
