@@ -41,16 +41,18 @@ namespace PlexRequests.Services.Jobs
 {
     public class CouchPotatoCacher : IJob, ICouchPotatoCacher
     {
-        public CouchPotatoCacher(ISettingsService<CouchPotatoSettings> cpSettings, ICouchPotatoApi cpApi, ICacheProvider cache)
+        public CouchPotatoCacher(ISettingsService<CouchPotatoSettings> cpSettings, ICouchPotatoApi cpApi, ICacheProvider cache, IJobRecord rec)
         {
             CpSettings = cpSettings;
             CpApi = cpApi;
             Cache = cache;
+            Job = rec;
         }
 
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
         private ICacheProvider Cache { get; }
         private ICouchPotatoApi CpApi { get; }
+        private IJobRecord Job { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -73,6 +75,10 @@ namespace PlexRequests.Services.Jobs
                 catch (System.Exception ex)
                 {
                     Log.Error(ex, "Failed caching queued items from CouchPotato");
+                }
+                finally
+                {
+                    Job.Record(JobNames.CpCacher);
                 }
             }
         }

@@ -47,5 +47,7 @@ namespace PlexRequests.Core
         public const string CouchPotatoQueued = "CouchPotatoQueued";
 
         public const string GetBaseUrl = "GetBaseUrl";
+
+        public const string LastestProductVersion = "LatestProductVersion";
     }
 }

@@ -34,7 +34,7 @@
                 </button>
                 <a class="navbar-brand" href="@url/search">Plex Requests</a>
             </div>
-            
+
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     @Html.GetNavbarUrl(Context, "/search", "Search", "search")
@@ -42,7 +42,7 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
-                    
+
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
                         <li><a href="@url/login"><i class="fa fa-user"></i> Admin</a></li>
@@ -66,6 +66,7 @@
                 </ul>
             </div>
         </div>
+        <div id="updateAvailable" hidden="hidden"></div>
     </nav>
 
 <div class="container">
@@ -81,6 +82,24 @@
 <script>
 
     $(function () {
+
+        var urlBase = '@Html.GetBaseUrl()';
+        var url = createBaseUrl(urlBase, '/updatechecker');
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                if (response.updateAvailable) {
+                    var status = createBaseUrl(urlBase, '/admin/status');
+                    $('#updateAvailable').html("There is a new update available! Click <a style='color: white' href='"+status+"'>Here!</a>");
+                    $('#updateAvailable').removeAttr("hidden");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
 
         $(document).on('scroll', function () {
 

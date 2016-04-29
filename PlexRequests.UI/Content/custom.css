@@ -220,3 +220,7 @@ label {
   border-radius: 0 0.25rem 0.25rem 0 !important;
   padding: 12px 8px; }
 
+#updateAvailable {
+  background-color: #ffa400;
+  text-align: center; }
+

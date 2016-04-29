@@ -35,6 +35,8 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 using Quartz;
 
@@ -42,16 +44,18 @@ namespace PlexRequests.Services.Jobs
 {
     public class SonarrCacher : IJob, ISonarrCacher
     {
-        public SonarrCacher(ISettingsService<SonarrSettings> sonarrSettings, ISonarrApi sonarrApi, ICacheProvider cache)
+        public SonarrCacher(ISettingsService<SonarrSettings> sonarrSettings, ISonarrApi sonarrApi, ICacheProvider cache, IJobRecord rec)
         {
             SonarrSettings = sonarrSettings;
             SonarrApi = sonarrApi;
+            Job = rec;
             Cache = cache;
         }
 
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ICacheProvider Cache { get; }
         private ISonarrApi SonarrApi { get; }
+        private IJobRecord Job { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -74,6 +78,10 @@ namespace PlexRequests.Services.Jobs
                 catch (System.Exception ex)
                 {
                     Log.Error(ex, "Failed caching queued items from Sonarr");
+                }
+                finally
+                {
+                    Job.Record(JobNames.SonarrCacher);
                 }
             }
         }

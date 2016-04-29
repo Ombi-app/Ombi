@@ -47,7 +47,7 @@ namespace PlexRequests.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify)
+            INotificationService notify, IJobRecord rec)
         {
             Plex = plexSettings;
             Auth = auth;
@@ -55,6 +55,7 @@ namespace PlexRequests.Services.Jobs
             PlexApi = plex;
             Cache = cache;
             Notification = notify;
+            Job = rec;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -64,6 +65,7 @@ namespace PlexRequests.Services.Jobs
         private IPlexApi PlexApi { get; }
         private ICacheProvider Cache { get; }
         private INotificationService Notification { get; }
+        private IJobRecord Job { get; }
 
         public void CheckAndUpdateAll()
         {
@@ -143,6 +145,8 @@ namespace PlexRequests.Services.Jobs
                 NotifyUsers(modifiedModel, authSettings.PlexAuthToken);
                 RequestService.BatchUpdate(modifiedModel);
             }
+
+            Job.Record(JobNames.PlexChecker);
 
         }
 

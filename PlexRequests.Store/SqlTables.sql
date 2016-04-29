@@ -45,5 +45,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
 CREATE TABLE IF NOT EXISTS DBInfo
 (
     SchemaVersion									INTEGER
-
 );
+
+CREATE TABLE IF NOT EXISTS ScheduledJobs
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name								varchar(100) NOT NULL,
+    LastRun								varchar(100) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ScheduledJobs_Id ON ScheduledJobs (Id);

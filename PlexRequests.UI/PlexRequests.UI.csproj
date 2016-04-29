@@ -185,12 +185,14 @@
     <Compile Include="Jobs\CustomJobFactory.cs" />
     <Compile Include="Jobs\Scheduler.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\JsonUpdateAvailableModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />

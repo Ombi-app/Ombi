@@ -7,8 +7,7 @@ $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
 $i:
-!important
-;
+!important;
 
 @media (min-width: 768px ) {
     .row {
@@ -279,4 +278,9 @@ $border-radius: 10px;
 .btn-split .btn.dropdown-toggle {
     border-radius: 0 .25rem .25rem 0 $i;
     padding: 12px 8px;
+}
+
+#updateAvailable {
+    background-color:  rgb(255, 164, 0);
+    text-align: center;
 }

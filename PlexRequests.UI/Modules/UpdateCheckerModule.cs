@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: BaseAuthModule.cs
+//    File: UpdateCheckerModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,75 +24,56 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Nancy;
-using Nancy.Extensions;
-using PlexRequests.UI.Models;
 using System;
 
-using Nancy.Security;
+using Nancy;
+
+using NLog;
 
 using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class BaseAuthModule : BaseModule
+    public class UpdateCheckerModule : BaseAuthModule
     {
-        private string _username;
-        private int _dateTimeOffset = -1;
-
-        protected string Username
+        public UpdateCheckerModule(ICacheProvider provider) : base("updatechecker")
         {
-            get
+            Cache = provider;
+
+            Get["/"] = _ => CheckLatestVersion();
+        }
+
+        private ICacheProvider Cache { get; }
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        private Response CheckLatestVersion()
+        {
+            try
             {
-                if (string.IsNullOrEmpty(_username))
+                if (!IsAdmin)
                 {
-                    _username = Session[SessionKeys.UsernameKey].ToString();
+                    return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
                 }
-                return _username;
+
+                var checker = new StatusChecker();
+                var release = Cache.GetOrSet(CacheKeys.LastestProductVersion, () => checker.GetStatus(), 30);
+
+                if (release.UpdateAvailable)
+                {
+                    return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = true});
+                }
+
+                return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Exception Thrown when attempting to check the status");
+                Log.Warn(e);
+                return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
             }
         }
-
-        protected bool IsAdmin => Context.CurrentUser.IsAuthenticated();
-
-        protected int DateTimeOffset
-        {
-            get
-            {
-                if (_dateTimeOffset == -1)
-                {
-                    _dateTimeOffset = (int?)Session[SessionKeys.ClientDateTimeOffsetKey] ?? new DateTimeOffset().Offset.Minutes;
-                }
-                return _dateTimeOffset;
-            }
-        }
-
-        public BaseAuthModule()
-        {
-            Before += (ctx) => CheckAuth();
-        }
-
-        public BaseAuthModule(string modulePath) : base(modulePath)
-        {
-            Before += (ctx) => CheckAuth();
-        }
-
-
-        private Response CheckAuth()
-        {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
-            var baseUrl = settings.BaseUrl;
-
-            var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
-
-            return Session[SessionKeys.UsernameKey] == null 
-                ? Context.GetRedirect(redirectPath) 
-                : null;
-        }
-
-
-
     }
 }

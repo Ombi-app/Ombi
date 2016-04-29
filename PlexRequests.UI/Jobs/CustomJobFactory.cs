@@ -36,7 +36,7 @@ using Quartz.Spi;
 namespace PlexRequests.UI.Jobs
 {
     /// <summary>
-    /// The custom job factory we are using so we are able to use our IoC container with DI in our Jobs.
+    /// The custom job factory we are using so we are able to use our IoC container with DI in our JobNames.
     /// </summary>
     /// <seealso cref="Quartz.Spi.IJobFactory" />
     public class CustomJobFactory : IJobFactory

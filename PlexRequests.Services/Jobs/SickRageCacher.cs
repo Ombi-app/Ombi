@@ -41,11 +41,12 @@ namespace PlexRequests.Services.Jobs
 {
     public class SickRageCacher : IJob, ISickRageCacher
     {
-        public SickRageCacher(ISettingsService<SickRageSettings> srSettings, ISickRageApi srApi, ICacheProvider cache)
+        public SickRageCacher(ISettingsService<SickRageSettings> srSettings, ISickRageApi srApi, ICacheProvider cache, IJobRecord rec)
         {
             SrSettings = srSettings;
             SrApi = srApi;
             Cache = cache;
+            Job = rec;
         }
 
         private ISettingsService<SickRageSettings> SrSettings { get; }
@@ -53,6 +54,7 @@ namespace PlexRequests.Services.Jobs
         private ISickRageApi SrApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private IJobRecord Job { get; }
 
         public void Queued()
         {
@@ -73,6 +75,10 @@ namespace PlexRequests.Services.Jobs
                 catch (System.Exception ex)
                 {
                     Log.Error(ex, "Failed caching queued items from SickRage");
+                }
+                finally
+                {
+                    Job.Record(JobNames.SrCacher);
                 }
             }
         }

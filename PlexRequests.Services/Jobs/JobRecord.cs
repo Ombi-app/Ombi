@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: StoreBackup.cs
+//    File: JobRecord.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,73 +25,35 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.IO;
 using System.Linq;
 
-using NLog;
-
 using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
-using Quartz;
-
-using Directory = System.IO.Directory;
-
-namespace PlexRequests.Services.Jobs
+namespace PlexRequests.Services
 {
-    public class StoreBackup : IJob
+    public class JobRecord : IJobRecord
     {
-        public StoreBackup(ISqliteConfiguration sql, IJobRecord rec)
+        public JobRecord(IRepository<ScheduledJobs> repo)
         {
-            Sql = sql;
-            JobRecord = rec;
+            Repo = repo;
         }
-
-        private ISqliteConfiguration Sql { get; }
-        private IJobRecord JobRecord { get; }
-
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public void Execute(IJobExecutionContext context)
+        private IRepository<ScheduledJobs> Repo { get; }
+        public void Record(string jobName)
         {
-            TakeBackup();
-        }
-
-        private void TakeBackup()
-        {
-            Log.Trace("Starting DB Backup");
-            var dbPath = Sql.CurrentPath;
-            var dir = Path.GetDirectoryName(dbPath);
-            if (dir == null)
+            var allJobs = Repo.GetAll();
+            var storeJob = allJobs.FirstOrDefault(x => x.Name == jobName);
+            if (storeJob != null)
             {
-                Log.Warn("We couldn't find the DB path. We cannot backup.");
-                return;
+                storeJob.LastRun = DateTime.UtcNow;
+                Repo.Update(storeJob);
             }
-            var backupDir = Directory.CreateDirectory(Path.Combine(dir, "Backup"));
-
-
-            if (string.IsNullOrEmpty(dbPath))
+            else
             {
-                Log.Warn("Could not find the actual database. We cannot backup.");
-                return;
+                var job = new ScheduledJobs { LastRun = DateTime.UtcNow, Name = jobName };
+                Repo.Insert(job);
             }
-
-            try
-            {
-                File.Copy(dbPath, Path.Combine(backupDir.FullName, $"PlexRequests.sqlite_{DateTime.Now.ToString("yyyy-MM-dd hh.mm.ss")}.bak"));
-            }
-            catch (Exception e)
-            {
-                Log.Warn(e);
-                Log.Warn("Exception when trying to copy the backup.");
-            }
-            finally
-            {
-                JobRecord.Record(JobNames.StoreBackup);
-            }
-
         }
     }
 }

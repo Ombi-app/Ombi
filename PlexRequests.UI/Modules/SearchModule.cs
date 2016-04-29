@@ -124,14 +124,6 @@ namespace PlexRequests.UI.Modules
         private IHeadphonesApi HeadphonesApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private bool IsAdmin
-        {
-            get
-            {
-                return Context.CurrentUser.IsAuthenticated();
-            }
-        }
-
         private Negotiator RequestLoad()
         {
             var settings = PrService.GetSettings();
@@ -626,7 +618,7 @@ namespace PlexRequests.UI.Modules
                 Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string>() { Username },
+                RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount
@@ -802,7 +794,7 @@ namespace PlexRequests.UI.Modules
                 }
 
                 var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
-                sender.AddAlbum(model);
+                sender.AddAlbum(model).Wait();
                 model.Approved = true;
                 RequestService.AddRequest(model);
 

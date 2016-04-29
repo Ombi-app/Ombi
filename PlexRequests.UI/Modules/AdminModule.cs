@@ -295,8 +295,8 @@ namespace PlexRequests.UI.Modules
             }
 
             var result = CpService.SaveSettings(couchPotatoSettings);
-            return Response.AsJson(result 
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" } 
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
@@ -429,7 +429,7 @@ namespace PlexRequests.UI.Modules
             finally
             {
                 NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
-            } 
+            }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
         }
 
@@ -464,7 +464,7 @@ namespace PlexRequests.UI.Modules
         {
             var checker = new StatusChecker();
             var status = checker.GetStatus();
-            var md = new Markdown();
+            var md = new Markdown(new MarkdownOptions { AutoNewLines = true });
             status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
         }
@@ -623,7 +623,7 @@ namespace PlexRequests.UI.Modules
         {
             JsonSettings.MaxJsonLength = int.MaxValue;
             var allLogs = LogsRepo.GetAll().OrderByDescending(x => x.Id).Take(200);
-            var model = new DatatablesModel<LogEntity> {Data = new List<LogEntity>()};
+            var model = new DatatablesModel<LogEntity> { Data = new List<LogEntity>() };
             foreach (var l in allLogs)
             {
                 l.DateString = l.Date.ToString("G");
@@ -650,7 +650,7 @@ namespace PlexRequests.UI.Modules
             settings.Level = level;
             LogService.SaveSettings(settings);
 
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}" });
         }
 
         private Negotiator Headphones()
@@ -673,7 +673,7 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
 
             var result = HeadphonesService.SaveSettings(settings);
-            
+
             Log.Info("Saved headphones settings, result: {0}", result);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }

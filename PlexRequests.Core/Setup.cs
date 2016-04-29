@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 using Mono.Data.Sqlite;
 using NLog;
@@ -72,18 +73,19 @@ namespace PlexRequests.Core
 
         private int CheckSchema()
         {
-            var checker = new StatusChecker();
-            var status = checker.GetStatus();
+            var productVersion = AssemblyHelper.GetProductVersion();
+            var trimStatus = new Regex("[^0-9]", RegexOptions.Compiled).Replace(productVersion, string.Empty).PadRight(4, '0');
+            var version =  int.Parse(trimStatus);
 
             var connection = Db.DbConnection();
             var schema = connection.GetSchemaVersion();
             if (schema == null)
             {
-                connection.CreateSchema(status.DBVersion); // Set the default.
+                connection.CreateSchema(version); // Set the default.
                 schema = connection.GetSchemaVersion();
             }
 
-            var version = schema.SchemaVersion;
+            version = schema.SchemaVersion;
 
             return version;
         }
