@@ -209,10 +209,23 @@ namespace PlexRequests.UI.Modules
         private Response SaveAdmin()
         {
             var model = this.Bind<PlexRequestSettings>();
+			var valid = this.Validate (model);
+			if (!valid.IsValid) {
+				return Response.AsJson(valid.SendJsonError());
+			}
 
-            PrService.SaveSettings(model);
+			if (!string.IsNullOrWhiteSpace (model.BaseUrl)) {
+				if (model.BaseUrl.StartsWith ("/") || model.BaseUrl.StartsWith ("\\"));
+				{
+					model.BaseUrl = model.BaseUrl.Remove (0, 1);
+				}
+			}
+            var result = PrService.SaveSettings(model);
+			if (result) {
+				return Response.AsJson (new JsonResponseModel{ Result = true });
+			}
 
-            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/admin" : "~/admin");
+			return Response.AsJson (new JsonResponseModel{ Result = false, Message = "We could not save to the database, please try again" });
         }
 
         private Response RequestAuthToken()

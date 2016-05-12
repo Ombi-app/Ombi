@@ -21,7 +21,7 @@
 
 }
 <div class="col-sm-8 col-sm-push-1">
-    <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
+    <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Request Plex Settings</legend>
             <div class="form-group">
@@ -168,9 +168,39 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button type="submit" class="btn btn-primary-outline">Submit</button>
+                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                 </div>
             </div>
         </fieldset>
     </form>
 </div>
+
+<script>
+$(function() {
+ $('#save').click(function (e) {
+            e.preventDefault();
+
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+});
+</script>
