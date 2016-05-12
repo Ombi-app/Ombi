@@ -6,6 +6,7 @@
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/PlexRequests.net/total.svg)](https://github.com/tidusjar/PlexRequests.Net)
+[![Stories in Progress](https://badge.waffle.io/tidusjar/PlexRequests.Net.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
