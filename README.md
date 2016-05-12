@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/tidusjar/PlexRequests.Net.png?label=ready&title=Ready)](https://waffle.io/tidusjar/PlexRequests.Net)
 # Plex Requests .NET!
 
 [![Gitter](https://badges.gitter.im/tidusjar/PlexRequest.NET.svg)](https://gitter.im/tidusjar/PlexRequests.Net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
