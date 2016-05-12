@@ -130,9 +130,10 @@ namespace PlexRequests.Api
             {
                 return Api.Execute<CouchPotatoMovies>(request, baseUrl);
             }
-            catch (ApiRequestException) // Request error is already logged in the ApiRequest class
+			catch (Exception e) // Request error is already logged in the ApiRequest class
             {
                 Log.Error("Error when attempting to GetMovies.");
+				Log.Error (e);
                 return new CouchPotatoMovies();    
             }
         }
