@@ -62,7 +62,13 @@ namespace PlexRequests.Api
             request.AddUrlSegment("imdbid", imdbid);
             request.AddUrlSegment("title", title);
 
-            var obj = Api.ExecuteJson<JObject>(request, baseUrl);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan));
+
+			var obj = (JObject)policy.Execute( () => Api.ExecuteJson<JObject>(request, baseUrl));
             Log.Trace("CP movie Add result count {0}", obj.Count);
 
             if (obj.Count > 0)
@@ -99,8 +105,13 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("apikey", apiKey);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for CP, Retrying {0}", timespan));
 
-            return Api.Execute<CouchPotatoStatus>(request,url);
+			return (CouchPotatoStatus)policy.Execute( () => Api.Execute<CouchPotatoStatus>(request,url));
         }
 
         public CouchPotatoProfiles GetProfiles(Uri url, string apiKey)
@@ -114,7 +125,13 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apikey", apiKey);
 
-            return Api.Execute<CouchPotatoProfiles>(request, url);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetProfiles for CP, Retrying {0}", timespan));
+
+			return (CouchPotatoProfiles)policy.Execute( () => Api.Execute<CouchPotatoProfiles>(request,url));
         }
 
         public CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status)
@@ -128,7 +145,13 @@ namespace PlexRequests.Api
             request.AddUrlSegment("status", string.Join(",", status));
             try
             {
-                return Api.Execute<CouchPotatoMovies>(request, baseUrl);
+				var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+					TimeSpan.FromSeconds (5),
+					TimeSpan.FromSeconds(10),
+					TimeSpan.FromSeconds(30)
+				}, (exception, timespan) => Log.Error (exception, "Exception when calling GetMovies for CP, Retrying {0}", timespan));
+
+				return (CouchPotatoMovies)policy.Execute( () => Api.Execute<CouchPotatoMovies>(request,baseUrl));
             }
 			catch (Exception e) // Request error is already logged in the ApiRequest class
             {
