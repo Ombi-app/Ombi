@@ -194,9 +194,9 @@ namespace PlexRequests.Api
 
 				return (PlexLibraries)policy.Execute(() => api.ExecuteXml<PlexLibraries>(request, plexFullHost));
             }
-            catch (ApiRequestException)
+			catch (Exception e)
             {
-                Log.Error("There has been a API Exception when attempting to get the Plex Libraries");
+                Log.Error(e,"There has been a API Exception when attempting to get the Plex Libraries");
                 return new PlexLibraries();
             }
         }
@@ -223,9 +223,9 @@ namespace PlexRequests.Api
 
 				return (PlexSearch)policy.Execute(() => api.ExecuteXml<PlexSearch>(request, plexFullHost));
             }
-            catch (ApiRequestException)
+			catch (Exception e)
             {
-                Log.Error("There has been a API Exception when attempting to get the Plex Library");
+                Log.Error(e,"There has been a API Exception when attempting to get the Plex Library");
                 return new PlexSearch();
             }
         }
