@@ -23,6 +23,9 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using Polly;
+
+
 #endregion
 using System;
 
@@ -67,7 +70,14 @@ namespace PlexRequests.Api
             request.AddJsonBody(userModel);
 
             var api = new ApiRequest();
-            return api.Execute<PlexAuthentication>(request, new Uri("https://plex.tv/users/sign_in.json"));
+
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan));
+
+			return (PlexAuthentication)policy.Execute(() => api.Execute<PlexAuthentication>(request, new Uri("https://plex.tv/users/sign_in.json")));
         }
 
         public PlexFriends GetUsers(string authToken)
@@ -80,7 +90,13 @@ namespace PlexRequests.Api
             AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
-            var users = api.ExecuteXml<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all"));
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan));
+
+			var users = (PlexFriends)policy.Execute(() =>api.ExecuteXml<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all")));
 
             return users;
         }
@@ -104,7 +120,13 @@ namespace PlexRequests.Api
             AddHeaders(ref request, authToken);
 
             var api = new ApiRequest();
-            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan));
+
+			var search = (PlexSearch)policy.Execute(() => api.ExecuteXml<PlexSearch>(request, plexFullHost));
 
             return search;
         }
@@ -117,9 +139,14 @@ namespace PlexRequests.Api
             };
 
             AddHeaders(ref request, authToken);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan));
 
             var api = new ApiRequest();
-            var users = api.ExecuteXml<PlexStatus>(request, uri);
+			var users = (PlexStatus)policy.Execute(() => api.ExecuteXml<PlexStatus>(request, uri));
 
             return users;
         }
@@ -133,8 +160,15 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying: {0}", timespan));
+
+
             var api = new ApiRequest();
-            var account = api.ExecuteXml<PlexAccount>(request, new Uri("https://plex.tv/users/account"));
+			var account = (PlexAccount)policy.Execute(() => api.ExecuteXml<PlexAccount>(request, new Uri("https://plex.tv/users/account")));
 
             return account;
         }
@@ -152,8 +186,13 @@ namespace PlexRequests.Api
             var api = new ApiRequest();
             try
             {
+				var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+					TimeSpan.FromSeconds (5),
+					TimeSpan.FromSeconds(10),
+					TimeSpan.FromSeconds(30)
+				}, (exception, timespan) => Log.Error (exception, "Exception when calling GetLibrarySections for Plex, Retrying {0}", timespan));
 
-                return api.ExecuteXml<PlexLibraries>(request, plexFullHost);
+				return (PlexLibraries)policy.Execute(() => api.ExecuteXml<PlexLibraries>(request, plexFullHost));
             }
             catch (ApiRequestException)
             {
@@ -176,8 +215,13 @@ namespace PlexRequests.Api
             var api = new ApiRequest();
             try
             {
+				var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+					TimeSpan.FromSeconds (5),
+					TimeSpan.FromSeconds(10),
+					TimeSpan.FromSeconds(30)
+				}, (exception, timespan) => Log.Error (exception, "Exception when calling GetLibrary for Plex, Retrying {0}", timespan));
 
-                return api.ExecuteXml<PlexSearch>(request, plexFullHost);
+				return (PlexSearch)policy.Execute(() => api.ExecuteXml<PlexSearch>(request, plexFullHost));
             }
             catch (ApiRequestException)
             {
