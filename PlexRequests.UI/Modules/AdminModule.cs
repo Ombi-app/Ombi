@@ -123,9 +123,9 @@ namespace PlexRequests.UI.Modules
             LogService = logs;
             Cache = cache;
 
-#if !DEBUG
-            this.RequiresAuthentication();
-#endif
+			#if DEBUG
+			this.RequiresClaims(UserClaims.Admin);
+			#endif
             Get["/"] = _ => Admin();
 
             Get["/authentication"] = _ => Authentication();
