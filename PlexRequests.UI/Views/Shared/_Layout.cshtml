@@ -43,7 +43,7 @@
                 <ul class="nav navbar-nav navbar-right">
 
 
-                    @if (!Context.CurrentUser.IsAuthenticated())
+                    @if (!Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
                     {
 
                         <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> Admin</a></li>

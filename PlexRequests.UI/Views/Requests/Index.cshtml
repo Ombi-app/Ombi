@@ -36,7 +36,7 @@
             <div class="col-sm-12">
                 <div class="pull-right">
                     <div class="btn-group">
-                        @if (Context.CurrentUser.IsAuthenticated())
+                        @if (Context.CurrentUser.IsAuthenticated()) //TODO replace with IsAdmin
                         {
                             @if (Model.SearchForMovies)
                             {
