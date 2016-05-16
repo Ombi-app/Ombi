@@ -25,12 +25,12 @@ namespace PlexRequests.UI
 			Get ["/users"] = x => LoadUsers ();
 		}
 
-		public Negotiator Load()
+		private Negotiator Load()
 		{
 			return View ["Index"];
 		}
 
-		public Response LoadUsers()
+		private Response LoadUsers()
 		{
 			var users = UserMapper.GetUsers ();
 			var model = new List<UserManagementUsersViewModel>();
@@ -45,6 +45,21 @@ namespace PlexRequests.UI
 			}
 			return Response.AsJson (users);
 		}
-	}
+
+		private Response CreateUser(string username, string password, string claims)
+		{
+			if (string.IsNullOrWhiteSpace (username) || string.IsNullOrWhiteSpace (password)) {
+				return Response.AsJson (new JsonResponseModel {
+					Result = true,
+					Message = "Please enter in a valid Username and Password"
+				});
+			}
+			var user = UserMapper.CreateUser (username, password, new string[]{ claims });
+			if(user.HasValue){
+				return Response.AsJson(new JsonResponseModel{ Result = true});
+				}
+
+			return Response.AsJson(new JsonResponseModel{ Result = false, Message = "Could not save user"});
+		}
 }
 

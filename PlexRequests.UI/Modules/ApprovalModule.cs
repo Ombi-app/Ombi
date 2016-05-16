@@ -276,11 +276,6 @@ namespace PlexRequests.UI.Modules
 
         private Response ApproveAllTVShows()
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
-
             var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.TvShow);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
