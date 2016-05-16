@@ -17,6 +17,8 @@ namespace PlexRequests.UI
 			RuleFor (x => x.BaseUrl).NotEqual ("test").WithMessage ("You cannot use 'test' as this is reserved by the application.");
 			RuleFor (x => x.BaseUrl).NotEqual ("approval").WithMessage ("You cannot use 'approval' as this is reserved by the application.");
 			RuleFor (x => x.BaseUrl).NotEqual ("updatechecker").WithMessage ("You cannot use 'updatechecker' as this is reserved by the application.");
+			RuleFor (x => x.BaseUrl).NotEqual ("usermanagement").WithMessage ("You cannot use 'usermanagement' as this is reserved by the application.");
+			RuleFor (x => x.BaseUrl).NotEqual ("api").WithMessage ("You cannot use 'api' as this is reserved by the application.");
 
 		
 		

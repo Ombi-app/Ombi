@@ -195,6 +195,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\PlexRequestsValidator.cs" />
+    <Compile Include="Modules\UserManagementModule.cs" />
+    <Content Include="Views\UserManagement\Index.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Compile Include="Modules\ApiModule.cs" />
+    <Compile Include="Models\ApiModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.js">
@@ -464,4 +470,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Views\UserManagement\" />
+  </ItemGroup>
 </Project>

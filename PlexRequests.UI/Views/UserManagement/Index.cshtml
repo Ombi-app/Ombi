@@ -1,0 +1,14 @@
+﻿@using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl().ToHtmlString();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        url = "/" + baseUrl;
+    }
+}
+
+
+<h2>User Management</h2>
+
+<button class="btn btn-success-outline" type="submit">Create User <div class="fa fa-plus"/></button>

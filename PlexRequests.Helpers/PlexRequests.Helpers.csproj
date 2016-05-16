@@ -64,6 +64,7 @@
     <Compile Include="SerializerSettings.cs" />
     <Compile Include="StringCipher.cs" />
     <Compile Include="UriHelper.cs" />
+    <Compile Include="UserClaims.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

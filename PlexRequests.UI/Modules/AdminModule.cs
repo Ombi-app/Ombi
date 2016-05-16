@@ -172,6 +172,8 @@ namespace PlexRequests.UI.Modules
 
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
+
+			Post ["/createapikey"] = x => CreateApiKey ();
         }
 
         private Negotiator Authentication()
@@ -705,5 +707,20 @@ namespace PlexRequests.UI.Modules
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
+
+		private Response CreateApiKey()
+		{
+			this.RequiresClaims (UserClaims.Admin);
+		
+			var apiKey = Guid.NewGuid ().ToString ("N");
+
+			var settings = PrService.GetSettings ();
+
+			settings.ApiKey = apiKey;
+
+			PrService.SaveSettings (settings);
+
+			return Response.AsJson (apiKey);
+		}
     }
 }
