@@ -45,7 +45,8 @@
 
                     @if (!Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><a href="@url/login"><i class="fa fa-user"></i> Admin</a></li>
+
+                        <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> Admin</a></li>
                     }
                     else
                     {

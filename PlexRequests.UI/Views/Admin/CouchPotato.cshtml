@@ -88,7 +88,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="testCp" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testCp" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"> </div></button>
                 </div>
             </div>
 
@@ -170,6 +170,8 @@
             e.preventDefault();
             var $form = $("#mainForm");
             var url = createBaseUrl(baseUrl,"/test/cp");
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+           
             $.ajax({
                 type: $form.prop("method"),
                 url: url,
@@ -178,15 +180,18 @@
                 success: function (response) {
                     console.log(response);
                     if (response.result === true) {
+                   		$('#spinner').attr("class", "fa fa-check");
                         generateNotify(response.message, "success");
                         $('#authToken').val(response.authToken);
                     } else {
                         generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
-                    generateNotify("Something went wrong!", "danger");
+	                    generateNotify("Something went wrong!", "danger");
+	        				$('#spinner').attr("class", "fa fa-times");
                 }
             });
         });

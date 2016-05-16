@@ -46,6 +46,7 @@ namespace PlexRequests.UI.Modules
             {
                 {
                     dynamic model = new ExpandoObject();
+					model.Redirect = Request.Query.redirect.Value ?? string.Empty;
                     model.Errored = Request.Query.error.HasValue;
                     var adminCreated = UserMapper.DoUsersExist();
                     model.AdminExists = adminCreated;
@@ -61,6 +62,7 @@ namespace PlexRequests.UI.Modules
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
                 var dtOffset = (int)Request.Form.DateTimeOffset;
+				var redirect = (string)Request.Form.Redirect;
 
                 var userId = UserMapper.ValidateUser(username, password);
 
@@ -75,12 +77,8 @@ namespace PlexRequests.UI.Modules
                 }
                 Session[SessionKeys.UsernameKey] = username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
-                if (!string.IsNullOrEmpty(BaseUrl))
-                {
 
-                    return this.LoginAndRedirect(userId.Value, expiry, $"/{BaseUrl}");
-                }
-                return this.LoginAndRedirect(userId.Value, expiry);
+				return this.LoginAndRedirect(userId.Value, expiry, redirect);
             };
 
             Get["/register"] = x =>

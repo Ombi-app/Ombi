@@ -75,7 +75,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="testHeadphones" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testHeadphones" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -96,6 +96,8 @@
 
         var base = '@Html.GetBaseUrl()';
         $('#testHeadphones').click(function (e) {
+
+         	$('#spinner').attr("class", "fa fa-spinner fa-spin");
             e.preventDefault();
             var $form = $("#mainForm");
             var url = createBaseUrl(base, '/test/headphones');
@@ -107,13 +109,16 @@
                 success: function (response) {
                     console.log(response);
                     if (response.result === true) {
+        				$('#spinner').attr("class", "fa fa-check");
                         generateNotify(response.message, "success");
                     } else {
+        				$('#spinner').attr("class", "fa fa-times");
                         generateNotify(response.message, "warning");
                     }
                 },
                 error: function (e) {
                     console.log(e);
+        				$('#spinner').attr("class", "fa fa-times");
                     generateNotify("Something went wrong!", "danger");
                 }
             });

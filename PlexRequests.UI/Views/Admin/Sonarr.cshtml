@@ -73,7 +73,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles</button>
+                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles <div id="getSpinner"/></button>
                 </div>
             </div>
             <div class="form-group">
@@ -109,7 +109,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button id="testSonarr" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testSonarr" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"/></button>
                 </div>
             </div>
 
@@ -200,17 +200,22 @@
         });
 
         $('#getProfiles').click(function (e) {
+
+            $('#getSpinner').attr("class", "fa fa-spinner fa-spin");
             e.preventDefault();
             if (!$('#Ip').val()) {
                 generateNotify("Please enter a valid IP/Hostname.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
                 return;
             }
             if (!$('#portNumber').val()) {
                 generateNotify("Please enter a valid Port Number.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
                 return;
             }
             if (!$('#ApiKey').val()) {
                 generateNotify("Please enter a valid ApiKey.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
                 return;
             }
             var $form = $("#mainForm");
@@ -221,11 +226,13 @@
                 dataType: "json",
                 success: function (response) {
                     response.forEach(function (result) {
+        				$('#getSpinner').attr("class", "fa fa-check");
                         $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
                     });
                 },
                 error: function (e) {
                     console.log(e);
+        				$('#getSpinner').attr("class", "fa fa-times");
                     generateNotify("Something went wrong!", "danger");
                 }
             });
@@ -233,6 +240,8 @@
 
         var base = '@Html.GetBaseUrl()';
         $('#testSonarr').click(function (e) {
+
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
             e.preventDefault();
             var qualityProfile = $("#profiles option:selected").val();
 
@@ -251,13 +260,16 @@
                     console.log(response);
                     if (response.result === true) {
                         generateNotify(response.message, "success");
+        				$('#spinner').attr("class", "fa fa-check");
                     } else {
                         generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+        				$('#spinner').attr("class", "fa fa-times");
                 }
             });
         });

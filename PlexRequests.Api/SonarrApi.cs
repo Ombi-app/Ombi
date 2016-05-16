@@ -157,10 +157,10 @@ namespace PlexRequests.Api
 
 				return policy.Execute(() => Api.ExecuteJson<List<Series>>(request, baseUrl));
 			}
-            catch (ApiRequestException)
+			catch (Exception e)
             {
-                Log.Error("There has been an API exception when getting the Sonarr Series");
-                return null;
+                Log.Error(e, "There has been an API exception when getting the Sonarr Series");
+				return null;
             }
         }
     }

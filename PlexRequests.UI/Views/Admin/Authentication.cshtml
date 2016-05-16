@@ -153,10 +153,17 @@
             url = createBaseUrl(base, url);
             $.ajax({
                 type: "Get",
-                url: "getusers",
+                url: url,
                 dataType: "json",
                 success: function (response) {
-                    if (response.length > 1) {
+
+                $('#users').html("");
+                if(!response.result){
+                	generateNotify(response.message,"danger");
+                    $('#users').append("<option>Error!</option>");
+                	return;
+                }
+                    if (response.users.length > 1) {
                         $(response).each(function () {
                             $('#users').append("<option>" + this + "</option>");
                         });
@@ -167,6 +174,8 @@
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+                    $('#users').html("");
+                    $('#users').append("<option>Error!</option>");
                 }
             });
 

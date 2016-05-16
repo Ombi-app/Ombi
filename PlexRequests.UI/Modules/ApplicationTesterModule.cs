@@ -87,7 +87,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to CouchPotato, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+			catch (Exception e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get CP's status: ");
                 Log.Warn(e);
@@ -116,7 +116,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Sonarr, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+			catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Sonarr's status: ");
                 Log.Warn(e);
@@ -150,7 +150,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Plex, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+			catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Plex's status: ");
                 Log.Warn(e);
@@ -179,7 +179,7 @@ namespace PlexRequests.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to SickRage, please check your settings." });
 
             }
-            catch (ApplicationException e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+			catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get SickRage's status: ");
                 Log.Warn(e);
@@ -214,7 +214,7 @@ namespace PlexRequests.UI.Modules
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Headphones, please check your settings." });
             }
-            catch (ApplicationException e)
+			catch (Exception e)
             {
                 Log.Warn("Exception thrown when attempting to get Headphones's status: ");
                 Log.Warn(e);

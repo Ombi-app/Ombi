@@ -23,6 +23,10 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using System.Net;
+using PlexRequests.Helpers.Exceptions;
+
+
 #endregion
 
 using System.Collections.Generic;
@@ -273,18 +277,27 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(string.Empty);
             }
 
-            var users = PlexApi.GetUsers(token);
-            if (users == null)
-            {
-                return Response.AsJson(string.Empty);
-            }
-            if (users.User == null || users.User?.Length == 0)
-            {
-                return Response.AsJson(string.Empty);
-            }
+			try {
+				var users = PlexApi.GetUsers(token);
+				if (users == null)
+				{
+					return Response.AsJson(string.Empty);
+				}
+				if (users.User == null || users.User?.Length == 0)
+				{
+					return Response.AsJson(string.Empty);
+				}
 
-            var usernames = users.User.Select(x => x.Title);
-            return Response.AsJson(usernames);
+				var usernames = users.User.Select(x => x.Title);
+				return Response.AsJson(new {Result = true, Users = usernames});
+			} catch (Exception ex) {
+				Log.Error (ex);
+				if (ex is WebException || ex is ApiRequestException) {
+					return Response.AsJson (new { Result = false, Message ="Could not load the user list! We have connectivity problems connecting to Plex, Please ensure we can access Plex.Tv, The error has been logged." });
+				}
+
+				return Response.AsJson (new { Result = false, Message = ex.Message});
+			}
         }
 
         private Negotiator CouchPotato()

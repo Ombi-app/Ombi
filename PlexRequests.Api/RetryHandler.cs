@@ -1,33 +1,70 @@
 ﻿using System;
 using Polly.Retry;
 using Polly;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Api
 {
 	public static class RetryHandler
 	{
-		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] TimeSpan, Action action)
+
+		private static TimeSpan[] DefaultTime = new TimeSpan[] { 
+			TimeSpan.FromSeconds (2),
+			TimeSpan.FromSeconds(5),
+			TimeSpan.FromSeconds(10)};
+
+		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] timeSpan, Action action)
 		{
+			if(timeSpan == null)
+			{
+				timeSpan = DefaultTime;
+			}
 			var policy = Policy.Handle<Exception> ()
-				.WaitAndRetry(TimeSpan, (exception, timeSpan) => action());
+				.WaitAndRetry(timeSpan, (e, ts) => action());
 			
 			return policy;
 		}
 
-		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] TimeSpan)
+		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] timeSpan)
 		{
+			if(timeSpan == null)
+			{
+				timeSpan = DefaultTime;
+			}
 			var policy = Policy.Handle<Exception> ()
-				.WaitAndRetry(TimeSpan);
+				.WaitAndRetry(timeSpan);
 
 			return policy;
 		}
 
-		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] TimeSpan, Action<Exception, TimeSpan> action)
+		public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] timeSpan, Action<Exception, TimeSpan> action)
 		{
+			if(timeSpan == null)
+			{
+				timeSpan = DefaultTime;
+			}
 			var policy = Policy.Handle<Exception> ()
-				.WaitAndRetry(TimeSpan, (exception, timeSpan) => action(exception, timeSpan));
+				.WaitAndRetry(timeSpan, (exception, ts) => action(exception, ts));
 
 			return policy;
+		}
+			
+		public static T Execute<T>(Func<T> action, TimeSpan[] timeSpan)
+		{
+			var policy = RetryAndWaitPolicy (timeSpan);
+
+			return policy.Execute (action);
+		}
+
+		public static T Execute<T>(Func<T> func, TimeSpan[] timeSpan, Action<Exception, TimeSpan> action)
+		{
+			if(timeSpan == null)
+			{
+				timeSpan = DefaultTime;
+			}
+			var policy = RetryAndWaitPolicy (timeSpan, action);
+
+			return policy.Execute (func);
 		}
 	}
 }
