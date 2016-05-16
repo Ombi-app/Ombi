@@ -10,6 +10,7 @@ using PlexRequests.Core;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.Helpers;
+using System.Collections.Generic;
 
 
 namespace PlexRequests.UI
@@ -32,6 +33,16 @@ namespace PlexRequests.UI
 		public Response LoadUsers()
 		{
 			var users = UserMapper.GetUsers ();
+			var model = new List<UserManagementUsersViewModel>();
+			foreach (var user in users) {
+				model.Add (new UserManagementUsersViewModel {
+				//Claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims),
+					Claims = "test",
+					Id = user.Id,
+					Username = user.UserName,
+					//Type = UserType.LocalUser
+				});
+			}
 			return Response.AsJson (users);
 		}
 	}

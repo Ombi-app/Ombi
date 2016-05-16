@@ -50,7 +50,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi) : base("approval")
         {
-            this.RequiresAuthentication();
+			this.RequiresClaims(UserClaims.Admin, UserClaims.PowerUser);
 
             Service = service;
             CpService = cpService;
@@ -88,10 +88,7 @@ namespace PlexRequests.UI.Modules
         private Response Approve(int requestId, string qualityId)
         {
             Log.Info("approving request {0}", requestId);
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
+
             // Get the request from the DB
             var request = Service.Get(requestId);
 
@@ -258,10 +255,6 @@ namespace PlexRequests.UI.Modules
 
         private Response ApproveAllMovies()
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
 
             var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.Movie);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
@@ -312,11 +305,6 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private Response ApproveAll()
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot approve any requests." });
-            }
-
             var requests = Service.GetAll().Where(x => x.CanApprove);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())

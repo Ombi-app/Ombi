@@ -201,6 +201,7 @@
     </Content>
     <Compile Include="Modules\ApiModule.cs" />
     <Compile Include="Models\ApiModel.cs" />
+    <Compile Include="Models\UserManagementUsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.js">

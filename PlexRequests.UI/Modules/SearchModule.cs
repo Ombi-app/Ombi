@@ -500,7 +500,7 @@ namespace PlexRequests.UI.Modules
                         RequestService.AddRequest(model);
 
 
-						if (ShouldSendNotification) {
+						if (ShouldSendNotification()) {
 							var notificationModel = new NotificationModel {
 								Title = model.Title,
 								User = Username,
@@ -525,7 +525,7 @@ namespace PlexRequests.UI.Modules
                     Log.Info("Adding movie to database (No approval required)");
                     RequestService.AddRequest(model);
 
-					if (ShouldSendNotification) {
+					if (ShouldSendNotification()) {
 						var notificationModel = new NotificationModel {
 							Title = model.Title,
 							User = Username,
@@ -660,7 +660,7 @@ namespace PlexRequests.UI.Modules
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
 
-						if (ShouldSendNotification) {
+						if (ShouldSendNotification()) {
 							var notify1 = new NotificationModel {
 								Title = model.Title,
 								User = Username,
@@ -686,7 +686,7 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         RequestService.AddRequest(model);
-						if (ShouldSendNotification) {
+						if (ShouldSendNotification()) {
 							var notify2 = new NotificationModel {
 								Title = model.Title,
 								User = Username,

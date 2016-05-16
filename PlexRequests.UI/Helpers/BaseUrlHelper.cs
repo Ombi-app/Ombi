@@ -95,7 +95,7 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(sb.ToString());
         }
 
-        public static IHtmlString LoadLogsAssets(this HtmlHelpers helper)
+        public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
             var assetLocation = GetBaseUrl();
