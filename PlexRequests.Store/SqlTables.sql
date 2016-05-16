@@ -42,6 +42,18 @@ CREATE TABLE IF NOT EXISTS Logs
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
 
+CREATE TABLE IF NOT EXISTS Audit
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Date								varchar(100) NOT NULL,
+    Username							varchar(100) NOT NULL,
+    ChangeType							varchar(100) NOT NULL,
+    OldValue							varchar(100),
+     NewValue							varchar(100),
+);
+CREATE UNIQUE INDEX IF NOT EXISTS Audit_Id ON Audit (Id);
+
+
 CREATE TABLE IF NOT EXISTS DBInfo
 (
     SchemaVersion									INTEGER

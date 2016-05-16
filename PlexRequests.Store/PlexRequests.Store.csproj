@@ -81,6 +81,7 @@
       <DependentUpon>Sql.resx</DependentUpon>
     </Compile>
     <Compile Include="TableCreation.cs" />
+    <Compile Include="Models\Audit.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="sqlite3.dll">
