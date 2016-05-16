@@ -499,15 +499,16 @@ namespace PlexRequests.UI.Modules
                         Log.Info("Adding movie to database (No approval required)");
                         RequestService.AddRequest(model);
 
-                        var notificationModel = new NotificationModel
-                        {
-                            Title = model.Title,
-                            User = Username,
-                            DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest
-                        };
-                        NotificationService.Publish(notificationModel);
 
+						if (ShouldSendNotification) {
+							var notificationModel = new NotificationModel {
+								Title = model.Title,
+								User = Username,
+								DateTime = DateTime.Now,
+								NotificationType = NotificationType.NewRequest
+							};
+							NotificationService.Publish (notificationModel);
+						}
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                     }
                     return
@@ -524,14 +525,15 @@ namespace PlexRequests.UI.Modules
                     Log.Info("Adding movie to database (No approval required)");
                     RequestService.AddRequest(model);
 
-                    var notificationModel = new NotificationModel
-                    {
-                        Title = model.Title,
-                        User = Username,
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.NewRequest
-                    };
-                    NotificationService.Publish(notificationModel);
+					if (ShouldSendNotification) {
+						var notificationModel = new NotificationModel {
+							Title = model.Title,
+							User = Username,
+							DateTime = DateTime.Now,
+							NotificationType = NotificationType.NewRequest
+						};
+						NotificationService.Publish (notificationModel);
+					}
 
                     return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
                 }
@@ -657,9 +659,16 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         RequestService.AddRequest(model);
-                        var notify1 = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
-                        NotificationService.Publish(notify1);
 
+						if (ShouldSendNotification) {
+							var notify1 = new NotificationModel {
+								Title = model.Title,
+								User = Username,
+								DateTime = DateTime.Now,
+								NotificationType = NotificationType.NewRequest
+							};
+							NotificationService.Publish (notify1);
+						}
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
 
@@ -677,9 +686,15 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         RequestService.AddRequest(model);
-
-                        var notify2 = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
-                        NotificationService.Publish(notify2);
+						if (ShouldSendNotification) {
+							var notify2 = new NotificationModel {
+								Title = model.Title,
+								User = Username,
+								DateTime = DateTime.Now,
+								NotificationType = NotificationType.NewRequest
+							};
+							NotificationService.Publish (notify2);
+						}
 
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
@@ -697,6 +712,18 @@ namespace PlexRequests.UI.Modules
 
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
+
+		private bool ShouldSendNotification(){
+			var sendNotification = true;
+			var claims = Context.CurrentUser?.Claims;
+			if (claims != null) {
+				if (claims.Contains (UserClaims.Admin) || claims.Contains (UserClaims.PowerUser)) {
+					sendNotification = false; // Don't bother sending a notification if the user is an admin
+				}
+			}
+			return sendNotification;
+		}
+
 
         private Response RequestAlbum(string releaseId, bool notify)
         {
@@ -798,6 +825,16 @@ namespace PlexRequests.UI.Modules
                 model.Approved = true;
                 RequestService.AddRequest(model);
 
+				if (ShouldSendNotification ()) {
+					var notify2 = new NotificationModel {
+						Title = model.Title,
+						User = Username,
+						DateTime = DateTime.Now,
+						NotificationType = NotificationType.NewRequest
+					};
+					NotificationService.Publish (notify2);
+				}
+
                 return
                     Response.AsJson(new JsonResponseModel
                     {
@@ -806,6 +843,15 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
+			if (ShouldSendNotification ()) {
+				var notify2 = new NotificationModel {
+					Title = model.Title,
+					User = Username,
+					DateTime = DateTime.Now,
+					NotificationType = NotificationType.NewRequest
+				};
+				NotificationService.Publish (notify2);
+			}
             var result = RequestService.AddRequest(model);
             return Response.AsJson(new JsonResponseModel
             {
