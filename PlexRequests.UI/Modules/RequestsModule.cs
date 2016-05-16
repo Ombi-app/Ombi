@@ -108,7 +108,6 @@ namespace PlexRequests.UI.Modules
         private Response GetMovies() // TODO: async await the API calls
         {
             var settings = PrSettings.GetSettings();
-            var isAdmin = Context.CurrentUser.IsAuthenticated();
 
             List<Task> taskList = new List<Task>();
 
@@ -130,7 +129,7 @@ namespace PlexRequests.UI.Modules
 
             List<QualityModel> qualities = new List<QualityModel>();
 
-            if (isAdmin)
+			if (IsAdmin)
             {
                 var cpSettings = CpSettings.GetSettings();
                 if (cpSettings.Enabled)
@@ -185,7 +184,6 @@ namespace PlexRequests.UI.Modules
         private Response GetTvShows() // TODO: async await the API calls
         {
             var settings = PrSettings.GetSettings();
-            var isAdmin = Context.CurrentUser.IsAuthenticated();
 
             List<Task> taskList = new List<Task>();
 
@@ -198,14 +196,14 @@ namespace PlexRequests.UI.Modules
             {
                 dbTv = t.Result.ToList();
 
-                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+						if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
                 {
                     dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
                 }
             }));
 
             List<QualityModel> qualities = new List<QualityModel>();
-            if (isAdmin)
+            if (IsAdmin)
             {
                 var sonarrSettings = SonarrSettings.GetSettings();
                 if (sonarrSettings.Enabled)
@@ -251,10 +249,10 @@ namespace PlexRequests.UI.Modules
                     Approved = tv.Available || tv.Approved,
                     Title = tv.Title,
                     Overview = tv.Overview,
-                    RequestedUsers = isAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                    RequestedUsers = IsAdmin ? tv.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = tv.ReleaseDate.Year.ToString(),
                     Available = tv.Available,
-                    Admin = isAdmin,
+                    Admin = IsAdmin,
                     Issues = tv.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = tv.OtherMessage,
                     AdminNotes = tv.AdminNote,
@@ -269,7 +267,6 @@ namespace PlexRequests.UI.Modules
         private Response GetAlbumRequests()
         {
             var settings = PrSettings.GetSettings();
-            var isAdmin = Context.CurrentUser.IsAuthenticated();
             var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
             if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
             {
@@ -294,10 +291,10 @@ namespace PlexRequests.UI.Modules
                     Approved = album.Available || album.Approved,
                     Title = album.Title,
                     Overview = album.Overview,
-                    RequestedUsers = isAdmin ? album.AllUsers.ToArray() : new string[] { },
+                    RequestedUsers = IsAdmin ? album.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = album.ReleaseDate.Year.ToString(),
                     Available = album.Available,
-                    Admin = isAdmin,
+                    Admin = IsAdmin,
                     Issues = album.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = album.OtherMessage,
                     AdminNotes = album.AdminNote,
@@ -312,11 +309,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response DeleteRequest(int requestid)
-        {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot delete any requests." });
-            }
+		{
+			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
 
             var currentEntity = Service.Get(requestid);
             Service.DeleteRequest(currentEntity);
@@ -363,10 +357,7 @@ namespace PlexRequests.UI.Modules
 
         private Response ClearIssue(int requestId)
         {
-            if (!Context.CurrentUser.IsAuthenticated())
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You are not an Admin, so you cannot clear any issues." });
-            }
+			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
 
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
@@ -383,7 +374,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response ChangeRequestAvailability(int requestId, bool available)
-        {
+		{
+			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {
@@ -399,7 +391,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response AddNote(int requestId, string noteArea)
-        {
+		{
+			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {

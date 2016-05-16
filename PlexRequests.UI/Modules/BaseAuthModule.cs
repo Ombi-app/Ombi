@@ -23,6 +23,9 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using System.Linq;
+
+
 #endregion
 
 using Nancy;
@@ -55,7 +58,12 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        protected bool IsAdmin => Context.CurrentUser.IsAuthenticated();
+		protected bool IsAdmin { get { 
+				var claims = Context.CurrentUser.Claims.ToList();
+				if(claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser)){
+					return true;}
+					return false;
+			} }
 
         protected int DateTimeOffset
         {
