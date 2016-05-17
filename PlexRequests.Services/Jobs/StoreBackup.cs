@@ -81,7 +81,7 @@ namespace PlexRequests.Services.Jobs
 
             try
             {
-				if(DoWeNeedToBackUp(backupDir.FullName))
+				if(DoWeNeedToBackup(backupDir.FullName))
 				{
                 File.Copy(dbPath, Path.Combine(backupDir.FullName, $"PlexRequests.sqlite_{DateTime.Now.ToString("yyyy-MM-dd hh.mm.ss")}.bak"));
 				}
