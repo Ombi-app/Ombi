@@ -96,7 +96,7 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-			var users = RetryHandler.Execute<PlexFriends>(() => Api.Execute<PlexFriends> (request, new Uri(FriendsUri)),
+			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
 				null,
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan));
 			

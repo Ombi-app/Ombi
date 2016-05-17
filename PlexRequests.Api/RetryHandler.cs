@@ -8,7 +8,7 @@ namespace PlexRequests.Api
 	public static class RetryHandler
 	{
 
-		private static TimeSpan[] DefaultTime = new TimeSpan[] { 
+		private static readonly TimeSpan[] DefaultTime = new TimeSpan[] { 
 			TimeSpan.FromSeconds (2),
 			TimeSpan.FromSeconds(5),
 			TimeSpan.FromSeconds(10)};
@@ -44,7 +44,7 @@ namespace PlexRequests.Api
 				timeSpan = DefaultTime;
 			}
 			var policy = Policy.Handle<Exception> ()
-				.WaitAndRetry(timeSpan, (exception, ts) => action(exception, ts));
+				.WaitAndRetry(timeSpan, action);
 
 			return policy;
 		}

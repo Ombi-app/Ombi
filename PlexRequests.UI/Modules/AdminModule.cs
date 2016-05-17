@@ -221,7 +221,7 @@ namespace PlexRequests.UI.Modules
 			}
 
 			if (!string.IsNullOrWhiteSpace (model.BaseUrl)) {
-				if (model.BaseUrl.StartsWith ("/") || model.BaseUrl.StartsWith ("\\"));
+				if (model.BaseUrl.StartsWith ("/") || model.BaseUrl.StartsWith ("\\"))
 				{
 					model.BaseUrl = model.BaseUrl.Remove (0, 1);
 				}

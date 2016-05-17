@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Audit
     Username							varchar(100) NOT NULL,
     ChangeType							varchar(100) NOT NULL,
     OldValue							varchar(100),
-     NewValue							varchar(100),
+     NewValue							varchar(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Audit_Id ON Audit (Id);
 
