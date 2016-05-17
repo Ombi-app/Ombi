@@ -1,48 +1,50 @@
 ﻿<!doctype html>
 <html>
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, maximum-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, maximum-scale=1">
 
-<title>Plex Request .Net</title>
-<link rel="icon" href="favicon.png" type="image/png">
-<link rel="shortcut icon" href="favicon.ico" type="img/x-icon">
+    <title>Plex Request .Net</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="shortcut icon" href="favicon.ico" type="img/x-icon">
 
-<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,800italic,700italic,600italic,400italic,300italic,800,700,600' rel='stylesheet' type='text/css'>
 
-<link href="stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/style.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/font-awesome.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/responsive.css" rel="stylesheet" type="text/css">
-<link href="stylesheets/animate.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/style.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/responsive.css" rel="stylesheet" type="text/css">
+    <link href="stylesheets/animate.css" rel="stylesheet" type="text/css">
 
-<!--[if IE]><style type="text/css">.pie {behavior:url(PIE.htc);}</style><![endif]-->
+    <!--[if IE]><style type="text/css">.pie {behavior:url(PIE.htc);}</style><![endif]-->
 
-<script type="text/javascript" src="js/jquery.1.8.3.min.js"></script>
-<script type="text/javascript" src="js/bootstrap.js"></script>
-<script type="text/javascript" src="js/jquery-scrolltofixed.js"></script>
-<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
-<script type="text/javascript" src="js/jquery.isotope.js"></script>
-<script type="text/javascript" src="js/wow.js"></script>
-<script type="text/javascript" src="js/classie.js"></script>
+    <script type="text/javascript" src="js/jquery.1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/jquery-scrolltofixed.js"></script>
+    <script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+    <script type="text/javascript" src="js/jquery.isotope.js"></script>
+    <script type="text/javascript" src="js/wow.js"></script>
+    <script type="text/javascript" src="js/classie.js"></script>
 
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-77083919-1', 'auto');
-  ga('send', 'pageview');
+        ga('create', 'UA-77083919-1', 'auto');
+        ga('send', 'pageview');
 
-</script>
+    </script>
 
-<!--[if lt IE 9]>
-    <script src="js/respond-1.1.0.min.js"></script>
-    <script src="js/html5shiv.js"></script>
-    <script src="js/html5element.js"></script>
-<![endif]-->
+    <!--[if lt IE 9]>
+        <script src="js/respond-1.1.0.min.js"></script>
+        <script src="js/html5shiv.js"></script>
+        <script src="js/html5element.js"></script>
+    <![endif]-->
 
 
 </head>
@@ -52,333 +54,375 @@
             <!--header-start-->
             <div class="container">
                 <figure class="logo animated fadeInDown delay-07s">
-                    <a href="#"><img src="img/plex-pms-icon.png" width="130"  alt=""></a>
+                    <a href="#"><img src="img/plex-pms-icon.png" width="130" alt=""></a>
                 </figure>
                 <h1 class="animated fadeInDown delay-07s">Welcome To Plex Requests.Net</h1>
                 <ul class="we-create animated fadeInUp delay-1s">
-                    <li>Need something on Plex? Request it!</li>
+                    <li>Plex user? Sharing your server with friends or family? Want added features and the ability to for your users to request new content automatically?</li>
                 </ul>
                 <a class="link animated fadeInUp delay-1s" href="https://github.com/tidusjar/PlexRequests.Net/releases" target="_blank">Download <i class="fa fa-download" aria-hidden="true"></i></a>
             </div>
         </header><!--header-end-->
     </div>
 
-<nav class="main-nav-outer" id="test"><!--main-nav-start-->
-	<div class="container">
-        <ul class="main-nav">
-        	<li><a href="#header">Home</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#Preview">Preview</a></li>
-            <li class="small-logo"><a href="#header"><img src="img/plex-pms-icon.png"  width="55" height="57" alt=""></a></li>
-            <li><a href="#client">Response</a></li>
-            <li><a href="#team">Team</a></li>
-            <li><a href="https://github.com/tidusjar/PlexRequests.Net">Github</a></li>
-        </ul>
-        <a class="res-nav_click" href="#"><i class="fa-bars"></i></a>
-    </div>
-</nav><!--main-nav-end-->
-
-
-
-<section class="main-section" id="features"><!--main-section-start-->
-	<div class="container">
-    	<h2>Features</h2>
-    	<h6>So what can Plex Requests .Net do?</h6>
-        <div class="row">
-        	<div class="col-lg-4 col-sm-6 wow fadeInLeft delay-05s">
-            	<div class="service-list">
-                	<div class="service-list-col1">
-                    	<i class="fa-film"></i>
-                    </div>
-                	<div class="service-list-col2">
-                        <h3>Usenet applications Integration</h3>
-                        <p>Plex Requests.Net is compatible with Sonarr, Sickrage, Couchpotato and Headphones!</p>
-                    </div>
-                </div>
-                <div class="service-list">
-                    <div class="service-list-col1">
-                        <i class="fa-desktop"></i>
-                    </div>
-                	<div class="service-list-col2">
-                        <h3>Cross Platform</h3>
-                        <p>Running Windows, Linux, OSX or some other OS? It's cool, we got it covered.</p>
-                    </div>
-                </div>
-                <div class="service-list">
-                	<div class="service-list-col1">
-                    	<i class="fa-play-circle"></i>
-                    </div>
-                	<div class="service-list-col2">
-                        <h3>Plex Integration</h3>
-                        <p>We actually check Plex to see if there is content present before actually allowing the user to request!</p>
-                    </div>
-                </div>
-                <div class="service-list">
-                	<div class="service-list-col1">
-                    	<i class="fa-mobile"></i>
-                    </div>
-                	<div class="service-list-col2">
-                        <h3>Responsive</h3>
-                        <p>You can easily request new content for Plex and administer your requests from mobile devices anywhere in the world!</p>
-                    </div>
-                </div>
-            </div>
-            <figure class="col-lg-8 col-sm-6  text-right wow fadeInUp delay-02s">
-            	<img src="img/macFront.png" alt="">
-            </figure>
-        
+    <nav class="main-nav-outer" id="test">
+        <!--main-nav-start-->
+        <div class="container">
+            <ul class="main-nav">
+                <li><a href="#header">Home</a></li>
+                <li><a href="#description">What is it?</a></li>
+                <li><a href="#features">Features</a></li>
+                <li class="small-logo"><a href="#header"><img src="img/plex-pms-icon.png" width="55" height="57" alt=""></a></li>
+                <li><a href="#Preview">Preview</a></li>
+                <li><a href="#team">Team</a></li>
+                <li><a href="https://github.com/tidusjar/PlexRequests.Net">Github</a></li>
+            </ul>
+            <a class="res-nav_click" href="#"><i class="fa-bars"></i></a>
         </div>
-	</div>
-</section><!--main-section-end-->
+    </nav><!--main-nav-end-->
 
 
+    <section class="main-section alabaster" id="description">
+        <!--main-section-start-->
+        <div class="container">
+            <h2>So what is it?</h2>
+            <div class="row">
+                <div class="wow fadeInLeft delay-05s">
 
-<section class="main-section alabaster"><!--main-section alabaster-start-->
-	<div class="container">
-    	<div class="row">
-			<figure class="col-lg-5 col-sm-4 wow fadeInLeft">
-            	<img  src="img/iphoneSideEdit.png" alt="">
-            </figure>
-        	<div class="col-lg-7 col-sm-8 featured-work">
-	            <h2>Need any more reasons?!</h2>
-            <P class="padding-b">Seriously... If you need some more reasons to use Plex Requests .Net then just keep on reading!</P>
-            	<div class="featured-box">
-                	<div class="featured-box-col1 wow fadeInRight delay-02s">
-                    	<i class="fa-magic"></i>
-                    </div>	
-                	<div class="featured-box-col2 wow fadeInRight delay-02s">
-                        <h3>Notifications</h3>
-                        <p>We currently support Email, Pushbullet and Pushover notifications. Get notified for new requests, issues a user has reported. Even users can now get notifications once a request is available!</p>
-                    </div>    
+                    <div>
+                        
+                        <p>Plex Requests .Net allows you to host your own Plex Request system. </p>
+                        <p>If you are sharing your Plex server with other users, allow them to request new content using an easy to manage interface!</p>
+                        <p>Manage all your requests for Movies and TV with ease, leave notes for the user and get notification when a user requests something.</p>
+                        <p>Allow your users to post issues against their requests so you know there is a problem with the audio etc.</p>
+
+
+                        <!--plex users that utilise the share function can now use your program and add new features
+                        and those features will be useful between sharing users.-->
+                    </div>
                 </div>
-                <div class="featured-box">
-                	<div class="featured-box-col1 wow fadeInRight delay-04s">
-                    	<i class="fa-gift"></i>
-                    </div>	
-                	<div class="featured-box-col2 wow fadeInRight delay-04s">
-                        <h3>It's a tiny application</h3>
-                        <p>We have been able to get a nice small memory footprint when using Plex Requests .Net, Even with all of it's background processing it's still nice and small!</p>
-                    </div>    
-                </div>
-                <div class="featured-box">
-                	<div class="featured-box-col1 wow fadeInRight delay-06s">
-                    	<i class="fa-dashboard"></i>
-                    </div>	
-                	<div class="featured-box-col2 wow fadeInRight delay-06s">
-                        <h3>Excellent design architecture</h3>
-                        <p> We have the ability to add new features quickly and efficiently, the turnaround for new features/bug fixes is fantastic.</p>
-                    </div>    
-                </div>
-              
+
             </div>
         </div>
-	</div>
-</section><!--main-section alabaster-end-->
+    </section><!--main-section-end-->
 
+    <section class="main-section " id="features">
+        <!--main-section-start-->
+        <div class="container">
+            <h2>Features</h2>
+            <h6>So what can Plex Requests .Net do?</h6>
+            <div class="row">
+                <div class="col-lg-4 col-sm-6 wow fadeInLeft delay-05s">
+                    <div class="service-list">
+                        <div class="service-list-col1">
+                            <i class="fa-film"></i>
+                        </div>
+                        <div class="service-list-col2">
+                            <h3>Usenet applications Integration</h3>
+                            <p>Plex Requests.Net is compatible with Sonarr, Sickrage, Couchpotato and Headphones!</p>
+                        </div>
+                    </div>
+                    <div class="service-list">
+                        <div class="service-list-col1">
+                            <i class="fa-desktop"></i>
+                        </div>
+                        <div class="service-list-col2">
+                            <h3>Cross Platform</h3>
+                            <p>Running Windows, Linux, OSX or some other OS? It's cool, we got it covered.</p>
+                        </div>
+                    </div>
+                    <div class="service-list">
+                        <div class="service-list-col1">
+                            <i class="fa-play-circle"></i>
+                        </div>
+                        <div class="service-list-col2">
+                            <h3>Plex Integration</h3>
+                            <p>We actually check Plex to see if there is content present before actually allowing the user to request!</p>
+                        </div>
+                    </div>
+                    <div class="service-list">
+                        <div class="service-list-col1">
+                            <i class="fa-mobile"></i>
+                        </div>
+                        <div class="service-list-col2">
+                            <h3>Responsive</h3>
+                            <p>You can easily request new content for Plex and administer your requests from mobile devices anywhere in the world!</p>
+                        </div>
+                    </div>
+                </div>
+                <figure class="col-lg-8 col-sm-6  text-right wow fadeInUp delay-02s">
+                    <img src="img/macFront.png" alt="">
+                </figure>
 
-
-<section class="main-section paddind" id="Preview"><!--main-section-start-->
-	<div class="container">
-    	<h2>Preview</h2>
-    	<h6>Here are some images of what Plex Requests.Net looks like!</h6>
-
-        
-	</div>
-    <div class="portfolioContainer wow fadeInUp delay-04s">
-        <div class="Portfolio-box">
-            <a href="#"><img src="img/login.png" alt=""></a>
-            <h3>Login</h3>
-        </div>
-        <div class="Portfolio-box">
-            <a href="#"><img src="img/moviesearch.png" alt=""></a>
-            <h3>Movie Search</h3>
-        </div>
-        <div class="Portfolio-box webdesign">
-            <a href="#"><img src="img/tvsearch.png" alt=""></a>
-            <h3>Tv Search</h3>
-        </div>
-        <div class="Portfolio-box">
-            <a href="#"><img src="img/movierequests.png" alt=""></a>
-            <h3>Movie Requests</h3>
-        </div>
-        <div class="Portfolio-box">
-            <a href="#"><img src="img/tvrequests.png" alt=""></a>
-            <h3>TV Requests</h3>
-        </div>
-        <div class="Portfolio-box">
-            <a href="#"><img src="img/admin.png" alt=""></a>
-            <h3>Admin</h3>
-        </div>
-
-    </div>
-</section><!--main-section-end-->
-
-
-<section class="main-section client-part" id="client"><!--main-section client-part-start-->
-	<div class="container">
-		<b class="quote-right wow fadeInDown delay-03"><i class="fa-quote-right"></i></b>
-    	<div class="row">
-        	<div class="col-lg-12">
-            	<p class="client-part-haead wow fadeInDown delay-05">Holy crap this makes everything much easier thanks a ton for working on this project.</p>
             </div>
         </div>
-    	<ul class="client wow fadeIn delay-05s">
-        	<li><a href="#">
-                <h3>R-Jimenez</h3>
-            </a></li>
-        </ul>
-    </div>
-</section><!--main-section client-part-end-->
+    </section><!--main-section-end-->
 
-<section class="main-section team" id="team"><!--main-section team-start-->
-	<div class="container">
-        <h2>Team</h2>
-        <h6>Take a closer look into our amazing team.</h6>
-        <div class="team-leader-block clearfix">
-            <div class="team-leader-box col-md-6 col-md-push-1">
-                <div class="team-leader wow fadeInDown delay-03s"> 
-                    <div class="team-leader-shadow"><a href="#"></a></div>
-                    <img src="img/jamie.jpg" alt="">
-                    <ul>
-                        <li><a href="https://github.com/tidusjar/" target="_blank" class="fa-github"></a></li>
-                        <li><a href="https://www.JamieTech.com" target="_blank" class="fa-rss"></a></li>
-                        <li><a href="https://uk.linkedin.com/in/jamiearees" target="_blank" class="fa-linkedin"></a></li>
-                        <li><a href="http://stackoverflow.com/users/3329836/jamie-r?tab=profile" target="_blank" class="fa-stack-overflow"></a></li>
-                    </ul>
+
+
+    <section class="main-section alabaster">
+        <!--main-section alabaster-start-->
+        <div class="container">
+            <div class="row">
+                <figure class="col-lg-5 col-sm-4 wow fadeInLeft">
+                    <img src="img/iphoneSideEdit.png" alt="">
+                </figure>
+                <div class="col-lg-7 col-sm-8 featured-work">
+                    <h2>Need any more reasons?!</h2>
+                    <P class="padding-b">Seriously... If you need some more reasons to use Plex Requests .Net then just keep on reading!</P>
+                    <div class="featured-box">
+                        <div class="featured-box-col1 wow fadeInRight delay-02s">
+                            <i class="fa-magic"></i>
+                        </div>
+                        <div class="featured-box-col2 wow fadeInRight delay-02s">
+                            <h3>Notifications</h3>
+                            <p>We currently support Email, Pushbullet and Pushover notifications. Get notified for new requests, issues a user has reported. Even users can now get notifications once a request is available!</p>
+                        </div>
+                    </div>
+                    <div class="featured-box">
+                        <div class="featured-box-col1 wow fadeInRight delay-04s">
+                            <i class="fa-gift"></i>
+                        </div>
+                        <div class="featured-box-col2 wow fadeInRight delay-04s">
+                            <h3>It's a tiny application</h3>
+                            <p>We have been able to get a nice small memory footprint when using Plex Requests .Net, Even with all of it's background processing it's still nice and small!</p>
+                        </div>
+                    </div>
+                    <div class="featured-box">
+                        <div class="featured-box-col1 wow fadeInRight delay-06s">
+                            <i class="fa-dashboard"></i>
+                        </div>
+                        <div class="featured-box-col2 wow fadeInRight delay-06s">
+                            <h3>Excellent design architecture</h3>
+                            <p> We have the ability to add new features quickly and efficiently, the turnaround for new features/bug fixes is fantastic.</p>
+                        </div>
+                    </div>
+
+                    <div class="featured-box">
+                        <div class="featured-box-col1 wow fadeInRight delay-06s">
+                            <i class="fa-user"></i>
+                        </div>
+                        <div class="featured-box-col2 wow fadeInRight delay-06s">
+                            <h3>First class support</h3>
+                            <p> Got a problem? Post it on <a href="https://github.com/tidusjar/PlexRequests.Net/issues/new" target="_blank">Github</a> and we shall help you fix it!</p>
+                        </div>
+                    </div>
+
                 </div>
-                <h3 class="wow fadeInDown delay-03s">Jamie Rees</h3>
-                <span class="wow fadeInDown delay-03s">Founder/Developer</span>
-                <p class="wow fadeInDown delay-03s"><!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.--></p>
             </div>
-            <div class="team-leader-box col-md-6 col-md-push-3">
-                <div class="team-leader  wow fadeInDown delay-06s"> 
-                    <div class="team-leader-shadow"><a href="#"></a></div>
-                    <img src="img/drew.JPG" alt="">
-                    <ul>
-                        <li><a href="https://github.com/Drewster727/" target="_blank" class="fa-github"></a></li>
-                    </ul>
-                </div>
-                <h3 class="wow fadeInDown delay-06s">Drew</h3>
-                <span class="wow fadeInDown delay-06s">Developer/Master of code</span>
-                <p class="wow fadeInDown delay-06s"><!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.--></p>
+        </div>
+    </section><!--main-section alabaster-end-->
+
+
+
+    <section class="main-section paddind" id="Preview">
+        <!--main-section-start-->
+        <div class="container">
+            <h2>Preview</h2>
+            <h6>Here are some images of what Plex Requests.Net looks like!</h6>
+
+
+        </div>
+        <div class="portfolioContainer wow fadeInUp delay-04s">
+            <div class="Portfolio-box">
+                <a href="#"><img src="img/login.png" alt=""></a>
+                <h3>Login</h3>
             </div>
-            <!--<div class="team-leader-box">
-                <div class="team-leader wow fadeInDown delay-09s"> 
-                    <div class="team-leader-shadow"><a href="#"></a></div>
-                    <img src="img/team-leader-pic3.jpg" alt="">
-                    <ul>
-                        <li><a href="#" class="fa-twitter"></a></li>
-                        <li><a href="#" class="fa-facebook"></a></li>
-                        <li><a href="#" class="fa-pinterest"></a></li>
-                        <li><a href="#" class="fa-google-plus"></a></li>
-                    </ul>
+            <div class="Portfolio-box">
+                <a href="#"><img src="img/moviesearch.png" alt=""></a>
+                <h3>Movie Search</h3>
+            </div>
+            <div class="Portfolio-box webdesign">
+                <a href="#"><img src="img/tvsearch.png" alt=""></a>
+                <h3>Tv Search</h3>
+            </div>
+            <div class="Portfolio-box">
+                <a href="#"><img src="img/movierequests.png" alt=""></a>
+                <h3>Movie Requests</h3>
+            </div>
+            <div class="Portfolio-box">
+                <a href="#"><img src="img/tvrequests.png" alt=""></a>
+                <h3>TV Requests</h3>
+            </div>
+            <div class="Portfolio-box">
+                <a href="#"><img src="img/admin.png" alt=""></a>
+                <h3>Admin</h3>
+            </div>
+
+        </div>
+    </section><!--main-section-end-->
+
+
+    <section class="main-section client-part" id="client">
+        <!--main-section client-part-start-->
+        <div class="container">
+            <b class="quote-right wow fadeInDown delay-03"><i class="fa-quote-right"></i></b>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p class="client-part-haead wow fadeInDown delay-05">Holy crap this makes everything much easier thanks a ton for working on this project.</p>
                 </div>
-                <h3 class="wow fadeInDown delay-09s">Skyler white</h3>
-                <span class="wow fadeInDown delay-09s">Accountant</span>
-                <p class="wow fadeInDown delay-09s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.</p>
-            </div>-->
+            </div>
+            <ul class="client wow fadeIn delay-05s">
+                <li>
+                    <a href="#">
+                        <h3>R-Jimenez</h3>
+                    </a>
+                </li>
+            </ul>
         </div>
-    </div>
-</section><!--main-section team-end-->
+    </section><!--main-section client-part-end-->
 
-<footer class="footer">
-    <div class="container">
-        <div class="footer-logo"><a href="#"><img src="img/plex-pms-icon.png" width="69" alt=""></a>
+    <section class="main-section team" id="team">
+        <!--main-section team-start-->
+        <div class="container">
+            <h2>Team</h2>
+            <h6>Take a closer look into our amazing team.</h6>
+            <div class="team-leader-block clearfix">
+                <div class="team-leader-box col-md-6 col-md-push-1">
+                    <div class="team-leader wow fadeInDown delay-03s">
+                        <div class="team-leader-shadow"><a href="#"></a></div>
+                        <img src="img/jamie.jpg" alt="">
+                        <ul>
+                            <li><a href="https://github.com/tidusjar/" target="_blank" class="fa-github"></a></li>
+                            <li><a href="https://www.JamieTech.com" target="_blank" class="fa-rss"></a></li>
+                            <li><a href="https://uk.linkedin.com/in/jamiearees" target="_blank" class="fa-linkedin"></a></li>
+                            <li><a href="http://stackoverflow.com/users/3329836/jamie-r?tab=profile" target="_blank" class="fa-stack-overflow"></a></li>
+                        </ul>
+                    </div>
+                    <h3 class="wow fadeInDown delay-03s">Jamie Rees</h3>
+                    <span class="wow fadeInDown delay-03s">Founder/Developer</span>
+                    <p class="wow fadeInDown delay-03s"><!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.--></p>
+                </div>
+                <div class="team-leader-box col-md-6 col-md-push-3">
+                    <div class="team-leader  wow fadeInDown delay-06s">
+                        <div class="team-leader-shadow"><a href="#"></a></div>
+                        <img src="img/drew.JPG" alt="">
+                        <ul>
+                            <li><a href="https://github.com/Drewster727/" target="_blank" class="fa-github"></a></li>
+                        </ul>
+                    </div>
+                    <h3 class="wow fadeInDown delay-06s">Drew</h3>
+                    <span class="wow fadeInDown delay-06s">Developer/Master of code</span>
+                    <p class="wow fadeInDown delay-06s"><!--Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.--></p>
+                </div>
+                <!--<div class="team-leader-box">
+                    <div class="team-leader wow fadeInDown delay-09s">
+                        <div class="team-leader-shadow"><a href="#"></a></div>
+                        <img src="img/team-leader-pic3.jpg" alt="">
+                        <ul>
+                            <li><a href="#" class="fa-twitter"></a></li>
+                            <li><a href="#" class="fa-facebook"></a></li>
+                            <li><a href="#" class="fa-pinterest"></a></li>
+                            <li><a href="#" class="fa-google-plus"></a></li>
+                        </ul>
+                    </div>
+                    <h3 class="wow fadeInDown delay-09s">Skyler white</h3>
+                    <span class="wow fadeInDown delay-09s">Accountant</span>
+                    <p class="wow fadeInDown delay-09s">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin consequat sollicitudin cursus. Dolor sit amet, consectetur adipiscing elit proin consequat.</p>
+                </div>-->
+            </div>
         </div>
-        <span class="copyright">Copyright © 2016 | <a href="https://www.JamieTech.com" target="_blank">TidusJar</a></span>
-    </div>
-</footer>
+    </section><!--main-section team-end-->
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">
+                <a href="#"><img src="img/plex-pms-icon.png" width="69" alt=""></a>
+            </div>
+            <span class="copyright">Copyright © 2016 | <a href="https://www.JamieTech.com" target="_blank">TidusJar</a></span>
+        </div>
+    </footer>
 
 
-<script type="text/javascript">
-    $(document).ready(function(e) {
-        $('#test').scrollToFixed();
-        $('.res-nav_click').click(function(){
-            $('.main-nav').slideToggle();
-            return false;
+    <script type="text/javascript">
+        $(document).ready(function (e) {
+            $('#test').scrollToFixed();
+            $('.res-nav_click').click(function () {
+                $('.main-nav').slideToggle();
+                return false;
+
+            });
 
         });
-        
-    });
-</script>
+    </script>
 
-  <script>
-    wow = new WOW(
-      {
-        animateClass: 'animated',
-        offset:       100
-      }
-    );
-    wow.init();
- 
-  </script>
+    <script>
+        wow = new WOW(
+          {
+              animateClass: 'animated',
+              offset: 100
+          }
+        );
+        wow.init();
+
+    </script>
 
 
-<script type="text/javascript">
-	$(window).load(function(){
-		
-		$('.main-nav li a').bind('click',function(event){
-			var $anchor = $(this);
-			
-			$('html, body').stop().animate({
-				scrollTop: $($anchor.attr('href')).offset().top - 102
-			}, 1500,'easeInOutExpo');
-			/*
-			if you don't want to use the easing effects:
-			$('html, body').stop().animate({
-				scrollTop: $($anchor.attr('href')).offset().top
-			}, 1000);
-			*/
-			event.preventDefault();
-		});
-	})
-</script>
+    <script type="text/javascript">
+        $(window).load(function () {
 
-<script type="text/javascript">
+            $('.main-nav li a').bind('click', function (event) {
+                var $anchor = $(this);
 
-$(window).load(function(){
-  
-  
-  var $container = $('.portfolioContainer'),
-      $body = $('body'),
-      colW = 375,
-      columns = null;
+                $('html, body').stop().animate({
+                    scrollTop: $($anchor.attr('href')).offset().top - 102
+                }, 1500, 'easeInOutExpo');
+                /*
+                if you don't want to use the easing effects:
+                $('html, body').stop().animate({
+                    scrollTop: $($anchor.attr('href')).offset().top
+                }, 1000);
+                */
+                event.preventDefault();
+            });
+        })
+    </script>
 
-  
-  $container.isotope({
-    // disable window resizing
-    resizable: true,
-    masonry: {
-      columnWidth: colW
-    }
-  });
-  
-  $(window).smartresize(function(){
-    // check if columns has changed
-    var currentColumns = Math.floor( ( $body.width() -30 ) / colW );
-    if ( currentColumns !== columns ) {
-      // set new column count
-      columns = currentColumns;
-      // apply width to container manually, then trigger relayout
-      $container.width( columns * colW )
-        .isotope('reLayout');
-    }
-    
-  }).smartresize(); // trigger resize to set container width
-  $('.portfolioFilter a').click(function(){
-        $('.portfolioFilter .current').removeClass('current');
-        $(this).addClass('current');
- 
-        var selector = $(this).attr('data-filter');
-        $container.isotope({
-			
-            filter: selector,
-         });
-         return false;
-    });
-  
-});
+    <script type="text/javascript">
 
-</script>
+        $(window).load(function () {
+
+
+            var $container = $('.portfolioContainer'),
+                $body = $('body'),
+                colW = 375,
+                columns = null;
+
+
+            $container.isotope({
+                // disable window resizing
+                resizable: true,
+                masonry: {
+                    columnWidth: colW
+                }
+            });
+
+            $(window).smartresize(function () {
+                // check if columns has changed
+                var currentColumns = Math.floor(($body.width() - 30) / colW);
+                if (currentColumns !== columns) {
+                    // set new column count
+                    columns = currentColumns;
+                    // apply width to container manually, then trigger relayout
+                    $container.width(columns * colW)
+                      .isotope('reLayout');
+                }
+
+            }).smartresize(); // trigger resize to set container width
+            $('.portfolioFilter a').click(function () {
+                $('.portfolioFilter .current').removeClass('current');
+                $(this).addClass('current');
+
+                var selector = $(this).attr('data-filter');
+                $container.isotope({
+
+                    filter: selector,
+                });
+                return false;
+            });
+
+        });
+
+    </script>
 </body>
 </html>
