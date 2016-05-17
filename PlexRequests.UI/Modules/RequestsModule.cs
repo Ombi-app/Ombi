@@ -120,7 +120,7 @@ namespace PlexRequests.UI.Modules
             {
                 dbMovies = t.Result.ToList();
 
-                if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+                if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
                 {
                     dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
                 }
@@ -167,10 +167,10 @@ namespace PlexRequests.UI.Modules
                     Approved = movie.Available || movie.Approved,
                     Title = movie.Title,
                     Overview = movie.Overview,
-                    RequestedUsers = isAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                    RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = movie.ReleaseDate.Year.ToString(),
                     Available = movie.Available,
-                    Admin = isAdmin,
+                    Admin = IsAdmin,
                     Issues = movie.Issues.ToString().CamelCaseToWords(),
                     OtherMessage = movie.OtherMessage,
                     AdminNotes = movie.AdminNote,
@@ -268,7 +268,7 @@ namespace PlexRequests.UI.Modules
         {
             var settings = PrSettings.GetSettings();
             var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
-            if (settings.UsersCanViewOnlyOwnRequests && !isAdmin)
+            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
             {
                 dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
             }
