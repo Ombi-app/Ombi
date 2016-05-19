@@ -33,15 +33,13 @@ using Nancy.Extensions;
 using PlexRequests.UI.Models;
 using System;
 
-using Nancy.Security;
-
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
-    public class BaseAuthModule : BaseModule
+    public abstract class BaseAuthModule : BaseModule
     {
         private string _username;
         private int _dateTimeOffset = -1;
@@ -77,12 +75,12 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        public BaseAuthModule()
+        protected BaseAuthModule()
         {
             Before += (ctx) => CheckAuth();
         }
 
-        public BaseAuthModule(string modulePath) : base(modulePath)
+        protected BaseAuthModule(string modulePath) : base(modulePath)
         {
             Before += (ctx) => CheckAuth();
         }
@@ -99,8 +97,5 @@ namespace PlexRequests.UI.Modules
                 ? Context.GetRedirect(redirectPath) 
                 : null;
         }
-
-
-
     }
 }

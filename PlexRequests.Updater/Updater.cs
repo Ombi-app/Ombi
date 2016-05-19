@@ -192,7 +192,7 @@ namespace PlexRequests.Updater
 
         private void FinishUpdate()
         {
-            var startInfo = new ProcessStartInfo("PlexRequests.exe") { Arguments = Error ? "-u false" : "-u true" };
+            var startInfo = new ProcessStartInfo("PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" };
             Process.Start(startInfo);
             
             Environment.Exit(0);

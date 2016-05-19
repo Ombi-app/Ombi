@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: StartupOptions.cs
+//    File: UpdateValue.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,40 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using CommandLine;
-
 namespace PlexRequests.UI.Start
 {
-    public class StartupOptions
+    public enum UpdateValue
     {
-        /// <summary>
-        /// Gets or sets the base URL.
-        /// </summary>
-        /// <value>
-        /// The base URL.
-        /// </value>
-        [Option('b',"base", Required = false, HelpText = "Provide a base url for Plex Requests")]
-        public string BaseUrl { get; set; }
-
-        /// <summary>
-        /// Gets or sets the port.
-        /// </summary>
-        /// <value>
-        /// The port.
-        /// </value>
-        [Option('p', "port", Required = false, HelpText = "Provide a port for Plex Requests to run on. You can also change this in the settings page in the UI", Default = 3579)]
-        public int Port { get; set; }
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="StartupOptions"/> is updated.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if updated; otherwise, <c>false</c>.
-        /// </value>
-        [Option('u', "updated", Required = false, HelpText = "This should only be used by the internal application")]
-        public UpdateValue Updated { get; set; }
-
+        None,
+        Updated,
+        Failed
     }
 }

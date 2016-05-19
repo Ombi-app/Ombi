@@ -61,7 +61,7 @@ namespace PlexRequests.UI
                 x => x.Port,
                 e => -1);
 
-            var updated = result.MapResult(x => x.Updated, e => false);
+            var updated = result.MapResult(x => x.Updated, e => UpdateValue.None);
             //TODO
             
             PrintToConsole("Starting Up! Please wait, this can usually take a few seconds.", ConsoleColor.Yellow);
@@ -157,6 +157,18 @@ namespace PlexRequests.UI
             Console.ForegroundColor = colour;
             Console.WriteLine(message);
             Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        private static void CheckUpdate(UpdateValue val)
+        {
+            if (val == UpdateValue.Failed)
+            {
+                
+            }
+            if (val == UpdateValue.Updated)
+            {
+                // TODO Change the name of PlexRequests.Updater.exe_Updated and delete the old version
+            }
         }
     }
 }

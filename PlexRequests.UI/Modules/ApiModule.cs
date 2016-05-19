@@ -1,71 +1,137 @@
-﻿using System;
-using PlexRequests.UI.Modules;
-using Nancy;
-using Nancy.Extensions;
-using Nancy.ModelBinding;
-using Nancy.Responses.Negotiation;
-using Nancy.Validation;
-using PlexRequests.Core;
+﻿#region Copyright
+// /************************************************************************
+//    Copyright (c) 2016 Jamie Rees
+//    File: ApiModule.cs
+//    Created By: Jamie Rees
+//   
+//    Permission is hereby granted, free of charge, to any person obtaining
+//    a copy of this software and associated documentation files (the
+//    "Software"), to deal in the Software without restriction, including
+//    without limitation the rights to use, copy, modify, merge, publish,
+//    distribute, sublicense, and/or sell copies of the Software, and to
+//    permit persons to whom the Software is furnished to do so, subject to
+//    the following conditions:
+//   
+//    The above copyright notice and this permission notice shall be
+//    included in all copies or substantial portions of the Software.
+//   
+//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+//    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+//    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+//    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+//    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+//  ************************************************************************/
+#endregion
+using System;
 using System.Collections.Generic;
+
+using Nancy;
+using Nancy.ModelBinding;
+using Nancy.Validation;
+
+using PlexRequests.Core;
 using PlexRequests.Store;
-using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.UI.Modules
 {
-	public class ApiModule : BaseModule
-	{
-		public ApiModule (IRequestService service, ISettingsService<PlexRequestSettings> settings) : base("api")
-		{
-			Get ["/requests"] = x => GetRequests ();
+    public class ApiModule : BaseApiModule
+    {
+        public ApiModule(IRequestService service) : base("api/v1/")
+        {
+            Get["/requests"] = x => GetRequests();
+            Post["/requests"] = x => CreateRequest();
+            Put["/requests"] = x => UpdateRequest();
+            Delete["/requests"] = x => DeleteRequest();
 
-			RequestService = service;
-			Settings = settings;
-		}
+            RequestService = service;
+        }
 
-		private IRequestService RequestService{ get; }
-		private ISettingsService<PlexRequestSettings> Settings{get;}
+        private IRequestService RequestService { get; }
 
-		public Response GetRequests()
-		{
-			var apiModel = new ApiModel<List<RequestedModel>>{Data = new List<RequestedModel>()};
-			if (!Authenticated ()) {
-				apiModel.Error = true;
-				apiModel.ErrorMessage = "ApiKey is invalid or not present, Please use 'apikey' in the querystring.";
-				return ReturnReponse (apiModel);
-			}
-			var requests = RequestService.GetAll ();
-			apiModel.Data.AddRange (requests);
+        public Response GetRequests()
+        {
+            var apiModel = new ApiModel<List<RequestedModel>> { Data = new List<RequestedModel>() };
 
-			return ReturnReponse (apiModel);
-		}
-			
-		private Response ReturnReponse(object result)
-		{
-			var queryString = (DynamicDictionary)Context.Request.Query;
-			dynamic value;
-			if (queryString.TryGetValue("xml", out value)) {
-				if ((bool)value) {
-					return Response.AsXml (result);
-				}
-			}
-			return Response.AsJson (result);
-		}
+            var requests = RequestService.GetAll();
+            apiModel.Data.AddRange(requests);
 
-		private bool Authenticated(){
+            return ReturnReponse(apiModel);
+        }
 
-			var query = (DynamicDictionary)Context.Request.Query;
-			dynamic key;
-			if (!query.TryGetValue ("apikey", out key)) {
-				return false;
-			}
+        public Response CreateRequest()
+        {
+            var request = this.Bind<RequestedModel>();
+            var valid = this.Validate(request);
+            if (!valid.IsValid)
+            {
+                return ReturnValidationReponse(valid);
+            }
 
-			var settings = Settings.GetSettings ();
-			if ((string)key == settings.ApiKey) {
-				return true;
-			}
-			return false;
+            var apiModel = new ApiModel<bool>();
+            var result = RequestService.AddRequest(request);
 
-		}
-	}
+            if (result == -1)
+            {
+                apiModel.Error = true;
+                apiModel.ErrorMessage = "Could not insert the new request into the database. Internal error.";
+                return ReturnReponse(apiModel);
+            }
+
+            apiModel.Data = true;
+
+            return ReturnReponse(apiModel);
+        }
+
+        public Response UpdateRequest()
+        {
+            var request = this.Bind<RequestedModel>();
+            var valid = this.Validate(request);
+            if (!valid.IsValid)
+            {
+                return ReturnValidationReponse(valid);
+            }
+
+
+            var apiModel = new ApiModel<bool>();
+            var result = RequestService.UpdateRequest(request);
+
+            if (!result)
+            {
+                apiModel.Error = true;
+                apiModel.ErrorMessage = "Could not update the request into the database. Internal error.";
+                return ReturnReponse(apiModel);
+            }
+
+            apiModel.Data = true;
+
+            return ReturnReponse(apiModel);
+        }
+
+        public Response DeleteRequest()
+        {
+            var request = this.Bind<RequestedModel>();
+            var valid = this.Validate(request);
+            if (!valid.IsValid)
+            {
+                return ReturnValidationReponse(valid);
+            }
+            var apiModel = new ApiModel<bool>();
+
+            try
+            {
+                RequestService.DeleteRequest(request);
+                apiModel.Data = true;
+
+                return ReturnReponse(apiModel);
+            }
+            catch (Exception)
+            {
+                apiModel.Error = true;
+                apiModel.ErrorMessage = "Could not delete the request from the database. Internal error.";
+                return ReturnReponse(apiModel);
+            }
+        }
+    }
 }
-

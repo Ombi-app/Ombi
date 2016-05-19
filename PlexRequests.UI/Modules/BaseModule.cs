@@ -32,13 +32,15 @@ using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
-    public class BaseModule : NancyModule
+    public abstract class BaseModule : NancyModule
     {
         protected ServiceLocator Locator => ServiceLocator.Instance;
+        protected ISettingsService<PlexRequestSettings> Settings => Locator.Resolve<ISettingsService<PlexRequestSettings>>();
         protected string BaseUrl { get; set; }
-        public BaseModule()
+
+        protected BaseModule()
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var settings = Settings.GetSettings();
             var baseUrl = settings.BaseUrl;
             BaseUrl = baseUrl;
 
@@ -47,9 +49,9 @@ namespace PlexRequests.UI.Modules
             ModulePath = modulePath;
         }
 
-        public BaseModule(string modulePath) 
+        protected BaseModule(string modulePath) 
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var settings = Settings.GetSettings();
             var baseUrl = settings.BaseUrl;
             BaseUrl = baseUrl;
 
