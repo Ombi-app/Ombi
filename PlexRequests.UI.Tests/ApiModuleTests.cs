@@ -24,22 +24,37 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
+using FluentValidation;
+
 using Moq;
 
 using Nancy;
+using Nancy.Bootstrapper;
 using Nancy.Testing;
+using Nancy.Validation;
+using Nancy.Validation.FluentValidation;
+
+using Newtonsoft.Json;
 
 using NUnit.Framework;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.UI.Helpers;
+using PlexRequests.Store;
+using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
+using PlexRequests.UI.Validators;
+
+using Ploeh.AutoFixture;
 
 namespace PlexRequests.UI.Tests
 {
     [TestFixture]
-    [Ignore("Locator :(")]
     public class ApiModuleTests
     {
         private ConfigurableBootstrapper Bootstrapper { get; set; }
@@ -47,38 +62,147 @@ namespace PlexRequests.UI.Tests
         [SetUp]
         public void Setup()
         {
+            var requests = new Fixture().CreateMany<RequestedModel>();
             var requestMock = new Mock<IRequestService>();
             var settingsMock = new Mock<ISettingsService<PlexRequestSettings>>();
+            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings {ApiKey = "api"});
+            requestMock.Setup(x => x.GetAll()).Returns(requests);
+            requestMock.Setup(x => x.Get(1)).Returns(requests.FirstOrDefault());
+            requestMock.Setup(x => x.Get(99)).Returns(new RequestedModel());
+            requestMock.Setup(x => x.DeleteRequest(It.IsAny<RequestedModel>()));
+
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<ApiModule>();
                 with.Dependency(requestMock.Object);
                 with.Dependency(settingsMock.Object);
-                with.ApplicationStartup(
-                    (c, a) =>
-                    {
-                        var loc = ServiceLocator.Instance;
-                        loc.SetContainer(c);
-                    });
+                with.RootPathProvider<TestRootPathProvider>();
+                with.ModelValidatorLocator(
+                    new DefaultValidatorLocator(
+                        new List<IModelValidatorFactory>()
+                        {
+                                new FluentValidationValidatorFactory(
+                                    new DefaultFluentAdapterFactory(new List<IFluentAdapter>()),
+                                    new List<IValidator> { new RequestedModelValidator() })
+                        }));
             });
-            
+
+        }
+
+        private Action<BrowserContext> GetBrowser()
+        {
+            return with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            };
+        }
+
+        [Test]
+        public void InvalidApiKey()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Get("/api/requests", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey","a");
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<List<RequestedModel>>>(result.Body.AsString());
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Empty);
         }
 
         [Test]
         public void GetAllRequests()
         {
-
             var browser = new Browser(Bootstrapper);
 
-            var result = browser.Post("/api/requests", with =>
-            {
-                with.HttpRequest();
-                with.Header("Accept", "application/json");
-                with.Query("apikey","a");
-
-            });
-
+            var result = browser.Get("/api/requests", GetBrowser());
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<List<RequestedModel>>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Data.Count, Is.GreaterThan(0));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void GetSingleRequest()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Get("/api/requests/1", GetBrowser());
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<List<RequestedModel>>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Data.Count, Is.EqualTo(1));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void GetSingleRequestThatDoesntExist()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Get("/api/requests/99", GetBrowser());
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<List<RequestedModel>>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Data.Count, Is.EqualTo(0));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void DeleteARequest()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Delete("/api/requests/1", GetBrowser());
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+            Assert.That(body.Data, Is.True);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void DeleteARequestThatDoesNotExist()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Delete("/api/requests/99", GetBrowser());
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+            Assert.That(body.Data, Is.False);
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void CreateAEmptyRequest()
+        {
+            var browser = new Browser(Bootstrapper);
+
+            var result = browser.Post("/api/requests/", GetBrowser());
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+ 
+            var body = JsonConvert.DeserializeObject<ApiModel<string[]>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null.Or.Empty);
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
         }
     }
 }

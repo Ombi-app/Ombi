@@ -48,7 +48,7 @@ namespace PlexRequests.UI.Modules
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi) : base("approval")
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("approval", pr)
         {
 			this.RequiresClaims(UserClaims.Admin, UserClaims.PowerUser);
 

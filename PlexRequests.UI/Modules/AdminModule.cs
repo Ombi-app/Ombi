@@ -101,7 +101,7 @@ namespace PlexRequests.UI.Modules
             INotificationService notify,
             ISettingsService<HeadphonesSettings> headphones,
             ISettingsService<LogSettings> logs,
-            ICacheProvider cache) : base("admin")
+            ICacheProvider cache) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -123,9 +123,8 @@ namespace PlexRequests.UI.Modules
             LogService = logs;
             Cache = cache;
 
-			#if DEBUG
 			this.RequiresClaims(UserClaims.Admin);
-			#endif
+			
             Get["/"] = _ => Admin();
 
             Get["/authentication"] = _ => Authentication();

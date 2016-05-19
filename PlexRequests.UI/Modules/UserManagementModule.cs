@@ -1,23 +1,19 @@
-﻿using System;
+﻿using System.Collections.Generic;
 
 using Nancy;
-using Nancy.Authentication.Forms;
-using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
 using PlexRequests.Core;
-using PlexRequests.UI.Models;
-using PlexRequests.UI.Modules;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using System.Collections.Generic;
+using PlexRequests.UI.Models;
 
-
-namespace PlexRequests.UI
+namespace PlexRequests.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule() : base("usermanagement")
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr) : base("usermanagement",pr)
         {
             this.RequiresClaims(UserClaims.Admin);
             Get["/"] = x => Load();

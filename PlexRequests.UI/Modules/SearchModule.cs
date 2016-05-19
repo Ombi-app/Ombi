@@ -62,7 +62,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService, 
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi, 
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth) : base("search")
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;

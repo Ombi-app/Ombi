@@ -26,24 +26,26 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Nancy;
 using Nancy.ModelBinding;
 
 using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 
 namespace PlexRequests.UI.Modules
 {
     public class ApiModule : BaseApiModule
     {
-        public ApiModule(IRequestService service) : base("api")
+        public ApiModule(IRequestService service, ISettingsService<PlexRequestSettings> pr) : base("api", pr)
         {
             Get["GetRequests","/requests"] = x => GetRequests();
             Get["GetRequest","/requests/{id}"] = x => GetSingleRequests(x);
             Post["PostRequests", "/requests"] = x => CreateRequest();
             Put["PutRequests", "/requests"] = x => UpdateRequest();
-            Delete["DeleteRequests", "/requests"] = x => DeleteRequest();
+            Delete["DeleteRequests", "/requests/{id}"] = x => DeleteRequest(x);
 
             RequestService = service;
         }
@@ -127,16 +129,15 @@ namespace PlexRequests.UI.Modules
             return ReturnReponse(apiModel);
         }
 
-        public Response DeleteRequest()
+        public Response DeleteRequest(dynamic x)
         {
-            var id = this.Bind<int>();
-
+            var id = (int)x.id;
             var apiModel = new ApiModel<bool>();
 
             try
             {
                 var exisitingRequest = RequestService.Get(id);
-                if (exisitingRequest == null)
+                if (string.IsNullOrEmpty(exisitingRequest.Title))
                 {
                     apiModel.Error = true;
                     apiModel.ErrorMessage = $"The request id {id} does not exist";

@@ -30,6 +30,7 @@ using System.Linq;
 using Nancy;
 using Nancy.Validation;
 
+using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 
@@ -37,15 +38,19 @@ namespace PlexRequests.UI.Modules
 {
     public abstract class BaseApiModule : BaseModule
     {
-        protected BaseApiModule()
+        protected BaseApiModule(ISettingsService<PlexRequestSettings> s) : base(s)
         {
+            Settings = s;
             Before += (ctx) => CheckAuth();
         }
 
-        protected BaseApiModule(string modulePath) : base(modulePath)
+        protected BaseApiModule(string modulePath, ISettingsService<PlexRequestSettings> s) : base(modulePath, s)
         {
+            Settings = s;
             Before += (ctx) => CheckAuth();
         }
+
+        private ISettingsService<PlexRequestSettings> Settings { get; }
 
         protected Response ReturnReponse(object result)
         {

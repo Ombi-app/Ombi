@@ -34,13 +34,14 @@ using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
 using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule()
+        public LoginModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
             Get["/login"] = _ =>
             {

@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Modules
             ICouchPotatoApi cpApi,
             ISonarrApi sonarrApi,
             ISickRageApi sickRageApi,
-            ICacheProvider cache) : base("requests")
+            ICacheProvider cache) : base("requests", prSettings)
         {
             Service = service;
             PrSettings = prSettings;

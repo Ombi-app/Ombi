@@ -46,7 +46,7 @@ namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api) : base("userlogin")
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr) : base("userlogin", pr)
         {
             AuthService = auth;
             Api = api;

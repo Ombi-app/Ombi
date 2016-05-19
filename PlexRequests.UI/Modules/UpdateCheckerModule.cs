@@ -31,6 +31,7 @@ using Nancy;
 using NLog;
 
 using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
@@ -38,7 +39,7 @@ namespace PlexRequests.UI.Modules
 {
     public class UpdateCheckerModule : BaseAuthModule
     {
-        public UpdateCheckerModule(ICacheProvider provider) : base("updatechecker")
+        public UpdateCheckerModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr) : base("updatechecker", pr)
         {
             Cache = provider;
 

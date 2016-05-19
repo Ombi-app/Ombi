@@ -27,11 +27,14 @@
 using Nancy;
 using Nancy.Responses.Negotiation;
 
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+
 namespace PlexRequests.UI.Modules
 {
     public class ApiDocsModule : BaseModule
     {
-        public ApiDocsModule() : base("apidocs")
+        public ApiDocsModule(ISettingsService<PlexRequestSettings> pr) : base("apidocs", pr)
         {
             Get["/"] = x => Documentation();
         }

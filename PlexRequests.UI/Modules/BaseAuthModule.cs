@@ -75,20 +75,23 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        protected BaseAuthModule()
+        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
+            Service = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        protected BaseAuthModule(string modulePath) : base(modulePath)
+        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
         {
+            Service = pr;
             Before += (ctx) => CheckAuth();
         }
 
+        private ISettingsService<PlexRequestSettings> Service { get; }
 
         private Response CheckAuth()
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var settings = Service.GetSettings();
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";

@@ -54,7 +54,6 @@ namespace PlexRequests.UI.Modules
 
                 with.Notes("This returns a single request");
                 with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
-                //with.QueryParam<int>("id", "The request id to return", true);
                 with.PathParam<int>("id");
                 with.Model<ApiModel<List<RequestedModel>>>();
             });
@@ -81,10 +80,10 @@ namespace PlexRequests.UI.Modules
 
             Describe["DeleteRequests"] = description => description.AsSwagger(with =>
             {
-                with.ResourcePath("/requests");
+                with.ResourcePath("/requests/{id}");
                 with.Summary("Deletes an existing request");
                 with.Model<ApiModel<bool>>();
-                with.BodyParam<int>("The request ID to delete", true);
+                with.PathParam<int>("id");
                 with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
                 with.Notes("Deletes an existing request. If the request doesn't exist we will return an error.");
             });
