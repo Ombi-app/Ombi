@@ -156,6 +156,8 @@ namespace PlexRequests.UI
             nancyConventions.StaticContentsConventions.Add(
                     StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content", "Content")
                 );
+
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/docs", "swagger-ui");
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
@@ -184,6 +186,19 @@ namespace PlexRequests.UI
             {
                 notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
             }
+        }
+
+        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            //CORS Enable
+            pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
+            {
+                ctx.Response.WithHeader("Access-Control-Allow-Origin", "*")
+                                .WithHeader("Access-Control-Allow-Methods", "POST,GET")
+                                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type");
+
+            });
+            base.RequestStartup(container, pipelines, context);
         }
     }
 }

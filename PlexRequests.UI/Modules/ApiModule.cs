@@ -29,6 +29,7 @@ using System.Collections.Generic;
 
 using Nancy;
 using Nancy.ModelBinding;
+using Nancy.Responses.Negotiation;
 using Nancy.Validation;
 
 using PlexRequests.Core;
@@ -38,12 +39,12 @@ namespace PlexRequests.UI.Modules
 {
     public class ApiModule : BaseApiModule
     {
-        public ApiModule(IRequestService service) : base("api/v1/")
+        public ApiModule(IRequestService service) : base("api")
         {
-            Get["/requests"] = x => GetRequests();
-            Post["/requests"] = x => CreateRequest();
-            Put["/requests"] = x => UpdateRequest();
-            Delete["/requests"] = x => DeleteRequest();
+            Get["GetRequests","/requests"] = x => GetRequests();
+            Post["PostRequests", "/requests"] = x => CreateRequest();
+            Put["PutRequests", "/requests"] = x => UpdateRequest();
+            Delete["DeleteRequests", "/requests"] = x => DeleteRequest();
 
             RequestService = service;
         }
@@ -133,5 +134,7 @@ namespace PlexRequests.UI.Modules
                 return ReturnReponse(apiModel);
             }
         }
+
+
     }
 }
