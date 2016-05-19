@@ -420,6 +420,10 @@
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Updater\PlexRequests.Updater.csproj">
+      <Project>{ebe6fc1c-7b4b-47e9-af54-0ee0604a2be5}</Project>
+      <Name>PlexRequests.Updater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\search.js">

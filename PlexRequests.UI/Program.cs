@@ -61,6 +61,9 @@ namespace PlexRequests.UI
                 x => x.Port,
                 e => -1);
 
+            var updated = result.MapResult(x => x.Updated, e => false);
+            //TODO
+            
             PrintToConsole("Starting Up! Please wait, this can usually take a few seconds.", ConsoleColor.Yellow);
             
             Log.Trace("Getting product version");

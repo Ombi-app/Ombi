@@ -7,7 +7,8 @@ namespace PlexRequests.Updater
 		public static void Main (string[] args)
 		{
 			Console.WriteLine ("Starting PlexRequests .Net updater");
-
+            var s = new Updater();
+            s.Start(args[0]);
 		}
 	}
 }

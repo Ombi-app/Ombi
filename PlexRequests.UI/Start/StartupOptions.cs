@@ -24,7 +24,6 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Text;
 
 using CommandLine;
 
@@ -51,6 +50,14 @@ namespace PlexRequests.UI.Start
         public int Port { get; set; }
 
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="StartupOptions"/> is updated.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if updated; otherwise, <c>false</c>.
+        /// </value>
+        [Option('u', "updated", Required = false, HelpText = "This should only be used by the internal application")]
+        public bool Updated { get; set; }
 
     }
 }
