@@ -90,6 +90,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ApiModuleTests.cs" />
     <Compile Include="BootstrapperExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestRootPathProvider.cs" />

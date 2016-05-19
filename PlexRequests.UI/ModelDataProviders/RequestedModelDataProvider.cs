@@ -34,6 +34,10 @@ namespace PlexRequests.UI.ModelDataProviders
 {
     public class RequestedModelDataProvider : ISwaggerModelDataProvider
     {
+        /// <summary>
+        /// Gets the model data for the api documentation.
+        /// </summary>
+        /// <returns></returns>
         public SwaggerModelData GetModelData()
         {
             return SwaggerModelData.ForType<RequestedModel>(with =>

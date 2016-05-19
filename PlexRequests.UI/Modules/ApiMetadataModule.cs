@@ -42,8 +42,20 @@ namespace PlexRequests.UI.Modules
                 with.ResourcePath("/requests");
                 with.Summary("The list of requests");
 
-                with.Notes("This returns a list of users from our awesome app");
+                with.Notes("This returns a list of requests");
                 with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.Model<ApiModel<List<RequestedModel>>>();
+            });
+
+            Describe["GetRequest"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/requests/{id}");
+                with.Summary("Get's a single request");
+
+                with.Notes("This returns a single request");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                //with.QueryParam<int>("id", "The request id to return", true);
+                with.PathParam<int>("id");
                 with.Model<ApiModel<List<RequestedModel>>>();
             });
 
@@ -72,7 +84,7 @@ namespace PlexRequests.UI.Modules
                 with.ResourcePath("/requests");
                 with.Summary("Deletes an existing request");
                 with.Model<ApiModel<bool>>();
-                with.BodyParam<RequestedModel>("The request", true);
+                with.BodyParam<int>("The request ID to delete", true);
                 with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
                 with.Notes("Deletes an existing request. If the request doesn't exist we will return an error.");
             });

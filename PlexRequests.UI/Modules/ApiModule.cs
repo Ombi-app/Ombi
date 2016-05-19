@@ -29,8 +29,6 @@ using System.Collections.Generic;
 
 using Nancy;
 using Nancy.ModelBinding;
-using Nancy.Responses.Negotiation;
-using Nancy.Validation;
 
 using PlexRequests.Core;
 using PlexRequests.Store;
@@ -42,6 +40,7 @@ namespace PlexRequests.UI.Modules
         public ApiModule(IRequestService service) : base("api")
         {
             Get["GetRequests","/requests"] = x => GetRequests();
+            Get["GetRequest","/requests/{id}"] = x => GetSingleRequests(x);
             Post["PostRequests", "/requests"] = x => CreateRequest();
             Put["PutRequests", "/requests"] = x => UpdateRequest();
             Delete["DeleteRequests", "/requests"] = x => DeleteRequest();
@@ -61,14 +60,32 @@ namespace PlexRequests.UI.Modules
             return ReturnReponse(apiModel);
         }
 
+        public Response GetSingleRequests(dynamic x)
+        {
+            var id = (int)x.id;
+            var apiModel = new ApiModel<List<RequestedModel>> { Data = new List<RequestedModel>() };
+
+            var requests = RequestService.Get(id);
+            if (string.IsNullOrEmpty(requests.Title))
+            {
+                apiModel.Error = true;
+                apiModel.ErrorMessage = "Request does not exist";
+                return ReturnReponse(apiModel);
+            }
+            apiModel.Data.Add(requests);
+
+            return ReturnReponse(apiModel);
+        }
+
         public Response CreateRequest()
         {
-            var request = this.Bind<RequestedModel>();
-            var valid = this.Validate(request);
-            if (!valid.IsValid)
+            var request = this.BindAndValidate<RequestedModel>();
+
+            if (!ModelValidationResult.IsValid)
             {
-                return ReturnValidationReponse(valid);
+                return ReturnValidationReponse(ModelValidationResult);
             }
+
 
             var apiModel = new ApiModel<bool>();
             var result = RequestService.AddRequest(request);
@@ -87,11 +104,11 @@ namespace PlexRequests.UI.Modules
 
         public Response UpdateRequest()
         {
-            var request = this.Bind<RequestedModel>();
-            var valid = this.Validate(request);
-            if (!valid.IsValid)
+            var request = this.BindAndValidate<RequestedModel>();
+
+            if (!ModelValidationResult.IsValid)
             {
-                return ReturnValidationReponse(valid);
+                return ReturnValidationReponse(ModelValidationResult);
             }
 
 
@@ -112,17 +129,20 @@ namespace PlexRequests.UI.Modules
 
         public Response DeleteRequest()
         {
-            var request = this.Bind<RequestedModel>();
-            var valid = this.Validate(request);
-            if (!valid.IsValid)
-            {
-                return ReturnValidationReponse(valid);
-            }
+            var id = this.Bind<int>();
+
             var apiModel = new ApiModel<bool>();
 
             try
             {
-                RequestService.DeleteRequest(request);
+                var exisitingRequest = RequestService.Get(id);
+                if (exisitingRequest == null)
+                {
+                    apiModel.Error = true;
+                    apiModel.ErrorMessage = $"The request id {id} does not exist";
+                    return ReturnReponse(apiModel);
+                }
+                RequestService.DeleteRequest(exisitingRequest);
                 apiModel.Data = true;
 
                 return ReturnReponse(apiModel);
