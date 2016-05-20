@@ -278,7 +278,7 @@ namespace PlexRequests.UI.Modules
             var token = settings?.PlexAuthToken;
             if (token == null)
             {
-                return Response.AsJson(string.Empty);
+                return Response.AsJson(new { Result = true, Users = string.Empty });
             }
 
 			try {

@@ -16,35 +16,35 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+             
                         @if (Model.UserAuthentication)
                         {
                             <input type="checkbox" id="userAuth" name="UserAuthentication" checked="checked">
-                            <text>Enable User Authentication</text>
+                            <label for="userAuth">Enable User Authentication</label>
                         }
                         else
                         {
                             <input type="checkbox" id="userAuth" name="UserAuthentication">
-                            <text>Enable User Authentication</text>
+                            <label for="userAuth">Enable User Authentication</label>
                         }
-                    </label>
+          
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+       
                         @if (Model.UsePassword)
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword" checked="checked">
-                            <text>Require users to login with their passwords</text>
+                            <label for="UsePassword">Require users to login with their passwords</label>
                         }
                         else
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword">
-                            <text>Require users to login with their passwords</text>
+                            <label for="UsePassword">Require users to login with their passwords</label>
                         }
-                    </label>
+            
                 </div>
             </div>
 

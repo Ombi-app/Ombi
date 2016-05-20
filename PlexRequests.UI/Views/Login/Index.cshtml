@@ -8,15 +8,16 @@
     }
 }
 <form method="POST">
-    Username <input class="form-control form-control-custom" type="text" name="Username"/>
-    <br/>
-    Password <input class="form-control form-control-custom" name="Password" type="password"/>
-    <br/>
-    Remember Me <input name="RememberMe" type="checkbox" value="True"/>
-    <br/><br/>
-    <input class="btn btn-success-outline" type="submit" value="Login"/>
+    Username <input class="form-control form-control-custom" type="text" name="Username" />
+    <br />
+    Password <input class="form-control form-control-custom" name="Password" type="password" />
+    <div class="checkbox">
+        <input name="RememberMe" id="RememberMe" type="checkbox" checked="checked" />
+        <label for="RememberMe">Remember Me</label>
+    </div>
+    <input class="btn btn-success-outline" type="submit" value="Login" />
     <input type="hidden" id="DateTimeOffset" name="DateTimeOffset" />
-    <input type="hidden" id="redirect" name="redirect" value="@Model.Redirect"/>
+    <input type="hidden" id="redirect" name="redirect" value="@Model.Redirect" />
 </form>
 @if (!Model.AdminExists)
 {

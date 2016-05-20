@@ -57,6 +57,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/custom.min.css\" type=\"text/css\" />");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>");
 
             sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");

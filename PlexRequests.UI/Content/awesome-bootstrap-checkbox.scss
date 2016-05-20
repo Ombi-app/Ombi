@@ -1,0 +1,250 @@
+
+//
+// Checkboxes
+// --------------------------------------------------
+
+
+$font-family-icon: 'FontAwesome' !default;
+$fa-var-check: "\f00c" !default;
+$check-icon: $fa-var-check !default;
+
+@mixin checkbox-variant($parent, $color) {
+  #{$parent} input[type="checkbox"]:checked + label,
+  #{$parent} input[type="radio"]:checked + label {
+    &::before {
+      background-color: $color;
+      border-color: $color;
+    }
+    &::after{
+      color: #fff;
+    }
+  }
+}
+
+@mixin checkbox-variant-indeterminate($parent, $color) {
+  #{$parent} input[type="checkbox"]:indeterminate + label,
+  #{$parent} input[type="radio"]:indeterminate + label {
+    &::before {
+      background-color: $color;
+      border-color: $color;
+    }
+    &::after{
+      background-color: #fff;
+    }
+  }
+}
+
+.abc-checkbox{
+  padding-left: 20px;
+
+  label{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+
+    &::before{
+      cursor: pointer;
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 0;
+      margin-left: -20px;
+      border: 1px solid $input-border-color;
+      border-radius: 3px;
+      background-color: #fff;
+      @include transition(border 0.15s ease-in-out, color 0.15s ease-in-out);
+    }
+
+    &::after{
+      cursor: pointer;
+      display: inline-block;
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 0;
+      top: 0;
+      margin-left: -20px;
+      padding-left: 3px;
+      padding-top: 1px;
+      font-size: 11px;
+      color: $input-color;
+    }
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    cursor: pointer;
+    opacity: 0;
+    z-index: 1;
+
+    &:focus + label::before{
+      @include tab-focus();
+    }
+
+    &:checked + label::after{
+      font-family: $font-family-icon;
+      content: $check-icon;
+    }
+
+    &:indeterminate + label::after{
+      display: block;
+      content: "";
+      width: 10px;
+      height: 3px;
+      background-color: #555555;
+      border-radius: 2px;
+      margin-left: -16.5px;
+      margin-top: 7px;
+    }
+
+    &:disabled + label{
+      opacity: 0.65;
+
+      &::before{
+        background-color: $input-bg-disabled;
+        cursor: not-allowed;
+      }
+    }
+
+  }
+
+  &.abc-checkbox-circle label::before{
+    border-radius: 50%;
+  }
+
+  &.checkbox-inline{
+    margin-top: 0;
+  }
+}
+
+@include checkbox-variant('.abc-checkbox-primary', $brand-primary);
+@include checkbox-variant('.abc-checkbox-danger', $brand-danger);
+@include checkbox-variant('.abc-checkbox-info', $brand-info);
+@include checkbox-variant('.abc-checkbox-warning', $brand-warning);
+@include checkbox-variant('.abc-checkbox-success', $brand-success);
+
+
+@include checkbox-variant-indeterminate('.abc-checkbox-primary', $brand-primary);
+@include checkbox-variant-indeterminate('.abc-checkbox-danger', $brand-danger);
+@include checkbox-variant-indeterminate('.abc-checkbox-info', $brand-info);
+@include checkbox-variant-indeterminate('.abc-checkbox-warning', $brand-warning);
+@include checkbox-variant-indeterminate('.abc-checkbox-success', $brand-success);
+
+//
+// Radios
+// --------------------------------------------------
+
+@mixin radio-variant($parent, $color) {
+  #{$parent} input[type="radio"]{
+    + label{
+      &::after{
+        background-color: $color;
+      }
+    }
+    &:checked + label{
+      &::before {
+        border-color: $color;
+      }
+      &::after{
+        background-color: $color;
+      }
+    }
+  }
+}
+
+.abc-radio{
+  padding-left: 20px;
+
+  label{
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 5px;
+
+    &::before{
+      cursor: pointer;
+      content: "";
+      display: inline-block;
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 0;
+      margin-left: -20px;
+      border: 1px solid $input-border-color;
+      border-radius: 50%;
+      background-color: #fff;
+      @include transition(border 0.15s ease-in-out);
+    }
+
+    &::after{
+      cursor: pointer;
+      display: inline-block;
+      position: absolute;
+      content: " ";
+      width: 11px;
+      height: 11px;
+      left: 3px;
+      top: 3px;
+      margin-left: -20px;
+      border-radius: 50%;
+      background-color: $input-color;
+      transform: scale(0, 0);
+
+      transition: transform .1s cubic-bezier(.8,-0.33,.2,1.33);
+      //curve - http://cubic-bezier.com/#.8,-0.33,.2,1.33
+    }
+  }
+
+  input[type="radio"]{
+    cursor: pointer;
+    opacity: 0;
+    z-index: 1;
+
+    &:focus + label::before{
+      @include tab-focus();
+    }
+
+    &:checked + label::after{
+      transform: scale(1, 1);
+    }
+
+    &:disabled + label{
+      opacity: 0.65;
+
+      &::before{
+        cursor: not-allowed;
+      }
+    }
+
+  }
+
+  &.radio-inline{
+    margin-top: 0;
+  }
+}
+
+@include radio-variant('.abc-radio-primary', $brand-primary);
+@include radio-variant('.abc-radio-danger', $brand-danger);
+@include radio-variant('.abc-radio-info', $brand-info);
+@include radio-variant('.abc-radio-warning', $brand-warning);
+@include radio-variant('.abc-radio-success', $brand-success);
+
+
+input[type="checkbox"],
+input[type="radio"] {
+  &.styled:checked + label:after {
+    font-family: $font-family-icon;
+    content: $check-icon;
+  }
+  .styled:checked + label {
+    &::before {
+      color: #fff;
+    }
+    &::after {
+      color: #fff;
+    }
+  }
+}

@@ -95,7 +95,7 @@ namespace PlexRequests.Updater
                             fullname = entry.FullName.Replace("Release/", string.Empty);
                         }
 
-                        var fullPath = Path.Combine(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath)), fullname);
+                        var fullPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), fullname);
 
                         if (string.IsNullOrEmpty(entry.Name))
                         {

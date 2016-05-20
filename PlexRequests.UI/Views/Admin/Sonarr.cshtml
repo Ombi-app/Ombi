@@ -17,16 +17,14 @@
             <legend>Sonarr Settings</legend>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
                         @if (Model.Enabled)
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
                         }
-                    </label>
                 </div>
             </div>
             <div class="form-group">
@@ -53,16 +51,14 @@
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
                         @if (Model.Ssl)
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
                         }
-                    </label>
                 </div>
             </div>
             <div class="form-group">
@@ -93,7 +89,7 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+
                         @if (Model.SeasonFolders)
                         {
                             <input type="checkbox" id="SeasonFolders" name="SeasonFolders" checked="checked">
@@ -103,9 +99,9 @@
                             <input type="checkbox" id="SeasonFolders" name="SeasonFolders">
                         }
                         <label>Enable season folders</label>
-                        <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
-                    </label>
+
                 </div>
+                <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
             </div>
             <div class="form-group">
                 <div>

@@ -18,44 +18,44 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+                    
                         @if (Model.Enabled)
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
                         }
-                    </label>
+                
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+                   
                         @if (Model.Ssl)
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><text>SSL Enabled</text>
+                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl"><text>SSL Enabled</text>
+                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL Enabled</label>
                         }
-                    </label>
+            
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+
                         @if (Model.EnableUserEmailNotifications)
                         {
-                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><text>Enable user email notifications</text>
+                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><text>Enable user email notifications</text>
+                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
                         }
-                    </label>
+         
                 </div>
             </div>
             <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
