@@ -63,7 +63,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u) : base("search", prSettings)
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -87,6 +87,7 @@ namespace PlexRequests.UI.Modules
             HeadphonesApi = hpApi;
             HeadphonesService = hpService;
             UsersToNotifyRepo = u;
+            EmailNotificationSettings = email;
 
 
             Get["/"] = parameters => RequestLoad();
@@ -121,6 +122,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
+        private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
         private IAvailabilityChecker Checker { get; }
         private ICouchPotatoCacher CpCacher { get; }
         private ISonarrCacher SonarrCacher { get; }
@@ -894,9 +896,14 @@ namespace PlexRequests.UI.Modules
         private Response NotifyUser(bool notify)
         {
             var auth = Auth.GetSettings().UserAuthentication;
+            var email = EmailNotificationSettings.GetSettings().EnableUserEmailNotifications;
             if (!auth)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but this functionality is currently only for users with Plex accounts"});
+            }
+            if (!email)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but your administrator has not yet enabled this functionality." });
             }
             var username = Username;
             var originalList = UsersToNotifyRepo.GetAll();
