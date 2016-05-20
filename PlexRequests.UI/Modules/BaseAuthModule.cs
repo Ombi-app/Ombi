@@ -56,12 +56,22 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-		protected bool IsAdmin { get { 
-				var claims = Context.CurrentUser.Claims.ToList();
-				if(claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser)){
-					return true;}
-					return false;
-			} }
+        protected bool IsAdmin
+        {
+            get
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return false;
+                }
+                var claims = Context.CurrentUser.Claims.ToList();
+                if (claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         protected int DateTimeOffset
         {
@@ -96,8 +106,8 @@ namespace PlexRequests.UI.Modules
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
 
-            return Session[SessionKeys.UsernameKey] == null 
-                ? Context.GetRedirect(redirectPath) 
+            return Session[SessionKeys.UsernameKey] == null
+                ? Context.GetRedirect(redirectPath)
                 : null;
         }
     }

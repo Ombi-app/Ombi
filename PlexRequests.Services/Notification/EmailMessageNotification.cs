@@ -28,12 +28,13 @@ using System;
 using System.Net;
 using System.Net.Mail;
 using System.Threading.Tasks;
-
+using MimeKit;
 using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
+using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace PlexRequests.Services.Notification
 {
@@ -111,28 +112,28 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
-            var message = new MailMessage
+            var message = new MimeMessage
             {
-                IsBodyHtml = true,
-                To = { new MailAddress(settings.RecipientEmail) },
-                Body = $"Hello! The user '{model.User}' has requested {model.Title}! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
-                From = new MailAddress(settings.EmailSender),
+                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested {model.Title}! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },
                 Subject = $"Plex Requests: New request for {model.Title}!"
             };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
 
             await Send(message, settings);
         }
 
         private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
         {
-            var message = new MailMessage
+            var message = new MimeMessage
             {
-                IsBodyHtml = true,
-                To = { new MailAddress(settings.RecipientEmail) },
-                Body = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
-                From = new MailAddress(settings.EmailSender),
+                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!" },
                 Subject = $"Plex Requests: New issue for {model.Title}!"
             };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
 
             await Send(message, settings);
         }
@@ -144,32 +145,34 @@ namespace PlexRequests.Services.Notification
                 await Task.FromResult(false);
             }
 
-            var message = new MailMessage
+            var message = new MimeMessage
             {
-                IsBodyHtml = true,
-                To = { new MailAddress(model.UserEmail) },
-                Body = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
-                From = new MailAddress(settings.EmailSender),
+                Body = new TextPart("plain") { Text = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)" },
                 Subject = $"Plex Requests: {model.Title} is now available!"
             };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
 
             await Send(message, settings);
         }
 
-        private async Task Send(MailMessage message, EmailNotificationSettings settings)
+        private async Task Send(MimeMessage message, EmailNotificationSettings settings)
         {
             try
             {
-                using (var smtp = new SmtpClient(settings.EmailHost, settings.EmailPort))
+                using (var client = new SmtpClient())
                 {
-                    smtp.Credentials = new NetworkCredential(settings.EmailUsername, settings.EmailPassword);
-                    smtp.EnableSsl = settings.Ssl;
-                    await smtp.SendMailAsync(message).ConfigureAwait(false);
+                    client.Connect(settings.EmailHost, settings.EmailPort, settings.Ssl);
+
+                    // Note: since we don't have an OAuth2 token, disable
+                    // the XOAUTH2 authentication mechanism.
+                    client.AuthenticationMechanisms.Remove("XOAUTH2");
+                    
+                    client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+
+                    await client.SendAsync(message);
+                    await client.DisconnectAsync(true);
                 }
-            }
-            catch (SmtpException smtp)
-            {
-                Log.Error(smtp);
             }
             catch (Exception e)
             {
@@ -179,14 +182,13 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
         {
-            var message = new MailMessage
+            var message = new MimeMessage
             {
-                IsBodyHtml = true,
-                To = { new MailAddress(settings.RecipientEmail) },
-                Body = "This is just a test! Success!",
-                From = new MailAddress(settings.EmailSender),
-                Subject = "Plex Requests: Test Message!"
+                Body = new TextPart("plain") {Text= "This is just a test! Success!"},
+                Subject = "Plex Requests: Test Message!",
             };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
 
             await Send(message, settings);
         }

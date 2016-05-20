@@ -164,7 +164,7 @@
                 	return;
                 }
                     if (response.users.length > 1) {
-                        $(response).each(function () {
+                        $(response.users).each(function () {
                             $('#users').append("<option>" + this + "</option>");
                         });
                     } else {
