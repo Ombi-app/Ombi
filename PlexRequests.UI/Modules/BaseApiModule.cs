@@ -86,6 +86,10 @@ namespace PlexRequests.UI.Modules
 
         private Response CheckAuth()
         {
+            if (Request.Path.Contains("api/apikey")) // We do not need the apikey for this call
+            {
+                return null;
+            }
             var settings = Settings.GetSettings();
             var apiModel = new ApiModel<List<RequestedModel>> { Data = new List<RequestedModel>() };
             if (!Authenticated(settings))

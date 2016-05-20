@@ -30,7 +30,6 @@ using Moq;
 
 using Nancy;
 using Nancy.Testing;
-using Nancy.TinyIoc;
 
 using Newtonsoft.Json;
 
@@ -40,7 +39,6 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 

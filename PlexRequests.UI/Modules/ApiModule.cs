@@ -26,7 +26,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using Nancy;
 using Nancy.ModelBinding;
@@ -34,12 +33,13 @@ using Nancy.ModelBinding;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class ApiModule : BaseApiModule
     {
-        public ApiModule(IRequestService service, ISettingsService<PlexRequestSettings> pr) : base("api", pr)
+        public ApiModule(IRequestService service, ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m) : base("api", pr)
         {
             Get["GetRequests","/requests"] = x => GetRequests();
             Get["GetRequest","/requests/{id}"] = x => GetSingleRequests(x);
@@ -47,10 +47,18 @@ namespace PlexRequests.UI.Modules
             Put["PutRequests", "/requests"] = x => UpdateRequest();
             Delete["DeleteRequests", "/requests/{id}"] = x => DeleteRequest(x);
 
+            Get["GetApiKey", "/apikey"] = x => GetApiKey();
+
+            Put["PutCredentials", "/credentials/{username}"] = x => ChangePassword(x);
+
             RequestService = service;
+            SettingsService = pr;
+            UserMapper = m;
         }
 
         private IRequestService RequestService { get; }
+        private ISettingsService<PlexRequestSettings> SettingsService { get; }
+        private ICustomUserMapper UserMapper { get; }
 
         public Response GetRequests()
         {
@@ -154,6 +162,54 @@ namespace PlexRequests.UI.Modules
                 apiModel.ErrorMessage = "Could not delete the request from the database. Internal error.";
                 return ReturnReponse(apiModel);
             }
+        }
+
+        public Response GetApiKey()
+        {
+            var user = Request.Query["username"];
+            var password = Request.Query["password"];
+            var result = UserMapper.ValidateUser(user, password);
+            var model = new ApiModel<string>();
+            if (result == null)
+            {
+                model.Error = true;
+                model.ErrorMessage = "Incorrect username or password";
+                return ReturnReponse(model);
+            }
+
+            var settings = SettingsService.GetSettings();
+            model.Data = settings.ApiKey;
+
+            return ReturnReponse(model);
+        }
+
+        public Response ChangePassword(dynamic x)
+        {
+            var username = (string)x.username;
+            var userModel = this.BindAndValidate<UserUpdateViewModel>();
+
+            if (!ModelValidationResult.IsValid)
+            {
+                return ReturnValidationReponse(ModelValidationResult);
+            }
+
+            var valid = UserMapper.ValidateUser(username, userModel.CurrentPassword);
+            if (valid == null)
+            {
+                var errorModel = new ApiModel<string> { Error = true, ErrorMessage = "Incorrect username or password" };
+                return ReturnReponse(errorModel);
+            }
+            var result = UserMapper.UpdatePassword(username, userModel.CurrentPassword, userModel.NewPassword);
+
+            if (!result)
+            {
+                var errorModel = new ApiModel<string> { Error = true, ErrorMessage = "Could not update the password. " };
+                return ReturnReponse(errorModel);
+            }
+
+
+            var model = new ApiModel<string> { Data = "Successfully updated the password"};
+            return ReturnReponse(model);
         }
 
 

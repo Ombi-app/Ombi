@@ -69,6 +69,7 @@ namespace PlexRequests.UI
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
             container.Register<IUserMapper, UserMapper>();
+            container.Register<ICustomUserMapper, UserMapper>();
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
             container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
 
@@ -87,6 +88,7 @@ namespace PlexRequests.UI
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
+            container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();

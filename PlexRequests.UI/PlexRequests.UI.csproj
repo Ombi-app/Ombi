@@ -164,6 +164,7 @@
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Jobs\CustomJobFactory.cs" />
     <Compile Include="Jobs\Scheduler.cs" />
+    <Compile Include="ModelDataProviders\UserUpdateViewModel.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
+    <Compile Include="Models\UserUpdateViewModel.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiMetadataModule.cs" />
     <Compile Include="Modules\BaseApiModule.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\UserViewModelValidator.cs" />
     <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
     <Compile Include="Validators\PushbulletSettingsValidator.cs" />

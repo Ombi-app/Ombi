@@ -30,6 +30,7 @@ using Nancy.Metadata.Modules;
 using Nancy.Swagger;
 
 using PlexRequests.Store;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
@@ -83,9 +84,30 @@ namespace PlexRequests.UI.Modules
                 with.ResourcePath("/requests/{id}");
                 with.Summary("Deletes an existing request");
                 with.Model<ApiModel<bool>>();
-                with.PathParam<int>("id");
+                with.PathParam<int>("id", required:true);
                 with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
                 with.Notes("Deletes an existing request. If the request doesn't exist we will return an error.");
+            });
+
+            Describe["GetApiKey"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/apikey");
+                with.Summary("Gets the Api Key for Plex Requests");
+                with.Model<ApiModel<string>>();
+                with.QueryParam<string>("username", required:true );
+                with.QueryParam<string>("password", required: true );
+                with.Notes("Get's the current api key for the application");
+            });
+
+            Describe["PutCredentials"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/credentials/{username}");
+                with.Summary("Sets a new password for the user");
+                with.Model<ApiModel<string>>();
+                with.PathParam<int>("username", required:true);
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<UserUpdateViewModel>("User update view model", true);
+                with.Notes("Sets a new password for the user");
             });
 
         }

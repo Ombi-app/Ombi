@@ -41,8 +41,9 @@ namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
+        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m) : base(pr)
         {
+            UserMapper = m;
             Get["/login"] = _ =>
             {
                 {
@@ -110,6 +111,7 @@ namespace PlexRequests.UI.Modules
             Get["/changepassword"] = _ => ChangePassword();
             Post["/changepassword"] = _ => ChangePasswordPost();
         }
+        private ICustomUserMapper UserMapper { get; }
 
         private Negotiator ChangePassword()
         {

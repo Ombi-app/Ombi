@@ -13,13 +13,15 @@ namespace PlexRequests.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule(ISettingsService<PlexRequestSettings> pr) : base("usermanagement",pr)
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m) : base("usermanagement",pr)
         {
             this.RequiresClaims(UserClaims.Admin);
             Get["/"] = x => Load();
 
             Get["/users"] = x => LoadUsers();
+            UserMapper = m;
         }
+        private ICustomUserMapper UserMapper { get; }
 
         private Negotiator Load()
         {

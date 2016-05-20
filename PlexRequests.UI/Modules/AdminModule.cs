@@ -709,17 +709,14 @@ namespace PlexRequests.UI.Modules
 
 		private Response CreateApiKey()
 		{
-			this.RequiresClaims (UserClaims.Admin);
-		
-			var apiKey = Guid.NewGuid ().ToString ("N");
-
-			var settings = PrService.GetSettings ();
+			this.RequiresClaims(UserClaims.Admin);
+		    var apiKey = Guid.NewGuid().ToString("N");
+            var settings = PrService.GetSettings();
 
 			settings.ApiKey = apiKey;
+            PrService.SaveSettings(settings);
 
-			PrService.SaveSettings (settings);
-
-			return Response.AsJson (apiKey);
+			return Response.AsJson(apiKey);
 		}
     }
 }

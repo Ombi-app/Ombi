@@ -34,7 +34,6 @@ using FluentValidation;
 using Moq;
 
 using Nancy;
-using Nancy.Bootstrapper;
 using Nancy.Testing;
 using Nancy.Validation;
 using Nancy.Validation.FluentValidation;
@@ -46,6 +45,7 @@ using NUnit.Framework;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.UI.Validators;
@@ -62,31 +62,48 @@ namespace PlexRequests.UI.Tests
         [SetUp]
         public void Setup()
         {
-            var requests = new Fixture().CreateMany<RequestedModel>();
+            var fixture = new Fixture();
+            var requests = fixture.CreateMany<RequestedModel>();
             var requestMock = new Mock<IRequestService>();
             var settingsMock = new Mock<ISettingsService<PlexRequestSettings>>();
+            var userRepoMock = new Mock<IRepository<UsersModel>>();
+            var mapperMock = new Mock<ICustomUserMapper>();
+
+            var userModels = fixture.CreateMany<UsersModel>().ToList();
+            userModels.Add(new UsersModel
+            {
+                UserName = "user1"
+            });
+
             settingsMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings {ApiKey = "api"});
             requestMock.Setup(x => x.GetAll()).Returns(requests);
             requestMock.Setup(x => x.Get(1)).Returns(requests.FirstOrDefault());
             requestMock.Setup(x => x.Get(99)).Returns(new RequestedModel());
             requestMock.Setup(x => x.DeleteRequest(It.IsAny<RequestedModel>()));
 
+            userRepoMock.Setup(x => x.GetAll()).Returns(userModels);
+            userRepoMock.Setup(x => x.Update(It.IsAny<UsersModel>())).Returns(true);
+
+            mapperMock.Setup(x => x.ValidateUser("user1", It.IsAny<string>())).Returns(Guid.NewGuid());
+            mapperMock.Setup(x => x.UpdatePassword("user1", "password", "newpassword")).Returns(true);
+
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<ApiModule>();
                 with.Dependency(requestMock.Object);
                 with.Dependency(settingsMock.Object);
+                with.Dependency(userRepoMock.Object);
+                with.Dependency(mapperMock.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.ModelValidatorLocator(
                     new DefaultValidatorLocator(
-                        new List<IModelValidatorFactory>()
+                        new List<IModelValidatorFactory>
                         {
                                 new FluentValidationValidatorFactory(
                                     new DefaultFluentAdapterFactory(new List<IFluentAdapter>()),
-                                    new List<IValidator> { new RequestedModelValidator() })
+                                    new List<IValidator> { new RequestedModelValidator(), new UserViewModelValidator() })
                         }));
             });
-
         }
 
         private Action<BrowserContext> GetBrowser()
@@ -192,6 +209,7 @@ namespace PlexRequests.UI.Tests
         }
 
         [Test]
+        [Description("Should file the validation")]
         public void CreateAEmptyRequest()
         {
             var browser = new Browser(Bootstrapper);
@@ -201,6 +219,148 @@ namespace PlexRequests.UI.Tests
  
             var body = JsonConvert.DeserializeObject<ApiModel<string[]>>(result.Body.AsString());
             Assert.That(body.Data, Is.Not.Null.Or.Empty);
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void UpdateUsersPassword()
+        {
+            var model = new UserUpdateViewModel
+            {
+                CurrentPassword = "password",
+                NewPassword = "newpassword"
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Put("/api/credentials/user1", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null.Or.Empty);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void UpdateInvalidUsersPassword()
+        {
+            var model = new UserUpdateViewModel
+            {
+                CurrentPassword = "password",
+                NewPassword = "newpassword"
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Put("/api/credentials/user99", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Null.Or.Empty);
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void UpdateUsersInvalidPassword()
+        {
+            var model = new UserUpdateViewModel
+            {
+                CurrentPassword = "password",
+                NewPassword = "password2"
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Put("/api/credentials/user1", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Null.Or.Empty);
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void UpdateUsersWithBadModel()
+        {
+            var model = new UserUpdateViewModel
+            {
+                CurrentPassword = null,
+                NewPassword = "password2"
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Put("/api/credentials/user1", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string[]>>(result.Body.AsString());
+            Assert.That(body.Data.Length, Is.GreaterThan(0));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+        [Test]
+        public void GetApiKey()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/apikey", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.Query("username","user1");
+                with.Query("password","password");
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null.Or.Empty);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [Test]
+        public void GetApiKeyWithBadCredentials()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/apikey", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.Query("username", "user");
+                with.Query("password", "password");
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Null.Or.Empty);
             Assert.That(body.Error, Is.True);
             Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
         }
