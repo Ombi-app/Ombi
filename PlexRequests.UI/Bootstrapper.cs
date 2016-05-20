@@ -68,9 +68,7 @@ namespace PlexRequests.UI
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
-            container.Register<IUserMapper, UserMapper>();
-            container.Register<ICustomUserMapper, UserMapper>();
-            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
+
             container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
 
             // Settings
@@ -88,7 +86,6 @@ namespace PlexRequests.UI
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
-            container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
@@ -121,9 +118,16 @@ namespace PlexRequests.UI
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }
+        
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
+            container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
+            container.Register<IUserMapper, UserMapper>();
+            container.Register<ICustomUserMapper, UserMapper>();
+
+
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
 
             StaticConfiguration.DisableErrorTraces = false;

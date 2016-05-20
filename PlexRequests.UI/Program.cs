@@ -39,6 +39,9 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 using CommandLine;
 
@@ -62,10 +65,10 @@ namespace PlexRequests.UI
                 e => -1);
 
             var updated = result.MapResult(x => x.Updated, e => UpdateValue.None);
-            //TODO
-            
+            CheckUpdate(updated);
+
             PrintToConsole("Starting Up! Please wait, this can usually take a few seconds.", ConsoleColor.Yellow);
-            
+
             Log.Trace("Getting product version");
             WriteOutVersion();
 
@@ -163,11 +166,37 @@ namespace PlexRequests.UI
         {
             if (val == UpdateValue.Failed)
             {
-                
+                PrintToConsole("Update Failed", ConsoleColor.Red);
             }
             if (val == UpdateValue.Updated)
             {
-                // TODO Change the name of PlexRequests.Updater.exe_Updated and delete the old version
+                PrintToConsole("Finishing Update", ConsoleColor.Yellow);
+                var applicationPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath));
+                var files = Directory.GetFiles(applicationPath, "PlexRequests.*", SearchOption.TopDirectoryOnly);
+                var oldUpdater = files.FirstOrDefault(x => x == $"{applicationPath}\\PlexRequests.Updater.exe");
+                var newUpdater = files.FirstOrDefault(x => x == $"{applicationPath}\\PlexRequests.Updater.exe_Updated");
+
+                if (oldUpdater == null || newUpdater == null)
+                {
+                    PrintToConsole("Looks like there was nothing to update.", ConsoleColor.Yellow);
+                    return;
+                }
+
+                try
+                {
+                    File.Copy(oldUpdater, "PlexRequests.Updater.exe_Old", true);
+                    File.Delete(oldUpdater);
+                    File.Copy(newUpdater, "PlexRequests.Updater.exe", true);
+                    File.Delete(newUpdater);
+
+                    File.Delete("PlexRequests.Updater.exe_Old"); // Cleanup
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                PrintToConsole("Finished Update!", ConsoleColor.Yellow);
             }
         }
     }

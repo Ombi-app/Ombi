@@ -26,10 +26,10 @@
 #endregion
 namespace PlexRequests.UI.Start
 {
-    public enum UpdateValue
+    public enum UpdateValue : int
     {
-        None,
-        Updated,
-        Failed
+        None = 0,
+        Updated = 1,
+        Failed = 2
     }
 }
