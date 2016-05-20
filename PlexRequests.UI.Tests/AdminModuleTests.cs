@@ -333,9 +333,10 @@ namespace PlexRequests.UI.Tests
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
 
-            var body = JsonConvert.DeserializeObject<string>(result.Body.AsString());
+            var body = JsonConvert.DeserializeObject<JObject>(result.Body.AsString());
+            var user = (string)body["users"];
             Assert.That(body, Is.Not.Null);
-            Assert.That(string.IsNullOrWhiteSpace(body), Is.True);
+            Assert.That(string.IsNullOrWhiteSpace(user), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
             AuthMock.Verify(x => x.GetSettings(), Times.Once);
