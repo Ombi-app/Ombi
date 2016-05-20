@@ -28,6 +28,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 using FluentValidation;
 
@@ -44,6 +45,7 @@ using NUnit.Framework;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
@@ -68,6 +70,7 @@ namespace PlexRequests.UI.Tests
             var settingsMock = new Mock<ISettingsService<PlexRequestSettings>>();
             var userRepoMock = new Mock<IRepository<UsersModel>>();
             var mapperMock = new Mock<ICustomUserMapper>();
+            var authSettingsMock = new Mock<ISettingsService<AuthenticationSettings>>();
 
             var userModels = fixture.CreateMany<UsersModel>().ToList();
             userModels.Add(new UsersModel
@@ -87,13 +90,21 @@ namespace PlexRequests.UI.Tests
             mapperMock.Setup(x => x.ValidateUser("user1", It.IsAny<string>())).Returns(Guid.NewGuid());
             mapperMock.Setup(x => x.UpdatePassword("user1", "password", "newpassword")).Returns(true);
 
+            authSettingsMock.Setup(x => x.SaveSettings(It.Is<AuthenticationSettings>(c => c.PlexAuthToken.Equals("abc")))).Returns(true);
+
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
-                with.Module<ApiModule>();
+                with.Module<ApiRequestModule>();
+                with.Module<ApiUserModule>();
+                with.Module<ApiSettingsModule>();
+
                 with.Dependency(requestMock.Object);
                 with.Dependency(settingsMock.Object);
                 with.Dependency(userRepoMock.Object);
                 with.Dependency(mapperMock.Object);
+                with.Dependency(authSettingsMock.Object);
+
+
                 with.RootPathProvider<TestRootPathProvider>();
                 with.ModelValidatorLocator(
                     new DefaultValidatorLocator(
@@ -363,6 +374,65 @@ namespace PlexRequests.UI.Tests
             Assert.That(body.Data, Is.Null.Or.Empty);
             Assert.That(body.Error, Is.True);
             Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
+        }
+
+
+        [Test]
+        public void SaveNewAuthSettings()
+        {
+            var model = new AuthenticationSettings
+            {
+                Id = 1,
+                PlexAuthToken = "abc",
+                DeniedUsers = "abc",
+                UsePassword = false,
+                UserAuthentication = true
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("api/settings/authentication", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+
+            var body = JsonConvert.DeserializeObject<ApiModel<string>>(result.Body.AsString());
+            Assert.That(body.Data, Is.Not.Null.Or.Empty);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
+        }
+
+        [TestCaseSource(nameof(AuthSettingsData))]
+        public object SaveNewAuthSettings(object model)
+        {
+
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("api/settings/authentication", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            var retVal = new List<string> { body.ErrorMessage, body.Error.ToString(), body.Data.ToString() };
+            return retVal;
+        }
+
+        private static IEnumerable<TestCaseData> AuthSettingsData
+        {
+            get
+            {
+                yield return
+                    new TestCaseData(new AuthenticationSettings { Id = 1, PlexAuthToken = "abc", DeniedUsers = "abc", UsePassword = false, UserAuthentication = true })
+                        .Returns(new List<string> { null, false.ToString(), true.ToString() });
+            }
         }
     }
 }

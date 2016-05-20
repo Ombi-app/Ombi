@@ -175,7 +175,11 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserUpdateViewModel.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
-    <Compile Include="Modules\ApiMetadataModule.cs" />
+    <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
+    <Compile Include="Modules\ApiUserMetadataModule.cs" />
+    <Compile Include="Modules\ApiRequestMetadataModule.cs" />
+    <Compile Include="Modules\ApiSettingsModule.cs" />
+    <Compile Include="Modules\ApiUserModule.cs" />
     <Compile Include="Modules\BaseApiModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
@@ -279,7 +283,7 @@
     <Content Include="Views\UserManagement\Index.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Modules\ApiModule.cs" />
+    <Compile Include="Modules\ApiRequestModule.cs" />
     <Compile Include="Models\ApiModel.cs" />
     <Compile Include="Models\UserManagementUsersViewModel.cs" />
   </ItemGroup>

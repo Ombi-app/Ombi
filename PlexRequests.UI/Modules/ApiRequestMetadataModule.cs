@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiMetadataModule.cs
+//    File: ApiRequestMetadataModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -34,9 +34,9 @@ using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
-    public class ApiMetadataModule: MetadataModule<SwaggerRouteData>
+    public class ApiRequestMetadataModule: MetadataModule<SwaggerRouteData>
     {
-        public ApiMetadataModule()
+        public ApiRequestMetadataModule()
         {
             Describe["GetRequests"] = description => description.AsSwagger(with =>
             {
