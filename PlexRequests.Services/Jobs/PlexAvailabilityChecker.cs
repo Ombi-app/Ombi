@@ -39,6 +39,8 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 using Quartz;
 
@@ -47,7 +49,7 @@ namespace PlexRequests.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users)
         {
             Plex = plexSettings;
             Auth = auth;
@@ -56,6 +58,7 @@ namespace PlexRequests.Services.Jobs
             Cache = cache;
             Notification = notify;
             Job = rec;
+            UserNotifyRepo = users;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -66,7 +69,7 @@ namespace PlexRequests.Services.Jobs
         private ICacheProvider Cache { get; }
         private INotificationService Notification { get; }
         private IJobRecord Job { get; }
-
+        private IRepository<UsersToNotify> UserNotifyRepo { get; }
         public void CheckAndUpdateAll()
         {
             Log.Trace("Getting the settings");
@@ -328,10 +331,11 @@ namespace PlexRequests.Services.Jobs
                     return;
                 }
 
+                var users = UserNotifyRepo.GetAll().ToList();
                 foreach (var model in modelChanged)
                 {
-                    var usersToNotify = model.UsersToNotify; // Users that selected the notification button when requesting a movie/tv show
-                    foreach (var user in usersToNotify)
+                    var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers);
+                    foreach (var user in selectedUsers)
                     {
                         var email = plexUser.User.FirstOrDefault(x => x.Username == user);
                         if (email == null)

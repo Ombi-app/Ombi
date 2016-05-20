@@ -86,6 +86,7 @@ namespace PlexRequests.UI
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
+            container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();

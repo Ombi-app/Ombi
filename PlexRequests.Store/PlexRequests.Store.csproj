@@ -60,6 +60,7 @@
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Models\ScheduledJobs.cs" />
+    <Compile Include="Models\UsersToNotify.cs" />
     <Compile Include="Repository\IRequestRepository.cs" />
     <Compile Include="Repository\ISettingsRepository.cs" />
     <Compile Include="ISqliteConfiguration.cs" />

@@ -66,3 +66,10 @@ CREATE TABLE IF NOT EXISTS ScheduledJobs
     LastRun								varchar(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ScheduledJobs_Id ON ScheduledJobs (Id);
+
+CREATE TABLE IF NOT EXISTS UsersToNotify
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username							varchar(100) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS UsersToNotify_Id ON UsersToNotify (Id);

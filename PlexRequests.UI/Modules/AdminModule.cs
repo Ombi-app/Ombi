@@ -502,7 +502,11 @@ namespace PlexRequests.UI.Modules
         private Response AutoUpdate()
         {
             var url = Request.Form["url"];
-            var startInfo = new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url};
+
+            var startInfo = Type.GetType("Mono.Runtime") != null 
+                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url } 
+                                             : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
+
             Process.Start(startInfo);
           
             Environment.Exit(0);

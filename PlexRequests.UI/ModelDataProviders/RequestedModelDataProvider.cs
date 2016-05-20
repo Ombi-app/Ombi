@@ -64,7 +64,6 @@ namespace PlexRequests.UI.ModelDataProviders
                 with.Property(x => x.RequestedDate).Description("The date if the request, if this is not set, the request date will be set at the time of the Api call");
                 with.Property(x => x.RequestedUsers).Description("A collection of the requested users").Required(true);
                 with.Property(x => x.Type).Description("The type of request: Movie = 0, TvShow = 1, Album = 2").Required(true);
-                with.Property(x => x.UsersToNotify).Description("A list of Plex users to notify");
             });
         }
     }

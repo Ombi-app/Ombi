@@ -40,7 +40,6 @@ namespace PlexRequests.Store
         public List<string> RequestedUsers { get; set; }
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
-        public List<string> UsersToNotify { get; private set; }
 
         [JsonIgnore]
         public List<string> AllUsers
@@ -67,21 +66,6 @@ namespace PlexRequests.Store
         public bool UserHasRequested(string username)
         {
             return AllUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase));
-        }
-
-        public void AddUserToNotification(string username)
-        {
-            if (UsersToNotify == null)
-            {
-                UsersToNotify = new List<string>();
-            }
-            if (UsersToNotify.FirstOrDefault(x => x == username) != null)
-            {
-                // User already exists in the notification list
-                return;
-            }
-
-            UsersToNotify.Add(username);
         }
     }
 

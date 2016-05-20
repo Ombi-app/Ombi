@@ -29,6 +29,21 @@ $(function () {
     });
     focusSearch($('li.active a', '#nav-tabs').first().attr('href'));
 
+    // Get the user notification setting
+    var url = createBaseUrl(base, '/search/notifyuser/');
+    $.ajax({
+        type: "get",
+        url: url,
+        dataType: "json",
+        success: function (response) {
+            $('#notifyUser').prop("checked", response);
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+
     // Type in movie search
     $("#movieSearchContent").on("input", function () {
         if (searchTimer) {
@@ -80,10 +95,6 @@ $(function () {
             data = data + "&seasons=first";
         }
 
-        var $notify = $('#notifyUser').is(':checked');
-
-        data = data + "&notify=" + $notify;
-
         var type = $form.prop('method');
         var url = $form.prop('action');
 
@@ -117,10 +128,6 @@ $(function () {
         var url = $form.prop('action');
         var data = $form.serialize();
 
-        var $notify = $('#notifyUser').is(':checked');
-
-        data = data + "&notify=" + $notify;
-
         sendRequestAjax(data, type, url, buttonId);
 
     });
@@ -142,12 +149,35 @@ $(function () {
         var type = $form.prop('method');
         var url = $form.prop('action');
         var data = $form.serialize();
-        var $notify = $('#notifyUser').is(':checked');
-
-        data = data + "&notify=" + $notify;
 
         sendRequestAjax(data, type, url, buttonId);
     });
+
+    // Enable/Disable user notifications
+    $('#saveNotificationSettings')
+        .click(function (e) {
+            e.preventDefault();
+            var url = createBaseUrl(base, '/search/notifyuser/');
+            var checked = $('#notifyUser').prop('checked');
+            $.ajax({
+                type: "post",
+                url: url,
+                data: {notify: checked},
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify(response.message || "Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
 
     function focusSearch($content) {
         if ($content.length > 0) {
