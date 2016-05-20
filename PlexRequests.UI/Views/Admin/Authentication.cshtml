@@ -126,7 +126,7 @@
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
-                url: "requestauth",
+                url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {

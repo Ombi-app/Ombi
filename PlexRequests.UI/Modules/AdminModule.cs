@@ -54,6 +54,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System;
+using System.Diagnostics;
 
 using Nancy.Json;
 using Nancy.Security;
@@ -172,7 +173,9 @@ namespace PlexRequests.UI.Modules
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
 
-			Post ["/createapikey"] = x => CreateApiKey ();
+			Post["/createapikey"] = x => CreateApiKey();
+
+            Post["/autoupdate"] = x => AutoUpdate();
         }
 
         private Negotiator Authentication()
@@ -494,6 +497,16 @@ namespace PlexRequests.UI.Modules
             var md = new Markdown(new MarkdownOptions { AutoNewLines = true });
             status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
+        }
+
+        private Response AutoUpdate()
+        {
+            var url = Request.Form["url"];
+            var startInfo = new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url};
+            Process.Start(startInfo);
+          
+            Environment.Exit(0);
+            return Nancy.Response.NoBody;
         }
 
         private Negotiator PushbulletNotifications()

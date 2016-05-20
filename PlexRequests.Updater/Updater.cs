@@ -192,7 +192,11 @@ namespace PlexRequests.Updater
 
         private void FinishUpdate()
         {
-            var startInfo = new ProcessStartInfo("PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" };
+            ProcessStartInfo startInfo;
+            startInfo = Type.GetType("Mono.Runtime") != null 
+                ? new ProcessStartInfo("mono PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" } 
+                : new ProcessStartInfo("PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" };
+
             Process.Start(startInfo);
             
             Environment.Exit(0);

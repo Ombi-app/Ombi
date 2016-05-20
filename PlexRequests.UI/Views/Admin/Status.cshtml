@@ -1,4 +1,5 @@
-﻿@Html.Partial("_Sidebar")
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
 
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
@@ -15,6 +16,8 @@
             @if (Model.UpdateAvailable)
             {
                 <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
+                <br />
+                <button id="autoUpdate" class="btn btn-success-outline">Automatic Update <i class="fa fa-download"></i></button>
             }
             else
             {
@@ -28,7 +31,7 @@
             <h2>
                 <a href="@Model.DownloadUri">@Model.ReleaseTitle</a>
             </h2>
-            <hr/>
+            <hr />
             <label>Release Notes:</label>
             @Html.Raw(Model.ReleaseNotes)
         }
@@ -36,3 +39,33 @@
 
     </fieldset>
 </div>
+
+<script>
+
+    var base = '@Html.GetBaseUrl()';
+    $('#autoUpdate')
+        .click(function (e) {
+            e.preventDefault();
+            $('body').append("<i class=\"fa fa-spinner fa-spin fa-5x fa-fw\" style=\"position: absolute; top: 20%; left: 50%;\"></i>");
+            $('#autoUpdate').prop("disabled", "disabled");
+            var count = 0;
+            setInterval(function () {
+                count++;
+                var dots = new Array(count % 10).join('.');
+                document.getElementById('autoUpdate').innerHTML = "Updating" + dots;
+            }, 1000);
+            var url = createBaseUrl(base, "autoupdate");
+            $.ajax({
+                type: "Post",
+                url: url,
+                data: { url: "@Model.DownloadUri" },
+                dataType: "json",
+                error: function () {
+                    setTimeout(
+                         function () {
+                             location.reload();
+                         }, 30000);
+                }
+            });
+        });
+</script>
