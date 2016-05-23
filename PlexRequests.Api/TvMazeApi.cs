@@ -85,7 +85,7 @@ namespace PlexRequests.Api
             return obj;
         }
 
-        public int GetSeasonCount(int id)
+        public List<TvMazeSeasons> GetSeasons(int id)
         {
             var request = new RestRequest
             {
@@ -95,7 +95,11 @@ namespace PlexRequests.Api
             request.AddUrlSegment("id", id.ToString());
             request.AddHeader("Content-Type", "application/json");
 
-            var obj = Api.Execute<List<TvMazeSeasons>>(request, new Uri(Uri));
+            return Api.Execute<List<TvMazeSeasons>>(request, new Uri(Uri));
+        }
+        public int GetSeasonCount(int id)
+        {
+            var obj = GetSeasons(id);
             var seasons = obj.Select(x => x.number > 0);
             return seasons.Count();
         }

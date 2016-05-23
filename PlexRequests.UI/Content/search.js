@@ -10,9 +10,11 @@
 $(function () {
 
     var searchSource = $("#search-template").html();
+    var seasonsSource = $("#seasons-template").html();
     var musicSource = $("#music-template").html();
     var searchTemplate = Handlebars.compile(searchSource);
     var musicTemplate = Handlebars.compile(musicSource);
+    var seasonsTemplate = Handlebars.compile(seasonsSource);
 
     var base = $('#baseUrl').text();
 
@@ -162,7 +164,7 @@ $(function () {
             $.ajax({
                 type: "post",
                 url: url,
-                data: {notify: checked},
+                data: { notify: checked },
                 dataType: "json",
                 success: function (response) {
                     console.log(response);
@@ -301,7 +303,7 @@ $(function () {
 
                     var html = musicTemplate(context);
                     $("#musicList").append(html);
-                     getCoverArt(context.id);
+                    getCoverArt(context.id);
                 });
             }
             else {
@@ -384,5 +386,68 @@ $(function () {
 
         return context;
     }
+
+    $('#seasonsModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var id = button.data('identifier'); // Extract info from data-* attributes
+        var url = createBaseUrl(base, '/search/seasons/');
+
+        $.ajax({
+            type: "get",
+            url: url,
+            data: { tvId: id },
+            dataType: "json",
+            success: function (results) {
+                var $content = $("#seasonsBody");
+                $('#selectedSeasonsId').val(id);
+                results.forEach(function(result) {
+                    var context = buildSeasonsContext(result);
+                    $content.append(seasonsTemplate(context));
+                });
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+
+        function buildSeasonsContext(result) {
+            var context = {
+                id: result
+            };
+            return context;
+        };
+    });
+
+    $('#seasonsRequest').click(function(e) {
+        e.preventDefault();
+        var tvId = $('#selectedSeasonsId').val();
+        var url = createBaseUrl(base, '/search/seasons/');
+
+        if ($("#" + tvId).attr('disabled')) {
+            return;
+        }
+
+        $("#" + tvId).prop("disabled", true);
+        loadingButton(tvId, "primary");
+
+
+        var $form = $('#form' + tvId);
+        var data = $form.serialize();
+        var seasonsParam = "&seasons=";
+
+        var testimonials = document.querySelectorAll('.selectedSeasons');
+        Array.prototype.forEach.call(testimonials, function (elements, index) {
+            seasonsParam = seasonsParam + elements.text() + ",";
+        });
+
+        data = data + seasonsParam;
+
+        var type = $form.prop('method');
+        var url = $form.prop('action');
+
+        sendRequestAjax(data, type, url, tvId);
+       
+    });
 
 });

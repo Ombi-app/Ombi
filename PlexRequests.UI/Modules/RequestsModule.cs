@@ -310,7 +310,7 @@ namespace PlexRequests.UI.Modules
 
         private Response DeleteRequest(int requestid)
 		{
-			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
+			this.RequiresClaims (UserClaims.Admin);
 
             var currentEntity = Service.Get(requestid);
             Service.DeleteRequest(currentEntity);

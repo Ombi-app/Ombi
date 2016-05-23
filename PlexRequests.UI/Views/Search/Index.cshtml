@@ -115,7 +115,7 @@
             <div class="input-group">
                 <div class="input-group-addon input-group-sm"></div>
             </div>
-            <br/>
+            <br />
 
             <!-- Notifications content -->
             <form class="form-horizontal" method="POST" id="notificationsForm">
@@ -190,6 +190,7 @@
                         <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
                         <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li>
                         <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
+                        <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">Select...</a></li>
                     </ul>
                 </div>
                 {{/if_eq}}
@@ -253,7 +254,36 @@
 
     </div>
     <hr />
+
 </script>
 
+<div class="modal fade" id="seasonsModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Seasons</h4>
+            </div>
+            <div class="modal-body" id="seasonsBody">
+
+            </div>
+
+            <div hidden="hidden" id="selectedSeasonsId"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="seasonsRequest" class="btn btn-primary">Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="seasons-template" type="text/x-handlebars-template">
+    <div class="form-group">
+        <div class="checkbox">
+            <input type="checkbox" class=".selectedSeasons" id="{{id}}" name="{{id}}"><label for="{{id}}">Season {{id}}</label>
+        </div>
+    </div>
+
+</script>
 
 @Html.LoadSearchAssets()

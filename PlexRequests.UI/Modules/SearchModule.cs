@@ -106,6 +106,8 @@ namespace PlexRequests.UI.Modules
 
             Post["/notifyuser"] = x => NotifyUser((bool)Request.Form.notify);
             Get["/notifyuser"] = x => GetUserNotificationSettings();
+
+            Get["/seasons"] = x => GetSeasons();
         }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
@@ -942,11 +944,20 @@ namespace PlexRequests.UI.Modules
             }
 
         }
-
-        public Response GetUserNotificationSettings()
+        private Response GetUserNotificationSettings()
         {
             var retval = UsersToNotifyRepo.GetAll().FirstOrDefault(x => x.Username == Username);
             return Response.AsJson(retval != null);
+        }
+
+        private Response GetSeasons()
+        {
+            var tv = new TvMazeApi();
+            var seriesId = (int)Request.Query.tvId;
+            var show = tv.ShowLookupByTheTvDbId(seriesId);
+            var seasons = tv.GetSeasons(show.id);
+            var model = seasons.Select(x => x.number);
+            return Response.AsJson(model);
         }
     }
 }
