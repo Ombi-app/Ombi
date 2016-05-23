@@ -36,6 +36,5 @@ namespace PlexRequests.Core.SettingModels
         public bool Enabled { get; set; }
         public bool EnableUserEmailNotifications { get; set; }
         public string RecipientEmail { get; set; }
-        public bool Ssl { get; set; }
     }
 }

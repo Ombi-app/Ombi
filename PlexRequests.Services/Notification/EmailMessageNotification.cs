@@ -25,9 +25,10 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Net;
-using System.Net.Mail;
 using System.Threading.Tasks;
+
+using MailKit.Security;
+
 using MimeKit;
 using NLog;
 
@@ -162,7 +163,7 @@ namespace PlexRequests.Services.Notification
             {
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.EmailHost, settings.EmailPort, settings.Ssl);
+                    client.Connect(settings.EmailHost, settings.EmailPort, SecureSocketOptions.Auto); // Let MailKit figure out the correct SecureSocketOptions.
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
