@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestedModelDataProvider.cs
+//    File: CouchPotatoDataProvider.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 using Nancy.Swagger;
 using Nancy.Swagger.Services;
 
-using PlexRequests.Store;
+using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.UI.ModelDataProviders
 {
-    public class UserUpdateViewModel : ISwaggerModelDataProvider
+    public class CouchPotatoDataProvider : ISwaggerModelDataProvider
     {
         /// <summary>
         /// Gets the model data for the api documentation.
@@ -40,16 +39,17 @@ namespace PlexRequests.UI.ModelDataProviders
         /// <returns></returns>
         public SwaggerModelData GetModelData()
         {
-            return SwaggerModelData.ForType<Models.UserUpdateViewModel>(with =>
-            {
-                with.Property(x => x.CurrentPassword)
-                    .Description("The users current password")
-                    .Required(true);
-
-                with.Property(x => x.NewPassword)
-                    .Description("The users new password that we will change it to")
-                    .Required(true);
-            });
+            return SwaggerModelData.ForType<CouchPotatoSettings>(
+                with =>
+                {
+                    with.Property(x => x.Ip).Description("The IP address of CouchPotato").Required(true);
+                    with.Property(x => x.Port).Description("The Port address of CouchPotato").Required(true).Default(5050);
+                    with.Property(x => x.Ssl).Description("Enable SSL").Required(false).Default(false);
+                    with.Property(x => x.FullUri).Description("Internal Property, do not use").Required(false).Default(null);
+                    with.Property(x => x.SubDir).Description("Subdir/BaseUrl of CouchPotato").Required(false);
+                    with.Property(x => x.ApiKey).Description("CouchPotato's API key").Required(true);
+                    with.Property(x => x.ProfileId).Description("CouchPotato's profileId").Required(false);
+                });
         }
     }
 }

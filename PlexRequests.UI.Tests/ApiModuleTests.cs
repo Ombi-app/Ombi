@@ -26,9 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
 
 using FluentValidation;
 
@@ -45,7 +43,6 @@ using NUnit.Framework;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
@@ -71,6 +68,11 @@ namespace PlexRequests.UI.Tests
             var userRepoMock = new Mock<IRepository<UsersModel>>();
             var mapperMock = new Mock<ICustomUserMapper>();
             var authSettingsMock = new Mock<ISettingsService<AuthenticationSettings>>();
+            var plexSettingsMock = new Mock<ISettingsService<PlexSettings>>();
+            var cpMock = new Mock<ISettingsService<CouchPotatoSettings>>();
+            var sonarrMock = new Mock<ISettingsService<SonarrSettings>>();
+            var sickRageMock = new Mock<ISettingsService<SickRageSettings>>();
+            var headphonesMock = new Mock<ISettingsService<HeadphonesSettings>>();
 
             var userModels = fixture.CreateMany<UsersModel>().ToList();
             userModels.Add(new UsersModel
@@ -78,7 +80,7 @@ namespace PlexRequests.UI.Tests
                 UserName = "user1"
             });
 
-            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings {ApiKey = "api"});
+            settingsMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings { ApiKey = "api" });
             requestMock.Setup(x => x.GetAll()).Returns(requests);
             requestMock.Setup(x => x.Get(1)).Returns(requests.FirstOrDefault());
             requestMock.Setup(x => x.Get(99)).Returns(new RequestedModel());
@@ -92,6 +94,21 @@ namespace PlexRequests.UI.Tests
 
             authSettingsMock.Setup(x => x.SaveSettings(It.Is<AuthenticationSettings>(c => c.PlexAuthToken.Equals("abc")))).Returns(true);
 
+            plexSettingsMock.Setup(x => x.GetSettings()).Returns(fixture.Create<PlexSettings>());
+            plexSettingsMock.Setup(x => x.SaveSettings(It.Is<PlexSettings>(c => c.Ip.Equals("192")))).Returns(true);
+
+            cpMock.Setup(x => x.GetSettings()).Returns(fixture.Create<CouchPotatoSettings>());
+            cpMock.Setup(x => x.SaveSettings(It.Is<CouchPotatoSettings>(c => c.Ip.Equals("192")))).Returns(true);
+
+            sonarrMock.Setup(x => x.GetSettings()).Returns(fixture.Create<SonarrSettings>());
+            sonarrMock.Setup(x => x.SaveSettings(It.Is<SonarrSettings>(c => c.Ip.Equals("192")))).Returns(true);
+
+            sickRageMock.Setup(x => x.GetSettings()).Returns(fixture.Create<SickRageSettings>());
+            sickRageMock.Setup(x => x.SaveSettings(It.Is<SickRageSettings>(c => c.Ip.Equals("192")))).Returns(true);
+
+            headphonesMock.Setup(x => x.GetSettings()).Returns(fixture.Create<HeadphonesSettings>());
+            headphonesMock.Setup(x => x.SaveSettings(It.Is<HeadphonesSettings>(c => c.Ip.Equals("192")))).Returns(true);
+
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<ApiRequestModule>();
@@ -102,7 +119,12 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(settingsMock.Object);
                 with.Dependency(userRepoMock.Object);
                 with.Dependency(mapperMock.Object);
+                with.Dependency(headphonesMock.Object);
                 with.Dependency(authSettingsMock.Object);
+                with.Dependency(plexSettingsMock.Object);
+                with.Dependency(cpMock.Object);
+                with.Dependency(sonarrMock.Object);
+                with.Dependency(sickRageMock.Object);
 
 
                 with.RootPathProvider<TestRootPathProvider>();
@@ -112,7 +134,7 @@ namespace PlexRequests.UI.Tests
                         {
                                 new FluentValidationValidatorFactory(
                                     new DefaultFluentAdapterFactory(new List<IFluentAdapter>()),
-                                    new List<IValidator> { new RequestedModelValidator(), new UserViewModelValidator() })
+                                    new List<IValidator> { new RequestedModelValidator(), new UserViewModelValidator(), new PlexValidator() })
                         }));
             });
         }
@@ -136,7 +158,7 @@ namespace PlexRequests.UI.Tests
             {
                 with.HttpRequest();
                 with.Header("Accept", "application/json");
-                with.Query("apikey","a");
+                with.Query("apikey", "a");
             });
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
@@ -227,7 +249,7 @@ namespace PlexRequests.UI.Tests
 
             var result = browser.Post("/api/requests/", GetBrowser());
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
- 
+
             var body = JsonConvert.DeserializeObject<ApiModel<string[]>>(result.Body.AsString());
             Assert.That(body.Data, Is.Not.Null.Or.Empty);
             Assert.That(body.Error, Is.True);
@@ -343,8 +365,8 @@ namespace PlexRequests.UI.Tests
                 with.HttpRequest();
                 with.Header("Accept", "application/json");
                 with.Query("apikey", "api");
-                with.Query("username","user1");
-                with.Query("password","password");
+                with.Query("username", "user1");
+                with.Query("password", "password");
             });
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
@@ -404,6 +426,338 @@ namespace PlexRequests.UI.Tests
             Assert.That(body.Error, Is.False);
             Assert.That(body.ErrorMessage, Is.Null.Or.Empty);
         }
+
+        [Test]
+        public void GetPlexSettings()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/settings/plex", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<PlexSettings>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+
+        [Test]
+        public void SavePlexSettings()
+        {
+            var model = new PlexSettings()
+            {
+                Port = 231,
+                Ip = "192",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/plex", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(true));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+        [Test]
+        public void SaveBadPlexSettings()
+        {
+            var model = new PlexSettings
+            {
+                Ip = "q",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/plex", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(false));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.EqualTo("Could not update the settings"));
+        }
+
+        [Test]
+        public void GetCpSettings()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/settings/couchpotato", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<CouchPotatoSettings>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+
+        [Test]
+        public void SaveCpSettings()
+        {
+            var model = new CouchPotatoSettings
+            {
+                Port = 231,
+                Ip = "192",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/couchpotato", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(true));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+        [Test]
+        public void SaveBadCpSettings()
+        {
+            var model = new CouchPotatoSettings
+            {
+                Ip = "q",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/couchpotato", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(false));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.EqualTo("Could not update the settings"));
+        }
+
+        [Test]
+        public void GetSonarrSettings()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/settings/sonarr", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<SonarrSettings>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+
+        [Test]
+        public void SaveSonarrSettings()
+        {
+            var model = new SonarrSettings
+            {
+                Port = 231,
+                Ip = "192",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/sonarr", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(true));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+        [Test]
+        public void SaveBadSonarrSettings()
+        {
+            var model = new SonarrSettings
+            {
+                Ip = "q",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/sonarr", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(false));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.EqualTo("Could not update the settings"));
+        }
+
+        [Test]
+        public void GetSickRageSettings()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/settings/sickrage", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<SickRageSettings>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+
+        [Test]
+        public void SaveSickRageSettings()
+        {
+            var model = new SickRageSettings
+            {
+                Port = 231,
+                Ip = "192",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/sickrage", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(true));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+        [Test]
+        public void SaveBadSickRageSettings()
+        {
+            var model = new SickRageSettings
+            {
+                Ip = "q",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/sickrage", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(false));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.EqualTo("Could not update the settings"));
+        }
+
+        [Test]
+        public void GetHeadphonesSettings()
+        {
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Get("/api/settings/headphones", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<HeadphonesSettings>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.Not.Null);
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+
+        [Test]
+        public void SaveHeadphonesSettings()
+        {
+            var model = new HeadphonesSettings
+            {
+                Port = 231,
+                Ip = "192",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/headphones", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(true));
+            Assert.That(body.Error, Is.False);
+            Assert.That(body.ErrorMessage, Is.Null);
+        }
+        [Test]
+        public void SaveBadHeadphonesSettings()
+        {
+            var model = new HeadphonesSettings
+            {
+                Ip = "q",
+                Ssl = true,
+            };
+            var browser = new Browser(Bootstrapper);
+            var result = browser.Post("/api/settings/headphones", with =>
+            {
+                with.HttpRequest();
+                with.Header("Accept", "application/json");
+                with.Query("apikey", "api");
+                with.JsonBody(model);
+            });
+
+            var body = JsonConvert.DeserializeObject<ApiModel<bool>>(result.Body.AsString());
+
+            Assert.That(body.Data, Is.EqualTo(false));
+            Assert.That(body.Error, Is.True);
+            Assert.That(body.ErrorMessage, Is.EqualTo("Could not update the settings"));
+        }
+
+
 
         [TestCaseSource(nameof(AuthSettingsData))]
         public object SaveNewAuthSettings(object model)

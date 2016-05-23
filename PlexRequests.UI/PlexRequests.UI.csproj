@@ -165,7 +165,13 @@
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Jobs\CustomJobFactory.cs" />
     <Compile Include="Jobs\Scheduler.cs" />
-    <Compile Include="ModelDataProviders\UserUpdateViewModel.cs" />
+    <Compile Include="ModelDataProviders\HeadphonesDataProvider.cs" />
+    <Compile Include="ModelDataProviders\SickRageDataProvider.cs" />
+    <Compile Include="ModelDataProviders\SonarrSettingsDataProvider.cs" />
+    <Compile Include="ModelDataProviders\CouchPotatoDataProvider.cs" />
+    <Compile Include="ModelDataProviders\PlexSettingsDataProvider.cs" />
+    <Compile Include="ModelDataProviders\AuthSettingsDataProvider.cs" />
+    <Compile Include="ModelDataProviders\UserUpdateViewModelDataProvider.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />

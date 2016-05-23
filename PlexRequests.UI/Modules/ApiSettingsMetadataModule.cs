@@ -55,6 +55,101 @@ namespace PlexRequests.UI.Modules
                 with.Notes("Saves the authentication settings saved in the application");
             });
 
+            Describe["GetPlexSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/plex");
+                with.Summary("Gets the Plex settings saved in the application");
+                with.Model<ApiModel<PlexSettings>>();
+                with.Notes("Gets the Plex settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostPlexSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/plex");
+                with.Summary("Saves the Plex settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<PlexSettings>("Plex settings", true);
+                with.Notes("Saves the Plex settings saved in the application");
+            });
+
+
+            Describe["GetCouchPotatoSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/couchpotato");
+                with.Summary("Gets the CouchPotato settings saved in the application");
+                with.Model<ApiModel<CouchPotatoSettings>>();
+                with.Notes("Gets the CouchPotato settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostCouchPotatoSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/couchpotato");
+                with.Summary("Saves the CouchPotato settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<CouchPotatoSettings>("CouchPotato settings", true);
+                with.Notes("Saves the CouchPotato settings saved in the application");
+            });
+
+            Describe["GetSonarrSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/sonarr");
+                with.Summary("Gets the sonarr settings saved in the application");
+                with.Model<ApiModel<SonarrSettings>>();
+                with.Notes("Gets the sonarr settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostSonarrSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/sonarr");
+                with.Summary("Saves the sonarr settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<SonarrSettings>("sonarr settings", true);
+                with.Notes("Saves the sonarr settings saved in the application");
+            });
+
+            Describe["GetSickRageSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/sickrage");
+                with.Summary("Gets the SickRage settings saved in the application");
+                with.Model<ApiModel<SickRageSettings>>();
+                with.Notes("Gets the SickRage settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostSickRageSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/sickrage");
+                with.Summary("Saves the SickRage settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<SickRageSettings>("SickRage settings", true);
+                with.Notes("Saves the sickrage settings saved in the application");
+            });
+
+            Describe["GetHeadphonesSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/headphones");
+                with.Summary("Gets the headphones settings saved in the application");
+                with.Model<ApiModel<HeadphonesSettings>>();
+                with.Notes("Gets the headphones settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostHeadphonesSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/sickrage");
+                with.Summary("Saves the headphones settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<HeadphonesSettings>("headphones settings", true);
+                with.Notes("Saves the headphones settings saved in the application");
+            });
         }
     }
 }
