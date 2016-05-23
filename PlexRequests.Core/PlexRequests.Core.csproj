@@ -73,6 +73,7 @@
     <Compile Include="Models\UserProperties.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
+    <Compile Include="SettingModels\SlackNotificationSettings.cs" />
     <Compile Include="SettingModels\PushoverNotificationSettings.cs" />
     <Compile Include="SettingModels\PushBulletNotificationSettings.cs" />
     <Compile Include="SettingModels\EmailNotificationSettings.cs" />

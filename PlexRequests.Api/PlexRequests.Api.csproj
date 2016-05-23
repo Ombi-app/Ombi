@@ -71,6 +71,7 @@
       <DependentUpon>MockApiData.resx</DependentUpon>
     </Compile>
     <Compile Include="Mocks\MockSonarrApi.cs" />
+    <Compile Include="SlackApi.cs" />
     <Compile Include="PushoverApi.cs" />
     <Compile Include="PushbulletApi.cs" />
     <Compile Include="SickrageApi.cs" />

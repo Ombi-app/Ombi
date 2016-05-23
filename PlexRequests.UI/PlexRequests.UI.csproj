@@ -175,6 +175,7 @@
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\AdminNotificationsModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
     <Compile Include="Modules\ApiUserMetadataModule.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\SlackSettingsValidator.cs" />
     <Compile Include="Validators\UserViewModelValidator.cs" />
     <Compile Include="Validators\HeadphonesValidator.cs" />
     <Compile Include="Validators\PushoverSettingsValidator.cs" />
@@ -477,6 +479,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\Headphones.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\SlackNotifications.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

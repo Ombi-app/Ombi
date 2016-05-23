@@ -93,6 +93,7 @@
     <Compile Include="Notification\NotificationType.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
+    <Compile Include="Notification\SlackNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

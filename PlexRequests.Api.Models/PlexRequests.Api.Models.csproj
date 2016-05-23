@@ -58,6 +58,7 @@
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />
     <Compile Include="Notifications\PushoverResponse.cs" />
+    <Compile Include="Notifications\SlackNotificationBody.cs" />
     <Compile Include="Plex\PlexAccount.cs" />
     <Compile Include="Plex\PlexAuthentication.cs" />
     <Compile Include="Plex\PlexError.cs" />

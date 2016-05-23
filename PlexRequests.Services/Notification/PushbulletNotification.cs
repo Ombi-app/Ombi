@@ -77,7 +77,7 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.AdminNote:
                     break;
                 case NotificationType.Test:
-                    await PushTestAsync(model, pushSettings);
+                    await PushTestAsync(pushSettings);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -116,7 +116,7 @@ namespace PlexRequests.Services.Notification
             await Push(settings, message, pushTitle);
         }
 
-        private async Task PushTestAsync(NotificationModel model, PushbulletNotificationSettings settings)
+        private async Task PushTestAsync(PushbulletNotificationSettings settings)
         {
             var message = "This is just a test! Success!";
             var pushTitle = "Plex Requests: Test Message!";

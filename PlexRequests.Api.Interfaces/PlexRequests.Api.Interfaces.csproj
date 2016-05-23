@@ -51,6 +51,7 @@
     <Compile Include="IMusicBrainzApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="IPushbulletApi.cs" />
+    <Compile Include="ISlackApi.cs" />
     <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
     <Compile Include="ISonarrApi.cs" />

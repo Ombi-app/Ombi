@@ -83,6 +83,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
             container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
             container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
+            container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
@@ -108,6 +109,7 @@ namespace PlexRequests.UI
             container.Register<IPlexApi, PlexApi>();
             container.Register<IMusicBrainzApi, MusicBrainzApi>();
             container.Register<IHeadphonesApi, HeadphonesApi>();
+            container.Register<ISlackApi, SlackApi>();
 
             // NotificationService
             container.Register<INotificationService, NotificationService>().AsSingleton();
@@ -192,6 +194,13 @@ namespace PlexRequests.UI
             if (pushoverSettings.Enabled)
             {
                 notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
+            }
+
+            var slackService = container.Resolve<ISettingsService<SlackNotificationSettings>>();
+            var slackSettings = slackService.GetSettings();
+            if (slackSettings.Enabled)
+            {
+                notificationService.Subscribe(new SlackNotification(container.Resolve<ISlackApi>(), slackService));
             }
         }
 

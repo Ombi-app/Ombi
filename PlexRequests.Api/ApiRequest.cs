@@ -72,7 +72,7 @@ namespace PlexRequests.Api
 
             return response.Data;
         }
-
+        
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
         {
             var client = new RestClient { BaseUrl = baseUri };
@@ -109,7 +109,6 @@ namespace PlexRequests.Api
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
             Log.Trace("Api Content Response:");
             Log.Trace(response.Content);
