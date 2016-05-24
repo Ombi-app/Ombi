@@ -52,8 +52,13 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
+            var settings = GetSettings();
+            if (string.IsNullOrEmpty(settings.ThemeName))
+            {
+                settings.ThemeName = Themes.OriginalTheme;
+            }
 
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/custom.min.css\" type=\"text/css\" />");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
@@ -156,11 +161,15 @@ namespace PlexRequests.UI.Helpers
 
         private static string GetBaseUrl()
         {
-            var returnValue = Cache.GetOrSet(CacheKeys.GetBaseUrl, () =>
+            return GetSettings().BaseUrl;
+        }
+
+        private static PlexRequestSettings GetSettings()
+        {
+            var returnValue = Cache.GetOrSet(CacheKeys.GetPlexRequestSettings, () =>
             {
                 var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
-                var assetLocation = settings.BaseUrl;
-                return assetLocation;
+                return settings;
             });
             return returnValue;
         }

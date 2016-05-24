@@ -161,6 +161,7 @@
     <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
+    <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Jobs\CustomJobFactory.cs" />
@@ -210,7 +211,7 @@
     <Content Include="Content\bootstrap-notify.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\bootstrap.css">
+    <Content Include="Content\Themes\OriginalBootstrap.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Models\JsonResponseModel.cs" />

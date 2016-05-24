@@ -46,7 +46,7 @@ namespace PlexRequests.Core
         public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
         public const string CouchPotatoQueued = "CouchPotatoQueued";
 
-        public const string GetBaseUrl = "GetBaseUrl";
+        public const string GetPlexRequestSettings = "GetPlexRequestSettings";
 
         public const string LastestProductVersion = "LatestProductVersion";
     }

@@ -18,7 +18,18 @@
     {
         formAction = "/" + baseUrl.ToHtmlString() + formAction;
     }
+    var plexTheme = string.Empty;
+    var originalTheme = string.Empty;
 
+    if (!string.IsNullOrEmpty(Model.ThemeName))
+    {
+        plexTheme = Model.ThemeName.Equals(Themes.PlexTheme) ? "selected=\"selected\"" : string.Empty;
+        originalTheme = Model.ThemeName.Equals(Themes.OriginalTheme) ? "selected=\"selected\"" : string.Empty;
+    }
+    else
+    {
+        plexTheme = "selected=\"selected\"";
+    }
 }
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -50,6 +61,16 @@
                     <div class="input-group-addon">
                         <div id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
                     </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="select" class="control-label">Theme</label>
+                <div id="themes">
+                    <select class="form-control form-control-custom" id="select">
+                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex Dark</option>
+                        <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                    </select>
                 </div>
             </div>
 
@@ -188,11 +209,13 @@
 <script>
 $(function() {
  $('#save').click(function (e) {
-            e.preventDefault();
+     e.preventDefault();
 
+            var theme = $("#themes option:selected").val();
             var $form = $("#mainForm");
 
             var data = $form.serialize();
+            data = data + "&themeName=" + theme;
 
             $.ajax({
                 type: $form.prop("method"),
