@@ -28,7 +28,11 @@ using System;
 using System.Collections.Generic;
 
 using Nancy;
+using Nancy.Extensions;
 using Nancy.ModelBinding;
+using Nancy.Validation;
+
+using Newtonsoft.Json;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -84,13 +88,12 @@ namespace PlexRequests.UI.Modules
 
         public Response CreateRequest()
         {
-            var request = this.BindAndValidate<RequestedModel>();
-
-            if (!ModelValidationResult.IsValid)
+            var request = JsonConvert.DeserializeObject<RequestedModel>(Request.Body.AsString());
+            var a = this.Validate(request);
+            if (!a.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(a);
             }
-
 
             var apiModel = new ApiModel<bool>();
             var result = RequestService.AddRequest(request);
@@ -109,11 +112,11 @@ namespace PlexRequests.UI.Modules
 
         public Response UpdateRequest()
         {
-            var request = this.BindAndValidate<RequestedModel>();
-
-            if (!ModelValidationResult.IsValid)
+            var request = JsonConvert.DeserializeObject<RequestedModel>(Request.Body.AsString());
+            var a = this.Validate(request);
+            if (!a.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(a);
             }
 
 

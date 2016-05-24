@@ -150,6 +150,25 @@ namespace PlexRequests.UI.Modules
                 with.BodyParam<HeadphonesSettings>("headphones settings", true);
                 with.Notes("Saves the headphones settings saved in the application");
             });
+
+            Describe["GetPlexRequestSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/plexrequest");
+                with.Summary("Gets the plexrequest settings saved in the application");
+                with.Model<ApiModel<PlexRequestSettings>>();
+                with.Notes("Gets the plexrequest settings saved in the application");
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+            });
+
+            Describe["PostPlexRequestSettings"] = description => description.AsSwagger(with =>
+            {
+                with.ResourcePath("/settings/plexrequest");
+                with.Summary("Saves the plexrequest settings saved in the application");
+                with.Model<ApiModel<bool>>();
+                with.QueryParam<string>("apikey", "The Api Key found in the settings", true);
+                with.BodyParam<PlexRequestSettings>("plexrequest settings", true);
+                with.Notes("Saves the plexrequest settings saved in the application");
+            });
         }
     }
 }

@@ -24,10 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Web.UI.WebControls;
 
 using Nancy;
+using Nancy.Extensions;
 using Nancy.ModelBinding;
+using Nancy.Validation;
+
+using Newtonsoft.Json;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -40,8 +45,11 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexSettings> plexSettings, ISettingsService<CouchPotatoSettings> cp,
             ISettingsService<SonarrSettings> sonarr, ISettingsService<SickRageSettings> sr, ISettingsService<HeadphonesSettings> hp) : base("api", pr)
         {
-            Get["GetAuthSettings","/settings/authentication"] = x => GetAuthSettings();
-            Post["PostAuthSettings","/settings/authentication"] = x => PostAuthSettings();
+            Get["GetAuthSettings", "/settings/authentication"] = x => GetAuthSettings();
+            Post["PostAuthSettings", "/settings/authentication"] = x => PostAuthSettings();
+
+            Get["GetPlexRequestSettings", "/settings/plexrequest"] = x => GetPrSettings();
+            Post["PostPlexRequestSettings", "/settings/plexrequest"] = x => PostPrSettings();
 
             Get["GetPlexSettings", "/settings/plex"] = x => GetPlexSettings();
             Post["PostPlexSettings", "/settings/plex"] = x => PostPlexSettings();
@@ -66,7 +74,7 @@ namespace PlexRequests.UI.Modules
             SickRageSettings = sr;
             HeadphonesSettings = hp;
         }
-        
+
         private ISettingsService<PlexRequestSettings> SettingsService { get; }
         private ISettingsService<AuthenticationSettings> AuthSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
@@ -75,20 +83,69 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesSettings { get; }
 
+        private Response GetPrSettings()
+        {
+            var model = new ApiModel<PlexRequestSettings>();
+            try
+            {
+                var settings = SettingsService.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
+        }
+
+        private Response PostPrSettings()
+        {
+            var newSettings = JsonConvert.DeserializeObject<PlexRequestSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
+            {
+                return ReturnValidationReponse(result);
+            }
+
+            var model = new ApiModel<bool>();
+            var settings = SettingsService.SaveSettings(newSettings);
+            if (settings)
+            {
+                model.Data = true;
+                return ReturnReponse(model);
+            }
+
+            model.Error = true;
+            model.ErrorMessage = "Could not update the settings";
+            return ReturnReponse(model);
+        }
+
         private Response GetAuthSettings()
         {
             var model = new ApiModel<AuthenticationSettings>();
-            var settings = AuthSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = AuthSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostAuthSettings()
         {
-            var newSettings = this.BindAndValidate<AuthenticationSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<AuthenticationSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
@@ -107,17 +164,27 @@ namespace PlexRequests.UI.Modules
         private Response GetPlexSettings()
         {
             var model = new ApiModel<PlexSettings>();
-            var settings = PlexSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = PlexSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostPlexSettings()
         {
-            var newSettings = this.BindAndValidate<PlexSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<PlexSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
@@ -136,17 +203,27 @@ namespace PlexRequests.UI.Modules
         private Response GetCpSettings()
         {
             var model = new ApiModel<CouchPotatoSettings>();
-            var settings = CpSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = CpSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostCpSettings()
         {
-            var newSettings = this.BindAndValidate<CouchPotatoSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<CouchPotatoSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
@@ -165,17 +242,27 @@ namespace PlexRequests.UI.Modules
         private Response GetSonarrSettings()
         {
             var model = new ApiModel<SonarrSettings>();
-            var settings = SonarrSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = SonarrSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostSonarrSettings()
         {
-            var newSettings = this.BindAndValidate<SonarrSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<SonarrSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
@@ -194,17 +281,27 @@ namespace PlexRequests.UI.Modules
         private Response GetSickRageSettings()
         {
             var model = new ApiModel<SickRageSettings>();
-            var settings = SickRageSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = SickRageSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostSickRageSettings()
         {
-            var newSettings = this.BindAndValidate<SickRageSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<SickRageSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
@@ -222,17 +319,27 @@ namespace PlexRequests.UI.Modules
         private Response GetHeadphonesSettings()
         {
             var model = new ApiModel<HeadphonesSettings>();
-            var settings = HeadphonesSettings.GetSettings();
-            model.Data = settings;
-            return ReturnReponse(model);
+            try
+            {
+                var settings = HeadphonesSettings.GetSettings();
+                model.Data = settings;
+                return ReturnReponse(model);
+            }
+            catch (Exception e)
+            {
+                model.ErrorMessage = e.Message;
+                model.Error = true;
+                return ReturnReponse(model);
+            }
         }
 
         private Response PostHeadphonesSettings()
         {
-            var newSettings = this.BindAndValidate<HeadphonesSettings>();
-            if (!ModelValidationResult.IsValid)
+            var newSettings = JsonConvert.DeserializeObject<HeadphonesSettings>(Request.Body.AsString());
+            var result = this.Validate(newSettings);
+            if (!result.IsValid)
             {
-                return ReturnValidationReponse(ModelValidationResult);
+                return ReturnValidationReponse(result);
             }
 
             var model = new ApiModel<bool>();
