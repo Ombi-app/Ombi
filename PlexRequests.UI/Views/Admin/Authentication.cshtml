@@ -122,7 +122,7 @@
 
         $('#requestToken').click(function (e) {
             e.preventDefault();
-            var url = createBaseUrl(base, "requestauth");
+            var url = createBaseUrl(base, "admin/requestauth");
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
@@ -149,7 +149,7 @@
 
         function loadUserList() {
             $('#users').html("");
-            var url = "getusers";
+            var url = "admin/getusers";
             url = createBaseUrl(base, url);
             $.ajax({
                 type: "Get",
