@@ -20,8 +20,9 @@ I wanted to write a similar application in .Net!
 * We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
 * We have allowed the ability for a user to add a custom note on a request
 * It automatically update the status of requests when they are available on Plex
-* Sick, responsive and mobile friendly UI
-* Headphones integration will be comming soon!
+* Slick, responsive and mobile friendly UI
+* Headphones integration!
+* Ability to run with a reverse proxy!
 
 # Preview (Needs updating)
 
