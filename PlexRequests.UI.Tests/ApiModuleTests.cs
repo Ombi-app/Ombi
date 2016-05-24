@@ -40,7 +40,7 @@ using Nancy.Validation.FluentValidation;
 using Newtonsoft.Json;
 
 using NUnit.Framework;
-
+using NUnit.Framework.Constraints;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
@@ -241,21 +241,7 @@ namespace PlexRequests.UI.Tests
             Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
         }
 
-        [Test]
-        [Description("Should file the validation")]
-        public void CreateAEmptyRequest()
-        {
-            var browser = new Browser(Bootstrapper);
-
-            var result = browser.Post("/api/requests/", GetBrowser());
-            Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
-
-            var body = JsonConvert.DeserializeObject<ApiModel<string[]>>(result.Body.AsString());
-            Assert.That(body.Data, Is.Not.Null.Or.Empty);
-            Assert.That(body.Error, Is.True);
-            Assert.That(body.ErrorMessage, Is.Not.Null.Or.Empty);
-        }
-
+        
         [Test]
         public void UpdateUsersPassword()
         {

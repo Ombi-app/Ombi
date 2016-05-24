@@ -55,7 +55,7 @@ namespace PlexRequests.UI.Helpers
             var settings = GetSettings();
             if (string.IsNullOrEmpty(settings.ThemeName))
             {
-                settings.ThemeName = Themes.OriginalTheme;
+                settings.ThemeName = Themes.PlexTheme;
             }
 
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");

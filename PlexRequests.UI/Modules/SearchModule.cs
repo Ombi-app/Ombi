@@ -48,7 +48,7 @@ using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using Nancy.Extensions;
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -208,7 +208,8 @@ namespace PlexRequests.UI.Modules
 
             }).ContinueWith((t) =>
             {
-                dbMovies = t.Result.ToDictionary(x => x.ProviderId);
+                var distinctResults = t.Result.DistinctBy(x => x.ProviderId);
+                dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
             }));
 
             Task.WaitAll(taskList.ToArray());
