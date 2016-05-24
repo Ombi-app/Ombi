@@ -287,6 +287,23 @@
     <Content Include="Content\swagger\underscore-min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Themes\OriginalBootstrapCustom.css">
+      <DependentUpon>OriginalBootstrapCustom.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Themes\OriginalBootstrapCustom.min.css">
+      <DependentUpon>OriginalBootstrapCustom.css</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\PlexBootstrap.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\PlexBootstrapCustom.css">
+      <DependentUpon>PlexBootstrapCustom.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\Themes\PlexBootstrapCustom.min.css">
+      <DependentUpon>PlexBootstrapCustom.css</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Views\ApiDocs\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -303,13 +320,6 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Content\custom.css">
-      <DependentUpon>custom.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\custom.min.css">
-      <DependentUpon>custom.css</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\dataTables.bootstrap.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -378,7 +388,8 @@
     <None Include="Content\awesome-bootstrap-checkbox.scss">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Content\custom.scss" />
+    <None Include="Content\Themes\PlexBootstrapCustom.scss" />
+    <None Include="Content\Themes\OriginalBootstrapCustom.scss" />
     <Content Include="Content\pace.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

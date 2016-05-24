@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Helpers
             }
 
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/custom.min.css\" type=\"text/css\" />");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName.Replace(".css",string.Empty)}Custom.min.css\" type=\"text/css\" />");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>");
