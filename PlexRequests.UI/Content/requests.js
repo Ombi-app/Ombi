@@ -540,6 +540,7 @@ function buildRequestContext(result, type) {
         requestedUsers: result.requestedUsers ? result.requestedUsers.join(', ') : '',
         requestedDate: Humanize(result.requestedDate),
         requestedDateTicks: result.requestedDateTicks,
+        released: result.released,
         available: result.available,
         admin: result.admin,
         issues: result.issues,
@@ -551,7 +552,8 @@ function buildRequestContext(result, type) {
         coverArtUrl: result.coverArtUrl,
         qualities: result.qualities,
         hasQualities: result.qualities && result.qualities.length > 0,
-        artist: result.artistName
+        artist: result.artistName,
+        musicBrainzId : result.musicBrainzId
     };
 
     return context;

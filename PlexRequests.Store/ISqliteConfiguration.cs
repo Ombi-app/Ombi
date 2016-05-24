@@ -45,6 +45,9 @@ namespace PlexRequests.Store
 		/// Creates the database.
 		/// </summary>
 		void CreateDatabase();
-	}
+
+        string CurrentPath { get; }
+
+    }
 }
 

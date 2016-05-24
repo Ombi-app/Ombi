@@ -6,6 +6,7 @@
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/PlexRequests.net/total.svg)](https://github.com/tidusjar/PlexRequests.Net)
+[![Stories in Progress](https://badge.waffle.io/tidusjar/PlexRequests.Net.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
@@ -50,4 +51,7 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ## A massive thanks to everyone below for all their help!
 
-[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat, [EddiYo](https://github.com/EddiYo)
+[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat, [EddiYo](https://github.com/EddiYo), [SaskiFX](https://github.com/SaskiFX)
+
+## Stats
+[![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)

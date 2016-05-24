@@ -38,6 +38,8 @@ using PlexRequests.Helpers;
 using RestSharp;
 using Newtonsoft.Json.Linq;
 
+using PlexRequests.Helpers.Exceptions;
+
 namespace PlexRequests.Api
 {
     public class SonarrApi : ISonarrApi
@@ -54,8 +56,13 @@ namespace PlexRequests.Api
             var request = new RestRequest { Resource = "/api/profile", Method = Method.GET };
 
             request.AddHeader("X-Api-Key", apiKey);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling GetProfiles for Sonarr, Retrying {0}", timespan));
 
-            var obj = Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl);
+			var obj = policy.Execute(() => Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl));
 
             return obj;
         }
@@ -100,7 +107,13 @@ namespace PlexRequests.Api
             SonarrAddSeries result;
             try
             {
-                result = Api.ExecuteJson<SonarrAddSeries>(request, baseUrl);
+				var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+					TimeSpan.FromSeconds (2),
+					TimeSpan.FromSeconds(5),
+					TimeSpan.FromSeconds(10)
+				}, (exception, timespan) => Log.Error (exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan));
+
+				result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
             }
             catch (JsonSerializationException jse)
             {
@@ -119,7 +132,13 @@ namespace PlexRequests.Api
             var request = new RestRequest { Resource = "/api/system/status", Method = Method.GET };
             request.AddHeader("X-Api-Key", apiKey);
 
-            var obj = Api.ExecuteJson<SystemStatus>(request, baseUrl);
+			var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)
+			}, (exception, timespan) => Log.Error (exception, "Exception when calling SystemStatus for Sonarr, Retrying {0}", timespan));
+
+			var obj = policy.Execute(() => Api.ExecuteJson<SystemStatus>(request, baseUrl));
 
             return obj;
         }
@@ -128,8 +147,21 @@ namespace PlexRequests.Api
         {
             var request = new RestRequest { Resource = "/api/series", Method = Method.GET };
             request.AddHeader("X-Api-Key", apiKey);
+            try
+            {
+				var policy = RetryHandler.RetryAndWaitPolicy (new TimeSpan[] { 
+					TimeSpan.FromSeconds (5),
+					TimeSpan.FromSeconds(10),
+					TimeSpan.FromSeconds(30)
+				}, (exception, timespan) => Log.Error (exception, "Exception when calling GetSeries for Sonarr, Retrying {0}", timespan));
 
-            return Api.Execute<List<Series>>(request, baseUrl);
+				return policy.Execute(() => Api.ExecuteJson<List<Series>>(request, baseUrl));
+			}
+			catch (Exception e)
+            {
+                Log.Error(e, "There has been an API exception when getting the Sonarr Series");
+				return null;
+            }
         }
     }
 }

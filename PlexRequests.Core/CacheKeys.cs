@@ -28,6 +28,11 @@ namespace PlexRequests.Core
 {
     public class CacheKeys
     {
+        public struct TimeFrameMinutes
+        {
+            public const int SchedulerCaching = 60;
+        }
+
         public const string PlexLibaries = "PlexLibaries";
 
         public const string TvDbToken = "TheTvDbApiToken";
@@ -42,5 +47,7 @@ namespace PlexRequests.Core
         public const string CouchPotatoQueued = "CouchPotatoQueued";
 
         public const string GetBaseUrl = "GetBaseUrl";
+
+        public const string LastestProductVersion = "LatestProductVersion";
     }
 }

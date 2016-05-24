@@ -17,16 +17,14 @@
             <legend>SickRage Settings</legend>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
                         @if (Model.Enabled)
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
                         }
-                    </label>
                 </div>
             </div>
             <div class="form-group">
@@ -53,16 +51,15 @@
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+               
                         @if (Model.Ssl)
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
                         }
-                    </label>
                 </div>
             </div>
 
@@ -86,7 +83,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="testSickRage" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testSickRage" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -147,6 +144,8 @@
         });
 
         $('#testSickRage').click(function (e) {
+
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
             e.preventDefault();
             var qualityProfile = $("#profiles option:selected").val();
 
@@ -165,13 +164,16 @@
                     console.log(response);
                     if (response.result === true) {
                         generateNotify(response.message, "success");
+        				$('#spinner').attr("class", "fa fa-check");
                     } else {
                         generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+        				$('#spinner').attr("class", "fa fa-times");
                 }
             });
         });

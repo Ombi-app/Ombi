@@ -61,7 +61,7 @@ namespace PlexRequests.Helpers
             return dumpTarget.ToString();
         }
 
-        public static void ConfigureLogging(string connectionString)
+        public static void  ConfigureLogging(string connectionString)
         {
             LogManager.ThrowExceptions = true;
             // Step 1. Create configuration object 

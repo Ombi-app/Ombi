@@ -35,5 +35,6 @@ namespace PlexRequests.Services.Notification
         public DateTime DateTime { get; set; }
         public NotificationType NotificationType { get; set; }
         public string User { get; set; }
+        public string UserEmail { get; set; }
     }
 }

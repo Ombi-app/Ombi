@@ -49,10 +49,9 @@ namespace PlexRequests.Core
             var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId };
             var id = Repo.Insert(entity);
 
-            // TODO Keep an eye on this, since we are now doing 2 DB update for 1 single request, inserting and then updating
             model.Id = (int)id;
 
-            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id, MusicId = model.MusicBrainzId};
+            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = (int)id, MusicId = model.MusicBrainzId };
             var result = Repo.Update(entity);
 
             return result ? id : -1;

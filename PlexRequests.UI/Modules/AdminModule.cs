@@ -23,6 +23,10 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using System.Net;
+using PlexRequests.Helpers.Exceptions;
+
+
 #endregion
 
 using System.Collections.Generic;
@@ -50,6 +54,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System;
+using System.Diagnostics;
 
 using Nancy.Json;
 using Nancy.Security;
@@ -68,6 +73,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
+        private ISettingsService<LogSettings> LogService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
         private IPushbulletApi PushbulletApi { get; }
@@ -95,7 +101,8 @@ namespace PlexRequests.UI.Modules
             IRepository<LogEntity> logsRepo,
             INotificationService notify,
             ISettingsService<HeadphonesSettings> headphones,
-            ICacheProvider cache) : base("admin")
+            ISettingsService<LogSettings> logs,
+            ICacheProvider cache) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -114,11 +121,11 @@ namespace PlexRequests.UI.Modules
             PushoverApi = pushoverApi;
             NotificationService = notify;
             HeadphonesService = headphones;
+            LogService = logs;
             Cache = cache;
 
-#if !DEBUG
-            this.RequiresAuthentication();
-#endif
+			this.RequiresClaims(UserClaims.Admin);
+			
             Get["/"] = _ => Admin();
 
             Get["/authentication"] = _ => Authentication();
@@ -165,6 +172,10 @@ namespace PlexRequests.UI.Modules
 
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
+
+			Post["/createapikey"] = x => CreateApiKey();
+
+            Post["/autoupdate"] = x => AutoUpdate();
         }
 
         private Negotiator Authentication()
@@ -206,10 +217,23 @@ namespace PlexRequests.UI.Modules
         private Response SaveAdmin()
         {
             var model = this.Bind<PlexRequestSettings>();
+			var valid = this.Validate (model);
+			if (!valid.IsValid) {
+				return Response.AsJson(valid.SendJsonError());
+			}
 
-            PrService.SaveSettings(model);
+			if (!string.IsNullOrWhiteSpace (model.BaseUrl)) {
+				if (model.BaseUrl.StartsWith ("/") || model.BaseUrl.StartsWith ("\\"))
+				{
+					model.BaseUrl = model.BaseUrl.Remove (0, 1);
+				}
+			}
+            var result = PrService.SaveSettings(model);
+			if (result) {
+				return Response.AsJson (new JsonResponseModel{ Result = true });
+			}
 
-            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/admin" : "~/admin");
+			return Response.AsJson (new JsonResponseModel{ Result = false, Message = "We could not save to the database, please try again" });
         }
 
         private Response RequestAuthToken()
@@ -254,21 +278,30 @@ namespace PlexRequests.UI.Modules
             var token = settings?.PlexAuthToken;
             if (token == null)
             {
-                return Response.AsJson(string.Empty);
+                return Response.AsJson(new { Result = true, Users = string.Empty });
             }
 
-            var users = PlexApi.GetUsers(token);
-            if (users == null)
-            {
-                return Response.AsJson(string.Empty);
-            }
-            if (users.User == null || users.User?.Length == 0)
-            {
-                return Response.AsJson(string.Empty);
-            }
+			try {
+				var users = PlexApi.GetUsers(token);
+				if (users == null)
+				{
+					return Response.AsJson(string.Empty);
+				}
+				if (users.User == null || users.User?.Length == 0)
+				{
+					return Response.AsJson(string.Empty);
+				}
 
-            var usernames = users.User.Select(x => x.Username);
-            return Response.AsJson(usernames);
+				var usernames = users.User.Select(x => x.Title);
+				return Response.AsJson(new {Result = true, Users = usernames});
+			} catch (Exception ex) {
+				Log.Error (ex);
+				if (ex is WebException || ex is ApiRequestException) {
+					return Response.AsJson (new { Result = false, Message ="Could not load the user list! We have connectivity problems connecting to Plex, Please ensure we can access Plex.Tv, The error has been logged." });
+				}
+
+				return Response.AsJson (new { Result = false, Message = ex.Message});
+			}
         }
 
         private Negotiator CouchPotato()
@@ -292,8 +325,8 @@ namespace PlexRequests.UI.Modules
             }
 
             var result = CpService.SaveSettings(couchPotatoSettings);
-            return Response.AsJson(result 
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" } 
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
@@ -426,7 +459,7 @@ namespace PlexRequests.UI.Modules
             finally
             {
                 NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
-            } 
+            }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
         }
 
@@ -461,9 +494,23 @@ namespace PlexRequests.UI.Modules
         {
             var checker = new StatusChecker();
             var status = checker.GetStatus();
-            var md = new Markdown();
+            var md = new Markdown(new MarkdownOptions { AutoNewLines = true });
             status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
+        }
+
+        private Response AutoUpdate()
+        {
+            var url = Request.Form["url"];
+
+            var startInfo = Type.GetType("Mono.Runtime") != null 
+                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url } 
+                                             : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
+
+            Process.Start(startInfo);
+          
+            Environment.Exit(0);
+            return Nancy.Response.NoBody;
         }
 
         private Negotiator PushbulletNotifications()
@@ -620,7 +667,7 @@ namespace PlexRequests.UI.Modules
         {
             JsonSettings.MaxJsonLength = int.MaxValue;
             var allLogs = LogsRepo.GetAll().OrderByDescending(x => x.Id).Take(200);
-            var model = new DatatablesModel<LogEntity> {Data = new List<LogEntity>()};
+            var model = new DatatablesModel<LogEntity> { Data = new List<LogEntity>() };
             foreach (var l in allLogs)
             {
                 l.DateString = l.Date.ToString("G");
@@ -637,9 +684,17 @@ namespace PlexRequests.UI.Modules
 
         private Response UpdateLogLevels(int level)
         {
+            var settings = LogService.GetSettings();
+
+            // apply the level
             var newLevel = LogLevel.FromOrdinal(level);
             LoggingHelper.ReconfigureLogLevel(newLevel);
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}"});
+
+            //save the log settings
+            settings.Level = level;
+            LogService.SaveSettings(settings);
+
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"The new log level is now {newLevel}" });
         }
 
         private Negotiator Headphones()
@@ -662,11 +717,23 @@ namespace PlexRequests.UI.Modules
             Log.Trace(settings.DumpJson());
 
             var result = HeadphonesService.SaveSettings(settings);
-            
+
             Log.Info("Saved headphones settings, result: {0}", result);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
+
+		private Response CreateApiKey()
+		{
+			this.RequiresClaims(UserClaims.Admin);
+		    var apiKey = Guid.NewGuid().ToString("N");
+            var settings = PrService.GetSettings();
+
+			settings.ApiKey = apiKey;
+            PrService.SaveSettings(settings);
+
+			return Response.AsJson(apiKey);
+		}
     }
 }

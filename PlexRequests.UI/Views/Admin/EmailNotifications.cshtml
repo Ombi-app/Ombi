@@ -18,34 +18,35 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+                    
                         @if (Model.Enabled)
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
                         }
-                    </label>
+                
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
-                        @if (Model.Ssl)
+
+                        @if (Model.EnableUserEmailNotifications)
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><text>SSL Enabled</text>
+                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl"><text>SSL Enabled</text>
+                            <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
                         }
-                    </label>
+         
                 </div>
             </div>
+            <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
             <div class="form-group">
-                <label for="EmailHost" class="control-label">SMTP Hostname or IP</label>
+                <label for="EmailHost" class="control-label">SMTP Host name or IP</label>
                 <div class="">
                     <input type="text" class="form-control form-control-custom " id="EmailHost" name="EmailHost" placeholder="localhost" value="@Model.EmailHost">
                 </div>
@@ -91,7 +92,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="testEmail" type="submit" class="btn btn-primary-outline">Test</button>
+                    <button id="testEmail" type="submit" class="btn btn-primary-outline">Test <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -135,7 +136,8 @@
             });
         });
 
-        $('#testEmail').click(function (e) {
+	        $('#testEmail').click(function (e) {
+	         	$('#spinner').attr("class", "fa fa-spinner fa-spin");
 
             var url = createBaseUrl(base, '/admin/testemailnotification');
             e.preventDefault();
@@ -152,13 +154,16 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.result === true) {
+        				$('#spinner').attr("class", "fa fa-check");
                         generateNotify(response.message, "success");
                     } else {
+        				$('#spinner').attr("class", "fa fa-times");
                         generateNotify(response.message, "warning");
                     }
                 },
                 error: function (e) {
                     console.log(e);
+        				$('#spinner').attr("class", "fa fa-times");
                     generateNotify("Something went wrong!", "danger");
                 }
             });

@@ -24,12 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+
 using PlexRequests.Api.Models.Tv;
 
 using RestSharp;
 
 namespace PlexRequests.Api
 {
+    [Obsolete("Use TVMazeAPP")]
     public class TheTvDbApi : TvBase
     {
         public TheTvDbApi()

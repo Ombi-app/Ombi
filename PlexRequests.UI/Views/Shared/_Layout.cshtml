@@ -34,7 +34,7 @@
                 </button>
                 <a class="navbar-brand" href="@url/search">Plex Requests</a>
             </div>
-            
+
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     @Html.GetNavbarUrl(Context, "/search", "Search", "search")
@@ -42,10 +42,11 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
-                    
-                    @if (!Context.CurrentUser.IsAuthenticated())
+
+                    @if (!Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
                     {
-                        <li><a href="@url/login"><i class="fa fa-user"></i> Admin</a></li>
+
+                        <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> Admin</a></li>
                     }
                     else
                     {
@@ -54,6 +55,8 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="@url/admin"><i class="fa fa-cog"></i> Settings</a></li>
                                 <li><a href="@url/changepassword"><i class="fa fa-key"></i> Change password</a></li>
+                                <li class="divider"></li>
+                                <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color:red"></i> Donate!</a></li>
                                 <li class="divider"></li>
                                 <li><a href="@url/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                             </ul>
@@ -66,21 +69,40 @@
                 </ul>
             </div>
         </div>
+        <div id="updateAvailable" hidden="hidden"></div>
     </nav>
 
-<div class="container">
-    @RenderBody()
-</div>
-<div class="scroll-top-wrapper ">
-    <span class="scroll-top-inner">
+    <div class="container">
+        @RenderBody()
+    </div>
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
             <i class="fa fa-2x fa-arrow-circle-up"></i>
         </span>
-</div>
+    </div>
 </body>
 </html>
 <script>
 
     $(function () {
+
+        var urlBase = '@Html.GetBaseUrl()';
+        var url = createBaseUrl(urlBase, '/updatechecker');
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                if (response.updateAvailable) {
+                    var status = createBaseUrl(urlBase, '/admin/status');
+                    $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> There is a new update available! Click <a style='color: white' href='" + status + "'>Here!</a>");
+                    $('#updateAvailable').removeAttr("hidden");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
 
         $(document).on('scroll', function () {
 

@@ -1,0 +1,48 @@
+﻿@using PlexRequests.UI.Helpers
+@Html.LoadTableAssets()
+@{
+    var baseUrl = Html.GetBaseUrl().ToHtmlString();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        url = "/" + baseUrl;
+    }
+}
+
+
+<h2>User Management</h2>
+
+<button class="btn btn-success-outline" type="submit">Create User <div class="fa fa-plus"/></button>
+<br>
+<br>
+    <fieldset>
+        <table id="example" class="table table-striped table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Username</th>
+                    <th>Permissions</th>
+                </tr>
+            </thead>
+
+        </table>
+    </fieldset>
+
+<script>
+
+        var baseUrl = '@Html.GetBaseUrl()';
+
+        var url = createBaseUrl(baseUrl, "usermanagement/users");
+        $('#example').DataTable({
+            "ajax": url,
+            "columns": [
+                { "data": "id" },
+                { "data": "username" },
+               	{ "data": "claims" },
+                //{ "data": "type" }
+            ],
+            "order": [[1, "desc"]]
+        });
+       
+
+</script>

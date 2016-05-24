@@ -24,21 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System.Text.RegularExpressions;
-
 namespace PlexRequests.Core.Models
 {
     public class StatusModel
     {
         public string Version { get; set; }
-        public int DBVersion {
-            get
-            {
-                string trimStatus = new Regex("[^0-9]", RegexOptions.Compiled).Replace(Version, string.Empty).PadRight(4, '0');
-                return int.Parse(trimStatus);
-            }
-        }
         public bool UpdateAvailable { get; set; }
         public string UpdateUri { get; set; }
         public string DownloadUri { get; set; }

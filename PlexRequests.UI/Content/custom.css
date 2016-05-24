@@ -42,10 +42,27 @@ label {
   margin-bottom: 0.5rem !important;
   font-size: 16px !important; }
 
+.nav-tabs > li {
+  font-size: 13px;
+  line-height: 21px; }
+
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   background: #4e5d6c; }
+
+.nav-tabs > li > a > .fa {
+  padding: 3px 5px 3px 3px; }
+
+.nav-tabs > li.nav-tab-right {
+  float: right; }
+
+.nav-tabs > li.nav-tab-right a {
+  margin-right: 0;
+  margin-left: 2px; }
+
+.nav-tabs > li.nav-tab-icononly .fa {
+  padding: 3px; }
 
 .navbar .nav a .fa,
 .dropdown-menu a .fa {
@@ -219,4 +236,48 @@ label {
 .btn-split .btn.dropdown-toggle {
   border-radius: 0 0.25rem 0.25rem 0 !important;
   padding: 12px 8px; }
+
+#updateAvailable {
+  background-color: #ffa400;
+  text-align: center;
+  font-size: 15px; }
+
+.checkbox label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  margin-right: 15px;
+  font-size: 13px;
+  margin-bottom: 10px; }
+
+.checkbox label:before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  border: 2px solid #eee;
+  border-radius: 3px; }
+
+.checkbox input[type=checkbox] {
+  display: none; }
+
+.checkbox input[type=checkbox]:checked + label:before {
+  content: "\2713";
+  font-size: 13px;
+  color: #fafafa;
+  text-align: center;
+  line-height: 13px; }
+
+.input-group-sm {
+  padding-top: 2px;
+  padding-bottom: 2px; }
+
+.tab-pane .form-horizontal .form-group {
+  margin-right: 15px;
+  margin-left: 15px; }
 

@@ -36,21 +36,20 @@ using Nancy.Security;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core
 {
-    public class UserMapper : IUserMapper
+    public class UserMapper : IUserMapper, ICustomUserMapper
     {
-        public UserMapper(ISqliteConfiguration db)
+        public UserMapper(IRepository<UsersModel> repo)
         {
-            Db = db;
+            Repo = repo;
         }
-        private static ISqliteConfiguration Db { get; set; }
+        private static IRepository<UsersModel> Repo { get; set; }
         public IUserIdentity GetUserFromIdentifier(Guid identifier, NancyContext context)
         {
-            var repo = new UserRepository<UsersModel>(Db);
-
-            var user = repo.Get(identifier.ToString());
+            var user = Repo.Get(identifier.ToString());
 
             if (user == null)
             {
@@ -64,10 +63,9 @@ namespace PlexRequests.Core
             };
         }
 
-        public static Guid? ValidateUser(string username, string password)
+        public Guid? ValidateUser(string username, string password)
         {
-            var repo = new UserRepository<UsersModel>(Db);
-            var users = repo.GetAll();
+            var users = Repo.GetAll();
 
             foreach (var u in users)
             {
@@ -83,17 +81,15 @@ namespace PlexRequests.Core
             return null;
         }
 
-        public static bool DoUsersExist()
+        public bool DoUsersExist()
         {
-            var repo = new UserRepository<UsersModel>(Db);
-            var users = repo.GetAll();
+            var users = Repo.GetAll();
 
             return users.Any();
         }
 
-        public static Guid? CreateUser(string username, string password, string[] claims = default(string[]))
+        public Guid? CreateUser(string username, string password, string[] claims = default(string[]))
         {
-            var repo = new UserRepository<UsersModel>(Db);
             var salt = PasswordHasher.GenerateSalt();
 
             var userModel = new UsersModel
@@ -105,17 +101,16 @@ namespace PlexRequests.Core
                 Claims = ByteConverterHelper.ReturnBytes(claims),
                 UserProperties = ByteConverterHelper.ReturnBytes(new UserProperties())
             };
-            repo.Insert(userModel);
+            Repo.Insert(userModel);
 
-            var userRecord = repo.Get(userModel.UserGuid);
+            var userRecord = Repo.Get(userModel.UserGuid);
 
             return new Guid(userRecord.UserGuid);
         }
 
-        public static bool UpdatePassword(string username, string oldPassword, string newPassword)
+        public bool UpdatePassword(string username, string oldPassword, string newPassword)
         {
-            var repo = new UserRepository<UsersModel>(Db);
-            var users = repo.GetAll();
+            var users = Repo.GetAll();
             var userToChange = users.FirstOrDefault(x => x.UserName == username);
             if (userToChange == null)
                 return false;
@@ -132,13 +127,22 @@ namespace PlexRequests.Core
             userToChange.Hash = newHash;
             userToChange.Salt = newSalt;
 
-            return repo.Update(userToChange);
+            return Repo.Update(userToChange);
         }
 
-        public static IEnumerable<UsersModel> GetUsers()
+        public IEnumerable<UsersModel> GetUsers()
         {
-            var repo = new UserRepository<UsersModel>(Db);
-            return repo.GetAll();
+            return Repo.GetAll();
         }
+    }
+
+    public interface ICustomUserMapper
+    {
+        IEnumerable<UsersModel> GetUsers();
+        Guid? CreateUser(string username, string password, string[] claims = default(string[]));
+        bool DoUsersExist();
+        Guid? ValidateUser(string username, string password);
+        bool UpdatePassword(string username, string oldPassword, string newPassword);
+
     }
 }

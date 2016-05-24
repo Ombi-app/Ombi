@@ -42,8 +42,34 @@ CREATE TABLE IF NOT EXISTS Logs
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Logs_Id ON Logs (Id);
 
+CREATE TABLE IF NOT EXISTS Audit
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Date								varchar(100) NOT NULL,
+    Username							varchar(100) NOT NULL,
+    ChangeType							varchar(100) NOT NULL,
+    OldValue							varchar(100),
+     NewValue							varchar(100)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS Audit_Id ON Audit (Id);
+
+
 CREATE TABLE IF NOT EXISTS DBInfo
 (
     SchemaVersion									INTEGER
-
 );
+
+CREATE TABLE IF NOT EXISTS ScheduledJobs
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name								varchar(100) NOT NULL,
+    LastRun								varchar(100) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ScheduledJobs_Id ON ScheduledJobs (Id);
+
+CREATE TABLE IF NOT EXISTS UsersToNotify
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username							varchar(100) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS UsersToNotify_Id ON UsersToNotify (Id);

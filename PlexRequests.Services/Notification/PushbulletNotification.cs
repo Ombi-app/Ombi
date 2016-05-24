@@ -45,7 +45,6 @@ namespace PlexRequests.Services.Notification
         }
         private IPushbulletApi PushbulletApi { get; }
         private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
-        private PushbulletNotificationSettings Settings => GetSettings();
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public string NotificationName => "PushbulletNotification";
@@ -78,7 +77,7 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.AdminNote:
                     break;
                 case NotificationType.Test:
-                    await PushTestAsync(model, pushSettings);
+                    await PushTestAsync(pushSettings);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -107,45 +106,28 @@ namespace PlexRequests.Services.Notification
         {
             var message = $"{model.Title} has been requested by user: {model.User}";
             var pushTitle = $"Plex Requests: {model.Title} has been requested!";
-            try
-            {
-                var result = await PushbulletApi.PushAsync(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
-                if (result == null)
-                {
-                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Push(settings, message, pushTitle);
         }
 
         private async Task PushIssueAsync(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
-            try
-            {
-                var result = await PushbulletApi.PushAsync(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
-                if (result != null)
-                {
-                    Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
+            await Push(settings, message, pushTitle);
         }
 
-        private async Task PushTestAsync(NotificationModel model, PushbulletNotificationSettings settings)
+        private async Task PushTestAsync(PushbulletNotificationSettings settings)
         {
             var message = "This is just a test! Success!";
             var pushTitle = "Plex Requests: Test Message!";
+            await Push(settings, message, pushTitle);
+        }
+
+        private async Task Push(PushbulletNotificationSettings settings, string message, string title)
+        {
             try
             {
-                var result = await PushbulletApi.PushAsync(settings.AccessToken, pushTitle, message, settings.DeviceIdentifier);
+                var result = await PushbulletApi.PushAsync(settings.AccessToken, title, message, settings.DeviceIdentifier);
                 if (result != null)
                 {
                     Log.Error("Pushbullet api returned a null value, the notification did not get pushed");

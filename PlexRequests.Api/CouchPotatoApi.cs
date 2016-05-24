@@ -31,6 +31,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Movie;
+using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
 
@@ -61,7 +62,12 @@ namespace PlexRequests.Api
             request.AddUrlSegment("imdbid", imdbid);
             request.AddUrlSegment("title", title);
 
-            var obj = Api.ExecuteJson<JObject>(request, baseUrl);
+			var obj = RetryHandler.Execute<JObject>(() => Api.ExecuteJson<JObject> (request, baseUrl),new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)},
+				(exception, timespan) => Log.Error (exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan));
+
             Log.Trace("CP movie Add result count {0}", obj.Count);
 
             if (obj.Count > 0)
@@ -99,7 +105,14 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apikey", apiKey);
 
-            return Api.Execute<CouchPotatoStatus>(request,url);
+
+			var obj = RetryHandler.Execute<CouchPotatoStatus>(() => Api.Execute<CouchPotatoStatus> (request, url),new TimeSpan[] { 
+				TimeSpan.FromSeconds (2),
+				TimeSpan.FromSeconds(5),
+				TimeSpan.FromSeconds(10)},
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for CP, Retrying {0}", timespan));
+		
+			return obj;
         }
 
         public CouchPotatoProfiles GetProfiles(Uri url, string apiKey)
@@ -113,18 +126,39 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apikey", apiKey);
 
-            return Api.Execute<CouchPotatoProfiles>(request, url);
+			var obj = RetryHandler.Execute<CouchPotatoProfiles>(() => Api.Execute<CouchPotatoProfiles> (request, url),null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetProfiles for CP, Retrying {0}", timespan));
+			
+			return obj;
         }
 
         public CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status)
         {
-            RestRequest request;
-            request = new RestRequest { Resource = "/api/{apikey}/movie.list?status={status}" };
+            var request = new RestRequest
+            {
+                Resource = "/api/{apikey}/movie.list?status={status}"
+            };
 
             request.AddUrlSegment("apikey", apiKey);
             request.AddUrlSegment("status", string.Join(",", status));
-
-            return Api.Execute<CouchPotatoMovies>(request, baseUrl);
+            try
+            {
+				var obj = RetryHandler.Execute<CouchPotatoMovies>(() => Api.Execute<CouchPotatoMovies> (request, baseUrl),
+					new TimeSpan[] { 
+						TimeSpan.FromSeconds (5),
+						TimeSpan.FromSeconds(10),
+						TimeSpan.FromSeconds(30)
+					},
+					(exception, timespan) => Log.Error (exception, "Exception when calling GetMovies for CP, Retrying {0}", timespan));
+				
+				return obj;
+            }
+			catch (Exception e) // Request error is already logged in the ApiRequest class
+            {
+                Log.Error("Error when attempting to GetMovies.");
+				Log.Error (e);
+                return new CouchPotatoMovies();    
+            }
         }
     }
 }

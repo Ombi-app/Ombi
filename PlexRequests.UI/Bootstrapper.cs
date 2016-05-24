@@ -50,6 +50,12 @@ using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
+using Nancy.Json;
+
+using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Jobs;
+
+using Quartz.Spi;
 
 namespace PlexRequests.UI
 {
@@ -62,8 +68,7 @@ namespace PlexRequests.UI
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
-            container.Register<IUserMapper, UserMapper>();
-            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
+
             container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
 
             // Settings
@@ -77,19 +82,23 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
             container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
+            container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
+            container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
+            container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
+            container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRequestService, JsonRequestService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
+            container.Register<IJobRecord, JobRecord>();
 
             // Services
             container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
             container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
             container.Register<ISonarrCacher, SonarrCacher>();
             container.Register<ISickRageCacher, SickRageCacher>();
-            container.Register<IConfigurationReader, ConfigurationReader>();
-            container.Register<IIntervals, UpdateInterval>();
+            container.Register<IJobFactory, CustomJobFactory>();
 
             // Api's
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
@@ -100,18 +109,28 @@ namespace PlexRequests.UI
             container.Register<IPlexApi, PlexApi>();
             container.Register<IMusicBrainzApi, MusicBrainzApi>();
             container.Register<IHeadphonesApi, HeadphonesApi>();
+            container.Register<ISlackApi, SlackApi>();
 
             // NotificationService
             container.Register<INotificationService, NotificationService>().AsSingleton();
+            
+            JsonSettings.MaxJsonLength = int.MaxValue;
 
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }
+        
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
+            container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
+            container.Register<IUserMapper, UserMapper>();
+            container.Register<ICustomUserMapper, UserMapper>();
+
+
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
 
             StaticConfiguration.DisableErrorTraces = false;
@@ -146,6 +165,8 @@ namespace PlexRequests.UI
             nancyConventions.StaticContentsConventions.Add(
                     StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content", "Content")
                 );
+
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/docs", "swagger-ui");
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
@@ -174,6 +195,26 @@ namespace PlexRequests.UI
             {
                 notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
             }
+
+            var slackService = container.Resolve<ISettingsService<SlackNotificationSettings>>();
+            var slackSettings = slackService.GetSettings();
+            if (slackSettings.Enabled)
+            {
+                notificationService.Subscribe(new SlackNotification(container.Resolve<ISlackApi>(), slackService));
+            }
+        }
+
+        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            //CORS Enable
+            pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
+            {
+                ctx.Response.WithHeader("Access-Control-Allow-Origin", "*")
+                                .WithHeader("Access-Control-Allow-Methods", "POST,GET")
+                                .WithHeader("Access-Control-Allow-Headers", "Accept, Origin, Content-type");
+
+            });
+            base.RequestStartup(container, pipelines, context);
         }
     }
 }
