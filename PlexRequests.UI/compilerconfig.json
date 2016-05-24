@@ -10,5 +10,13 @@
   {
     "outputFile": "Content/moment.min.es5.js",
     "inputFile": "Content/moment.min.js"
+  },
+  {
+    "outputFile": "Content/Themes/OriginalBootstrapCustom.css",
+    "inputFile": "Content/Themes/OriginalBootstrapCustom.scss"
+  },
+  {
+    "outputFile": "Content/Themes/PlexBootstrapCustom.css",
+    "inputFile": "Content/Themes/PlexBootstrapCustom.scss"
   }
 ]

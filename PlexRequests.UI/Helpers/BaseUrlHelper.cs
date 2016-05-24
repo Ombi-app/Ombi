@@ -52,17 +52,23 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
+            var settings = GetSettings();
+            if (string.IsNullOrEmpty(settings.ThemeName))
+            {
+                settings.ThemeName = Themes.PlexTheme;
+            }
 
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/custom.min.css\" type=\"text/css\" />");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName.Replace(".css",string.Empty)}Custom.min.css\" type=\"text/css\" />");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>");
 
             sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap-notify.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/site.js\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/site-1.7.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/pace.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/jquery.mixitup.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/moment.min.js\"></script>");
@@ -78,7 +84,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/search.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/search-1.7.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -90,12 +96,12 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/requests.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/requests-1.7.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
 
-        public static IHtmlString LoadLogsAssets(this HtmlHelpers helper)
+        public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
             var assetLocation = GetBaseUrl();
@@ -155,11 +161,15 @@ namespace PlexRequests.UI.Helpers
 
         private static string GetBaseUrl()
         {
-            var returnValue = Cache.GetOrSet(CacheKeys.GetBaseUrl, () =>
+            return GetSettings().BaseUrl;
+        }
+
+        private static PlexRequestSettings GetSettings()
+        {
+            var returnValue = Cache.GetOrSet(CacheKeys.GetPlexRequestSettings, () =>
             {
                 var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
-                var assetLocation = settings.BaseUrl;
-                return assetLocation;
+                return settings;
             });
             return returnValue;
         }

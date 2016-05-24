@@ -2,7 +2,7 @@
 {
     public interface ISonarrCacher
     {
-        void Queued(long check);
+        void Queued();
         int[] QueuedIds();
     }
 }

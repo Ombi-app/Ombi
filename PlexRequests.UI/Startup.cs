@@ -25,36 +25,33 @@
 //  ************************************************************************/
 #endregion
 using System;
-using FluentScheduler;
 
 using NLog;
 
 using Owin;
+
 using PlexRequests.UI.Jobs;
-using TaskFactory = FluentScheduler.TaskFactory;
 
 namespace PlexRequests.UI
 {
     public class Startup
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
         public void Configuration(IAppBuilder app)
         {
             try
             {
                 app.UseNancy();
 
-
+                var scheduler = new Scheduler();
+                scheduler.StartScheduler();
             }
             catch (Exception exception)
             {
                 Log.Fatal(exception);
                 throw;
             }
-
         }
-
-
     }
 }

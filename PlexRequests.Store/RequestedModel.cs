@@ -61,13 +61,7 @@ namespace PlexRequests.Store
         }
 
         [JsonIgnore]
-        public bool CanApprove
-        {
-            get
-            {
-                return !Approved && !Available;
-            }
-        }
+        public bool CanApprove => !Approved && !Available;
 
         public bool UserHasRequested(string username)
         {

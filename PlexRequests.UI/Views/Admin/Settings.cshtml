@@ -18,12 +18,23 @@
     {
         formAction = "/" + baseUrl.ToHtmlString() + formAction;
     }
+    var plexTheme = string.Empty;
+    var originalTheme = string.Empty;
 
+    if (!string.IsNullOrEmpty(Model.ThemeName))
+    {
+        plexTheme = Model.ThemeName.Equals(Themes.PlexTheme) ? "selected=\"selected\"" : string.Empty;
+        originalTheme = Model.ThemeName.Equals(Themes.OriginalTheme) ? "selected=\"selected\"" : string.Empty;
+    }
+    else
+    {
+        plexTheme = "selected=\"selected\"";
+    }
 }
 <div class="col-sm-8 col-sm-push-1">
-    <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
+    <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
-            <legend>Request Plex Settings</legend>
+            <legend>Plex Request Settings</legend>
             <div class="form-group">
                 <label for="portNumber" class="control-label">Port</label>
 
@@ -43,134 +54,208 @@
             <small class="control-label">You will have to restart after changing the url base.</small>
 
             <div class="form-group">
+                <label for="ApiKey" class="control-label">Api Key</label>
+                <div class="input-group">
+                    <input type="text" disabled="disabled" class="form-control form-control-custom" id="apiKey" name="ApiKey" value="@Model.ApiKey">
+
+                    <div class="input-group-addon">
+                        <div id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="select" class="control-label">Theme</label>
+                <div id="themes">
+                    <select class="form-control form-control-custom" id="select">
+                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
+                        <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="checkbox">
-                    <label>
+   
                         @if (Model.SearchForMovies)
                         {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><text>Search for Movies</text>
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><text>Search for Movies</text>
+                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
                         }
-                    </label>
+   
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+
                         @if (Model.SearchForTvShows)
                         {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><text>Search for TV Shows</text>
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><label for="SearchForTvShows">Search for TV Shows</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><text>Search for TV Shows</text>
+                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><label for="SearchForTvShows">Search for TV Shows</label>
                         }
-                    </label>
+     
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+             
                         @if (Model.SearchForMusic)
                         {
-                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><text>Search for Music</text>
+                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><label for="SearchForMusic">Search for Music</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><text>Search for Music</text>
+                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label for="SearchForMusic">Search for Music</label>
                         }
-                    </label>
+        
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+      
                         @if (Model.RequireMovieApproval)
                         {
-                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><text>Require approval of Movie requests</text>
+                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><label for="RequireMovieApproval">Require approval of Movie requests</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><text>Require approval of Movie requests</text>
+                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><label for="RequireMovieApproval">Require approval of Movie requests</label>
                         }
-                    </label>
-
-                </div>
+    </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+           
                         @if (Model.RequireTvShowApproval)
                         {
-                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><text>Require approval of TV show requests</text>
+                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><text>Require approval of TV show requests</text>
+                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
                         }
-                    </label>
+                  
 
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+       
                         @if (Model.RequireMusicApproval)
                         {
-                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><text>Require approval of Music requests</text>
+                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><label for="RequireMusicApproval">Require approval of Music requests</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><text>Require approval of Music requests</text>
+                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><label for="RequireMusicApproval">Require approval of Music requests</label>
                         }
-                    </label>
+           
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                        @if (Model.UsersCanViewOnlyOwnRequests)
+                        {
+                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked">
+                            <label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
+                        }
+          
 
                 </div>
             </div>
 
             <p class="form-group">A comma separated list of users whose requests do not require approval.</p>
             <div class="form-group">
-                <label for="noApprovalUsers" class="control-label">Users</label>
+                <label for="noApprovalUsers" class="control-label">Approval White listed Users</label>
                 <div>
                     <input type="text" class="form-control-custom form-control " id="NoApprovalUsers" name="NoApprovalUsers" placeholder="e.g. John, Bobby" value="@Model.NoApprovalUsers">
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        @if (Model.UsersCanViewOnlyOwnRequests)
-                        {
-                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked"><text>Users can view their own requests only</text>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><text>Users can view their own requests only</text>
-                        }
-                    </label>
-
-                </div>
-            </div>
-
             @*<div class="form-group">
-                    <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
-                    <div>
-                        <label>
-                            <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
-                        </label>
-                    </div>
-                </div> //TODO: Need to implement this*@
+                <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
+                <div>
+                    <label>
+                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
+                    </label>
+                </div>
+            </div> //TODO: Need to implement this*@
 
             <div>
             </div>
             <div class="form-group">
                 <div>
-                    <button type="submit" class="btn btn-primary-outline">Submit</button>
+                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                 </div>
             </div>
         </fieldset>
     </form>
 </div>
+
+<script>
+$(function() {
+ $('#save').click(function (e) {
+     e.preventDefault();
+
+            var theme = $("#themes option:selected").val();
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&themeName=" + theme;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#refreshKey').click(function (e) {
+        	e.preventDefault();
+        	  var base = '@Html.GetBaseUrl()';
+        	  var url = createBaseUrl(base, '/admin/createapikey');
+           
+        	 $.ajax({
+                type: "post",
+                url: url,
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        generateNotify("Success!", "success");
+                        $('#apiKey').val(response);
+}
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+});
+</script>

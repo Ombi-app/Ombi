@@ -30,7 +30,6 @@ using Moq;
 
 using Nancy;
 using Nancy.Testing;
-using Nancy.TinyIoc;
 
 using Newtonsoft.Json;
 
@@ -40,18 +39,18 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 
 namespace PlexRequests.UI.Tests
 {
     [TestFixture]
-    [Ignore("Needs some work")]
+    //[Ignore("Needs some work")]
     public class UserLoginModuleTests
     {
         private Mock<ISettingsService<AuthenticationSettings>> AuthMock { get; set; }
         private Mock<ISettingsService<PlexRequestSettings>> PlexRequestMock { get; set; }
+        private ConfigurableBootstrapper Bootstrapper { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
 
         [SetUp]
@@ -60,6 +59,15 @@ namespace PlexRequests.UI.Tests
             AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
             PlexMock = new Mock<IPlexApi>();
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
+            PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
+            Bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.Module<UserLoginModule>();
+                with.Dependency(PlexRequestMock.Object);
+                with.Dependency(AuthMock.Object);
+                with.Dependency(PlexMock.Object);
+                with.RootPathProvider<TestRootPathProvider>();
+            });
         }
 
         [Test]
@@ -68,18 +76,11 @@ namespace PlexRequests.UI.Tests
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.Dependency(PlexRequestMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
 
-            var browser = new Browser(bootstrapper);
+            Bootstrapper.WithSession(new Dictionary<string, object>());
+
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -103,17 +104,10 @@ namespace PlexRequests.UI.Tests
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -140,7 +134,7 @@ namespace PlexRequests.UI.Tests
                 {
                     new UserFriends
                     {
-                        Username = "abc",
+                        Title = "abc",
                     },
                 }
             };
@@ -149,17 +143,9 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -196,17 +182,9 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
 
             var result = browser.Post("/userlogin", with =>
             {
@@ -237,7 +215,7 @@ namespace PlexRequests.UI.Tests
                 {
                     new UserFriends
                     {
-                        Username = "abc",
+                        Title = "abc",
                     }
                 }
             };
@@ -254,17 +232,9 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -307,17 +277,10 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+  
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -344,17 +307,9 @@ namespace PlexRequests.UI.Tests
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, DeniedUsers = "abc", PlexAuthToken = "abc" };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+   Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -376,17 +331,9 @@ namespace PlexRequests.UI.Tests
         [Test]
         public void Logout()
         {
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object> { { SessionKeys.UsernameKey, "abc" } });
 
-            bootstrapper.WithSession(new Dictionary<string, object> { { SessionKeys.UsernameKey, "abc" } });
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Get("/userlogin/logout", with =>
             {
                 with.HttpRequest();
@@ -415,17 +362,9 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(new PlexAuthentication { user = new User { username = "Jamie" } });
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();
@@ -470,17 +409,9 @@ namespace PlexRequests.UI.Tests
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.Module<UserLoginModule>();
-                with.Dependency(AuthMock.Object);
-                with.Dependency(PlexMock.Object);
-                with.RootPathProvider<TestRootPathProvider>();
-            });
+            Bootstrapper.WithSession(new Dictionary<string, object>());
 
-            bootstrapper.WithSession(new Dictionary<string, object>());
-
-            var browser = new Browser(bootstrapper);
+            var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
             {
                 with.HttpRequest();

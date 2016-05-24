@@ -31,7 +31,7 @@ namespace PlexRequests.Services.Interfaces
 {
     public interface IAvailabilityChecker
     {
-        void CheckAndUpdateAll(long check);
+        void CheckAndUpdateAll();
         List<PlexMovie> GetPlexMovies();
         bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year);
         List<PlexTvShow> GetPlexTvShows();

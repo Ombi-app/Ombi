@@ -27,11 +27,14 @@
 using Nancy;
 using Nancy.Extensions;
 
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
+
 namespace PlexRequests.UI.Modules
 {
     public class IndexModule : BaseAuthModule
     {
-        public IndexModule()
+        public IndexModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
             Get["/"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
 

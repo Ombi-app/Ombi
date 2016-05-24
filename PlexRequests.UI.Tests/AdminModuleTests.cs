@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
+using System.Linq;
 
 using Moq;
 
@@ -32,6 +33,7 @@ using Nancy;
 using Nancy.Testing;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 using NUnit.Framework;
 
@@ -45,11 +47,11 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Tests
 {
     [TestFixture]
-    [Ignore("Needs rework")]
     public class AdminModuleTests
     {
         private Mock<ISettingsService<PlexRequestSettings>> PlexRequestMock { get; set; }
@@ -70,6 +72,7 @@ namespace PlexRequests.UI.Tests
         private Mock<IRepository<LogEntity>> LogRepo { get; set; }
         private Mock<INotificationService> NotificationService { get; set; }
         private Mock<ICacheProvider> Cache { get; set; }
+        private Mock<ISettingsService<LogSettings>> Log { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -82,9 +85,10 @@ namespace PlexRequests.UI.Tests
 
             PlexMock = new Mock<IPlexApi>();
             PlexMock.Setup(x => x.SignIn("Username1", "Password1"))
-                    .Returns(new PlexAuthentication { user = new User { authentication_token = "abc", username = "Username1" } });
+                    .Returns(new PlexAuthentication { user = new User { authentication_token = "abc", title = "Username1" } });
 
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
+            PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
             CpMock = new Mock<ISettingsService<CouchPotatoSettings>>();
             PlexSettingsMock = new Mock<ISettingsService<PlexSettings>>();
             SonarrApiMock = new Mock<ISonarrApi>();
@@ -100,6 +104,7 @@ namespace PlexRequests.UI.Tests
             NotificationService = new Mock<INotificationService>();
             HeadphonesSettings = new Mock<ISettingsService<HeadphonesSettings>>();
             Cache = new Mock<ICacheProvider>();
+            Log = new Mock<ISettingsService<LogSettings>>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -121,11 +126,12 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
                 with.Dependency(HeadphonesSettings.Object);
-                with.Dependencies(Cache.Object);
+                with.Dependency(Cache.Object);
+                with.Dependency(Log.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {
-                    context.CurrentUser = new UserIdentity { UserName = "user" };
+                    context.CurrentUser = new UserIdentity { UserName = "user", Claims = new List<string> {"Admin"} };
                 });
             });
 
@@ -233,7 +239,7 @@ namespace PlexRequests.UI.Tests
         [Test]
         public void GetUsersSuccessfully()
         {
-            var users = new PlexFriends { User = new[] { new UserFriends { Username = "abc2" }, } };
+            var users = new PlexFriends { User = new[] { new UserFriends { Title = "abc2" }, } };
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(users);
             var browser = new Browser(Bootstrapper);
 
@@ -248,9 +254,11 @@ namespace PlexRequests.UI.Tests
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
 
-            var body = result.Body.AsString();
+
+            var body = JsonConvert.DeserializeObject<JObject>(result.Body.AsString());
+            var user = body["users"];
             Assert.That(body, Is.Not.Null);
-            Assert.That(body, Contains.Substring("abc2"));
+            Assert.That(user.ToString().Contains("abc"), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
             AuthMock.Verify(x => x.GetSettings(), Times.Once);
@@ -269,6 +277,7 @@ namespace PlexRequests.UI.Tests
                 with.Header("Accept", "application/json");
                 with.FormValue("username", "Username1");
                 with.FormValue("password", "Password1");
+                
 
             });
 
@@ -324,9 +333,10 @@ namespace PlexRequests.UI.Tests
 
             Assert.That(HttpStatusCode.OK, Is.EqualTo(result.StatusCode));
 
-            var body = JsonConvert.DeserializeObject<string>(result.Body.AsString());
+            var body = JsonConvert.DeserializeObject<JObject>(result.Body.AsString());
+            var user = (string)body["users"];
             Assert.That(body, Is.Not.Null);
-            Assert.That(string.IsNullOrWhiteSpace(body), Is.True);
+            Assert.That(string.IsNullOrWhiteSpace(user), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
             AuthMock.Verify(x => x.GetSettings(), Times.Once);

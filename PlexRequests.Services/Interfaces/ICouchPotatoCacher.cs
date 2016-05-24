@@ -2,7 +2,7 @@
 {
     public interface ICouchPotatoCacher
     {
-        void Queued(long check);
+        void Queued();
         int[] QueuedIds();
     }
 }

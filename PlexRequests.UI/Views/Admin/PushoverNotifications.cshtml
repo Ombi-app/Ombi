@@ -8,16 +8,16 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+             
                         @if (Model.Enabled)
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Enabled" name="Enabled"><text>Enabled</text>
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
                         }
-                    </label>
+                   
                 </div>
             </div>
             
@@ -39,7 +39,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="testPushover" type="submit" class="btn btn-primary-outline">Test</button>
+                    <button id="testPushover" type="submit" class="btn btn-primary-outline">Test <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -59,6 +59,7 @@
         $('#save').click(function (e) {
             e.preventDefault();
 
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
@@ -68,13 +69,16 @@
                 success: function (response) {
                     if (response.result === true) {
                         generateNotify(response.message, "success");
+        				$('#spinner').attr("class", "fa fa-check");
                     } else {
                         generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+        				$('#spinner').attr("class", "fa fa-times");
                 }
             });
         });

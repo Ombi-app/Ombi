@@ -34,8 +34,8 @@ namespace PlexRequests.UI.Validators
     {
         public PlexValidator()
         {
-            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
-            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.Ip).NotNull().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotNull().WithMessage("You must specify a Port.");
         }
     }
 }

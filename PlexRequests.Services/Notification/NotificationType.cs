@@ -33,6 +33,7 @@ namespace PlexRequests.Services.Notification
         RequestAvailable,
         RequestApproved,
         AdminNote,
-        Test
+        Test,
+
     }
 }

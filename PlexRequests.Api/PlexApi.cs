@@ -23,17 +23,20 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using Polly;
+
+
 #endregion
 using System;
 
+using NLog;
+
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
-using System.Xml;
-using System.Collections.Generic;
 
 namespace PlexRequests.Api
 {
@@ -43,6 +46,19 @@ namespace PlexRequests.Api
         {
             Version = AssemblyHelper.GetAssemblyVersion();
         }
+
+		public PlexApi (IApiRequest api)
+		{
+			Api = api;
+		}
+			
+		private IApiRequest Api { get; }
+
+		private const string SignInUri = "https://plex.tv/users/sign_in.json";
+		private const string FriendsUri = "https://plex.tv/pms/friends/all";
+		private const string GetAccountUri = "https://plex.tv/users/account";
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private static string Version { get; }
 
         public PlexAuthentication SignIn(string username, string password)
@@ -64,8 +80,11 @@ namespace PlexRequests.Api
 
             request.AddJsonBody(userModel);
 
-            var api = new ApiRequest();
-            return api.Execute<PlexAuthentication>(request, new Uri("https://plex.tv/users/sign_in.json"));
+			var obj = RetryHandler.Execute<PlexAuthentication>(() => Api.Execute<PlexAuthentication> (request, new Uri(SignInUri)),
+				null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan));
+			
+			return obj;
         }
 
         public PlexFriends GetUsers(string authToken)
@@ -77,8 +96,10 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var users = api.ExecuteXml<PlexFriends>(request, new Uri("https://plex.tv/pms/friends/all"));
+			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
+				null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan));
+			
 
             return users;
         }
@@ -101,8 +122,9 @@ namespace PlexRequests.Api
             request.AddUrlSegment("searchTerm", searchTerm);
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+			var search = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+				null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan));
 
             return search;
         }
@@ -116,9 +138,10 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var users = api.ExecuteXml<PlexStatus>(request, uri);
-
+			var users = RetryHandler.Execute<PlexStatus>(() => Api.ExecuteXml<PlexStatus> (request, uri),
+				null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan));
+		
             return users;
         }
 
@@ -131,9 +154,10 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var account = api.ExecuteXml<PlexAccount>(request, new Uri("https://plex.tv/users/account"));
-
+			var account = RetryHandler.Execute<PlexAccount>(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
+				null,
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying {0}", timespan));
+			
             return account;
         }
 
@@ -147,10 +171,23 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var sections = api.ExecuteXml<PlexLibraries>(request, plexFullHost);
+            try
+            {
+				var lib = RetryHandler.Execute<PlexLibraries>(() => Api.ExecuteXml<PlexLibraries> (request, plexFullHost),
+					new TimeSpan[] { 
+						TimeSpan.FromSeconds (5),
+						TimeSpan.FromSeconds(10),
+						TimeSpan.FromSeconds(30)
+					},
+					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrarySections for Plex, Retrying {0}", timespan));
 
-            return sections;
+				return lib;
+            }
+			catch (Exception e)
+            {
+                Log.Error(e,"There has been a API Exception when attempting to get the Plex Libraries");
+                return new PlexLibraries();
+            }
         }
 
         public PlexSearch GetLibrary(string authToken, Uri plexFullHost, string libraryId)
@@ -161,13 +198,26 @@ namespace PlexRequests.Api
                 Resource = "library/sections/{libraryId}/all"
             };
 
-            request.AddUrlSegment("libraryId", libraryId.ToString());
+            request.AddUrlSegment("libraryId", libraryId);
             AddHeaders(ref request, authToken);
 
-            var api = new ApiRequest();
-            var search = api.ExecuteXml<PlexSearch>(request, plexFullHost);
+            try
+            {
+				var lib = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+					new TimeSpan[] { 
+						TimeSpan.FromSeconds (5),
+						TimeSpan.FromSeconds(10),
+						TimeSpan.FromSeconds(30)
+					},
+					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrary for Plex, Retrying {0}", timespan));
 
-            return search;
+				return lib;
+            }
+			catch (Exception e)
+            {
+                Log.Error(e,"There has been a API Exception when attempting to get the Plex Library");
+                return new PlexSearch();
+            }
         }
 
         private void AddHeaders(ref RestRequest request, string authToken)

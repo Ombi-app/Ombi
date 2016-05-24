@@ -32,16 +32,16 @@
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                    <label>
+                
                         @if (Model.Ssl)
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
                         }
                         else
                         {
-                            <input type="checkbox" id="Ssl" name="Ssl"><text>SSL</text>
+                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
                         }
-                    </label>
+                   
                 </div>
             </div>
             <div class="form-group">
@@ -52,7 +52,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button id="testPlex" type="submit" class="btn btn-primary-outline">Test Connectivity</button>
+                    <button id="testPlex" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -69,25 +69,34 @@
 <script>
     $(function () {
         var base = '@Html.GetBaseUrl()';
+
         $('#testPlex').click(function (e) {
             e.preventDefault();
             var url = createBaseUrl(base, '/test/plex');
             var $form = $("#mainForm");
+
+        	$('#spinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: $form.prop("method"),
                 url: url,
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {
+        		$('#spinner').attr("class", "");
                     console.log(response);
                     if (response.result === true) {
                         generateNotify(response.message, "success");
+
+        				$('#spinner').attr("class", "fa fa-check");
                         $('#authToken').val(response.authToken);
                     } else {
                         generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
+
+        		$('#spinner').attr("class", "fa fa-times");
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

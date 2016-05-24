@@ -1,8 +1,7 @@
 ﻿#region Copyright
-
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoApi.cs
+//    File: SickrageApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +23,28 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
-
 #endregion
+using System.Linq;
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
+
 using NLog;
+
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
+
 using RestSharp;
-using Newtonsoft.Json.Linq;
 
 namespace PlexRequests.Api
 {
     public class SickrageApi : ISickRageApi
     {
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public SickrageApi()
         {
@@ -54,22 +53,38 @@ namespace PlexRequests.Api
 
         private ApiRequest Api { get; }
 
-
-        public async Task<SickRageTvAdd> AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey,
-            Uri baseUrl)
+        public SickRageSeasonList VerifyShowHasLoaded(int tvdbId, string apiKey, Uri baseUrl)
         {
+            Log.Trace("Entered `VerifyShowHasLoaded({0} <- id)`", tvdbId);
+            var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=show.seasonlist", Method = Method.GET };
+            request.AddUrlSegment("apiKey", apiKey);
+            request.AddQueryParameter("tvdbid", tvdbId.ToString());
 
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy(
+                    null,
+                    (exception, timespan) => Log.Error(exception, "Exception when calling VerifyShowHasLoaded for SR, Retrying {0}", timespan));
+
+                var obj = policy.Execute(() => Api.ExecuteJson<SickRageSeasonList>(request, baseUrl));
+                return obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new SickRageSeasonList();
+            }
+        }
+
+        public async Task<SickRageTvAdd> AddSeries(int tvdbId, int seasonCount, int[] seasons, string quality, string apiKey, Uri baseUrl)
+        {
             var futureStatus = seasons.Length > 0 && !seasons.Any(x => x == seasonCount) ? SickRageStatus.Skipped : SickRageStatus.Wanted;
             var status = seasons.Length > 0 ? SickRageStatus.Skipped : SickRageStatus.Wanted;
 
             Log.Trace("Future Status: {0}", futureStatus);
             Log.Trace("Current Status: {0}", status);
 
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=show.addnew",
-                Method = Method.GET
-            };
+            var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=show.addnew", Method = Method.GET };
             request.AddUrlSegment("apiKey", apiKey);
             request.AddQueryParameter("tvdbid", tvdbId.ToString());
             request.AddQueryParameter("status", status);
@@ -80,9 +95,11 @@ namespace PlexRequests.Api
                 request.AddQueryParameter("initial", quality);
             }
 
-            Log.Trace("Entering `Execute<SickRageTvAdd>`");
-            var obj = Api.Execute<SickRageTvAdd>(request, baseUrl);
-            Log.Trace("Exiting `Execute<SickRageTvAdd>`");
+            var policy = RetryHandler.RetryAndWaitPolicy(
+                null,
+                (exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for SR, Retrying {0}", timespan));
+
+            var obj = policy.Execute(() => Api.Execute<SickRageTvAdd>(request, baseUrl));
             Log.Trace("obj Result:");
             Log.Trace(obj.DumpJson());
 
@@ -93,7 +110,6 @@ namespace PlexRequests.Api
 
                 var seasonIncrement = 0;
                 var seasonList = new SickRageSeasonList();
-                Log.Trace("while (seasonIncrement < seasonCount) where seasonCount = {0}", seasonCount);
                 try
                 {
                     while (seasonIncrement < seasonCount)
@@ -130,6 +146,7 @@ namespace PlexRequests.Api
                     foreach (var s in seasons)
                     {
                         Log.Trace("Adding season {0}", s);
+
                         var result = await AddSeason(tvdbId, s, apiKey, baseUrl);
                         Log.Trace("SickRage adding season results: ");
                         Log.Trace(result.DumpJson());
@@ -149,76 +166,62 @@ namespace PlexRequests.Api
 
         public SickRagePing Ping(string apiKey, Uri baseUrl)
         {
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=sb.ping",
-                Method = Method.GET
-            };
+            var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=sb.ping", Method = Method.GET };
+
+            var policy = RetryHandler.RetryAndWaitPolicy(
+                null,
+                (exception, timespan) => Log.Error(exception, "Exception when calling Ping for SR, Retrying {0}", timespan));
 
             request.AddUrlSegment("apiKey", apiKey);
-            var obj = Api.ExecuteJson<SickRagePing>(request, baseUrl);
+            var obj = policy.Execute(() => Api.ExecuteJson<SickRagePing>(request, baseUrl));
 
             return obj;
         }
 
-        public SickRageSeasonList VerifyShowHasLoaded(int tvdbId, string apiKey, Uri baseUrl)
-        {
-            Log.Trace("Entered `VerifyShowHasLoaded({0} <- id)`", tvdbId);
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=show.seasonlist",
-                Method = Method.GET
-            };
-            request.AddUrlSegment("apiKey", apiKey);
-            request.AddQueryParameter("tvdbid", tvdbId.ToString());
-
-            try
-            {
-                Log.Trace("Entering `ExecuteJson<SickRageSeasonList>`");
-                var obj = Api.ExecuteJson<SickRageSeasonList>(request, baseUrl);
-                Log.Trace("Exited `ExecuteJson<SickRageSeasonList>`");
-                return obj;
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-                return new SickRageSeasonList();
-            }
-        }
-
         public async Task<SickRageTvAdd> AddSeason(int tvdbId, int season, string apiKey, Uri baseUrl)
         {
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=episode.setstatus",
-                Method = Method.GET
-            };
+            var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=episode.setstatus", Method = Method.GET };
             request.AddUrlSegment("apiKey", apiKey);
             request.AddQueryParameter("tvdbid", tvdbId.ToString());
             request.AddQueryParameter("season", season.ToString());
             request.AddQueryParameter("status", SickRageStatus.Wanted);
 
             await Task.Run(() => Thread.Sleep(2000));
-            return await Task.Run(() =>
-            {
-                Log.Trace("Entering `Execute<SickRageTvAdd>` in a new `Task<T>`");
-                var result = Api.Execute<SickRageTvAdd>(request, baseUrl);
+            return await Task.Run(
+                () =>
+                {
+                    var policy = RetryHandler.RetryAndWaitPolicy(
+                        null,
+                        (exception, timespan) => Log.Error(exception, "Exception when calling AddSeason for SR, Retrying {0}", timespan));
 
-                Log.Trace("Exiting `Execute<SickRageTvAdd>` and yeilding `Task<T>` result");
-                return result;
-            }).ConfigureAwait(false);
+                    var result = policy.Execute(() => Api.Execute<SickRageTvAdd>(request, baseUrl));
+
+                    return result;
+                }).ConfigureAwait(false);
         }
 
-        public async Task<SickrageShows> GetShows(string apiKey, Uri baseUrl) 
+        public async Task<SickrageShows> GetShows(string apiKey, Uri baseUrl)
         {
-            var request = new RestRequest
-            {
-                Resource = "/api/{apiKey}/?cmd=shows",
-                Method = Method.GET
-            };
+            var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=shows", Method = Method.GET };
             request.AddUrlSegment("apiKey", apiKey);
-            
-            return await Task.Run(() => Api.Execute<SickrageShows>(request, baseUrl)).ConfigureAwait(false);
+
+            return await Task.Run(
+                () =>
+                {
+                    try
+                    {
+                        var policy = RetryHandler.RetryAndWaitPolicy(
+                            new[] { TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) },
+                            (exception, timespan) => Log.Error(exception, "Exception when calling GetShows for SR, Retrying {0}", timespan));
+
+                        return policy.Execute(() => Api.Execute<SickrageShows>(request, baseUrl));
+                    }
+                    catch (ApiRequestException)
+                    {
+                        Log.Error("There has been a API exception when Getting the Sickrage shows");
+                        return null;
+                    }
+                }).ConfigureAwait(false);
         }
     }
 }

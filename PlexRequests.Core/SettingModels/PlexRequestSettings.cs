@@ -44,6 +44,13 @@ namespace PlexRequests.Core.SettingModels
         public int WeeklyRequestLimit { get; set; }
         public string NoApprovalUsers { get; set; }
 
+        /// <summary>
+        /// The CSS name of the theme we want
+        /// </summary>
+        public string ThemeName { get; set; }
+
+        public string ApiKey { get; set; }
+
         [JsonIgnore]
         public List<string> ApprovalWhiteList
         {

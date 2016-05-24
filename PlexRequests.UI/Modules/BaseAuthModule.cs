@@ -23,6 +23,9 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+using System.Linq;
+
+
 #endregion
 
 using Nancy;
@@ -32,10 +35,11 @@ using System;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
-    public class BaseAuthModule : BaseModule
+    public abstract class BaseAuthModule : BaseModule
     {
         private string _username;
         private int _dateTimeOffset = -1;
@@ -52,6 +56,23 @@ namespace PlexRequests.UI.Modules
             }
         }
 
+        protected bool IsAdmin
+        {
+            get
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return false;
+                }
+                var claims = Context.CurrentUser.Claims.ToList();
+                if (claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         protected int DateTimeOffset
         {
             get
@@ -64,28 +85,30 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        public BaseAuthModule()
+        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
+            Service = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        public BaseAuthModule(string modulePath) : base(modulePath)
+        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
         {
+            Service = pr;
             Before += (ctx) => CheckAuth();
         }
 
+        private ISettingsService<PlexRequestSettings> Service { get; }
 
         private Response CheckAuth()
         {
-            var settings = Locator.Resolve<ISettingsService<PlexRequestSettings>>().GetSettings();
+            var settings = Service.GetSettings();
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
 
-            return Session[SessionKeys.UsernameKey] == null 
-                ? Context.GetRedirect(redirectPath) 
+            return Session[SessionKeys.UsernameKey] == null
+                ? Context.GetRedirect(redirectPath)
                 : null;
         }
-
     }
 }

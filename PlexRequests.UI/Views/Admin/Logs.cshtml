@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @Html.Partial("_Sidebar")
-@Html.LoadLogsAssets()
+@Html.LoadTableAssets()
 
 @{
     var baseUrl = Html.GetBaseUrl();
@@ -76,11 +76,14 @@
             url: logUrl,
             dataType: "json",
             success: function (response) {
-                $("#select > option").each(function (level) {
-                    if (response[0] == level.value) {
-                        $('#' + level.target.id).prop("selected", "selected");
-                    }
-                });
+                if (response && response.length > 0) {
+                    $("#selected > option").each(function (level) {
+                        var $opt = $(this);
+                        if (response[0].ordinal == level) {
+                            $opt.prop("selected", "selected");
+                        }
+                    });
+                }
             },
             error: function (e) {
                 console.log(e);

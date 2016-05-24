@@ -12,22 +12,37 @@
     <h4>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</h4>
     <br />
     <!-- Nav tabs -->
+
+
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
         @if (Model.SearchForMovies)
         {
-            <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab">Movies</a></li>
+            <li role="presentation" class="active">
+                <a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> Movies</a>
+
+            </li>
         }
         @if (Model.SearchForTvShows)
         {
-            <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab">TV Shows</a></li>
+            <li role="presentation">
+                <a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> TV Shows</a>
+
+            </li>
         }
         @if (Model.SearchForMusic)
         {
-            <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab">Albums</a></li>
+            <li role="presentation">
+                <a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-music"></i>Albums</a>
+            </li>
         }
 
+        <li role="presentation" class="nav-tab-right nav-tab-icononly">
+            <a href="#NotificationsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-bell"></i></a>
+
+        </li>
+
     </ul>
-    
+
     <!-- Tab panes -->
     <div class="tab-content">
         @if (Model.SearchForMovies)
@@ -94,9 +109,32 @@
                 </div>
             </div>
         }
+
+        <!-- Notification tab -->
+        <div role="tabpanel" class="tab-pane" id="NotificationsTab">
+            <div class="input-group">
+                <div class="input-group-addon input-group-sm"></div>
+            </div>
+            <br />
+
+            <!-- Notifications content -->
+            <form class="form-horizontal" method="POST" id="notificationsForm">
+                <fieldset>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <input type="checkbox" id="notifyUser" name="Notify">
+                            <label for="notifyUser">Send me a notification when items I have requested have been added</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div>
+                            <button id="saveNotificationSettings" class="btn btn-primary-outline">Save</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
     </div>
-
-
 </div>
 
 <!-- Movie and TV Results template -->
@@ -136,26 +174,27 @@
                 {{#if_eq available true}}
                 <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
                 {{else}}
-                    {{#if_eq requested true}}
-                    <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
-                    {{else}}
-                        {{#if_eq type "movie"}}
-                            <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
-                        {{/if_eq}}
-                        {{#if_eq type "tv"}}
-                            <div class="dropdown">
-                                <button id="{{id}}" class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="fa fa-plus"></i> Request
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
-                                    <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li>
-                                    <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
-                                </ul>
-                            </div>
-                        {{/if_eq}}
-                    {{/if_eq}}
+                {{#if_eq requested true}}
+                <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
+                {{else}}
+                {{#if_eq type "movie"}}
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> Request</button>
+                {{/if_eq}}
+                {{#if_eq type "tv"}}
+                <div class="dropdown">
+                    <button id="{{id}}" class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-plus"></i> Request
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">All Seasons</a></li>
+                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">First Season</a></li>
+                        <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">Latest Season</a></li>
+                        <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">Select...</a></li>
+                    </ul>
+                </div>
+                {{/if_eq}}
+                {{/if_eq}}
                 {{/if_eq}}
                 <br />
                 <br />
@@ -201,11 +240,11 @@
                 {{#if_eq available true}}
                 <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
                 {{else}}
-                    {{#if_eq requested true}}
-                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
-                    {{else}}
-                    <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestAlbum" type="submit"><i class="fa fa-plus"></i> Request</button>
-                    {{/if_eq}}
+                {{#if_eq requested true}}
+                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Requested</button>
+                {{else}}
+                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestAlbum" type="submit"><i class="fa fa-plus"></i> Request</button>
+                {{/if_eq}}
                 {{/if_eq}}
                 <br />
                 <small class="row">Track Count: {{trackCount}}</small>
@@ -215,7 +254,36 @@
 
     </div>
     <hr />
+
 </script>
 
+<div class="modal fade" id="seasonsModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Seasons</h4>
+            </div>
+            <div class="modal-body" id="seasonsBody">
+
+            </div>
+
+            <div hidden="hidden" id="selectedSeasonsId"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" id="seasonsRequest" class="btn btn-primary">Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script id="seasons-template" type="text/x-handlebars-template">
+    <div class="form-group">
+        <div class="checkbox">
+            <input type="checkbox" class="selectedSeasons" id="{{id}}" name="{{id}}"><label for="{{id}}">Season {{id}}</label>
+        </div>
+    </div>
+
+</script>
 
 @Html.LoadSearchAssets()

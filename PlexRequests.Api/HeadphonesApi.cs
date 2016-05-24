@@ -71,7 +71,7 @@ namespace PlexRequests.Api
 
                 return albumResult;
             }
-            catch (JsonSerializationException jse)
+			catch (Exception jse)
             {
                 Log.Error(jse);
                 return false; // If there is no matching result we do not get returned a JSON string, it just returns "false".
@@ -94,7 +94,7 @@ namespace PlexRequests.Api
 
                 return result;
             }
-            catch (JsonSerializationException jse)
+			catch (Exception jse)
             {
                 Log.Error(jse);
                 return new List<HeadphonesGetIndex>();

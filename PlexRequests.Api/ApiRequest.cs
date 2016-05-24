@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 
@@ -34,14 +33,15 @@ using Newtonsoft.Json;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
+
 using RestSharp;
 
 namespace PlexRequests.Api
 {
     public class ApiRequest : IApiRequest
     {
-        private JsonSerializerSettings Settings = new JsonSerializerSettings
+        private readonly JsonSerializerSettings _settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             MissingMemberHandling = MissingMemberHandling.Ignore
@@ -66,12 +66,13 @@ namespace PlexRequests.Api
             if (response.ErrorException != null)
             {
                 var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApplicationException(message, response.ErrorException);
+                Log.Error(response.ErrorException);
+                throw new ApiRequestException(message, response.ErrorException);
             }
 
             return response.Data;
         }
-
+        
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
         {
             var client = new RestClient { BaseUrl = baseUri };
@@ -80,8 +81,9 @@ namespace PlexRequests.Api
 
             if (response.ErrorException != null)
             {
+                Log.Error(response.ErrorException);
                 var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApplicationException(message, response.ErrorException);
+                throw new ApiRequestException(message, response.ErrorException);
             }
 
             return response;
@@ -95,8 +97,9 @@ namespace PlexRequests.Api
 
             if (response.ErrorException != null)
             {
+                Log.Error(response.ErrorException);
                 var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApplicationException(message, response.ErrorException);
+                throw new ApiRequestException(message, response.ErrorException);
             }
 
             var result = DeserializeXml<T>(response.Content);
@@ -106,18 +109,18 @@ namespace PlexRequests.Api
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
             Log.Trace("Api Content Response:");
             Log.Trace(response.Content);
             if (response.ErrorException != null)
             {
+                Log.Error(response.ErrorException);
                 var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApplicationException(message, response.ErrorException);
+                throw new ApiRequestException(message, response.ErrorException);
             }
 
             Log.Trace("Deserialzing Object");
-            var json = JsonConvert.DeserializeObject<T>(response.Content, Settings);
+            var json = JsonConvert.DeserializeObject<T>(response.Content, _settings);
             Log.Trace("Finished Deserialzing Object");
 
             return json;
@@ -133,8 +136,9 @@ namespace PlexRequests.Api
                 using (var sr = new StringReader(input))
                     return (T)ser.Deserialize(sr);
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException e)
             {
+                Log.Error(e);
                 return null;
             }
         }

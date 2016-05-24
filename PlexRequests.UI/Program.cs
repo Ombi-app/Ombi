@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
 
 using Microsoft.Owin.Hosting;
 
@@ -40,11 +39,13 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
-using FluentScheduler;
+using CommandLine;
 
-using PlexRequests.Services;
-using PlexRequests.UI.Jobs;
+using PlexRequests.UI.Start;
 
 namespace PlexRequests.UI
 {
@@ -53,37 +54,21 @@ namespace PlexRequests.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-            var baseUrl = string.Empty;
-            var port = -1;
-            if (args.Length > 0)
-            {
-                for (int i = 0; i < args.Length; i++)
-                {
-                    var arg = args[i].ToLowerInvariant().Substring(1);
-                    switch (arg)
-                    {
-                        case "base":
-                            i++;
-                            var value = args[i];
-                            Console.WriteLine($"Using a Base URL {args[i]}");
-                            baseUrl = value;
-                            break;
-                        default:
-                            int portResult;
-                            if (!int.TryParse(args[i], out portResult))
-                            {
-                                Console.WriteLine("Didn't pass in a valid port");
-                                Console.ReadLine();
-                                Environment.Exit(1);
-                            }
-                            else
-                            {
-                                port = portResult;
-                            }
-                            break;
-                    }
-                }
-            }
+
+            var result = Parser.Default.ParseArguments<StartupOptions>(args);
+            var baseUrl = result.MapResult(
+                o => o.BaseUrl,
+                e => string.Empty);
+
+            var port = result.MapResult(
+                x => x.Port,
+                e => -1);
+
+            var updated = result.MapResult(x => x.Updated, e => UpdateValue.None);
+            CheckUpdate(updated);
+
+            PrintToConsole("Starting Up! Please wait, this can usually take a few seconds.", ConsoleColor.Yellow);
+
             Log.Trace("Getting product version");
             WriteOutVersion();
 
@@ -91,8 +76,9 @@ namespace PlexRequests.UI
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
             ConfigureTargets(cn);
+            SetupLogging();
 
-            if (port == -1)
+            if (port == -1 || port == 3579)
                 port = GetStartupPort();
 
             var options = new StartOptions(Debugger.IsAttached ? $"http://localhost:{port}" : $"http://+:{port}")
@@ -103,21 +89,21 @@ namespace PlexRequests.UI
             {
                 using (WebApp.Start<Startup>(options))
                 {
-                    SetupSchedulers();
+                    Console.WriteLine($"Plex Requests is running on the following: http://+:{port}/{baseUrl}");
 
-                    Console.WriteLine($"Request Plex is running on the following: http://+:{port}/");
-
+                    PrintToConsole("All setup, Plex Requests is now ready!", ConsoleColor.Yellow);
                     if (Type.GetType("Mono.Runtime") != null)
                     {
-                        Log.Trace("We are on Mono!");
+                        Log.Info("We are on Mono!");
+
                         // on mono, processes will usually run as daemons - this allows you to listen
                         // for termination signals (ctrl+c, shutdown, etc) and finalize correctly
                         UnixSignal.WaitAny(
-                            new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM), new UnixSignal(Signum.SIGQUIT), new UnixSignal(Signum.SIGHUP) });
+                            new[] { new UnixSignal(Signum.SIGINT), new UnixSignal(Signum.SIGTERM), new UnixSignal(Signum.SIGQUIT) });
                     }
                     else
                     {
-                        Log.Trace("This is not Mono");
+                        Log.Info("This is not Mono");
                         Console.WriteLine("Press any key to exit");
                         Console.ReadLine();
                     }
@@ -126,6 +112,7 @@ namespace PlexRequests.UI
             catch (Exception e)
             {
                 Log.Fatal(e);
+                Console.WriteLine(e);
                 throw;
             }
         }
@@ -157,11 +144,60 @@ namespace PlexRequests.UI
             LoggingHelper.ConfigureLogging(connectionString);
         }
 
-        private static void SetupSchedulers()
+        private static void SetupLogging()
         {
-            TaskManager.TaskFactory = new PlexTaskFactory();
-            TaskManager.Initialize(new PlexRegistry());
-            TaskManager.Initialize(new MediaCacheRegistry());
+            var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var logSettings = settingsService.GetSettings();
+
+            if (logSettings != null)
+            {
+                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
+            }
+        }
+
+        private static void PrintToConsole(string message, ConsoleColor colour = ConsoleColor.Gray)
+        {
+            Console.ForegroundColor = colour;
+            Console.WriteLine(message);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        private static void CheckUpdate(UpdateValue val)
+        {
+            if (val == UpdateValue.Failed)
+            {
+                PrintToConsole("Update Failed", ConsoleColor.Red);
+            }
+            if (val == UpdateValue.Updated)
+            {
+                PrintToConsole("Finishing Update", ConsoleColor.Yellow);
+                var applicationPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath));
+                var files = Directory.GetFiles(applicationPath, "PlexRequests.*", SearchOption.TopDirectoryOnly);
+                var oldUpdater = files.FirstOrDefault(x => x == $"{applicationPath}\\PlexRequests.Updater.exe");
+                var newUpdater = files.FirstOrDefault(x => x == $"{applicationPath}\\PlexRequests.Updater.exe_Updated");
+
+                if (oldUpdater == null || newUpdater == null)
+                {
+                    PrintToConsole("Looks like there was nothing to update.", ConsoleColor.Yellow);
+                    return;
+                }
+
+                try
+                {
+                    File.Copy(oldUpdater, "PlexRequests.Updater.exe_Old", true);
+                    File.Delete(oldUpdater);
+                    File.Copy(newUpdater, "PlexRequests.Updater.exe", true);
+                    File.Delete(newUpdater);
+
+                    File.Delete("PlexRequests.Updater.exe_Old"); // Cleanup
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                PrintToConsole("Finished Update!", ConsoleColor.Yellow);
+            }
         }
     }
 }
