@@ -47,6 +47,8 @@ using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -638,8 +640,19 @@ namespace PlexRequests.UI.Modules
                     seasonsList.Add(model.SeasonCount);
                     model.SeasonsRequested = "Latest";
                     break;
-                default:
+                case "all":
                     model.SeasonsRequested = "All";
+                    break;
+                default:
+                    var split = seasons.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    var seasonsCount = new int[split.Length];
+                    for (var i = 0; i < split.Length; i++)
+                    {
+                        int tryInt;
+                        int.TryParse(split[i], out tryInt);
+                        seasonsCount[i] = tryInt;
+                    }
+                    seasonsList.AddRange(seasonsCount);
                     break;
             }
 

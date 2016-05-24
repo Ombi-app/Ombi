@@ -68,7 +68,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap-notify.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/site.js\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/site-1.7.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/pace.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/jquery.mixitup.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/moment.min.js\"></script>");
@@ -84,7 +84,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/search.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/search-1.7.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -96,7 +96,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/requests.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/requests-1.7.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
