@@ -161,7 +161,7 @@
                     $('#users').append("<option>Error!</option>");
                 	return;
                 }
-                    if (response.users.length > 1) {
+                    if (response.users.length > 0) {
                         $(response.users).each(function () {
                             $('#users').append("<option>" + this + "</option>");
                         });
