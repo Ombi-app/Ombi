@@ -122,7 +122,6 @@
 
         $('#requestToken').click(function (e) {
             e.preventDefault();
-            var url = createBaseUrl(base, "requestauth");
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
@@ -150,10 +149,9 @@
         function loadUserList() {
             $('#users').html("");
             var url = "getusers";
-            url = createBaseUrl(base, url);
             $.ajax({
                 type: "Get",
-                url: "getusers",
+                url: url,
                 dataType: "json",
                 success: function (response) {
 
