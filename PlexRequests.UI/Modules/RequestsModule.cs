@@ -357,7 +357,7 @@ namespace PlexRequests.UI.Modules
 
         private Response ClearIssue(int requestId)
         {
-			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
+			this.RequiresClaims ( UserClaims.Admin);
 
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
@@ -375,7 +375,7 @@ namespace PlexRequests.UI.Modules
 
         private Response ChangeRequestAvailability(int requestId, bool available)
 		{
-			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
+			this.RequiresClaims (UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {
@@ -392,7 +392,7 @@ namespace PlexRequests.UI.Modules
 
         private Response AddNote(int requestId, string noteArea)
 		{
-			this.RequiresClaims (UserClaims.PowerUser, UserClaims.Admin);
+			this.RequiresClaims (UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {

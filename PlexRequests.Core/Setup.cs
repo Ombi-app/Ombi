@@ -26,8 +26,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 using Mono.Data.Sqlite;
@@ -84,7 +82,11 @@ namespace PlexRequests.Core
                 connection.CreateSchema(version); // Set the default.
                 schema = connection.GetSchemaVersion();
             }
-
+            if (version > schema.SchemaVersion)
+            {
+                Db.DbConnection().UpdateSchemaVersion(version);
+                schema = connection.GetSchemaVersion();
+            }
             version = schema.SchemaVersion;
 
             return version;
