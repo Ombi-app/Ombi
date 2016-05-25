@@ -73,6 +73,8 @@ namespace PlexRequests.UI.Tests
         private Mock<INotificationService> NotificationService { get; set; }
         private Mock<ICacheProvider> Cache { get; set; }
         private Mock<ISettingsService<LogSettings>> Log { get; set; }
+        private Mock<ISettingsService<SlackNotificationSettings>> SlackSettings { get; set; }
+        private Mock<ISlackApi> SlackApi { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -105,6 +107,8 @@ namespace PlexRequests.UI.Tests
             HeadphonesSettings = new Mock<ISettingsService<HeadphonesSettings>>();
             Cache = new Mock<ICacheProvider>();
             Log = new Mock<ISettingsService<LogSettings>>();
+            SlackApi = new Mock<ISlackApi>();
+            SlackSettings = new Mock<ISettingsService<SlackNotificationSettings>>();
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -128,6 +132,8 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(HeadphonesSettings.Object);
                 with.Dependency(Cache.Object);
                 with.Dependency(Log.Object);
+                with.Dependency(SlackApi.Object);
+                with.Dependency(SlackSettings.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {
