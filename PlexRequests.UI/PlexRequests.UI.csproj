@@ -499,7 +499,7 @@
     <Content Include="Views\Admin\Headphones.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\SlackNotifications.cshtml">
+    <Content Include="Views\AdminNotifications\SlackNotifications.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

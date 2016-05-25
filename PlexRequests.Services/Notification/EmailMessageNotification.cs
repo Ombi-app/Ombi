@@ -84,11 +84,8 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.Test:
                     await EmailTest(model, emailSettings);
                     break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
-            
+
         }
 
         private EmailNotificationSettings GetConfiguration()
@@ -168,7 +165,7 @@ namespace PlexRequests.Services.Notification
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
-                    
+
                     client.Authenticate(settings.EmailUsername, settings.EmailPassword);
 
                     await client.SendAsync(message);
@@ -185,7 +182,7 @@ namespace PlexRequests.Services.Notification
         {
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") {Text= "This is just a test! Success!"},
+                Body = new TextPart("plain") { Text = "This is just a test! Success!" },
                 Subject = "Plex Requests: Test Message!",
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));

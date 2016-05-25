@@ -14,6 +14,14 @@
   .home {
     padding-top: 4rem; } }
 
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+  color: #fff; }
+
+hr {
+  border-color: #777; }
+
 .btn {
   border-radius: 0.25rem !important; }
 
@@ -219,7 +227,7 @@ label {
   position: absolute;
   right: 45px;
   z-index: 3;
-  top: 13px;
+  top: 10px;
   box-shadow: 0 0 0; }
 
 .input-group-addon .btn-group .btn {
@@ -238,9 +246,10 @@ label {
   padding: 12px 8px; }
 
 #updateAvailable {
-  background-color: #ffa400;
+  background-color: #df691a;
   text-align: center;
-  font-size: 15px; }
+  font-size: 15px;
+  padding: 3px 0; }
 
 .checkbox label {
   display: inline-block;

@@ -34,6 +34,20 @@ $i:
     }
 }
 
+.navbar-default .navbar-nav > .active > a, 
+.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a:focus {
+    color: #fff;
+}
+
+hr {
+    border-color: #777;
+}
+
+body.update-available {
+    margin-top: 80px;
+}
+
 .btn {
     border-radius: .25rem $i;
 }
@@ -280,7 +294,7 @@ $border-radius: 10px;
     position: absolute;
     right: 45px;
     z-index: 3;
-    top: 13px;
+    top: 10px;
     box-shadow: 0 0 0;
 }
 
@@ -304,9 +318,10 @@ $border-radius: 10px;
 }
 
 #updateAvailable {
-    background-color:  rgb(255, 164, 0);
+    background-color: #df691a;
     text-align: center;
     font-size: 15px;
+    padding: 3px 0;
 }
 
 .checkbox label {

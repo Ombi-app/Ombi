@@ -97,6 +97,7 @@
                     var status = createBaseUrl(urlBase, '/admin/status');
                     $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> There is a new update available! Click <a style='color: white' href='" + status + "'>Here!</a>");
                     $('#updateAvailable').removeAttr("hidden");
+                    $('body').addClass('update-available')
                 }
             },
             error: function (e) {
