@@ -451,9 +451,6 @@
     <Content Include="Views\Admin\Settings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\_Sidebar.cshtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Views\Login\Register.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -499,7 +496,10 @@
     <Content Include="Views\Admin\Headphones.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\AdminNotifications\SlackNotifications.cshtml">
+    <Content Include="Views\Admin\_Sidebar.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\SlackNotifications.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

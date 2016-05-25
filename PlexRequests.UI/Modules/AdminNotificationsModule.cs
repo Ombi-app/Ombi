@@ -100,7 +100,7 @@ namespace PlexRequests.UI.Modules
         private Negotiator SlackNotifications()
         {
             var settings = SlackSettings.GetSettings();
-            return View["SlackNotifications", settings];
+            return View["Admin/SlackNotifications", settings];
         }
 
         private Response SaveSlackNotifications()
