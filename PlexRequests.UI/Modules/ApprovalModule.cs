@@ -50,7 +50,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("approval", pr)
         {
-			this.RequiresClaims(UserClaims.Admin, UserClaims.PowerUser);
+			this.RequiresClaims(UserClaims.Admin);
 
             Service = service;
             CpService = cpService;
