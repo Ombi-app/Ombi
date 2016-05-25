@@ -182,7 +182,6 @@
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserUpdateViewModel.cs" />
-    <Compile Include="Modules\AdminNotificationsModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
     <Compile Include="Modules\ApiUserMetadataModule.cs" />

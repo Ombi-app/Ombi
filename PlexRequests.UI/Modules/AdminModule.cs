@@ -82,6 +82,8 @@ namespace PlexRequests.UI.Modules
         private IRepository<LogEntity> LogsRepo { get; }
         private INotificationService NotificationService { get; }
         private ICacheProvider Cache { get; }
+        private ISettingsService<SlackNotificationSettings> SlackSettings { get; }
+        private ISlackApi SlackApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -102,7 +104,8 @@ namespace PlexRequests.UI.Modules
             INotificationService notify,
             ISettingsService<HeadphonesSettings> headphones,
             ISettingsService<LogSettings> logs,
-            ICacheProvider cache) : base("admin", prService)
+            ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
+            ISlackApi slackApi) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -123,8 +126,10 @@ namespace PlexRequests.UI.Modules
             HeadphonesService = headphones;
             LogService = logs;
             Cache = cache;
+            SlackSettings = slackSettings;
+            SlackApi = slackApi;
 
-			this.RequiresClaims(UserClaims.Admin);
+            this.RequiresClaims(UserClaims.Admin);
 			
             Get["/"] = _ => Admin();
 
@@ -176,6 +181,11 @@ namespace PlexRequests.UI.Modules
 			Post["/createapikey"] = x => CreateApiKey();
 
             Post["/autoupdate"] = x => AutoUpdate();
+
+            Post["/testslacknotification"] = _ => TestSlackNotification();
+
+            Get["/slacknotification"] = _ => SlackNotifications();
+            Post["/slacknotification"] = _ => SaveSlackNotifications();
         }
 
         private Negotiator Authentication()
@@ -735,5 +745,65 @@ namespace PlexRequests.UI.Modules
 
 			return Response.AsJson(apiKey);
 		}
+
+        private Response TestSlackNotification()
+        {
+            var settings = this.BindAndValidate<SlackNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+            try
+            {
+                NotificationService.Subscribe(new SlackNotification(SlackApi, SlackSettings));
+                settings.Enabled = true;
+                NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent slack notification test");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to subscribe and publish test Slack Notification");
+            }
+            finally
+            {
+                NotificationService.UnSubscribe(new SlackNotification(SlackApi, SlackSettings));
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Slack Notification! If you do not receive it please check the logs." });
+        }
+
+        private Negotiator SlackNotifications()
+        {
+            var settings = SlackSettings.GetSettings();
+            return View["SlackNotifications", settings];
+        }
+
+        private Response SaveSlackNotifications()
+        {
+            var settings = this.BindAndValidate<SlackNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+
+            var result = SlackSettings.SaveSettings(settings);
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new SlackNotification(SlackApi, SlackSettings));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new SlackNotification(SlackApi, SlackSettings));
+            }
+
+            Log.Info("Saved slack settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Slack Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
     }
 }
