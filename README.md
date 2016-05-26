@@ -24,9 +24,9 @@ I wanted to write a similar application in .Net!
 * Headphones integration!
 * Ability to run with a reverse proxy!
 
-# Preview (Needs updating)
+# Preview ()
 
-![Preview](http://i.imgur.com/ucCFUvd.gif)
+![Preview](http://i.imgur.com/DgwkIsW.gif)
 
 #Installation
 Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
