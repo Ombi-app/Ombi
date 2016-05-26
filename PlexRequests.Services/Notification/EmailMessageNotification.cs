@@ -62,7 +62,10 @@ namespace PlexRequests.Services.Notification
 
             var emailSettings = (EmailNotificationSettings)settings;
 
-            if (!ValidateConfiguration(emailSettings)) return;
+            if (!ValidateConfiguration(emailSettings))
+            {
+                return;
+            }
 
             switch (model.NotificationType)
             {
@@ -96,13 +99,17 @@ namespace PlexRequests.Services.Notification
 
         private bool ValidateConfiguration(EmailNotificationSettings settings)
         {
-            if (!settings.Enabled)
-            {
-                return false;
-            }
             if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
             {
                 return false;
+            }
+
+            if (!settings.EnableUserEmailNotifications)
+            {
+                if (!settings.Enabled)
+                {
+                    return false;
+                }
             }
 
             return true;
