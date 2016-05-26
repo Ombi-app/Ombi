@@ -606,7 +606,7 @@ namespace PlexRequests.UI.Modules
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
             }
-            catch (ApplicationSettingsException)
+            catch (Exception)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullShowName} is in Plex, are you sure it's correctly setup?" });
             }
@@ -716,6 +716,25 @@ namespace PlexRequests.UI.Modules
                         return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                     }
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
+                }
+
+                if (!srSettings.Enabled && !sonarrSettings.Enabled)
+                {
+                    model.Approved = true;
+                    Log.Debug("Adding tv to database requests (No approval required) and Sonarr/Sickrage not setup");
+                    RequestService.AddRequest(model);
+                    if (ShouldSendNotification())
+                    {
+                        var notify2 = new NotificationModel
+                        {
+                            Title = model.Title,
+                            User = Username,
+                            DateTime = DateTime.Now,
+                            NotificationType = NotificationType.NewRequest
+                        };
+                        NotificationService.Publish(notify2);
+                    }
+                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
                 }
 
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "The request of TV Shows is not correctly set up. Please contact your admin." });

@@ -50,7 +50,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("approval", pr)
         {
-			this.RequiresClaims(UserClaims.Admin);
+            this.RequiresClaims(UserClaims.Admin);
 
             Service = service;
             CpService = cpService;
@@ -130,7 +130,7 @@ namespace PlexRequests.UI.Modules
                     Log.Trace("Approval result: {0}", requestResult);
                     if (requestResult)
                     {
-                        return Response.AsJson(new JsonResponseModel {Result = true});
+                        return Response.AsJson(new JsonResponseModel { Result = true });
                     }
                     return
                         Response.AsJson(new JsonResponseModel
@@ -156,11 +156,9 @@ namespace PlexRequests.UI.Modules
                     request.Approved = true;
                     var requestResult = Service.UpdateRequest(request);
                     Log.Trace("Approval result: {0}", requestResult);
-                    if (requestResult)
-                    {
-                        return Response.AsJson(new JsonResponseModel { Result = true });
-                    }
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Updated SickRage but could not approve it in PlexRequests :(" });
+                    return Response.AsJson(requestResult
+                        ? new JsonResponseModel { Result = true }
+                        : new JsonResponseModel { Result = false, Message = "Updated SickRage but could not approve it in PlexRequests :(" });
                 }
                 return Response.AsJson(new JsonResponseModel
                 {
@@ -168,11 +166,13 @@ namespace PlexRequests.UI.Modules
                     Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Could not add the series to SickRage"
                 });
             }
-            return Response.AsJson(new JsonResponseModel
-            {
-                Result = false,
-                Message = "SickRage or Sonarr are not set up!"
-            });
+
+
+            request.Approved = true;
+            var res = Service.UpdateRequest(request);
+            return Response.AsJson(res
+                ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to Sonarr/SickRage because it has not been configured" }
+                : new JsonResponseModel { Result = false, Message = "Updated SickRage but could not approve it in PlexRequests :(" });
         }
 
         private Response RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
@@ -248,9 +248,9 @@ namespace PlexRequests.UI.Modules
 
             var sender = new HeadphonesSender(HeadphoneApi, hpSettings, Service);
             var result = sender.AddAlbum(request);
-            
 
-            return Response.AsJson( new JsonResponseModel { Result = true, Message = "We have sent the approval to Headphones for processing, This can take a few minutes."} );
+
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "We have sent the approval to Headphones for processing, This can take a few minutes." });
         }
 
         private Response ApproveAllMovies()
@@ -327,15 +327,23 @@ namespace PlexRequests.UI.Modules
             {
                 if (r.Type == RequestType.Movie)
                 {
-                    var res = SendMovie(cpSettings, r, CpApi);
-                    if (res)
+                    if (cpSettings.Enabled)
                     {
-                        r.Approved = true;
-                        updatedRequests.Add(r);
+                        var res = SendMovie(cpSettings, r, CpApi);
+                        if (res)
+                        {
+                            r.Approved = true;
+                            updatedRequests.Add(r);
+                        }
+                        else
+                        {
+                            Log.Error("Could not approve and send the movie {0} to couch potato!", r.Title);
+                        }
                     }
                     else
                     {
-                        Log.Error("Could not approve and send the movie {0} to couch potato!", r.Title);
+                        r.Approved = true;
+                        updatedRequests.Add(r);
                     }
                 }
                 if (r.Type == RequestType.TvShow)
@@ -358,7 +366,7 @@ namespace PlexRequests.UI.Modules
                         }
                     }
 
-                    if (sonarr.Enabled)
+                    else if (sonarr.Enabled)
                     {
                         var res = sender.SendToSonarr(sonarr, r);
                         if (!string.IsNullOrEmpty(res?.title))
@@ -371,6 +379,11 @@ namespace PlexRequests.UI.Modules
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
                             res?.ErrorMessages.ForEach(x => Log.Error("Error messages: {0}", x));
                         }
+                    }
+                    else
+                    {
+                        r.Approved = true;
+                        updatedRequests.Add(r);
                     }
                 }
             }
