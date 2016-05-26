@@ -87,7 +87,7 @@ namespace PlexRequests.Services.Jobs
         public int[] QueuedIds()
         {
             var tv = Cache.Get<SickrageShows>(CacheKeys.SickRageQueued);
-            return tv?.data.Values.Select(x => x.tvdbid).ToArray() ?? new int[] { };
+            return tv?.data?.Values.Select(x => x.tvdbid).ToArray() ?? new int[] { };
         }
 
         public void Execute(IJobExecutionContext context)
