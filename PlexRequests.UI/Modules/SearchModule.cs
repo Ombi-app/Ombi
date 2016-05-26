@@ -627,7 +627,7 @@ namespace PlexRequests.UI.Modules
                 RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                SeasonCount = showInfo.seasonCount
+                SeasonCount = showInfo.seasonCount,
             };
 
             var seasonsList = new List<int>();
@@ -645,6 +645,7 @@ namespace PlexRequests.UI.Modules
                     model.SeasonsRequested = "All";
                     break;
                 default:
+                    model.SeasonsRequested = seasons;
                     var split = seasons.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     var seasonsCount = new int[split.Length];
                     for (var i = 0; i < split.Length; i++)

@@ -196,7 +196,7 @@ namespace PlexRequests.UI.Modules
             {
                 dbTv = t.Result.ToList();
 
-						if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+				if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
                 {
                     dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
                 }
