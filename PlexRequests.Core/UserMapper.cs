@@ -81,6 +81,16 @@ namespace PlexRequests.Core
             return null;
         }
 
+        public UsersModel EditUser(UsersModel user)
+        {
+            var existingUser = Repo.Get(user.UserGuid);
+
+            user.Id = existingUser.Id;
+            user.UserGuid = existingUser.UserGuid;
+            Repo.Update(user);
+            return user;
+        }
+
         public bool DoUsersExist()
         {
             var users = Repo.GetAll();
@@ -88,7 +98,7 @@ namespace PlexRequests.Core
             return users.Any();
         }
 
-        public Guid? CreateUser(string username, string password, string[] claims = default(string[]))
+        private Guid? CreateUser(string username, string password, string[] claims = default(string[]))
         {
             var salt = PasswordHasher.GenerateSalt();
 
@@ -106,6 +116,21 @@ namespace PlexRequests.Core
             var userRecord = Repo.Get(userModel.UserGuid);
 
             return new Guid(userRecord.UserGuid);
+        }
+
+        public Guid? CreateAdmin(string username, string password)
+        {
+            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser, UserClaims.Admin });
+        }
+
+        public Guid? CreatePowerUser(string username, string password)
+        {
+            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser });
+        }
+
+        public Guid? CreateRegularUser(string username, string password)
+        {
+            return CreateUser(username, password, new[] { UserClaims.User });
         }
 
         public bool UpdatePassword(string username, string oldPassword, string newPassword)
@@ -134,15 +159,25 @@ namespace PlexRequests.Core
         {
             return Repo.GetAll();
         }
+
+        public UsersModel GetUser(Guid userId)
+        {
+            var user = Repo.Get(userId.ToString());
+            return user;
+        }
     }
 
     public interface ICustomUserMapper
     {
         IEnumerable<UsersModel> GetUsers();
-        Guid? CreateUser(string username, string password, string[] claims = default(string[]));
+        UsersModel GetUser(Guid userId);
+        UsersModel EditUser(UsersModel user);
         bool DoUsersExist();
         Guid? ValidateUser(string username, string password);
         bool UpdatePassword(string username, string oldPassword, string newPassword);
+        Guid? CreateAdmin(string username, string password);
+        Guid? CreatePowerUser(string username, string password);
+        Guid? CreateRegularUser(string username, string password);
 
     }
 }

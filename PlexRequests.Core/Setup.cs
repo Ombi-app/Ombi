@@ -61,6 +61,10 @@ namespace PlexRequests.Core
                 {
                     MigrateToVersion1700();
                 }
+                if (version > 1800 && version <= 1899)
+                {
+                    MigrateToVersion1800();
+                }
             }
 
             return Db.DbConnection().ConnectionString;
@@ -172,6 +176,33 @@ namespace PlexRequests.Core
             // Drop old tables
             TableCreation.DropTable(Db.DbConnection(), "User");
             TableCreation.DropTable(Db.DbConnection(), "Log");
+        }
+
+        /// <summary>
+        /// Migrates to version 1.8.
+        /// <para>This includes updating the admin account to have all roles.</para>
+        /// </summary>
+        private void MigrateToVersion1800()
+        {
+            try
+            {
+                var userMapper = new UserMapper(new UserRepository<UsersModel>(Db));
+                var users = userMapper.GetUsers();
+
+                foreach (var u in users)
+                {
+                    var claims = new[] { UserClaims.User, UserClaims.Admin, UserClaims.PowerUser };
+                    u.Claims = ByteConverterHelper.ReturnBytes(claims);
+
+                    userMapper.EditUser(u);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+
         }
     }
 }
