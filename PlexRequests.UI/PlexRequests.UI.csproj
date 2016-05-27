@@ -294,6 +294,14 @@
     <Content Include="Content\swagger\underscore-min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Themes\original.css">
+      <DependentUpon>original.scss</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Themes\original.min.css">
+      <DependentUpon>original.css</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\Themes\plex.css">
       <DependentUpon>plex.scss</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

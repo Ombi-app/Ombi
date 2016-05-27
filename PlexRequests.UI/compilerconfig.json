@@ -22,5 +22,9 @@
   {
     "outputFile": "Content/Themes/plex.css",
     "inputFile": "Content/Themes/plex.scss"
+  },
+  {
+    "outputFile": "Content/Themes/original.css",
+    "inputFile": "Content/Themes/original.scss"
   }
 ]
