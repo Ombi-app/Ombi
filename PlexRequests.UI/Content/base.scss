@@ -46,6 +46,11 @@ hr {
     border-radius: .25rem $i;
 }
 
+.btn-group-separated .btn, 
+.btn-group-separated .btn + .btn {
+    margin-left: 3px;
+}
+
 .multiSelect {
     background-color: $form-color;
 }

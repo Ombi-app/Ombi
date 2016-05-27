@@ -41,5 +41,6 @@ namespace PlexRequests.Core
         RequestedModel Get(int id);
         IEnumerable<RequestedModel> GetAll();
         bool BatchUpdate(List<RequestedModel> model);
+        bool BatchDelete(List<RequestedModel> model);
     }
 }

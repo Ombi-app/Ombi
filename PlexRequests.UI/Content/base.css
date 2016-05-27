@@ -25,6 +25,10 @@ hr {
 .btn {
   border-radius: 0.25rem !important; }
 
+.btn-group-separated .btn,
+.btn-group-separated .btn + .btn {
+  margin-left: 3px; }
+
 .multiSelect {
   background-color: #4e5d6c; }
 
