@@ -47,7 +47,7 @@ using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+
 using Nancy.Extensions;
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Store.Models;
@@ -94,13 +94,13 @@ namespace PlexRequests.UI.Modules
 
             Get["/"] = parameters => RequestLoad();
 
-            Get["movie/{searchTerm}"] = parameters => SearchMovie((string)parameters.searchTerm);
-            Get["tv/{searchTerm}"] = parameters => SearchTvShow((string)parameters.searchTerm);
-            Get["music/{searchTerm}"] = parameters => SearchMusic((string)parameters.searchTerm);
+            Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
+            Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
+            Get["music/{searchTerm}", true] = async (x, ct) => await SearchMusic((string)x.searchTerm);
             Get["music/coverArt/{id}"] = p => GetMusicBrainzCoverArt((string)p.id);
 
-            Get["movie/upcoming"] = parameters => UpcomingMovies();
-            Get["movie/playing"] = parameters => CurrentlyPlayingMovies();
+            Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
+            Get["movie/playing", true] = async (x, ct) => await CurrentlyPlayingMovies();
 
             Post["request/movie"] = parameters => RequestMovie((int)Request.Form.movieId);
             Post["request/tv"] = parameters => RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
@@ -144,75 +144,80 @@ namespace PlexRequests.UI.Modules
             return View["Search/Index", settings];
         }
 
-        private Response UpcomingMovies()
+        private async Task<Response> UpcomingMovies()
         {
             Log.Trace("Loading upcoming movies");
-            return ProcessMovies(MovieSearchType.Upcoming, string.Empty);
+            return await ProcessMovies(MovieSearchType.Upcoming, string.Empty);
         }
 
-        private Response CurrentlyPlayingMovies()
+        private async Task<Response> CurrentlyPlayingMovies()
         {
             Log.Trace("Loading currently playing movies");
-            return ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
+            return await ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
         }
 
-        private Response SearchMovie(string searchTerm)
+        private async Task<Response> SearchMovie(string searchTerm)
         {
             Log.Trace("Searching for Movie {0}", searchTerm);
-            return ProcessMovies(MovieSearchType.Search, searchTerm);
+            return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
-        private Response ProcessMovies(MovieSearchType searchType, string searchTerm)
+        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-            var taskList = new List<Task>();
+
 
             var apiMovies = new List<MovieResult>();
-            taskList.Add(Task.Factory.StartNew(() =>
-            {
-                switch (searchType)
+            await Task.Factory.StartNew(
+                () =>
                 {
-                    case MovieSearchType.Search:
-                        return MovieApi.SearchMovie(searchTerm).Result.Select(x => new MovieResult()
-                        {
-                            Adult = x.Adult,
-                            BackdropPath = x.BackdropPath,
-                            GenreIds = x.GenreIds,
-                            Id = x.Id,
-                            OriginalLanguage = x.OriginalLanguage,
-                            OriginalTitle = x.OriginalTitle,
-                            Overview = x.Overview,
-                            Popularity = x.Popularity,
-                            PosterPath = x.PosterPath,
-                            ReleaseDate = x.ReleaseDate,
-                            Title = x.Title,
-                            Video = x.Video,
-                            VoteAverage = x.VoteAverage,
-                            VoteCount = x.VoteCount
-                        }).ToList();
-                    case MovieSearchType.CurrentlyPlaying:
-                        return MovieApi.GetCurrentPlayingMovies().Result.ToList();
-                    case MovieSearchType.Upcoming:
-                        return MovieApi.GetUpcomingMovies().Result.ToList();
-                    default:
-                        return new List<MovieResult>();
-                }
-            }).ContinueWith((t) =>
-            {
-                apiMovies = t.Result;
-            }));
+                    switch (searchType)
+                    {
+                        case MovieSearchType.Search:
+                            return
+                                MovieApi.SearchMovie(searchTerm)
+                                        .Result.Select(
+                                            x =>
+                                            new MovieResult()
+                                            {
+                                                Adult = x.Adult,
+                                                BackdropPath = x.BackdropPath,
+                                                GenreIds = x.GenreIds,
+                                                Id = x.Id,
+                                                OriginalLanguage = x.OriginalLanguage,
+                                                OriginalTitle = x.OriginalTitle,
+                                                Overview = x.Overview,
+                                                Popularity = x.Popularity,
+                                                PosterPath = x.PosterPath,
+                                                ReleaseDate = x.ReleaseDate,
+                                                Title = x.Title,
+                                                Video = x.Video,
+                                                VoteAverage = x.VoteAverage,
+                                                VoteCount = x.VoteCount
+                                            })
+                                        .ToList();
+                        case MovieSearchType.CurrentlyPlaying:
+                            return MovieApi.GetCurrentPlayingMovies().Result.ToList();
+                        case MovieSearchType.Upcoming:
+                            return MovieApi.GetUpcomingMovies().Result.ToList();
+                        default:
+                            return new List<MovieResult>();
+                    }
+                }).ContinueWith(
+                    (t) =>
+                    {
+                        apiMovies = t.Result;
+                    });
 
             Dictionary<int, RequestedModel> dbMovies = new Dictionary<int, RequestedModel>();
-            taskList.Add(Task.Factory.StartNew(() =>
-            {
-                return RequestService.GetAll().Where(x => x.Type == RequestType.Movie);
+            await Task.Factory.StartNew(() =>
+             {
+                 return RequestService.GetAll().Where(x => x.Type == RequestType.Movie);
 
-            }).ContinueWith((t) =>
-            {
-                var distinctResults = t.Result.DistinctBy(x => x.ProviderId);
-                dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
-            }));
-
-            Task.WaitAll(taskList.ToArray());
+             }).ContinueWith((t) =>
+             {
+                 var distinctResults = t.Result.DistinctBy(x => x.ProviderId);
+                 dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+             });
 
             var cpCached = CpCacher.QueuedIds();
             var plexMovies = Checker.GetPlexMovies();
@@ -272,33 +277,25 @@ namespace PlexRequests.UI.Modules
             return true;
         }
 
-        private Response SearchTvShow(string searchTerm)
+        private async Task<Response> SearchTvShow(string searchTerm)
         {
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
-            var taskList = new List<Task>();
-
             var apiTv = new List<TvMazeSearch>();
-            taskList.Add(Task.Factory.StartNew(() =>
-            {
-                return new TvMazeApi().Search(searchTerm);
-
-            }).ContinueWith((t) =>
+            await Task.Factory.StartNew(() => new TvMazeApi().Search(searchTerm)).ContinueWith((t) =>
             {
                 apiTv = t.Result;
-            }));
+            });
 
             var dbTv = new Dictionary<int, RequestedModel>();
-            taskList.Add(Task.Factory.StartNew(() =>
+            await Task.Factory.StartNew(() =>
             {
                 return RequestService.GetAll().Where(x => x.Type == RequestType.TvShow);
 
             }).ContinueWith((t) =>
             {
                 dbTv = t.Result.ToDictionary(x => x.ProviderId);
-            }));
-
-            Task.WaitAll(taskList.ToArray());
+            });
 
             if (!apiTv.Any())
             {
@@ -361,31 +358,25 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewTv);
         }
 
-        private Response SearchMusic(string searchTerm)
+        private async Task<Response> SearchMusic(string searchTerm)
         {
-            var taskList = new List<Task>();
-
             var apiAlbums = new List<Release>();
-            taskList.Add(Task.Factory.StartNew(() =>
-            {
-                return MusicBrainzApi.SearchAlbum(searchTerm);
-
-            }).ContinueWith((t) =>
+            await Task.Factory.StartNew(() => MusicBrainzApi.SearchAlbum(searchTerm)).ContinueWith((t) =>
             {
                 apiAlbums = t.Result.releases ?? new List<Release>();
-            }));
+            });
 
             var dbAlbum = new Dictionary<string, RequestedModel>();
-            taskList.Add(Task.Factory.StartNew(() =>
-            {
-                return RequestService.GetAll().Where(x => x.Type == RequestType.Album);
+            await Task.Factory.StartNew(() =>
+             {
+                 return RequestService.GetAll().Where(x => x.Type == RequestType.Album);
 
-            }).ContinueWith((t) =>
-            {
-                dbAlbum = t.Result.ToDictionary(x => x.MusicBrainzId);
-            }));
+             }).ContinueWith((t) =>
+             {
+                 dbAlbum = t.Result.ToDictionary(x => x.MusicBrainzId);
+             });
 
-            Task.WaitAll(taskList.ToArray());
+
 
             var plexAlbums = Checker.GetPlexAlbums();
 
@@ -935,7 +926,7 @@ namespace PlexRequests.UI.Modules
             var email = EmailNotificationSettings.GetSettings().EnableUserEmailNotifications;
             if (!auth)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but this functionality is currently only for users with Plex accounts"});
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but this functionality is currently only for users with Plex accounts" });
             }
             if (!email)
             {
