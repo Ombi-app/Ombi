@@ -181,3 +181,16 @@ button.list-group-item:focus {
 .modal-footer {
     background-color: #282828;
 }
+
+.modal-content {
+    position: relative;
+    background-color: #282828;
+    border: 1px solid transparent;
+    border-radius: 0;
+    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding-box;
+    background-clip: padding-box;
+    outline: 0;
+}
