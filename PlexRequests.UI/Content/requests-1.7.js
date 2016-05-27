@@ -514,8 +514,10 @@ function mixItUpConfig(activeState) {
     return conf;
 };
 
+var position = 0;
 function initLoad() {
-    movieLoad();
+    //movieLoad();
+    movieLoadWithPosition(0);
     tvLoad();
     albumLoad();
 }
@@ -543,6 +545,52 @@ function movieLoad() {
         $ml.mixItUp(mixItUpConfig());
     });
 };
+
+function movieLoadWithPosition(pos) {
+    var $ml = $('#movieList');
+    if ($ml.mixItUp('isLoaded')) {
+        activeState = $ml.mixItUp('getState');
+        $ml.mixItUp('destroy');
+    }
+
+    var url = createBaseUrl(base, '/requests/movies/'+pos);
+    $.ajax(url).success(function (results) {
+        if (results.length > 0) {
+            position++;
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "movie");
+                var html = searchTemplate(context);
+                $ml.append(html);
+            });
+        }
+        else {
+            $ml.append(noResultsHtml.format("movie"));
+        }
+        $ml.mixItUp(mixItUpConfig());
+    });
+};
+
+var win = $(window);
+
+$(win).scroll(function () {
+    if ($(win).scrollTop() + $(win).height() >= $(document).height() - 100) {
+        // Debounce the scroll event
+        if (this.timeoutId)
+            win.clearTimeout(this.timeoutId);
+        this.timeoutId = win.setTimeout(function () {
+            movieLoadWithPosition(position);
+        }, 200);
+    }
+});
+//// Each time the user scrolls
+//win.scroll(function () {
+//    // End of the document reached?
+//    if ($(document).height() - win.height() == win.scrollTop()) {
+//        $('#loading').show();
+
+//        movieLoadWithPosition(position);
+//    }
+//});
 
 function tvLoad() {
     var $tvl = $('#tvList');

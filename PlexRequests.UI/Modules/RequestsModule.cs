@@ -74,7 +74,8 @@ namespace PlexRequests.UI.Modules
             Cache = cache;
 
             Get["/"] = _ => LoadRequests();
-            Get["/movies"] = _ => GetMovies();
+            Get["/movies", true] = async (x, ct) => await GetMovies();
+            Get["/movies/{position}", true] = async (x, ct) => await GetMovies(x.position);
             Get["/tvshows"] = _ => GetTvShows();
             Get["/albums"] = _ => GetAlbumRequests();
             Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
@@ -105,77 +106,61 @@ namespace PlexRequests.UI.Modules
             return View["Index", settings];
         }
 
-        private Response GetMovies() // TODO: async await the API calls
+        private async Task<Response> GetMovies()
         {
             var settings = PrSettings.GetSettings();
 
-            List<Task> taskList = new List<Task>();
+            var allRequests = await Service.GetAllAsync();
+            allRequests = allRequests.Where(x => x.Type == RequestType.Movie);
 
-            List<RequestedModel> dbMovies = new List<RequestedModel>();
-            taskList.Add(Task.Factory.StartNew(() =>
+            var dbMovies = allRequests.ToList();
+
+            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
             {
-                return Service.GetAll().Where(x => x.Type == RequestType.Movie);
-
-            }).ContinueWith((t) =>
-            {
-                dbMovies = t.Result.ToList();
-
-                if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
-                {
-                    dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
-                }
-            }));
-
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
+            }
 
             List<QualityModel> qualities = new List<QualityModel>();
 
-			if (IsAdmin)
+            if (IsAdmin)
             {
                 var cpSettings = CpSettings.GetSettings();
                 if (cpSettings.Enabled)
                 {
-                    taskList.Add(Task.Factory.StartNew(() =>
+
+                    var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
                     {
-                        return Cache.GetOrSet(CacheKeys.CouchPotatoQualityProfiles, () =>
-                        {
-                            return CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey); // TODO: cache this!
-                        });
-                    }).ContinueWith((t) =>
-                    {
-                        qualities = t.Result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
-                    }));
+                        return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
+                    });
+
+                    qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
                 }
             }
 
-            Task.WaitAll(taskList.ToArray());
-
-            var viewModel = dbMovies.Select(movie =>
+            var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
-                return new RequestViewModel
-                {
-                    ProviderId = movie.ProviderId,
-                    Type = movie.Type,
-                    Status = movie.Status,
-                    ImdbId = movie.ImdbId,
-                    Id = movie.Id,
-                    PosterPath = movie.PosterPath,
-                    ReleaseDate = movie.ReleaseDate,
-                    ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                    RequestedDate = movie.RequestedDate,
-                    Released = DateTime.Now > movie.ReleaseDate,
-                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
-                    Approved = movie.Available || movie.Approved,
-                    Title = movie.Title,
-                    Overview = movie.Overview,
-                    RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
-                    ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                    Available = movie.Available,
-                    Admin = IsAdmin,
-                    Issues = movie.Issues.ToString().CamelCaseToWords(),
-                    OtherMessage = movie.OtherMessage,
-                    AdminNotes = movie.AdminNote,
-                    Qualities = qualities.ToArray()
-                };
+                ProviderId = movie.ProviderId,
+                Type = movie.Type,
+                Status = movie.Status,
+                ImdbId = movie.ImdbId,
+                Id = movie.Id,
+                PosterPath = movie.PosterPath,
+                ReleaseDate = movie.ReleaseDate,
+                ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                RequestedDate = movie.RequestedDate,
+                Released = DateTime.Now > movie.ReleaseDate,
+                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
+                Approved = movie.Available || movie.Approved,
+                Title = movie.Title,
+                Overview = movie.Overview,
+                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                Available = movie.Available,
+                Admin = IsAdmin,
+                Issues = movie.Issues.ToString().CamelCaseToWords(),
+                OtherMessage = movie.OtherMessage,
+                AdminNotes = movie.AdminNote,
+                Qualities = qualities.ToArray()
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -196,7 +181,7 @@ namespace PlexRequests.UI.Modules
             {
                 dbTv = t.Result.ToList();
 
-				if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+                if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
                 {
                     dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
                 }
@@ -214,13 +199,14 @@ namespace PlexRequests.UI.Modules
                         {
                             return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri); // TODO: cache this!
 
-                    });
+                        });
                     }).ContinueWith((t) =>
                     {
                         qualities = t.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
                     }));
                 }
-                else {
+                else
+                {
                     var sickRageSettings = SickRageSettings.GetSettings();
                     if (sickRageSettings.Enabled)
                     {
@@ -309,8 +295,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response DeleteRequest(int requestid)
-		{
-			this.RequiresClaims (UserClaims.Admin);
+        {
+            this.RequiresClaims(UserClaims.Admin);
 
             var currentEntity = Service.Get(requestid);
             Service.DeleteRequest(currentEntity);
@@ -357,7 +343,7 @@ namespace PlexRequests.UI.Modules
 
         private Response ClearIssue(int requestId)
         {
-			this.RequiresClaims ( UserClaims.Admin);
+            this.RequiresClaims(UserClaims.Admin);
 
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
@@ -374,8 +360,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response ChangeRequestAvailability(int requestId, bool available)
-		{
-			this.RequiresClaims (UserClaims.Admin);
+        {
+            this.RequiresClaims(UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {
@@ -391,8 +377,8 @@ namespace PlexRequests.UI.Modules
         }
 
         private Response AddNote(int requestId, string noteArea)
-		{
-			this.RequiresClaims (UserClaims.Admin);
+        {
+            this.RequiresClaims(UserClaims.Admin);
             var originalRequest = Service.Get(requestId);
             if (originalRequest == null)
             {
@@ -405,6 +391,66 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                                        ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
+        }
+
+        private async Task<Response> GetMovies(int position)
+        {
+            var settings = PrSettings.GetSettings();
+
+            var allRequests = await Service.GetAllAsync();
+            allRequests = allRequests.Where(x => x.Type == RequestType.Movie).OrderByDescending(x => x.RequestedDate).Skip(position == 0 ? 0 : position * 3).Take(3);
+
+            var dbMovies = allRequests.ToList();
+
+            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            {
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
+            }
+
+            List<QualityModel> qualities = new List<QualityModel>();
+
+            if (IsAdmin)
+            {
+                var cpSettings = CpSettings.GetSettings();
+                if (cpSettings.Enabled)
+                {
+
+                    var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                    {
+                        return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
+                    });
+
+                    qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
+                }
+            }
+
+            var viewModel = dbMovies.Select(movie => new RequestViewModel
+            {
+                ProviderId = movie.ProviderId,
+                Type = movie.Type,
+                Status = movie.Status,
+                ImdbId = movie.ImdbId,
+                Id = movie.Id,
+                PosterPath = movie.PosterPath,
+                ReleaseDate = movie.ReleaseDate,
+                ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                RequestedDate = movie.RequestedDate,
+                Released = DateTime.Now > movie.ReleaseDate,
+                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
+                Approved = movie.Available || movie.Approved,
+                Title = movie.Title,
+                Overview = movie.Overview,
+                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                Available = movie.Available,
+                Admin = IsAdmin,
+                Issues = movie.Issues.ToString().CamelCaseToWords(),
+                OtherMessage = movie.OtherMessage,
+                AdminNotes = movie.AdminNote,
+                Qualities = qualities.ToArray()
+            }).ToList();
+
+            return Response.AsJson(viewModel);
         }
     }
 }
