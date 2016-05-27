@@ -12,6 +12,8 @@ var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
 var base = $('#baseUrl').text();
+var tvLoaded = false;
+var albumLoaded = false;
 
 var mixItUpDefault = {
     animation: { enable: true },
@@ -42,6 +44,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
     $('.approve-category,.delete-category').hide();
     if (target === "#TvShowTab") {
+        if (!tvLoaded) {
+            tvLoaded = true;
+            tvLoad();
+        }
+
         $('#approveTVShows,#deleteTVShows').show();
         if ($ml.mixItUp('isLoaded')) {
             activeState = $ml.mixItUp('getState');
@@ -51,8 +58,8 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             activeState = $musicL.mixItUp('getState');
             $musicL.mixItUp('destroy');
         }
-        if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
-        $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
+        //if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
+        //$tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
     if (target === "#MoviesTab") {
         $('#approveMovies,#deleteMovies').show();
@@ -69,6 +76,10 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     }
 
     if (target === "#MusicTab") {
+        if (!albumLoaded) {
+            albumLoaded = true;
+            albumLoad();
+        }
         $('#approveMusic,#deleteMusic').show();
         if ($tvl.mixItUp('isLoaded')) {
             activeState = $tvl.mixItUp('getState');
@@ -516,10 +527,8 @@ function mixItUpConfig(activeState) {
 
 var position = 0;
 function initLoad() {
-    //movieLoad();
-    movieLoadWithPosition(0);
-    tvLoad();
-    albumLoad();
+    movieLoad();
+
 }
 
 function movieLoad() {
@@ -545,52 +554,6 @@ function movieLoad() {
         $ml.mixItUp(mixItUpConfig());
     });
 };
-
-function movieLoadWithPosition(pos) {
-    var $ml = $('#movieList');
-    if ($ml.mixItUp('isLoaded')) {
-        activeState = $ml.mixItUp('getState');
-        $ml.mixItUp('destroy');
-    }
-
-    var url = createBaseUrl(base, '/requests/movies/'+pos);
-    $.ajax(url).success(function (results) {
-        if (results.length > 0) {
-            position++;
-            results.forEach(function (result) {
-                var context = buildRequestContext(result, "movie");
-                var html = searchTemplate(context);
-                $ml.append(html);
-            });
-        }
-        else {
-            $ml.append(noResultsHtml.format("movie"));
-        }
-        $ml.mixItUp(mixItUpConfig());
-    });
-};
-
-var win = $(window);
-
-$(win).scroll(function () {
-    if ($(win).scrollTop() + $(win).height() >= $(document).height() - 100) {
-        // Debounce the scroll event
-        if (this.timeoutId)
-            win.clearTimeout(this.timeoutId);
-        this.timeoutId = win.setTimeout(function () {
-            movieLoadWithPosition(position);
-        }, 200);
-    }
-});
-//// Each time the user scrolls
-//win.scroll(function () {
-//    // End of the document reached?
-//    if ($(document).height() - win.height() == win.scrollTop()) {
-//        $('#loading').show();
-
-//        movieLoadWithPosition(position);
-//    }
-//});
 
 function tvLoad() {
     var $tvl = $('#tvList');

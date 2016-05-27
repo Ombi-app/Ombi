@@ -75,17 +75,16 @@ namespace PlexRequests.UI.Modules
 
             Get["/"] = _ => LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
-            Get["/movies/{position}", true] = async (x, ct) => await GetMovies(x.position);
-            Get["/tvshows"] = _ => GetTvShows();
-            Get["/albums"] = _ => GetAlbumRequests();
-            Post["/delete"] = _ => DeleteRequest((int)Request.Form.id);
-            Post["/reportissue"] = _ => ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
-            Post["/reportissuecomment"] = _ => ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
+            Get["/tvshows", true] = async (c, ct) => await GetTvShows();
+            Get["/albums", true] = async (x,ct) => await GetAlbumRequests();
+            Post["/delete", true] = async (x, ct) => await DeleteRequest((int)Request.Form.id);
+            Post["/reportissue", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
+            Post["/reportissuecomment", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
 
-            Post["/clearissues"] = _ => ClearIssue((int)Request.Form.Id);
+            Post["/clearissues", true] = async (x, ct) => await ClearIssue((int)Request.Form.Id);
 
-            Post["/changeavailability"] = _ => ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
-            Post["/addnote"] = _ => AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
+            Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
+            Post["/addnote", true] = async (x, ct) => await AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
 
         private IRequestService Service { get; }
@@ -166,44 +165,31 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewModel);
         }
 
-        private Response GetTvShows() // TODO: async await the API calls
+        private async Task<Response> GetTvShows()
         {
             var settings = PrSettings.GetSettings();
 
-            List<Task> taskList = new List<Task>();
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.Type == RequestType.TvShow);
 
-            List<RequestedModel> dbTv = new List<RequestedModel>();
-            taskList.Add(Task.Factory.StartNew(() =>
+            var dbTv = requests;
+
+            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
             {
-                return Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+                dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
+            }
 
-            }).ContinueWith((t) =>
-            {
-                dbTv = t.Result.ToList();
-
-                if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
-                {
-                    dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
-                }
-            }));
-
-            List<QualityModel> qualities = new List<QualityModel>();
+            IEnumerable<QualityModel> qualities = new List<QualityModel>();
             if (IsAdmin)
             {
                 var sonarrSettings = SonarrSettings.GetSettings();
                 if (sonarrSettings.Enabled)
                 {
-                    taskList.Add(Task.Factory.StartNew(() =>
+                    var result = Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
                     {
-                        return Cache.GetOrSet(CacheKeys.SonarrQualityProfiles, () =>
-                        {
-                            return SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri); // TODO: cache this!
-
-                        });
-                    }).ContinueWith((t) =>
-                    {
-                        qualities = t.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
-                    }));
+                        return await Task.Run(() => SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+                    });
+                    qualities = result.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
                 }
                 else
                 {
@@ -214,8 +200,6 @@ namespace PlexRequests.UI.Modules
                     }
                 }
             }
-
-            Task.WaitAll(taskList.ToArray());
 
             var viewModel = dbTv.Select(tv =>
             {
@@ -250,10 +234,11 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewModel);
         }
 
-        private Response GetAlbumRequests()
+        private async Task<Response> GetAlbumRequests()
         {
             var settings = PrSettings.GetSettings();
-            var dbAlbum = Service.GetAll().Where(x => x.Type == RequestType.Album);
+            var dbAlbum = await Service.GetAllAsync();
+            dbAlbum = dbAlbum.Where(x => x.Type == RequestType.Album);
             if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
             {
                 dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
@@ -294,12 +279,12 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewModel);
         }
 
-        private Response DeleteRequest(int requestid)
+        private async Task<Response> DeleteRequest(int requestid)
         {
             this.RequiresClaims(UserClaims.Admin);
 
-            var currentEntity = Service.Get(requestid);
-            Service.DeleteRequest(currentEntity);
+            var currentEntity = await Service.GetAsync(requestid);
+            await Service.DeleteRequestAsync(currentEntity);
             return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
@@ -311,9 +296,9 @@ namespace PlexRequests.UI.Modules
         /// <param name="issue">The issue.</param>
         /// <param name="comment">The comment.</param>
         /// <returns></returns>
-        private Response ReportIssue(int requestId, IssueState issue, string comment)
+        private async Task<Response> ReportIssue(int requestId, IssueState issue, string comment)
         {
-            var originalRequest = Service.Get(requestId);
+            var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
@@ -324,7 +309,7 @@ namespace PlexRequests.UI.Modules
                 : string.Empty;
 
 
-            var result = Service.UpdateRequest(originalRequest);
+            var result = await Service.UpdateRequestAsync(originalRequest);
 
             var model = new NotificationModel
             {
@@ -334,18 +319,18 @@ namespace PlexRequests.UI.Modules
                 DateTime = DateTime.Now,
                 Body = issue == IssueState.Other ? comment : issue.ToString().CamelCaseToWords()
             };
-            NotificationService.Publish(model);
+            await NotificationService.Publish(model);
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not add issue, please try again or contact the administrator!" });
         }
 
-        private Response ClearIssue(int requestId)
+        private async Task<Response> ClearIssue(int requestId)
         {
             this.RequiresClaims(UserClaims.Admin);
 
-            var originalRequest = Service.Get(requestId);
+            var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to clear it!" });
@@ -353,16 +338,16 @@ namespace PlexRequests.UI.Modules
             originalRequest.Issues = IssueState.None;
             originalRequest.OtherMessage = string.Empty;
 
-            var result = Service.UpdateRequest(originalRequest);
+            var result = await Service.UpdateRequestAsync(originalRequest);
             return Response.AsJson(result
                                        ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not clear issue, please try again or check the logs" });
         }
 
-        private Response ChangeRequestAvailability(int requestId, bool available)
+        private async Task<Response> ChangeRequestAvailability(int requestId, bool available)
         {
             this.RequiresClaims(UserClaims.Admin);
-            var originalRequest = Service.Get(requestId);
+            var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to change the availability!" });
@@ -370,16 +355,16 @@ namespace PlexRequests.UI.Modules
 
             originalRequest.Available = available;
 
-            var result = Service.UpdateRequest(originalRequest);
+            var result = await Service.UpdateRequestAsync(originalRequest);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
         }
 
-        private Response AddNote(int requestId, string noteArea)
+        private async Task<Response> AddNote(int requestId, string noteArea)
         {
             this.RequiresClaims(UserClaims.Admin);
-            var originalRequest = Service.Get(requestId);
+            var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to add a note!" });
@@ -387,70 +372,10 @@ namespace PlexRequests.UI.Modules
 
             originalRequest.AdminNote = noteArea;
 
-            var result = Service.UpdateRequest(originalRequest);
+            var result = await Service.UpdateRequestAsync(originalRequest);
             return Response.AsJson(result
                                        ? new JsonResponseModel { Result = true }
                                        : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
-        }
-
-        private async Task<Response> GetMovies(int position)
-        {
-            var settings = PrSettings.GetSettings();
-
-            var allRequests = await Service.GetAllAsync();
-            allRequests = allRequests.Where(x => x.Type == RequestType.Movie).OrderByDescending(x => x.RequestedDate).Skip(position == 0 ? 0 : position * 3).Take(3);
-
-            var dbMovies = allRequests.ToList();
-
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
-            {
-                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
-            }
-
-            List<QualityModel> qualities = new List<QualityModel>();
-
-            if (IsAdmin)
-            {
-                var cpSettings = CpSettings.GetSettings();
-                if (cpSettings.Enabled)
-                {
-
-                    var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
-                    {
-                        return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
-                    });
-
-                    qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
-                }
-            }
-
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
-            {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate,
-                ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                RequestedDate = movie.RequestedDate,
-                Released = DateTime.Now > movie.ReleaseDate,
-                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
-                Approved = movie.Available || movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = IsAdmin,
-                Issues = movie.Issues.ToString().CamelCaseToWords(),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote,
-                Qualities = qualities.ToArray()
-            }).ToList();
-
-            return Response.AsJson(viewModel);
         }
     }
 }
