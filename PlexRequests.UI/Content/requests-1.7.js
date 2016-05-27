@@ -190,7 +190,7 @@ $('#deleteTVShows').click(function (e) {
         return;
     }
 
-    loadingButton(buttonId, "success");
+    loadingButton(buttonId, "warning");
     var url = createBaseUrl(base, '/approval/deletealltvshows');
     $.ajax({
         type: 'post',
