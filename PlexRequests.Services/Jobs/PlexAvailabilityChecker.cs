@@ -326,33 +326,36 @@ namespace PlexRequests.Services.Jobs
             try
             {
                 var plexUser = PlexApi.GetUsers(apiKey);
-                if (plexUser?.User == null || plexUser.User.Length == 0)
-                {
-                    return;
-                }
+                var userAccount = PlexApi.GetAccount(apiKey);
+
+                var adminUsername = userAccount.Username ?? string.Empty;
 
                 var users = UserNotifyRepo.GetAll().ToList();
+                Log.Debug("Notifying Users Count {0}", users.Count);
                 foreach (var model in modelChanged)
                 {
                     var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers);
+                    Log.Debug("Selected Users {0}", selectedUsers.DumpJson());
                     foreach (var user in selectedUsers)
                     {
+                        Log.Info("Notifying user {0}", user);
+                        if (user == adminUsername)
+                        {
+                            Log.Info("This user is the Plex server owner");
+                            PublishUserNotification(userAccount.Username, userAccount.Email, model.Title);
+                            return;
+                        }
+
                         var email = plexUser.User.FirstOrDefault(x => x.Username == user);
                         if (email == null)
                         {
+                            Log.Info("There is no email address for this Plex user, cannot send notification");
                             // We do not have a plex user that requested this!
                             continue;
                         }
-                        var notificationModel = new NotificationModel
-                        {
-                            User = email.Username,
-                            UserEmail = email.Email,
-                            NotificationType = NotificationType.RequestAvailable,
-                            Title = model.Title
-                        };
 
-                        // Send the notification to the user.
-                        Notification.Publish(notificationModel);
+                        Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
+                        PublishUserNotification(email.Username, email.Email, model.Title);
                     }
                 }
             }
@@ -360,6 +363,20 @@ namespace PlexRequests.Services.Jobs
             {
                 Log.Error(e);
             }
+        }
+
+        private void PublishUserNotification(string username, string email, string title)
+        {
+            var notificationModel = new NotificationModel
+            {
+                User = username,
+                UserEmail = email,
+                NotificationType = NotificationType.RequestAvailable,
+                Title = title
+            };
+
+            // Send the notification to the user.
+            Notification.Publish(notificationModel);
         }
 
         public void Execute(IJobExecutionContext context)
