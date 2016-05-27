@@ -187,7 +187,7 @@ namespace PlexRequests.Core
         {
             try
             {
-                var userMapper = new UserMapper(new UserRepository<UsersModel>(Db));
+                var userMapper = new UserMapper(new UserRepository<UsersModel>(Db, new MemoryCacheProvider()));
                 var users = userMapper.GetUsers();
 
                 foreach (var u in users)

@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 using PlexRequests.Core.SettingModels;
@@ -62,6 +64,21 @@ namespace PlexRequests.Core
             return model;
         }
 
+        public async Task<T> GetSettingsAsync()
+        {
+            var result = await Repo.GetAsync(EntityName);
+            if (result == null)
+            {
+                return new T();
+            }
+            result.Content = DecryptSettings(result);
+            var obj = string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
+
+            var model = obj;
+
+            return model;
+        }
+
         public bool SaveSettings(T model)
         {
             var entity = Repo.Get(EntityName);
@@ -88,6 +105,31 @@ namespace PlexRequests.Core
              return result;
         }
 
+        public async Task<bool> SaveSettingsAsync(T model)
+        {
+            var entity = await Repo.GetAsync(EntityName);
+
+            if (entity == null)
+            {
+                var newEntity = model;
+
+                var settings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(newEntity, SerializerSettings.Settings) };
+                settings.Content = EncryptSettings(settings);
+                var insertResult = await Repo.InsertAsync(settings);
+
+                return insertResult != int.MinValue;
+            }
+
+            var modified = model;
+            modified.Id = entity.Id;
+
+            var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
+            globalSettings.Content = EncryptSettings(globalSettings);
+            var result = await Repo.UpdateAsync(globalSettings);
+
+            return result;
+        }
+
         public bool Delete(T model)
         {
             var entity = Repo.Get(EntityName);
@@ -97,6 +139,17 @@ namespace PlexRequests.Core
             }
 
             // Entity does not exist so nothing to delete
+            return true;
+        }
+
+        public async Task<bool> DeleteAsync(T model)
+        {
+            var entity = Repo.Get(EntityName);
+            if (entity != null)
+            {
+                return await Repo.DeleteAsync(entity);
+            }
+            
             return true;
         }
 

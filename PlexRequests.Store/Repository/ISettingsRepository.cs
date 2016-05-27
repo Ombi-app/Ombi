@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using PlexRequests.Store.Models;
 
 namespace PlexRequests.Store.Repository
@@ -37,12 +37,14 @@ namespace PlexRequests.Store.Repository
         /// </summary>
         /// <param name="entity">The entity.</param>
         long Insert(GlobalSettings entity);
+        Task<int> InsertAsync(GlobalSettings entity);
 
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
         IEnumerable<GlobalSettings> GetAll();
+        Task<IEnumerable<GlobalSettings>> GetAllAsync();
 
         /// <summary>
         /// Gets the specified identifier.
@@ -50,12 +52,14 @@ namespace PlexRequests.Store.Repository
         /// <param name="settingsName">Name of the settings.</param>
         /// <returns></returns>
         GlobalSettings Get(string settingsName);
+        Task<GlobalSettings> GetAsync(string settingsName);
 
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
+        Task<bool> DeleteAsync(GlobalSettings entity);
         bool Delete(GlobalSettings entity);
 
         /// <summary>
@@ -63,6 +67,7 @@ namespace PlexRequests.Store.Repository
         /// </summary>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
+        Task<bool> UpdateAsync(GlobalSettings entity);
         bool Update(GlobalSettings entity);
 
 

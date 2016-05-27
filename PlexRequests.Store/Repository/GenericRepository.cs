@@ -1,4 +1,5 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: GenericRepository.cs
@@ -23,59 +24,38 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
-
 using NLog;
-
 using PlexRequests.Helpers;
 
 namespace PlexRequests.Store.Repository
 {
-    public class GenericRepository<T> : IRepository<T> where T : Entity
+    public class GenericRepository<T> : BaseGenericRepository<T>, IRepository<T> where T : Entity
     {
-        private ICacheProvider Cache { get; }
-        public GenericRepository(ISqliteConfiguration config, ICacheProvider cache)
+ 
+        public GenericRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config, cache)
         {
-            Config = config;
-            Cache = cache;
+           
         }
-
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        private ISqliteConfiguration Config { get; }
-        public long Insert(T entity)
-        {
-            ResetCache();
-            using (var cnn = Config.DbConnection())
-            {
-                cnn.Open();
-                return cnn.Insert(entity);
-            }
-        }
-
-        public IEnumerable<T> GetAll()
-        {
-
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                var result = db.GetAll<T>();
-                return result;
-            }
-
-        }
-
-        public T Get(string id)
+        
+        public override T Get(string id)
         {
             throw new NotSupportedException("Get(string) is not supported. Use Get(int)");
         }
 
-        public T Get(int id)
+        public override Task<T> GetAsync(string id)
+        {
+            throw new NotSupportedException("GetAsync(string) is not supported. Use GetAsync(int)");
+        }
+
+        public override T Get(int id)
         {
             var key = "Get" + id;
             var item = Cache.GetOrSet(
@@ -91,49 +71,22 @@ namespace PlexRequests.Store.Repository
             return item;
         }
 
-        public void Delete(T entity)
+        public override async Task<T> GetAsync(int id)
         {
-            ResetCache();
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                db.Delete(entity);
-            }
-        }
-
-        public bool Update(T entity)
-        {
-            ResetCache();
-            Log.Trace("Updating entity");
-            Log.Trace(entity.DumpJson());
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                return db.Update(entity);
-            }
-        }
-
-        public bool UpdateAll(IEnumerable<T> entity)
-        {
-            ResetCache();
-            Log.Trace("Updating all entities");
-            var result = new HashSet<bool>();
-
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                foreach (var e in entity)
+            var key = "Get" + id;
+            var item = await Cache.GetOrSetAsync(
+                key,
+                async () =>
                 {
-                    result.Add(db.Update(e));
-                }
-            }
-            return result.All(x => true);
+                    using (var db = Config.DbConnection())
+                    {
+                        db.Open();
+                        return await db.GetAsync<T>(id);
+                    }
+                });
+            return item;
         }
 
-        private void ResetCache()
-        {
-            Cache.Remove("Get");
-            Cache.Remove("GetAll");
-        }
+        
     }
 }

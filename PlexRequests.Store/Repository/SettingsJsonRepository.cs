@@ -26,7 +26,7 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
 
 using PlexRequests.Helpers;
@@ -57,6 +57,15 @@ namespace PlexRequests.Store.Repository
             }
         }
 
+        public async Task<int> InsertAsync(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                return await con.InsertAsync(entity);
+            }
+        }
+
         public IEnumerable<GlobalSettings> GetAll()
         {
             var key = TypeName + "GetAll";
@@ -65,6 +74,20 @@ namespace PlexRequests.Store.Repository
                 using (var con = Db.DbConnection())
                 {
                     var page = con.GetAll<GlobalSettings>();
+                    return page;
+                }
+            }, 5);
+            return item;
+        }
+
+        public async Task<IEnumerable<GlobalSettings>> GetAllAsync()
+        {
+            var key = TypeName + "GetAll";
+            var item = await Cache.GetOrSetAsync(key, async() =>
+            {
+                using (var con = Db.DbConnection())
+                {
+                    var page = await con.GetAllAsync<GlobalSettings>();
                     return page;
                 }
             }, 5);
@@ -83,6 +106,38 @@ namespace PlexRequests.Store.Repository
                 }
             }, 5);
             return item;
+        }
+
+        public async Task<GlobalSettings> GetAsync(string settingsName)
+        {
+            var key = settingsName + "Get";
+            var item = await Cache.GetOrSetAsync(key, async() =>
+            {
+                using (var con = Db.DbConnection())
+                {
+                    var page = await con.GetAllAsync<GlobalSettings>();
+                    return page.SingleOrDefault(x => x.SettingsName == settingsName);
+                }
+            }, 5);
+            return item;
+        }
+
+        public async Task<bool> DeleteAsync(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                return await con.DeleteAsync(entity);
+            }
+        }
+
+        public async Task<bool> UpdateAsync(GlobalSettings entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                return await con.UpdateAsync(entity);
+            }
         }
 
         public bool Delete(GlobalSettings entity)

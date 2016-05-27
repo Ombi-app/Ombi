@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Store.Repository
 {
@@ -35,12 +36,15 @@ namespace PlexRequests.Store.Repository
         /// </summary>
         /// <param name="entity">The entity.</param>
         long Insert(T entity);
+        Task<int> InsertAsync(T entity);
 
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
         IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
+
 
         /// <summary>
         /// Gets the specified identifier.
@@ -48,12 +52,15 @@ namespace PlexRequests.Store.Repository
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
         T Get(string id);
+        Task<T> GetAsync(string id);
         T Get(int id);
+        Task<T> GetAsync(int id);
         /// <summary>
         /// Deletes the specified entity.
         /// </summary>
         /// <param name="entity">The entity.</param>
         void Delete(T entity);
+        Task DeleteAsync(T entity);
 
         /// <summary>
         /// Updates the specified entity.
@@ -61,6 +68,7 @@ namespace PlexRequests.Store.Repository
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         bool Update(T entity);
+        Task<bool> UpdateAsync(T entity);
 
         /// <summary>
         /// Updates all.
@@ -68,5 +76,6 @@ namespace PlexRequests.Store.Repository
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         bool UpdateAll(IEnumerable<T> entity);
+        Task<bool> UpdateAllAsync(IEnumerable<T> entity);
     }
 }

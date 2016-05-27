@@ -37,7 +37,9 @@ namespace PlexRequests.Core
         long AddRequest(RequestedModel model);
         Task<int> AddRequestAsync(RequestedModel model);
         RequestedModel CheckRequest(int providerId);
+        Task<RequestedModel> CheckRequestAsync(int providerId);
         RequestedModel CheckRequest(string musicId);
+        Task<RequestedModel> CheckRequestAsync(string musicId);
         
         void DeleteRequest(RequestedModel request);
         Task DeleteRequestAsync(RequestedModel request);

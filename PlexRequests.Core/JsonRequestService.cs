@@ -78,9 +78,23 @@ namespace PlexRequests.Core
             return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
 
+        public async Task<RequestedModel> CheckRequestAsync(int providerId)
+        {
+            var blobs = await Repo.GetAllAsync();
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+        }
+
         public RequestedModel CheckRequest(string musicId)
         {
             var blobs = Repo.GetAll();
+            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
+            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+        }
+
+        public async Task<RequestedModel> CheckRequestAsync(string musicId)
+        {
+            var blobs = await Repo.GetAllAsync();
             var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
             return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
