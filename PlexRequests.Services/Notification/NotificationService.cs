@@ -76,7 +76,7 @@ namespace PlexRequests.Services.Notification
             Observers.TryRemove(notification.NotificationName, out notification);
         }
 
-        private static async Task NotifyAsync(INotification notification, NotificationModel model)
+        private async Task NotifyAsync(INotification notification, NotificationModel model)
         {
             try
             {
@@ -89,7 +89,7 @@ namespace PlexRequests.Services.Notification
 
         }
 
-        private static async Task NotifyAsync(INotification notification, NotificationModel model, Settings settings)
+        private async Task NotifyAsync(INotification notification, NotificationModel model, Settings settings)
         {
             try
             {
