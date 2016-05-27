@@ -164,8 +164,6 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-
-
             var apiMovies = new List<MovieResult>();
             await Task.Factory.StartNew(
                 () =>
@@ -208,16 +206,12 @@ namespace PlexRequests.UI.Modules
                         apiMovies = t.Result;
                     });
 
-            Dictionary<int, RequestedModel> dbMovies = new Dictionary<int, RequestedModel>();
-            await Task.Factory.StartNew(() =>
-             {
-                 return RequestService.GetAll().Where(x => x.Type == RequestType.Movie);
+            var allResults = await RequestService.GetAllAsync();
+            allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
-             }).ContinueWith((t) =>
-             {
-                 var distinctResults = t.Result.DistinctBy(x => x.ProviderId);
-                 dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
-             });
+            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+            var dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+
 
             var cpCached = CpCacher.QueuedIds();
             var plexMovies = Checker.GetPlexMovies();
@@ -287,15 +281,10 @@ namespace PlexRequests.UI.Modules
                 apiTv = t.Result;
             });
 
-            var dbTv = new Dictionary<int, RequestedModel>();
-            await Task.Factory.StartNew(() =>
-            {
-                return RequestService.GetAll().Where(x => x.Type == RequestType.TvShow);
+            var allResults = await RequestService.GetAllAsync();
+            allResults = allResults.Where(x => x.Type == RequestType.TvShow);
 
-            }).ContinueWith((t) =>
-            {
-                dbTv = t.Result.ToDictionary(x => x.ProviderId);
-            });
+            var dbTv = allResults.ToDictionary(x => x.ProviderId);
 
             if (!apiTv.Any())
             {
@@ -366,18 +355,11 @@ namespace PlexRequests.UI.Modules
                 apiAlbums = t.Result.releases ?? new List<Release>();
             });
 
-            var dbAlbum = new Dictionary<string, RequestedModel>();
-            await Task.Factory.StartNew(() =>
-             {
-                 return RequestService.GetAll().Where(x => x.Type == RequestType.Album);
+            var allResults = await RequestService.GetAllAsync();
+            allResults = allResults.Where(x => x.Type == RequestType.Album);
 
-             }).ContinueWith((t) =>
-             {
-                 dbAlbum = t.Result.ToDictionary(x => x.MusicBrainzId);
-             });
-
-
-
+            var dbAlbum = allResults.ToDictionary(x => x.MusicBrainzId);
+            
             var plexAlbums = Checker.GetPlexAlbums();
 
             var viewAlbum = new List<SearchMusicViewModel>();

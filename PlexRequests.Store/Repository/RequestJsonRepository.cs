@@ -26,6 +26,7 @@
 #endregion
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Dapper.Contrib.Extensions;
 
@@ -56,6 +57,16 @@ namespace PlexRequests.Store.Repository
             }
         }
 
+        public async Task<int> InsertAsync(RequestBlobs entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                var id = await con.InsertAsync(entity);
+                return id;
+            }
+        }
+
         public IEnumerable<RequestBlobs> GetAll()
         {
             var key = "GetAll";
@@ -64,6 +75,20 @@ namespace PlexRequests.Store.Repository
                 using (var con = Db.DbConnection())
                 {
                     var page = con.GetAll<RequestBlobs>();
+                    return page;
+                }
+            }, 5);
+            return item;
+        }
+
+        public async Task<IEnumerable<RequestBlobs>> GetAllAsync()
+        {
+            var key = "GetAll";
+            var item = await Cache.GetOrSetAsync(key, async() =>
+            {
+                using (var con = Db.DbConnection())
+                {
+                    var page = await con.GetAllAsync<RequestBlobs>();
                     return page;
                 }
             }, 5);
@@ -84,6 +109,20 @@ namespace PlexRequests.Store.Repository
             return item;
         }
 
+        public async Task<RequestBlobs> GetAsync(int id)
+        {
+            var key = "Get" + id;
+            var item = await Cache.GetOrSetAsync(key, async () =>
+            {
+                using (var con = Db.DbConnection())
+                {
+                    var page = await con.GetAsync<RequestBlobs>(id);
+                    return page;
+                }
+            }, 5);
+            return item;
+        }
+
         public bool Delete(RequestBlobs entity)
         {
             ResetCache();
@@ -93,12 +132,45 @@ namespace PlexRequests.Store.Repository
             }
         }
 
+        public async Task<bool> DeleteAsync(RequestBlobs entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                return await con.DeleteAsync(entity);
+            }
+        }
+
+        public async Task<bool> DeleteAllAsync(IEnumerable<RequestBlobs> entity)
+        {
+            ResetCache();
+            var result = new HashSet<bool>();
+            using (var db = Db.DbConnection())
+            {
+                db.Open();
+                foreach (var e in entity)
+                {
+                    result.Add(await db.DeleteAsync(e));
+                }
+            }
+            return result.All(x => true);
+        }
+
         public bool Update(RequestBlobs entity)
         {
             ResetCache();
             using (var con = Db.DbConnection())
             {
                 return con.Update(entity);
+            }
+        }
+
+        public async Task<bool> UpdateAsync(RequestBlobs entity)
+        {
+            ResetCache();
+            using (var con = Db.DbConnection())
+            {
+                return await con.UpdateAsync(entity);
             }
         }
 
@@ -118,6 +190,21 @@ namespace PlexRequests.Store.Repository
                 foreach (var e in entity)
                 {
                     result.Add(db.Update(e));
+                }
+            }
+            return result.All(x => true);
+        }
+
+        public async Task<bool> UpdateAllAsync(IEnumerable<RequestBlobs> entity)
+        {
+            ResetCache();
+            var result = new HashSet<bool>();
+            using (var db = Db.DbConnection())
+            {
+                db.Open();
+                foreach (var e in entity)
+                {
+                    result.Add(await db.UpdateAsync(e));
                 }
             }
             return result.All(x => true);

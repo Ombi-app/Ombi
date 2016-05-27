@@ -26,6 +26,8 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
 using PlexRequests.Store;
 
 namespace PlexRequests.Core
@@ -33,13 +35,18 @@ namespace PlexRequests.Core
     public interface IRequestService
     {
         long AddRequest(RequestedModel model);
+        Task<int> AddRequestAsync(RequestedModel model);
         RequestedModel CheckRequest(int providerId);
         RequestedModel CheckRequest(string musicId);
         
         void DeleteRequest(RequestedModel request);
+        Task DeleteRequestAsync(RequestedModel request);
         bool UpdateRequest(RequestedModel model);
+        Task<bool> UpdateRequestAsync(RequestedModel model);
         RequestedModel Get(int id);
+        Task<RequestedModel> GetAsync(int id);
         IEnumerable<RequestedModel> GetAll();
+        Task<IEnumerable<RequestedModel>> GetAllAsync();
         bool BatchUpdate(List<RequestedModel> model);
         bool BatchDelete(List<RequestedModel> model);
     }

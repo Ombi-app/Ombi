@@ -27,6 +27,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 
@@ -57,6 +58,19 @@ namespace PlexRequests.Core
             return result ? id : -1;
         }
 
+        public async Task<int> AddRequestAsync(RequestedModel model)
+        {
+            var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId };
+            var id = await Repo.InsertAsync(entity);
+
+            model.Id = id;
+
+            entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = id, MusicId = model.MusicBrainzId };
+            var result = await Repo.UpdateAsync(entity);
+
+            return result ? id : -1;
+        }
+
         public RequestedModel CheckRequest(int providerId)
         {
             var blobs = Repo.GetAll();
@@ -77,10 +91,22 @@ namespace PlexRequests.Core
             Repo.Delete(blob);
         }
 
+        public async Task DeleteRequestAsync(RequestedModel request)
+        {
+            var blob = await Repo.GetAsync(request.Id);
+            await Repo.DeleteAsync(blob);
+        }
+
         public bool UpdateRequest(RequestedModel model)
         {
             var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
             return Repo.Update(entity);
+        }
+
+        public async Task<bool> UpdateRequestAsync(RequestedModel model)
+        {
+            var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
+            return await Repo.UpdateAsync(entity);
         }
 
         public RequestedModel Get(int id)
@@ -94,9 +120,28 @@ namespace PlexRequests.Core
             return model;
         }
 
+        public async Task<RequestedModel> GetAsync(int id)
+        {
+            var blob = await Repo.GetAsync(id);
+            if (blob == null)
+            {
+                return new RequestedModel();
+            }
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            return model;
+        }
+
         public IEnumerable<RequestedModel> GetAll()
         {
             var blobs = Repo.GetAll();
+            return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
+                .Select(JsonConvert.DeserializeObject<RequestedModel>)
+                .ToList();
+        }
+
+        public async Task<IEnumerable<RequestedModel>> GetAllAsync()
+        {
+            var blobs = await Repo.GetAllAsync();
             return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
                 .Select(JsonConvert.DeserializeObject<RequestedModel>)
                 .ToList();

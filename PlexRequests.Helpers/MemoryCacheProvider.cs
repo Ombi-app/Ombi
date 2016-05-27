@@ -27,6 +27,7 @@
 using System;
 using System.Linq;
 using System.Runtime.Caching;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Helpers
 {
@@ -62,6 +63,23 @@ namespace PlexRequests.Helpers
             // Return a copy, not the stored cache reference
             // The cached object will not change
             // If we 
+            return item.CloneJson();
+        }
+
+        public async Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> itemCallback, int cacheTime = 20) where T : class
+        {
+            var item = Get<T>(key);
+            if (item == null)
+            {
+                item = await itemCallback();
+                if (item != null)
+                {
+                    Set(key, item, cacheTime);
+                }
+            }
+
+            // Return a copy, not the stored cache reference
+            // The cached object will not change
             return item.CloneJson();
         }
 
