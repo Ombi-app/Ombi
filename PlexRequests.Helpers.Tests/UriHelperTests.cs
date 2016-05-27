@@ -26,7 +26,8 @@
 #endregion
 
 using System;
-using System.Linq.Expressions;
+using System.Collections.Generic;
+
 using NUnit.Framework;
 
 namespace PlexRequests.Helpers.Tests
@@ -35,11 +36,9 @@ namespace PlexRequests.Helpers.Tests
     public class UriHelperTests
     {
         [TestCaseSource(nameof(UriData))]
-        public void CreateUri1(string uri, Uri expected)
+        public Uri CreateUri1(string uri)
         {
-            var result = uri.ReturnUri();
-
-            Assert.That(result, Is.EqualTo(expected));
+            return uri.ReturnUri();
         }
 
         [Test]
@@ -52,54 +51,58 @@ namespace PlexRequests.Helpers.Tests
         }
 
         [TestCaseSource(nameof(UriDataWithPort))]
-        public void CreateUri2(string uri, int port, Uri expected)
+        public Uri CreateUri2(string uri, int port)
         {
-            var result = uri.ReturnUri(port);
-
-            Assert.That(result, Is.EqualTo(expected));
+            return uri.ReturnUri(port);
         }
 
         [TestCaseSource(nameof(UriDataWithSubDir))]
-        public void CreateUriWithSubDir(string uri, int port, bool ssl, string subDir, Uri expected)
+        public Uri CreateUriWithSubDir(string uri, int port, bool ssl, string subDir)
         {
-            var result = uri.ReturnUriWithSubDir(port, ssl, subDir);
-
-            Assert.That(result, Is.EqualTo(expected));
+            return uri.ReturnUriWithSubDir(port, ssl, subDir);
         }
 
-        static readonly object[] UriData =
+        private static IEnumerable<TestCaseData> UriData
         {
-            new object[] { "google.com", new Uri("http://google.com/"),  },
-            new object[] { "http://google.com", new Uri("http://google.com/"),  },
-            new object[] { "https://google.com", new Uri("https://google.com/"),  },
-            new object[] { "192.168.1.1", new Uri("http://192.168.1.1")},
-            new object[] { "0.0.0.0:5533", new Uri("http://0.0.0.0:5533")},
-            new object[] {"www.google.com", new Uri("http://www.google.com/")},
-            new object[] {"http://www.google.com/", new Uri("http://www.google.com/") },
-            new object[] {"https://www.google.com", new Uri("https://www.google.com/") },
-            new object[] {"www.google.com:443", new Uri("http://www.google.com:443/") },
-            new object[] {"https://www.google.com:443", new Uri("https://www.google.com:443/") },
-            new object[] {"http://www.google.com:443/id=2", new Uri("http://www.google.com:443/id=2") },
-            new object[] {"www.google.com:4438/id=22", new Uri("http://www.google.com:4438/id=22") }
-        };
+            get
+            {
+                yield return new TestCaseData("google.com").Returns(new Uri("http://google.com/"));
+                yield return new TestCaseData("http://google.com").Returns(new Uri("http://google.com/"));
+                yield return new TestCaseData("https://google.com").Returns(new Uri("https://google.com/"));
+                yield return new TestCaseData("192.168.1.1").Returns(new Uri("http://192.168.1.1"));
+                yield return new TestCaseData("0.0.0.0:5533").Returns(new Uri("http://0.0.0.0:5533"));
+                yield return new TestCaseData("www.google.com").Returns(new Uri("http://www.google.com/"));
+                yield return new TestCaseData("http://www.google.com/").Returns(new Uri("http://www.google.com/"));
+                yield return new TestCaseData("https://www.google.com").Returns(new Uri("https://www.google.com/"));
+                yield return new TestCaseData("www.google.com:443").Returns(new Uri("http://www.google.com:443/"));
+                yield return new TestCaseData("https://www.google.com:443").Returns(new Uri("https://www.google.com/"));
+                yield return new TestCaseData("http://www.google.com:443/id=2").Returns(new Uri("http://www.google.com:443/id=2"));
+                yield return new TestCaseData("www.google.com:4438/id=22").Returns(new Uri("http://www.google.com:4438/id=22"));
+            }
+        }
 
-        static readonly object[] UriDataWithPort =
+        private static IEnumerable<TestCaseData> UriDataWithPort
         {
-            new object[] {"www.google.com", 80, new Uri("http://www.google.com:80/"),  },
-            new object[] {"www.google.com", 443, new Uri("http://www.google.com:443/") },
-            new object[] {"http://www.google.com", 443, new Uri("http://www.google.com:443/") },
-            new object[] {"https://www.google.com", 443, new Uri("https://www.google.com:443/") },
-            new object[] {"http://www.google.com/id=2", 443, new Uri("http://www.google.com:443/id=2") },
-            new object[] {"http://www.google.com/id=2", 443, new Uri("http://www.google.com:443/id=2") },
-            new object[] {"https://www.google.com/id=2", 443, new Uri("https://www.google.com:443/id=2") },
-        };
+            get
+            {
+                yield return new TestCaseData("www.google.com", 80).Returns(new Uri("http://www.google.com:80/"));
+                yield return new TestCaseData("www.google.com", 443).Returns(new Uri("http://www.google.com:443/"));
+                yield return new TestCaseData("http://www.google.com", 443).Returns(new Uri("http://www.google.com:443/"));
+                yield return new TestCaseData("https://www.google.com", 443).Returns(new Uri("https://www.google.com:443/"));
+                yield return new TestCaseData("http://www.google.com/id=2", 443).Returns(new Uri("http://www.google.com:443/id=2"));
+                yield return new TestCaseData("https://www.google.com/id=2", 443).Returns(new Uri("https://www.google.com:443/id=2"));
+            }
+        }
 
-        static readonly object[] UriDataWithSubDir =
-{
-            new object[] {"www.google.com", 80,         false,"test", new Uri("http://www.google.com:80/test"),  },
-            new object[] {"www.google.com", 443,        false,"test", new Uri("http://www.google.com:443/test") },
-            new object[] {"http://www.google.com", 443, true,"test", new Uri("https://www.google.com:443/test") },
-            new object[] {"https://www.google.com", 443,true,"test", new Uri("https://www.google.com:443/test") },
-        };
+        private static IEnumerable<TestCaseData> UriDataWithSubDir
+        {
+            get
+            {
+                yield return new TestCaseData("www.google.com", 80, false, "test").Returns(new Uri("http://www.google.com:80/test"));
+                yield return new TestCaseData("www.google.com", 443, false, "test").Returns(new Uri("http://www.google.com:443/test"));
+                yield return new TestCaseData("http://www.google.com", 443, true, "test").Returns(new Uri("https://www.google.com:443/test"));
+                yield return new TestCaseData("https://www.google.com", 443, true, "test").Returns(new Uri("https://www.google.com:443/test"));
+            }
+        }
     }
 }
