@@ -107,5 +107,11 @@ namespace PlexRequests.Core
             var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
             return Repo.UpdateAll(entities);
         }
+
+        public bool BatchDelete(List<RequestedModel> model)
+        {
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
+            return Repo.DeleteAll(entities);
+        }
     }
 }

@@ -66,6 +66,8 @@ namespace PlexRequests.UI.Modules
             Post["/approveall"] = x => ApproveAll();
             Post["/approveallmovies"] = x => ApproveAllMovies();
             Post["/approvealltvshows"] = x => ApproveAllTVShows();
+            Post["/deleteallmovies"] = x => DeleteAllMovies();
+            Post["/deletealltvshows"] = x => DeleteAllTVShows();
         }
 
         private IRequestService Service { get; }
@@ -274,6 +276,27 @@ namespace PlexRequests.UI.Modules
             }
         }
 
+        private Response DeleteAllMovies()
+        {
+
+            var requests = Service.GetAll().Where(x => x.Type == RequestType.Movie);
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!requestedModels.Any())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no movie requests to delete. Please refresh." });
+            }
+
+            try
+            {
+                return DeleteRequests(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+        }
+
         private Response ApproveAllTVShows()
         {
             var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.TvShow);
@@ -286,6 +309,27 @@ namespace PlexRequests.UI.Modules
             try
             {
                 return UpdateRequests(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+        }
+
+        private Response DeleteAllTVShows()
+        {
+
+            var requests = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!requestedModels.Any())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no tv show requests to delete. Please refresh." });
+            }
+
+            try
+            {
+                return DeleteRequests(requestedModels);
             }
             catch (Exception e)
             {
@@ -317,6 +361,22 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
             }
 
+        }
+
+        private Response DeleteRequests(RequestedModel[] requestedModels)
+        {
+            try
+            {
+                var result = Service.BatchDelete(requestedModels.ToList());
+                return Response.AsJson(result
+                    ? new JsonResponseModel { Result = true }
+                    : new JsonResponseModel { Result = false, Message = "We could not delete all of the requests. Please try again or check the logs." });
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
         }
 
         private Response UpdateRequests(RequestedModel[] requestedModels)
@@ -389,7 +449,6 @@ namespace PlexRequests.UI.Modules
             }
             try
             {
-
                 var result = Service.BatchUpdate(updatedRequests);
                 return Response.AsJson(result
                     ? new JsonResponseModel { Result = true }

@@ -6,8 +6,7 @@ $info-colour: #5bc0de;
 $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
-$i:
-!important;
+$i: !important;
 
 @media (min-width: 768px ) {
     .row {
@@ -40,11 +39,16 @@ $i:
 }
 
 hr {
-    border-color: #777;
+    border: 1px dashed #777;
 }
 
 .btn {
     border-radius: .25rem $i;
+}
+
+.btn-group-separated .btn, 
+.btn-group-separated .btn + .btn {
+    margin-left: 3px;
 }
 
 .multiSelect {

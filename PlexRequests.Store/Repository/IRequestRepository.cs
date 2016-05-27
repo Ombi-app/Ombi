@@ -53,6 +53,8 @@ namespace PlexRequests.Store.Repository
         /// <returns></returns>
         bool Delete(RequestBlobs entity);
 
+        bool DeleteAll(IEnumerable<RequestBlobs> entity);
+
         /// <summary>
         /// Updates the specified entity.
         /// </summary>

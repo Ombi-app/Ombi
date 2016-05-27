@@ -28,7 +28,7 @@ namespace PlexRequests.UI.Helpers
 {
     public static class Themes
     {
-        public const string OriginalTheme = "OriginalBootstrap.css";
-        public const string PlexTheme = "PlexBootstrap.css";
+        public const string OriginalTheme = "original.css";
+        public const string PlexTheme = "plex.css";
     }
 }

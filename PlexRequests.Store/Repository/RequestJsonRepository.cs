@@ -122,5 +122,20 @@ namespace PlexRequests.Store.Repository
             }
             return result.All(x => true);
         }
+
+        public bool DeleteAll(IEnumerable<RequestBlobs> entity)
+        {
+            ResetCache();
+            var result = new HashSet<bool>();
+            using (var db = Db.DbConnection())
+            {
+                db.Open();
+                foreach (var e in entity)
+                {
+                    result.Add(db.Delete(e));
+                }
+            }
+            return result.All(x => true);
+        }
     }
 }

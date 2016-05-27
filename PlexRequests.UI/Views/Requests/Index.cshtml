@@ -35,19 +35,22 @@
         <div class="row">
             <div class="col-sm-12">
                 <div class="pull-right">
-                    <div class="btn-group">
+                    <div class="btn-group btn-group-separated">
                         @if (Context.CurrentUser.IsAuthenticated()) //TODO replace with IsAdmin
                         {
                             @if (Model.SearchForMovies)
                             {
+                                <button id="deleteMovies" class="btn btn-warning-outline delete-category" type="submit"><i class="fa fa-trash"></i> Delete Movies</button>
                                 <button id="approveMovies" class="btn btn-success-outline approve-category" type="submit"><i class="fa fa-plus"></i> Approve Movies</button>
                             }
                             @if (Model.SearchForTvShows)
                             {
+                                <button id="deleteTVShows" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> Delete TV Shows</button>
                                 <button id="approveTVShows" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve TV Shows</button>
                             }
                             @if (Model.SearchForMusic)
                             {
+                                <button id="deleteMusics" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> Delete Music</button>
                                 <button id="approveMusic" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve Music</button>
                             }
                         }
