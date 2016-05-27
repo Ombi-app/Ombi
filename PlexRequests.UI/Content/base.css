@@ -20,10 +20,7 @@
   color: #fff; }
 
 hr {
-  border-color: #777; }
-
-body.update-available {
-  margin-top: 80px; }
+  border: 1px dashed #777; }
 
 .btn {
   border-radius: 0.25rem !important; }
@@ -32,7 +29,7 @@ body.update-available {
   background-color: #4e5d6c; }
 
 .form-control-custom {
-  background-color: #333333 !important;
+  background-color: #4e5d6c !important;
   color: white !important;
   border-radius: 0;
   box-shadow: 0 0 0 !important; }
@@ -60,7 +57,7 @@ label {
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
-  background: #df691a; }
+  background: #4e5d6c; }
 
 .nav-tabs > li > a > .fa {
   padding: 3px 5px 3px 3px; }
@@ -179,7 +176,7 @@ label {
   overflow: hidden;
   text-align: center;
   z-index: 99999999;
-  background-color: #333333;
+  background-color: #4e5d6c;
   color: #eeeeee;
   width: 50px;
   height: 48px;
@@ -198,7 +195,7 @@ label {
   transition: all 0.5s ease-in-out; }
 
 .scroll-top-wrapper:hover {
-  background-color: #df691a; }
+  background-color: #637689; }
 
 .scroll-top-wrapper.show {
   visibility: visible;
