@@ -380,7 +380,7 @@ namespace PlexRequests.UI.Modules
                 DateTime release;
                 DateTimeHelper.CustomParse(a.ReleaseEvents?.FirstOrDefault()?.date, out release);
                 var artist = a.ArtistCredit?.FirstOrDefault()?.artist;
-                if (Checker.IsAlbumAvailable(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist.name))
+                if (Checker.IsAlbumAvailable(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name))
                 {
                     viewA.Available = true;
                 }
@@ -433,8 +433,9 @@ namespace PlexRequests.UI.Modules
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullMovieName} is already in Plex!" });
                 }
             }
-            catch (ApplicationSettingsException)
+            catch (Exception e)
             {
+                Log.Error(e);
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullMovieName} is in Plex, are you sure it's correctly setup?" });
             }
             //#endif

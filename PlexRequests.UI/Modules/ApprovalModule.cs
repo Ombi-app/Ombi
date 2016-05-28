@@ -180,7 +180,7 @@ namespace PlexRequests.UI.Modules
         private Response RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
         {
             var cpSettings = CpService.GetSettings();
-            var cp = new CouchPotatoApi();
+
             Log.Info("Adding movie to CouchPotato : {0}", request.Title);
             if (!cpSettings.Enabled)
             {
@@ -199,7 +199,7 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
-            var result = cp.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
+            var result = CpApi.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
             Log.Trace("Adding movie to CP result {0}", result);
             if (result)
             {
