@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services
+namespace PlexRequests.Services.Jobs
 {
     public static class JobNames
     {
@@ -33,5 +33,6 @@ namespace PlexRequests.Services
         public const string SonarrCacher = "Sonarr Cacher";
         public const string SrCacher = "SickRage Cacher";
         public const string PlexChecker = "Plex Availability Cacher";
+        public const string StoreCleanup = "Database Cleanup";
     }
 }

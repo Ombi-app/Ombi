@@ -12,6 +12,8 @@ var albumTemplate = Handlebars.compile(albumSource);
 var movieTimer = 0;
 var tvimer = 0;
 var base = $('#baseUrl').text();
+var tvLoaded = false;
+var albumLoaded = false;
 
 var mixItUpDefault = {
     animation: { enable: true },
@@ -40,9 +42,14 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var $tvl = $('#tvList');
     var $musicL = $('#musicList');
 
-    $('.approve-category').hide();
+    $('.approve-category,.delete-category').hide();
     if (target === "#TvShowTab") {
-        $('#approveTVShows').show();
+        if (!tvLoaded) {
+            tvLoaded = true;
+            tvLoad();
+        }
+
+        $('#approveTVShows,#deleteTVShows').show();
         if ($ml.mixItUp('isLoaded')) {
             activeState = $ml.mixItUp('getState');
             $ml.mixItUp('destroy');
@@ -51,11 +58,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             activeState = $musicL.mixItUp('getState');
             $musicL.mixItUp('destroy');
         }
-        if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
-        $tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
+        //if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
+        //$tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
     if (target === "#MoviesTab") {
-        $('#approveMovies').show();
+        $('#approveMovies,#deleteMovies').show();
         if ($tvl.mixItUp('isLoaded')) {
             activeState = $tvl.mixItUp('getState');
             $tvl.mixItUp('destroy');
@@ -69,7 +76,11 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     }
 
     if (target === "#MusicTab") {
-        $('#approveMusic').show();
+        if (!albumLoaded) {
+            albumLoaded = true;
+            albumLoad();
+        }
+        $('#approveMusic,#deleteMusic').show();
         if ($tvl.mixItUp('isLoaded')) {
             activeState = $tvl.mixItUp('getState');
             $tvl.mixItUp('destroy');
@@ -124,7 +135,7 @@ $('#approveTVShows').click(function (e) {
         return;
     }
 
-    loadingButton(buttonId, "success");
+    loadingButton(buttonId, "warning");
     var url = createBaseUrl(base, '/approval/approvealltvshows');
     $.ajax({
         type: 'post',
@@ -133,6 +144,72 @@ $('#approveTVShows').click(function (e) {
         success: function (response) {
             if (checkJsonResponse(response)) {
                 generateNotify("Success! All TV Show requests approved!", "success");
+                tvLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "warning", origHtml);
+        }
+    });
+});
+
+$('#deleteMovies').click(function (e) {
+    e.preventDefault();
+    if (!confirm("Are you sure you want to delete all TV show requests?")) return;
+
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "warning");
+
+    var url = createBaseUrl(base, '/approval/deleteallmovies');
+    $.ajax({
+        type: 'post',
+        url: url,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All Movie requests deleted!", "success");
+                movieLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "warning", origHtml);
+        }
+    });
+});
+$('#deleteTVShows').click(function (e) {
+    e.preventDefault();
+    if (!confirm("Are you sure you want to delete all TV show requests?")) return;
+
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "warning");
+    var url = createBaseUrl(base, '/approval/deletealltvshows');
+    $.ajax({
+        type: 'post',
+        url: url,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All TV Show requests deleted!", "success");
                 tvLoad();
             }
         },
@@ -448,10 +525,10 @@ function mixItUpConfig(activeState) {
     return conf;
 };
 
+var position = 0;
 function initLoad() {
     movieLoad();
-    tvLoad();
-    albumLoad();
+
 }
 
 function movieLoad() {

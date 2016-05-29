@@ -26,15 +26,11 @@
 #endregion
 using System;
 using System.IO;
-using System.Linq;
-using System.Globalization;
 
 using NLog;
 
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
 
 using Quartz;
 
@@ -57,7 +53,7 @@ namespace PlexRequests.Services.Jobs
         public void Execute(IJobExecutionContext context)
         {
             TakeBackup();
-			Cleanup ();
+            Cleanup();
         }
 
         private void TakeBackup()
@@ -81,11 +77,11 @@ namespace PlexRequests.Services.Jobs
 
             try
             {
-				if(DoWeNeedToBackup(backupDir.FullName))
-				{
-                File.Copy(dbPath, Path.Combine(backupDir.FullName, $"PlexRequests.sqlite_{DateTime.Now.ToString("yyyy-MM-dd hh.mm.ss")}.bak"));
-				}
-				}
+                if (DoWeNeedToBackup(backupDir.FullName))
+                {
+                    File.Copy(dbPath, Path.Combine(backupDir.FullName, $"PlexRequests.sqlite_{DateTime.Now.ToString("yyyy-MM-dd hh.mm.ss")}.bak"));
+                }
+            }
             catch (Exception e)
             {
                 Log.Warn(e);
@@ -98,53 +94,58 @@ namespace PlexRequests.Services.Jobs
 
         }
 
-		private void Cleanup()
-		{
-			Log.Trace("Starting DB Cleanup");
-			var dbPath = Sql.CurrentPath;
-			var dir = Path.GetDirectoryName(dbPath);
-			if (dir == null)
-			{
-				Log.Warn("We couldn't find the DB path. We cannot backup.");
-				return;
-			}
-			var backupDir = Directory.CreateDirectory(Path.Combine(dir, "Backup"));
+        private void Cleanup()
+        {
+            Log.Trace("Starting DB Cleanup");
+            var dbPath = Sql.CurrentPath;
+            var dir = Path.GetDirectoryName(dbPath);
+            if (dir == null)
+            {
+                Log.Warn("We couldn't find the DB path. We cannot backup.");
+                return;
+            }
+            var backupDir = Directory.CreateDirectory(Path.Combine(dir, "Backup"));
 
-			var files = backupDir.GetFiles();
+            var files = backupDir.GetFiles();
 
-			foreach (var file in files) {
-				var dt = ParseName(file.Name);
-				if(dt < DateTime.Now.AddDays(-7)){
-					try {
+            foreach (var file in files)
+            {
+                var dt = ParseName(file.Name);
+                if (dt < DateTime.Now.AddDays(-7))
+                {
+                    try
+                    {
 
-						File.Delete(file.FullName);
-					} catch (Exception ex) {
-						Log.Error(ex);
-					}
-				}
-			}
+                        File.Delete(file.FullName);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex);
+                    }
+                }
+            }
 
-		}
+        }
 
-		private bool DoWeNeedToBackup(string backupPath)
-		{
-			var files = Directory.GetFiles(backupPath);
-			//TODO Get the latest file and if it's within an hour of DateTime.Now then don't bother backing up.
-			return true;
-		}
+        private bool DoWeNeedToBackup(string backupPath)
+        {
+            var files = Directory.GetFiles(backupPath);
+            //TODO Get the latest file and if it's within an hour of DateTime.Now then don't bother backing up.
+            return true;
+        }
 
-		private DateTime ParseName(string fileName)
-		{
-			var names = fileName.Split(new []{'_','.',' '}, StringSplitOptions.RemoveEmptyEntries);
-			if(names.Count() > 1)
-			{
-				DateTime parsed;
-				//DateTime.TryParseExcat(names[1], "yyyy-MM-dd hh.mm.ss",CultureInfo.CurrentUICulture, DateTimeStyles.None, out parsed);
-				DateTime.TryParse(names[2], out parsed);
-				return parsed;
+        private DateTime ParseName(string fileName)
+        {
+            var names = fileName.Split(new[] { '_', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (names.Length > 1)
+            {
+                DateTime parsed;
+                //DateTime.TryParseExcat(names[1], "yyyy-MM-dd hh.mm.ss",CultureInfo.CurrentUICulture, DateTimeStyles.None, out parsed);
+                DateTime.TryParse(names[2], out parsed);
+                return parsed;
 
-			}
-			return DateTime.MinValue;
-		}
+            }
+            return DateTime.MinValue;
+        }
     }
 }

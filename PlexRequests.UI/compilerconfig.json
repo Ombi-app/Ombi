@@ -1,9 +1,5 @@
 ﻿[
   {
-    "outputFile": "Content/custom.css",
-    "inputFile": "Content/custom.scss"
-  },
-  {
     "outputFile": "Content/pace.css",
     "inputFile": "Content/pace.scss"
   },
@@ -18,5 +14,17 @@
   {
     "outputFile": "Content/Themes/PlexBootstrapCustom.css",
     "inputFile": "Content/Themes/PlexBootstrapCustom.scss"
+  },
+  {
+    "outputFile": "Content/base.css",
+    "inputFile": "Content/base.scss"
+  },
+  {
+    "outputFile": "Content/Themes/plex.css",
+    "inputFile": "Content/Themes/plex.scss"
+  },
+  {
+    "outputFile": "Content/Themes/original.css",
+    "inputFile": "Content/Themes/original.scss"
   }
 ]

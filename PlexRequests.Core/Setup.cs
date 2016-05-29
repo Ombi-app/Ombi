@@ -53,13 +53,17 @@ namespace PlexRequests.Core
             {
                 CreateDefaultSettingsPage(urlBase);
             }
-            
+
             var version = CheckSchema();
             if (version > 0)
             {
                 if (version > 1700 && version <= 1799)
                 {
                     MigrateToVersion1700();
+                }
+                if (version > 1800 && version <= 1899)
+                {
+                    MigrateToVersion1800();
                 }
             }
 
@@ -73,7 +77,7 @@ namespace PlexRequests.Core
         {
             var productVersion = AssemblyHelper.GetProductVersion();
             var trimStatus = new Regex("[^0-9]", RegexOptions.Compiled).Replace(productVersion, string.Empty).PadRight(4, '0');
-            var version =  int.Parse(trimStatus);
+            var version = int.Parse(trimStatus);
 
             var connection = Db.DbConnection();
             var schema = connection.GetSchemaVersion();
@@ -172,6 +176,51 @@ namespace PlexRequests.Core
             // Drop old tables
             TableCreation.DropTable(Db.DbConnection(), "User");
             TableCreation.DropTable(Db.DbConnection(), "Log");
+        }
+
+        /// <summary>
+        /// Migrates to version 1.8.
+        /// <para>This includes updating the admin account to have all roles.</para>
+        /// <para>Set the log level to info</para>
+        /// </summary>
+        private void MigrateToVersion1800()
+        {
+            try
+            {
+                var userMapper = new UserMapper(new UserRepository<UsersModel>(Db, new MemoryCacheProvider()));
+                var users = userMapper.GetUsers();
+
+                foreach (var u in users)
+                {
+                    var claims = new[] { UserClaims.User, UserClaims.Admin, UserClaims.PowerUser };
+                    u.Claims = ByteConverterHelper.ReturnBytes(claims);
+
+                    userMapper.EditUser(u);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+
+            try
+            {
+                var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var logSettings = settingsService.GetSettings();
+                logSettings.Level = LogLevel.Info.Ordinal;
+                settingsService.SaveSettings(logSettings);
+
+                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+
+
         }
     }
 }

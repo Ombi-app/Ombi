@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 namespace PlexRequests.Helpers
 {
@@ -40,6 +41,7 @@ namespace PlexRequests.Helpers
         /// <param name="cacheTime">The amount of time we want to cache the object</param>
         /// <returns><see cref="T"/></returns>
         T GetOrSet<T>(string key, Func<T> itemCallback, int cacheTime = 20) where T : class;
+        Task<T> GetOrSetAsync<T>(string key, Func<Task<T>> itemCallback, int cacheTime = 20) where T : class;
 
         /// <summary>
         /// Gets the specified item from the cache.

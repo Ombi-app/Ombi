@@ -54,10 +54,10 @@
                 var dots = new Array(count % 10).join('.');
                 document.getElementById('autoUpdate').innerHTML = "Updating" + dots;
             }, 1000);
-            var url = createBaseUrl(base, "autoupdate");
+
             $.ajax({
                 type: "Post",
-                url: url,
+                url: "autoupdate",
                 data: { url: "@Model.DownloadUri" },
                 dataType: "json",
                 error: function () {

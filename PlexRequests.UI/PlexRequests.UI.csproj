@@ -210,7 +210,15 @@
     <Content Include="Content\bootstrap-notify.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\OriginalBootstrap.css">
+    <Content Include="Content\base.css">
+      <DependentUpon>base.scss</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\base.min.css">
+      <DependentUpon>base.css</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\bootstrap.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="Models\JsonResponseModel.cs" />
@@ -286,22 +294,21 @@
     <Content Include="Content\swagger\underscore-min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\OriginalBootstrapCustom.css">
-      <DependentUpon>OriginalBootstrapCustom.scss</DependentUpon>
+    <Content Include="Content\Themes\original.css">
+      <DependentUpon>original.scss</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\OriginalBootstrapCustom.min.css">
-      <DependentUpon>OriginalBootstrapCustom.css</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Content\Themes\original.min.css">
+      <DependentUpon>original.css</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\PlexBootstrap.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Content\Themes\plex.css">
+      <DependentUpon>plex.scss</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\Themes\PlexBootstrapCustom.css">
-      <DependentUpon>PlexBootstrapCustom.scss</DependentUpon>
-    </Content>
-    <Content Include="Content\Themes\PlexBootstrapCustom.min.css">
-      <DependentUpon>PlexBootstrapCustom.css</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="Content\Themes\plex.min.css">
+      <DependentUpon>plex.css</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\ApiDocs\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -387,8 +394,9 @@
     <None Include="Content\awesome-bootstrap-checkbox.scss">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Content\Themes\PlexBootstrapCustom.scss" />
-    <None Include="Content\Themes\OriginalBootstrapCustom.scss" />
+    <None Include="Content\base.scss" />
+    <None Include="Content\Themes\original.scss" />
+    <None Include="Content\Themes\plex.scss" />
     <Content Include="Content\pace.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

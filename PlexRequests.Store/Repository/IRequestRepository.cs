@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using PlexRequests.Store.Models;
 
@@ -38,13 +39,18 @@ namespace PlexRequests.Store.Repository
         /// <param name="entity">The entity.</param>
         long Insert(RequestBlobs entity);
 
+        Task<int> InsertAsync(RequestBlobs entity);
+
         /// <summary>
         /// Gets all.
         /// </summary>
         /// <returns></returns>
         IEnumerable<RequestBlobs> GetAll();
 
+        Task<IEnumerable<RequestBlobs>> GetAllAsync();
+
         RequestBlobs Get(int id);
+        Task<RequestBlobs> GetAsync(int id);
 
         /// <summary>
         /// Deletes the specified entity.
@@ -52,6 +58,10 @@ namespace PlexRequests.Store.Repository
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         bool Delete(RequestBlobs entity);
+        Task<bool> DeleteAsync(RequestBlobs entity);
+
+        bool DeleteAll(IEnumerable<RequestBlobs> entity);
+        Task<bool> DeleteAllAsync(IEnumerable<RequestBlobs> entity);
 
         /// <summary>
         /// Updates the specified entity.
@@ -59,7 +69,9 @@ namespace PlexRequests.Store.Repository
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         bool Update(RequestBlobs entity);
+        Task<bool> UpdateAsync(RequestBlobs entity);
 
         bool UpdateAll(IEnumerable<RequestBlobs> entity);
+        Task<bool> UpdateAllAsync(IEnumerable<RequestBlobs> entity);
     }
 }

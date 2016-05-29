@@ -56,13 +56,15 @@ namespace PlexRequests.UI.Jobs
             var sickrage = JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build();
             var sonarr = JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build();
             var cp = JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build();
-            var store = JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Backup").Build();
+            var store = JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build();
+            var storeClean = JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build();
 
             jobs.Add(plex);
             jobs.Add(sickrage);
             jobs.Add(sonarr);
             jobs.Add(cp);
             jobs.Add(store);
+            jobs.Add(storeClean);
 
             return jobs;
         }
@@ -129,10 +131,17 @@ namespace PlexRequests.UI.Jobs
 
             var storeBackup =
                 TriggerBuilder.Create()
-                              .WithIdentity("StoreBackup", "Backup")
+                              .WithIdentity("StoreBackup", "Database")
                               .StartNow()
                               .WithSimpleSchedule(x => x.WithIntervalInHours(24).RepeatForever())
                               .Build();
+
+        var storeCleanup =
+            TriggerBuilder.Create()
+                          .WithIdentity("StoreCleanup", "Database")
+                          .StartNow()
+                          .WithSimpleSchedule(x => x.WithIntervalInHours(24).RepeatForever())
+                          .Build();
 
 
             triggers.Add(plexAvailabilityChecker);
@@ -140,6 +149,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(sonarrCacher);
             triggers.Add(cpCacher);
             triggers.Add(storeBackup);
+            triggers.Add(storeCleanup);
 
             return triggers;
         }

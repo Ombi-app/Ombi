@@ -73,6 +73,7 @@
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
+    <Compile Include="Jobs\StoreCleanup.cs" />
     <Compile Include="Jobs\CouchPotatoCacher.cs" />
     <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
     <Compile Include="Jobs\SickRageCacher.cs" />

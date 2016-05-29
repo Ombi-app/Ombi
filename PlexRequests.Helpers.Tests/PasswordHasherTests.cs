@@ -24,7 +24,6 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Diagnostics;
 
 using NUnit.Framework;
 
@@ -41,7 +40,7 @@ namespace PlexRequests.Helpers.Tests
             var hash = PasswordHasher.ComputeHash(password, salt);
 
             Assert.That(hash, Is.Not.EqualTo(password));
-            
+
             var match = PasswordHasher.VerifyPassword(password, salt, hash);
 
             Assert.That(match, Is.True);

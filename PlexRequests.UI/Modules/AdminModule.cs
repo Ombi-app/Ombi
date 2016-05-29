@@ -481,8 +481,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            Log.Trace(settings.DumpJson());
-
+       
             var result = EmailService.SaveSettings(settings);
 
             if (settings.Enabled)

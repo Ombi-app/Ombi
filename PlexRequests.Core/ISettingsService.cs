@@ -24,12 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Threading.Tasks;
+
 namespace PlexRequests.Core
 {
     public interface ISettingsService<T>
     {
         T GetSettings();
+        Task<T> GetSettingsAsync();
         bool SaveSettings(T model);
+        Task<bool> SaveSettingsAsync(T model);
         bool Delete(T model);
+        Task<bool> DeleteAsync(T model);
     }
 }

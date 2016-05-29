@@ -27,41 +27,31 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
-
+using PlexRequests.Helpers;
 using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Store
 {
-    public class UserRepository<T> : IRepository<T> where T : UserEntity
+    public class UserRepository<T> : BaseGenericRepository<T>, IRepository<T> where T : UserEntity
     {
-        public UserRepository(ISqliteConfiguration config)
+        public UserRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config, cache)
         {
-            Config = config;
+ 
         }
 
-        private ISqliteConfiguration Config { get; }
-        public long Insert(T entity)
+        public override T Get(int id)
         {
-            using (var cnn = Config.DbConnection())
-            {
-                cnn.Open();
-                return cnn.Insert(entity);
-            }
+            throw new NotSupportedException("Get(int) is not supported. Use Get(string)");
         }
 
-        public IEnumerable<T> GetAll()
+        public override Task<T> GetAsync(int id)
         {
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                var result = db.GetAll<T>();
-                return result;
-            }
+            throw new NotSupportedException("GetAsync(int) is not supported. Use GetAsync(string)");
         }
 
-        public T Get(string id)
+        public override T Get(string id)
         {
             using (var db = Config.DbConnection())
             {
@@ -72,33 +62,18 @@ namespace PlexRequests.Store
             }
         }
 
-        public T Get(int id)
-        {
-            throw new NotSupportedException("Get(int) is not supported. Use Get(string)");
-        }
-
-        public void Delete(T entity)
+        public override async Task<T> GetAsync(string id)
         {
             using (var db = Config.DbConnection())
             {
                 db.Open();
-                db.Delete(entity);
+                var result = await db.GetAllAsync<T>();
+                var selected = result.FirstOrDefault(x => x.UserGuid == id);
+                return selected;
             }
         }
 
-        public bool Update(T entity)
-        {
-            using (var db = Config.DbConnection())
-            {
-                db.Open();
-                return db.Update(entity);
-            }
-        }
 
-        public bool UpdateAll(IEnumerable<T> entity)
-        {
-            throw new NotSupportedException();
-        }
     }
 }
 

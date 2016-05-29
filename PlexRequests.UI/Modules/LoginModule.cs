@@ -35,6 +35,7 @@ using Nancy.Security;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -103,7 +104,7 @@ namespace PlexRequests.UI.Modules
                 {
                     return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/register?error=true" : "~/register?error=true");
                 }
-                var userId = UserMapper.CreateUser(username, Request.Form.Password, new[] { "Admin" });
+                var userId = UserMapper.CreateAdmin(username, Request.Form.Password);
                 Session[SessionKeys.UsernameKey] = username;
                 return this.LoginAndRedirect((Guid)userId);
             };

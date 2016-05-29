@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Themes.cs
+//    File: StoreCleanup.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,59 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.UI.Helpers
+using System;
+using System.Linq;
+
+using NLog;
+
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
+
+using Quartz;
+
+namespace PlexRequests.Services.Jobs
 {
-    public static class Themes
+    public class StoreCleanup : IJob
     {
-        public const string OriginalTheme = "original.css";
-        public const string PlexTheme = "plex.css";
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        public StoreCleanup(IRepository<LogEntity> repo, IJobRecord rec)
+        {
+            Repo = repo;
+            JobRecord = rec;
+        }
+
+        private IJobRecord JobRecord { get; }
+
+        private IRepository<LogEntity> Repo { get; }
+
+        private void Cleanup()
+        {
+            try
+            {
+                var items = Repo.GetAll();
+                var orderedItems = items.Where(x => x.Date < DateTime.Now.AddDays(-7));
+
+                foreach (var o in orderedItems)
+                {
+                    Repo.Delete(o);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                JobRecord.Record(JobNames.StoreCleanup);
+            }
+
+        }
+
+        public void Execute(IJobExecutionContext context)
+        {
+            Cleanup();
+        }
     }
 }
