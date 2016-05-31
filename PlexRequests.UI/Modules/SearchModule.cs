@@ -49,7 +49,10 @@ using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 
 using Nancy.Extensions;
+using Nancy.Responses;
+
 using PlexRequests.Api.Models.Tv;
+using PlexRequests.Core.Models;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -65,7 +68,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email) : base("search", prSettings)
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
+            IIssueService issue) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -90,6 +94,7 @@ namespace PlexRequests.UI.Modules
             HeadphonesService = hpService;
             UsersToNotifyRepo = u;
             EmailNotificationSettings = email;
+            IssueService = issue;
 
 
             Get["/", true] = async (x, ct) => await RequestLoad();
@@ -134,6 +139,7 @@ namespace PlexRequests.UI.Modules
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
+        private IIssueService IssueService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
@@ -968,5 +974,7 @@ namespace PlexRequests.UI.Modules
             var model = seasons.Select(x => x.number);
             return Response.AsJson(model);
         }
+
+
     }
 }

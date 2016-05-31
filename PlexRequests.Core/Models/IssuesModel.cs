@@ -32,8 +32,12 @@ namespace PlexRequests.Core.Models
 {
     public class IssuesModel : Entity
     {
+        public IssuesModel()
+        {
+            Issues = new List<IssueModel>();
+        }
         public string Title { get; set; }
-        public string PosterUrl1 { get; set; }
+        public string PosterUrl { get; set; }
         public int RequestId { get; set; }
         public List<IssueModel> Issues { get; set; }
         public bool Deleted { get; set; }

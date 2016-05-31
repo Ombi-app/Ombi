@@ -235,7 +235,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/issues/issue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -348,7 +348,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/issues/issue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -382,7 +382,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
                 <h4 class="modal-title">Add issue/comment</h4>
             </div>
-            <form method="POST" action="@formAction/requests/reportissuecomment" id="commentForm">
+            <form method="POST" action="@formAction/issues/issuecomment" id="commentForm">
                 <div class="modal-body">
                     <input name="requestId" class="requestId" type="text" hidden="hidden" value="" />
                     <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>

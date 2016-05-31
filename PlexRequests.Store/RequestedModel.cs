@@ -40,6 +40,7 @@ namespace PlexRequests.Store
         public List<string> RequestedUsers { get; set; }
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
+        public int IssueId { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers
@@ -83,6 +84,6 @@ namespace PlexRequests.Store
         NoSubtitles = 1,
         WrongContent = 2,
         PlaybackIssues = 3,
-        Other = 4 // Provide a message    
+        Other = 4, // Provide a message
     }
 }
