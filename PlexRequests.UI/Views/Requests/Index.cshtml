@@ -135,7 +135,7 @@
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}
                 {{#if posterPath}}
-                <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+                <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}"  alt="poster">
                 {{/if}}
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
@@ -146,7 +146,7 @@
             </div>
             <div class="col-sm-5 ">
                 <div>
-                    <a href="http://www.imdb.com/title/{{imdb}}/" targe="_blank">
+                    <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
                         <h4 class="request-title">{{title}} ({{year}})</h4>
                     </a>
                     <span class="label label-success">{{status}}</span>
