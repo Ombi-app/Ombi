@@ -39,6 +39,9 @@ using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Jobs;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Services.Tests
 {
@@ -46,19 +49,40 @@ namespace PlexRequests.Services.Tests
     public class PlexAvailabilityCheckerTests
     {
         public IAvailabilityChecker Checker { get; set; }
+        private Mock<ISettingsService<PlexSettings>> SettingsMock { get; set; }
+        private Mock<ISettingsService<AuthenticationSettings>> AuthMock { get; set; }
+        private Mock<IRequestService> RequestMock { get; set; }
+        private Mock<IPlexApi> PlexMock { get; set; }
+        private Mock<ICacheProvider> CacheMock { get; set; }
+        private Mock<INotificationService> NotificationMock { get; set; }
+        private Mock<IJobRecord> JobRec { get; set; }
+        private Mock<IRepository<UsersToNotify>> NotifyUsers { get; set; }
 
-        //[Test]
-        //public void IsAvailableWithEmptySettingsTest()
-        //{
-        //    var settingsMock = new Mock<ISettingsService<PlexSettings>>();
-        //    var authMock = new Mock<ISettingsService<AuthenticationSettings>>();
-        //    var requestMock = new Mock<IRequestService>();
-        //    var plexMock = new Mock<IPlexApi>();
-        //    var cacheMock = new Mock<ICacheProvider>();
-        //    Checker = new PlexAvailabilityChecker(settingsMock.Object, authMock.Object, requestMock.Object, plexMock.Object, cacheMock.Object);
+        [SetUp]
+        public void Setup()
+        {
+            SettingsMock = new Mock<ISettingsService<PlexSettings>>();
+            AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
+            RequestMock = new Mock<IRequestService>();
+            PlexMock = new Mock<IPlexApi>();
+            NotificationMock = new Mock<INotificationService>();
+            CacheMock = new Mock<ICacheProvider>();
+            NotifyUsers = new Mock<IRepository<UsersToNotify>>();
+            JobRec = new Mock<IJobRecord>();
+            Checker = new PlexAvailabilityChecker(SettingsMock.Object, AuthMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object);
 
-        //    Assert.Throws<ApplicationSettingsException>(() => Checker.IsAvailable("title", "2013", null, PlexType.TvShow), "We should be throwing an exception since we cannot talk to the services.");
-        //}
+        }
+
+        [Test]
+        public void InvalidSettings()
+        {
+            Checker.CheckAndUpdateAll();
+            PlexMock.Verify(x => x.GetLibrary(It.IsAny<string>(), It.IsAny<Uri>(), It.IsAny<string>()), Times.Never);
+            PlexMock.Verify(x => x.GetAccount(It.IsAny<string>()), Times.Never);
+            PlexMock.Verify(x => x.GetLibrarySections(It.IsAny<string>(), It.IsAny<Uri>()), Times.Never);
+            PlexMock.Verify(x => x.GetStatus(It.IsAny<string>(), It.IsAny<Uri>()), Times.Never);
+            PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
+        }
 
         //[Test]
         //public void IsAvailableTest()
