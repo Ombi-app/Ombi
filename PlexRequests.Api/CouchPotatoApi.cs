@@ -62,7 +62,7 @@ namespace PlexRequests.Api
             request.AddUrlSegment("imdbid", imdbid);
             request.AddUrlSegment("title", title);
 
-			var obj = RetryHandler.Execute<JObject>(() => Api.ExecuteJson<JObject> (request, baseUrl),new TimeSpan[] { 
+			var obj = RetryHandler.Execute(() => Api.ExecuteJson<JObject> (request, baseUrl),new[] { 
 				TimeSpan.FromSeconds (2),
 				TimeSpan.FromSeconds(5),
 				TimeSpan.FromSeconds(10)},

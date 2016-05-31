@@ -161,16 +161,26 @@ namespace PlexRequests.Core
                 .ToList();
         }
 
-        public bool BatchUpdate(List<RequestedModel> model)
+        public bool BatchUpdate(IEnumerable<RequestedModel> model)
         {
             var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
             return Repo.UpdateAll(entities);
         }
-
-        public bool BatchDelete(List<RequestedModel> model)
+        public async Task<bool> BatchUpdateAsync(IEnumerable<RequestedModel> model)
+        {
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
+            return await Repo.UpdateAllAsync(entities);
+        }
+        public bool BatchDelete(IEnumerable<RequestedModel> model)
         {
             var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
             return Repo.DeleteAll(entities);
+        }
+
+        public async Task<bool> BatchDeleteAsync(IEnumerable<RequestedModel> model)
+        {
+            var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
+            return await Repo.DeleteAllAsync(entities);
         }
     }
 }
