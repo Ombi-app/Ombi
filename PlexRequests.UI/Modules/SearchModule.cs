@@ -299,11 +299,15 @@ namespace PlexRequests.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                var banner = t.show.image?.medium;
+                if (!string.IsNullOrEmpty(banner))
+                {
+                    banner = banner.Replace("http", "https");
+                }
+
                 var viewT = new SearchTvShowViewModel
                 {
-                    // We are constructing the banner with the id: 
-                    // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
-                    Banner = t.show.image?.medium,
+                    Banner = banner,
                     FirstAired = t.show.premiered,
                     Id = t.show.externals?.thetvdb ?? 0,
                     ImdbId = t.show.externals?.imdb,
