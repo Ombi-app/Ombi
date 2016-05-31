@@ -26,7 +26,6 @@
 #endregion
 using System;
 using System.IO;
-using System.Linq;
 
 using NLog;
 
@@ -131,18 +130,7 @@ namespace PlexRequests.Services.Jobs
         private bool DoWeNeedToBackup(string backupPath)
         {
             var files = Directory.GetFiles(backupPath);
-            var last = files.LastOrDefault();
-            if (!string.IsNullOrEmpty(last))
-            {
-                var dt = ParseName(Path.GetFileName(last));
-                if (dt < DateTime.Now.AddHours(-1))
-                {
-                    return true;
-                }
-                return false;
-            }
-
-            // We don't have a backup
+            //TODO Get the latest file and if it's within an hour of DateTime.Now then don't bother backing up.
             return true;
         }
 

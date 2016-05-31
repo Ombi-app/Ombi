@@ -25,7 +25,6 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using Moq;
 
@@ -60,7 +59,7 @@ namespace PlexRequests.UI.Tests
             AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
             PlexMock = new Mock<IPlexApi>();
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
-            PlexRequestMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(new PlexRequestSettings()));
+            PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<UserLoginModule>();
@@ -75,7 +74,7 @@ namespace PlexRequests.UI.Tests
         public void LoginWithoutAuthentication()
         {
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
 
 
@@ -94,7 +93,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
@@ -103,7 +102,7 @@ namespace PlexRequests.UI.Tests
         public void LoginWithoutAuthenticationWithEmptyUsername()
         {
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
 
             Bootstrapper.WithSession(new Dictionary<string, object>());
@@ -120,7 +119,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Never);
+            AuthMock.Verify(x => x.GetSettings(), Times.Never);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
@@ -140,7 +139,7 @@ namespace PlexRequests.UI.Tests
                 }
             };
 
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
@@ -159,7 +158,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
         }
@@ -179,7 +178,7 @@ namespace PlexRequests.UI.Tests
                 }
             };
 
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
 
@@ -201,7 +200,7 @@ namespace PlexRequests.UI.Tests
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
             Assert.That(body.Message, Is.Not.Empty);
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
         }
@@ -228,7 +227,7 @@ namespace PlexRequests.UI.Tests
                 }
             };
 
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(new PlexAccount());
@@ -250,7 +249,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
         }
@@ -274,7 +273,7 @@ namespace PlexRequests.UI.Tests
                 user = null
             };
 
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
 
@@ -297,7 +296,7 @@ namespace PlexRequests.UI.Tests
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
             Assert.That(body.Message, Is.Not.Empty);
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
@@ -306,9 +305,9 @@ namespace PlexRequests.UI.Tests
         public void AttemptToLoginAsDeniedUser()
         {
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, DeniedUsers = "abc", PlexAuthToken = "abc" };
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
 
-            Bootstrapper.WithSession(new Dictionary<string, object>());
+   Bootstrapper.WithSession(new Dictionary<string, object>());
 
             var browser = new Browser(Bootstrapper);
             var result = browser.Post("/userlogin", with =>
@@ -324,7 +323,7 @@ namespace PlexRequests.UI.Tests
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(false));
             Assert.That(body.Message, Is.Not.Empty);
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }
@@ -358,7 +357,7 @@ namespace PlexRequests.UI.Tests
             };
 
             var account = new PlexAccount { Username = "Jamie" };
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(new PlexAuthentication { user = new User { username = "Jamie" } });
@@ -378,7 +377,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Never);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
         }
@@ -405,7 +404,7 @@ namespace PlexRequests.UI.Tests
 
             var account = new PlexAccount { Username = "Jamie" };
 
-            AuthMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(expectedSettings));
+            AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
             PlexMock.Setup(x => x.GetUsers(It.IsAny<string>())).Returns(plexFriends);
             PlexMock.Setup(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>())).Returns(plexAuth);
             PlexMock.Setup(x => x.GetAccount(It.IsAny<string>())).Returns(account);
@@ -427,7 +426,7 @@ namespace PlexRequests.UI.Tests
 
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
-            AuthMock.Verify(x => x.GetSettingsAsync(), Times.Once);
+            AuthMock.Verify(x => x.GetSettings(), Times.Once);
             PlexMock.Verify(x => x.SignIn(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
         }

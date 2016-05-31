@@ -35,6 +35,8 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 using Quartz;
 

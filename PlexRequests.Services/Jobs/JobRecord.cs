@@ -31,7 +31,7 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
-namespace PlexRequests.Services.Jobs
+namespace PlexRequests.Services
 {
     public class JobRecord : IJobRecord
     {
