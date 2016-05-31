@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="Models\IssueBlobs.cs" />
     <Compile Include="Models\ScheduledJobs.cs" />
     <Compile Include="Models\UsersToNotify.cs" />
     <Compile Include="Repository\BaseGenericRepository.cs" />

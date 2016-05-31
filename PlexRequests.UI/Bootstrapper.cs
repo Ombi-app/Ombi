@@ -68,9 +68,6 @@ namespace PlexRequests.UI
 
         protected override void ConfigureRequestContainer(TinyIoCContainer container, NancyContext context)
         {
-
-            container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
-
             // Settings
             container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
             container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
@@ -89,7 +86,9 @@ namespace PlexRequests.UI
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
             container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
-            container.Register<IRequestService, JsonRequestService>();
+            container.Register<IRepository<IssueBlobs>, GenericRepository<IssueBlobs>>();
+            container.Register<IRequestService, JsonRequestModelRequestService>();
+            container.Register<IIssueService, IssueJsonService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
             container.Register<IJobRecord, JobRecord>();
 
@@ -100,7 +99,7 @@ namespace PlexRequests.UI
             container.Register<ISickRageCacher, SickRageCacher>();
             container.Register<IJobFactory, CustomJobFactory>();
 
-            // Api's
+            // Api
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();
             container.Register<IPushoverApi, PushoverApi>();
@@ -111,7 +110,7 @@ namespace PlexRequests.UI
             container.Register<IHeadphonesApi, HeadphonesApi>();
             container.Register<ISlackApi, SlackApi>();
 
-            // NotificationService
+            // Notification Service
             container.Register<INotificationService, NotificationService>().AsSingleton();
             
             JsonSettings.MaxJsonLength = int.MaxValue;
@@ -125,6 +124,7 @@ namespace PlexRequests.UI
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
+            container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
             container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
             container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
             container.Register<IUserMapper, UserMapper>();
@@ -132,7 +132,6 @@ namespace PlexRequests.UI
 
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
-
             StaticConfiguration.DisableErrorTraces = false;
 
             base.ApplicationStartup(container, pipelines);

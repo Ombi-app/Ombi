@@ -66,9 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="IIssueService.cs" />
     <Compile Include="IRequestService.cs" />
     <Compile Include="ISettingsService.cs" />
-    <Compile Include="JsonRequestService.cs" />
+    <Compile Include="JsonIssuesModelRequestService.cs" />
+    <Compile Include="JsonRequestModelRequestService.cs" />
+    <Compile Include="Models\IssuesModel.cs" />
     <Compile Include="Models\StatusModel.cs" />
     <Compile Include="Models\UserProperties.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />

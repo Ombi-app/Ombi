@@ -157,6 +157,27 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(returnString);
         }
 
+        public static IHtmlString GetNavbarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string fontIcon, string extraHtml)
+        {
+            var returnString = string.Empty;
+            var content = GetLinkUrl(GetBaseUrl());
+            if (!string.IsNullOrEmpty(content))
+            {
+                url = $"/{content}{url}";
+            }
+            
+            if (context.Request.Path == url)
+            {
+                returnString = $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
+            }
+            else
+            {
+                returnString = $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
+            }
+
+            return helper.Raw(returnString);
+        }
+
         public static IHtmlString GetBaseUrl(this HtmlHelpers helper)
         {
             return helper.Raw(GetBaseUrl());

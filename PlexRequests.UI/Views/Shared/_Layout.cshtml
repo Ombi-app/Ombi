@@ -39,6 +39,8 @@
                 <ul class="nav navbar-nav">
                     @Html.GetNavbarUrl(Context, "/search", "Search", "search")
                     @Html.GetNavbarUrl(Context, "/requests", "Requests", "plus-circle")
+                    @Html.GetNavbarUrl(Context, "/issues", "Issues", "exclamation", "<span id=\"issueCount\" class=\"badge\">0</span>")
+
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
@@ -87,6 +89,8 @@
     $(function () {
 
         var urlBase = '@Html.GetBaseUrl()';
+
+        // Check for update
         var url = createBaseUrl(urlBase, '/updatechecker');
         $.ajax({
             type: "GET",
@@ -97,14 +101,17 @@
                     var status = createBaseUrl(urlBase, '/admin/status');
                     $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> There is a new update available! Click <a style='color: white' href='" + status + "'>Here!</a>");
                     $('#updateAvailable').removeAttr("hidden");
-                    $('body').addClass('update-available')
+                    $('body').addClass('update-available');
                 }
             },
             error: function (e) {
                 console.log(e);
             }
         });
+        // End Check for update
 
+
+        // Scroller
         $(document).on('scroll', function () {
 
             if ($(window).scrollTop() > 100) {
@@ -115,6 +122,27 @@
         });
 
         $('.scroll-top-wrapper').on('click', scrollToTop);
+        // End Scroller
+
+
+        // Get Issue count
+        var issueUrl = createBaseUrl(urlBase, '/issues/issuecount');
+        $.ajax({
+            type: "GET",
+            url: issueUrl,
+            dataType: "json",
+            success: function (response) {
+                if (response) {
+                    $('#issueCount').html(response);
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+        // End issue count
+
+
     });
 
     function scrollToTop() {

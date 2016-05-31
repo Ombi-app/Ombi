@@ -33,21 +33,21 @@ namespace PlexRequests.Core
             public const int SchedulerCaching = 60;
         }
 
-        public const string PlexLibaries = "PlexLibaries";
+        public const string PlexLibaries = nameof(PlexLibaries);
 
-        public const string TvDbToken = "TheTvDbApiToken";
+        public const string TvDbToken = nameof(TvDbToken);
 
-        public const string SonarrQualityProfiles = "SonarrQualityProfiles";
-        public const string SonarrQueued = "SonarrQueued";
+        public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
+        public const string SonarrQueued = nameof(SonarrQueued);
 
-        public const string SickRageQualityProfiles = "SickRageQualityProfiles";
-        public const string SickRageQueued = "SickRageQueued";
+        public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
+        public const string SickRageQueued = nameof(SickRageQueued);
 
-        public const string CouchPotatoQualityProfiles = "CouchPotatoQualityProfiles";
-        public const string CouchPotatoQueued = "CouchPotatoQueued";
+        public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);
+        public const string CouchPotatoQueued = nameof(CouchPotatoQueued);
 
-        public const string GetPlexRequestSettings = "GetPlexRequestSettings";
+        public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
 
-        public const string LastestProductVersion = "LatestProductVersion";
+        public const string LastestProductVersion = nameof(LastestProductVersion);
     }
 }
