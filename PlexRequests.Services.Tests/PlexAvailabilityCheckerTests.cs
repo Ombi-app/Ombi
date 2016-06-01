@@ -25,19 +25,15 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
 
 using Moq;
 
 using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Jobs;
 using PlexRequests.Store.Models;

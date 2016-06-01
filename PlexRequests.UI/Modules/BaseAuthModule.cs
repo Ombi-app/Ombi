@@ -87,21 +87,21 @@ namespace PlexRequests.UI.Modules
 
         protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
-            Service = pr;
+            PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
         protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
         {
-            Service = pr;
+            PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        private ISettingsService<PlexRequestSettings> Service { get; }
+        protected ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
 
         private Response CheckAuth()
         {
-            var settings = Service.GetSettings();
+            var settings = PlexRequestSettings.GetSettings();
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";

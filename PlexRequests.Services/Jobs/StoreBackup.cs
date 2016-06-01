@@ -152,7 +152,6 @@ namespace PlexRequests.Services.Jobs
             if (names.Length > 1)
             {
                 DateTime parsed;
-                //DateTime.TryParseExcat(names[1], "yyyy-MM-dd hh.mm.ss",CultureInfo.CurrentUICulture, DateTimeStyles.None, out parsed);
                 DateTime.TryParse(names[2], out parsed);
                 return parsed;
 

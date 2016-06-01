@@ -65,7 +65,7 @@
                             <li><a href="#" class="filter" data-filter=".approved-true"><i class="fa fa-square-o"></i>  Approved</a></li>
                             <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i>  Not Approved</a></li>
                             <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i>  Available</a></li>
-	                        <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> Not Available</a></li>
+                            <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> Not Available</a></li>
                             <li><a href="#" class="filter" data-filter=".released-true"><i class="fa fa-square-o"></i>  Released</a></li>
                             <li><a href="#" class="filter" data-filter=".released-false"><i class="fa fa-square-o"></i>  Not Released</a></li>
                         </ul>
@@ -135,7 +135,7 @@
             <div class="col-sm-2">
                 {{#if_eq type "movie"}}
                 {{#if posterPath}}
-                <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}"  alt="poster">
+                <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
                 {{/if}}
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
@@ -178,17 +178,13 @@
                 <div>Requested By: {{requestedUsers}}</div>
                 {{/if}}
                 <div>Requested Date: {{requestedDate}}</div>
-                <div id="issueArea{{requestId}}">
-                    {{#if otherMessage}}
-                    <div>Message: {{otherMessage}}</div>
+                <div>
+                    Issue:
+                    {{#if_eq issueId 0}}
+                    <i class="fa fa-times"></i>
                     {{else}}
-                    <div>Issue: {{issues}}</div>
-                    {{/if}}
-                </div>
-                <div id="adminNotesArea{{requestId}}">
-                    {{#if adminNote}}
-                    <div>Note from Admin: {{adminNote}}</div>
-                    {{/if}}
+                    <a href="/issues/{{issueId}}"><i class="fa fa-check"></i></a>
+                    {{/if_eq}}
                 </div>
             </div>
             <div class="col-sm-3 col-sm-push-3">
@@ -197,20 +193,20 @@
                 <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq hasQualities true}}
-                        <div class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}"><i class="fa fa-plus"></i> Approve</button>
-                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                {{#each qualities}}
-                                    <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
-                                {{/each}}
-                            </ul>
-                        </div>
+                    <div class="btn-group btn-split">
+                        <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}"><i class="fa fa-plus"></i> Approve</button>
+                        <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#each qualities}}
+                            <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
                     {{else}}
-                        <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                     {{/if_eq}}
                 </form>
                 {{/if_eq}}
@@ -405,7 +401,7 @@
             </div>
             <form method="POST" action="@formAction/requests/addnote" id="noteForm">
                 <div class="modal-body">
-                    <input name="requestId" class="noteId" type="text" hidden="hidden" value=""/>
+                    <input name="requestId" class="noteId" type="text" hidden="hidden" value="" />
                     <textarea class="form-control form-control-custom" rows="3" id="noteArea" name="noteArea"></textarea>
                 </div>
                 <div class="modal-footer">

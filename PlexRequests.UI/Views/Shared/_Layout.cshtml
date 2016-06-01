@@ -39,7 +39,7 @@
                 <ul class="nav navbar-nav">
                     @Html.GetNavbarUrl(Context, "/search", "Search", "search")
                     @Html.GetNavbarUrl(Context, "/requests", "Requests", "plus-circle")
-                    @Html.GetNavbarUrl(Context, "/issues", "Issues", "exclamation", "<span id=\"issueCount\" class=\"badge\">0</span>")
+                    @Html.GetNavbarUrl(Context, "/issues", "Issues", "exclamation", "<span id=\"issueCount\"></span>")
 
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -133,7 +133,9 @@
             dataType: "json",
             success: function (response) {
                 if (response) {
-                    $('#issueCount').html(response);
+                    if(response > 0)
+                        $('#issueCount').addClass("badge");
+                        $('#issueCount').html(+response);
                 }
             },
             error: function (e) {

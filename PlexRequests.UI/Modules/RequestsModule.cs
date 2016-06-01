@@ -76,7 +76,7 @@ namespace PlexRequests.UI.Modules
             Get["/"] = _ => LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
             Get["/tvshows", true] = async (c, ct) => await GetTvShows();
-            Get["/albums", true] = async (x,ct) => await GetAlbumRequests();
+            Get["/albums", true] = async (x, ct) => await GetAlbumRequests();
             Post["/delete", true] = async (x, ct) => await DeleteRequest((int)Request.Form.id);
             Post["/reportissue", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/reportissuecomment", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
@@ -156,9 +156,7 @@ namespace PlexRequests.UI.Modules
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
                 Admin = IsAdmin,
-                Issues = movie.Issues.ToString().CamelCaseToWords(),
-                OtherMessage = movie.OtherMessage,
-                AdminNotes = movie.AdminNote,
+                IssueId = movie.IssueId,
                 Qualities = qualities.ToArray()
             }).ToList();
 
@@ -223,9 +221,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseYear = tv.ReleaseDate.Year.ToString(),
                     Available = tv.Available,
                     Admin = IsAdmin,
-                    Issues = tv.Issues.ToString().CamelCaseToWords(),
-                    OtherMessage = tv.OtherMessage,
-                    AdminNotes = tv.AdminNote,
+                    IssueId = tv.IssueId,
                     TvSeriesRequestType = tv.SeasonsRequested,
                     Qualities = qualities.ToArray()
                 };
@@ -266,9 +262,7 @@ namespace PlexRequests.UI.Modules
                     ReleaseYear = album.ReleaseDate.Year.ToString(),
                     Available = album.Available,
                     Admin = IsAdmin,
-                    Issues = album.Issues.ToString().CamelCaseToWords(),
-                    OtherMessage = album.OtherMessage,
-                    AdminNotes = album.AdminNote,
+                    IssueId = album.IssueId,
                     TvSeriesRequestType = album.SeasonsRequested,
                     MusicBrainzId = album.MusicBrainzId,
                     ArtistName = album.ArtistName

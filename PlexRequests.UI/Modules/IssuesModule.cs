@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
@@ -23,7 +25,7 @@ namespace PlexRequests.UI.Modules
 
             Get["/issuecount", true] = async (x, ct) => await IssueCount();
 
-            Get["/details/{id}", true] = async (x, ct) => await Details(x.id);
+            Get["/{id}", true] = async (x, ct) => await Details(x.id);
 
             Post["/issue", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
             Post["/issuecomment", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
@@ -40,13 +42,35 @@ namespace PlexRequests.UI.Modules
         public async Task<Response> IssueCount()
         {
             var issues = await IssuesService.GetAllAsync();
-            var count = issues.Count(x => x.Deleted == false);
+            var settings = PlexRequestSettings.GetSettings();
+
+            IEnumerable<IssueModel> myIssues;
+
+            if (IsAdmin)
+            {
+                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+            }
+            else if (settings.UsersCanViewOnlyOwnRequests)
+            {
+                myIssues = (from issuesModel in issues
+                            from i in issuesModel.Issues
+                            where i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)
+                            select i).ToList();
+            }
+            else
+            {
+                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+            }
+
+
+            var count = myIssues.Count();
 
             return Response.AsJson(count);
         }
 
         public async Task<Negotiator> Details(int id)
         {
+
             var issue = await IssuesService.GetAsync(id);
 
             return issue == null
