@@ -27,11 +27,15 @@
 
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+
 namespace PlexRequests.Api.Models.Movie
 {
     public class ProfileList
     {
         public bool core { get; set; }
+        public bool hide { get; set; }
         public string _rev { get; set; }
         public List<bool> finish { get; set; }
         public List<string> qualities { get; set; }
@@ -42,7 +46,8 @@ namespace PlexRequests.Api.Models.Movie
         public List<int> stop_after { get; set; }
         public List<int> wait_for { get; set; }
         public int order { get; set; }
-        public List<object> __invalid_name__3d { get; set; }
+        [JsonProperty(PropertyName = "3d")]
+        public List<object> threeD { get; set; }
     }
 
     public class CouchPotatoProfiles

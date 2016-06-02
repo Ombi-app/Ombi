@@ -143,8 +143,8 @@ namespace PlexRequests.Api
             request.AddUrlSegment("status", string.Join(",", status));
             try
             {
-				var obj = RetryHandler.Execute<CouchPotatoMovies>(() => Api.Execute<CouchPotatoMovies> (request, baseUrl),
-					new TimeSpan[] { 
+				var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoMovies> (request, baseUrl),
+					new[] { 
 						TimeSpan.FromSeconds (5),
 						TimeSpan.FromSeconds(10),
 						TimeSpan.FromSeconds(30)

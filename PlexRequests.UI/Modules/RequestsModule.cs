@@ -44,6 +44,8 @@ using System.Collections.Generic;
 using PlexRequests.Api.Interfaces;
 using System.Threading.Tasks;
 
+using NLog;
+
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseAuthModule
@@ -87,6 +89,7 @@ namespace PlexRequests.UI.Modules
             Post["/addnote", true] = async (x, ct) => await AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
 
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private IRequestService Service { get; }
         private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
@@ -126,13 +129,20 @@ namespace PlexRequests.UI.Modules
                 var cpSettings = CpSettings.GetSettings();
                 if (cpSettings.Enabled)
                 {
-
-                    var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                    try
                     {
-                        return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
-                    });
+                        var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                        {
+                            return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
+                        });
 
-                    qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
+                        qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
+
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Info(e);
+                    }
                 }
             }
 
