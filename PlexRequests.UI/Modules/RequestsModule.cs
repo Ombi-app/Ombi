@@ -190,23 +190,31 @@ namespace PlexRequests.UI.Modules
             IEnumerable<QualityModel> qualities = new List<QualityModel>();
             if (IsAdmin)
             {
-                var sonarrSettings = SonarrSettings.GetSettings();
-                if (sonarrSettings.Enabled)
+                try
                 {
-                    var result = Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
+                    var sonarrSettings = SonarrSettings.GetSettings();
+                    if (sonarrSettings.Enabled)
                     {
-                        return await Task.Run(() => SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri));
-                    });
-                    qualities = result.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
-                }
-                else
-                {
-                    var sickRageSettings = SickRageSettings.GetSettings();
-                    if (sickRageSettings.Enabled)
+                        var result = Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
+                        {
+                            return await Task.Run(() => SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+                        });
+                        qualities = result.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
+                    }
+                    else
                     {
-                        qualities = sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }).ToList();
+                        var sickRageSettings = SickRageSettings.GetSettings();
+                        if (sickRageSettings.Enabled)
+                        {
+                            qualities = sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }).ToList();
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                   Log.Info(e);
+                }
+
             }
 
             var viewModel = dbTv.Select(tv =>
