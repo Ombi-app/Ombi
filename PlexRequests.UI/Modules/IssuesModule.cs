@@ -42,26 +42,8 @@ namespace PlexRequests.UI.Modules
         public async Task<Response> IssueCount()
         {
             var issues = await IssuesService.GetAllAsync();
-            var settings = PlexRequestSettings.GetSettings();
 
-            IEnumerable<IssueModel> myIssues;
-
-            if (IsAdmin)
-            {
-                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
-            }
-            else if (settings.UsersCanViewOnlyOwnRequests)
-            {
-                myIssues = (from issuesModel in issues
-                            from i in issuesModel.Issues
-                            where i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)
-                            select i).ToList();
-            }
-            else
-            {
-                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
-            }
-
+            var myIssues = await FilterIssues(issues);
 
             var count = myIssues.Count();
 
@@ -125,5 +107,29 @@ namespace PlexRequests.UI.Modules
 
             return Response.AsJson(new JsonResponseModel { Result = true });
         }
+
+        private async Task<IEnumerable<IssueModel>> FilterIssues(IEnumerable<IssuesModel> issues)
+        {
+            var settings = await PlexRequestSettings.GetSettingsAsync();
+            IEnumerable<IssueModel> myIssues;
+            if (IsAdmin)
+            {
+                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+            }
+            else if (settings.UsersCanViewOnlyOwnRequests)
+            {
+                myIssues = (from issuesModel in issues
+                            from i in issuesModel.Issues
+                            where i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)
+                            select i).ToList();
+            }
+            else
+            {
+                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+            }
+
+            return myIssues;
+        }
+        
     }
 }

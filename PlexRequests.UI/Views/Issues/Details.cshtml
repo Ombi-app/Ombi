@@ -1,0 +1,15 @@
+﻿
+<h1>Details</h1>
+<h4>Issues For @Model.Title</h4>
+<br />
+
+<img src="@Model.PosterUrl" />
+
+@foreach (var issue in Model.Issues)
+{
+    <div>Type: @issue.Issue</div>
+    <div>User Reported: @issue.UserReported</div>
+    <div>User Note: @issue.UserNote</div>
+    <div>Admin Note: @issue.AdminNote</div>
+    <div>Status: @issue.IssueStatus</div>
+}
