@@ -1,1 +1,42 @@
-﻿
+﻿@using PlexRequests.UI.Helpers
+<h1>Issues</h1>
+<h4>Below you can see yours and all your current issues and their state.</h4>
+<br />
+<br />
+<h3>Pending Issues</h3><hr />
+<div id="pendingIssues"></div>
+
+<script id="issue-template" type="text/x-handlebars-template">
+    <div>
+        <div class="row">
+            <div class="col-md-3">
+                <div id="title">{{title}}</div>
+            </div>
+            <div class="col-md-2">
+                <div id="type">{{type}}</div>
+            </div>
+            <div class="col-md-1">
+                Issues: {{count}}
+            </div>
+
+            <div class="col-md-2">
+                {{#if requestId}}
+                <div>Request {{requestId}}</div>
+                {{/if}}
+            </div>
+            <div class="col-sm-3 col-sm-push-3">
+                <a href="" id="{{id}}link" class="btn btn-sm btn-info-outline approve"><i class="fa fa-info"></i> Details</a>
+            </div>
+        </div>
+
+
+
+
+
+ 
+
+    </div>
+    <hr />
+</script>
+
+@Html.LoadIssueAssets()

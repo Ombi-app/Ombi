@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using System.Web.UI.WebControls;
 using Nancy;
+using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
@@ -14,6 +15,7 @@ using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -31,9 +33,9 @@ namespace PlexRequests.UI.Modules
 
             Post["/issue", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
 
-            Get["/inprogress", true] = async (x, ct) => await GetInProgressIssues(IssueStatus.InProgressIssue);
-            Get["/pending", true] = async (x, ct) => await GetInProgressIssues(IssueStatus.PendingIssue);
-            Get["/resolved", true] = async (x, ct) => await GetInProgressIssues(IssueStatus.ResolvedIssue);
+            Get["/inprogress", true] = async (x, ct) => await GetIssues(IssueStatus.InProgressIssue);
+            Get["/pending", true] = async (x, ct) => await GetIssues(IssueStatus.PendingIssue);
+            Get["/resolved", true] = async (x, ct) => await GetIssues(IssueStatus.ResolvedIssue);
 
             Post["/remove", true] = async (x, ct) => await RemoveIssue((int)Request.Form.issueId);
 
@@ -51,11 +53,17 @@ namespace PlexRequests.UI.Modules
             return View["Index"];
         }
 
-        private async Task<Response> GetInProgressIssues(IssueStatus status)
+        private async Task<Response> GetIssues(IssueStatus status)
         {
             var issues = await IssuesService.GetAllAsync();
 
-            return Response.AsJson(issues.Where(x => x.IssueStatus == status));
+            var issuesModels = issues as IssuesModel[] ?? issues.Where(x => x.IssueStatus == status).ToArray();
+            var model = issuesModels.Select(i => new IssuesViewModel
+            {
+                Title = i.Title, Type = i.Type.ToString().CamelCaseToWords(), Count = i.Issues.Count, Id = i.Id, RequestId = i.RequestId
+            }).ToList();
+
+            return Response.AsJson(model);
         }
 
         public async Task<Response> IssueCount()
