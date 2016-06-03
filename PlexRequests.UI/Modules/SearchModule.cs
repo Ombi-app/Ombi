@@ -271,7 +271,7 @@ namespace PlexRequests.UI.Modules
             if (usersCanViewOnlyOwnRequests)
             {
                 var result = moviesInDb.FirstOrDefault(x => x.Value.ProviderId == movieId);
-                return result.Value != null && result.Value.UserHasRequested(Username);
+                return result.Value == null || result.Value.UserHasRequested(Username);
             }
 
             return true;
