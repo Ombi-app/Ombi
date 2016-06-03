@@ -688,6 +688,8 @@ namespace PlexRequests.UI.Modules
         private Response GetLogLevels()
         {
             var levels = LogManager.Configuration.LoggingRules.FirstOrDefault(x => x.NameMatches("database"));
+            Log.Debug("debug");
+            Log.Info("Info");
             return Response.AsJson(levels.Levels);
         }
 
