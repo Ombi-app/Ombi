@@ -56,7 +56,7 @@ namespace PlexRequests.Services.Jobs
             try
             {
                 var items = Repo.GetAll();
-                var orderedItems = items.Where(x => x.Date < DateTime.Now.AddDays(-7));
+                var orderedItems = items.Where(x => x.Date < DateTime.Now.AddDays(-2));
 
                 foreach (var o in orderedItems)
                 {
