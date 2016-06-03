@@ -57,13 +57,13 @@ namespace PlexRequests.Core
             var version = CheckSchema();
             if (version > 0)
             {
-                if (version > 1700 && version <= 1799)
+                if (version > 1700 && version <= 1759)
                 {
                     MigrateToVersion1700();
                 }
-                if (version > 1800 && version <= 1899)
+                if (version > 1759 && version <= 1799)
                 {
-                    MigrateToVersion1800();
+                    MigrateToVersion1760();
                 }
             }
 
@@ -183,7 +183,7 @@ namespace PlexRequests.Core
         /// <para>This includes updating the admin account to have all roles.</para>
         /// <para>Set the log level to info</para>
         /// </summary>
-        private void MigrateToVersion1800()
+        private void MigrateToVersion1760()
         {
             try
             {

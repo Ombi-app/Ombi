@@ -42,6 +42,7 @@ namespace PlexRequests.Core.Models
         public List<IssueModel> Issues { get; set; }
         public bool Deleted { get; set; }
         public RequestType Type { get; set; }
+        public IssueStatus IssueStatus { get; set; }
     }
 
     public class IssueModel
@@ -50,7 +51,6 @@ namespace PlexRequests.Core.Models
         public string UserReported { get; set; }
         public IssueState Issue { get; set; }
         public string AdminNote { get; set; }
-        public IssueStatus IssueStatus { get; set; }
     }
 
     public enum IssueStatus
