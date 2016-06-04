@@ -41,6 +41,7 @@ namespace PlexRequests.Core.SettingModels
         public bool RequireTvShowApproval { get; set; }
         public bool RequireMusicApproval { get; set; }
         public bool UsersCanViewOnlyOwnRequests { get; set; }
+        public bool UsersCanViewOnlyOwnIssues { get; set; }
         public int WeeklyRequestLimit { get; set; }
         public string NoApprovalUsers { get; set; }
 

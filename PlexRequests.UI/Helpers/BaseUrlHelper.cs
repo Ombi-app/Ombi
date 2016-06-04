@@ -116,6 +116,18 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(sb.ToString());
         }
 
+        public static IHtmlString LoadIssueDetailsAssets(this HtmlHelpers helper)
+        {
+            var sb = new StringBuilder();
+            var assetLocation = GetBaseUrl();
+
+            var content = GetContentUrl(assetLocation);
+
+            sb.AppendLine($"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>");
+
+            return helper.Raw(sb.ToString());
+        }
+
         public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();

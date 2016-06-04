@@ -38,10 +38,18 @@ namespace PlexRequests.UI.Modules
             Get["/resolved", true] = async (x, ct) => await GetIssues(IssueStatus.ResolvedIssue);
 
             Post["/remove", true] = async (x, ct) => await RemoveIssue((int)Request.Form.issueId);
+            Post["/inprogressUpdate", true] = async (x, ct) => await ChangeStatus((int)Request.Form.issueId, IssueStatus.InProgressIssue);
+            Post["/resolvedUpdate", true] = async (x, ct) => await ChangeStatus((int)Request.Form.issueId, IssueStatus.ResolvedIssue);
+
+            Post["/clear", true] = async (x, ct) => await ClearIssue((int) Request.Form.issueId, (IssueState) (int) Request.Form.issue);
 
             Get["/issuecount", true] = async (x, ct) => await IssueCount();
+            Get["/tabCount", true] = async (x, ct) => await TabCount();
 
             Post["/issuecomment", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
+
+
+            Post["/addnote", true] = async (x, ct) => await AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea, (IssueState)(int)Request.Form.issue);
         }
 
         private IIssueService IssuesService { get; }
@@ -56,6 +64,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> GetIssues(IssueStatus status)
         {
             var issues = await IssuesService.GetAllAsync();
+            issues = await FilterIssues(issues);
 
             var issuesModels = issues as IssuesModel[] ?? issues.Where(x => x.IssueStatus == status).ToArray();
             var model = issuesModels.Select(i => new IssuesViewModel
@@ -77,10 +86,30 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(count);
         }
 
+        public async Task<Response> TabCount()
+        {
+            var issues = await IssuesService.GetAllAsync();
+
+            var myIssues = await FilterIssues(issues);
+
+            var count = new List<object>();
+
+            var issuesModels = myIssues as IssuesModel[] ?? myIssues.ToArray();
+            var pending = issuesModels.Where(x => x.IssueStatus == IssueStatus.PendingIssue);
+            var progress = issuesModels.Where(x => x.IssueStatus == IssueStatus.InProgressIssue);
+            var resolved = issuesModels.Where(x => x.IssueStatus == IssueStatus.ResolvedIssue);
+          
+            count.Add(new  { Name = IssueStatus.PendingIssue, Count = pending.Count()});
+            count.Add(new  { Name = IssueStatus.InProgressIssue, Count = progress.Count()});
+            count.Add(new  { Name = IssueStatus.ResolvedIssue, Count = resolved.Count()});
+            
+            return Response.AsJson(count);
+        }
+
         public async Task<Negotiator> Details(int id)
         {
             var issue = await IssuesService.GetAsync(id);
-
+            issue = Order(issue);
             return issue == null
                 ? Index()
                 : View["Details", issue];
@@ -106,6 +135,16 @@ namespace PlexRequests.UI.Modules
             // An issue already exists
             if (existingIssue != null)
             {
+                if (existingIssue.Issues.Any(x => x.Issue == issue))
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel()
+                        {
+                            Result = false,
+                            Message = "This issue has already been reported!"
+                        });
+
+                }
                 existingIssue.Issues.Add(model);
                 var result = await IssuesService.UpdateIssueAsync(existingIssue);
 
@@ -134,46 +173,104 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
-        private async Task<IEnumerable<IssueModel>> FilterIssues(IEnumerable<IssuesModel> issues)
+        private async Task<IEnumerable<IssuesModel>> FilterIssues(IEnumerable<IssuesModel> issues)
         {
             var settings = await PlexRequestSettings.GetSettingsAsync();
-            IEnumerable<IssueModel> myIssues;
+            IEnumerable<IssuesModel> myIssues;
             if (IsAdmin)
             {
-                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+                myIssues = issues.Where(x => x.Deleted == false);
             }
-            else if (settings.UsersCanViewOnlyOwnRequests)
+            else if (settings.UsersCanViewOnlyOwnIssues)
             {
-                myIssues = (from issuesModel in issues
-                            from i in issuesModel.Issues
-                            where i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)
-                            select i).ToList();
+                myIssues =
+                    issues.Where(
+                        x =>
+                            x.Issues.Any(i => i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)) && x.Deleted == false);
             }
             else
             {
-                myIssues = issues.Where(x => x.Deleted == false).SelectMany(i => i.Issues);
+                myIssues = issues.Where(x => x.Deleted == false);
             }
 
             return myIssues;
         }
-        private async Task<Response> RemoveIssue(int issueId)
+        private async Task<Negotiator> RemoveIssue(int issueId)
         {
             try
             {
-                this.RequiresClaims(UserClaims.PowerUser);
+                this.RequiresClaims(UserClaims.Admin);
 
                 await IssuesService.DeleteIssueAsync(issueId);
 
-                return Response.AsJson(new JsonResponseModel {Result = true, Message = "Issue Removed"});
+                return View["Index"];
             }
             catch (Exception e)
             {
                 Log.Error(e);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Looks like we couldn't remove the issue. Check the logs!" });
+                return View["Index"];
+            }
+
+        }
+
+        private async Task<Negotiator> ChangeStatus(int issueId, IssueStatus status)
+        {
+            try
+            {
+                this.RequiresClaims(UserClaims.Admin);
+
+                var issue = await IssuesService.GetAsync(issueId);
+                issue.IssueStatus = status;
+                var result = await IssuesService.UpdateIssueAsync(issue);
+                return result ? await Details(issueId) : View["Index"];
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return View["Index"];
             }
 
         }
 
 
+        private async Task<Negotiator> ClearIssue(int issueId, IssueState state)
+        {
+            this.RequiresClaims(UserClaims.Admin);
+            var issue = await IssuesService.GetAsync(issueId);
+
+            var toRemove = issue.Issues.FirstOrDefault(x => x.Issue == state);
+            issue.Issues.Remove(toRemove);
+
+            var result = await IssuesService.UpdateIssueAsync(issue);
+
+            return result ? await Details(issueId) : View["Index"];
+        }
+
+        private async Task<Response> AddNote(int requestId, string noteArea, IssueState state)
+        {
+            this.RequiresClaims(UserClaims.Admin);
+            var issue = await IssuesService.GetAsync(requestId);
+            if (issue == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Issue does not exist to add a note!" });
+            }
+            var toAddNote = issue.Issues.FirstOrDefault(x => x.Issue == state);
+
+            issue.Issues.Remove(toAddNote);
+            toAddNote.AdminNote = noteArea;
+            issue.Issues.Add(toAddNote);
+            
+
+            var result = await IssuesService.UpdateIssueAsync(issue);
+            return Response.AsJson(result
+                                       ? new JsonResponseModel { Result = true }
+                                       : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
+        }
+
+        private IssuesModel Order(IssuesModel issues)
+        {
+            issues.Issues = issues.Issues.OrderByDescending(x => x.Issue).ToList();
+            return issues;
+        }
     }
 }

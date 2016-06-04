@@ -3,8 +3,66 @@
 <h4>Below you can see yours and all your current issues and their state.</h4>
 <br />
 <br />
-<h3>Pending Issues</h3><hr />
-<div id="pendingIssues"></div>
+
+<ul id="nav-tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#pendingTab" aria-controls="home" role="tab" data-toggle="tab">Pending <span id="pendingCount"></span></a></li>
+    <li role="presentation"><a href="#inProgressTab" aria-controls="profile" role="tab" data-toggle="tab">In-Progress <span id="inProgressCount"></span></a></li>
+    <li role="presentation"><a href="#resolvedTab" aria-controls="profile" role="tab" data-toggle="tab">Resolved <span id="resolvedCount"></span></a></li>
+</ul>
+<br/>
+<hr/>
+<div class="row">
+    <div class="col-md-3">
+        <h4>Title</h4>
+    </div>
+    <div class="col-md-2">
+        <h4>Type</h4>
+    </div>
+    <div class="col-md-1">
+        <h4>Issue's</h4>
+    </div>
+
+    <div class="col-md-2">
+        <h4>Requested</h4>
+    </div>
+    <div class="col-sm-3 col-sm-push-3">
+        
+    </div>
+</div>
+
+<div id="myTabContent" class="tab-content">
+    <!-- Pending tab -->
+    <div role="tabpanel" class="tab-pane active" id="pendingTab">
+        <br />
+        <br />
+        <!-- Movie content -->
+        <div id="pendingIssues">
+            
+        </div>
+    </div>
+
+    <!--In Progress-->
+    <div role="tabpanel" class="tab-pane" id="inProgressTab">
+
+        <br />
+        <br />
+        <!-- In progress content -->
+        <div id="inprogressIssues">
+            
+        </div>
+    </div>
+
+    <!-- Resolved -->
+    <div role="tabpanel" class="tab-pane" id="resolvedTab">
+
+        <br />
+        <br />
+        <!-- resolved content -->
+        <div id="resolvedIssues">
+            
+        </div>
+    </div>
+</div>
 
 <script id="issue-template" type="text/x-handlebars-template">
     <div>
@@ -21,20 +79,15 @@
 
             <div class="col-md-2">
                 {{#if requestId}}
-                <div>Request {{requestId}}</div>
+                <div><i class="fa fa-check"></i></div>
+                {{else}}
+                <div><i class="fa fa-times"></i></div>
                 {{/if}}
             </div>
             <div class="col-sm-3 col-sm-push-3">
                 <a href="" id="{{id}}link" class="btn btn-sm btn-info-outline approve"><i class="fa fa-info"></i> Details</a>
             </div>
         </div>
-
-
-
-
-
- 
-
     </div>
     <hr />
 </script>

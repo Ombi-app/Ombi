@@ -14,6 +14,16 @@ var base = $('#baseUrl').text();
 
 initLoad();
 
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    var target = $(e.target).attr('href');
+
+    if (target === "#inProgressTab") {
+        loadInProgressIssues();
+    }
+    if (target === "#resolvedTab") {
+        loadResolvedIssues();
+    }
+});
 
 
 // Report Issue
@@ -179,14 +189,58 @@ $(document).on("click", ".clear", function (e) {
 
 
 function initLoad() {
+    loadCounts();
     loadPendingIssues();
+}
 
+function loadCounts() {
+    var url = createBaseUrl(base, "issues/tabCount");
+    $.ajax({
+        type: "get",
+        url: url,
+        dataType: "json",
+        success: function (response) {
+            if (response.length > 0) {
+                response.forEach(function (result) {
+                    if (result.count > 0) {
+
+                        if (result.name == 0) {
+                            $('#pendingCount').addClass("badge");
+                            $('#pendingCount').html(result.count);
+                        } else if (result.name == 1) {
+                            $('#inProgressCount').addClass("badge");
+                            $('#inProgressCount').html(result.count);
+                        } else if (result.name == 2) {
+                            $('#resolvedCount').addClass("badge");
+                            $('#resolvedCount').html(result.count);
+                        }
+
+                    }
+                });
+            };
+        }
+    });
+}
+
+function loadPendingIssues() {
+    loadIssues("pending", $('#pendingIssues'));
 }
 
 
-function loadPendingIssues() {
-    $issues = $('#pendingIssues');
-    var url = createBaseUrl(base, "issues/pending");
+function loadInProgressIssues() {
+    var $element = $('#inprogressIssues');
+    $element.html("");
+    loadIssues("inprogress", $element);
+}
+
+function loadResolvedIssues() {
+    var $element = $('#resolvedIssues');
+    $element.html("");
+    loadIssues("resolved", $element);
+}
+
+function loadIssues(type, element) {
+    var url = createBaseUrl(base, "issues/" + type);
     var linkUrl = createBaseUrl(base, "issues/");
     $.ajax({
         type: "get",
@@ -194,12 +248,12 @@ function loadPendingIssues() {
         dataType: "json",
         success: function (response) {
             if (response.length > 0) {
-                response.forEach(function(result) {
+                response.forEach(function (result) {
                     var context = buildIssueContext(result);
                     var html = issueTemplate(context);
-                    $issues.append(html);
+                    element.append(html);
 
-                    $("#" +result.id + "link").attr("href", linkUrl + result.id);
+                    $("#" + result.id + "link").attr("href", linkUrl + result.id);
                 });
             };
         },
@@ -208,7 +262,6 @@ function loadPendingIssues() {
             generateNotify("Could not load Pending issues", "danger");
         }
     });
-
 }
 
 

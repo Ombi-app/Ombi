@@ -194,3 +194,18 @@ button.list-group-item:focus {
     background-clip: padding-box;
     outline: 0;
 }
+
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 300;
+  color: #ebebeb;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  background-color: $bg-colour;
+  border-radius: 10px;
+}

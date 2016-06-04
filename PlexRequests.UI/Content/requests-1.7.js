@@ -445,31 +445,6 @@ $(document).on("click", ".approve-with-quality", function (e) {
 
 });
 
-// Clear issues
-$(document).on("click", ".clear", function (e) {
-    e.preventDefault();
-    var buttonId = e.target.id;
-    var $form = $('#clear' + buttonId);
-
-    $.ajax({
-        type: $form.prop('method'),
-        url: $form.prop('action'),
-        data: $form.serialize(),
-        dataType: "json",
-        success: function (response) {
-
-            if (checkJsonResponse(response)) {
-                generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea' + buttonId).html("<div>Issue: None</div>");
-            }
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
-        }
-    });
-
-});
 
 // Change Availability
 $(document).on("click", ".change", function (e) {

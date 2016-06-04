@@ -183,7 +183,7 @@
                     {{#if_eq issueId 0}}
                     <i class="fa fa-times"></i>
                     {{else}}
-                    <a href="/issues/{{issueId}}"><i class="fa fa-check"></i></a>
+                    <a href="@formAction/issues/{{issueId}}"><i class="fa fa-check"></i></a>
                     {{/if_eq}}
                 </div>
             </div>
@@ -326,11 +326,6 @@
                 <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
-                </form>
-
-                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
-                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
 
                 <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">

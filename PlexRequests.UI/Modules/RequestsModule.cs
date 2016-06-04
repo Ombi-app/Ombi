@@ -86,7 +86,6 @@ namespace PlexRequests.UI.Modules
             Post["/clearissues", true] = async (x, ct) => await ClearIssue((int)Request.Form.Id);
 
             Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
-            Post["/addnote", true] = async (x, ct) => await AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea);
         }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -373,21 +372,6 @@ namespace PlexRequests.UI.Modules
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
         }
 
-        private async Task<Response> AddNote(int requestId, string noteArea)
-        {
-            this.RequiresClaims(UserClaims.Admin);
-            var originalRequest = await Service.GetAsync(requestId);
-            if (originalRequest == null)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Request does not exist to add a note!" });
-            }
-
-            originalRequest.AdminNote = noteArea;
-
-            var result = await Service.UpdateRequestAsync(originalRequest);
-            return Response.AsJson(result
-                                       ? new JsonResponseModel { Result = true }
-                                       : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
-        }
+        
     }
 }
