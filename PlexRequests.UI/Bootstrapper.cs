@@ -81,6 +81,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
             container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
             container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
+            container.Register<ISettingsService<LandingPageSettings>, SettingsServiceV2<LandingPageSettings>>();
 
             // Repo's
             container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();

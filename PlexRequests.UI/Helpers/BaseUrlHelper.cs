@@ -66,6 +66,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/base.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/datepicker.min.css\" type=\"text/css\"/>");
 
             sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
@@ -75,6 +76,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<script src=\"{content}/Content/pace.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/jquery.mixitup.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/moment.min.js\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-datetimepicker.min.js\"></script>");
 
 
             return helper.Raw(sb.ToString());

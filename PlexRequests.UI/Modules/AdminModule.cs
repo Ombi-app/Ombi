@@ -55,6 +55,7 @@ using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 using Nancy.Json;
 using Nancy.Security;
@@ -83,6 +84,7 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<SlackNotificationSettings> SlackSettings { get; }
+        private ISettingsService<LandingPageSettings> LandingSettings { get; }
         private ISlackApi SlackApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -105,7 +107,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<HeadphonesSettings> headphones,
             ISettingsService<LogSettings> logs,
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
-            ISlackApi slackApi) : base("admin", prService)
+            ISlackApi slackApi, ISettingsService<LandingPageSettings> lp) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -128,6 +130,7 @@ namespace PlexRequests.UI.Modules
             Cache = cache;
             SlackSettings = slackSettings;
             SlackApi = slackApi;
+            LandingSettings = lp;
 
             this.RequiresClaims(UserClaims.Admin);
 			
@@ -186,6 +189,9 @@ namespace PlexRequests.UI.Modules
 
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
+
+            Get["/landingpage", true] = async (x,ct) =>  await LandingPage();
+            Post["/landingpage"] = _ => SaveSlackNotifications();
         }
 
         private Negotiator Authentication()
@@ -805,6 +811,13 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Slack Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Negotiator> LandingPage()
+        {
+            var settings = await LandingSettings.GetSettingsAsync();
+
+            return View["LandingPage", settings];
         }
     }
 }

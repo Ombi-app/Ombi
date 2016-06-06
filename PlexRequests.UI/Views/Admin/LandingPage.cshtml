@@ -1,0 +1,146 @@
+﻿@using PlexRequests.UI.Helpers
+@Html.Partial("_Sidebar")
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = "/admin";
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString() + formAction;
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Landing Page Settings</legend>
+
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.Enabled)
+                    {
+                        <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
+                    }
+                </div>
+            </div>
+            <small>If enabled then all users will be redirected to the landing page instead of the login page.</small>
+
+            <br/>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.NoticeEnable)
+                    {
+                        <input type="checkbox" id="NoticeEnable" name="NoticeEnable" checked="checked"><label for="NoticeEnable">Enable a notice</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="NoticeEnable" name="NoticeEnable"><label for="NoticeEnable">Enable a notice</label>
+                    }
+
+                </div>
+            </div>
+
+            <p class="form-group">Notice Message</p>
+            <div class="form-group">
+                <div>
+                    <input type="text" class="form-control-custom form-control " id="NoticeMessage" name="NoticeMessage" placeholder="e.g. Plex will be down for maintaince" value="@Model.NoticeMessage">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.EnabledNoticeTime)
+                    {
+                        <input type="checkbox" id="EnabledNoticeTime" name="EnabledNoticeTime" checked="checked"><label for="EnabledNoticeTime">Enable a time limit for the notices</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="EnabledNoticeTime" name="EnabledNoticeTime"><label for="EnabledNoticeTime">Enable a time limit for the notices</label>
+                    }
+
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker6'>
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class='input-group date' id='datetimepicker7'>
+                    <input type='text' class="form-control"/>
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script>
+    $(function () {
+        $('#save').click(function (e) {
+            e.preventDefault();
+
+            var theme = $("#themes option:selected").val();
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&themeName=" + theme;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+        $('#datetimepicker6').datetimepicker({
+            dayViewHeaderFormat: 'MMMM YYYY'
+        });
+        $('#datetimepicker7').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#datetimepicker6").on("dp.change", function (e) {
+            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
+        });
+        $("#datetimepicker7").on("dp.change", function (e) {
+            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
+        });
+    });
+</script>

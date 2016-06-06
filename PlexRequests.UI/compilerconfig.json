@@ -26,5 +26,13 @@
   {
     "outputFile": "Content/Themes/original.css",
     "inputFile": "Content/Themes/original.scss"
+  },
+  {
+    "outputFile": "Content/_bootstrap-datetimepicker.css",
+    "inputFile": "Content/_bootstrap-datetimepicker.less"
+  },
+  {
+    "outputFile": "Content/datepicker.css",
+    "inputFile": "Content/datepicker.scss"
   }
 ]

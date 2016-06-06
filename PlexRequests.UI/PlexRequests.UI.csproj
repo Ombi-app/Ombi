@@ -193,6 +193,7 @@
     <Compile Include="Modules\BaseApiModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
+    <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
@@ -243,6 +244,13 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\PlexRequestsValidator.cs" />
     <Compile Include="Modules\UserManagementModule.cs" />
+    <Content Include="Content\datepicker.css">
+      <DependentUpon>datepicker.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\datepicker.min.css">
+      <DependentUpon>datepicker.css</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\issue-details.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -319,6 +327,13 @@
       <DependentUpon>plex.css</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\bootstrap-datetimepicker.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\bootstrap-datetimepicker.js" />
+    <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Views\ApiDocs\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -400,10 +415,11 @@
     <None Include="compilerconfig.json.defaults">
       <DependentUpon>compilerconfig.json</DependentUpon>
     </None>
-    <None Include="Content\awesome-bootstrap-checkbox.scss">
+    <None Include="Content\datepicker.scss">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Content\base.scss" />
+    <None Include="Content\bootstrap-datetimepicker-build.less" />
     <None Include="Content\Themes\original.scss" />
     <None Include="Content\Themes\plex.scss" />
     <Content Include="Content\pace.min.js">
@@ -522,6 +538,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Issues\Details.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\LandingPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
