@@ -53,13 +53,17 @@ namespace PlexRequests.UI.Helpers
 
         public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
-            int qualityProfile;
-            
-            if (!string.IsNullOrEmpty(qualityId) || !int.TryParse(qualityId, out qualityProfile)) // try to parse the passed in quality, otherwise use the settings default quality
+
+            var qualityProfile = 0;
+
+            if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
             {
-                int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+                if (!int.TryParse(qualityId, out qualityProfile))
+                {
+                    int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+                }
             }
-            
+
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
