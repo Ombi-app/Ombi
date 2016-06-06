@@ -352,8 +352,6 @@ namespace PlexRequests.UI.Modules
                 viewTv.Add(viewT);
             }
 
-            Log.Trace("Returning TV Show results: ");
-            Log.Trace(viewTv.DumpJson());
             return Response.AsJson(viewTv);
         }
 
@@ -788,12 +786,6 @@ namespace PlexRequests.UI.Modules
 
             var img = GetMusicBrainzCoverArt(albumInfo.id);
 
-            Log.Trace("Album Details:");
-            Log.Trace(albumInfo.DumpJson());
-            Log.Trace("CoverArt Details:");
-            Log.Trace(img.DumpJson());
-
-
             var model = new RequestedModel
             {
                 Title = albumInfo.title,
@@ -815,9 +807,6 @@ namespace PlexRequests.UI.Modules
             {
                 Log.Debug("We don't require approval OR the user is in the whitelist");
                 var hpSettings = HeadphonesService.GetSettings();
-
-                Log.Trace("Headphone Settings:");
-                Log.Trace(hpSettings.DumpJson());
 
                 if (!hpSettings.Enabled)
                 {

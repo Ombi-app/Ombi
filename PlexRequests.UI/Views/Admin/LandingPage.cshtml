@@ -1,13 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @Html.Partial("_Sidebar")
-@{
-    var baseUrl = Html.GetBaseUrl();
-    var formAction = "/admin";
-    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
-    {
-        formAction = "/" + baseUrl.ToHtmlString() + formAction;
-    }
-}
+
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
@@ -70,7 +63,7 @@
 
 
             <div class="form-group">
-                <div class='input-group date' id='datetimepicker6'>
+                <div class='input-group date' id='startDate'>
                     <input type='text' class="form-control" />
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -80,7 +73,7 @@
             </div>
 
             <div class="form-group">
-                <div class='input-group date' id='datetimepicker7'>
+                <div class='input-group date' id='endDate'>
                     <input type='text' class="form-control"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
@@ -103,14 +96,24 @@
 
 <script>
     $(function () {
+        var $startDate = $('#startDate').datetimepicker();
+        var $endDate = $('#endDate').datetimepicker({
+            useCurrent: false //Important! See issue #1075
+        });
+        $("#startDate").on("dp.change", function (e) {
+            $('#endDate').data("DateTimePicker").minDate(e.date);
+        });
+        $("#endDate").on("dp.change", function (e) {
+            $('#startDate').data("DateTimePicker").maxDate(e.date);
+        });
+
         $('#save').click(function (e) {
             e.preventDefault();
 
-            var theme = $("#themes option:selected").val();
             var $form = $("#mainForm");
 
             var data = $form.serialize();
-            data = data + "&themeName=" + theme;
+            data = data + "&noticeStart=" + $startDate.data("DateTimePicker").date().toISOString() + "&noticeEnd=" + $endDate.data("DateTimePicker").date().toISOString();
 
             $.ajax({
                 type: $form.prop("method"),
@@ -130,17 +133,6 @@
                 }
             });
         });
-        $('#datetimepicker6').datetimepicker({
-            dayViewHeaderFormat: 'MMMM YYYY'
-        });
-        $('#datetimepicker7').datetimepicker({
-            useCurrent: false //Important! See issue #1075
-        });
-        $("#datetimepicker6").on("dp.change", function (e) {
-            $('#datetimepicker7').data("DateTimePicker").minDate(e.date);
-        });
-        $("#datetimepicker7").on("dp.change", function (e) {
-            $('#datetimepicker6').data("DateTimePicker").maxDate(e.date);
-        });
+
     });
 </script>

@@ -191,7 +191,7 @@ namespace PlexRequests.UI.Modules
             Post["/slacknotification"] = _ => SaveSlackNotifications();
 
             Get["/landingpage", true] = async (x,ct) =>  await LandingPage();
-            Post["/landingpage"] = _ => SaveSlackNotifications();
+            Post["/landingpage", true] = async (x, ct) => await SaveLandingPage();
         }
 
         private Negotiator Authentication()
@@ -818,6 +818,22 @@ namespace PlexRequests.UI.Modules
             var settings = await LandingSettings.GetSettingsAsync();
 
             return View["LandingPage", settings];
+        }
+
+        private async Task<Response> SaveLandingPage()
+        {
+            var settings = this.Bind<LandingPageSettings>();
+
+            if (settings.Enabled && settings.EnabledNoticeTime && string.IsNullOrEmpty(settings.NoticeMessage))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "If you are going to enabled the notice, then we need a message!"});
+            }
+
+            var result = await LandingSettings.SaveSettingsAsync(settings);
+
+            return Response.AsJson(result 
+                ? new JsonResponseModel { Result = true } 
+                : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs"});
         }
     }
 }

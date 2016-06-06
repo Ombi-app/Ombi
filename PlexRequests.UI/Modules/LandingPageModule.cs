@@ -24,6 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Threading.Tasks;
+
+using Nancy.Responses.Negotiation;
+
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 
@@ -34,8 +38,16 @@ namespace PlexRequests.UI.Modules
         public LandingPageModule(ISettingsService<PlexRequestSettings> settingsService, ISettingsService<LandingPageSettings> landing) : base("landing", settingsService)
         {
             LandingSettings = landing;
+
+            Get["/", true] = async (x, ct) => await Index();
         }
 
         private ISettingsService<LandingPageSettings> LandingSettings { get; }
+
+        private async Task<Negotiator> Index()
+        {
+            var model = await LandingSettings.GetSettingsAsync();
+            return View["Index", model];
+        }
     }
 }
