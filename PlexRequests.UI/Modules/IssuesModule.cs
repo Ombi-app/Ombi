@@ -297,7 +297,7 @@ namespace PlexRequests.UI.Modules
 
 
 
-            return Response.AsJson(new JsonResponseModel { Result = true });
+            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Album Reports are not supported yet!"});
         }
 
         /// <summary>

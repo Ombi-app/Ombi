@@ -199,6 +199,7 @@
 
                 <br />
             </form>
+            {{#if_eq available true}}
             <form method="POST" action="@url/issues/nonrequestissue/" id="report{{id}}">
                 <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
                 <input name="type" type="text" value="{{type}}" hidden="hidden" />
@@ -216,6 +217,7 @@
                     </ul>
                 </div>
             </form>
+            {{/if_eq}}
         </div>
 
     </div>
