@@ -35,13 +35,6 @@
 
             @if (Model.IssueStatus == IssueStatus.PendingIssue)
             {
-                <form action="@formAction/issues/inprogressUpdate" method="post">
-                    <input id="issueId" name="issueId" value="@Model.Id" hidden="hidden" />
-                    <button id="@Model.Id" class="btn btn-sm btn-primary-outline dropdown-toggle inProgress">In-Progress</button>
-                </form>
-            }
-            @if (Model.IssueStatus == IssueStatus.InProgressIssue)
-            {
                 <form action="@formAction/issues/resolvedUpdate" method="post">
                     <input id="issueId" name="issueId" value="@Model.Id" hidden="hidden" />
                     <button type="submit" id="@Model.Id" class="btn btn-sm btn-success-outline dropdown-toggle resolve">Resolve</button>
@@ -67,7 +60,7 @@
 {
     <div class="row">
         <div class="col-sm-11">
-            <div><strong>Type:</strong> @StringHelper.CamelCaseToWords(issue.Issue.ToString())</div>
+            <div><strong>Type:</strong> @StringHelper.ToCamelCaseWords(issue.Issue.ToString())</div>
             <div><strong>User Reported:</strong> @issue.UserReported</div>
             <div><strong>User Note:</strong> @issue.UserNote</div>
             <div><strong>Admin Note:</strong>@issue.AdminNote</div>

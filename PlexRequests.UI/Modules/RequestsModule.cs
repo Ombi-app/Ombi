@@ -328,7 +328,7 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,
-                Body = issue == IssueState.Other ? comment : issue.ToString().CamelCaseToWords()
+                Body = issue == IssueState.Other ? comment : issue.ToString().ToCamelCaseWords()
             };
             await NotificationService.Publish(model);
 

@@ -184,6 +184,78 @@ $(function () {
             });
         });
 
+    // Report Issue
+    $(document).on("click", ".dropdownIssue", function (e) {
+        var issue = $(this).attr("issue-select");
+        var id = e.target.id;
+        // Other issue so the modal is opening
+        if (issue == 4) {
+            return;
+        }
+        e.preventDefault();
+
+        var $form = $('#report' + id);
+        var data = $form.serialize();
+        data = data + "&issue=" + issue;
+
+        $.ajax({
+            type: $form.prop('method'),
+            url: $form.prop('action'),
+            data: data,
+            dataType: "json",
+            success: function (response) {
+                if (checkJsonResponse(response)) {
+                    generateNotify("Successfully Reported Issue.", "success");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+    });
+
+    // Save Modal click
+    $(".theSaveButton").click(function (e) {
+        var comment = $("#commentArea").val();
+        e.preventDefault();
+
+        var $form = $("#commentForm");
+        var data = $form.serialize();
+        data = data + "&comment=" + comment;
+
+        $.ajax({
+            type: $form.prop("method"),
+            url: $form.prop("action"),
+            data: data,
+            dataType: "json",
+            success: function (response) {
+                if (checkJsonResponse(response)) {
+                    generateNotify("Success! Added Issue.", "success");
+                    $("#myModal").modal("hide");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+    });
+
+    // Update the modal
+    $('#issuesModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var id = button.data('identifier'); // Extract info from data-* attributes
+        var type = button.data('type'); // Extract info from data-* attributes
+
+        var modal = $(this);
+        modal.find('.theSaveButton').val(id); // Add ID to the button
+
+
+        $('#providerIdModal').val(id);
+        $('#typeModal').val(type);
+    });
+
     function focusSearch($content) {
         if ($content.length > 0) {
             $('input[type=text].form-control', $content).first().focus();

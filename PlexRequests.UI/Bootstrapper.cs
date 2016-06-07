@@ -111,11 +111,12 @@ namespace PlexRequests.UI
             container.Register<IHeadphonesApi, HeadphonesApi>();
             container.Register<ISlackApi, SlackApi>();
 
+            
+            container.AutoRegister();
+
             // Notification Service
             container.Register<INotificationService, NotificationService>().AsSingleton();
             
-            JsonSettings.MaxJsonLength = int.MaxValue;
-
             SubscribeAllObservers(container);
             base.ConfigureRequestContainer(container, context);
             var loc = ServiceLocator.Instance;
@@ -131,6 +132,7 @@ namespace PlexRequests.UI
             container.Register<IUserMapper, UserMapper>();
             container.Register<ICustomUserMapper, UserMapper>();
 
+            JsonSettings.MaxJsonLength = int.MaxValue;
 
             CookieBasedSessions.Enable(pipelines, CryptographyConfiguration.Default);
             StaticConfiguration.DisableErrorTraces = false;

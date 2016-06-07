@@ -408,11 +408,9 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
-            var movieApi = new TheMovieDbApi();
-            var movieInfo = movieApi.GetMovieInformation(movieId).Result;
+            var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
-            //#if !DEBUG
 
             var settings = await PrService.GetSettingsAsync();
 

@@ -196,14 +196,25 @@
                 {{/if_eq}}
                 {{/if_eq}}
                 {{/if_eq}}
-                <br />
-                <br />
-                <br />
-                {{#if voteAverage}}
 
-                <small class="row">Vote Average: {{voteAverage}}</small>
-                <small class="row">Vote Count: {{voteCount}}</small>
-                {{/if}}
+                <br />
+            </form>
+            <form method="POST" action="@url/issues/nonrequestissue/" id="report{{id}}">
+                <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
+                <input name="type" type="text" value="{{type}}" hidden="hidden" />
+                <div class="dropdown">
+                    <button id="{{id}}" class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <i class="fa fa-exclamation"></i> Report Issue
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">Wrong Audio</a></li>
+                        <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">No Subtitles</a></li>
+                        <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">Wrong Content</a></li>
+                        <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">Playback Issues</a></li>
+                        <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" data-type="{{type}}" href="#" data-toggle="modal" data-target="#issuesModal">Other</a></li>
+                    </ul>
+                </div>
             </form>
         </div>
 
@@ -273,6 +284,30 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" id="seasonsRequest" class="btn btn-primary">Request</button>
             </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="issuesModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <h4 class="modal-title">Add an issue</h4>
+            </div>
+            <form method="POST" action="@url/issues/nonrequestissuecomment" id="commentForm">
+                <div class="modal-body">
+                    <input id="providerIdModal" name="providerId" class="providerId" type="text" hidden="hidden" value="" />
+                    <input name="issue" class="issue" type="text" hidden="hidden" value="" />
+                    <input id="typeModal" name="type" class="type" type="text" hidden="hidden" value="" />
+                    <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">Save changes</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

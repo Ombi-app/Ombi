@@ -34,7 +34,7 @@ namespace PlexRequests.UI.Models
         public int Id { get; set; }
         public int RequestId { get; set; }
         public string Title { get; set; }
-        public int Count { get; set; }
+        public string Issues { get; set; }
         public string Type { get; set; }
 
     }

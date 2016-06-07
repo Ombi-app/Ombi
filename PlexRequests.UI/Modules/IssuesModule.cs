@@ -10,10 +10,13 @@ using Nancy.Security;
 
 using NLog;
 
+using PlexRequests.Api;
 using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
@@ -22,31 +25,34 @@ namespace PlexRequests.UI.Modules
 {
     public class IssuesModule : BaseAuthModule
     {
-        public IssuesModule(ISettingsService<PlexRequestSettings> pr, IIssueService issueService, IRequestService request) : base("issues", pr)
+        public IssuesModule(ISettingsService<PlexRequestSettings> pr, IIssueService issueService, IRequestService request, INotificationService n) : base("issues", pr)
         {
             IssuesService = issueService;
             RequestService = request;
+            NotificationService = n;
 
             Get["/"] = x => Index();
 
             Get["/{id}", true] = async (x, ct) => await Details(x.id);
 
-            Post["/issue", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
+            Post["/issue", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.requestId, (IssueState)(int)Request.Form.issue, null);
 
-            Get["/inprogress", true] = async (x, ct) => await GetIssues(IssueStatus.InProgressIssue);
             Get["/pending", true] = async (x, ct) => await GetIssues(IssueStatus.PendingIssue);
             Get["/resolved", true] = async (x, ct) => await GetIssues(IssueStatus.ResolvedIssue);
 
             Post["/remove", true] = async (x, ct) => await RemoveIssue((int)Request.Form.issueId);
-            Post["/inprogressUpdate", true] = async (x, ct) => await ChangeStatus((int)Request.Form.issueId, IssueStatus.InProgressIssue);
             Post["/resolvedUpdate", true] = async (x, ct) => await ChangeStatus((int)Request.Form.issueId, IssueStatus.ResolvedIssue);
 
-            Post["/clear", true] = async (x, ct) => await ClearIssue((int) Request.Form.issueId, (IssueState) (int) Request.Form.issue);
+            Post["/clear", true] = async (x, ct) => await ClearIssue((int)Request.Form.issueId, (IssueState)(int)Request.Form.issue);
 
             Get["/issuecount", true] = async (x, ct) => await IssueCount();
             Get["/tabCount", true] = async (x, ct) => await TabCount();
 
-            Post["/issuecomment", true] = async (x, ct) => await ReportIssue((int)Request.Form.requestId, IssueState.Other, (string)Request.Form.commentArea);
+            Post["/issuecomment", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.provierId, IssueState.Other, (string)Request.Form.commentArea);
+
+            Post["/nonrequestissue", true] = async (x, ct) => await ReportNonRequestIssue((int)Request.Form.providerId, (string)Request.Form.type, (IssueState)(int)Request.Form.issue, null);
+
+            Post["/nonrequestissuecomment", true] = async (x, ct) => await ReportNonRequestIssue((int)Request.Form.providerId, (string)Request.Form.type, IssueState.Other, (string)Request.Form.commentArea);
 
 
             Post["/addnote", true] = async (x, ct) => await AddNote((int)Request.Form.requestId, (string)Request.Form.noteArea, (IssueState)(int)Request.Form.issue);
@@ -54,6 +60,7 @@ namespace PlexRequests.UI.Modules
 
         private IIssueService IssuesService { get; }
         private IRequestService RequestService { get; }
+        private INotificationService NotificationService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public Negotiator Index()
@@ -64,22 +71,43 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> GetIssues(IssueStatus status)
         {
             var issues = await IssuesService.GetAllAsync();
-            issues = await FilterIssues(issues);
+            issues = await FilterIssuesAsync(issues, status == IssueStatus.ResolvedIssue);
 
             var issuesModels = issues as IssuesModel[] ?? issues.Where(x => x.IssueStatus == status).ToArray();
-            var model = issuesModels.Select(i => new IssuesViewModel
-            {
-                Title = i.Title, Type = i.Type.ToString().CamelCaseToWords(), Count = i.Issues.Count, Id = i.Id, RequestId = i.RequestId
-            }).ToList();
+            var viewModel = new List<IssuesViewModel>();
 
-            return Response.AsJson(model);
+            foreach (var i in issuesModels)
+            {
+                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), };
+
+                // Create a string with all of the current issue states with a "," delimiter in e.g. Wrong Content, Playback Issues
+                var state = i.Issues.Select(x => x.Issue).ToArray();
+                var issueState = string.Empty;
+                for (var j = 0; j < state.Length; j++)
+                {
+                    var word = state[j].ToString().ToCamelCaseWords();
+                    if (j != state.Length - 1)
+                    {
+                        issueState += $"{word}, ";
+                    }
+                    else
+                    {
+                        issueState += word;
+                    }
+                }
+                model.Issues = issueState;
+
+                viewModel.Add(model);
+            }
+
+            return Response.AsJson(viewModel);
         }
 
         public async Task<Response> IssueCount()
         {
             var issues = await IssuesService.GetAllAsync();
 
-            var myIssues = await FilterIssues(issues);
+            var myIssues = await FilterIssuesAsync(issues);
 
             var count = myIssues.Count();
 
@@ -90,19 +118,17 @@ namespace PlexRequests.UI.Modules
         {
             var issues = await IssuesService.GetAllAsync();
 
-            var myIssues = await FilterIssues(issues);
+            var myIssues = await FilterIssuesAsync(issues);
 
             var count = new List<object>();
 
             var issuesModels = myIssues as IssuesModel[] ?? myIssues.ToArray();
             var pending = issuesModels.Where(x => x.IssueStatus == IssueStatus.PendingIssue);
-            var progress = issuesModels.Where(x => x.IssueStatus == IssueStatus.InProgressIssue);
             var resolved = issuesModels.Where(x => x.IssueStatus == IssueStatus.ResolvedIssue);
-          
-            count.Add(new  { Name = IssueStatus.PendingIssue, Count = pending.Count()});
-            count.Add(new  { Name = IssueStatus.InProgressIssue, Count = progress.Count()});
-            count.Add(new  { Name = IssueStatus.ResolvedIssue, Count = resolved.Count()});
-            
+
+            count.Add(new { Name = IssueStatus.PendingIssue, Count = pending.Count() });
+            count.Add(new { Name = IssueStatus.ResolvedIssue, Count = resolved.Count() });
+
             return Response.AsJson(count);
         }
 
@@ -115,7 +141,7 @@ namespace PlexRequests.UI.Modules
                 : View["Details", issue];
         }
 
-        private async Task<Response> ReportIssue(int requestId, IssueState issue, string comment)
+        private async Task<Response> ReportRequestIssue(int requestId, IssueState issue, string comment)
         {
 
             var model = new IssueModel
@@ -132,13 +158,22 @@ namespace PlexRequests.UI.Modules
             var issueEntity = await IssuesService.GetAllAsync();
             var existingIssue = issueEntity.FirstOrDefault(x => x.RequestId == requestId);
 
+            var notifyModel = new NotificationModel
+            {
+                User = Username,
+                NotificationType = NotificationType.Issue,
+                Title = request.Title,
+                DateTime = DateTime.Now,
+                Body = issue == IssueState.Other ? comment : issue.ToString().ToCamelCaseWords()
+            };
+
             // An issue already exists
             if (existingIssue != null)
             {
                 if (existingIssue.Issues.Any(x => x.Issue == issue))
                 {
                     return
-                        Response.AsJson(new JsonResponseModel()
+                        Response.AsJson(new JsonResponseModel
                         {
                             Result = false,
                             Message = "This issue has already been reported!"
@@ -147,6 +182,9 @@ namespace PlexRequests.UI.Modules
                 }
                 existingIssue.Issues.Add(model);
                 var result = await IssuesService.UpdateIssueAsync(existingIssue);
+
+
+                await NotificationService.Publish(notifyModel);
 
                 return Response.AsJson(result
                     ? new JsonResponseModel { Result = true }
@@ -169,28 +207,144 @@ namespace PlexRequests.UI.Modules
             request.IssueId = issueId;
             await RequestService.UpdateRequestAsync(request);
 
+            await NotificationService.Publish(notifyModel);
+            return Response.AsJson(new JsonResponseModel { Result = true });
+        }
+
+        private async Task<Response> ReportNonRequestIssue(int providerId, string type, IssueState issue, string comment)
+        {
+            var currentIssues = await IssuesService.GetAllAsync();
+            var notifyModel = new NotificationModel
+            {
+                User = Username,
+                NotificationType = NotificationType.Issue,
+                DateTime = DateTime.Now,
+                Body = issue == IssueState.Other ? comment : issue.ToString().ToCamelCaseWords()
+            };
+            var model = new IssueModel
+            {
+                Issue = issue,
+                UserReported = Username,
+                UserNote = !string.IsNullOrEmpty(comment)
+                ? $"{Username} - {comment}"
+                : string.Empty,
+            };
+
+            var existing = currentIssues.FirstOrDefault(x => x.ProviderId == providerId && !x.Deleted && x.IssueStatus == IssueStatus.PendingIssue);
+            if (existing != null)
+            {
+                existing.Issues.Add(model);
+                await IssuesService.UpdateIssueAsync(existing);
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+
+            if (type == "movie")
+            {
+                var movieApi = new TheMovieDbApi();
+
+                var result = await movieApi.GetMovieInformation(providerId);
+                if (result != null)
+                {
+                    notifyModel.Title = result.Title;
+                    // New issue
+                    var issues = new IssuesModel
+                    {
+                        Title = result.Title,
+                        PosterUrl = "https://image.tmdb.org/t/p/w150/" + result.PosterPath,
+                        ProviderId = providerId,
+                        Type = RequestType.Movie,
+                        IssueStatus = IssueStatus.PendingIssue
+                    };
+                    issues.Issues.Add(model);
+
+                    var issueId = await IssuesService.AddIssueAsync(issues);
+
+                    await NotificationService.Publish(notifyModel);
+                    return Response.AsJson(new JsonResponseModel { Result = true });
+                }
+            }
+
+            if (type == "tv")
+            {
+                var tv = new TvMazeApi();
+                var result = tv.ShowLookupByTheTvDbId(providerId);
+                if (result != null)
+                {
+                    var banner = result.image?.medium;
+                    if (!string.IsNullOrEmpty(banner))
+                    {
+                        banner = banner.Replace("http", "https");
+                    }
+
+                    notifyModel.Title = result.name;
+                    // New issue
+                    var issues = new IssuesModel
+                    {
+                        Title = result.name,
+                        PosterUrl = banner,
+                        ProviderId = providerId,
+                        Type = RequestType.TvShow,
+                        IssueStatus = IssueStatus.PendingIssue
+                    };
+                    issues.Issues.Add(model);
+
+                    var issueId = await IssuesService.AddIssueAsync(issues);
+
+                    await NotificationService.Publish(notifyModel);
+                    return Response.AsJson(new JsonResponseModel { Result = true });
+                }
+            }
+
+
 
             return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
-        private async Task<IEnumerable<IssuesModel>> FilterIssues(IEnumerable<IssuesModel> issues)
+        /// <summary>
+        /// Filters the issues. Checks to see if we have set <c>UsersCanViewOnlyOwnIssues</c> in the database and filters upon the user logged in and that setting.
+        /// </summary>
+        /// <param name="issues">The issues.</param>
+        private async Task<IEnumerable<IssuesModel>> FilterIssuesAsync(IEnumerable<IssuesModel> issues, bool showResolved = false)
         {
             var settings = await PlexRequestSettings.GetSettingsAsync();
             IEnumerable<IssuesModel> myIssues;
+
+            // Is the user an Admin? If so show everything
             if (IsAdmin)
             {
-                myIssues = issues.Where(x => x.Deleted == false);
+                var issuesModels = issues as IssuesModel[] ?? issues.ToArray();
+                myIssues = issuesModels.Where(x => x.Deleted == false);
+                if (!showResolved)
+                {
+                    myIssues = issuesModels.Where(x => x.IssueStatus != IssueStatus.ResolvedIssue);
+                }
             }
-            else if (settings.UsersCanViewOnlyOwnIssues)
+            else if (settings.UsersCanViewOnlyOwnIssues) // The user is not an Admin, do we have the settings to hide them?
             {
-                myIssues =
-                    issues.Where(
-                        x =>
-                            x.Issues.Any(i => i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)) && x.Deleted == false);
+                if (!showResolved)
+                {
+                    myIssues =
+                        issues.Where(
+                            x =>
+                            x.Issues.Any(i => i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)) && x.Deleted == false
+                            && x.IssueStatus != IssueStatus.ResolvedIssue);
+                }
+                else
+                {
+                    myIssues =
+                        issues.Where(
+                            x =>
+                                x.Issues.Any(i => i.UserReported.Equals(Username, StringComparison.CurrentCultureIgnoreCase)) && x.Deleted == false);
+                }
             }
-            else
+            else // Looks like the user is not an admin and there is no settings set.
             {
-                myIssues = issues.Where(x => x.Deleted == false);
+                var issuesModels = issues as IssuesModel[] ?? issues.ToArray();
+                myIssues = issuesModels.Where(x => x.Deleted == false);
+                if (!showResolved)
+                {
+                    myIssues = issuesModels.Where(x => x.IssueStatus != IssueStatus.ResolvedIssue);
+                }
             }
 
             return myIssues;
@@ -200,10 +354,19 @@ namespace PlexRequests.UI.Modules
             try
             {
                 this.RequiresClaims(UserClaims.Admin);
+                var issue = await IssuesService.GetAsync(issueId);
+                var request = await RequestService.GetAsync(issue.RequestId);
 
-                await IssuesService.DeleteIssueAsync(issueId);
+                request.IssueId = 0; // No issue;
+
+                var result = await RequestService.UpdateRequestAsync(request);
+                if (result)
+                {
+                    await IssuesService.DeleteIssueAsync(issueId);
+                }
 
                 return View["Index"];
+
             }
             catch (Exception e)
             {
@@ -256,10 +419,12 @@ namespace PlexRequests.UI.Modules
             }
             var toAddNote = issue.Issues.FirstOrDefault(x => x.Issue == state);
 
-            issue.Issues.Remove(toAddNote);
-            toAddNote.AdminNote = noteArea;
-            issue.Issues.Add(toAddNote);
-            
+            if (toAddNote != null)
+            {
+                issue.Issues.Remove(toAddNote);
+                toAddNote.AdminNote = noteArea;
+                issue.Issues.Add(toAddNote);
+            }
 
             var result = await IssuesService.UpdateIssueAsync(issue);
             return Response.AsJson(result
@@ -267,6 +432,11 @@ namespace PlexRequests.UI.Modules
                                        : new JsonResponseModel { Result = false, Message = "Could not update the notes, please try again or check the logs" });
         }
 
+        /// <summary>
+        /// Orders the issues descending by the <see cref="IssueState"/>.
+        /// </summary>
+        /// <param name="issues">The issues.</param>
+        /// <returns></returns>
         private IssuesModel Order(IssuesModel issues)
         {
             issues.Issues = issues.Issues.OrderByDescending(x => x.Issue).ToList();

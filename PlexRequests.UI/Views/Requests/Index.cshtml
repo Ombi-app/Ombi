@@ -215,11 +215,6 @@
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
                 </form>
 
-                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
-                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
-                </form>
-
                 <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq available true}}

@@ -43,6 +43,7 @@ namespace PlexRequests.Core.Models
         public bool Deleted { get; set; }
         public RequestType Type { get; set; }
         public IssueStatus IssueStatus { get; set; }
+        public int ProviderId { get; set; }
     }
 
     public class IssueModel
@@ -56,7 +57,6 @@ namespace PlexRequests.Core.Models
     public enum IssueStatus
     {
         PendingIssue,
-        InProgressIssue,
         ResolvedIssue
     }
 }

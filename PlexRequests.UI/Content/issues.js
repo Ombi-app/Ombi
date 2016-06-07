@@ -17,9 +17,6 @@ initLoad();
 $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
     var target = $(e.target).attr('href');
 
-    if (target === "#inProgressTab") {
-        loadInProgressIssues();
-    }
     if (target === "#resolvedTab") {
         loadResolvedIssues();
     }
@@ -117,10 +114,12 @@ $('#myModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget); // Button that triggered the modal
     var id = button.data('identifier'); // Extract info from data-* attributes
 
+
     var modal = $(this);
     modal.find('.theSaveButton').val(id); // Add ID to the button
     var requestField = modal.find('input');
-    requestField.val(id);  // Add ID to the hidden field
+    requestField.val(id);  // Add ID to the hidden field 
+
 });
 
 // Update the note modal
@@ -194,7 +193,7 @@ function initLoad() {
 }
 
 function loadCounts() {
-    var url = createBaseUrl(base, "issues/tabCount");
+    var url = createBaseUrl(base, "/issues/tabCount");
     $.ajax({
         type: "get",
         url: url,
@@ -226,13 +225,6 @@ function loadPendingIssues() {
     loadIssues("pending", $('#pendingIssues'));
 }
 
-
-function loadInProgressIssues() {
-    var $element = $('#inprogressIssues');
-    $element.html("");
-    loadIssues("inprogress", $element);
-}
-
 function loadResolvedIssues() {
     var $element = $('#resolvedIssues');
     $element.html("");
@@ -240,8 +232,8 @@ function loadResolvedIssues() {
 }
 
 function loadIssues(type, element) {
-    var url = createBaseUrl(base, "issues/" + type);
-    var linkUrl = createBaseUrl(base, "issues/");
+    var url = createBaseUrl(base, "/issues/" + type);
+    var linkUrl = createBaseUrl(base, "/issues/");
     $.ajax({
         type: "get",
         url: url,
@@ -272,7 +264,7 @@ function buildIssueContext(result) {
         requestId: result.requestId,
         type: result.type,
         title: result.title,
-        count: result.count
+        issues: result.issues
     };
 
     return context;

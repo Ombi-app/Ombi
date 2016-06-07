@@ -6,11 +6,10 @@
 
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#pendingTab" aria-controls="home" role="tab" data-toggle="tab">Pending <span id="pendingCount"></span></a></li>
-    <li role="presentation"><a href="#inProgressTab" aria-controls="profile" role="tab" data-toggle="tab">In-Progress <span id="inProgressCount"></span></a></li>
     <li role="presentation"><a href="#resolvedTab" aria-controls="profile" role="tab" data-toggle="tab">Resolved <span id="resolvedCount"></span></a></li>
 </ul>
 <br/>
-<hr/>
+
 <div class="row">
     <div class="col-md-3">
         <h4>Title</h4>
@@ -18,18 +17,18 @@
     <div class="col-md-2">
         <h4>Type</h4>
     </div>
-    <div class="col-md-1">
+    <div class="col-md-4">
         <h4>Issue's</h4>
     </div>
 
     <div class="col-md-2">
         <h4>Requested</h4>
     </div>
-    <div class="col-sm-3 col-sm-push-3">
+    <div class="col-sm-1">
         
     </div>
 </div>
-
+<hr />
 <div id="myTabContent" class="tab-content">
     <!-- Pending tab -->
     <div role="tabpanel" class="tab-pane active" id="pendingTab">
@@ -37,17 +36,6 @@
         <br />
         <!-- Movie content -->
         <div id="pendingIssues">
-            
-        </div>
-    </div>
-
-    <!--In Progress-->
-    <div role="tabpanel" class="tab-pane" id="inProgressTab">
-
-        <br />
-        <br />
-        <!-- In progress content -->
-        <div id="inprogressIssues">
             
         </div>
     </div>
@@ -73,8 +61,8 @@
             <div class="col-md-2">
                 <div id="type">{{type}}</div>
             </div>
-            <div class="col-md-1">
-                Issues: {{count}}
+            <div class="col-md-4">
+                <small>{{issues}}</small>
             </div>
 
             <div class="col-md-2">
@@ -84,7 +72,7 @@
                 <div><i class="fa fa-times"></i></div>
                 {{/if}}
             </div>
-            <div class="col-sm-3 col-sm-push-3">
+            <div class="col-sm-1">
                 <a href="" id="{{id}}link" class="btn btn-sm btn-info-outline approve"><i class="fa fa-info"></i> Details</a>
             </div>
         </div>
