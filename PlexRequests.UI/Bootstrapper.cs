@@ -111,8 +111,7 @@ namespace PlexRequests.UI
             container.Register<IHeadphonesApi, HeadphonesApi>();
             container.Register<ISlackApi, SlackApi>();
 
-            
-            container.AutoRegister();
+           
 
             // Notification Service
             container.Register<INotificationService, NotificationService>().AsSingleton();
