@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Moq;
 
@@ -50,6 +51,7 @@ namespace PlexRequests.UI.Tests
     {
         private Mock<ISettingsService<AuthenticationSettings>> AuthMock { get; set; }
         private Mock<ISettingsService<PlexRequestSettings>> PlexRequestMock { get; set; }
+        private Mock<ISettingsService<LandingPageSettings>> LandingPageMock { get; set; }
         private ConfigurableBootstrapper Bootstrapper { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
 
@@ -58,14 +60,17 @@ namespace PlexRequests.UI.Tests
         {
             AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
             PlexMock = new Mock<IPlexApi>();
+            LandingPageMock = new Mock<ISettingsService<LandingPageSettings>>();
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
             PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
+            PlexRequestMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(new PlexRequestSettings()));
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<UserLoginModule>();
                 with.Dependency(PlexRequestMock.Object);
                 with.Dependency(AuthMock.Object);
                 with.Dependency(PlexMock.Object);
+                with.Dependency(LandingPageMock.Object);
                 with.RootPathProvider<TestRootPathProvider>();
             });
         }
