@@ -160,6 +160,7 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\EmptyViewBase.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Themes.cs" />
@@ -541,6 +542,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\LandingPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Landing\Index.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Blank.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

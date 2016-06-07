@@ -65,11 +65,7 @@ namespace PlexRequests.UI.Modules
                     return false;
                 }
                 var claims = Context.CurrentUser.Claims.ToList();
-                if (claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser))
-                {
-                    return true;
-                }
-                return false;
+                return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
             }
         }
 
@@ -105,7 +101,7 @@ namespace PlexRequests.UI.Modules
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
-
+            
             return Session[SessionKeys.UsernameKey] == null
                 ? Context.GetRedirect(redirectPath)
                 : null;

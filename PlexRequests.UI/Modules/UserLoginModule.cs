@@ -28,9 +28,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Nancy;
 using Nancy.Extensions;
+using Nancy.Responses;
 using Nancy.Responses.Negotiation;
 
 using NLog;
@@ -46,23 +48,30 @@ namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp) : base("userlogin", pr)
         {
             AuthService = auth;
+            LandingPageSettings = lp;
             Api = api;
-            Get["/"] = _ => Index();
+            Get["/", true] = async (x, ct) => await Index();
             Post["/"] = x => LoginUser();
             Get["/logout"] = x => Logout();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
+        private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private IPlexApi Api { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public Negotiator Index()
+        public async Task<Negotiator> Index()
         {
-            var settings = AuthService.GetSettings();
+            var landingSettings = await LandingPageSettings.GetSettingsAsync();
+            if (landingSettings.Enabled)
+            {
+                return View["Landing/Index",landingSettings];
+            }
+            var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
         }
 
