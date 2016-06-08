@@ -1,5 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @Html.Partial("_Sidebar")
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.LandingPageSettings>
 
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -76,7 +77,7 @@
 
             <div class="form-group">
                 <div class='input-group date' id='startDate'>
-                    <input type='text' class="form-control" />
+                    <input type='text' class="form-control" value="@Model.NoticeStart"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -86,7 +87,7 @@
 
             <div class="form-group">
                 <div class='input-group date' id='endDate'>
-                    <input type='text' class="form-control"/>
+                    <input type='text' class="form-control" value="@Model.NoticeStart"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -119,13 +120,22 @@
             $('#startDate').data("DateTimePicker").maxDate(e.date);
         });
 
+        var start = '';
+        var end = '';
+        if ($startDate.data("DateTimePicker").date()) {
+            start = $startDate.data("DateTimePicker").date().toISOString();
+        }
+        if ($endDate.data("DateTimePicker").date()) {
+            end = $endDate.data("DateTimePicker").date().toISOString();
+        }
+
         $('#save').click(function (e) {
             e.preventDefault();
 
             var $form = $("#mainForm");
 
             var data = $form.serialize();
-            data = data + "&noticeStart=" + $startDate.data("DateTimePicker").date().toISOString() + "&noticeEnd=" + $endDate.data("DateTimePicker").date().toISOString();
+            data = data + "&noticeStart=" + start + "&noticeEnd=" + end;
 
             $.ajax({
                 type: $form.prop("method"),
