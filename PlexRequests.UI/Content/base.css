@@ -294,3 +294,13 @@ label {
   margin-right: 15px;
   margin-left: 15px; }
 
+.bootstrap-datetimepicker-widget.dropdown-menu {
+  background-color: #4e5d6c; }
+
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
+  border-bottom: 6px solid #df691a !important; }
+
+.bootstrap-datetimepicker-widget table td.active,
+.bootstrap-datetimepicker-widget table td.active:hover {
+  color: #fff !important; }
+

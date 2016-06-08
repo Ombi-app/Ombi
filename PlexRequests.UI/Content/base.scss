@@ -354,7 +354,7 @@ $border-radius: 10px;
    text-align: center;
    line-height: 13px; }
 
-.input-group-sm{
+.input-group-sm{form
     padding-top: 2px;
     padding-bottom: 2px;
 }
@@ -362,3 +362,16 @@ $border-radius: 10px;
 .tab-pane .form-horizontal .form-group {
   margin-right: 15px;
   margin-left: 15px; }
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    background-color: $form-color;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
+    border-bottom: 6px solid $form-color $i;
+}
+
+.bootstrap-datetimepicker-widget table td.active, 
+.bootstrap-datetimepicker-widget table td.active:hover {
+    color: #fff !important;
+}

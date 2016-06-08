@@ -209,3 +209,11 @@ button.list-group-item:focus {
   background-color: $bg-colour;
   border-radius: 10px;
 }
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    background-color: $bg-colour;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
+    border-bottom: 6px solid $bg-colour $i;
+}
