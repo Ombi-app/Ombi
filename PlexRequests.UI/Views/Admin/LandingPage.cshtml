@@ -9,7 +9,6 @@
 
             <div class="form-group">
                 <div class="checkbox">
-
                     @if (Model.Enabled)
                     {
                         <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
@@ -20,6 +19,19 @@
                     }
                 </div>
                 <small>If enabled then all users will be redirected to the landing page instead of the login page.</small>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    @if (Model.BeforeLogin)
+                    {
+                        <input type="checkbox" id="BeforeLogin" name="BeforeLogin" checked="checked"><label for="BeforeLogin">Show before the login</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="BeforeLogin" name="BeforeLogin"><label for="BeforeLogin">Show before the login</label>
+                    }
+                </div>
+                <small>If enabled then this will show the landing page before the login page, if this is disabled the user will log in first and then see the landing page.</small>
             </div>
 
             <br/>

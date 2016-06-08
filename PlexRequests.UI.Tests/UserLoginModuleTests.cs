@@ -64,6 +64,7 @@ namespace PlexRequests.UI.Tests
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
             PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
             PlexRequestMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(new PlexRequestSettings()));
+            LandingPageMock.Setup(x => x.GetSettings()).Returns(new LandingPageSettings());
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<UserLoginModule>();
@@ -80,8 +81,6 @@ namespace PlexRequests.UI.Tests
         {
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
-
-
 
             Bootstrapper.WithSession(new Dictionary<string, object>());
 

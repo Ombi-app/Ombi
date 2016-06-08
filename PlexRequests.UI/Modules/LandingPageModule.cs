@@ -33,6 +33,7 @@ using Nancy.Responses.Negotiation;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
@@ -57,8 +58,20 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Negotiator> Index()
         {
-            var model = await LandingSettings.GetSettingsAsync();
-            return View["Index", model];
+            var s = await LandingSettings.GetSettingsAsync();
+            var model = new LandingPageViewModel
+            {
+                Enabled = s.Enabled,
+                Id = s.Id,
+                EnabledNoticeTime = s.EnabledNoticeTime,
+                NoticeEnable = s.NoticeEnable,
+                NoticeEnd = s.NoticeEnd,
+                NoticeMessage = s.NoticeMessage,
+                NoticeStart = s.NoticeStart,
+                ContinueUrl = s.BeforeLogin ? $"userlogin" : $"search"
+            };
+
+            return View["Landing/Index", model];
         }
 
         private async Task<Response> CheckStatus()

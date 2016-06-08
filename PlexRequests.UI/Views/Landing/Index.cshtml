@@ -1,3 +1,41 @@
-﻿@inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.Core.SettingModels.LandingPageSettings>
+﻿
+@inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.UI.Models.LandingPageViewModel>
 
 
+<img class="center" src="~/Content/images/logo.png" width="300" />
+
+<div id="area" class="landing-block">
+    @if (Model.NoticeEnable)
+    {
+        <div class="row" style="padding-top: 20px">
+            <div class="col-md-1 col-md-push-4">
+                <i class="fa fa-bell fa-5x"></i>
+            </div>
+            <div class="col-md-5 col-md-push-4">
+                <span class="landing-title">Notice</span>
+                <br/>
+                @Model.NoticeMessage
+                <br/>
+                <strong>6/27/2016 @@ 9:00PM CST to 6/27/2016 @@ 9:00PM CST</strong>
+            </div>
+        </div>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+    }
+    <div class="row">
+        <div class="col-md-1 col-md-push-4">
+            <i class="fa fa-check-circle fa-5x"></i>
+        </div>
+        <div class="col-md-5 col-md-push-4">
+            <span class="landing-title">Currently Online</span>
+            <br/>
+            The Plex server is currently online (check this page for continuous status updates)
+
+        </div>
+    </div>
+</div>
+<div style="text-align: center; margin-top: 10px">
+    <a href="@Model.ContinueUrl?landing=false" class="btn btn-success-outline">Continue</a>
+</div>

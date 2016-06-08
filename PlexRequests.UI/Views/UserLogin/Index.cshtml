@@ -54,7 +54,7 @@
                     console.log(response);
                     if (response.result === true) {
 
-                        window.location.replace(url);
+                        location.replace(response.message);
              
                     } else {
                         generateNotify(response.message, "warning");

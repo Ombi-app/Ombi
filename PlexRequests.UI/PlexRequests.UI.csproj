@@ -179,6 +179,7 @@
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
+    <Compile Include="Models\LandingPageViewModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
@@ -329,6 +330,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\bootstrap-datetimepicker.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\bootstrap-datetimepicker.js" />

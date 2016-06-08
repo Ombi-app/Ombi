@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LandingPageSettings.cs
+//    File: LandingPageViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
-namespace PlexRequests.Core.SettingModels
+using PlexRequests.Core.SettingModels;
+
+namespace PlexRequests.UI.Models
 {
-    public class LandingPageSettings : Settings
+    public class LandingPageViewModel : LandingPageSettings
     {
-        public bool Enabled { get; set; }
-        public bool BeforeLogin { get; set; }
-        public bool NoticeEnable { get; set; }
-        public string NoticeMessage { get; set; }
-        public bool EnabledNoticeTime { get; set; }
-        public DateTime NoticeStart { get; set; }
-        public DateTime NoticeEnd { get; set; }
+        public string ContinueUrl { get; set; } 
     }
 }

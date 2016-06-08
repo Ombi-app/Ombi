@@ -354,7 +354,7 @@ $border-radius: 10px;
    text-align: center;
    line-height: 13px; }
 
-.input-group-sm{form
+.input-group-sm{
     padding-top: 2px;
     padding-bottom: 2px;
 }
@@ -374,4 +374,20 @@ $border-radius: 10px;
 .bootstrap-datetimepicker-widget table td.active, 
 .bootstrap-datetimepicker-widget table td.active:hover {
     color: #fff !important;
+}
+
+img.center {
+    display: block;
+    margin: 0 auto;
+}
+
+div.landing-block{
+    background: #424242 !important;
+    padding-bottom:30px;
+    padding-top:15px;
+}
+
+span.landing-title{
+    font-size:32px;
+    font-weight:600;
 }
