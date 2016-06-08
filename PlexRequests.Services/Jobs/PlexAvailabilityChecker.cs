@@ -72,14 +72,12 @@ namespace PlexRequests.Services.Jobs
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
         public void CheckAndUpdateAll()
         {
-            Log.Trace("Getting the settings");
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
-            Log.Trace("Getting all the requests");
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
-                Log.Info("Validation of the plex settings failed.");
+                Log.Debug("Validation of the plex settings failed.");
                 return;
             }
 
@@ -87,7 +85,7 @@ namespace PlexRequests.Services.Jobs
 
             if (libraries == null || !libraries.Any())
             {
-                Log.Info("Did not find any libraries in Plex.");
+                Log.Debug("Did not find any libraries in Plex.");
                 return;
             }
 
@@ -97,21 +95,16 @@ namespace PlexRequests.Services.Jobs
 
             var requests = RequestService.GetAll();
             var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
-            Log.Trace("Requests Count {0}", requestedModels.Length);
 
             if (!requestedModels.Any())
             {
-                Log.Info("There are no requests to check.");
+                Log.Debug("There are no requests to check.");
                 return;
             }
 
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
-                Log.Trace("We are going to see if Plex has the following title: {0}", r.Title);
-
-                Log.Trace("Search results from Plex for the following request: {0}", r.Title);
-
                 var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
 
                 bool matchResult;
@@ -136,12 +129,10 @@ namespace PlexRequests.Services.Jobs
                     modifiedModel.Add(r);
                     continue;
                 }
-
-                Log.Trace("The result from Plex where the title's match was null, so that means the content is not yet in Plex.");
+                
             }
-
-            Log.Trace("Updating the requests now");
-            Log.Trace("Requests that will be updated count {0}", modifiedModel.Count);
+            
+            Log.Debug("Requests that will be updated count {0}", modifiedModel.Count);
 
             if (modifiedModel.Any())
             {
@@ -248,8 +239,6 @@ namespace PlexRequests.Services.Jobs
 
         private List<PlexSearch> CachedLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings, bool setCache)
         {
-            Log.Trace("Obtaining library sections from Plex");
-
             List<PlexSearch> results = new List<PlexSearch>();
 
             if (!ValidateSettings(plexSettings, authSettings))
@@ -262,10 +251,8 @@ namespace PlexRequests.Services.Jobs
             {
                 if (setCache)
                 {
-                    Log.Trace("Plex Lib API Call");
                     results = GetLibraries(authSettings, plexSettings);
 
-                    Log.Trace("Plex Lib Cache Set Call");
                     if (results != null)
                     {
                         Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
@@ -273,12 +260,8 @@ namespace PlexRequests.Services.Jobs
                 }
                 else
                 {
-                    Log.Trace("Plex Lib GetSet Call");
                     results = Cache.GetOrSet(CacheKeys.PlexLibaries, () =>
-                    {
-                        Log.Trace("Plex Lib API Call (inside getset)");
-                        return GetLibraries(authSettings, plexSettings);
-                    }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    GetLibraries(authSettings, plexSettings), CacheKeys.TimeFrameMinutes.SchedulerCaching);
                 }
             }
             catch (Exception ex)
@@ -298,7 +281,6 @@ namespace PlexRequests.Services.Jobs
             {
                 foreach (var dir in sections.Directories)
                 {
-                    Log.Trace("Obtaining results from Plex for the following library section: {0}", dir.Title);
                     var lib = PlexApi.GetLibrary(authSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
                     if (lib != null)
                     {
@@ -306,8 +288,7 @@ namespace PlexRequests.Services.Jobs
                     }
                 }
             }
-
-            Log.Trace("Returning Plex Libs");
+            
             return libs;
         }
 
@@ -335,7 +316,6 @@ namespace PlexRequests.Services.Jobs
                 foreach (var model in modelChanged)
                 {
                     var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers);
-                    Log.Debug("Selected Users {0}", selectedUsers.DumpJson());
                     foreach (var user in selectedUsers)
                     {
                         Log.Info("Notifying user {0}", user);

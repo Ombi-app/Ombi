@@ -87,16 +87,11 @@ namespace PlexRequests.UI.Helpers
                 qualityId = sickRageSettings.QualityProfile;
             }
 
-            Log.Trace("Calling `AddSeries` with the following settings:");
-            Log.Trace(sickRageSettings.DumpJson());
-            Log.Trace("And the following `model`:");
-            Log.Trace(model.DumpJson());
             var apiResult = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, qualityId,
-                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
+                               sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
             var result = apiResult.Result;
-            Log.Trace("SickRage Add Result: ");
-            Log.Trace(result.DumpJson());
+
 
             return result;
         }

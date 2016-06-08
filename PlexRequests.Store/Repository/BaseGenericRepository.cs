@@ -83,8 +83,6 @@ namespace PlexRequests.Store.Repository
         public bool Update(T entity)
         {
             ResetCache();
-            Log.Trace("Updating entity");
-            Log.Trace(entity.DumpJson());
             using (var db = Config.DbConnection())
             {
                 db.Open();
@@ -95,8 +93,6 @@ namespace PlexRequests.Store.Repository
         public async Task<bool> UpdateAsync(T entity)
         {
             ResetCache();
-            Log.Trace("Updating entity");
-            Log.Trace(entity.DumpJson());
             using (var db = Config.DbConnection())
             {
                 db.Open();

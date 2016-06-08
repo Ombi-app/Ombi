@@ -224,8 +224,6 @@ namespace PlexRequests.UI.Modules
         private Negotiator Admin()
         {
             var settings = PrService.GetSettings();
-            Log.Trace("Getting Settings:");
-            Log.Trace(settings.DumpJson());
 
             return View["Settings", settings];
         }
@@ -542,7 +540,6 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            Log.Trace(settings.DumpJson());
 
             var result = PushbulletService.SaveSettings(settings);
             if (settings.Enabled)
@@ -605,7 +602,6 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            Log.Trace(settings.DumpJson());
 
             var result = PushoverService.SaveSettings(settings);
             if (settings.Enabled)
@@ -731,7 +727,6 @@ namespace PlexRequests.UI.Modules
                 Log.Info("Error validating Headphones settings, message: {0}", error.Message);
                 return Response.AsJson(error);
             }
-            Log.Trace(settings.DumpJson());
 
             var result = HeadphonesService.SaveSettings(settings);
 
