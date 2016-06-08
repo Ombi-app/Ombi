@@ -66,10 +66,15 @@ namespace PlexRequests.UI.Modules
 
         public async Task<Negotiator> Index()
         {
-            var landingSettings = await LandingPageSettings.GetSettingsAsync();
-            if (landingSettings.Enabled)
+            var query = Request.Query["landing"];
+            var landingCheck = (bool?)query ?? true;
+            if (landingCheck)
             {
-                return View["Landing/Index",landingSettings];
+                var landingSettings = await LandingPageSettings.GetSettingsAsync();
+                if (landingSettings.Enabled)
+                {
+                    return View["Landing/Index", landingSettings];
+                }
             }
             var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
