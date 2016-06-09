@@ -114,7 +114,7 @@ namespace PlexRequests.Services.Jobs
                         matchResult = IsMovieAvailable(movies, r.Title, releaseDate, r.ImdbId);
                         break;
                     case RequestType.TvShow:
-                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.ProviderId.ToString());
+                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId);
                         break;
                     case RequestType.Album:
                         matchResult = IsAlbumAvailable(albums, r.Title, r.ReleaseDate.Year.ToString(), r.ArtistName);

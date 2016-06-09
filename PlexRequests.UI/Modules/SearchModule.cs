@@ -279,6 +279,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+            var plexSettings = await PlexService.GetSettingsAsync();
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
             var apiTv = new List<TvMazeSearch>();
@@ -327,7 +328,15 @@ namespace PlexRequests.UI.Modules
                     Status = t.show.status
                 };
 
-                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4)))
+
+                var providerId = string.Empty;
+
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = viewT.Id.ToString();
+                }
+
+                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId))
                 {
                     viewT.Available = true;
                 }
@@ -575,7 +584,13 @@ namespace PlexRequests.UI.Modules
             try
             {
                 var shows = Checker.GetPlexTvShows();
-                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4)))
+                var providerId = string.Empty;
+                var plexSettings = await PlexService.GetSettingsAsync();
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = showId.ToString();
+                }
+                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
@@ -602,7 +617,7 @@ namespace PlexRequests.UI.Modules
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount,
-                TvDbId = showInfo.externals?.thetvdb?.ToString() ?? string.Empty,
+                TvDbId = showId.ToString()
             };
 
             var seasonsList = new List<int>();
