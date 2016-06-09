@@ -1,6 +1,7 @@
 ﻿@using System.Linq
 @using PlexRequests.Core.Models
 @using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<IssuesModel>
 @{
     var baseUrl = Html.GetBaseUrl();
     var formAction = string.Empty;

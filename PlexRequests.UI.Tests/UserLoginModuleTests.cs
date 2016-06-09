@@ -46,7 +46,6 @@ using PlexRequests.UI.Modules;
 namespace PlexRequests.UI.Tests
 {
     [TestFixture]
-    //[Ignore("Needs some work")]
     public class UserLoginModuleTests
     {
         private Mock<ISettingsService<AuthenticationSettings>> AuthMock { get; set; }

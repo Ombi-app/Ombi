@@ -145,7 +145,7 @@ namespace PlexRequests.UI
                 notificationService.Subscribe(new SlackNotification(container.Resolve<ISlackApi>(), slackService));
             }
         }
-
+        
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
         {
             //CORS Enable
@@ -203,7 +203,7 @@ namespace PlexRequests.UI
             container.Register<IJobFactory, CustomJobFactory>();
 
             container.Register<IAnalytics, Analytics>();
-
+            
             // Api
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();

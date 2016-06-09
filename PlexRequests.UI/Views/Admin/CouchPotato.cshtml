@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.CouchPotatoSettings>
 @Html.Partial("_Sidebar")
 @{
     int port;

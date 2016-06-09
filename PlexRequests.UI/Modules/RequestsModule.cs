@@ -75,7 +75,7 @@ namespace PlexRequests.UI.Modules
             CpApi = cpApi;
             Cache = cache;
 
-            Get["/"] = _ => LoadRequests();
+            Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
             Get["/tvshows", true] = async (c, ct) => await GetTvShows();
             Get["/albums", true] = async (x, ct) => await GetAlbumRequests();
@@ -101,9 +101,9 @@ namespace PlexRequests.UI.Modules
         private ICouchPotatoApi CpApi { get; }
         private ICacheProvider Cache { get; }
 
-        private Negotiator LoadRequests()
+        private async Task<Negotiator> LoadRequests()
         {
-            var settings = PrSettings.GetSettings();
+            var settings = await PrSettings.GetSettingsAsync();
             return View["Index", settings];
         }
 

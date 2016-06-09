@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using Nancy;
 
@@ -43,14 +44,14 @@ namespace PlexRequests.UI.Modules
         {
             Cache = provider;
 
-            Get["/"] = _ => CheckLatestVersion();
+            Get["/", true] = async (x,ct) => await CheckLatestVersion();
         }
 
         private ICacheProvider Cache { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private Response CheckLatestVersion()
+        private async Task<Response> CheckLatestVersion()
         {
             try
             {
@@ -60,7 +61,7 @@ namespace PlexRequests.UI.Modules
                 }
 
                 var checker = new StatusChecker();
-                var release = Cache.GetOrSet(CacheKeys.LastestProductVersion, () => checker.GetStatus(), 30);
+                var release = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async() => await checker.GetStatus(), 30);
 
                 return Response.AsJson(release.UpdateAvailable 
                     ? new JsonUpdateAvailableModel { UpdateAvailable = true} 

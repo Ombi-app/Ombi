@@ -51,7 +51,7 @@ namespace PlexRequests.Core
             return releases.FirstOrDefault();
         }
 
-        public StatusModel GetStatus()
+        public async Task<StatusModel> GetStatus()
         {
             var assemblyVersion = AssemblyHelper.GetProductVersion();
             var model = new StatusModel
@@ -59,23 +59,23 @@ namespace PlexRequests.Core
                 Version = assemblyVersion,
             };
 
-            var latestRelease = GetLatestRelease();
-            if (latestRelease.Result == null)
+            var latestRelease = await GetLatestRelease();
+            if (latestRelease == null)
             {
                 return new StatusModel { Version = "Unknown" };
             }
-            var latestVersionArray = latestRelease.Result.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
+            var latestVersionArray = latestRelease.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
             var latestVersion = latestVersionArray.Length > 1 ? latestVersionArray[1] : string.Empty;
 
             if (!latestVersion.Equals(assemblyVersion, StringComparison.InvariantCultureIgnoreCase))
             {
                 model.UpdateAvailable = true;
-                model.UpdateUri = latestRelease.Result.HtmlUrl;
+                model.UpdateUri = latestRelease.HtmlUrl;
             }
 
-            model.ReleaseNotes = latestRelease.Result.Body;
-            model.DownloadUri = latestRelease.Result.Assets[0].BrowserDownloadUrl;
-            model.ReleaseTitle = latestRelease.Result.Name;
+            model.ReleaseNotes = latestRelease.Body;
+            model.DownloadUri = latestRelease.Assets[0].BrowserDownloadUrl;
+            model.ReleaseTitle = latestRelease.Name;
 
             return model;
         }

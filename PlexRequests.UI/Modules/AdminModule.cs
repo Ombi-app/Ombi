@@ -23,42 +23,43 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
-using System.Net;
-using PlexRequests.Helpers.Exceptions;
+
 
 
 #endregion
 
+using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
-using MarkdownSharp;
+using System.Net;
 
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Validation;
-
+using Nancy.Json;
+using Nancy.Security;
 using NLog;
+
+using MarkdownSharp;
 
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 
-using Nancy.Json;
-using Nancy.Security;
 
 namespace PlexRequests.UI.Modules
 {
@@ -133,11 +134,11 @@ namespace PlexRequests.UI.Modules
             LandingSettings = lp;
 
             this.RequiresClaims(UserClaims.Admin);
-			
+
             Get["/"] = _ => Admin();
 
-            Get["/authentication"] = _ => Authentication();
-            Post["/authentication"] = _ => SaveAuthentication();
+            Get["/authentication", true] = async (x, ct) => await Authentication();
+            Post["/authentication", true] = async (x, ct) => await SaveAuthentication();
 
             Post["/"] = _ => SaveAdmin();
 
@@ -163,7 +164,7 @@ namespace PlexRequests.UI.Modules
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
             Post["/testemailnotification"] = _ => TestEmailNotifications();
-            Get["/status"] = _ => Status();
+            Get["/status", true] = async (x,ct) => await Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
@@ -181,7 +182,7 @@ namespace PlexRequests.UI.Modules
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
 
-			Post["/createapikey"] = x => CreateApiKey();
+            Post["/createapikey"] = x => CreateApiKey();
 
             Post["/autoupdate"] = x => AutoUpdate();
 
@@ -190,22 +191,22 @@ namespace PlexRequests.UI.Modules
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
 
-            Get["/landingpage", true] = async (x,ct) =>  await LandingPage();
+            Get["/landingpage", true] = async (x, ct) => await LandingPage();
             Post["/landingpage", true] = async (x, ct) => await SaveLandingPage();
         }
 
-        private Negotiator Authentication()
+        private async Task<Negotiator> Authentication()
         {
-            var settings = AuthService.GetSettings();
+            var settings = await AuthService.GetSettingsAsync();
 
             return View["/Authentication", settings];
         }
 
-        private Response SaveAuthentication()
+        private async Task<Response> SaveAuthentication()
         {
             var model = this.Bind<AuthenticationSettings>();
 
-            var result = AuthService.SaveSettings(model);
+            var result = await AuthService.SaveSettingsAsync(model);
             if (result)
             {
                 if (!string.IsNullOrEmpty(BaseUrl))
@@ -231,23 +232,23 @@ namespace PlexRequests.UI.Modules
         private Response SaveAdmin()
         {
             var model = this.Bind<PlexRequestSettings>();
-			var valid = this.Validate (model);
-			if (!valid.IsValid) {
-				return Response.AsJson(valid.SendJsonError());
-			}
+            var valid = this.Validate(model);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
 
-			if (!string.IsNullOrWhiteSpace (model.BaseUrl)) {
-				if (model.BaseUrl.StartsWith ("/") || model.BaseUrl.StartsWith ("\\"))
-				{
-					model.BaseUrl = model.BaseUrl.Remove (0, 1);
-				}
-			}
+            if (!string.IsNullOrWhiteSpace(model.BaseUrl))
+            {
+                if (model.BaseUrl.StartsWith("/", StringComparison.CurrentCultureIgnoreCase) || model.BaseUrl.StartsWith("\\", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    model.BaseUrl = model.BaseUrl.Remove(0, 1);
+                }
+            }
             var result = PrService.SaveSettings(model);
-			if (result) {
-				return Response.AsJson (new JsonResponseModel{ Result = true });
-			}
-
-			return Response.AsJson (new JsonResponseModel{ Result = false, Message = "We could not save to the database, please try again" });
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true }
+                : new JsonResponseModel { Result = false, Message = "We could not save to the database, please try again" });
         }
 
         private Response RequestAuthToken()
@@ -295,39 +296,39 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new { Result = true, Users = string.Empty });
             }
 
-			try {
-				var users = PlexApi.GetUsers(token);
-				if (users == null)
-				{
-					return Response.AsJson(string.Empty);
-				}
-				if (users.User == null || users.User?.Length == 0)
-				{
-					return Response.AsJson(string.Empty);
-				}
+            try
+            {
+                var users = PlexApi.GetUsers(token);
+                if (users == null)
+                {
+                    return Response.AsJson(string.Empty);
+                }
+                if (users.User == null || users.User?.Length == 0)
+                {
+                    return Response.AsJson(string.Empty);
+                }
 
-				var usernames = users.User.Select(x => x.Title);
-				return Response.AsJson(new {Result = true, Users = usernames});
-			} catch (Exception ex) {
-				Log.Error (ex);
-				if (ex is WebException || ex is ApiRequestException) {
-					return Response.AsJson (new { Result = false, Message ="Could not load the user list! We have connectivity problems connecting to Plex, Please ensure we can access Plex.Tv, The error has been logged." });
-				}
+                var usernames = users.User.Select(x => x.Title);
+                return Response.AsJson(new { Result = true, Users = usernames });
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                if (ex is WebException || ex is ApiRequestException)
+                {
+                    return Response.AsJson(new { Result = false, Message = "Could not load the user list! We have connectivity problems connecting to Plex, Please ensure we can access Plex.Tv, The error has been logged." });
+                }
 
-				return Response.AsJson (new { Result = false, Message = ex.Message});
-			}
+                return Response.AsJson(new { Result = false, Message = ex.Message });
+            }
         }
 
         private Negotiator CouchPotato()
         {
-            dynamic model = new ExpandoObject();
             var settings = CpService.GetSettings();
-            model = settings;
 
-            return View["CouchPotato", model];
+            return View["CouchPotato", settings];
         }
-
-
 
         private Response SaveCouchPotato()
         {
@@ -485,7 +486,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-       
+
             var result = EmailService.SaveSettings(settings);
 
             if (settings.Enabled)
@@ -503,11 +504,11 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private Negotiator Status()
+        private async Task<Negotiator> Status()
         {
             var checker = new StatusChecker();
-            var status = checker.GetStatus();
-            var md = new Markdown(new MarkdownOptions { AutoNewLines = true });
+            var status = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async () => await checker.GetStatus(), 30);
+            var md = new Markdown(new MarkdownOptions { AutoNewLines = true, AutoHyperlink = true});
             status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
         }
@@ -516,12 +517,12 @@ namespace PlexRequests.UI.Modules
         {
             var url = Request.Form["url"];
 
-            var startInfo = Type.GetType("Mono.Runtime") != null 
-                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url } 
+            var startInfo = Type.GetType("Mono.Runtime") != null
+                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url }
                                              : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
 
             Process.Start(startInfo);
-          
+
             Environment.Exit(0);
             return Nancy.Response.NoBody;
         }
@@ -734,17 +735,17 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-		private Response CreateApiKey()
-		{
-			this.RequiresClaims(UserClaims.Admin);
-		    var apiKey = Guid.NewGuid().ToString("N");
+        private Response CreateApiKey()
+        {
+            this.RequiresClaims(UserClaims.Admin);
+            var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();
 
-			settings.ApiKey = apiKey;
+            settings.ApiKey = apiKey;
             PrService.SaveSettings(settings);
 
-			return Response.AsJson(apiKey);
-		}
+            return Response.AsJson(apiKey);
+        }
 
         private Response TestSlackNotification()
         {
@@ -825,14 +826,14 @@ namespace PlexRequests.UI.Modules
 
             if (settings.Enabled && settings.EnabledNoticeTime && string.IsNullOrEmpty(settings.NoticeMessage))
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "If you are going to enabled the notice, then we need a message!"});
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "If you are going to enabled the notice, then we need a message!" });
             }
 
             var result = await LandingSettings.SaveSettingsAsync(settings);
 
-            return Response.AsJson(result 
-                ? new JsonResponseModel { Result = true } 
-                : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs"});
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true }
+                : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs" });
         }
     }
 }
