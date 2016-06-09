@@ -17,6 +17,7 @@ namespace PlexRequests.Store
         // ReSharper disable once IdentifierTypo
         public int ProviderId { get; set; }
         public string ImdbId { get; set; }
+        public string TvDbId { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }
         public string PosterPath { get; set; }

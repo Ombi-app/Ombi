@@ -602,6 +602,7 @@ namespace PlexRequests.UI.Modules
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount,
+                TvDbId = showInfo.externals?.thetvdb?.ToString() ?? string.Empty,
             };
 
             var seasonsList = new List<int>();
