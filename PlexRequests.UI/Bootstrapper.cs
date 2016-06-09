@@ -52,6 +52,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using Nancy.Json;
 
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Jobs;
 
@@ -99,6 +100,8 @@ namespace PlexRequests.UI
             container.Register<ISonarrCacher, SonarrCacher>();
             container.Register<ISickRageCacher, SickRageCacher>();
             container.Register<IJobFactory, CustomJobFactory>();
+
+            container.Register<IAnalytics, Analytics>();
 
             // Api
             container.Register<ICouchPotatoApi, CouchPotatoApi>();

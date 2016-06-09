@@ -26,6 +26,8 @@
 #endregion
 using System;
 
+using Nancy.Helpers;
+
 using NLog;
 
 using Owin;

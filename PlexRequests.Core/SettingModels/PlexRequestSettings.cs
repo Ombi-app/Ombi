@@ -44,6 +44,7 @@ namespace PlexRequests.Core.SettingModels
         public bool UsersCanViewOnlyOwnIssues { get; set; }
         public int WeeklyRequestLimit { get; set; }
         public string NoApprovalUsers { get; set; }
+        public bool CollectAnalyticData { get; set; }
 
         /// <summary>
         /// The CSS name of the theme we want

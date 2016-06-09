@@ -87,7 +87,7 @@
 
             <div class="form-group">
                 <div class='input-group date' id='endDate'>
-                    <input type='text' class="form-control" value="@Model.NoticeStart"/>
+                    <input type='text' class="form-control" value="@Model.NoticeEnd"/>
                     <span class="input-group-addon">
                         <span class="glyphicon glyphicon-calendar"></span>
                     </span>
@@ -120,16 +120,16 @@
             $('#startDate').data("DateTimePicker").maxDate(e.date);
         });
 
-        var start = '';
-        var end = '';
-        if ($startDate.data("DateTimePicker").date()) {
-            start = $startDate.data("DateTimePicker").date().toISOString();
-        }
-        if ($endDate.data("DateTimePicker").date()) {
-            end = $endDate.data("DateTimePicker").date().toISOString();
-        }
-
         $('#save').click(function (e) {
+            var start = '';
+            var end = '';
+            if ($startDate.data("DateTimePicker").date()) {
+                start = $startDate.data("DateTimePicker").date().toISOString();
+            }
+            if ($endDate.data("DateTimePicker").date()) {
+                end = $endDate.data("DateTimePicker").date().toISOString();
+            }
+
             e.preventDefault();
 
             var $form = $("#mainForm");

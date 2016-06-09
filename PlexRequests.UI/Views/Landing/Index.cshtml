@@ -1,11 +1,10 @@
 ﻿
+@using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.UI.Models.LandingPageViewModel>
 
-
 <img class="center" src="~/Content/images/logo.png" width="300" />
-
 <div id="area" class="landing-block">
-    @if (Model.NoticeEnable)
+    @if (Model.NoticeEnable && Model.NoticeActive)
     {
         <div class="row" style="padding-top: 20px">
             <div class="col-md-1 col-md-push-3">
@@ -13,25 +12,25 @@
             </div>
             <div class="col-md-5 col-md-push-3">
                 <span class="landing-title">Notice</span>
-                <br/>
+                <br />
                 @Model.NoticeMessage
-                <br/>
-                <strong>6/27/2016 @@ 9:00PM CST to 6/27/2016 @@ 9:00PM CST</strong>
+                <br />
+                <strong><span id="startDate"></span> <span id="endDate"></span></strong>
             </div>
         </div>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
+        <br />
     }
     <div class="row">
         <div class="col-md-1 col-md-push-3">
-            <i class="fa fa-check-circle fa-5x"></i>
+            <i id="statusIcon" class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
         </div>
         <div class="col-md-5 col-md-push-3">
-            <span class="landing-title">Currently Online</span>
-            <br/>
-            The Plex server is currently online (check this page for continuous status updates)
+            <span id="statusTitle" class="landing-title">Loading...</span>
+            <br />
+            The Plex server is <strong><span id="statusText">Loading...</span></strong> (check this page for continuous status updates)
 
         </div>
     </div>
@@ -39,3 +38,45 @@
 <div style="text-align: center; margin-top: 10px">
     <a href="@Model.ContinueUrl?landing=false" class="btn btn-success-outline">Continue</a>
 </div>
+
+<script>
+    $(function () {
+        @if (Model.NoticeEnable && Model.NoticeActive)
+        {
+        <text>
+            var start = moment("@Model.NoticeStart.ToString("O")");
+            var end = moment("@Model.NoticeEnd.ToString("O")");
+
+            var text = "for " + start.to(end, true);
+            $('#startDate').html(start.toString());
+            $('#endDate').html(text);
+        </text>
+        }
+        var base = "@Html.GetBaseUrl()";
+        var url = createBaseUrl(base, "landing/status");
+
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                $('#statusIcon').removeClass("fa-spinner fa-spin fa-fw");
+                if (response === true) {
+                    //fa fa-check-circle fa-5x
+                    $('#statusIcon').addClass("fa-check-circle");
+                    $('#statusText').text("currently online");
+                    $('#statusTitle').text("Currently Online");
+                } else {
+                    $('#statusIcon').addClass("fa-times-circle");
+                    $('#statusText').text("currently offline");
+                    $('#statusTitle').text("Currently Offline");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+                $('#statusIcon').addClass("fa-times-circle");
+            }
+        });
+
+    });
+</script>

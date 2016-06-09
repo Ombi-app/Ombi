@@ -45,6 +45,7 @@ using System.Windows.Forms;
 
 using CommandLine;
 
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Start;
 
 namespace PlexRequests.UI

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LandingPageSettings.cs
+//    File: Action.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,23 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-
-using Newtonsoft.Json;
-
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Helpers.Analytics
 {
-    public class LandingPageSettings : Settings
+    public enum Action
     {
-        public bool Enabled { get; set; }
-        public bool BeforeLogin { get; set; }
-        public bool NoticeEnable { get; set; }
-        public string NoticeMessage { get; set; }
-        public bool EnabledNoticeTime { get; set; }
-        public DateTime NoticeStart { get; set; }
-        public DateTime NoticeEnd { get; set; }
-        
-        [JsonIgnore]
-        public bool NoticeActive => DateTime.Now > NoticeEnd || DateTime.Now < NoticeStart;
+        Donate
     }
 }
