@@ -1,4 +1,12 @@
 ﻿@using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString();
+    }
+}
 <h1>Issues</h1>
 <h4>Below you can see yours and all your current issues and their state.</h4>
 <br />
@@ -74,6 +82,11 @@
             </div>
             <div class="col-sm-1">
                 <a href="" id="{{id}}link" class="btn btn-sm btn-info-outline approve"><i class="fa fa-info"></i> Details</a>
+                <br />
+                <form action="@formAction/issues/remove" method="post">
+                    <input id="issueId" name="issueId" value="{{id}}" hidden="hidden" />
+                    <button type="submit" id="{{id}}" class="btn btn-sm btn-danger-outline dropdown-toggle delete">Remove</button>
+                </form>  
             </div>
         </div>
     </div>
