@@ -690,8 +690,6 @@ namespace PlexRequests.UI.Modules
         private Response GetLogLevels()
         {
             var levels = LogManager.Configuration.LoggingRules.FirstOrDefault(x => x.NameMatches("database"));
-            Log.Debug("debug");
-            Log.Info("Info");
             return Response.AsJson(levels.Levels);
         }
 
@@ -818,6 +816,12 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> SaveLandingPage()
         {
             var settings = this.Bind<LandingPageSettings>();
+
+            var plexSettings = await PlexService.GetSettingsAsync();
+            if (string.IsNullOrEmpty(plexSettings.Ip))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "We cannot enable the landing page if Plex is not setup!" });
+            }
 
             if (settings.Enabled && settings.EnabledNoticeTime && string.IsNullOrEmpty(settings.NoticeMessage))
             {
