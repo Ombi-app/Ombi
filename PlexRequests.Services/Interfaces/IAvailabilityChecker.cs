@@ -33,9 +33,9 @@ namespace PlexRequests.Services.Interfaces
     {
         void CheckAndUpdateAll();
         List<PlexMovie> GetPlexMovies();
-        bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year);
+        bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null);
         List<PlexTvShow> GetPlexTvShows();
-        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year);
+        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null);
         List<PlexAlbum> GetPlexAlbums();
         bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
     }

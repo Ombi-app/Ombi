@@ -111,10 +111,10 @@ namespace PlexRequests.Services.Jobs
                 switch (r.Type)
                 {
                     case RequestType.Movie:
-                        matchResult = IsMovieAvailable(movies, r.Title, releaseDate);
+                        matchResult = IsMovieAvailable(movies, r.Title, releaseDate, r.ImdbId);
                         break;
                     case RequestType.TvShow:
-                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate);
+                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.ProviderId.ToString());
                         break;
                     case RequestType.Album:
                         matchResult = IsAlbumAvailable(albums, r.Title, r.ReleaseDate.Year.ToString(), r.ArtistName);
@@ -129,9 +129,9 @@ namespace PlexRequests.Services.Jobs
                     modifiedModel.Add(r);
                     continue;
                 }
-                
+
             }
-            
+
             Log.Debug("Requests that will be updated count {0}", modifiedModel.Count);
 
             if (modifiedModel.Any())
@@ -158,19 +158,36 @@ namespace PlexRequests.Services.Jobs
 
                 foreach (var lib in movieLibs)
                 {
-                    movies.AddRange(lib.Video.Select(x => new PlexMovie() // movies are in the Video list
+                    movies.AddRange(lib.Video.Select(video => new PlexMovie
                     {
-                        Title = x.Title,
-                        ReleaseYear = x.Year
+                        ReleaseYear = video.Year,
+                        Title = video.Title,
+                        ProviderId = video.ProviderId,
                     }));
                 }
             }
             return movies;
         }
 
-        public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year)
+        public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null)
         {
-            return plexMovies.Any(x => x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
+            var advanced = !string.IsNullOrEmpty(providerId);
+            foreach (var movie in plexMovies)
+            {
+                if (advanced)
+                {
+                    if (movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                if (movie.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
+                    movie.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<PlexTvShow> GetPlexTvShows()
@@ -190,18 +207,33 @@ namespace PlexRequests.Services.Jobs
                     shows.AddRange(lib.Directory.Select(x => new PlexTvShow() // shows are in the directory list
                     {
                         Title = x.Title,
-                        ReleaseYear = x.Year
+                        ReleaseYear = x.Year,
+                        ProviderId = x.ProviderId,
                     }));
                 }
             }
             return shows;
         }
 
-        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year)
+        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null)
         {
-            return plexShows.Any(x =>
-            (x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) || x.Title.StartsWith(title, StringComparison.CurrentCultureIgnoreCase)) &&
-            x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
+            var advanced = !string.IsNullOrEmpty(providerId);
+            foreach (var show in plexShows)
+            {
+                if (advanced)
+                {
+                    if (show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                if (show.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
+                    show.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<PlexAlbum> GetPlexAlbums()
@@ -239,12 +271,12 @@ namespace PlexRequests.Services.Jobs
 
         private List<PlexSearch> CachedLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings, bool setCache)
         {
-            List<PlexSearch> results = new List<PlexSearch>();
+            var results = new List<PlexSearch>();
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
                 Log.Warn("The settings are not configured");
-                return results; // don't error out here, just let it go!
+                return results; // don't error out here, just let it go! let it goo!!!
             }
 
             try
@@ -252,7 +284,28 @@ namespace PlexRequests.Services.Jobs
                 if (setCache)
                 {
                     results = GetLibraries(authSettings, plexSettings);
-
+                    if (plexSettings.AdvancedSearch)
+                    {
+                        for (var i = 0; i < results.Count; i++)
+                        {
+                            for (var j = 0; j < results[i].Directory.Count; j++)
+                            {
+                                var currentItem = results[i].Directory[j];
+                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                    currentItem.RatingKey);
+                                var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
+                                results[i].Directory[j].ProviderId = providerId;
+                            }
+                            for (var j = 0; j < results[i].Video.Count; j++)
+                            {
+                                var currentItem = results[i].Video[j];
+                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                    currentItem.RatingKey);
+                                var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Video.Guid);
+                                results[i].Video[j].ProviderId = providerId;
+                            }
+                        }
+                    }
                     if (results != null)
                     {
                         Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
@@ -288,7 +341,7 @@ namespace PlexRequests.Services.Jobs
                     }
                 }
             }
-            
+
             return libs;
         }
 
