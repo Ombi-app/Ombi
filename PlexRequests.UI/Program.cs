@@ -63,7 +63,7 @@ namespace PlexRequests.UI
             var baseUrl = result.MapResult(
                 o => o.BaseUrl,
                 e => string.Empty);
-
+            
             var port = result.MapResult(
                 x => x.Port,
                 e => -1);
