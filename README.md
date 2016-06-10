@@ -1,5 +1,5 @@
 
-![PR](http://i.imgur.com/s4nswSA.png?1)
+![](http://i.imgur.com/s4nswSA.png?1)
 ____
 [![Gitter](https://badges.gitter.im/tidusjar/PlexRequest.NET.svg)](https://gitter.im/tidusjar/PlexRequests.Net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
@@ -30,9 +30,8 @@ I wanted to write a similar application in .Net!
 ![Preview](http://i.imgur.com/DgwkIsW.gif)
 
 #Installation
-Download the latest [Release](https://github.com/tidusjar/PlexRequests.Net/releases).
-Extract the .zip file (Unblock if on Windows! Right Click > Properties > Unblock).
-Just run `PlexRequests.exe`! (Mono compatible `mono PlexRequests.exe`)
+
+[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)
 
 # FAQ
 Do you have an issue or a question? if so check out our [FAQ!](https://github.com/tidusjar/PlexRequests.Net/wiki/FAQ)
