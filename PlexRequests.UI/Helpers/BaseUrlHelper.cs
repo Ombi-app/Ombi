@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Helpers
             }
             if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
             if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
-            
+
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
@@ -120,14 +120,12 @@ namespace PlexRequests.UI.Helpers
 
         public static IHtmlString LoadIssueDetailsAssets(this HtmlHelpers helper)
         {
-            var sb = new StringBuilder();
             var assetLocation = GetBaseUrl();
-
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>");
+            var asset = $"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>";
 
-            return helper.Raw(sb.ToString());
+            return helper.Raw(asset);
         }
 
         public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
@@ -141,6 +139,22 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}/Content/dataTables.bootstrap.css\" />");
 
             return helper.Raw(sb.ToString());
+        }
+
+        public static IHtmlString LoadAnalytics(this HtmlHelpers helper)
+        {
+            var settings = GetSettings();
+            if (!settings.CollectAnalyticData)
+            {
+                return helper.Raw(string.Empty);
+            }
+
+            var assetLocation = GetBaseUrl();
+            var content = GetContentUrl(assetLocation);
+
+            var asset = $"<script src=\"{content}/Content/analytics.js\" type=\"text/javascript\"></script>";
+
+            return helper.Raw(asset);
         }
 
         public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
@@ -191,7 +205,7 @@ namespace PlexRequests.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
-            
+
             if (context.Request.Path == url)
             {
                 returnString = $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";

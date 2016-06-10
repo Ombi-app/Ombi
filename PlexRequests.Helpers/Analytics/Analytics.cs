@@ -177,7 +177,7 @@ namespace PlexRequests.Helpers.Analytics
             request.ContentLength = Encoding.UTF8.GetByteCount(postDataString);
 
             // write the request body to the request
-            using (var writer = new StreamWriter(request.GetRequestStream()))
+            using (var writer = new StreamWriter(await request.GetRequestStreamAsync()))
             {
                 await writer.WriteAsync(postDataString);
             }
@@ -203,7 +203,7 @@ namespace PlexRequests.Helpers.Analytics
                                { "v", "1" },
                                { "tid", TrackingId },
                                { "t", type.ToString() },
-                               {"cid", "" }
+                               {"cid", Guid.NewGuid().ToString() }
                            };
 
             if (!string.IsNullOrEmpty(username))

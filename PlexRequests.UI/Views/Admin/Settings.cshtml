@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexRequestSettings>
 @Html.Partial("_Sidebar")
 @{
     int port;
@@ -190,8 +191,21 @@
                     {
                         <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues"><label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
                     }
+                </div>
+            </div>
 
+            <div class="form-group">
+                <div class="checkbox">
 
+                    @if (Model.CollectAnalyticData)
+                    {
+                        <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData" checked="checked">
+                        <label for="CollectAnalyticData">Allow us to collect anonymous analytical data e.g. browser used</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData"><label for="CollectAnalyticData">Allow us to collect anonymous analytical data e.g. browser</label>
+                    }
                 </div>
             </div>
 
