@@ -6,7 +6,7 @@
 .nav-tabs > li.active > a:focus {
   background: #df691a; }
 
-scroll-top-wrapper {
+.scroll-top-wrapper {
   background-color: #333333; }
 
 .scroll-top-wrapper:hover {
