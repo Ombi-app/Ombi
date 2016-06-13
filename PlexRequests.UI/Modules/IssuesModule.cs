@@ -135,10 +135,23 @@ namespace PlexRequests.UI.Modules
         public async Task<Negotiator> Details(int id)
         {
             var issue = await IssuesService.GetAsync(id);
+            if (issue == null)
+                return Index();
+
             issue = Order(issue);
-            return issue == null
-                ? Index()
-                : View["Details", issue];
+            var m = new IssuesDetailsViewModel
+            {
+                Issues = issue.Issues,
+                RequestId = issue.RequestId,
+                Title = issue.Title,
+                IssueStatus = issue.IssueStatus,
+                Deleted = issue.Deleted,
+                Type = issue.Type,
+                ProviderId = issue.ProviderId,
+                PosterUrl = issue.PosterUrl,
+                Id = issue.Id
+            };
+            return View["Details", m];
         }
 
         private async Task<Response> ReportRequestIssue(int requestId, IssueState issue, string comment)

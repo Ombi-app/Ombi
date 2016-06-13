@@ -177,6 +177,7 @@
     <Compile Include="ModelDataProviders\UserUpdateViewModelDataProvider.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\IssuesDetailsViewModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
     <Compile Include="Models\LandingPageViewModel.cs" />
