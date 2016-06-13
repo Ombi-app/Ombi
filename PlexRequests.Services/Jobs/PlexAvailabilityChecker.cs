@@ -35,6 +35,7 @@ using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
 using PlexRequests.Services.Notification;
@@ -43,6 +44,8 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 using Quartz;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.Services.Jobs
 {

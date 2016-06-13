@@ -35,6 +35,7 @@ namespace PlexRequests.Helpers.Analytics
         LandingPage,
         Api,
         Issues,
-        UserLogin
+        UserLogin,
+        Services,
     }
 }

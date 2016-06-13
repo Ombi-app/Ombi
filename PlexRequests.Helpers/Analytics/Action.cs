@@ -28,6 +28,12 @@ namespace PlexRequests.Helpers.Analytics
 {
     public enum Action
     {
-        Donate
+        Donate,
+        ClickButton,
+        Delete,
+        Create,
+        Save,
+        Update,
+        Start
     }
 }
