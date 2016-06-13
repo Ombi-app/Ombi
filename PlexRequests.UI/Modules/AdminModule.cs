@@ -86,7 +86,9 @@ namespace PlexRequests.UI.Modules
         private ICacheProvider Cache { get; }
         private ISettingsService<SlackNotificationSettings> SlackSettings { get; }
         private ISettingsService<LandingPageSettings> LandingSettings { get; }
+        private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
         private ISlackApi SlackApi { get; }
+        private IJobRecord JobRecorder { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -108,7 +110,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<HeadphonesSettings> headphones,
             ISettingsService<LogSettings> logs,
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
-            ISlackApi slackApi, ISettingsService<LandingPageSettings> lp) : base("admin", prService)
+            ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
+            ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -132,6 +135,8 @@ namespace PlexRequests.UI.Modules
             SlackSettings = slackSettings;
             SlackApi = slackApi;
             LandingSettings = lp;
+            ScheduledJobSettings = scheduler;
+            JobRecorder = rec;
 
             this.RequiresClaims(UserClaims.Admin);
 
@@ -193,6 +198,9 @@ namespace PlexRequests.UI.Modules
 
             Get["/landingpage", true] = async (x, ct) => await LandingPage();
             Post["/landingpage", true] = async (x, ct) => await SaveLandingPage();
+
+            Get["/scheduledjobs", true] = async (x, ct) => await GetScheduledJobs();
+            Post["/scheduledjobs", true] = async (x, ct) => await SaveScheduledJobs();
         }
 
         private async Task<Negotiator> Authentication()
@@ -830,6 +838,35 @@ namespace PlexRequests.UI.Modules
             }
 
             var result = await LandingSettings.SaveSettingsAsync(settings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true }
+                : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs" });
+        }
+
+        private async Task<Negotiator> GetScheduledJobs()
+        {
+            var s = await ScheduledJobSettings.GetSettingsAsync();
+            var allJobs = await JobRecorder.GetJobsAsync();
+            var jobsDict = allJobs.ToDictionary(k => k.Name, v => v.LastRun);
+            var model = new ScheduledJobsViewModel
+            {
+                CouchPotatoCacher = s.CouchPotatoCacher,
+                PlexAvailabilityChecker = s.PlexAvailabilityChecker,
+                SickRageCacher = s.SickRageCacher,
+                SonarrCacher = s.SonarrCacher,
+                StoreBackup = s.StoreBackup,
+                StoreCleanup = s.StoreCleanup,
+                JobRecorder = jobsDict
+            };
+            return View["SchedulerSettings", model];
+        }
+
+        private async Task<Response> SaveScheduledJobs()
+        {
+            var settings = this.Bind<ScheduledJobsSettings>();
+
+            var result = await ScheduledJobSettings.SaveSettingsAsync(settings);
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }

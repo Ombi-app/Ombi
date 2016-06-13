@@ -24,10 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+using System.Linq;
+
 using Nancy;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
@@ -56,5 +61,45 @@ namespace PlexRequests.UI.Modules
 
             ModulePath = settingModulePath;
         }
+
+        private int _dateTimeOffset = -1;
+        protected int DateTimeOffset
+        {
+            get
+            {
+                if (_dateTimeOffset == -1)
+                {
+                    _dateTimeOffset = (int?)Session[SessionKeys.ClientDateTimeOffsetKey] ?? new DateTimeOffset().Offset.Minutes;
+                }
+                return _dateTimeOffset;
+            }
+        }
+        private string _username;
+
+        protected string Username
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_username))
+                {
+                    _username = Session[SessionKeys.UsernameKey].ToString();
+                }
+                return _username;
+            }
+        }
+
+        protected bool IsAdmin
+        {
+            get
+            {
+                if (Context.CurrentUser == null)
+                {
+                    return false;
+                }
+                var claims = Context.CurrentUser.Claims.ToList();
+                return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
+            }
+        }
+
     }
 }

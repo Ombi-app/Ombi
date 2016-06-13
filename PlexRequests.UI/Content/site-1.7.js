@@ -14,6 +14,10 @@ function Humanize(date) {
     return moment.duration(mNow - mDate).humanize() + (mNow.isBefore(mDate) ? ' from now' : ' ago');
 }
 
+function utcToLocal(date) {
+    return moment(date).local();
+}
+
 function generateNotify(message, type) {
     // type = danger, warning, info, successs
     $.notify({

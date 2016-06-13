@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: JobRecord.cs
+//    File: ScheduledJobsSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,50 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
-namespace PlexRequests.Services.Jobs
+namespace PlexRequests.Core.SettingModels
 {
-    public class JobRecord : IJobRecord
+    public class ScheduledJobsSettings : Settings
     {
-        public JobRecord(IRepository<ScheduledJobs> repo)
+        public ScheduledJobsSettings()
         {
-            Repo = repo;
+            PlexAvailabilityChecker = 10;
+            SickRageCacher = 10;
+            SonarrCacher = 10;
+            CouchPotatoCacher = 10;
+            StoreBackup = 24;
+            StoreCleanup = 24;
         }
-
-        private IRepository<ScheduledJobs> Repo { get; }
-
-        public void Record(string jobName)
-        {
-            var allJobs = Repo.GetAll();
-            var storeJob = allJobs.FirstOrDefault(x => x.Name == jobName);
-            if (storeJob != null)
-            {
-                storeJob.LastRun = DateTime.UtcNow;
-                Repo.Update(storeJob);
-            }
-            else
-            {
-                var job = new ScheduledJobs { LastRun = DateTime.UtcNow, Name = jobName };
-                Repo.Insert(job);
-            }
-        }
-
-        public async Task<IEnumerable<ScheduledJobs>> GetJobsAsync()
-        {
-            return await Repo.GetAllAsync();
-        }
-
-        public IEnumerable<ScheduledJobs> GetJobs()
-        {
-            return Repo.GetAll();
-        }
+        public int PlexAvailabilityChecker { get; set; }
+        public int SickRageCacher { get; set; }
+        public int SonarrCacher { get; set; }
+        public int CouchPotatoCacher { get; set; }
+        public int StoreBackup { get; set; }
+        public int StoreCleanup { get; set; }
     }
 }

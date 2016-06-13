@@ -39,7 +39,7 @@ namespace PlexRequests.UI.Tests
         [TestCaseSource(nameof(NoticeEnabledData))]
         public bool TestNoticeEnabled(DateTime start, DateTime end)
         {
-            return new LandingPageViewModel {NoticeEnd = end, NoticeStart = start}.NoticeActive;
+            return new LandingPageViewModel { NoticeEnd = end, NoticeStart = start }.NoticeActive;
         }
 
         private static IEnumerable<TestCaseData> NoticeEnabledData

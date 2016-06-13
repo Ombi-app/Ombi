@@ -182,6 +182,7 @@
     <Compile Include="Models\LandingPageViewModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
+    <Compile Include="Models\ScheduledJobsViewModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
@@ -555,6 +556,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Shared\Blank.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\SchedulerSettings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

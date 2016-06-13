@@ -56,6 +56,8 @@ using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Jobs;
 
+using Quartz;
+using Quartz.Impl;
 using Quartz.Spi;
 
 namespace PlexRequests.UI
@@ -170,6 +172,7 @@ namespace PlexRequests.UI
             container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
             container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
             container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
+            container.Register<ISettingsService<ScheduledJobsSettings>, SettingsServiceV2<ScheduledJobsSettings>>();
 
             // Notification Service
             container.Register<INotificationService, NotificationService>().AsSingleton();
@@ -203,6 +206,9 @@ namespace PlexRequests.UI
             container.Register<IJobFactory, CustomJobFactory>();
 
             container.Register<IAnalytics, Analytics>();
+            container.Register<ISchedulerFactory, StdSchedulerFactory>();
+            container.Register<IJobScheduler, Scheduler>();
+
             
             // Api
             container.Register<ICouchPotatoApi, CouchPotatoApi>();

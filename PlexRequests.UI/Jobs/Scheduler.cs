@@ -30,16 +30,20 @@ using System.Linq;
 
 using NLog;
 
+using PlexRequests.Core;
+using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Helpers;
 
 using Quartz;
 using Quartz.Impl;
 
 namespace PlexRequests.UI.Jobs
 {
-    internal sealed class Scheduler
+    internal sealed class Scheduler : IJobScheduler
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private IServiceLocator Service => ServiceLocator.Instance;
 
         private readonly ISchedulerFactory _factory;
 
@@ -99,48 +103,51 @@ namespace PlexRequests.UI.Jobs
 
         private IEnumerable<ITrigger> CreateTriggers()
         {
+            var settingsService = Service.Resolve<ISettingsService<ScheduledJobsSettings>>();
+            var s = settingsService.GetSettings();
+
             var triggers = new List<ITrigger>();
 
             var plexAvailabilityChecker =
                 TriggerBuilder.Create()
                               .WithIdentity("PlexAvailabilityChecker", "Plex")
                               .StartNow()
-                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever())
+                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexAvailabilityChecker).RepeatForever())
                               .Build();
 
             var srCacher =
                 TriggerBuilder.Create()
                               .WithIdentity("SickRageCacher", "Cache")
                               .StartNow()
-                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever())
+                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.SickRageCacher).RepeatForever())
                               .Build();
 
             var sonarrCacher =
                 TriggerBuilder.Create()
                               .WithIdentity("SonarrCacher", "Cache")
                               .StartNow()
-                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever())
+                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.SonarrCacher).RepeatForever())
                               .Build();
 
             var cpCacher =
                 TriggerBuilder.Create()
                               .WithIdentity("CouchPotatoCacher", "Cache")
                               .StartNow()
-                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(10).RepeatForever())
+                              .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.CouchPotatoCacher).RepeatForever())
                               .Build();
 
             var storeBackup =
                 TriggerBuilder.Create()
                               .WithIdentity("StoreBackup", "Database")
                               .StartNow()
-                              .WithSimpleSchedule(x => x.WithIntervalInHours(24).RepeatForever())
+                              .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreBackup).RepeatForever())
                               .Build();
 
         var storeCleanup =
             TriggerBuilder.Create()
                           .WithIdentity("StoreCleanup", "Database")
                           .StartNow()
-                          .WithSimpleSchedule(x => x.WithIntervalInHours(24).RepeatForever())
+                          .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreCleanup).RepeatForever())
                           .Build();
 
 
@@ -153,5 +160,10 @@ namespace PlexRequests.UI.Jobs
 
             return triggers;
         }
+    }
+
+    public interface IJobScheduler
+    {
+        void StartScheduler();
     }
 }

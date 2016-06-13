@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: JobRecord.cs
+//    File: ScheduledJobsViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,48 +26,13 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Services.Jobs
+namespace PlexRequests.UI.Models
 {
-    public class JobRecord : IJobRecord
+    public class ScheduledJobsViewModel : ScheduledJobsSettings
     {
-        public JobRecord(IRepository<ScheduledJobs> repo)
-        {
-            Repo = repo;
-        }
-
-        private IRepository<ScheduledJobs> Repo { get; }
-
-        public void Record(string jobName)
-        {
-            var allJobs = Repo.GetAll();
-            var storeJob = allJobs.FirstOrDefault(x => x.Name == jobName);
-            if (storeJob != null)
-            {
-                storeJob.LastRun = DateTime.UtcNow;
-                Repo.Update(storeJob);
-            }
-            else
-            {
-                var job = new ScheduledJobs { LastRun = DateTime.UtcNow, Name = jobName };
-                Repo.Insert(job);
-            }
-        }
-
-        public async Task<IEnumerable<ScheduledJobs>> GetJobsAsync()
-        {
-            return await Repo.GetAllAsync();
-        }
-
-        public IEnumerable<ScheduledJobs> GetJobs()
-        {
-            return Repo.GetAll();
-        }
+        public Dictionary<string,DateTime> JobRecorder { get; set; }
     }
 }

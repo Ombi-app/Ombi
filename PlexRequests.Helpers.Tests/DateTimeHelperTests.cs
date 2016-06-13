@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: JobRecord.cs
+//    File: DateTimeHelperTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,48 +26,29 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using NUnit.Framework;
 
-namespace PlexRequests.Services.Jobs
+namespace PlexRequests.Helpers.Tests
 {
-    public class JobRecord : IJobRecord
+    [TestFixture]
+    public class DateTimeHelperTests
     {
-        public JobRecord(IRepository<ScheduledJobs> repo)
+        [TestCaseSource(nameof(OffsetUtcDateTimeData))]
+        public DateTime TestOffsetUtcDateTimeData(DateTime utcDateTime, int minuteOffset)
         {
-            Repo = repo;
+            var offset =  DateTimeHelper.OffsetUTCDateTime(utcDateTime, minuteOffset);
+            return offset.DateTime;
         }
 
-        private IRepository<ScheduledJobs> Repo { get; }
-
-        public void Record(string jobName)
+        private static IEnumerable<TestCaseData> OffsetUtcDateTimeData
         {
-            var allJobs = Repo.GetAll();
-            var storeJob = allJobs.FirstOrDefault(x => x.Name == jobName);
-            if (storeJob != null)
+            get
             {
-                storeJob.LastRun = DateTime.UtcNow;
-                Repo.Update(storeJob);
+                yield return new TestCaseData(new DateTime(2016,01,01,12,00,00), -60).Returns(new DateTimeOffset(new DateTime(2016, 01, 01, 13, 00, 00)).DateTime);
+                yield return new TestCaseData(new DateTime(2016,01,01,12,00,00), -120).Returns(new DateTimeOffset(new DateTime(2016, 01, 01, 14, 00, 00)).DateTime);
+                yield return new TestCaseData(new DateTime(2016,01,01,12,00,00), 120).Returns(new DateTimeOffset(new DateTime(2016, 01, 01, 10, 00, 00)).DateTime);
             }
-            else
-            {
-                var job = new ScheduledJobs { LastRun = DateTime.UtcNow, Name = jobName };
-                Repo.Insert(job);
-            }
-        }
-
-        public async Task<IEnumerable<ScheduledJobs>> GetJobsAsync()
-        {
-            return await Repo.GetAllAsync();
-        }
-
-        public IEnumerable<ScheduledJobs> GetJobs()
-        {
-            return Repo.GetAll();
         }
     }
 }
