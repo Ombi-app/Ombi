@@ -41,15 +41,11 @@ using PlexRequests.Store.Repository;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 
 using CommandLine;
 
-using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Start;
-
-using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI
 {

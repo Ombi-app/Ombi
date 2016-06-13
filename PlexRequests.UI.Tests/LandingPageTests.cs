@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LandingPageSettings.cs
+//    File: LandingPageTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,22 +25,34 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 
-using Newtonsoft.Json;
+using NUnit.Framework;
 
-namespace PlexRequests.Core.SettingModels
+using PlexRequests.UI.Models;
+
+namespace PlexRequests.UI.Tests
 {
-    public class LandingPageSettings : Settings
+    [TestFixture]
+    public class LandingPageTests
     {
-        public bool Enabled { get; set; }
-        public bool BeforeLogin { get; set; }
-        public bool NoticeEnable { get; set; }
-        public string NoticeMessage { get; set; }
-        public bool EnabledNoticeTime { get; set; }
-        public DateTime NoticeStart { get; set; }
-        public DateTime NoticeEnd { get; set; }
-        
-        [JsonIgnore]
-        public bool NoticeActive => DateTime.Now < NoticeEnd && DateTime.Now > NoticeStart;
+        [TestCaseSource(nameof(NoticeEnabledData))]
+        public bool TestNoticeEnabled(DateTime start, DateTime end)
+        {
+            return new LandingPageViewModel {NoticeEnd = end, NoticeStart = start}.NoticeActive;
+        }
+
+        private static IEnumerable<TestCaseData> NoticeEnabledData
+        {
+            get
+            {
+                yield return new TestCaseData(DateTime.Now, DateTime.Now.AddDays(1)).Returns(true);
+                yield return new TestCaseData(DateTime.Now, DateTime.Now.AddDays(99)).Returns(true);
+                yield return new TestCaseData(DateTime.Now.AddDays(2), DateTime.Now).Returns(false); // End in past
+                yield return new TestCaseData(DateTime.Now.AddDays(2), DateTime.Now.AddDays(3)).Returns(false); // Not started yet
+                yield return new TestCaseData(DateTime.Now.AddDays(-5), DateTime.Now.AddDays(-1)).Returns(false); // Finished yesterday
+                yield return new TestCaseData(DateTime.Now.AddMilliseconds(200), DateTime.Now.AddMilliseconds(900)).Returns(true); // Just about to start but not yet
+            }
+        }
     }
 }
