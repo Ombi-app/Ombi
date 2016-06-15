@@ -2,54 +2,50 @@
 @using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.UI.Models.LandingPageViewModel>
 
-<img class="center" src="~/Content/images/logo.png" width="300" />
+<img class="landing-header" src="~/Content/images/logo.png" width="300" />
 <div id="area" class="landing-block">
-    @if (Model.NoticeEnable && Model.NoticeActive)
+    @if (Model.NoticeEnable && (!Model.EnabledNoticeTime || Model.NoticeActive))
     {
-        <div class="row" style="padding-top: 20px">
-            <div class="col-md-1 col-md-push-3">
-                <i class="fa fa-bell fa-5x"></i>
+        <div class="media">
+            <div class="media-left media-middle">
+                <i class="fa fa-bell"></i>
             </div>
-            <div class="col-md-5 col-md-push-3">
-                <span class="landing-title">Notice</span>
-                <br />
-                @Model.NoticeMessage
-                <br />
-                <strong><span id="startDate"></span> <span id="endDate"></span></strong>
+            <div class="media-body">
+                <h4 class="media-heading landing-title">Notice</h4>
+                @Model.NoticeMessage<br />
+                @if (Model.EnabledNoticeTime)
+                {
+                    <strong><span id="startDate"></span> <span id="endDate"></span></strong>
+                }
             </div>
         </div>
-        <br />
-        <br />
-        <br />
-        <br />
     }
-    <div class="row">
-        <div class="col-md-1 col-md-push-3">
-            <i id="statusIcon" class="fa fa-spinner fa-spin fa-5x fa-fw"></i>
-        </div>
-        <div class="col-md-5 col-md-push-3">
-            <span id="statusTitle" class="landing-title">Loading...</span>
-            <br />
-            The Plex server is <strong><span id="statusText">Loading...</span></strong> (check this page for continuous status updates)
 
+    <div class="media">
+        <div class="media-left media-middle">
+            <i id="statusIcon" class="fa fa-spinner fa-spin fa-fw"></i>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading landing-title" id="statusTitle">Checking...</h4>
+            The Plex server is <strong><span id="statusText">Loading...</span></strong> (check this page for continuous status updates)
         </div>
     </div>
 </div>
-<div style="text-align: center; margin-top: 10px">
-    <a href="@Model.ContinueUrl?landing=false" class="btn btn-success-outline">Continue</a>
+<div style="text-align: center; margin-top: 20px">
+    <a href="@Model.ContinueUrl?landing=false" class="btn btn-primary-outline">Continue</a>
 </div>
 
 <script>
     $(function () {
-        @if (Model.NoticeEnable && Model.NoticeActive)
+        @if (Model.NoticeEnable && (!Model.EnabledNoticeTime || Model.NoticeActive))
         {
         <text>
-            var start = moment("@Model.NoticeStart.ToString("O")");
-            var end = moment("@Model.NoticeEnd.ToString("O")");
+        var start = moment("@Model.NoticeStart.ToString("O")");
+        var end = moment("@Model.NoticeEnd.ToString("O")");
 
-            var text = "for " + start.to(end, true);
-            $('#startDate').html(start.toString());
-            $('#endDate').html(text);
+        var text = "for " + start.to(end, true);
+        $('#startDate').html(start.toString());
+        $('#endDate').html(text);
         </text>
         }
         var base = "@Html.GetBaseUrl()";

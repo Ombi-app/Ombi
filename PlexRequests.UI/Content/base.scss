@@ -6,7 +6,9 @@ $info-colour: #5bc0de;
 $warning-colour: #f0ad4e;
 $danger-colour: #d9534f;
 $success-colour: #5cb85c;
-$i: !important;
+$i:
+!important
+;
 
 @media (min-width: 768px ) {
     .row {
@@ -17,6 +19,10 @@ $i: !important;
         position: absolute;
         bottom: 0;
         right: 0;
+    }
+
+    .landing-block .media {
+        max-width: 450px;
     }
 }
 
@@ -32,8 +38,8 @@ $i: !important;
     }
 }
 
-.navbar-default .navbar-nav > .active > a, 
-.navbar-default .navbar-nav > .active > a:hover, 
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
 .navbar-default .navbar-nav > .active > a:focus {
     color: #fff;
 }
@@ -46,7 +52,7 @@ hr {
     border-radius: .25rem $i;
 }
 
-.btn-group-separated .btn, 
+.btn-group-separated .btn,
 .btn-group-separated .btn + .btn {
     margin-left: 3px;
 }
@@ -324,44 +330,49 @@ $border-radius: 10px;
 }
 
 .checkbox label {
-   display: inline-block;
-   cursor: pointer;
-   position: relative;
-   padding-left: 25px;
-   margin-right: 15px;
-   font-size: 13px;
-   margin-bottom: 10px; }
- 
- .checkbox label:before {
-   content: "";
-   display: inline-block;
-   width: 18px;
-   height: 18px;
-   margin-right: 10px;
-   position: absolute;
-   left: 0;
-   bottom: 1px;
-   border: 2px solid #eee;
-   border-radius: 3px; }
- 
- .checkbox input[type=checkbox] {
-   display: none; }
- 
- .checkbox input[type=checkbox]:checked + label:before {
-   content: "\2713";
-   font-size: 13px;
-   color: #fafafa;
-   text-align: center;
-   line-height: 13px; }
+    display: inline-block;
+    cursor: pointer;
+    position: relative;
+    padding-left: 25px;
+    margin-right: 15px;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
 
-.input-group-sm{
+.checkbox label:before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    position: absolute;
+    left: 0;
+    bottom: 1px;
+    border: 2px solid #eee;
+    border-radius: 3px;
+}
+
+.checkbox input[type=checkbox] {
+    display: none;
+}
+
+.checkbox input[type=checkbox]:checked + label:before {
+    content: "\2713";
+    font-size: 13px;
+    color: #fafafa;
+    text-align: center;
+    line-height: 13px;
+}
+
+.input-group-sm {
     padding-top: 2px;
     padding-bottom: 2px;
 }
 
 .tab-pane .form-horizontal .form-group {
-  margin-right: 15px;
-  margin-left: 15px; }
+    margin-right: 15px;
+    margin-left: 15px;
+}
 
 .bootstrap-datetimepicker-widget.dropdown-menu {
     background-color: $form-color;
@@ -371,23 +382,36 @@ $border-radius: 10px;
     border-bottom: 6px solid $form-color $i;
 }
 
-.bootstrap-datetimepicker-widget table td.active, 
+.bootstrap-datetimepicker-widget table td.active,
 .bootstrap-datetimepicker-widget table td.active:hover {
     color: #fff !important;
 }
 
-img.center {
+.landing-header {
     display: block;
-    margin: 0 auto;
+    margin: 60px auto;
 }
 
-div.landing-block{
-    background: #424242 !important;
-    padding-bottom:30px;
-    padding-top:15px;
+.landing-block {
+    background: #2f2f2f !important;
+    padding: 5px;
 }
 
-span.landing-title{
-    font-size:32px;
-    font-weight:600;
+.landing-block .media {
+    margin: 30px auto;
+    max-width: 450px;
+}
+
+.landing-block .media .media-left {
+    display: inline-block;
+    float: left;
+    width: 70px;
+}
+
+.landing-block .media .media-left i.fa {
+    font-size: 3em;
+}
+
+.landing-title {
+    font-weight: bold;
 }

@@ -4,7 +4,9 @@
   .bottom-align-text {
     position: absolute;
     bottom: 0;
-    right: 0; } }
+    right: 0; }
+  .landing-block .media {
+    max-width: 450px; } }
 
 @media (max-width: 48em) {
   .home {
@@ -304,16 +306,26 @@ label {
 .bootstrap-datetimepicker-widget table td.active:hover {
   color: #fff !important; }
 
-img.center {
+.landing-header {
   display: block;
-  margin: 0 auto; }
+  margin: 60px auto; }
 
-div.landing-block {
-  background: #424242 !important;
-  padding-bottom: 30px;
-  padding-top: 15px; }
+.landing-block {
+  background: #2f2f2f !important;
+  padding: 5px; }
 
-span.landing-title {
-  font-size: 32px;
-  font-weight: 600; }
+.landing-block .media {
+  margin: 30px auto;
+  max-width: 450px; }
+
+.landing-block .media .media-left {
+  display: inline-block;
+  float: left;
+  width: 70px; }
+
+.landing-block .media .media-left i.fa {
+  font-size: 3em; }
+
+.landing-title {
+  font-weight: bold; }
 
