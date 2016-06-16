@@ -32,6 +32,7 @@ I wanted to write a similar application in .Net!
 #Installation
 
 [Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)
+[Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
 Do you have an issue or a question? if so check out our [FAQ!](https://github.com/tidusjar/PlexRequests.Net/wiki/FAQ)
