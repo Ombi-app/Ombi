@@ -317,6 +317,8 @@ namespace PlexRequests.UI.Modules
         /// Filters the issues. Checks to see if we have set <c>UsersCanViewOnlyOwnIssues</c> in the database and filters upon the user logged in and that setting.
         /// </summary>
         /// <param name="issues">The issues.</param>
+        /// <param name="showResolved">if set to <c>true</c> [show resolved].</param>
+        /// <returns></returns>
         private async Task<IEnumerable<IssuesModel>> FilterIssuesAsync(IEnumerable<IssuesModel> issues, bool showResolved = false)
         {
             var settings = await PlexRequestSettings.GetSettingsAsync();

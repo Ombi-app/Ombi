@@ -105,6 +105,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StringHelperTests.cs" />
     <Compile Include="TestRootPathProvider.cs" />
+    <Compile Include="IssuesModuleTests.cs" />
     <Compile Include="UserLoginModuleTests.cs" />
     <Compile Include="AdminModuleTests.cs" />
   </ItemGroup>
