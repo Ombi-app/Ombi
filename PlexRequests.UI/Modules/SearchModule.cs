@@ -49,7 +49,10 @@ using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 
 using Nancy.Extensions;
+using Nancy.Responses;
+
 using PlexRequests.Api.Models.Tv;
+using PlexRequests.Core.Models;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -65,7 +68,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email) : base("search", prSettings)
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
+            IIssueService issue) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -90,6 +94,7 @@ namespace PlexRequests.UI.Modules
             HeadphonesService = hpService;
             UsersToNotifyRepo = u;
             EmailNotificationSettings = email;
+            IssueService = issue;
 
 
             Get["/", true] = async (x, ct) => await RequestLoad();
@@ -134,6 +139,7 @@ namespace PlexRequests.UI.Modules
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
+        private IIssueService IssueService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
@@ -265,7 +271,7 @@ namespace PlexRequests.UI.Modules
             if (usersCanViewOnlyOwnRequests)
             {
                 var result = moviesInDb.FirstOrDefault(x => x.Value.ProviderId == movieId);
-                return result.Value != null && result.Value.UserHasRequested(Username);
+                return result.Value == null || result.Value.UserHasRequested(Username);
             }
 
             return true;
@@ -273,6 +279,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+            var plexSettings = await PlexService.GetSettingsAsync();
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
             var apiTv = new List<TvMazeSearch>();
@@ -299,11 +306,15 @@ namespace PlexRequests.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                var banner = t.show.image?.medium;
+                if (!string.IsNullOrEmpty(banner))
+                {
+                    banner = banner.Replace("http", "https");
+                }
+
                 var viewT = new SearchTvShowViewModel
                 {
-                    // We are constructing the banner with the id: 
-                    // http://thetvdb.com/banners/_cache/posters/ID-1.jpg
-                    Banner = t.show.image?.medium,
+                    Banner = banner,
                     FirstAired = t.show.premiered,
                     Id = t.show.externals?.thetvdb ?? 0,
                     ImdbId = t.show.externals?.imdb,
@@ -317,7 +328,15 @@ namespace PlexRequests.UI.Modules
                     Status = t.show.status
                 };
 
-                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4)))
+
+                var providerId = string.Empty;
+
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = viewT.Id.ToString();
+                }
+
+                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId))
                 {
                     viewT.Available = true;
                 }
@@ -342,8 +361,6 @@ namespace PlexRequests.UI.Modules
                 viewTv.Add(viewT);
             }
 
-            Log.Trace("Returning TV Show results: ");
-            Log.Trace(viewTv.DumpJson());
             return Response.AsJson(viewTv);
         }
 
@@ -400,11 +417,9 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
-            var movieApi = new TheMovieDbApi();
-            var movieInfo = movieApi.GetMovieInformation(movieId).Result;
+            var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
-            //#if !DEBUG
 
             var settings = await PrService.GetSettingsAsync();
 
@@ -569,7 +584,13 @@ namespace PlexRequests.UI.Modules
             try
             {
                 var shows = Checker.GetPlexTvShows();
-                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4)))
+                var providerId = string.Empty;
+                var plexSettings = await PlexService.GetSettingsAsync();
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = showId.ToString();
+                }
+                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
                 }
@@ -596,6 +617,7 @@ namespace PlexRequests.UI.Modules
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 SeasonCount = showInfo.seasonCount,
+                TvDbId = showId.ToString()
             };
 
             var seasonsList = new List<int>();
@@ -778,12 +800,6 @@ namespace PlexRequests.UI.Modules
 
             var img = GetMusicBrainzCoverArt(albumInfo.id);
 
-            Log.Trace("Album Details:");
-            Log.Trace(albumInfo.DumpJson());
-            Log.Trace("CoverArt Details:");
-            Log.Trace(img.DumpJson());
-
-
             var model = new RequestedModel
             {
                 Title = albumInfo.title,
@@ -805,9 +821,6 @@ namespace PlexRequests.UI.Modules
             {
                 Log.Debug("We don't require approval OR the user is in the whitelist");
                 var hpSettings = HeadphonesService.GetSettings();
-
-                Log.Trace("Headphone Settings:");
-                Log.Trace(hpSettings.DumpJson());
 
                 if (!hpSettings.Enabled)
                 {
@@ -964,5 +977,7 @@ namespace PlexRequests.UI.Modules
             var model = seasons.Select(x => x.number);
             return Response.AsJson(model);
         }
+
+
     }
 }

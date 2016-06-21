@@ -139,7 +139,6 @@ namespace PlexRequests.Helpers
                 if (level == LogLevel.Info)
                 {
                     rule.EnableLoggingForLevel(LogLevel.Info);
-                    rule.EnableLoggingForLevel(LogLevel.Debug);
                     rule.EnableLoggingForLevel(LogLevel.Warn);
                     rule.EnableLoggingForLevel(LogLevel.Error);
                     rule.EnableLoggingForLevel(LogLevel.Fatal);

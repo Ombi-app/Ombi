@@ -190,9 +190,43 @@ $('#deleteMovies').click(function (e) {
         }
     });
 });
+
 $('#deleteTVShows').click(function (e) {
     e.preventDefault();
     if (!confirm("Are you sure you want to delete all TV show requests?")) return;
+
+    var buttonId = e.target.id;
+    var origHtml = $(this).html();
+
+    if ($('#' + buttonId).text() === " Loading...") {
+        return;
+    }
+
+    loadingButton(buttonId, "warning");
+    var url = createBaseUrl(base, '/approval/deletealltvshows');
+    $.ajax({
+        type: 'post',
+        url: url,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify("Success! All TV Show requests deleted!", "success");
+                tvLoad();
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        },
+        complete: function (e) {
+            finishLoading(buttonId, "success", origHtml);
+        }
+    });
+});
+
+$('#deleteMusic').click(function (e) {
+    e.preventDefault();
+    if (!confirm("Are you sure you want to delete all album requests?")) return;
 
     var buttonId = e.target.id;
     var origHtml = $(this).html();
@@ -411,31 +445,6 @@ $(document).on("click", ".approve-with-quality", function (e) {
 
 });
 
-// Clear issues
-$(document).on("click", ".clear", function (e) {
-    e.preventDefault();
-    var buttonId = e.target.id;
-    var $form = $('#clear' + buttonId);
-
-    $.ajax({
-        type: $form.prop('method'),
-        url: $form.prop('action'),
-        data: $form.serialize(),
-        dataType: "json",
-        success: function (response) {
-
-            if (checkJsonResponse(response)) {
-                generateNotify("Success! Issues Cleared.", "info");
-                $('#issueArea' + buttonId).html("<div>Issue: None</div>");
-            }
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
-        }
-    });
-
-});
 
 // Change Availability
 $(document).on("click", ".change", function (e) {
@@ -620,10 +629,8 @@ function buildRequestContext(result, type) {
         released: result.released,
         available: result.available,
         admin: result.admin,
-        issues: result.issues,
-        otherMessage: result.otherMessage,
+        issueId: result.issueId,
         requestId: result.id,
-        adminNote: result.adminNotes,
         imdb: result.imdbId,
         seriesRequested: result.tvSeriesRequestType,
         coverArtUrl: result.coverArtUrl,

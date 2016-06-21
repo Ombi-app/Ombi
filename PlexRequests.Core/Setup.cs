@@ -61,7 +61,7 @@ namespace PlexRequests.Core
                 {
                     MigrateToVersion1700();
                 }
-                if (version > 1800 && version <= 1899)
+                if (version > 1799 && version <= 1800)
                 {
                     MigrateToVersion1800();
                 }
@@ -181,10 +181,13 @@ namespace PlexRequests.Core
         /// <summary>
         /// Migrates to version 1.8.
         /// <para>This includes updating the admin account to have all roles.</para>
-        /// <para>Set the log level to info</para>
+        /// <para>Set the log level to Error</para>
+        /// <para>Enable Analytics by default</para>
         /// </summary>
         private void MigrateToVersion1800()
         {
+
+            // Give admin all roles/claims
             try
             {
                 var userMapper = new UserMapper(new UserRepository<UsersModel>(Db, new MemoryCacheProvider()));
@@ -201,14 +204,15 @@ namespace PlexRequests.Core
             catch (Exception e)
             {
                 Log.Error(e);
-                throw;
             }
 
+
+            // Set log level
             try
             {
                 var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
                 var logSettings = settingsService.GetSettings();
-                logSettings.Level = LogLevel.Info.Ordinal;
+                logSettings.Level = LogLevel.Error.Ordinal;
                 settingsService.SaveSettings(logSettings);
 
                 LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
@@ -217,9 +221,23 @@ namespace PlexRequests.Core
             catch (Exception e)
             {
                 Log.Error(e);
-                throw;
             }
 
+
+            // Enable analytics;
+            try
+            {
+
+                var prSettings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var settings = prSettings.GetSettings();
+                settings.CollectAnalyticData = true;
+                var updated = prSettings.SaveSettings(settings);
+
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
 
         }
     }

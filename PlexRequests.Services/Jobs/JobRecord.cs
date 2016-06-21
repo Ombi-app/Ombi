@@ -25,13 +25,15 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
-namespace PlexRequests.Services
+namespace PlexRequests.Services.Jobs
 {
     public class JobRecord : IJobRecord
     {
@@ -39,7 +41,9 @@ namespace PlexRequests.Services
         {
             Repo = repo;
         }
+
         private IRepository<ScheduledJobs> Repo { get; }
+
         public void Record(string jobName)
         {
             var allJobs = Repo.GetAll();
@@ -54,6 +58,16 @@ namespace PlexRequests.Services
                 var job = new ScheduledJobs { LastRun = DateTime.UtcNow, Name = jobName };
                 Repo.Insert(job);
             }
+        }
+
+        public async Task<IEnumerable<ScheduledJobs>> GetJobsAsync()
+        {
+            return await Repo.GetAllAsync();
+        }
+
+        public IEnumerable<ScheduledJobs> GetJobs()
+        {
+            return Repo.GetAll();
         }
     }
 }

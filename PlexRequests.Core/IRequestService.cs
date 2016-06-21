@@ -49,7 +49,9 @@ namespace PlexRequests.Core
         Task<RequestedModel> GetAsync(int id);
         IEnumerable<RequestedModel> GetAll();
         Task<IEnumerable<RequestedModel>> GetAllAsync();
-        bool BatchUpdate(List<RequestedModel> model);
-        bool BatchDelete(List<RequestedModel> model);
+        bool BatchUpdate(IEnumerable<RequestedModel> model);
+        Task<bool> BatchUpdateAsync(IEnumerable<RequestedModel> model);
+        bool BatchDelete(IEnumerable<RequestedModel> model);
+        Task<bool> BatchDeleteAsync(IEnumerable<RequestedModel> model);
     }
 }

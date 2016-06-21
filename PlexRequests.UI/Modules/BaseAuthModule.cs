@@ -23,85 +23,36 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
-using System.Linq;
-
 
 #endregion
 
 using Nancy;
 using Nancy.Extensions;
 using PlexRequests.UI.Models;
-using System;
-
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public abstract class BaseAuthModule : BaseModule
     {
-        private string _username;
-        private int _dateTimeOffset = -1;
-
-        protected string Username
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(_username))
-                {
-                    _username = Session[SessionKeys.UsernameKey].ToString();
-                }
-                return _username;
-            }
-        }
-
-        protected bool IsAdmin
-        {
-            get
-            {
-                if (Context.CurrentUser == null)
-                {
-                    return false;
-                }
-                var claims = Context.CurrentUser.Claims.ToList();
-                if (claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser))
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        protected int DateTimeOffset
-        {
-            get
-            {
-                if (_dateTimeOffset == -1)
-                {
-                    _dateTimeOffset = (int?)Session[SessionKeys.ClientDateTimeOffsetKey] ?? new DateTimeOffset().Offset.Minutes;
-                }
-                return _dateTimeOffset;
-            }
-        }
-
         protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
-            Service = pr;
+            PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
         protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
         {
-            Service = pr;
+            PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        private ISettingsService<PlexRequestSettings> Service { get; }
+        protected ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
 
         private Response CheckAuth()
         {
-            var settings = Service.GetSettings();
+            var settings = PlexRequestSettings.GetSettings();
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";

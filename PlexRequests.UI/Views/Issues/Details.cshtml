@@ -1,0 +1,109 @@
+﻿@using System.Linq
+@using PlexRequests.Core.Models
+@using PlexRequests.UI.Helpers
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString();
+    }
+
+    var isAdmin = false;
+
+    if (Context.CurrentUser != null)
+    {
+        var claims = Context.CurrentUser.Claims.ToList();
+        if (claims.Contains("Admin") || claims.Contains("PowerUser"))
+        {
+            isAdmin = true;
+        }
+    }
+}
+<h1>Details</h1>
+
+<div class="row">
+    <div class="col-md-3">
+        <img src="@Model.PosterUrl" />
+    </div>
+    <div class="col-md-9">
+        <h4>Issues For "@Model.Title"</h4>
+    </div>
+    @if (isAdmin)
+    {
+        <div class="col-md-1">
+
+            @if (Model.IssueStatus == IssueStatus.PendingIssue)
+            {
+                <form action="@formAction/issues/resolvedUpdate" method="post">
+                    <input id="issueId" name="issueId" value="@Model.Id" hidden="hidden" />
+                    <button type="submit" id="@Model.Id" class="btn btn-sm btn-success-outline dropdown-toggle resolve">Resolve</button>
+                </form>
+            }
+            @if (Model.IssueStatus == IssueStatus.ResolvedIssue)
+            {
+                <form action="@formAction/issues/remove" method="post">
+                    <input id="issueId" name="issueId" value="@Model.Id" hidden="hidden" />
+                    <button type="submit" id="@Model.Id" class="btn btn-sm btn-danger-outline dropdown-toggle delete">Remove</button>
+                </form>
+            }
+        </div>
+    }
+    <br />
+
+
+</div>
+
+<hr />
+
+@foreach (var issue in Model.Issues)
+{
+    <div class="row">
+        <div class="col-sm-11">
+            <div><strong>Type:</strong> @StringHelper.ToCamelCaseWords(issue.Issue.ToString())</div>
+            <div><strong>User Reported:</strong> @issue.UserReported</div>
+            <div><strong>User Note:</strong> @issue.UserNote</div>
+            <div><strong>Admin Note:</strong>@issue.AdminNote</div>
+        </div>
+        @if (isAdmin)
+        {
+            <div class="col-sm-1">
+                <form action="@formAction/issues/clear" method="post">
+                    <input name="issueId" value="@Model.Id" hidden="hidden" />
+                    <input name="issue" value="@((int) issue.Issue)" hidden="hidden" />
+
+                    <button type="submit" id="@Model.Id" class="btn btn-sm btn-info-outline dropdown-toggle">Clear</button>
+                </form>
+            </div>
+            <div class="col-sm-1">
+                <button id="@Model.Id" issue-select="4" class="note btn btn-sm btn-primary-outline dropdown-toggle" data-identifier="@Model.Id" data-issue="@((int) issue.Issue)" href="#" data-toggle="modal" data-target="#noteModal">Add Note</button>
+            </div>
+        }
+    </div>
+            <br />
+            <hr />
+}
+
+<div class="modal fade" id="noteModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <h4 class="modal-title">Add a note</h4>
+            </div>
+            <form method="POST" action="@formAction/issues/addnote" id="noteForm">
+                <div class="modal-body">
+                    <input name="requestId" class="noteId" type="text" hidden="hidden" value="" />
+                    <input name="issue" class="issue" type="text" hidden="hidden" value="" />
+                    <textarea class="form-control form-control-custom" rows="3" id="noteArea" name="noteArea"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary-outline theNoteSaveButton" data-dismiss="modal">Save changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@Html.LoadIssueDetailsAssets()

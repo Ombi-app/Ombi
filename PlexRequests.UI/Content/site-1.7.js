@@ -14,6 +14,10 @@ function Humanize(date) {
     return moment.duration(mNow - mDate).humanize() + (mNow.isBefore(mDate) ? ' from now' : ' ago');
 }
 
+function utcToLocal(date) {
+    return moment(date).local();
+}
+
 function generateNotify(message, type) {
     // type = danger, warning, info, successs
     $.notify({
@@ -45,7 +49,7 @@ function loadingButton(elementId, originalCss) {
     $element.removeClass("btn-" + originalCss + "-outline").addClass("btn-primary-outline").addClass('disabled').html("<i class='fa fa-spinner fa-spin'></i> Loading...");
 
     // handle split-buttons
-    var $dropdown = $element.next('.dropdown-toggle')
+    var $dropdown = $element.next('.dropdown-toggle');
     if ($dropdown.length > 0) {
         $dropdown.removeClass("btn-" + originalCss + "-outline").addClass("btn-primary-outline").addClass('disabled');
     }
@@ -56,7 +60,7 @@ function finishLoading(elementId, originalCss, html) {
     $element.removeClass("btn-primary-outline").removeClass('disabled').addClass("btn-" + originalCss + "-outline").html(html);
 
     // handle split-buttons
-    var $dropdown = $element.next('.dropdown-toggle')
+    var $dropdown = $element.next('.dropdown-toggle');
     if ($dropdown.length > 0) {
         $dropdown.removeClass("btn-primary-outline").removeClass('disabled').addClass("btn-" + originalCss + "-outline");
     }

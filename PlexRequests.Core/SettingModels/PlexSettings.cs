@@ -37,6 +37,7 @@ namespace PlexRequests.Core.SettingModels
         public int Port { get; set; }
         public bool Ssl { get; set; }
         public string SubDir { get; set; }
+        public bool AdvancedSearch { get; set; }
        
         [JsonIgnore]
         public Uri FullUri

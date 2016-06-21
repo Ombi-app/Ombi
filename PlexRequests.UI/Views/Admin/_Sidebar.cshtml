@@ -2,6 +2,7 @@
 <div class="col-lg-3 col-md-3 col-sm-4">
     <div class="list-group table-of-contents">
         @Html.GetSidebarUrl(Context, "/admin", "Plex Request")
+        @Html.GetSidebarUrl(Context, "/admin/landingpage", "Landing Page")
         @Html.GetSidebarUrl(Context, "/admin/authentication", "Authentication")
         @Html.GetSidebarUrl(Context, "/admin/plex", "Plex")
         @Html.GetSidebarUrl(Context, "/admin/couchpotato", "CouchPotato")
@@ -14,5 +15,6 @@
         @Html.GetSidebarUrl(Context, "/admin/slacknotification", "Slack Notifications")
         @Html.GetSidebarUrl(Context, "/admin/logs", "Logs")
         @Html.GetSidebarUrl(Context, "/admin/status", "Status")
+        @Html.GetSidebarUrl(Context, "/admin/scheduledjobs", "Scheduled Jobs")
     </div>
 </div>

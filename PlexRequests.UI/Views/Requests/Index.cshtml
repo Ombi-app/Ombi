@@ -50,7 +50,7 @@
                             }
                             @if (Model.SearchForMusic)
                             {
-                                <button id="deleteMusics" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> Delete Music</button>
+                                <button id="deleteMusic" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> Delete Music</button>
                                 <button id="approveMusic" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> Approve Music</button>
                             }
                         }
@@ -65,7 +65,7 @@
                             <li><a href="#" class="filter" data-filter=".approved-true"><i class="fa fa-square-o"></i>  Approved</a></li>
                             <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i>  Not Approved</a></li>
                             <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i>  Available</a></li>
-	                        <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> Not Available</a></li>
+                            <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> Not Available</a></li>
                             <li><a href="#" class="filter" data-filter=".released-true"><i class="fa fa-square-o"></i>  Released</a></li>
                             <li><a href="#" class="filter" data-filter=".released-false"><i class="fa fa-square-o"></i>  Not Released</a></li>
                         </ul>
@@ -146,7 +146,7 @@
             </div>
             <div class="col-sm-5 ">
                 <div>
-                    <a href="http://www.imdb.com/title/{{imdb}}/" targe="_blank">
+                    <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
                         <h4 class="request-title">{{title}} ({{year}})</h4>
                     </a>
                     <span class="label label-success">{{status}}</span>
@@ -178,17 +178,13 @@
                 <div>Requested By: {{requestedUsers}}</div>
                 {{/if}}
                 <div>Requested Date: {{requestedDate}}</div>
-                <div id="issueArea{{requestId}}">
-                    {{#if otherMessage}}
-                    <div>Message: {{otherMessage}}</div>
+                <div>
+                    Issue:
+                    {{#if_eq issueId 0}}
+                    <i class="fa fa-times"></i>
                     {{else}}
-                    <div>Issue: {{issues}}</div>
-                    {{/if}}
-                </div>
-                <div id="adminNotesArea{{requestId}}">
-                    {{#if adminNote}}
-                    <div>Note from Admin: {{adminNote}}</div>
-                    {{/if}}
+                    <a href="@formAction/issues/{{issueId}}"><i class="fa fa-check"></i></a>
+                    {{/if_eq}}
                 </div>
             </div>
             <div class="col-sm-3 col-sm-push-3">
@@ -197,31 +193,26 @@
                 <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq hasQualities true}}
-                        <div class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}"><i class="fa fa-plus"></i> Approve</button>
-                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                {{#each qualities}}
-                                    <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
-                                {{/each}}
-                            </ul>
-                        </div>
+                    <div class="btn-group btn-split">
+                        <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}"><i class="fa fa-plus"></i> Approve</button>
+                        <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#each qualities}}
+                            <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
                     {{else}}
-                        <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                     {{/if_eq}}
                 </form>
                 {{/if_eq}}
                 <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
-                </form>
-
-                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
-                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
                 </form>
 
                 <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">
@@ -235,7 +226,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/issues/issue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -332,11 +323,6 @@
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> Remove</button>
                 </form>
 
-                <form method="POST" action="@formAction/requests/clearissues" id="clear{{requestId}}">
-                    <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
-                    <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-info-outline clear" type="submit"><i class="fa fa-check"></i> Clear Issues</button>
-                </form>
-
                 <form method="POST" action="@formAction/requests/changeavailability" id="change{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq available true}}
@@ -348,7 +334,7 @@
 
                 {{/if_eq}}
 
-                <form method="POST" action="@formAction/requests/reportissue/" id="report{{requestId}}">
+                <form method="POST" action="@formAction/issues/issue/" id="report{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -382,7 +368,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
                 <h4 class="modal-title">Add issue/comment</h4>
             </div>
-            <form method="POST" action="@formAction/requests/reportissuecomment" id="commentForm">
+            <form method="POST" action="@formAction/issues/issuecomment" id="commentForm">
                 <div class="modal-body">
                     <input name="requestId" class="requestId" type="text" hidden="hidden" value="" />
                     <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
@@ -405,7 +391,7 @@
             </div>
             <form method="POST" action="@formAction/requests/addnote" id="noteForm">
                 <div class="modal-body">
-                    <input name="requestId" class="noteId" type="text" hidden="hidden" value=""/>
+                    <input name="requestId" class="noteId" type="text" hidden="hidden" value="" />
                     <textarea class="form-control form-control-custom" rows="3" id="noteArea" name="noteArea"></textarea>
                 </div>
                 <div class="modal-footer">

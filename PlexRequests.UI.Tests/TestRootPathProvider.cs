@@ -25,14 +25,10 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 
 using Nancy;
-
-using PlexRequests.UI.Modules;
 
 namespace PlexRequests.UI.Tests
 {
@@ -42,7 +38,6 @@ namespace PlexRequests.UI.Tests
 
         public string GetRootPath()
         {
-            //return @"C:\Applications\51\DeliveryDateCalculator\StandAndDeliver\Views\Home\";
             if (!string.IsNullOrEmpty(_CachedRootPath))
                 return _CachedRootPath;
 

@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexRequestSettings>
 @Html.Partial("_Sidebar")
 @{
     int port;
@@ -164,19 +165,51 @@
             <div class="form-group">
                 <div class="checkbox">
 
-                        @if (Model.UsersCanViewOnlyOwnRequests)
-                        {
-                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked">
-                            <label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                        }
-          
+                    @if (Model.UsersCanViewOnlyOwnRequests)
+                    {
+                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked">
+                        <label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
+                    }
+
 
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.UsersCanViewOnlyOwnIssues)
+                    {
+                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues" checked="checked">
+                        <label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues"><label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.CollectAnalyticData)
+                    {
+                        <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData" checked="checked">
+                        <label for="CollectAnalyticData">Allow us to collect anonymous analytical data e.g. browser used</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData"><label for="CollectAnalyticData">Allow us to collect anonymous analytical data e.g. browser</label>
+                    }
+                </div>
+            </div>
+
+
 
             <p class="form-group">A comma separated list of users whose requests do not require approval.</p>
             <div class="form-group">

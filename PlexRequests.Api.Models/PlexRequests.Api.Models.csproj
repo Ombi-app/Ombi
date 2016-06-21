@@ -64,6 +64,7 @@
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />
     <Compile Include="Plex\PlexLibraries.cs" />
+    <Compile Include="Plex\PlexMetadata.cs" />
     <Compile Include="Plex\PlexSearch.cs" />
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexMediaType.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="Tv\TvShowImages.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

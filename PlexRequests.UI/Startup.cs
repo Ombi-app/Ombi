@@ -26,10 +26,13 @@
 #endregion
 using System;
 
+using Nancy.TinyIoc;
+
 using NLog;
 
 using Owin;
 
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
 
 namespace PlexRequests.UI
@@ -43,7 +46,6 @@ namespace PlexRequests.UI
             try
             {
                 app.UseNancy();
-
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
             }

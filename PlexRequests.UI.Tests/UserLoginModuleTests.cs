@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using Moq;
 
@@ -45,11 +46,11 @@ using PlexRequests.UI.Modules;
 namespace PlexRequests.UI.Tests
 {
     [TestFixture]
-    //[Ignore("Needs some work")]
     public class UserLoginModuleTests
     {
         private Mock<ISettingsService<AuthenticationSettings>> AuthMock { get; set; }
         private Mock<ISettingsService<PlexRequestSettings>> PlexRequestMock { get; set; }
+        private Mock<ISettingsService<LandingPageSettings>> LandingPageMock { get; set; }
         private ConfigurableBootstrapper Bootstrapper { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
 
@@ -58,14 +59,18 @@ namespace PlexRequests.UI.Tests
         {
             AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
             PlexMock = new Mock<IPlexApi>();
+            LandingPageMock = new Mock<ISettingsService<LandingPageSettings>>();
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
             PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
+            PlexRequestMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(new PlexRequestSettings()));
+            LandingPageMock.Setup(x => x.GetSettings()).Returns(new LandingPageSettings());
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<UserLoginModule>();
                 with.Dependency(PlexRequestMock.Object);
                 with.Dependency(AuthMock.Object);
                 with.Dependency(PlexMock.Object);
+                with.Dependency(LandingPageMock.Object);
                 with.RootPathProvider<TestRootPathProvider>();
             });
         }
@@ -75,8 +80,6 @@ namespace PlexRequests.UI.Tests
         {
             var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
-
-
 
             Bootstrapper.WithSession(new Dictionary<string, object>());
 

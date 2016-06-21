@@ -71,10 +71,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DateTimeHelperTests.cs" />
     <Compile Include="PasswordHasherTests.cs" />
     <Compile Include="HtmlRemoverTests.cs" />
     <Compile Include="AssemblyHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PlexHelperTests.cs" />
     <Compile Include="UriHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>

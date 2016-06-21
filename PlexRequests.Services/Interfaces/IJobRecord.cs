@@ -24,10 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using PlexRequests.Store.Models;
+
 namespace PlexRequests.Services.Interfaces
 {
     public interface IJobRecord
     {
         void Record(string jobName);
+        Task<IEnumerable<ScheduledJobs>> GetJobsAsync();
+        IEnumerable<ScheduledJobs> GetJobs();
     }
 }

@@ -133,6 +133,9 @@ namespace PlexRequests.Api.Models.Plex
     [XmlRoot(ElementName = "Video")]
     public class Video
     {
+        public string ProviderId { get; set; }
+        [XmlAttribute(AttributeName = "guid")]
+        public string Guid { get; set; }
         [XmlElement(ElementName = "Media")]
         public List<Media> Media { get; set; }
         [XmlElement(ElementName = "Genre")]
@@ -241,6 +244,9 @@ namespace PlexRequests.Api.Models.Plex
     [XmlRoot(ElementName = "Directory")]
     public class Directory1
     {
+        public string ProviderId { get; set; }
+        [XmlAttribute(AttributeName = "guid")]
+        public string Guid { get; set; }
         [XmlElement(ElementName = "Genre")]
         public List<Genre> Genre { get; set; }
         [XmlElement(ElementName = "Role")]
@@ -311,6 +317,7 @@ namespace PlexRequests.Api.Models.Plex
     [XmlRoot(ElementName = "MediaContainer")]
     public class PlexSearch
     {
+
         [XmlElement(ElementName = "Directory")]
         public List<Directory1> Directory { get; set; }
         [XmlElement(ElementName = "Video")]

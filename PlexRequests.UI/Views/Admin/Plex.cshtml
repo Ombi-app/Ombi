@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexSettings>
 @Html.Partial("_Sidebar")
 @{
     int port;
@@ -32,18 +33,35 @@
             </div>
             <div class="form-group">
                 <div class="checkbox">
-                
-                        @if (Model.Ssl)
-                        {
-                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
-                        }
-                   
+
+                    @if (Model.Ssl)
+                    {
+                        <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
+                    }
+
                 </div>
             </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.AdvancedSearch)
+                    {
+                        <input type="checkbox" id="AdvancedSearch" name="AdvancedSearch" checked="checked"><label for="AdvancedSearch">Use Advanced Search</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="AdvancedSearch" name="AdvancedSearch"><label for="AdvancedSearch">Use Advanced Search</label>
+                    }
+
+                </div>
+                <small>If enabled we will be able to have a 100% accurate match, but we will be querying Plex for every single item in your library. So if you have a big library then this could take some time.</small>
+            </div>
+
             <div class="form-group">
                 <label for="SubDir" class="control-label">Plex SubDirectory</label>
                 <div>

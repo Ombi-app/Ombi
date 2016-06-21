@@ -28,6 +28,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+
 using Nancy;
 using Nancy.Security;
 
@@ -62,12 +64,13 @@ namespace PlexRequests.UI.Modules
             HeadphonesSettings = hpSettings;
             HeadphoneApi = hpApi;
 
-            Post["/approve"] = parameters => Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
-            Post["/approveall"] = x => ApproveAll();
-            Post["/approveallmovies"] = x => ApproveAllMovies();
-            Post["/approvealltvshows"] = x => ApproveAllTVShows();
-            Post["/deleteallmovies"] = x => DeleteAllMovies();
-            Post["/deletealltvshows"] = x => DeleteAllTVShows();
+            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
+            Post["/approveall", true] = async (x, ct) => await ApproveAll();
+            Post["/approveallmovies", true] = async (x, ct) => await ApproveAllMovies();
+            Post["/approvealltvshows", true] = async (x, ct) => await ApproveAllTVShows();
+            Post["/deleteallmovies", true] = async (x, ct) => await DeleteAllMovies();
+            Post["/deletealltvshows", true] = async (x, ct) => await DeleteAllTVShows();
+            Post["/deleteallalbums", true] = async (x, ct) => await DeleteAllAlbums();
         }
 
         private IRequestService Service { get; }
@@ -87,12 +90,12 @@ namespace PlexRequests.UI.Modules
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        private Response Approve(int requestId, string qualityId)
+        private async Task<Response> Approve(int requestId, string qualityId)
         {
             Log.Info("approving request {0}", requestId);
 
             // Get the request from the DB
-            var request = Service.Get(requestId);
+            var request = await Service.GetAsync(requestId);
 
             if (request == null)
             {
@@ -103,21 +106,21 @@ namespace PlexRequests.UI.Modules
             switch (request.Type)
             {
                 case RequestType.Movie:
-                    return RequestMovieAndUpdateStatus(request, qualityId);
+                    return await RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
-                    return RequestTvAndUpdateStatus(request, qualityId);
+                    return await RequestTvAndUpdateStatus(request, qualityId);
                 case RequestType.Album:
-                    return RequestAlbumAndUpdateStatus(request);
+                    return await RequestAlbumAndUpdateStatus(request);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(request));
             }
         }
 
-        private Response RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
+        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
         {
             var sender = new TvSender(SonarrApi, SickRageApi);
 
-            var sonarrSettings = SonarrSettings.GetSettings();
+            var sonarrSettings = await SonarrSettings.GetSettingsAsync();
             if (sonarrSettings.Enabled)
             {
                 Log.Trace("Sending to Sonarr");
@@ -128,7 +131,7 @@ namespace PlexRequests.UI.Modules
                 {
                     Log.Info("Sent successfully, Approving request now.");
                     request.Approved = true;
-                    var requestResult = Service.UpdateRequest(request);
+                    var requestResult = await Service.UpdateRequestAsync(request);
                     Log.Trace("Approval result: {0}", requestResult);
                     if (requestResult)
                     {
@@ -145,7 +148,7 @@ namespace PlexRequests.UI.Modules
 
             }
 
-            var srSettings = SickRageSettings.GetSettings();
+            var srSettings = await SickRageSettings.GetSettingsAsync();
             if (srSettings.Enabled)
             {
                 Log.Trace("Sending to SickRage");
@@ -156,7 +159,7 @@ namespace PlexRequests.UI.Modules
                 {
                     Log.Info("Sent successfully, Approving request now.");
                     request.Approved = true;
-                    var requestResult = Service.UpdateRequest(request);
+                    var requestResult = await Service.UpdateRequestAsync(request);
                     Log.Trace("Approval result: {0}", requestResult);
                     return Response.AsJson(requestResult
                         ? new JsonResponseModel { Result = true }
@@ -171,15 +174,15 @@ namespace PlexRequests.UI.Modules
 
 
             request.Approved = true;
-            var res = Service.UpdateRequest(request);
+            var res = await Service.UpdateRequestAsync(request);
             return Response.AsJson(res
                 ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to Sonarr/SickRage because it has not been configured" }
                 : new JsonResponseModel { Result = false, Message = "Updated SickRage but could not approve it in PlexRequests :(" });
         }
 
-        private Response RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
+        private async Task<Response> RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
         {
-            var cpSettings = CpService.GetSettings();
+            var cpSettings = await CpService.GetSettingsAsync();
 
             Log.Info("Adding movie to CouchPotato : {0}", request.Title);
             if (!cpSettings.Enabled)
@@ -189,7 +192,7 @@ namespace PlexRequests.UI.Modules
                 Log.Warn("We approved movie: {0} but could not add it to CouchPotato because it has not been setup", request.Title);
 
                 // Update the record
-                var inserted = Service.UpdateRequest(request);
+                var inserted = await Service.UpdateRequestAsync(request);
                 return Response.AsJson(inserted
                     ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to CouchPotato because it has not been configured." }
                     : new JsonResponseModel
@@ -207,7 +210,7 @@ namespace PlexRequests.UI.Modules
                 request.Approved = true;
 
                 // Update the record
-                var inserted = Service.UpdateRequest(request);
+                var inserted = await Service.UpdateRequestAsync(request);
 
                 return Response.AsJson(inserted
                     ? new JsonResponseModel { Result = true }
@@ -227,9 +230,9 @@ namespace PlexRequests.UI.Modules
                     });
         }
 
-        private Response RequestAlbumAndUpdateStatus(RequestedModel request)
+        private async Task<Response> RequestAlbumAndUpdateStatus(RequestedModel request)
         {
-            var hpSettings = HeadphonesSettings.GetSettings();
+            var hpSettings = await HeadphonesSettings.GetSettingsAsync();
             Log.Info("Adding album to Headphones : {0}", request.Title);
             if (!hpSettings.Enabled)
             {
@@ -238,7 +241,7 @@ namespace PlexRequests.UI.Modules
                 Log.Warn("We approved Album: {0} but could not add it to Headphones because it has not been setup", request.Title);
 
                 // Update the record
-                var inserted = Service.UpdateRequest(request);
+                var inserted = await Service.UpdateRequestAsync(request);
                 return Response.AsJson(inserted
                     ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to Headphones because it has not been configured." }
                     : new JsonResponseModel
@@ -255,10 +258,11 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "We have sent the approval to Headphones for processing, This can take a few minutes." });
         }
 
-        private Response ApproveAllMovies()
+        private async Task<Response> ApproveAllMovies()
         {
 
-            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.Movie);
+            var requests = await Service.GetAllAsync();
+                requests = requests.Where(x => x.CanApprove && x.Type == RequestType.Movie);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -267,7 +271,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                return UpdateRequests(requestedModels);
+                return await UpdateRequestsAsync(requestedModels);
             }
             catch (Exception e)
             {
@@ -276,10 +280,11 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        private Response DeleteAllMovies()
+        private async Task<Response> DeleteAllMovies()
         {
 
-            var requests = Service.GetAll().Where(x => x.Type == RequestType.Movie);
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.Type == RequestType.Movie);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -288,7 +293,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                return DeleteRequests(requestedModels);
+                return await DeleteRequestsAsync(requestedModels);
             }
             catch (Exception e)
             {
@@ -297,9 +302,32 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        private Response ApproveAllTVShows()
+        private async Task<Response> DeleteAllAlbums()
         {
-            var requests = Service.GetAll().Where(x => x.CanApprove && x.Type == RequestType.TvShow);
+
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.Type == RequestType.Album);
+            var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
+            if (!requestedModels.Any())
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "There are no album requests to delete. Please refresh." });
+            }
+
+            try
+            {
+                return await DeleteRequestsAsync(requestedModels);
+            }
+            catch (Exception e)
+            {
+                Log.Fatal(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
+            }
+        }
+
+        private async Task<Response> ApproveAllTVShows()
+        {
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.CanApprove && x.Type == RequestType.TvShow);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -308,7 +336,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                return UpdateRequests(requestedModels);
+                return await UpdateRequestsAsync(requestedModels);
             }
             catch (Exception e)
             {
@@ -317,10 +345,11 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        private Response DeleteAllTVShows()
+        private async Task<Response> DeleteAllTVShows()
         {
 
-            var requests = Service.GetAll().Where(x => x.Type == RequestType.TvShow);
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.Type == RequestType.TvShow);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -329,7 +358,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                return DeleteRequests(requestedModels);
+                return await DeleteRequestsAsync(requestedModels);
             }
             catch (Exception e)
             {
@@ -342,9 +371,10 @@ namespace PlexRequests.UI.Modules
         /// Approves all.
         /// </summary>
         /// <returns></returns>
-        private Response ApproveAll()
+        private async Task<Response> ApproveAll()
         {
-            var requests = Service.GetAll().Where(x => x.CanApprove);
+            var requests = await Service.GetAllAsync();
+            requests = requests.Where(x => x.CanApprove);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -353,7 +383,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                return UpdateRequests(requestedModels);
+                return await UpdateRequestsAsync(requestedModels);
             }
             catch (Exception e)
             {
@@ -363,11 +393,11 @@ namespace PlexRequests.UI.Modules
 
         }
 
-        private Response DeleteRequests(RequestedModel[] requestedModels)
+        private async Task<Response> DeleteRequestsAsync(IEnumerable<RequestedModel> requestedModels)
         {
             try
             {
-                var result = Service.BatchDelete(requestedModels.ToList());
+                var result = await Service.BatchDeleteAsync(requestedModels);
                 return Response.AsJson(result
                     ? new JsonResponseModel { Result = true }
                     : new JsonResponseModel { Result = false, Message = "We could not delete all of the requests. Please try again or check the logs." });
@@ -379,9 +409,9 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        private Response UpdateRequests(RequestedModel[] requestedModels)
+        private async Task<Response> UpdateRequestsAsync(RequestedModel[] requestedModels)
         {
-            var cpSettings = CpService.GetSettings();
+            var cpSettings = await CpService.GetSettingsAsync();
             var updatedRequests = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
@@ -409,8 +439,8 @@ namespace PlexRequests.UI.Modules
                 if (r.Type == RequestType.TvShow)
                 {
                     var sender = new TvSender(SonarrApi, SickRageApi);
-                    var sr = SickRageSettings.GetSettings();
-                    var sonarr = SonarrSettings.GetSettings();
+                    var sr = await SickRageSettings.GetSettingsAsync();
+                    var sonarr = await SonarrSettings.GetSettingsAsync();
                     if (sr.Enabled)
                     {
                         var res = sender.SendToSickRage(sr, r);
@@ -449,7 +479,7 @@ namespace PlexRequests.UI.Modules
             }
             try
             {
-                var result = Service.BatchUpdate(updatedRequests);
+                var result = await Service.BatchUpdateAsync(updatedRequests);
                 return Response.AsJson(result
                     ? new JsonResponseModel { Result = true }
                     : new JsonResponseModel { Result = false, Message = "We could not approve all of the requests. Please try again or check the logs." });

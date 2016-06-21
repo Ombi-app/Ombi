@@ -1,0 +1,109 @@
+﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.UI.Models.ScheduledJobsViewModel>
+@Html.Partial("_Sidebar")
+
+<div class="col-sm-8 col-sm-push-1">
+
+
+    <div class="row">
+        <div class="col-md-3"><strong>Job Name</strong></div>
+        <div class="col-md-8"><strong>Last Run</strong></div>
+    </div>
+    @foreach (var record in Model.JobRecorder)
+    {
+        <div class="row">
+            <div class="col-md-3">@record.Key</div>
+            <div class="col-md-8 date">@record.Value.ToString("O")</div>
+        </div>
+    }
+    <br/>
+    <br/>
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Scheduler Settings</legend>
+            <small>Please note, you will need to restart for these settings to take effect</small>
+
+            <div class="form-group">
+                <label for="PlexAvailabilityChecker" class="control-label">Plex Availability Checker (min)</label>
+                <input type="text" class="form-control form-control-custom " id="PlexAvailabilityChecker" name="PlexAvailabilityChecker" value="@Model.PlexAvailabilityChecker">
+            </div>
+
+            <div class="form-group">
+                <label for="CouchPotatoCacher" class="control-label">Couch Potato Cacher (min)</label>
+                <input type="text" class="form-control form-control-custom " id="CouchPotatoCacher" name="CouchPotatoCacher" value="@Model.CouchPotatoCacher">
+            </div>
+
+
+            <div class="form-group">
+                <label for="SonarrCacher" class="control-label">Sonarr Cacher (min)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SonarrCacher" name="SonarrCacher" value="@Model.SonarrCacher">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="SickRageCacher" class="control-label">SickRage Cacher (min)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SickRageCacher" name="SickRageCacher" value="@Model.SickRageCacher">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="StoreBackup" class="control-label">Store Backup (hour)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="StoreBackup" name="StoreBackup" value="@Model.StoreBackup">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="StoreCleanup" class="control-label">Store Cleanup (hour)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="StoreCleanup" name="StoreCleanup" value="@Model.StoreCleanup">
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline ">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+<script>
+    $(function () {
+
+        $('.date').each(function (i, obj) {
+            var $obj = $(obj);
+            var val = $obj.text();
+            var newDate = utcToLocal(val);
+            $obj.text(newDate);
+        });
+
+        $('#save')
+            .click(function (e) {
+                e.preventDefault();
+
+                var $form = $("#mainForm");
+
+                var data = $form.serialize();
+
+                $.ajax({
+                    type: $form.prop("method"),
+                    data: data,
+                    url: $form.prop("action"),
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.result === true) {
+                            generateNotify("Success!", "success");
+                        } else {
+                            generateNotify(response.message, "warning");
+                        }
+                    },
+                    error: function (e) {
+                        console.log(e);
+                        generateNotify("Something went wrong!", "danger");
+                    }
+                });
+            });
+    });
+</script>

@@ -35,6 +35,7 @@ using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
 using PlexRequests.Services.Notification;
@@ -43,6 +44,8 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 using Quartz;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.Services.Jobs
 {
@@ -72,14 +75,12 @@ namespace PlexRequests.Services.Jobs
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
         public void CheckAndUpdateAll()
         {
-            Log.Trace("Getting the settings");
             var plexSettings = Plex.GetSettings();
             var authSettings = Auth.GetSettings();
-            Log.Trace("Getting all the requests");
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
-                Log.Info("Validation of the plex settings failed.");
+                Log.Debug("Validation of the plex settings failed.");
                 return;
             }
 
@@ -87,7 +88,7 @@ namespace PlexRequests.Services.Jobs
 
             if (libraries == null || !libraries.Any())
             {
-                Log.Info("Did not find any libraries in Plex.");
+                Log.Debug("Did not find any libraries in Plex.");
                 return;
             }
 
@@ -97,31 +98,26 @@ namespace PlexRequests.Services.Jobs
 
             var requests = RequestService.GetAll();
             var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
-            Log.Trace("Requests Count {0}", requestedModels.Length);
 
             if (!requestedModels.Any())
             {
-                Log.Info("There are no requests to check.");
+                Log.Debug("There are no requests to check.");
                 return;
             }
 
             var modifiedModel = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
-                Log.Trace("We are going to see if Plex has the following title: {0}", r.Title);
-
-                Log.Trace("Search results from Plex for the following request: {0}", r.Title);
-
                 var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
 
                 bool matchResult;
                 switch (r.Type)
                 {
                     case RequestType.Movie:
-                        matchResult = IsMovieAvailable(movies, r.Title, releaseDate);
+                        matchResult = IsMovieAvailable(movies, r.Title, releaseDate, r.ImdbId);
                         break;
                     case RequestType.TvShow:
-                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate);
+                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId);
                         break;
                     case RequestType.Album:
                         matchResult = IsAlbumAvailable(albums, r.Title, r.ReleaseDate.Year.ToString(), r.ArtistName);
@@ -137,11 +133,9 @@ namespace PlexRequests.Services.Jobs
                     continue;
                 }
 
-                Log.Trace("The result from Plex where the title's match was null, so that means the content is not yet in Plex.");
             }
 
-            Log.Trace("Updating the requests now");
-            Log.Trace("Requests that will be updated count {0}", modifiedModel.Count);
+            Log.Debug("Requests that will be updated count {0}", modifiedModel.Count);
 
             if (modifiedModel.Any())
             {
@@ -167,19 +161,36 @@ namespace PlexRequests.Services.Jobs
 
                 foreach (var lib in movieLibs)
                 {
-                    movies.AddRange(lib.Video.Select(x => new PlexMovie() // movies are in the Video list
+                    movies.AddRange(lib.Video.Select(video => new PlexMovie
                     {
-                        Title = x.Title,
-                        ReleaseYear = x.Year
+                        ReleaseYear = video.Year,
+                        Title = video.Title,
+                        ProviderId = video.ProviderId,
                     }));
                 }
             }
             return movies;
         }
 
-        public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year)
+        public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null)
         {
-            return plexMovies.Any(x => x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) && x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
+            var advanced = !string.IsNullOrEmpty(providerId);
+            foreach (var movie in plexMovies)
+            {
+                if (advanced)
+                {
+                    if (movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                if (movie.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
+                    movie.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<PlexTvShow> GetPlexTvShows()
@@ -199,18 +210,33 @@ namespace PlexRequests.Services.Jobs
                     shows.AddRange(lib.Directory.Select(x => new PlexTvShow() // shows are in the directory list
                     {
                         Title = x.Title,
-                        ReleaseYear = x.Year
+                        ReleaseYear = x.Year,
+                        ProviderId = x.ProviderId,
                     }));
                 }
             }
             return shows;
         }
 
-        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year)
+        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null)
         {
-            return plexShows.Any(x =>
-            (x.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) || x.Title.StartsWith(title, StringComparison.CurrentCultureIgnoreCase)) &&
-            x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase));
+            var advanced = !string.IsNullOrEmpty(providerId);
+            foreach (var show in plexShows)
+            {
+                if (advanced)
+                {
+                    if (show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+                if (show.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
+                    show.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public List<PlexAlbum> GetPlexAlbums()
@@ -248,24 +274,41 @@ namespace PlexRequests.Services.Jobs
 
         private List<PlexSearch> CachedLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings, bool setCache)
         {
-            Log.Trace("Obtaining library sections from Plex");
-
-            List<PlexSearch> results = new List<PlexSearch>();
+            var results = new List<PlexSearch>();
 
             if (!ValidateSettings(plexSettings, authSettings))
             {
                 Log.Warn("The settings are not configured");
-                return results; // don't error out here, just let it go!
+                return results; // don't error out here, just let it go! let it goo!!!
             }
 
             try
             {
                 if (setCache)
                 {
-                    Log.Trace("Plex Lib API Call");
                     results = GetLibraries(authSettings, plexSettings);
-
-                    Log.Trace("Plex Lib Cache Set Call");
+                    if (plexSettings.AdvancedSearch)
+                    {
+                        for (var i = 0; i < results.Count; i++)
+                        {
+                            for (var j = 0; j < results[i].Directory.Count; j++)
+                            {
+                                var currentItem = results[i].Directory[j];
+                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                    currentItem.RatingKey);
+                                var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
+                                results[i].Directory[j].ProviderId = providerId;
+                            }
+                            for (var j = 0; j < results[i].Video.Count; j++)
+                            {
+                                var currentItem = results[i].Video[j];
+                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                    currentItem.RatingKey);
+                                var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Video.Guid);
+                                results[i].Video[j].ProviderId = providerId;
+                            }
+                        }
+                    }
                     if (results != null)
                     {
                         Cache.Set(CacheKeys.PlexLibaries, results, CacheKeys.TimeFrameMinutes.SchedulerCaching);
@@ -273,12 +316,8 @@ namespace PlexRequests.Services.Jobs
                 }
                 else
                 {
-                    Log.Trace("Plex Lib GetSet Call");
                     results = Cache.GetOrSet(CacheKeys.PlexLibaries, () =>
-                    {
-                        Log.Trace("Plex Lib API Call (inside getset)");
-                        return GetLibraries(authSettings, plexSettings);
-                    }, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    GetLibraries(authSettings, plexSettings), CacheKeys.TimeFrameMinutes.SchedulerCaching);
                 }
             }
             catch (Exception ex)
@@ -298,7 +337,6 @@ namespace PlexRequests.Services.Jobs
             {
                 foreach (var dir in sections.Directories)
                 {
-                    Log.Trace("Obtaining results from Plex for the following library section: {0}", dir.Title);
                     var lib = PlexApi.GetLibrary(authSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
                     if (lib != null)
                     {
@@ -307,7 +345,6 @@ namespace PlexRequests.Services.Jobs
                 }
             }
 
-            Log.Trace("Returning Plex Libs");
             return libs;
         }
 
@@ -335,7 +372,6 @@ namespace PlexRequests.Services.Jobs
                 foreach (var model in modelChanged)
                 {
                     var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers);
-                    Log.Debug("Selected Users {0}", selectedUsers.DumpJson());
                     foreach (var user in selectedUsers)
                     {
                         Log.Info("Notifying user {0}", user);

@@ -49,9 +49,7 @@ namespace PlexRequests.UI.Models
         public string ReleaseYear { get; set; }
         public bool Available { get; set; }
         public bool Admin { get; set; }
-        public string Issues { get; set; }
-        public string OtherMessage { get; set; }
-        public string AdminNotes { get; set; }
+        public int IssueId { get; set; }
         public string TvSeriesRequestType { get; set; }
         public string MusicBrainzId { get; set; }
         public QualityModel[] Qualities { get; set; }

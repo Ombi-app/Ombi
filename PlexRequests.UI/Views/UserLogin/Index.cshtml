@@ -13,7 +13,7 @@
                 <label>Plex.tv Username </label>
             </div>
             <div>
-                <input class="form-control form-control-custom" style="width: 50%" type="text" name="Username" placeholder="Username" />
+                <input class="form-control form-control-custom" type="text" name="Username" placeholder="Username" />
             </div>
         </div>
         <br />
@@ -24,7 +24,7 @@
                     <label> Password </label>
                 </div>
                 <div>
-                    <input class="form-control form-control-custom" style="width: 50%" name="Password" type="password" placeholder="Password"/>
+                    <input class="form-control form-control-custom" name="Password" type="password" placeholder="Password"/>
                 </div>
             </div>
             <br />
@@ -54,7 +54,7 @@
                     console.log(response);
                     if (response.result === true) {
 
-                        window.location.replace(url);
+                        location.replace(response.message);
              
                     } else {
                         generateNotify(response.message, "warning");

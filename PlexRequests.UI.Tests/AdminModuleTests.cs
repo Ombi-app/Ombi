@@ -60,6 +60,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<PlexSettings>> PlexSettingsMock { get; set; }
         private Mock<ISettingsService<SonarrSettings>> SonarrSettingsMock { get; set; }
         private Mock<ISettingsService<SickRageSettings>> SickRageSettingsMock { get; set; }
+        private Mock<ISettingsService<ScheduledJobsSettings>> ScheduledJobsSettingsMock { get; set; }
         private Mock<ISettingsService<EmailNotificationSettings>> EmailMock { get; set; }
         private Mock<ISettingsService<PushbulletNotificationSettings>> PushbulletSettings { get; set; }
         private Mock<ISettingsService<PushoverNotificationSettings>> PushoverSettings { get; set; }
@@ -69,11 +70,13 @@ namespace PlexRequests.UI.Tests
         private Mock<IPushbulletApi> PushbulletApi { get; set; }
         private Mock<IPushoverApi> PushoverApi { get; set; }
         private Mock<ICouchPotatoApi> CpApi { get; set; }
+        private Mock<IJobRecord> RecorderMock { get; set; }
         private Mock<IRepository<LogEntity>> LogRepo { get; set; }
         private Mock<INotificationService> NotificationService { get; set; }
         private Mock<ICacheProvider> Cache { get; set; }
         private Mock<ISettingsService<LogSettings>> Log { get; set; }
         private Mock<ISettingsService<SlackNotificationSettings>> SlackSettings { get; set; }
+        private Mock<ISettingsService<LandingPageSettings>> LandingPageSettings { get; set; }
         private Mock<ISlackApi> SlackApi { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
@@ -109,6 +112,10 @@ namespace PlexRequests.UI.Tests
             Log = new Mock<ISettingsService<LogSettings>>();
             SlackApi = new Mock<ISlackApi>();
             SlackSettings = new Mock<ISettingsService<SlackNotificationSettings>>();
+            LandingPageSettings = new Mock<ISettingsService<LandingPageSettings>>();
+            ScheduledJobsSettingsMock = new Mock<ISettingsService<ScheduledJobsSettings>>();
+            RecorderMock = new Mock<IJobRecord>();
+
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -133,7 +140,10 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(Cache.Object);
                 with.Dependency(Log.Object);
                 with.Dependency(SlackApi.Object);
+                with.Dependency(LandingPageSettings.Object);
                 with.Dependency(SlackSettings.Object);
+                with.Dependency(ScheduledJobsSettingsMock.Object);
+                with.Dependency(RecorderMock.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {

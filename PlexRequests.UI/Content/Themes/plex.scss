@@ -13,7 +13,7 @@ $i: !important;
     background: $primary-colour;
 }
 
-scroll-top-wrapper {
+.scroll-top-wrapper {
     background-color: $bg-colour;
 }
 
@@ -193,4 +193,27 @@ button.list-group-item:focus {
     -moz-background-clip: padding-box;
     background-clip: padding-box;
     outline: 0;
+}
+
+.badge {
+  display: inline-block;
+  min-width: 10px;
+  padding: 3px 7px;
+  font-size: 12px;
+  font-weight: 300;
+  color: #ebebeb;
+  line-height: 1;
+  vertical-align: middle;
+  white-space: nowrap;
+  text-align: center;
+  background-color: $bg-colour;
+  border-radius: 10px;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu {
+    background-color: $bg-colour;
+}
+
+.bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
+    border-bottom: 6px solid $bg-colour $i;
 }

@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using NLog;
@@ -51,14 +52,21 @@ namespace PlexRequests.Services.Jobs
 
         private IRepository<LogEntity> Repo { get; }
 
+        private const int ItemsToDelete = 1000;
+
         private void Cleanup()
         {
             try
             {
                 var items = Repo.GetAll();
-                var orderedItems = items.Where(x => x.Date < DateTime.Now.AddDays(-7));
+                var ordered = items.OrderByDescending(x => x.Date).ToList();
+                var itemsToDelete = new List<LogEntity>();
+                if (ordered.Count > ItemsToDelete)
+                {
+                    itemsToDelete = ordered.Skip(ItemsToDelete).ToList();
+                }
 
-                foreach (var o in orderedItems)
+                foreach (var o in itemsToDelete)
                 {
                     Repo.Delete(o);
                 }

@@ -73,3 +73,12 @@ CREATE TABLE IF NOT EXISTS UsersToNotify
     Username							varchar(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS UsersToNotify_Id ON UsersToNotify (Id);
+
+CREATE TABLE IF NOT EXISTS IssueBlobs
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    RequestId							INTEGER,
+    Type								INTEGER NOT NULL,
+    Content								BLOB NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS IssueBlobs_Id ON IssueBlobs (Id);

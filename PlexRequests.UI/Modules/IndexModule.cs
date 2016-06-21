@@ -24,8 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Nancy;
 using Nancy.Extensions;
+using Nancy.Responses;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -36,9 +36,14 @@ namespace PlexRequests.UI.Modules
     {
         public IndexModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
         {
-            Get["/"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
+            Get["/"] = x =>  Index();
 
-            Get["/Index"] = parameters => Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
+            Get["/Index"] = x => Index();
+        }
+
+        public RedirectResponse Index()
+        {
+            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
         }
     }
 }

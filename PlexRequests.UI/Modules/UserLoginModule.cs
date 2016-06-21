@@ -26,8 +26,8 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using Nancy;
 using Nancy.Extensions;
@@ -39,30 +39,57 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp) : base("userlogin", pr)
         {
             AuthService = auth;
+            LandingPageSettings = lp;
             Api = api;
-            Get["/"] = _ => Index();
+            Get["/", true] = async (x, ct) => await Index();
             Post["/"] = x => LoginUser();
             Get["/logout"] = x => Logout();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
+        private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private IPlexApi Api { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public Negotiator Index()
+        public async Task<Negotiator> Index()
         {
-            var settings = AuthService.GetSettings();
+            var query = Request.Query["landing"];
+            var landingCheck = (bool?)query ?? true;
+            if (landingCheck)
+            {
+                var landingSettings = await LandingPageSettings.GetSettingsAsync();
+
+                if (landingSettings.Enabled)
+                {
+                    if (landingSettings.BeforeLogin)
+                    {
+                        var model = new LandingPageViewModel
+                        {
+                            Enabled = landingSettings.Enabled,
+                            Id = landingSettings.Id,
+                            EnabledNoticeTime = landingSettings.EnabledNoticeTime,
+                            NoticeEnable = landingSettings.NoticeEnable,
+                            NoticeEnd = landingSettings.NoticeEnd,
+                            NoticeMessage = landingSettings.NoticeMessage,
+                            NoticeStart = landingSettings.NoticeStart,
+                            ContinueUrl = landingSettings.BeforeLogin ? $"userlogin" : $"search"
+                        };
+
+                        return View["Landing/Index", model];
+                    }
+                }
+            }
+            var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
         }
 
@@ -70,7 +97,7 @@ namespace PlexRequests.UI.Modules
         {
             var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
-            Log.Debug("Username \"{0}\" attempting to login",username);
+            Log.Debug("Username \"{0}\" attempting to login", username);
             if (string.IsNullOrWhiteSpace(username))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
@@ -79,8 +106,6 @@ namespace PlexRequests.UI.Modules
             var authenticated = false;
 
             var settings = AuthService.GetSettings();
-            Log.Debug("Settings: ");
-            Log.Debug(settings.DumpJson());
 
             if (IsUserInDeniedList(username, settings))
             {
@@ -95,7 +120,7 @@ namespace PlexRequests.UI.Modules
                 password = Request.Form.password.Value;
             }
 
-            
+
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
                 Log.Debug("Need to auth and also provide pass");
@@ -115,7 +140,7 @@ namespace PlexRequests.UI.Modules
                     }
                 }
             }
-            else if(settings.UserAuthentication) // Check against the users in Plex
+            else if (settings.UserAuthentication) // Check against the users in Plex
             {
                 Log.Debug("Need to auth");
                 authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
@@ -126,7 +151,7 @@ namespace PlexRequests.UI.Modules
                 }
                 Log.Debug("Friends list result = {0}", authenticated);
             }
-            else if(!settings.UserAuthentication) // No auth, let them pass!
+            else if (!settings.UserAuthentication) // No auth, let them pass!
             {
                 Log.Debug("No need to auth");
                 authenticated = true;
@@ -141,12 +166,22 @@ namespace PlexRequests.UI.Modules
 
             Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
 
-            return Response.AsJson(authenticated 
-                ? new JsonResponseModel { Result = true } 
-                : new JsonResponseModel { Result = false, Message = "Incorrect User or Password"});
+            if (!authenticated)
+            {
+                return Response.AsJson(new JsonResponseModel {Result = false, Message = "Incorrect User or Password"});
+            }
+
+            var landingSettings = LandingPageSettings.GetSettings();
+
+            if (landingSettings.Enabled)
+            {
+                if (!landingSettings.BeforeLogin)
+                    return Response.AsJson(new JsonResponseModel { Result = true, Message = "landing" });
+            }
+            return Response.AsJson(new JsonResponseModel {Result = true, Message = "search" });
         }
 
-        
+
 
         private Response Logout()
         {
@@ -155,8 +190,8 @@ namespace PlexRequests.UI.Modules
             {
                 Session.Delete(SessionKeys.UsernameKey);
             }
-            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) 
-                ? $"~/{BaseUrl}/userlogin" 
+            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl)
+                ? $"~/{BaseUrl}/userlogin"
                 : "~/userlogin");
         }
 
@@ -173,8 +208,6 @@ namespace PlexRequests.UI.Modules
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
             var users = Api.GetUsers(authToken);
-            Log.Trace("Plex Users: ");
-            Log.Trace(users.DumpJson());
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers != null && allUsers.Any(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }

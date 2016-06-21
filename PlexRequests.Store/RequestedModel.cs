@@ -17,6 +17,7 @@ namespace PlexRequests.Store
         // ReSharper disable once IdentifierTypo
         public int ProviderId { get; set; }
         public string ImdbId { get; set; }
+        public string TvDbId { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }
         public string PosterPath { get; set; }
@@ -40,6 +41,7 @@ namespace PlexRequests.Store
         public List<string> RequestedUsers { get; set; }
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
+        public int IssueId { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers
@@ -83,6 +85,6 @@ namespace PlexRequests.Store
         NoSubtitles = 1,
         WrongContent = 2,
         PlaybackIssues = 3,
-        Other = 4 // Provide a message    
+        Other = 4, // Provide a message
     }
 }

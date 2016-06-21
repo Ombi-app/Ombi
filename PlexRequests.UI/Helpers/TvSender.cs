@@ -53,13 +53,17 @@ namespace PlexRequests.UI.Helpers
 
         public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
-            int qualityProfile;
-            
-            if (!string.IsNullOrEmpty(qualityId) || !int.TryParse(qualityId, out qualityProfile)) // try to parse the passed in quality, otherwise use the settings default quality
+
+            var qualityProfile = 0;
+
+            if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
             {
-                int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+                if (!int.TryParse(qualityId, out qualityProfile))
+                {
+                    int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+                }
             }
-            
+
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
@@ -83,16 +87,11 @@ namespace PlexRequests.UI.Helpers
                 qualityId = sickRageSettings.QualityProfile;
             }
 
-            Log.Trace("Calling `AddSeries` with the following settings:");
-            Log.Trace(sickRageSettings.DumpJson());
-            Log.Trace("And the following `model`:");
-            Log.Trace(model.DumpJson());
             var apiResult = SickrageApi.AddSeries(model.ProviderId, model.SeasonCount, model.SeasonList, qualityId,
-                           sickRageSettings.ApiKey, sickRageSettings.FullUri);
+                               sickRageSettings.ApiKey, sickRageSettings.FullUri);
 
             var result = apiResult.Result;
-            Log.Trace("SickRage Add Result: ");
-            Log.Trace(result.DumpJson());
+
 
             return result;
         }

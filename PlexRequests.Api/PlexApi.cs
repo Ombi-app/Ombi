@@ -220,6 +220,36 @@ namespace PlexRequests.Api
             }
         }
 
+        public PlexMetadata GetMetadata(string authToken, Uri plexFullHost, string itemId)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/metadata/{itemId}"
+            };
+
+            request.AddUrlSegment("itemId", itemId);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexMetadata>(request, plexFullHost),
+                    new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    },
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan));
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex GetMetadata");
+                return new PlexMetadata();
+            }
+        }
+
         private void AddHeaders(ref RestRequest request, string authToken)
         {
             request.AddHeader("X-Plex-Token", authToken);

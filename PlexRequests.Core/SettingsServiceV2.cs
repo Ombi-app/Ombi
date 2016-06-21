@@ -72,11 +72,7 @@ namespace PlexRequests.Core
                 return new T();
             }
             result.Content = DecryptSettings(result);
-            var obj = string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
-
-            var model = obj;
-
-            return model;
+            return string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
         }
 
         public bool SaveSettings(T model)
