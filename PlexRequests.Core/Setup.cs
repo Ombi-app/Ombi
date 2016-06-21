@@ -105,7 +105,8 @@ namespace PlexRequests.Core
                 SearchForMovies = true,
                 SearchForTvShows = true,
                 WeeklyRequestLimit = 0,
-                BaseUrl = baseUrl ?? string.Empty
+                BaseUrl = baseUrl ?? string.Empty,
+                CollectAnalyticData = true,
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
