@@ -362,7 +362,7 @@ namespace PlexRequests.UI.Modules
 
             return myIssues;
         }
-        private async Task<Negotiator> RemoveIssue(int issueId)
+        private async Task<Response> RemoveIssue(int issueId)
         {
             try
             {
@@ -378,13 +378,13 @@ namespace PlexRequests.UI.Modules
                     await IssuesService.DeleteIssueAsync(issueId);
                 }
 
-                return View["Index"];
+                return Response.AsJson(new JsonResponseModel() { Result = true });
 
             }
             catch (Exception e)
             {
                 Log.Error(e);
-                return View["Index"];
+                return Response.AsJson(new JsonResponseModel() { Result = false, Message = "Could not delete issue! Check the logs."});
             }
 
         }

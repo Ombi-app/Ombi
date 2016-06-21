@@ -818,7 +818,14 @@ namespace PlexRequests.UI.Modules
         private async Task<Negotiator> LandingPage()
         {
             var settings = await LandingSettings.GetSettingsAsync();
-
+            if (settings.NoticeEnd == DateTime.MinValue)
+            {
+                settings.NoticeEnd = DateTime.Now;
+            }
+            if (settings.NoticeStart == DateTime.MinValue)
+            {
+                settings.NoticeStart = DateTime.Now;
+            }
             return View["LandingPage", settings];
         }
 
