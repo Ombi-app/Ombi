@@ -136,7 +136,11 @@ namespace PlexRequests.Api
         {
             var request = new RestRequest
             {
-                Resource = "/api/{apikey}/movie.list?status={status}"
+                Resource = "/api/{apikey}/movie.list?status={status}",
+                OnBeforeDeserialization = (x =>
+                {
+                    x.Content = x.Content.Replace("[]", "{}");
+                })
             };
 
             request.AddUrlSegment("apikey", apiKey);
