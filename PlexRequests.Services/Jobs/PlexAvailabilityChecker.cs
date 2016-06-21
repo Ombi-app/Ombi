@@ -225,7 +225,8 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(show.ProviderId) && 
+                        show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }
