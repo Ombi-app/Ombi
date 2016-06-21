@@ -159,7 +159,6 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
-    <Compile Include="Helpers\ContainerHelper.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
