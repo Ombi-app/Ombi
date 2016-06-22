@@ -48,7 +48,7 @@ namespace PlexRequests.UI.Modules
             Get["/issuecount", true] = async (x, ct) => await IssueCount();
             Get["/tabCount", true] = async (x, ct) => await TabCount();
 
-            Post["/issuecomment", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.provierId, IssueState.Other, (string)Request.Form.commentArea);
+            Post["/issuecomment", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.providerId, IssueState.Other, (string)Request.Form.commentArea);
 
             Post["/nonrequestissue", true] = async (x, ct) => await ReportNonRequestIssue((int)Request.Form.providerId, (string)Request.Form.type, (IssueState)(int)Request.Form.issue, null);
 
@@ -369,16 +369,22 @@ namespace PlexRequests.UI.Modules
                 this.RequiresClaims(UserClaims.Admin);
                 var issue = await IssuesService.GetAsync(issueId);
                 var request = await RequestService.GetAsync(issue.RequestId);
+                if (request.Id > 0)
+                {
+                    request.IssueId = 0; // No issue;
 
-                request.IssueId = 0; // No issue;
-
-                var result = await RequestService.UpdateRequestAsync(request);
-                if (result)
+                    var result = await RequestService.UpdateRequestAsync(request);
+                    if (result)
+                    {
+                        await IssuesService.DeleteIssueAsync(issueId);
+                    }
+                }
+                else
                 {
                     await IssuesService.DeleteIssueAsync(issueId);
                 }
 
-                return Response.AsJson(new JsonResponseModel() { Result = true });
+                return Response.AsJson(new JsonResponseModel { Result = true });
 
             }
             catch (Exception e)

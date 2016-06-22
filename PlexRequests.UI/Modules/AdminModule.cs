@@ -32,7 +32,6 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
 using System.Net;
 
@@ -52,6 +51,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
@@ -60,6 +60,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
@@ -89,6 +90,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
         private ISlackApi SlackApi { get; }
         private IJobRecord JobRecorder { get; }
+        private IAnalytics Analytics { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -111,7 +113,7 @@ namespace PlexRequests.UI.Modules
             ISettingsService<LogSettings> logs,
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
-            ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec) : base("admin", prService)
+            ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -137,6 +139,7 @@ namespace PlexRequests.UI.Modules
             LandingSettings = lp;
             ScheduledJobSettings = scheduler;
             JobRecorder = rec;
+            Analytics = analytics;
 
             this.RequiresClaims(UserClaims.Admin);
 
@@ -145,7 +148,7 @@ namespace PlexRequests.UI.Modules
             Get["/authentication", true] = async (x, ct) => await Authentication();
             Post["/authentication", true] = async (x, ct) => await SaveAuthentication();
 
-            Post["/"] = _ => SaveAdmin();
+            Post["/", true] = async (x, ct) => await SaveAdmin();
 
             Post["/requestauth"] = _ => RequestAuthToken();
 
@@ -237,7 +240,7 @@ namespace PlexRequests.UI.Modules
             return View["Settings", settings];
         }
 
-        private Response SaveAdmin()
+        private async Task<Response> SaveAdmin()
         {
             var model = this.Bind<PlexRequestSettings>();
             var valid = this.Validate(model);
@@ -254,6 +257,8 @@ namespace PlexRequests.UI.Modules
                 }
             }
             var result = PrService.SaveSettings(model);
+            
+            await Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "We could not save to the database, please try again" });

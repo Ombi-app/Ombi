@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Action.cs
+//    File: CookieHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,17 +24,34 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Helpers.Analytics
+using System;
+using System.Collections.Generic;
+
+namespace PlexRequests.Helpers
 {
-    public enum Action
+    public static class CookieHelper
     {
-        Donate,
-        ClickButton,
-        Delete,
-        Create,
-        Save,
-        Update,
-        Start,
-        View
+        private const string GaCookie = "_ga";
+
+        /// <summary>
+        /// Gets the analytic client identifier.
+        /// <para>Example: Value = "GA1.1.306549087.1464005217"</para>
+        /// </summary>
+        /// <param name="cookies">The cookies.</param>
+        /// <returns></returns>
+        public static string GetAnalyticClientId(IDictionary<string, string> cookies)
+        {
+            var outString = string.Empty;
+
+            if (cookies.TryGetValue(GaCookie, out outString))
+            {
+                var split = outString.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+
+                return split.Length < 4 
+                    ? string.Empty 
+                    : $"{split[2]}.{split[3]}";
+            }
+            return string.Empty;
+        }
     }
 }
