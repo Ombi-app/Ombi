@@ -42,7 +42,7 @@
             }
             @if (Model.IssueStatus == IssueStatus.ResolvedIssue)
             {
-                <form action="@formAction/issues/remove" method="post">
+                <form action="@formAction/issues/remove" method="post" id="removeForm">
                     <input id="issueId" name="issueId" value="@Model.Id" hidden="hidden" />
                     <button type="submit" id="@Model.Id" class="btn btn-sm btn-danger-outline dropdown-toggle delete">Remove</button>
                 </form>
