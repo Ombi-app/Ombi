@@ -88,11 +88,7 @@ namespace PlexRequests.Services.Jobs
         {
             var movies = Cache.Get<CouchPotatoMovies>(CacheKeys.CouchPotatoQueued);
             var items = movies?.movies?.Select(x => x.info?.tmdb_id).Cast<int>().ToArray();
-            if (items == null)
-            {
-                return new int[] { };
-            }
-            return items;
+            return items ?? new int[] { };
         }
 
         public void Execute(IJobExecutionContext context)
