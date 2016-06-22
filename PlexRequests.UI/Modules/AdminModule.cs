@@ -148,7 +148,7 @@ namespace PlexRequests.UI.Modules
             Get["/authentication", true] = async (x, ct) => await Authentication();
             Post["/authentication", true] = async (x, ct) => await SaveAuthentication();
 
-            Post["/"] = _ => SaveAdmin();
+            Post["/", true] = async (x, ct) => await SaveAdmin();
 
             Post["/requestauth"] = _ => RequestAuthToken();
 
