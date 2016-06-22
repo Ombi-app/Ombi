@@ -86,7 +86,12 @@ namespace PlexRequests.Services.Jobs
         // we do not want to set here...
         public int[] QueuedIds()
         {
+            Log.Error("This is not an error, starting to get the CP Cached Id's");
+
             var movies = Cache.Get<CouchPotatoMovies>(CacheKeys.CouchPotatoQueued);
+            Log.Error("Cached result:");
+            Log.Error(movies.DumpJson());
+
             var items = movies?.movies?.Select(x => x.info?.tmdb_id).Cast<int>().ToArray();
             return items ?? new int[] { };
         }
