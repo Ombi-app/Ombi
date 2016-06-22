@@ -488,7 +488,7 @@ namespace PlexRequests.UI.Modules
                         Log.Info("Adding movie to database (No approval required)");
                         await RequestService.AddRequestAsync(model);
 
-                        if (ShouldSendNotification())
+                        if (ShouldSendNotification(settings))
                         {
                             var notificationModel = new NotificationModel
                             {
@@ -515,7 +515,7 @@ namespace PlexRequests.UI.Modules
                     Log.Info("Adding movie to database (No approval required)");
                     await RequestService.AddRequestAsync(model);
 
-                    if (ShouldSendNotification())
+                    if (ShouldSendNotification(settings))
                     {
                         var notificationModel = new NotificationModel
                         {
@@ -663,7 +663,7 @@ namespace PlexRequests.UI.Modules
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         await RequestService.AddRequestAsync(model);
 
-                        if (ShouldSendNotification())
+                        if (ShouldSendNotification(settings))
                         {
                             var notify1 = new NotificationModel
                             {
@@ -691,7 +691,7 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         await RequestService.AddRequestAsync(model);
-                        if (ShouldSendNotification())
+                        if (ShouldSendNotification(settings))
                         {
                             var notify2 = new NotificationModel
                             {
@@ -713,7 +713,7 @@ namespace PlexRequests.UI.Modules
                     model.Approved = true;
                     Log.Debug("Adding tv to database requests (No approval required) and Sonarr/Sickrage not setup");
                     await RequestService.AddRequestAsync(model);
-                    if (ShouldSendNotification())
+                    if (ShouldSendNotification(settings))
                     {
                         var notify2 = new NotificationModel
                         {
@@ -739,9 +739,9 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
-        private bool ShouldSendNotification()
+        private bool ShouldSendNotification(PlexRequestSettings prSettings)
         {
-            var sendNotification = true;
+            var sendNotification = !prSettings.IgnoreNotifyForAutoApprovedRequests;
             var claims = Context.CurrentUser?.Claims;
             if (claims != null)
             {
@@ -838,7 +838,7 @@ namespace PlexRequests.UI.Modules
                 model.Approved = true;
                 await RequestService.AddRequestAsync(model);
 
-                if (ShouldSendNotification())
+                if (ShouldSendNotification(settings))
                 {
                     var notify2 = new NotificationModel
                     {
@@ -858,7 +858,7 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
-            if (ShouldSendNotification())
+            if (ShouldSendNotification(settings))
             {
                 var notify2 = new NotificationModel
                 {

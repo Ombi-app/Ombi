@@ -197,6 +197,21 @@
             <div class="form-group">
                 <div class="checkbox">
 
+                    @if (Model.IgnoreNotifyForAutoApprovedRequests)
+                    {
+                        <input type="checkbox" id="IgnoreNotifyForAutoApprovedRequests" name="IgnoreNotifyForAutoApprovedRequests" checked="checked">
+                        <label for="IgnoreNotifyForAutoApprovedRequests">Do not send notifications for requests that don't require approval</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="IgnoreNotifyForAutoApprovedRequests" name="IgnoreNotifyForAutoApprovedRequests"><label for="IgnoreNotifyForAutoApprovedRequests">Do not send notifications for requests that don't require approval</label>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
                     @if (Model.CollectAnalyticData)
                     {
                         <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData" checked="checked">
