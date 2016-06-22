@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Action.cs
+//    File: DateTimeHelperTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,17 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Helpers.Analytics
+using System.Collections.Generic;
+
+using NUnit.Framework;
+
+namespace PlexRequests.Helpers.Tests
 {
-    public enum Action
+    [TestFixture]
+    public class CookieHelperTests
     {
-        Donate,
-        ClickButton,
-        Delete,
-        Create,
-        Save,
-        Update,
-        Start,
-        View
+        [TestCaseSource(nameof(GetAnalyticsClientId))]
+        public string TestGetAnalyticsClientId(Dictionary<string,string> cookies)
+        {
+            return CookieHelper.GetAnalyticClientId(cookies);
+        }
+
+        private static IEnumerable<TestCaseData> GetAnalyticsClientId
+        {
+            get
+            {
+                yield return new TestCaseData(new Dictionary<string, string>()).Returns(string.Empty);
+                yield return new TestCaseData(new Dictionary<string, string> { { "_ga", "GA1.1.306549087.1464005217" } }).Returns("306549087.1464005217");
+                yield return new TestCaseData(new Dictionary<string,string> { {"_ga", "GA1.1.306549087" } }).Returns(string.Empty);
+            }
+        }
     }
 }

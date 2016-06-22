@@ -47,52 +47,51 @@ namespace PlexRequests.Helpers.Analytics
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public void TrackEvent(Category category, Action action, string label, string username, int? value = null)
+        public void TrackEvent(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
             var cat = category.ToString();
             var act = action.ToString();
-            Track(HitType.@event, username, cat, act, label, value);
+            Track(HitType.@event, username, cat, act, label, clientId, value);
         }
 
-        public async Task TrackEventAsync(Category category, Action action, string label, string username, int? value = null)
+        public async Task TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
             var cat = category.ToString();
             var act = action.ToString();
-            await TrackAsync(HitType.@event, username, cat, act, label, value);
+            await TrackAsync(HitType.@event, username, cat, act, clientId, label, value);
         }
 
-        public void TrackPageview(Category category, Action action, string label, string username, int? value = null)
+        public void TrackPageview(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
             var cat = category.ToString();
             var act = action.ToString();
-            Track(HitType.@pageview, username, cat, act, label, value);
+            Track(HitType.@pageview, username, cat, act, clientId, label, value);
         }
-        public async Task TrackPageviewAsync(Category category, Action action, string label, string username, int? value = null)
+        public async Task TrackPageviewAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
             var cat = category.ToString();
             var act = action.ToString();
-            await TrackAsync(HitType.@pageview, username, cat, act, label, value);
+            await TrackAsync(HitType.@pageview, username, cat, act, clientId, label, value);
         }
 
-        public void TrackException(string message, string username, bool fatal)
+        public void TrackException(string message, string username, string clientId, bool fatal)
         {
             var fatalInt = fatal ? 1 : 0;
-            Track(HitType.exception, message, fatalInt, username);
+            Track(HitType.exception, message, fatalInt, username, clientId);
         }
 
-        public async Task TrackExceptionAsync(string message, string username, bool fatal)
+        public async Task TrackExceptionAsync(string message, string username, string clientId, bool fatal)
         {
             var fatalInt = fatal ? 1 : 0;
-            await TrackAsync(HitType.exception, message, fatalInt, username);
+            await TrackAsync(HitType.exception, message, fatalInt, username, clientId);
         }
 
-        private void Track(HitType type, string username, string category, string action, string label, int? value = null)
+        private void Track(HitType type, string username, string category, string action, string clientId, string label, int? value = null)
         {
             if (string.IsNullOrEmpty(category)) throw new ArgumentNullException(nameof(category));
             if (string.IsNullOrEmpty(action)) throw new ArgumentNullException(nameof(action));
-            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
 
-            var postData = BuildRequestData(type, username, category, action, label, value, null, null);
+            var postData = BuildRequestData(type, username, category, action, clientId, label, value, null, null);
 
             var postDataString = postData
                 .Aggregate("", (data, next) => string.Format($"{data}&{next.Key}={HttpUtility.UrlEncode(next.Value)}"))
@@ -101,26 +100,12 @@ namespace PlexRequests.Helpers.Analytics
             SendRequest(postDataString);
         }
 
-        private async Task TrackAsync(HitType type, string username, string category, string action, string label, int? value = null)
+        private async Task TrackAsync(HitType type, string username, string category, string action, string clientId, string label, int? value = null)
         {
             if (string.IsNullOrEmpty(category)) throw new ArgumentNullException(nameof(category));
             if (string.IsNullOrEmpty(action)) throw new ArgumentNullException(nameof(action));
-            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
 
-            var postData = BuildRequestData(type, username, category, action, label, value, null, null);
-
-            var postDataString = postData
-                .Aggregate("", (data, next) => string.Format($"{data}&{next.Key}={HttpUtility.UrlEncode(next.Value)}"))
-                .TrimEnd('&');
-
-            await SendRequestAsync(postDataString);
-        }
-        private async Task TrackAsync(HitType type, string message, int fatal, string username)
-        {
-            if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
-            if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
-
-            var postData = BuildRequestData(type, username, null, null, null, null, message, fatal);
+            var postData = BuildRequestData(type, username, category, action, clientId, label, value, null, null);
 
             var postDataString = postData
                 .Aggregate("", (data, next) => string.Format($"{data}&{next.Key}={HttpUtility.UrlEncode(next.Value)}"))
@@ -128,13 +113,25 @@ namespace PlexRequests.Helpers.Analytics
 
             await SendRequestAsync(postDataString);
         }
+        private async Task TrackAsync(HitType type, string message, int fatal, string username, string clientId)
+        {
+            if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
 
-        private void Track(HitType type, string message, int fatal, string username)
+            var postData = BuildRequestData(type, username, null, null, null, clientId, null, message, fatal);
+
+            var postDataString = postData
+                .Aggregate("", (data, next) => string.Format($"{data}&{next.Key}={HttpUtility.UrlEncode(next.Value)}"))
+                .TrimEnd('&');
+
+            await SendRequestAsync(postDataString);
+        }
+
+        private void Track(HitType type, string message, int fatal, string username, string clientId)
         {
             if (string.IsNullOrEmpty(message)) throw new ArgumentNullException(nameof(message));
             if (string.IsNullOrEmpty(username)) throw new ArgumentNullException(nameof(username));
 
-            var postData = BuildRequestData(type, username, null, null, null, null, message, fatal);
+            var postData = BuildRequestData(type, username, null, null, null, clientId, null, message, fatal);
 
             var postDataString = postData
                 .Aggregate("", (data, next) => string.Format($"{data}&{next.Key}={HttpUtility.UrlEncode(next.Value)}"))
@@ -196,20 +193,24 @@ namespace PlexRequests.Helpers.Analytics
             }
         }
 
-        private Dictionary<string, string> BuildRequestData(HitType type, string username, string category, string action, string label, int? value, string exceptionDescription, int? fatal)
+        private Dictionary<string, string> BuildRequestData(HitType type, string username, string category, string action, string clientId, string label,  int? value, string exceptionDescription, int? fatal)
         {
             var postData = new Dictionary<string, string>
                            {
                                { "v", "1" },
                                { "tid", TrackingId },
-                               { "t", type.ToString() },
-                               {"cid", Guid.NewGuid().ToString() }
+                               { "t", type.ToString() }
                            };
 
             if (!string.IsNullOrEmpty(username))
             {
                 postData.Add("uid", username);
             }
+
+            postData.Add("cid", !string.IsNullOrEmpty(clientId)
+                ? clientId
+                : Guid.NewGuid().ToString());
+
             if (!string.IsNullOrEmpty(label))
             {
                 postData.Add("el", label);

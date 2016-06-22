@@ -40,6 +40,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 
@@ -53,6 +54,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<LandingPageSettings>> LandingPageMock { get; set; }
         private ConfigurableBootstrapper Bootstrapper { get; set; }
         private Mock<IPlexApi> PlexMock { get; set; }
+        private Mock<IAnalytics> IAnalytics { get; set; }
 
         [SetUp]
         public void Setup()
@@ -64,6 +66,7 @@ namespace PlexRequests.UI.Tests
             PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
             PlexRequestMock.Setup(x => x.GetSettingsAsync()).Returns(Task.FromResult(new PlexRequestSettings()));
             LandingPageMock.Setup(x => x.GetSettings()).Returns(new LandingPageSettings());
+            IAnalytics = new Mock<IAnalytics>();
             Bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.Module<UserLoginModule>();
@@ -71,6 +74,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(AuthMock.Object);
                 with.Dependency(PlexMock.Object);
                 with.Dependency(LandingPageMock.Object);
+                with.Dependency(IAnalytics.Object);
                 with.RootPathProvider<TestRootPathProvider>();
             });
         }

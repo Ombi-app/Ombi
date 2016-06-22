@@ -45,6 +45,7 @@ namespace PlexRequests.UI.Validators
             RuleFor(x => x.BaseUrl).NotEqual("updatechecker").WithMessage("You cannot use 'updatechecker' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("usermanagement").WithMessage("You cannot use 'usermanagement' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("api").WithMessage("You cannot use 'api' as this is reserved by the application.");
+            RuleFor(x => x.BaseUrl).NotEqual("landing").WithMessage("You cannot use 'landing' as this is reserved by the application.");
         }
     }
 }

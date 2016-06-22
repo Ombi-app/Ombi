@@ -47,6 +47,7 @@ using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Tests
@@ -78,6 +79,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<SlackNotificationSettings>> SlackSettings { get; set; }
         private Mock<ISettingsService<LandingPageSettings>> LandingPageSettings { get; set; }
         private Mock<ISlackApi> SlackApi { get; set; }
+        private Mock<IAnalytics> IAnalytics { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -115,6 +117,7 @@ namespace PlexRequests.UI.Tests
             LandingPageSettings = new Mock<ISettingsService<LandingPageSettings>>();
             ScheduledJobsSettingsMock = new Mock<ISettingsService<ScheduledJobsSettings>>();
             RecorderMock = new Mock<IJobRecord>();
+            IAnalytics = new Mock<IAnalytics>();
 
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
@@ -136,6 +139,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverSettings.Object);
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
+                with.Dependency(IAnalytics.Object);
                 with.Dependency(HeadphonesSettings.Object);
                 with.Dependency(Cache.Object);
                 with.Dependency(Log.Object);

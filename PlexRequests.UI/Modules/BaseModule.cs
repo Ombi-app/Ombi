@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Nancy;
@@ -51,7 +52,7 @@ namespace PlexRequests.UI.Modules
             ModulePath = modulePath;
         }
 
-        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService) 
+        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService)
         {
             var settings = settingsService.GetSettings();
             var baseUrl = settings.BaseUrl;
@@ -82,11 +83,20 @@ namespace PlexRequests.UI.Modules
             {
                 if (string.IsNullOrEmpty(_username))
                 {
-                    _username = Session[SessionKeys.UsernameKey].ToString();
+                    try
+                    {
+                        _username = Session[SessionKeys.UsernameKey].ToString();
+                    }
+                    catch (Exception)
+                    {
+                        return string.Empty;
+                    }
                 }
                 return _username;
             }
         }
+
+        protected IDictionary<string, string> Cookies => Request.Cookies;
 
         protected bool IsAdmin
         {
