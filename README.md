@@ -25,7 +25,7 @@ I wanted to write a similar application in .Net!
 * Headphones integration!
 * Ability to run with a reverse proxy!
 
-# Preview ()
+# Preview
 
 ![Preview](http://i.imgur.com/DgwkIsW.gif)
 
