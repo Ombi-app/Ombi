@@ -488,14 +488,15 @@ namespace PlexRequests.UI.Modules
                         Log.Info("Adding movie to database (No approval required)");
                         await RequestService.AddRequestAsync(model);
 
-                        if (ShouldSendNotification(settings))
+                        if (ShouldSendNotification(RequestType.Movie, settings))
                         {
                             var notificationModel = new NotificationModel
                             {
                                 Title = model.Title,
                                 User = Username,
                                 DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest
+                                NotificationType = NotificationType.NewRequest,
+                                RequestType = RequestType.Movie
                             };
                             await NotificationService.Publish(notificationModel);
                         }
@@ -515,14 +516,15 @@ namespace PlexRequests.UI.Modules
                     Log.Info("Adding movie to database (No approval required)");
                     await RequestService.AddRequestAsync(model);
 
-                    if (ShouldSendNotification(settings))
+                    if (ShouldSendNotification(RequestType.Movie, settings))
                     {
                         var notificationModel = new NotificationModel
                         {
                             Title = model.Title,
                             User = Username,
                             DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest
+                            NotificationType = NotificationType.NewRequest,
+                            RequestType = RequestType.Movie
                         };
                         await NotificationService.Publish(notificationModel);
                     }
@@ -536,7 +538,7 @@ namespace PlexRequests.UI.Modules
                 Log.Info("Adding movie to database");
                 var id = await RequestService.AddRequestAsync(model);
 
-                var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+                var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.Movie };
                 await NotificationService.Publish(notificationModel);
 
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
@@ -663,14 +665,15 @@ namespace PlexRequests.UI.Modules
                         Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
                         await RequestService.AddRequestAsync(model);
 
-                        if (ShouldSendNotification(settings))
+                        if (ShouldSendNotification(RequestType.TvShow, settings))
                         {
                             var notify1 = new NotificationModel
                             {
                                 Title = model.Title,
                                 User = Username,
                                 DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest
+                                NotificationType = NotificationType.NewRequest,
+                                RequestType = RequestType.TvShow
                             };
                             await NotificationService.Publish(notify1);
                         }
@@ -691,14 +694,15 @@ namespace PlexRequests.UI.Modules
                         model.Approved = true;
                         Log.Debug("Adding tv to database requests (No approval required & SickRage)");
                         await RequestService.AddRequestAsync(model);
-                        if (ShouldSendNotification(settings))
+                        if (ShouldSendNotification(RequestType.TvShow, settings))
                         {
                             var notify2 = new NotificationModel
                             {
                                 Title = model.Title,
                                 User = Username,
                                 DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest
+                                NotificationType = NotificationType.NewRequest,
+                                RequestType = RequestType.TvShow
                             };
                             await NotificationService.Publish(notify2);
                         }
@@ -713,14 +717,15 @@ namespace PlexRequests.UI.Modules
                     model.Approved = true;
                     Log.Debug("Adding tv to database requests (No approval required) and Sonarr/Sickrage not setup");
                     await RequestService.AddRequestAsync(model);
-                    if (ShouldSendNotification(settings))
+                    if (ShouldSendNotification(RequestType.TvShow, settings))
                     {
                         var notify2 = new NotificationModel
                         {
                             Title = model.Title,
                             User = Username,
                             DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest
+                            NotificationType = NotificationType.NewRequest,
+                            RequestType = RequestType.TvShow
                         };
                         await NotificationService.Publish(notify2);
                     }
@@ -733,15 +738,15 @@ namespace PlexRequests.UI.Modules
 
             await RequestService.AddRequestAsync(model);
 
-            var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest };
+            var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.TvShow };
             await NotificationService.Publish(notificationModel);
 
             return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
         }
 
-        private bool ShouldSendNotification(PlexRequestSettings prSettings)
+        private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
         {
-            var sendNotification = !prSettings.IgnoreNotifyForAutoApprovedRequests;
+            var sendNotification = ShouldAutoApprove(type, prSettings) ? !prSettings.IgnoreNotifyForAutoApprovedRequests : true;
             var claims = Context.CurrentUser?.Claims;
             if (claims != null)
             {
@@ -838,14 +843,15 @@ namespace PlexRequests.UI.Modules
                 model.Approved = true;
                 await RequestService.AddRequestAsync(model);
 
-                if (ShouldSendNotification(settings))
+                if (ShouldSendNotification(RequestType.Album, settings))
                 {
                     var notify2 = new NotificationModel
                     {
                         Title = model.Title,
                         User = Username,
                         DateTime = DateTime.Now,
-                        NotificationType = NotificationType.NewRequest
+                        NotificationType = NotificationType.NewRequest,
+                        RequestType = RequestType.Album
                     };
                     await NotificationService.Publish(notify2);
                 }
@@ -858,14 +864,15 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
-            if (ShouldSendNotification(settings))
+            if (ShouldSendNotification(RequestType.Album, settings))
             {
                 var notify2 = new NotificationModel
                 {
                     Title = model.Title,
                     User = Username,
                     DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest
+                    NotificationType = NotificationType.NewRequest,
+                    RequestType = RequestType.Album
                 };
                 await NotificationService.Publish(notify2);
             }
