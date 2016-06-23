@@ -159,7 +159,7 @@ $('#approveTVShows').click(function (e) {
 
 $('#deleteMovies').click(function (e) {
     e.preventDefault();
-    if (!confirm("Are you sure you want to delete all TV show requests?")) return;
+    if (!confirm("Are you sure you want to delete all Movie requests?")) return;
 
     var buttonId = e.target.id;
     var origHtml = $(this).html();
