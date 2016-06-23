@@ -105,7 +105,7 @@ namespace PlexRequests.Services.Notification
 
         private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
-            var message = $"Plex Requests: The {RequestTypeDisplay.Get(model.RequestType)?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
+            var message = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
             await Push(settings, message);
         }
 

@@ -40,7 +40,10 @@
                     @Html.GetNavbarUrl(Context, "/search", "Search", "search")
                     @Html.GetNavbarUrl(Context, "/requests", "Requests", "plus-circle")
                     @Html.GetNavbarUrl(Context, "/issues", "Issues", "exclamation", "<span id=\"issueCount\"></span>")
-
+                    @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
+                    {
+                        <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> Donate</a></li>
+                    }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
 
@@ -57,8 +60,7 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="@url/admin"><i class="fa fa-cog"></i> Settings</a></li>
                                 <li><a href="@url/changepassword"><i class="fa fa-key"></i> Change password</a></li>
-                                <li class="divider"></li>
-                                <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color:red"></i> Donate!</a></li>
+
                                 <li class="divider"></li>
                                 <li><a href="@url/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                             </ul>
@@ -133,9 +135,9 @@
             dataType: "json",
             success: function (response) {
                 if (response) {
-                    if(response > 0)
+                    if (response > 0)
                         $('#issueCount').addClass("badge");
-                        $('#issueCount').html(+response);
+                    $('#issueCount').html(+response);
                 }
             },
             error: function (e) {
