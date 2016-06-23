@@ -53,10 +53,13 @@ using Nancy.Responses;
 
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 using TMDbLib.Objects.General;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
@@ -69,7 +72,7 @@ namespace PlexRequests.UI.Modules
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue) : base("search", prSettings)
+            IIssueService issue, IAnalytics a) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -95,6 +98,7 @@ namespace PlexRequests.UI.Modules
             UsersToNotifyRepo = u;
             EmailNotificationSettings = email;
             IssueService = issue;
+            Analytics = a;
 
 
             Get["/", true] = async (x, ct) => await RequestLoad();
@@ -140,31 +144,31 @@ namespace PlexRequests.UI.Modules
         private IHeadphonesApi HeadphonesApi { get; }
         private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
         private IIssueService IssueService { get; }
+        private IAnalytics Analytics { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
         {
             var settings = await PrService.GetSettingsAsync();
 
-            Log.Trace("Loading Index");
             return View["Search/Index", settings];
         }
 
         private async Task<Response> UpcomingMovies()
         {
-            Log.Trace("Loading upcoming movies");
+            await Analytics.TrackEventAsync(Category.Search, Action.Movie, "Upcoming", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Upcoming, string.Empty);
         }
 
         private async Task<Response> CurrentlyPlayingMovies()
         {
-            Log.Trace("Loading currently playing movies");
+            await Analytics.TrackEventAsync(Category.Search, Action.Movie, "CurrentlyPlaying", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
         }
 
         private async Task<Response> SearchMovie(string searchTerm)
         {
-            Log.Trace("Searching for Movie {0}", searchTerm);
+            await Analytics.TrackEventAsync(Category.Search, Action.Movie, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
@@ -279,6 +283,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
@@ -366,6 +371,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchMusic(string searchTerm)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiAlbums = new List<Release>();
             await Task.Run(() => MusicBrainzApi.SearchAlbum(searchTerm)).ContinueWith((t) =>
             {
@@ -417,6 +423,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
@@ -559,6 +566,7 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
@@ -762,6 +770,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestAlbum(string releaseId)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var settings = await PrService.GetSettingsAsync();
             var existingRequest = await RequestService.CheckRequestAsync(releaseId);
             Log.Debug("Checking for an existing request");
@@ -919,6 +928,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> NotifyUser(bool notify)
         {
+            await Analytics.TrackEventAsync(Category.Search, Action.Save, "NotifyUser", Username, CookieHelper.GetAnalyticClientId(Cookies), notify ? 1 : 0);
             var authSettings = await Auth.GetSettingsAsync();
             var auth = authSettings.UserAuthentication;
             var emailSettings = await EmailNotificationSettings.GetSettingsAsync();
@@ -984,7 +994,5 @@ namespace PlexRequests.UI.Modules
             var model = seasons.Select(x => x.number);
             return Response.AsJson(model);
         }
-
-
     }
 }
