@@ -39,6 +39,7 @@ namespace PlexRequests.Helpers.Analytics
         Movie,
         TvShow,
         Album,
-        Request
+        Request,
+        Language
     }
 }

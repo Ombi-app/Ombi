@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Threading.Tasks;
 
 using Nancy;
 using Nancy.Extensions;
@@ -32,18 +33,24 @@ using Nancy.Responses;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class CultureModule : BaseModule
     {
-        public CultureModule(ISettingsService<PlexRequestSettings> pr) : base("culture",pr)
+        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a) : base("culture",pr)
         {
-            Get["/"] = x => SetCulture();
+            Analytics = a;
+
+            Get["/", true] = async(x,c) => await SetCulture();
         }
 
-        public RedirectResponse SetCulture()
+        private IAnalytics Analytics { get; }
+
+        public async Task<RedirectResponse> SetCulture()
         {
             var culture = (string)Request.Query["l"];
             var returnUrl = (string)Request.Query["u"];
@@ -60,10 +67,11 @@ namespace PlexRequests.UI.Modules
             {
                 Cookies.Add(CultureCookieName, culture);
             }
-            var cookie = Cookies["_culture"];
+            var cookie = Cookies[CultureCookieName];
             var response = Context.GetRedirect(returnUrl);
 
             response.WithCookie(CultureCookieName, cookie ?? culture, DateTime.Now.AddYears(1));
+            await Analytics.TrackEventAsync(Category.Navbar, PlexRequests.Helpers.Analytics.Action.Language, culture, Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             return response;
         }
