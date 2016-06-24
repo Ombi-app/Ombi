@@ -201,4 +201,7 @@
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Olandese</value>
   </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Cerca!</value>
+  </data>
 </root>

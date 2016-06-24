@@ -201,4 +201,94 @@
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Holandês</value>
   </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Filmes</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>Todas as Series de TV</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Álbuns</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Quer assistir algo que não está atualmente em Plex ?! Sem problemas! Basta procurá-lo abaixo e solicitá-lo !!</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Buscar</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Sugestões</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Em breve!</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>somente nos cinemas</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Envie-me uma notificação quando os itens I solicitados foram adicionados!</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Salvar</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>Disponível!</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>SOLICITADOS</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>SOLICITAÇÃO</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Todas as temporadas</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Primeira Temporada!</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Últimas estação!</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Selecione</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>REGISTRANDO A RETIRADA (BAIXA)</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Áudio errado!</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Sem legendas!</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Conteúdo errado!</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Problemas de reprodução!</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Outra!</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Contagem pista!</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>País</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Temporadas</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Adicionar um problema!</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Salvar alterações</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Temporada</value>
+  </data>
 </root>

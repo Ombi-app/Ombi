@@ -201,4 +201,94 @@
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Hollandsk</value>
   </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>TV-shows</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Ønsker at se noget, der ikke i øjeblikket på Plex ?! Intet problem! Bare søge efter det nedenfor og anmode den !</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Søg</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Forslag</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Kommer snart</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>Teatre</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Send mig en meddelelse, når emner, jeg har anmodet er blevet tilføjet</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Gem</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>Forespørgsel sendt</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Forespørgsel</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Alle sæsoner</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Første sæson</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Sidste sæson</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Vælg</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Rapport Issue</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Forkert lyd</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Undertekster</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Forkert indhold</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Playback Issues</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Andet</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Track Count!</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Årstid</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Luk</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Tilføj et problem!</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Gem ændringer</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Sæson</value>
+  </data>
 </root>

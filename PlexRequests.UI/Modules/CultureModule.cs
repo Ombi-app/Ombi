@@ -38,7 +38,6 @@ namespace PlexRequests.UI.Modules
 {
     public class CultureModule : BaseModule
     {
-        private const string CookieName = "_culture";
         public CultureModule(ISettingsService<PlexRequestSettings> pr) : base("culture",pr)
         {
             Get["/"] = x => SetCulture();
@@ -53,18 +52,18 @@ namespace PlexRequests.UI.Modules
             culture = CultureHelper.GetImplementedCulture(culture);
 
             var outCookie = string.Empty;
-            if (Cookies.TryGetValue(CookieName, out outCookie))
+            if (Cookies.TryGetValue(CultureCookieName, out outCookie))
             {
-                Cookies[CookieName] = culture;
+                Cookies[CultureCookieName] = culture;
             }
             else
             {
-                Cookies.Add(CookieName, culture);
+                Cookies.Add(CultureCookieName, culture);
             }
             var cookie = Cookies["_culture"];
             var response = Context.GetRedirect(returnUrl);
 
-            response.WithCookie(CookieName, cookie ?? culture, DateTime.Now.AddYears(1));
+            response.WithCookie(CultureCookieName, cookie ?? culture, DateTime.Now.AddYears(1));
 
             return response;
         }

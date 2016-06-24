@@ -201,4 +201,94 @@
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Holandés</value>
   </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Películas</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>Serie de TV</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Álbumes</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>¿Quieres ver algo que no se encuentra actualmente en Plex ?! ¡No hay problema! Sólo la búsqueda de abajo y que solicitarlo !!</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>¡Buscar!</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Sugerencias</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Muy Pronto!</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>¡En los cines!</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Envíame una notificación cuando se han añadido elementos que he solicitado!</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Ahorra!</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>disponible</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>¡Pedido!</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Solicitud</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Todas las temporadas</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Primera Temporada!</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Última estación!</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Seleccionar</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Informe del problema!</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Audio mal!</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Subtitles</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Contenido incorrecto!</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Problemas de reproducción!</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Otro</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>El número de pistas!</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>País</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Temporadas</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Cerrar</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Añadir un problema!</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Guardar cambios</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Temporada</value>
+  </data>
 </root>

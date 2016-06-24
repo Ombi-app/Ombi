@@ -61,6 +61,87 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Common_Close {
+            get {
+                return ResourceManager.GetString("Common_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Common_Save {
+            get {
+                return ResourceManager.GetString("Common_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string Issues_Modal_Save {
+            get {
+                return ResourceManager.GetString("Issues_Modal_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add an issue.
+        /// </summary>
+        public static string Issues_Modal_Title {
+            get {
+                return ResourceManager.GetString("Issues_Modal_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No Subtitles.
+        /// </summary>
+        public static string Issues_NoSubs {
+            get {
+                return ResourceManager.GetString("Issues_NoSubs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        public static string Issues_Other {
+            get {
+                return ResourceManager.GetString("Issues_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Playback Issues.
+        /// </summary>
+        public static string Issues_Playback {
+            get {
+                return ResourceManager.GetString("Issues_Playback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Audio.
+        /// </summary>
+        public static string Issues_WrongAudio {
+            get {
+                return ResourceManager.GetString("Issues_WrongAudio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wrong Content.
+        /// </summary>
+        public static string Issues_WrongContent {
+            get {
+                return ResourceManager.GetString("Issues_WrongContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Something went wrong!.
         /// </summary>
         public static string Javascript_SomethingWentWrong {
@@ -246,6 +327,195 @@ namespace PlexRequests.UI.Resources {
         public static string Layout_UpdateAvailablePart2 {
             get {
                 return ResourceManager.GetString("Layout_UpdateAvailablePart2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Albums.
+        /// </summary>
+        public static string Search_Albums {
+            get {
+                return ResourceManager.GetString("Search_Albums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All Seasons.
+        /// </summary>
+        public static string Search_AllSeasons {
+            get {
+                return ResourceManager.GetString("Search_AllSeasons", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        public static string Search_Available {
+            get {
+                return ResourceManager.GetString("Search_Available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coming Soon.
+        /// </summary>
+        public static string Search_ComingSoon {
+            get {
+                return ResourceManager.GetString("Search_ComingSoon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country.
+        /// </summary>
+        public static string Search_Country {
+            get {
+                return ResourceManager.GetString("Search_Country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Season.
+        /// </summary>
+        public static string Search_FirstSeason {
+            get {
+                return ResourceManager.GetString("Search_FirstSeason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In Theaters.
+        /// </summary>
+        public static string Search_InTheaters {
+            get {
+                return ResourceManager.GetString("Search_InTheaters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Season.
+        /// </summary>
+        public static string Search_LatestSeason {
+            get {
+                return ResourceManager.GetString("Search_LatestSeason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seasons.
+        /// </summary>
+        public static string Search_Modal_SeasonsTitle {
+            get {
+                return ResourceManager.GetString("Search_Modal_SeasonsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movies.
+        /// </summary>
+        public static string Search_Movies {
+            get {
+                return ResourceManager.GetString("Search_Movies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!.
+        /// </summary>
+        public static string Search_Paragraph {
+            get {
+                return ResourceManager.GetString("Search_Paragraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Report Issue.
+        /// </summary>
+        public static string Search_ReportIssue {
+            get {
+                return ResourceManager.GetString("Search_ReportIssue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request.
+        /// </summary>
+        public static string Search_Request {
+            get {
+                return ResourceManager.GetString("Search_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested.
+        /// </summary>
+        public static string Search_Requested {
+            get {
+                return ResourceManager.GetString("Search_Requested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Season.
+        /// </summary>
+        public static string Search_Season {
+            get {
+                return ResourceManager.GetString("Search_Season", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select .
+        /// </summary>
+        public static string Search_SelectSeason {
+            get {
+                return ResourceManager.GetString("Search_SelectSeason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send me a notification when items I have requested have been added.
+        /// </summary>
+        public static string Search_SendNotificationText {
+            get {
+                return ResourceManager.GetString("Search_SendNotificationText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suggestions.
+        /// </summary>
+        public static string Search_Suggestions {
+            get {
+                return ResourceManager.GetString("Search_Suggestions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Search_Title {
+            get {
+                return ResourceManager.GetString("Search_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Track Count.
+        /// </summary>
+        public static string Search_TrackCount {
+            get {
+                return ResourceManager.GetString("Search_TrackCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TV Shows.
+        /// </summary>
+        public static string Search_TvShows {
+            get {
+                return ResourceManager.GetString("Search_TvShows", resourceCulture);
             }
         }
         

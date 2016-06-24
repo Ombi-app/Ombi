@@ -201,4 +201,43 @@
   <data name="Layout_Dutch" xml:space="preserve">
     <value>dutch</value>
   </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Fråga</value>
+  </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Filmer</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>Tv program!</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Vill titta på något som inte är närvarande på Plex ?! Inga problem! Bara söka efter den nedan och begär det !!</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Sök!</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Förslag</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Kommer snart!</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>Teater</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Skicka mig ett meddelande när objekt jag har begärt har lagts till!</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>Tillgänglig</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>Begärd</value>
+  </data>
 </root>
