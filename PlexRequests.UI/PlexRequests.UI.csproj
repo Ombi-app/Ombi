@@ -582,6 +582,7 @@
     <EmbeddedResource Include="Resources\UI.es.resx" />
     <EmbeddedResource Include="Resources\UI.fr.resx" />
     <EmbeddedResource Include="Resources\UI.it.resx" />
+    <EmbeddedResource Include="Resources\UI.nl.resx" />
     <EmbeddedResource Include="Resources\UI.pt.resx" />
     <EmbeddedResource Include="Resources\UI.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>

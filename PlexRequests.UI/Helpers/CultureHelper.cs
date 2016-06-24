@@ -33,7 +33,7 @@ namespace PlexRequests.UI.Helpers
 {
     public class CultureHelper
     {
-        private static readonly List<string> ValidCultures = new List<string> { "en-US", "de-DE", "fr-FR", "es-ES", "de", "en", "fr", "es","da","sv","it" };
+        private static readonly List<string> ValidCultures = new List<string> { "en-US", "de-DE", "fr-FR", "es-ES", "de", "en", "fr", "es","da","sv","it","nl" };
 
         private static readonly List<string> ImplimentedCultures = new List<string> {
         "en-US",
@@ -43,7 +43,8 @@ namespace PlexRequests.UI.Helpers
         "es",
         "da",
         "sv",
-        "it"
+        "it",
+        "nl"
     };
 
         /// <summary>

@@ -179,4 +179,7 @@
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
     <value>Here!</value>
   </data>
+  <data name="Layout_Dutch" xml:space="preserve">
+    <value>Dutch</value>
+  </data>
 </root>

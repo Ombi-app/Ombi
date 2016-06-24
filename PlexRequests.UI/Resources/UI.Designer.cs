@@ -115,6 +115,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dutch.
+        /// </summary>
+        public static string Layout_Dutch {
+            get {
+                return ResourceManager.GetString("Layout_Dutch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to English.
         /// </summary>
         public static string Layout_English {
