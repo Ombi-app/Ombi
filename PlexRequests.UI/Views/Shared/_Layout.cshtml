@@ -2,6 +2,7 @@
 @using Nancy.Session
 @using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
+@using PlexRequests.UI.Resources
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
 @{
     var baseUrl = Html.GetBaseUrl();
@@ -14,7 +15,7 @@
 <html>
 <div hidden="hidden" id="baseUrl">@baseUrl.ToHtmlString()</div>
 <head>
-    <title>Plex Requests</title>
+    <title>@UI.Layout_Title</title>
     <!-- Styles -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @Html.LoadAnalytics()
@@ -32,17 +33,17 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="@url/search">Plex Requests</a>
+                <a class="navbar-brand" href="@url/search">@UI.Layout_Title</a>
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    @Html.GetNavbarUrl(Context, "/search", "Search", "search")
-                    @Html.GetNavbarUrl(Context, "/requests", "Requests", "plus-circle")
-                    @Html.GetNavbarUrl(Context, "/issues", "Issues", "exclamation", "<span id=\"issueCount\"></span>")
+                    @Html.GetNavbarUrl(Context, "/search", UI.Layout_Search, "search")
+                    @Html.GetNavbarUrl(Context, "/requests", UI.Layout_Requests, "plus-circle")
+                    @Html.GetNavbarUrl(Context, "/issues", UI.Layout_Issues, "exclamation", "<span id=\"issueCount\"></span>")
                     @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
                     {
-                        <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> Donate</a></li>
+                        <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -56,20 +57,33 @@
                     else
                     {
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Admin <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Admin <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="@url/admin"><i class="fa fa-cog"></i> Settings</a></li>
-                                <li><a href="@url/changepassword"><i class="fa fa-key"></i> Change password</a></li>
+                                <li><a href="@url/admin"><i class="fa fa-cog"></i> @UI.Layout_Settings</a></li>
+                                <li><a href="@url/changepassword"><i class="fa fa-key"></i> @UI.Layout_ChangePassword</a></li>
 
                                 <li class="divider"></li>
-                                <li><a href="@url/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                <li><a href="@url/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
                             </ul>
                         </li>
                     }
                     @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
                     {
-                        <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
                     }
+                    <li class="dropdown">
+                    
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
+                            <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
+                            <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
+                            <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
+                            <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
+                            <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
+                            <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
+                        </ul>
+                    <li />
                 </ul>
             </div>
         </div>
@@ -101,7 +115,7 @@
             success: function (response) {
                 if (response.updateAvailable) {
                     var status = createBaseUrl(urlBase, '/admin/status');
-                    $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> There is a new update available! Click <a style='color: white' href='" + status + "'>Here!</a>");
+                    $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> @UI.Layout_UpdateAvailablePart1 <a style='color: white' href='" + status + "'>@UI.Layout_UpdateAvailablePart2</a>");
                     $('#updateAvailable').removeAttr("hidden");
                     $('body').addClass('update-available');
                 }

@@ -27,12 +27,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 using Nancy;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -40,9 +42,11 @@ namespace PlexRequests.UI.Modules
     public abstract class BaseModule : NancyModule
     {
         protected string BaseUrl { get; set; }
+        
 
         protected BaseModule(ISettingsService<PlexRequestSettings> settingsService)
         {
+
             var settings = settingsService.GetSettings();
             var baseUrl = settings.BaseUrl;
             BaseUrl = baseUrl;
@@ -50,10 +54,13 @@ namespace PlexRequests.UI.Modules
             var modulePath = string.IsNullOrEmpty(baseUrl) ? string.Empty : baseUrl;
 
             ModulePath = modulePath;
+
+            Before += (ctx) => SetCookie();
         }
 
         protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService)
         {
+
             var settings = settingsService.GetSettings();
             var baseUrl = settings.BaseUrl;
             BaseUrl = baseUrl;
@@ -61,6 +68,8 @@ namespace PlexRequests.UI.Modules
             var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
 
             ModulePath = settingModulePath;
+
+            Before += (ctx) => SetCookie();
         }
 
         private int _dateTimeOffset = -1;
@@ -96,7 +105,7 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        protected IDictionary<string, string> Cookies => Request.Cookies;
+        protected IDictionary<string, string> Cookies => Request?.Cookies;
 
         protected bool IsAdmin
         {
@@ -109,6 +118,41 @@ namespace PlexRequests.UI.Modules
                 var claims = Context.CurrentUser.Claims.ToList();
                 return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
             }
+        }
+        protected string Culture { get; set; }
+        protected const string CultureCookieName = "_culture";
+        protected Response SetCookie()
+        {
+            try
+            {
+                string cultureName;
+
+                // Attempt to read the culture cookie from Request
+                var outCookie = string.Empty;
+                if (Cookies.TryGetValue(CultureCookieName, out outCookie))
+                {
+                    cultureName = outCookie;
+                }
+                else
+                {
+                    cultureName = Request.Headers?.AcceptLanguage?.FirstOrDefault()?.Item1;
+                }
+
+                // Validate culture name
+                cultureName = CultureHelper.GetImplementedCulture(cultureName); // This is safe
+
+
+                // Modify current thread's cultures            
+                Thread.CurrentThread.CurrentCulture = new System.Globalization.CultureInfo(cultureName);
+                Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+
+                Culture = Thread.CurrentThread.CurrentCulture.Name;
+            }
+            catch (Exception)
+            {
+                // Couldn't Set the culture
+            }
+            return null;
         }
 
     }

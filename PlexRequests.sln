@@ -37,8 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Updater", "Ple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers.Tests", "PlexRequests.Helpers.Tests\PlexRequests.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Resources", "PlexRequests.Resources\PlexRequests.Resources.csproj", "{9C266462-BE82-461A-87A2-9EDCFB95D732}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -97,10 +95,6 @@ Global
 		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E6395D3-B074-49E8-898D-0EB99E507E0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C266462-BE82-461A-87A2-9EDCFB95D732}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C266462-BE82-461A-87A2-9EDCFB95D732}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C266462-BE82-461A-87A2-9EDCFB95D732}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C266462-BE82-461A-87A2-9EDCFB95D732}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

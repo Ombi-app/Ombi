@@ -118,30 +118,84 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UserLogin_Title" xml:space="preserve">
-    <value>INICIAR SESIÓN</value>
+    <value>Logga in</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>¿Quieres ver una película o programa de televisión, pero no es actualmente en Plex? Ingresa abajo con su nombre de usuario y contraseña Plex.tv !!</value>
+    <value>Vill du titta på en film eller TV-show, men det är inte närvarande på Plex? Logga in nedan med Plex.tv användarnamn och lösenord !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Sus datos de acceso sólo se utilizan para autenticar su cuenta Plex.!</value>
+    <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.!</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv nombre de usuario!</value>
+    <value>Plex.tv användarnamn!</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
-    <value>Username</value>
+    <value>Användarnamn</value>
   </data>
   <data name="UserLogin_Password" xml:space="preserve">
-    <value>Contraseña</value>
+    <value>Lösenord</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Iniciar sesión</value>
+    <value>Logga in!</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Algo salió mal.</value>
+    <value>Något gick fel</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>CRÍTICOS</value>
+    <value>Lyckades</value>
+  </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Plex Requests</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Sök!</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Begäran</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>Frågor!</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>Donera</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Byt lösenord</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>Det finns en ny uppdatering tillgänglig! Klick!</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Spanska</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>Tyska</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Danska</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portugisiska</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italienska</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>Här.”</value>
   </data>
 </root>

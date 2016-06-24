@@ -118,30 +118,84 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UserLogin_Title" xml:space="preserve">
-    <value>Login</value>
+    <value>Se connecter</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vuoi guardare un film o tv ma non è attualmente in Plex? Effettua il login con il tuo username e la password Plex.tv !!</value>
+    <value>Vous voulez regarder un film ou la télévision, mais il est pas actuellement sur Plex? Connectez-vous ci-dessous avec votre nom d'utilisateur et mot de passe Plex.tv!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>I dati di accesso vengono utilizzati solo per autenticare l&amp;#39;account Plex.!</value>
+    <value>Vos informations de connexion sont uniquement utilisées pour authentifier votre compte Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Nome utente!</value>
+    <value>Plex.tv Nom d'utilisateur</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
-    <value>Nome utente</value>
+    <value>Nom d’utilisateur</value>
   </data>
   <data name="UserLogin_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Mot de passe</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Accedi!</value>
+    <value>Se connecter!</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Errore</value>
+    <value>Quelque-chose s'est mal passé!</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>Successo</value>
+    <value>Succès</value>
+  </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Plex Requests</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Chercher</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Requêtes</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>Sortie</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>FAIRE UN DON</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>d'Administration</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Paramètres</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Modifier le mot de passe</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>Déconnexion</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>Il y a une nouvelle mise à jour disponible! Cliquez!</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>Anglais</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Espagnol</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>Allemand</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Danois</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portugais</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Suédois (homonymie)</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italien</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>ici</value>
   </data>
 </root>

@@ -125,4 +125,58 @@
   <data name="Javascript_Success" xml:space="preserve">
     <value>Success!</value>
   </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Plex Requests</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>Issues</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>There is a new update available! Click</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Spanish</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>German</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Danish</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portuguese</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italian</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>Here!</value>
+  </data>
 </root>

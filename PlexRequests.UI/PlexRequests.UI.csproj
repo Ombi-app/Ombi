@@ -201,6 +201,11 @@
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
+    <Compile Include="Resources\UI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UI.resx</DependentUpon>
+    </Compile>
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
     <Compile Include="Validators\SlackSettingsValidator.cs" />
@@ -571,7 +576,19 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\UI.da.resx" />
+    <EmbeddedResource Include="Resources\UI.de.resx" />
+    <EmbeddedResource Include="Resources\UI.es.resx" />
+    <EmbeddedResource Include="Resources\UI.fr.resx" />
+    <EmbeddedResource Include="Resources\UI.it.resx" />
+    <EmbeddedResource Include="Resources\UI.pt.resx" />
+    <EmbeddedResource Include="Resources\UI.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>UI.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\UI.sv.resx" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
       <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
@@ -592,10 +609,6 @@
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>PlexRequests.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Resources\PlexRequests.Resources.csproj">
-      <Project>{9c266462-be82-461a-87a2-9edcfb95d732}</Project>
-      <Name>PlexRequests.Resources</Name>
     </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Services\PlexRequests.Services.csproj">
       <Project>{566EFA49-68F8-4716-9693-A6B3F2624DEA}</Project>

@@ -41,18 +41,27 @@ namespace PlexRequests.UI.Modules
         private const string CookieName = "_culture";
         public CultureModule(ISettingsService<PlexRequestSettings> pr) : base("culture",pr)
         {
-            Get["/culture"] = x => SetCulture();
+            Get["/"] = x => SetCulture();
         }
 
         public RedirectResponse SetCulture()
         {
-            var culture = (string)Request.Query["culture"];
-            var returnUrl = (string)Request.Query["returnUrl"];
+            var culture = (string)Request.Query["l"];
+            var returnUrl = (string)Request.Query["u"];
 
             // Validate
             culture = CultureHelper.GetImplementedCulture(culture);
 
-            var cookie = Request.Cookies["_culture"];
+            var outCookie = string.Empty;
+            if (Cookies.TryGetValue(CookieName, out outCookie))
+            {
+                Cookies[CookieName] = culture;
+            }
+            else
+            {
+                Cookies.Add(CookieName, culture);
+            }
+            var cookie = Cookies["_culture"];
             var response = Context.GetRedirect(returnUrl);
 
             response.WithCookie(CookieName, cookie ?? culture, DateTime.Now.AddYears(1));

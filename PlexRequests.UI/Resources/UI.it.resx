@@ -121,27 +121,81 @@
     <value>Login</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Quer assistir a um filme ou programa de TV, mas não está atualmente em Plex? Entre abaixo com seu nome de usuário e senha Plex.tv !!</value>
+    <value>Vuoi guardare un film o tv ma non è attualmente in Plex? Effettua il login con il tuo username e la password Plex.tv !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Seus dados de login são apenas usados ​​para autenticar sua conta Plex.!</value>
+    <value>I dati di accesso vengono utilizzati solo per autenticare l&amp;#39;account Plex.!</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv usuário!</value>
+    <value>Plex.tv Nome utente!</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
-    <value>Nome de usuário</value>
+    <value>Nome utente</value>
   </data>
   <data name="UserLogin_Password" xml:space="preserve">
-    <value>Senha</value>
+    <value>Password</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Assinar em!</value>
+    <value>Accedi!</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Alguma coisa saiu errada.</value>
+    <value>Errore</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>Sucesso</value>
+    <value>Successo</value>
+  </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Plex Requests</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>C'è un nuovo aggiornamento disponibile! Clic!</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Cerca!</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>problemi quantificati</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>Donazione</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Impostazioni</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Modifica password</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>LOGOUT</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>Inglese!</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Spagnolo</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>Tedesco</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Danese</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portoghese</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Svedese</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italiano</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>Here</value>
   </data>
 </root>

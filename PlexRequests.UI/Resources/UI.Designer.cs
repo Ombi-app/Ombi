@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlexRequests.Resources {
+namespace PlexRequests.UI.Resources {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PlexRequests.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlexRequests.Resources.UI", typeof(UI).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlexRequests.UI.Resources.UI", typeof(UI).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -75,6 +75,168 @@ namespace PlexRequests.Resources {
         public static string Javascript_Success {
             get {
                 return ResourceManager.GetString("Javascript_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        public static string Layout_Admin {
+            get {
+                return ResourceManager.GetString("Layout_Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change Password.
+        /// </summary>
+        public static string Layout_ChangePassword {
+            get {
+                return ResourceManager.GetString("Layout_ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Danish.
+        /// </summary>
+        public static string Layout_Danish {
+            get {
+                return ResourceManager.GetString("Layout_Danish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Donate.
+        /// </summary>
+        public static string Layout_Donate {
+            get {
+                return ResourceManager.GetString("Layout_Donate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to English.
+        /// </summary>
+        public static string Layout_English {
+            get {
+                return ResourceManager.GetString("Layout_English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to German.
+        /// </summary>
+        public static string Layout_German {
+            get {
+                return ResourceManager.GetString("Layout_German", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Issues.
+        /// </summary>
+        public static string Layout_Issues {
+            get {
+                return ResourceManager.GetString("Layout_Issues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Italian.
+        /// </summary>
+        public static string Layout_Italian {
+            get {
+                return ResourceManager.GetString("Layout_Italian", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        public static string Layout_Logout {
+            get {
+                return ResourceManager.GetString("Layout_Logout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Portuguese.
+        /// </summary>
+        public static string Layout_Portuguese {
+            get {
+                return ResourceManager.GetString("Layout_Portuguese", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requests.
+        /// </summary>
+        public static string Layout_Requests {
+            get {
+                return ResourceManager.GetString("Layout_Requests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string Layout_Search {
+            get {
+                return ResourceManager.GetString("Layout_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string Layout_Settings {
+            get {
+                return ResourceManager.GetString("Layout_Settings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spanish.
+        /// </summary>
+        public static string Layout_Spanish {
+            get {
+                return ResourceManager.GetString("Layout_Spanish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Swedish.
+        /// </summary>
+        public static string Layout_Swedish {
+            get {
+                return ResourceManager.GetString("Layout_Swedish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plex Requests.
+        /// </summary>
+        public static string Layout_Title {
+            get {
+                return ResourceManager.GetString("Layout_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is a new update available! Click.
+        /// </summary>
+        public static string Layout_UpdateAvailablePart1 {
+            get {
+                return ResourceManager.GetString("Layout_UpdateAvailablePart1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Here!.
+        /// </summary>
+        public static string Layout_UpdateAvailablePart2 {
+            get {
+                return ResourceManager.GetString("Layout_UpdateAvailablePart2", resourceCulture);
             }
         }
         
