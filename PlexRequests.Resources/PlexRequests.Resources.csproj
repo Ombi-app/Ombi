@@ -48,10 +48,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="UI.da.resx" />
+    <EmbeddedResource Include="UI.de.resx" />
+    <EmbeddedResource Include="UI.es.resx" />
+    <EmbeddedResource Include="UI.fr.resx" />
+    <EmbeddedResource Include="UI.it.resx" />
+    <EmbeddedResource Include="UI.pt.resx" />
     <EmbeddedResource Include="UI.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UI.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="UI.sv.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
