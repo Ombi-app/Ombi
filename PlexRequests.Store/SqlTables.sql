@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Audit
     Username							varchar(100) NOT NULL,
     ChangeType							varchar(100) NOT NULL,
     OldValue							varchar(100),
-     NewValue							varchar(100)
+    NewValue							varchar(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS Audit_Id ON Audit (Id);
 
@@ -82,3 +82,13 @@ CREATE TABLE IF NOT EXISTS IssueBlobs
     Content								BLOB NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS IssueBlobs_Id ON IssueBlobs (Id);
+
+CREATE TABLE IF NOT EXISTS RequestLimit
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Username							varchar(100) NOT NULL,
+	FirstRequestDate					varchar(100) NOT NULL,
+	RequestCount						INTEGER NOT NULL,
+	RequestType							INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS RequestLimit_Id ON RequestLimit (Id);

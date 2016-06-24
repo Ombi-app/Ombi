@@ -34,5 +34,6 @@ namespace PlexRequests.Services.Jobs
         public const string SrCacher = "SickRage Cacher";
         public const string PlexChecker = "Plex Availability Cacher";
         public const string StoreCleanup = "Database Cleanup";
+        public const string RequestLimitReset = "Request Limit Reset";
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ScheduledJobsSettings.cs
+//    File: UsersToNotify.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
+using System;
+
+using Dapper.Contrib.Extensions;
+
+namespace PlexRequests.Store.Models
 {
-    public class ScheduledJobsSettings : Settings
+    [Table("RequestLimit")]
+    public class RequestLimit : Entity
     {
-        public ScheduledJobsSettings()
-        {
-            PlexAvailabilityChecker = 10;
-            SickRageCacher = 10;
-            SonarrCacher = 10;
-            CouchPotatoCacher = 10;
-            StoreBackup = 24;
-            StoreCleanup = 24;
-            UserRequestLimitResetter = 12;
-        }
-        public int PlexAvailabilityChecker { get; set; }
-        public int SickRageCacher { get; set; }
-        public int SonarrCacher { get; set; }
-        public int CouchPotatoCacher { get; set; }
-        public int StoreBackup { get; set; }
-        public int StoreCleanup { get; set; }
-        public int UserRequestLimitResetter { get; set; }
+        public string Username { get; set; }
+        public DateTime FirstRequestDate { get; set; }
+        public int RequestCount { get; set; }
+        public RequestType RequestType { get; set; }
     }
 }

@@ -72,7 +72,7 @@ namespace PlexRequests.UI.Modules
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a) : base("search", prSettings)
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -99,6 +99,7 @@ namespace PlexRequests.UI.Modules
             EmailNotificationSettings = email;
             IssueService = issue;
             Analytics = a;
+            RequestLimitRepo = rl;
 
 
             Get["/", true] = async (x, ct) => await RequestLoad();
@@ -145,6 +146,7 @@ namespace PlexRequests.UI.Modules
         private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
         private IIssueService IssueService { get; }
         private IAnalytics Analytics { get; }
+        private IRepository<RequestLimit> RequestLimitRepo { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
@@ -423,12 +425,16 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.Movie))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for Movies! Please contact your admin." });
+            }
+
             await Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
-
-            var settings = await PrService.GetSettingsAsync();
 
             // check if the movie has already been requested
             Log.Info("Requesting movie with id {0}", movieId);
@@ -491,64 +497,23 @@ namespace PlexRequests.UI.Modules
                     Log.Debug("Adding movie to CP result {0}", result);
                     if (result)
                     {
-                        model.Approved = true;
-                        Log.Info("Adding movie to database (No approval required)");
-                        await RequestService.AddRequestAsync(model);
-
-                        if (ShouldSendNotification(RequestType.Movie, settings))
-                        {
-                            var notificationModel = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.Movie
-                            };
-                            await NotificationService.Publish(notificationModel);
-                        }
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullMovieName} was successfully added!");
                     }
-                    return
-                        Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message =
-                                "Something went wrong adding the movie to CouchPotato! Please check your settings."
-                        });
-                }
-                else
-                {
-                    model.Approved = true;
-                    Log.Info("Adding movie to database (No approval required)");
-                    await RequestService.AddRequestAsync(model);
 
-                    if (ShouldSendNotification(RequestType.Movie, settings))
+                    return Response.AsJson(new JsonResponseModel
                     {
-                        var notificationModel = new NotificationModel
-                        {
-                            Title = model.Title,
-                            User = Username,
-                            DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest,
-                            RequestType = RequestType.Movie
-                        };
-                        await NotificationService.Publish(notificationModel);
-                    }
-
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                        Result = false,
+                        Message =
+                                "Something went wrong adding the movie to CouchPotato! Please check your settings."
+                    });
                 }
+
+                return await AddRequest(model, settings, $"{fullMovieName} was successfully added!");
             }
 
             try
             {
-                Log.Info("Adding movie to database");
-                var id = await RequestService.AddRequestAsync(model);
-
-                var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.Movie };
-                await NotificationService.Publish(notificationModel);
-
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                return await AddRequest(model, settings, $"{fullMovieName} was successfully added!");
             }
             catch (Exception e)
             {
@@ -566,6 +531,11 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.TvShow))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for TV Shows! Please contact your admin." });
+            }
             await Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var tvApi = new TvMazeApi();
 
@@ -575,7 +545,6 @@ namespace PlexRequests.UI.Modules
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
 
-            var settings = await PrService.GetSettingsAsync();
 
             // check if the show has already been requested
             Log.Info("Requesting tv show with id {0}", showId);
@@ -669,28 +638,10 @@ namespace PlexRequests.UI.Modules
                     var result = sender.SendToSonarr(sonarrSettings, model);
                     if (!string.IsNullOrEmpty(result?.title))
                     {
-                        model.Approved = true;
-                        Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
-                        await RequestService.AddRequestAsync(model);
-
-                        if (ShouldSendNotification(RequestType.TvShow, settings))
-                        {
-                            var notify1 = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.TvShow
-                            };
-                            await NotificationService.Publish(notify1);
-                        }
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullShowName} was successfully added!");
                     }
 
-
                     return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages));
-
                 }
 
                 var srSettings = SickRageService.GetSettings();
@@ -699,57 +650,20 @@ namespace PlexRequests.UI.Modules
                     var result = sender.SendToSickRage(srSettings, model);
                     if (result?.result == "success")
                     {
-                        model.Approved = true;
-                        Log.Debug("Adding tv to database requests (No approval required & SickRage)");
-                        await RequestService.AddRequestAsync(model);
-                        if (ShouldSendNotification(RequestType.TvShow, settings))
-                        {
-                            var notify2 = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.TvShow
-                            };
-                            await NotificationService.Publish(notify2);
-                        }
-
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullShowName} was successfully added!");
                     }
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
                 }
 
                 if (!srSettings.Enabled && !sonarrSettings.Enabled)
                 {
-                    model.Approved = true;
-                    Log.Debug("Adding tv to database requests (No approval required) and Sonarr/Sickrage not setup");
-                    await RequestService.AddRequestAsync(model);
-                    if (ShouldSendNotification(RequestType.TvShow, settings))
-                    {
-                        var notify2 = new NotificationModel
-                        {
-                            Title = model.Title,
-                            User = Username,
-                            DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest,
-                            RequestType = RequestType.TvShow
-                        };
-                        await NotificationService.Publish(notify2);
-                    }
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                    return await AddRequest(model, settings, $"{fullShowName} was successfully added!");
                 }
 
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "The request of TV Shows is not correctly set up. Please contact your admin." });
 
             }
-
-            await RequestService.AddRequestAsync(model);
-
-            var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.TvShow };
-            await NotificationService.Publish(notificationModel);
-
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+            return await AddRequest(model, settings, $"{fullShowName} was successfully added!");
         }
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
@@ -770,8 +684,12 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestAlbum(string releaseId)
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.Album))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for Albums! Please contact your admin." });
+            }
+            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var existingRequest = await RequestService.CheckRequestAsync(releaseId);
             Log.Debug("Checking for an existing request");
 
@@ -849,48 +767,10 @@ namespace PlexRequests.UI.Modules
 
                 var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
                 await sender.AddAlbum(model);
-                model.Approved = true;
-                await RequestService.AddRequestAsync(model);
-
-                if (ShouldSendNotification(RequestType.Album, settings))
-                {
-                    var notify2 = new NotificationModel
-                    {
-                        Title = model.Title,
-                        User = Username,
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.NewRequest,
-                        RequestType = RequestType.Album
-                    };
-                    await NotificationService.Publish(notify2);
-                }
-
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = true,
-                        Message = $"{model.Title} was successfully added!"
-                    });
+                return await AddRequest(model, settings, $"{model.Title} was successfully added!");
             }
 
-            if (ShouldSendNotification(RequestType.Album, settings))
-            {
-                var notify2 = new NotificationModel
-                {
-                    Title = model.Title,
-                    User = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = RequestType.Album
-                };
-                await NotificationService.Publish(notify2);
-            }
-            await RequestService.AddRequestAsync(model);
-            return Response.AsJson(new JsonResponseModel
-            {
-                Result = true,
-                Message = $"{model.Title} was successfully added!"
-            });
+            return await AddRequest(model, settings, $"{model.Title} was successfully added!");
         }
 
         private string GetMusicBrainzCoverArt(string id)
@@ -993,6 +873,85 @@ namespace PlexRequests.UI.Modules
             var seasons = tv.GetSeasons(show.id);
             var model = seasons.Select(x => x.number);
             return Response.AsJson(model);
+        }
+
+        private async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
+        {
+            var requestLimit = GetRequestLimitForType(type, s);
+            if (requestLimit == 0)
+            {
+                return true;
+            }
+
+            var limit = await RequestLimitRepo.GetAllAsync();
+            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == type);
+            if (usersLimit == null)
+            {
+                // Have not set a requestLimit yet
+                return true;
+            }
+
+            return usersLimit.RequestCount >= requestLimit;
+        }
+
+        private int GetRequestLimitForType(RequestType type, PlexRequestSettings s)
+        {
+            int requestLimit;
+            switch (type)
+            {
+                case RequestType.Movie:
+                    requestLimit = s.MovieWeeklyRequestLimit;
+                    break;
+                case RequestType.TvShow:
+                    requestLimit = s.TvWeeklyRequestLimit;
+                    break;
+                case RequestType.Album:
+                    requestLimit = s.AlbumWeeklyRequestLimit;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            return requestLimit;
+        }
+
+        private async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
+        {
+
+            model.Approved = true;
+            await RequestService.AddRequestAsync(model);
+
+            if (ShouldSendNotification(RequestType.Movie, settings))
+            {
+                var notificationModel = new NotificationModel
+                {
+                    Title = model.Title,
+                    User = Username,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.NewRequest,
+                    RequestType = RequestType.Movie
+                };
+                await NotificationService.Publish(notificationModel);
+            }
+
+            var limit = await RequestLimitRepo.GetAllAsync();
+            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
+            if (usersLimit == null)
+            {
+                await RequestLimitRepo.InsertAsync(new RequestLimit
+                {
+                    Username = Username,
+                    RequestType = model.Type,
+                    FirstRequestDate = DateTime.UtcNow,
+                    RequestCount = 1
+                });
+            }
+            else
+            {
+                usersLimit.RequestCount++;
+                await RequestLimitRepo.UpdateAsync(usersLimit);
+            }
+
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
     }
 }

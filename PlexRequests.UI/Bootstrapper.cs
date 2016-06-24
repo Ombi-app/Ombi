@@ -193,6 +193,7 @@ namespace PlexRequests.UI
             container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRepository<IssueBlobs>, GenericRepository<IssueBlobs>>();
+            container.Register<IRepository<RequestLimit>, GenericRepository<RequestLimit>>();
             container.Register<IRequestService, JsonRequestModelRequestService>();
             container.Register<IIssueService, IssueJsonService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
