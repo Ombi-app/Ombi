@@ -256,6 +256,10 @@ namespace PlexRequests.UI.Modules
                     model.BaseUrl = model.BaseUrl.Remove(0, 1);
                 }
             }
+            if (!model.CollectAnalyticData)
+            {
+                await Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            }
             var result = PrService.SaveSettings(model);
             
             await Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
