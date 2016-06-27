@@ -331,6 +331,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Welcome.
+        /// </summary>
+        public static string Layout_Welcome {
+            get {
+                return ResourceManager.GetString("Layout_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Albums.
         /// </summary>
         public static string Search_Albums {

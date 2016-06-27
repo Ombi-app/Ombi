@@ -291,4 +291,7 @@
   <data name="Search_Season" xml:space="preserve">
     <value>Temporada</value>
   </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
 </root>

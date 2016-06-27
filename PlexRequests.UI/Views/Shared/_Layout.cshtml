@@ -69,6 +69,7 @@
                     }
                     @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
                     {
+                        <li><i class="fa fa-sign-out"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</li>
                         <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
                     }
                     <li class="dropdown">

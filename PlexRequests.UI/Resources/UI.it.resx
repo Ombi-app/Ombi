@@ -204,4 +204,94 @@
   <data name="Search_Title" xml:space="preserve">
     <value>Cerca!</value>
   </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>Spettacoli TV</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Voglia di guardare qualcosa che non è attualmente il Plex?! Non c'è problema! Basta cercare per esso qui sotto e richiederla!</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Suggerimenti</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Novita</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>Nei Cinema</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Inviami una notifica quando sono stati aggiunti elementi che ho chiesto!</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Salva</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>disponibili</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>Richiesto</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Richiedi</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Tutte le Stagioni</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Prima stagione</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Ultima stagione</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>seleziona</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Segnala il problema</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Audio sbagliato</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Nessun sottotitolo</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Contenuto sbagliato</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Problemi di riproduzione</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Altre</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Conta di pista</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>PAESE</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Stagioni</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Chiudi</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Aggiungere un problema!</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Salva Cambia</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Stagione</value>
+  </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Benvenuta</value>
+  </data>
 </root>

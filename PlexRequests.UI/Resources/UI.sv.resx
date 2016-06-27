@@ -240,4 +240,58 @@
   <data name="Search_Requested" xml:space="preserve">
     <value>Begärd</value>
   </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Alla säsonger</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Första säsongen</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Senaste säsongen</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Välj...</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Rapporten fråga</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Fel ljud!</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Inga undertexter</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Fel innehåll!</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Uppspelningsproblem</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Annat</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Spår räknas</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Säsonger</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Lägg till en fråga</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Spara Ändringar</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Årstid</value>
+  </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Välkommen</value>
+  </data>
 </root>

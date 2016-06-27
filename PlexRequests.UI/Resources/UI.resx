@@ -272,4 +272,7 @@
   <data name="Search_Season" xml:space="preserve">
     <value>Season</value>
   </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
 </root>
