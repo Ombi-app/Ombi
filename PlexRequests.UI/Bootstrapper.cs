@@ -194,6 +194,7 @@ namespace PlexRequests.UI
             container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
             container.Register<IRepository<IssueBlobs>, GenericRepository<IssueBlobs>>();
             container.Register<IRepository<RequestLimit>, GenericRepository<RequestLimit>>();
+            container.Register<IRepository<PlexUsers>, GenericRepository<PlexUsers>>();
             container.Register<IRequestService, JsonRequestModelRequestService>();
             container.Register<IIssueService, IssueJsonService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();

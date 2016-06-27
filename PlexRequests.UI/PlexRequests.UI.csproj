@@ -200,6 +200,7 @@
     <Compile Include="Modules\CultureModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
+    <Compile Include="Modules\PlexUsersModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Resources\UI.Designer.cs">
       <AutoGen>True</AutoGen>
