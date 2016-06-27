@@ -46,6 +46,8 @@ using NLog;
 
 using MarkdownSharp;
 
+using Nancy.Responses;
+
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
@@ -204,6 +206,8 @@ namespace PlexRequests.UI.Modules
 
             Get["/scheduledjobs", true] = async (x, ct) => await GetScheduledJobs();
             Post["/scheduledjobs", true] = async (x, ct) => await SaveScheduledJobs();
+
+            Post["/clearlogs", true] = async (x, ct) => await ClearLogs();
         }
 
         private async Task<Negotiator> Authentication()
@@ -887,6 +891,24 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs" });
+        }
+
+        private async Task<Response> ClearLogs()
+        {
+            try
+            {
+                var allLogs = await LogsRepo.GetAllAsync();
+                foreach (var logEntity in allLogs)
+                {
+                    await LogsRepo.DeleteAsync(logEntity);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });   
+            }
         }
     }
 }
