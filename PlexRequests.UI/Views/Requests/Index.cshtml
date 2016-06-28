@@ -221,7 +221,7 @@
                     {{#if_eq available true}}
                     <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change" type="submit"><i class="fa fa-minus"></i> @UI.Requests_MarkUnavailable</button>
                     {{else}}
-                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change" type="submit"><i class="fa fa-plus"></i> @UI.Requests_Mark</button>
+                    <button id="{{requestId}}" custom-availibility="{{requestId}}" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change" type="submit"><i class="fa fa-plus"></i> @UI.Requests_MarkAvailable</button>
                     {{/if_eq}}
                 </form>
 
@@ -231,7 +231,7 @@
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <div class="dropdown">
                         <button id="{{requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> @UI.Rep
+                            <i class="fa fa-plus"></i> @UI.Search_ReportIssue
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

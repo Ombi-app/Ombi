@@ -49,13 +49,14 @@
                 <ul class="nav navbar-nav navbar-right">
 
 
-                    @if (!Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
+                    @if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null)  // TODO replace with IsAdmin
                     {
 
-                        <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> Admin</a></li>
+                        <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
                     }
-                    else
+                    @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
                     {
+                        <li><a>@UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Admin <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -67,14 +68,21 @@
                             </ul>
                         </li>
                     }
-                    @if (Context.Request.Session[SessionKeys.UsernameKey] != null)
+                    @if (Context.Request.Session[SessionKeys.UsernameKey] != null && !Context.CurrentUser.IsAuthenticated())
                     {
-                        <li><i class="fa fa-sign-out"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</li>
-                        <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey] <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
+                                <li class="divider"></li>
+                                <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
+                            </ul>
+                        </li>
+
                     }
                     <li class="dropdown">
-                    
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"></i></a>
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
                             <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
@@ -103,7 +111,7 @@
 </body>
 </html>
 <script>
-    
+
     function donateClick(url) {
         ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
         var redirectWindow = window.open(url, '_blank');
