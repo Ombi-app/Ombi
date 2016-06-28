@@ -27,7 +27,7 @@ I wanted to write a similar application in .Net!
 
 # Preview
 
-![Preview](http://i.imgur.com/DgwkIsW.gif)
+![Preview](http://i.imgur.com/yrz2pzl.gif)
 
 #Installation
 
