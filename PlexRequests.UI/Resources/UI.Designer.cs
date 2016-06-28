@@ -61,6 +61,24 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string Common_Approve {
+            get {
+                return ResourceManager.GetString("Common_Approve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approved.
+        /// </summary>
+        public static string Common_Approved {
+            get {
+                return ResourceManager.GetString("Common_Approved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
         public static string Common_Close {
@@ -70,11 +88,29 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Common_Remove {
+            get {
+                return ResourceManager.GetString("Common_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         public static string Common_Save {
             get {
                 return ResourceManager.GetString("Common_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Issue.
+        /// </summary>
+        public static string Issues_Issue {
+            get {
+                return ResourceManager.GetString("Issues_Issue", resourceCulture);
             }
         }
         
@@ -336,6 +372,294 @@ namespace PlexRequests.UI.Resources {
         public static string Layout_Welcome {
             get {
                 return ResourceManager.GetString("Layout_Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Albums.
+        /// </summary>
+        public static string Requests_AlbumsTabTitle {
+            get {
+                return ResourceManager.GetString("Requests_AlbumsTabTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approve Movies.
+        /// </summary>
+        public static string Requests_ApproveMovies {
+            get {
+                return ResourceManager.GetString("Requests_ApproveMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approve Music.
+        /// </summary>
+        public static string Requests_ApproveMusic {
+            get {
+                return ResourceManager.GetString("Requests_ApproveMusic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approve TV Shows.
+        /// </summary>
+        public static string Requests_ApproveTvShows {
+            get {
+                return ResourceManager.GetString("Requests_ApproveTvShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        public static string Requests_Available {
+            get {
+                return ResourceManager.GetString("Requests_Available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Movies.
+        /// </summary>
+        public static string Requests_DeleteMovies {
+            get {
+                return ResourceManager.GetString("Requests_DeleteMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Music.
+        /// </summary>
+        public static string Requests_DeleteMusic {
+            get {
+                return ResourceManager.GetString("Requests_DeleteMusic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete TV Shows.
+        /// </summary>
+        public static string Requests_DeleteTVShows {
+            get {
+                return ResourceManager.GetString("Requests_DeleteTVShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Requests_Filter {
+            get {
+                return ResourceManager.GetString("Requests_Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string Requests_Filter_All {
+            get {
+                return ResourceManager.GetString("Requests_Filter_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approved.
+        /// </summary>
+        public static string Requests_Filter_Approved {
+            get {
+                return ResourceManager.GetString("Requests_Filter_Approved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        public static string Requests_Filter_Available {
+            get {
+                return ResourceManager.GetString("Requests_Filter_Available", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Approved.
+        /// </summary>
+        public static string Requests_Filter_NotApproved {
+            get {
+                return ResourceManager.GetString("Requests_Filter_NotApproved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Available.
+        /// </summary>
+        public static string Requests_Filter_NotAvailable {
+            get {
+                return ResourceManager.GetString("Requests_Filter_NotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Released.
+        /// </summary>
+        public static string Requests_Filter_NotReleased {
+            get {
+                return ResourceManager.GetString("Requests_Filter_NotReleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Released.
+        /// </summary>
+        public static string Requests_Filter_Released {
+            get {
+                return ResourceManager.GetString("Requests_Filter_Released", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark Available.
+        /// </summary>
+        public static string Requests_MarkAvailable {
+            get {
+                return ResourceManager.GetString("Requests_MarkAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mark Unavailable.
+        /// </summary>
+        public static string Requests_MarkUnavailable {
+            get {
+                return ResourceManager.GetString("Requests_MarkUnavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Movies.
+        /// </summary>
+        public static string Requests_MoviesTabTitle {
+            get {
+                return ResourceManager.GetString("Requests_MoviesTabTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Order.
+        /// </summary>
+        public static string Requests_Order {
+            get {
+                return ResourceManager.GetString("Requests_Order", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Releases.
+        /// </summary>
+        public static string Requests_Order_LatestReleases {
+            get {
+                return ResourceManager.GetString("Requests_Order_LatestReleases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest Requests.
+        /// </summary>
+        public static string Requests_Order_LatestRequests {
+            get {
+                return ResourceManager.GetString("Requests_Order_LatestRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oldest Releases.
+        /// </summary>
+        public static string Requests_Order_OldestReleases {
+            get {
+                return ResourceManager.GetString("Requests_Order_OldestReleases", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Oldest Requests.
+        /// </summary>
+        public static string Requests_Order_OldestRequests {
+            get {
+                return ResourceManager.GetString("Requests_Order_OldestRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Below you can see yours and all other requests, as well as their download and approval status..
+        /// </summary>
+        public static string Requests_Paragraph {
+            get {
+                return ResourceManager.GetString("Requests_Paragraph", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release Date.
+        /// </summary>
+        public static string Requests_ReleaseDate {
+            get {
+                return ResourceManager.GetString("Requests_ReleaseDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested By.
+        /// </summary>
+        public static string Requests_RequestedBy {
+            get {
+                return ResourceManager.GetString("Requests_RequestedBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requested Date.
+        /// </summary>
+        public static string Requests_RequestedDate {
+            get {
+                return ResourceManager.GetString("Requests_RequestedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Seasons Requested.
+        /// </summary>
+        public static string Requests_SeasonsRequested {
+            get {
+                return ResourceManager.GetString("Requests_SeasonsRequested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Requests.
+        /// </summary>
+        public static string Requests_Title {
+            get {
+                return ResourceManager.GetString("Requests_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle Dropdown.
+        /// </summary>
+        public static string Requests_ToggleDropdown {
+            get {
+                return ResourceManager.GetString("Requests_ToggleDropdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TV Shows.
+        /// </summary>
+        public static string Requests_TvShowTabTitle {
+            get {
+                return ResourceManager.GetString("Requests_TvShowTabTitle", resourceCulture);
             }
         }
         

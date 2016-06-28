@@ -294,4 +294,112 @@
   <data name="Layout_Welcome" xml:space="preserve">
     <value>Velkommen</value>
   </data>
+  <data name="Requests_Title" xml:space="preserve">
+    <value>Anmodninger</value>
+  </data>
+  <data name="Requests_Paragraph" xml:space="preserve">
+    <value>Nedenfor kan du se dine og alle andre anmodninger, samt deres download og godkendelse status.</value>
+  </data>
+  <data name="Requests_MoviesTabTitle" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Requests_TvShowTabTitle" xml:space="preserve">
+    <value>TV-shows</value>
+  </data>
+  <data name="Requests_AlbumsTabTitle" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Requests_DeleteMovies" xml:space="preserve">
+    <value>Slet Film</value>
+  </data>
+  <data name="Requests_ApproveMovies" xml:space="preserve">
+    <value>Godkend film</value>
+  </data>
+  <data name="Requests_DeleteTVShows" xml:space="preserve">
+    <value>Slet tv-udsendelser</value>
+  </data>
+  <data name="Requests_ApproveTvShows" xml:space="preserve">
+    <value>Godkend tv-udsendelser</value>
+  </data>
+  <data name="Requests_DeleteMusic" xml:space="preserve">
+    <value>Slet Music</value>
+  </data>
+  <data name="Requests_ApproveMusic" xml:space="preserve">
+    <value>Godkend Music</value>
+  </data>
+  <data name="Requests_Filter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Requests_Filter_Approved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Filter_NotApproved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Filter_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Requests_Filter_NotAvailable" xml:space="preserve">
+    <value>Ikke tilgængelig</value>
+  </data>
+  <data name="Requests_Filter_Released" xml:space="preserve">
+    <value>Udgivet</value>
+  </data>
+  <data name="Requests_Filter_NotReleased" xml:space="preserve">
+    <value>Udgivet:</value>
+  </data>
+  <data name="Requests_Order" xml:space="preserve">
+    <value>Ordrer</value>
+  </data>
+  <data name="Requests_Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Requests_Order_LatestRequests" xml:space="preserve">
+    <value>Seneste anmodninger</value>
+  </data>
+  <data name="Requests_Order_OldestRequests" xml:space="preserve">
+    <value>Ældste anmodninger</value>
+  </data>
+  <data name="Requests_Order_LatestReleases" xml:space="preserve">
+    <value>Nyeste udgivelser</value>
+  </data>
+  <data name="Requests_Order_OldestReleases" xml:space="preserve">
+    <value>Ældste udgivelser</value>
+  </data>
+  <data name="Requests_ReleaseDate" xml:space="preserve">
+    <value>Frigivelsesdato</value>
+  </data>
+  <data name="Requests_SeasonsRequested" xml:space="preserve">
+    <value>Seasons Anmodet</value>
+  </data>
+  <data name="Requests_RequestedBy" xml:space="preserve">
+    <value>Anmodet Af</value>
+  </data>
+  <data name="Requests_RequestedDate" xml:space="preserve">
+    <value>Ønskede dato</value>
+  </data>
+  <data name="Requests_ToggleDropdown" xml:space="preserve">
+    <value>Toggle Dropdown</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>Godkend</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Fjern</value>
+  </data>
+  <data name="Requests_MarkUnavailable" xml:space="preserve">
+    <value>ikke tilgængelig</value>
+  </data>
+  <data name="Requests_MarkAvailable" xml:space="preserve">
+    <value>Mark tilgængelig</value>
+  </data>
+  <data name="Common_Approved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Issues_Issue" xml:space="preserve">
+    <value>Aktieemission</value>
+  </data>
 </root>

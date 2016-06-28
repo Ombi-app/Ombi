@@ -275,4 +275,112 @@
   <data name="Layout_Welcome" xml:space="preserve">
     <value>Welcome</value>
   </data>
+  <data name="Requests_Title" xml:space="preserve">
+    <value>Requests</value>
+  </data>
+  <data name="Requests_Paragraph" xml:space="preserve">
+    <value>Below you can see yours and all other requests, as well as their download and approval status.</value>
+  </data>
+  <data name="Requests_MoviesTabTitle" xml:space="preserve">
+    <value>Movies</value>
+  </data>
+  <data name="Requests_TvShowTabTitle" xml:space="preserve">
+    <value>TV Shows</value>
+  </data>
+  <data name="Requests_AlbumsTabTitle" xml:space="preserve">
+    <value>Albums</value>
+  </data>
+  <data name="Requests_DeleteMovies" xml:space="preserve">
+    <value>Delete Movies</value>
+  </data>
+  <data name="Requests_ApproveMovies" xml:space="preserve">
+    <value>Approve Movies</value>
+  </data>
+  <data name="Requests_DeleteTVShows" xml:space="preserve">
+    <value>Delete TV Shows</value>
+  </data>
+  <data name="Requests_ApproveTvShows" xml:space="preserve">
+    <value>Approve TV Shows</value>
+  </data>
+  <data name="Requests_DeleteMusic" xml:space="preserve">
+    <value>Delete Music</value>
+  </data>
+  <data name="Requests_ApproveMusic" xml:space="preserve">
+    <value>Approve Music</value>
+  </data>
+  <data name="Requests_Filter_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="Requests_Filter_Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="Requests_Filter_NotApproved" xml:space="preserve">
+    <value>Not Approved</value>
+  </data>
+  <data name="Requests_Filter_Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="Requests_Filter_NotAvailable" xml:space="preserve">
+    <value>Not Available</value>
+  </data>
+  <data name="Requests_Filter_Released" xml:space="preserve">
+    <value>Released</value>
+  </data>
+  <data name="Requests_Filter_NotReleased" xml:space="preserve">
+    <value>Not Released</value>
+  </data>
+  <data name="Requests_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="Requests_Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Requests_Order_LatestRequests" xml:space="preserve">
+    <value>Latest Requests</value>
+  </data>
+  <data name="Requests_Order_OldestRequests" xml:space="preserve">
+    <value>Oldest Requests</value>
+  </data>
+  <data name="Requests_Order_LatestReleases" xml:space="preserve">
+    <value>Latest Releases</value>
+  </data>
+  <data name="Requests_Order_OldestReleases" xml:space="preserve">
+    <value>Oldest Releases</value>
+  </data>
+  <data name="Requests_ReleaseDate" xml:space="preserve">
+    <value>Release Date</value>
+  </data>
+  <data name="Requests_SeasonsRequested" xml:space="preserve">
+    <value>Seasons Requested</value>
+  </data>
+  <data name="Requests_RequestedBy" xml:space="preserve">
+    <value>Requested By</value>
+  </data>
+  <data name="Requests_RequestedDate" xml:space="preserve">
+    <value>Requested Date</value>
+  </data>
+  <data name="Requests_ToggleDropdown" xml:space="preserve">
+    <value>Toggle Dropdown</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="Requests_MarkUnavailable" xml:space="preserve">
+    <value>Mark Unavailable</value>
+  </data>
+  <data name="Requests_MarkAvailable" xml:space="preserve">
+    <value>Mark Available</value>
+  </data>
+  <data name="Common_Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="Requests_Available" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="Issues_Issue" xml:space="preserve">
+    <value>Issue</value>
+  </data>
 </root>

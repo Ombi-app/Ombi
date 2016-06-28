@@ -294,4 +294,112 @@
   <data name="Layout_Welcome" xml:space="preserve">
     <value>Welkom</value>
   </data>
+  <data name="Requests_Title" xml:space="preserve">
+    <value>Verzoeken</value>
+  </data>
+  <data name="Requests_Paragraph" xml:space="preserve">
+    <value>Hieronder vindt u de jouwe en alle andere verzoeken kan zien, evenals hun download en goedkeuring-status.</value>
+  </data>
+  <data name="Requests_MoviesTabTitle" xml:space="preserve">
+    <value>films</value>
+  </data>
+  <data name="Requests_TvShowTabTitle" xml:space="preserve">
+    <value>TV programma's</value>
+  </data>
+  <data name="Requests_AlbumsTabTitle" xml:space="preserve">
+    <value>albums</value>
+  </data>
+  <data name="Requests_DeleteMovies" xml:space="preserve">
+    <value>Verwijder Movies</value>
+  </data>
+  <data name="Requests_ApproveMovies" xml:space="preserve">
+    <value>Goedkeuren Movies</value>
+  </data>
+  <data name="Requests_DeleteTVShows" xml:space="preserve">
+    <value>Verwijder TV Shows</value>
+  </data>
+  <data name="Requests_ApproveTvShows" xml:space="preserve">
+    <value>Goedkeuren TV Shows</value>
+  </data>
+  <data name="Requests_DeleteMusic" xml:space="preserve">
+    <value>Verwijderen Muziek</value>
+  </data>
+  <data name="Requests_ApproveMusic" xml:space="preserve">
+    <value>Goedkeuren Music</value>
+  </data>
+  <data name="Requests_Filter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Requests_Filter_Approved" xml:space="preserve">
+    <value>Goedgekeurd</value>
+  </data>
+  <data name="Requests_Filter_NotApproved" xml:space="preserve">
+    <value>Nog niet gestart</value>
+  </data>
+  <data name="Requests_Filter_Available" xml:space="preserve">
+    <value>Beschikbaar</value>
+  </data>
+  <data name="Requests_Filter_NotAvailable" xml:space="preserve">
+    <value>Niet beschikbaar</value>
+  </data>
+  <data name="Requests_Filter_Released" xml:space="preserve">
+    <value>Released</value>
+  </data>
+  <data name="Requests_Filter_NotReleased" xml:space="preserve">
+    <value>Niet vrijgegeven</value>
+  </data>
+  <data name="Requests_Order" xml:space="preserve">
+    <value>Bestel</value>
+  </data>
+  <data name="Requests_Filter" xml:space="preserve">
+    <value>Filter!</value>
+  </data>
+  <data name="Requests_Order_LatestRequests" xml:space="preserve">
+    <value>Laatste aanvragen</value>
+  </data>
+  <data name="Requests_Order_OldestRequests" xml:space="preserve">
+    <value>Oudste aanvragen</value>
+  </data>
+  <data name="Requests_Order_LatestReleases" xml:space="preserve">
+    <value>Nieuwste releases</value>
+  </data>
+  <data name="Requests_Order_OldestReleases" xml:space="preserve">
+    <value>Oudste Releases</value>
+  </data>
+  <data name="Requests_ReleaseDate" xml:space="preserve">
+    <value>Uitgiftedatum</value>
+  </data>
+  <data name="Requests_SeasonsRequested" xml:space="preserve">
+    <value>Seasons gevraagd</value>
+  </data>
+  <data name="Requests_RequestedBy" xml:space="preserve">
+    <value>Verzocht door</value>
+  </data>
+  <data name="Requests_RequestedDate" xml:space="preserve">
+    <value>Aanvraag datum</value>
+  </data>
+  <data name="Requests_ToggleDropdown" xml:space="preserve">
+    <value>Toggle Dropdown</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>Goedkeuren</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>verwijder</value>
+  </data>
+  <data name="Requests_MarkUnavailable" xml:space="preserve">
+    <value>Niet beschikbaar</value>
+  </data>
+  <data name="Requests_MarkAvailable" xml:space="preserve">
+    <value>Mark beschikbaar</value>
+  </data>
+  <data name="Common_Approved" xml:space="preserve">
+    <value>Goedgekeurd</value>
+  </data>
+  <data name="Requests_Available" xml:space="preserve">
+    <value>Beschikbaar</value>
+  </data>
+  <data name="Issues_Issue" xml:space="preserve">
+    <value>Uitgave</value>
+  </data>
 </root>
