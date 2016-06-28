@@ -33,6 +33,7 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
@@ -179,7 +180,8 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(movie.ProviderId) && 
+                        movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }
@@ -225,7 +227,8 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
+                    if (!string.IsNullOrEmpty(show.ProviderId) && 
+                        show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
                     }

@@ -24,7 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using PlexRequests.Store;
 using System;
+
+using PlexRequests.Core.Models;
 
 namespace PlexRequests.Services.Notification
 {
@@ -36,5 +39,6 @@ namespace PlexRequests.Services.Notification
         public NotificationType NotificationType { get; set; }
         public string User { get; set; }
         public string UserEmail { get; set; }
+        public RequestType RequestType { get; set; }
     }
 }

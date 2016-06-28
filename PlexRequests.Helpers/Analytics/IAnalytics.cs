@@ -37,8 +37,9 @@ namespace PlexRequests.Helpers.Analytics
         /// <param name="action">The action.</param>
         /// <param name="label">The label.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="value">The value.</param>
-        void TrackEvent(Category category, Action action, string label, string username, int? value = null);
+        void TrackEvent(Category category, Action action, string label, string username, string clientId, int? value = null);
 
         /// <summary>
         /// Tracks the event asynchronous.
@@ -47,9 +48,10 @@ namespace PlexRequests.Helpers.Analytics
         /// <param name="action">The action.</param>
         /// <param name="label">The label.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        Task TrackEventAsync(Category category, Action action, string label, string username, int? value = null);
+        Task TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null);
 
         /// <summary>
         /// Tracks the page view.
@@ -58,8 +60,9 @@ namespace PlexRequests.Helpers.Analytics
         /// <param name="action">The action.</param>
         /// <param name="label">The label.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="value">The value.</param>
-        void TrackPageview(Category category, Action action, string label, string username, int? value = null);
+        void TrackPageview(Category category, Action action, string label, string username, string clientId, int? value = null);
 
         /// <summary>
         /// Tracks the page view asynchronous.
@@ -68,25 +71,28 @@ namespace PlexRequests.Helpers.Analytics
         /// <param name="action">The action.</param>
         /// <param name="label">The label.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        Task TrackPageviewAsync(Category category, Action action, string label, string username, int? value = null);
+        Task TrackPageviewAsync(Category category, Action action, string label, string username, string clientId, int? value = null);
 
         /// <summary>
         /// Tracks the exception.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="fatal">if set to <c>true</c> [fatal].</param>
-        void TrackException(string message, string username, bool fatal);
+        void TrackException(string message, string username, string clientId, bool fatal);
 
         /// <summary>
         /// Tracks the exception asynchronous.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="username">The username.</param>
+        /// <param name="clientId">The client identifier.</param>
         /// <param name="fatal">if set to <c>true</c> [fatal].</param>
         /// <returns></returns>
-        Task TrackExceptionAsync(string message, string username, bool fatal);
+        Task TrackExceptionAsync(string message, string username, string clientId, bool fatal);
     }
 }

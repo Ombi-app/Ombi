@@ -32,6 +32,7 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Notifications;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 

@@ -77,87 +77,87 @@
 
             <div class="form-group">
                 <div class="checkbox">
-   
-                        @if (Model.SearchForMovies)
-                        {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
-                        }
-   
+
+                    @if (Model.SearchForMovies)
+                    {
+                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
+                    }
+
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="checkbox">
 
-                        @if (Model.SearchForTvShows)
-                        {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><label for="SearchForTvShows">Search for TV Shows</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><label for="SearchForTvShows">Search for TV Shows</label>
-                        }
-     
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-             
-                        @if (Model.SearchForMusic)
-                        {
-                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><label for="SearchForMusic">Search for Music</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label for="SearchForMusic">Search for Music</label>
-                        }
-        
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-      
-                        @if (Model.RequireMovieApproval)
-                        {
-                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                        }
-    </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-           
-                        @if (Model.RequireTvShowApproval)
-                        {
-                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                        }
-                  
+                    @if (Model.SearchForTvShows)
+                    {
+                        <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><label for="SearchForTvShows">Search for TV Shows</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><label for="SearchForTvShows">Search for TV Shows</label>
+                    }
 
                 </div>
             </div>
             <div class="form-group">
                 <div class="checkbox">
-       
-                        @if (Model.RequireMusicApproval)
-                        {
-                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                        }
-           
+
+                    @if (Model.SearchForMusic)
+                    {
+                        <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><label for="SearchForMusic">Search for Music</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label for="SearchForMusic">Search for Music</label>
+                    }
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.RequireMovieApproval)
+                    {
+                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><label for="RequireMovieApproval">Require approval of Movie requests</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><label for="RequireMovieApproval">Require approval of Movie requests</label>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.RequireTvShowApproval)
+                    {
+                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
+                    }
+
+
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.RequireMusicApproval)
+                    {
+                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><label for="RequireMusicApproval">Require approval of Music requests</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><label for="RequireMusicApproval">Require approval of Music requests</label>
+                    }
+
 
                 </div>
             </div>
@@ -197,6 +197,21 @@
             <div class="form-group">
                 <div class="checkbox">
 
+                    @if (Model.IgnoreNotifyForAutoApprovedRequests)
+                    {
+                        <input type="checkbox" id="IgnoreNotifyForAutoApprovedRequests" name="IgnoreNotifyForAutoApprovedRequests" checked="checked">
+                        <label for="IgnoreNotifyForAutoApprovedRequests">Do not send notifications for requests that don't require approval</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="IgnoreNotifyForAutoApprovedRequests" name="IgnoreNotifyForAutoApprovedRequests"><label for="IgnoreNotifyForAutoApprovedRequests">Do not send notifications for requests that don't require approval</label>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
                     @if (Model.CollectAnalyticData)
                     {
                         <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData" checked="checked">
@@ -211,24 +226,44 @@
 
 
 
-            <p class="form-group">A comma separated list of users whose requests do not require approval.</p>
+            <p class="form-group">A comma separated list of users whose requests do not require approval (These users also do not have a request limit).</p>
             <div class="form-group">
-                <label for="noApprovalUsers" class="control-label">Approval White listed Users</label>
+                <label for="NoApprovalUsers" class="control-label">Approval White listed Users</label>
                 <div>
                     <input type="text" class="form-control-custom form-control " id="NoApprovalUsers" name="NoApprovalUsers" placeholder="e.g. John, Bobby" value="@Model.NoApprovalUsers">
                 </div>
             </div>
 
-            @*<div class="form-group">
-                <label for="WeeklyRequestLimit" class="control-label">Weekly Request Limit</label>
+
+            <p class="form-group">If the request limits are set to 0 then no request limit is applied.</p>
+        <div class="form-group">
+            <label for="MovieWeeklyRequestLimit" class="control-label">Movie Weekly Request Limit</label>
+            <div>
+                <label>
+                    <input type="number" id="MovieWeeklyRequestLimit" name="MovieWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.MovieWeeklyRequestLimit">
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="TvWeeklyRequestLimit" class="control-label">TV Show Weekly Request Limit</label>
+            <div>
+                <label>
+                    <input type="number" id="TvWeeklyRequestLimit" name="TvWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.TvWeeklyRequestLimit">
+                </label>
+            </div>
+        </div>
+
+            <div class="form-group">
+                <label for="AlbumWeeklyRequestLimit" class="control-label">Album Weekly Request Limit</label>
                 <div>
                     <label>
-                        <input type="number" id="WeeklyRequestLimit" name="WeeklyRequestLimit" class="form-control form-control-custom " value="@Model.WeeklyRequestLimit">
+                        <input type="number" id="AlbumWeeklyRequestLimit" name="AlbumWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.AlbumWeeklyRequestLimit">
                     </label>
                 </div>
-            </div> //TODO: Need to implement this*@
+            </div>
 
-            <div>
+        <div>
             </div>
             <div class="form-group">
                 <div>
@@ -240,9 +275,9 @@
 </div>
 
 <script>
-$(function() {
- $('#save').click(function (e) {
-     e.preventDefault();
+    $(function () {
+        $('#save').click(function (e) {
+            e.preventDefault();
 
             var theme = $("#themes option:selected").val();
             var $form = $("#mainForm");
@@ -270,11 +305,11 @@ $(function() {
         });
 
         $('#refreshKey').click(function (e) {
-        	e.preventDefault();
-        	  var base = '@Html.GetBaseUrl()';
-        	  var url = createBaseUrl(base, '/admin/createapikey');
-           
-        	 $.ajax({
+            e.preventDefault();
+            var base = '@Html.GetBaseUrl()';
+            var url = createBaseUrl(base, '/admin/createapikey');
+
+            $.ajax({
                 type: "post",
                 url: url,
                 dataType: "json",
@@ -282,7 +317,7 @@ $(function() {
                     if (response) {
                         generateNotify("Success!", "success");
                         $('#apiKey').val(response);
-}
+                    }
                 },
                 error: function (e) {
                     console.log(e);
@@ -290,5 +325,5 @@ $(function() {
                 }
             });
         });
-});
+    });
 </script>

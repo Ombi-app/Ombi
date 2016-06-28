@@ -62,6 +62,7 @@ namespace PlexRequests.UI.Jobs
             var cp = JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build();
             var store = JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build();
             var storeClean = JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build();
+            var userRequestLimitReset = JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build();
 
             jobs.Add(plex);
             jobs.Add(sickrage);
@@ -69,6 +70,7 @@ namespace PlexRequests.UI.Jobs
             jobs.Add(cp);
             jobs.Add(store);
             jobs.Add(storeClean);
+            jobs.Add(userRequestLimitReset);
 
             return jobs;
         }
@@ -150,6 +152,13 @@ namespace PlexRequests.UI.Jobs
                           .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreCleanup).RepeatForever())
                           .Build();
 
+            var userRequestLimiter =
+    TriggerBuilder.Create()
+                  .WithIdentity("UserRequestLimiter", "Request")
+                  .StartAt(DateTimeOffset.Now.AddMinutes(5)) // Everything has started on application start, lets wait 5 minutes
+                  .WithSimpleSchedule(x => x.WithIntervalInHours(s.UserRequestLimitResetter).RepeatForever())
+                  .Build();
+
 
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
@@ -157,6 +166,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(cpCacher);
             triggers.Add(storeBackup);
             triggers.Add(storeCleanup);
+            triggers.Add(userRequestLimiter);
 
             return triggers;
         }

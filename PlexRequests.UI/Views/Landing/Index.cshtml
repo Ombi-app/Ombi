@@ -1,8 +1,15 @@
 ﻿
 @using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.UI.Models.LandingPageViewModel>
-
-<img class="landing-header" src="~/Content/images/logo.png" width="300" />
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString();
+    }
+}
+<img class="landing-header" src="@formAction/Content/images/logo.png" width="300" />
 <div id="area" class="landing-block">
     @if (Model.NoticeEnable && (!Model.EnabledNoticeTime || Model.NoticeActive))
     {

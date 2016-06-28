@@ -36,6 +36,7 @@ namespace PlexRequests.Core.SettingModels
             CouchPotatoCacher = 10;
             StoreBackup = 24;
             StoreCleanup = 24;
+            UserRequestLimitResetter = 12;
         }
         public int PlexAvailabilityChecker { get; set; }
         public int SickRageCacher { get; set; }
@@ -43,5 +44,6 @@ namespace PlexRequests.Core.SettingModels
         public int CouchPotatoCacher { get; set; }
         public int StoreBackup { get; set; }
         public int StoreCleanup { get; set; }
+        public int UserRequestLimitResetter { get; set; }
     }
 }

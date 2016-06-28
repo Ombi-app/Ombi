@@ -78,6 +78,24 @@ namespace PlexRequests.Store
         Album
     }
 
+    public static class RequestTypeDisplay
+    {
+        public static string GetString(this RequestType type)
+        {
+            switch (type)
+            {
+                case RequestType.Movie:
+                    return "Movie";
+                case RequestType.TvShow:
+                    return "TV Show";
+                case RequestType.Album:
+                    return "Album";
+                default:
+                    return string.Empty;
+            }
+        } 
+    }
+
     public enum IssueState
     {
         None = 99,

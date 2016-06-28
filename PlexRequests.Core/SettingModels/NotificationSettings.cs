@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ContainerHelper.cs
+//    File: NotificationSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,25 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Nancy.TinyIoc;
+using System.Collections.Generic;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
+using PlexRequests.Core.Models;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core.SettingModels
 {
-    public static class ContainerHelper
+    public class NotificationSettings : Settings
     {
-        public static void RegisterSetting<T>(this TinyIoCContainer container) where T : Settings, new()
-        {
-            container.Register<ISettingsService<T>, SettingsServiceV2<T>>();
-        }
-
-        public static void RegisterRepo<T>(this TinyIoCContainer container) where T : Entity, new()
-        {
-            container.Register<IRepository<T>, GenericRepository<T>>();
-        }
+        public Dictionary<NotificationType, string> Message { get; set; }
+        public Dictionary<string,string> CustomParamaters { get; set; }
     }
 }

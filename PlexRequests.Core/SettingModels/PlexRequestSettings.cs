@@ -32,6 +32,13 @@ namespace PlexRequests.Core.SettingModels
 {
     public class PlexRequestSettings : Settings
     {
+        public PlexRequestSettings()
+        {
+            TvWeeklyRequestLimit = 0;
+            MovieWeeklyRequestLimit = 0;
+            AlbumWeeklyRequestLimit = 0;
+        }
+
         public int Port { get; set; }
         public string BaseUrl { get; set; }
         public bool SearchForMovies { get; set; }
@@ -42,9 +49,12 @@ namespace PlexRequests.Core.SettingModels
         public bool RequireMusicApproval { get; set; }
         public bool UsersCanViewOnlyOwnRequests { get; set; }
         public bool UsersCanViewOnlyOwnIssues { get; set; }
-        public int WeeklyRequestLimit { get; set; }
+        public int MovieWeeklyRequestLimit { get; set; }
+        public int TvWeeklyRequestLimit { get; set; }
+        public int AlbumWeeklyRequestLimit { get; set; }
         public string NoApprovalUsers { get; set; }
         public bool CollectAnalyticData { get; set; }
+        public bool IgnoreNotifyForAutoApprovedRequests { get; set; }
 
         /// <summary>
         /// The CSS name of the theme we want

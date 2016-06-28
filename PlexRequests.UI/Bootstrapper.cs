@@ -43,6 +43,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -146,7 +147,7 @@ namespace PlexRequests.UI
                 notificationService.Subscribe(new SlackNotification(container.Resolve<ISlackApi>(), slackService));
             }
         }
-
+        
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
         {
             //CORS Enable
@@ -167,33 +168,33 @@ namespace PlexRequests.UI
             container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
             container.Register<IUserMapper, UserMapper>();
             container.Register<ICustomUserMapper, UserMapper>();
-            
-            // Settings
-            container.RegisterSetting<EmailNotificationSettings>();
-            container.RegisterSetting<PushbulletNotificationSettings>();
-            container.RegisterSetting<PushoverNotificationSettings>();
-            container.RegisterSetting<SlackNotificationSettings>();
-            container.RegisterSetting<ScheduledJobsSettings>();
-            container.RegisterSetting<PlexRequestSettings>();
-            container.RegisterSetting<CouchPotatoSettings>();
-            container.RegisterSetting<AuthenticationSettings>();
-            container.RegisterSetting<PlexSettings>();
-            container.RegisterSetting<SonarrSettings>();
-            container.RegisterSetting<SickRageSettings>();
-            container.RegisterSetting<HeadphonesSettings>();
-            container.RegisterSetting<LogSettings>();
-            container.RegisterSetting<LandingPageSettings>();
-
-            // Repository
-            container.RegisterRepo<LogEntity>();
-            container.RegisterRepo<UsersToNotify>();
-            container.RegisterRepo<ScheduledJobs>();
-            container.RegisterRepo<IssueBlobs>();
-            
+            container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
+            container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
+            container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
+            container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
+            container.Register<ISettingsService<ScheduledJobsSettings>, SettingsServiceV2<ScheduledJobsSettings>>();
 
             // Notification Service
             container.Register<INotificationService, NotificationService>().AsSingleton();
-           
+            // Settings
+            container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
+            container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
+            container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
+            container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
+            container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
+            container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
+
+            container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
+            container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
+            container.Register<ISettingsService<LandingPageSettings>, SettingsServiceV2<LandingPageSettings>>();
+
+            // Repo's
+            container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
+            container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
+            container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
+            container.Register<IRepository<IssueBlobs>, GenericRepository<IssueBlobs>>();
+            container.Register<IRepository<RequestLimit>, GenericRepository<RequestLimit>>();
+            container.Register<IRepository<PlexUsers>, GenericRepository<PlexUsers>>();
             container.Register<IRequestService, JsonRequestModelRequestService>();
             container.Register<IIssueService, IssueJsonService>();
             container.Register<ISettingsRepository, SettingsJsonRepository>();
@@ -210,7 +211,7 @@ namespace PlexRequests.UI
             container.Register<ISchedulerFactory, StdSchedulerFactory>();
             container.Register<IJobScheduler, Scheduler>();
 
-
+            
             // Api
             container.Register<ICouchPotatoApi, CouchPotatoApi>();
             container.Register<IPushbulletApi, PushbulletApi>();

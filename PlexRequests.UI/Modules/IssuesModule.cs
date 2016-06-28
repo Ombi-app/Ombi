@@ -48,7 +48,7 @@ namespace PlexRequests.UI.Modules
             Get["/issuecount", true] = async (x, ct) => await IssueCount();
             Get["/tabCount", true] = async (x, ct) => await TabCount();
 
-            Post["/issuecomment", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.provierId, IssueState.Other, (string)Request.Form.commentArea);
+            Post["/issuecomment", true] = async (x, ct) => await ReportRequestIssue((int)Request.Form.providerId, IssueState.Other, (string)Request.Form.commentArea);
 
             Post["/nonrequestissue", true] = async (x, ct) => await ReportNonRequestIssue((int)Request.Form.providerId, (string)Request.Form.type, (IssueState)(int)Request.Form.issue, null);
 
@@ -78,7 +78,7 @@ namespace PlexRequests.UI.Modules
 
             foreach (var i in issuesModels)
             {
-                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), };
+                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), Admin = IsAdmin };
 
                 // Create a string with all of the current issue states with a "," delimiter in e.g. Wrong Content, Playback Issues
                 var state = i.Issues.Select(x => x.Issue).ToArray();
@@ -317,8 +317,6 @@ namespace PlexRequests.UI.Modules
         /// Filters the issues. Checks to see if we have set <c>UsersCanViewOnlyOwnIssues</c> in the database and filters upon the user logged in and that setting.
         /// </summary>
         /// <param name="issues">The issues.</param>
-        /// <param name="showResolved">if set to <c>true</c> [show resolved].</param>
-        /// <returns></returns>
         private async Task<IEnumerable<IssuesModel>> FilterIssuesAsync(IEnumerable<IssuesModel> issues, bool showResolved = false)
         {
             var settings = await PlexRequestSettings.GetSettingsAsync();
@@ -364,29 +362,35 @@ namespace PlexRequests.UI.Modules
 
             return myIssues;
         }
-        private async Task<Negotiator> RemoveIssue(int issueId)
+        private async Task<Response> RemoveIssue(int issueId)
         {
             try
             {
                 this.RequiresClaims(UserClaims.Admin);
                 var issue = await IssuesService.GetAsync(issueId);
                 var request = await RequestService.GetAsync(issue.RequestId);
+                if (request.Id > 0)
+                {
+                    request.IssueId = 0; // No issue;
 
-                request.IssueId = 0; // No issue;
-
-                var result = await RequestService.UpdateRequestAsync(request);
-                if (result)
+                    var result = await RequestService.UpdateRequestAsync(request);
+                    if (result)
+                    {
+                        await IssuesService.DeleteIssueAsync(issueId);
+                    }
+                }
+                else
                 {
                     await IssuesService.DeleteIssueAsync(issueId);
                 }
 
-                return View["Index"];
+                return Response.AsJson(new JsonResponseModel { Result = true });
 
             }
             catch (Exception e)
             {
                 Log.Error(e);
-                return View["Index"];
+                return Response.AsJson(new JsonResponseModel() { Result = false, Message = "Could not delete issue! Check the logs."});
             }
 
         }

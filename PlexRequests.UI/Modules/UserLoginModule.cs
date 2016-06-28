@@ -39,16 +39,21 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Models;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp, IAnalytics a) : base("userlogin", pr)
         {
             AuthService = auth;
             LandingPageSettings = lp;
+            Analytics = a;
             Api = api;
             Get["/", true] = async (x, ct) => await Index();
             Post["/"] = x => LoginUser();
@@ -58,6 +63,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private IPlexApi Api { get; }
+        private IAnalytics Analytics { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -71,8 +77,18 @@ namespace PlexRequests.UI.Modules
 
                 if (landingSettings.Enabled)
                 {
+
                     if (landingSettings.BeforeLogin)
                     {
+#pragma warning disable 4014
+                        Analytics.TrackEventAsync(
+#pragma warning restore 4014
+                                 Category.LandingPage,
+                                 Action.View,
+                                 "Going To LandingPage before login",
+                                 Username,
+                                 CookieHelper.GetAnalyticClientId(Cookies));
+
                         var model = new LandingPageViewModel
                         {
                             Enabled = landingSettings.Enabled,
@@ -168,7 +184,7 @@ namespace PlexRequests.UI.Modules
 
             if (!authenticated)
             {
-                return Response.AsJson(new JsonResponseModel {Result = false, Message = "Incorrect User or Password"});
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
             }
 
             var landingSettings = LandingPageSettings.GetSettings();
@@ -178,7 +194,7 @@ namespace PlexRequests.UI.Modules
                 if (!landingSettings.BeforeLogin)
                     return Response.AsJson(new JsonResponseModel { Result = true, Message = "landing" });
             }
-            return Response.AsJson(new JsonResponseModel {Result = true, Message = "search" });
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "search" });
         }
 
 

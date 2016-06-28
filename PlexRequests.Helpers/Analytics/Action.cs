@@ -34,6 +34,12 @@ namespace PlexRequests.Helpers.Analytics
         Create,
         Save,
         Update,
-        Start
+        Start,
+        View,
+        Movie,
+        TvShow,
+        Album,
+        Request,
+        Language
     }
 }

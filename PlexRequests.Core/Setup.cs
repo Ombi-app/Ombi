@@ -57,10 +57,6 @@ namespace PlexRequests.Core
             var version = CheckSchema();
             if (version > 0)
             {
-                if (version > 1700 && version <= 1799)
-                {
-                    MigrateToVersion1700();
-                }
                 if (version > 1799 && version <= 1800)
                 {
                     MigrateToVersion1800();
@@ -104,8 +100,8 @@ namespace PlexRequests.Core
                 RequireMovieApproval = true,
                 SearchForMovies = true,
                 SearchForTvShows = true,
-                WeeklyRequestLimit = 0,
-                BaseUrl = baseUrl ?? string.Empty
+                BaseUrl = baseUrl ?? string.Empty,
+                CollectAnalyticData = true,
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);

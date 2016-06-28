@@ -46,6 +46,8 @@ using System.Threading.Tasks;
 
 using NLog;
 
+using PlexRequests.Core.Models;
+
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseAuthModule
