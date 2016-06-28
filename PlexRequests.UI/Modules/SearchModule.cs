@@ -880,6 +880,9 @@ namespace PlexRequests.UI.Modules
             if (IsAdmin)
                 return true;
 
+            if (s.ApprovalWhiteList.Contains(Username))
+                return true;
+
             var requestLimit = GetRequestLimitForType(type, s);
             if (requestLimit == 0)
             {
