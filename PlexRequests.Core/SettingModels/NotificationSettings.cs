@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationModel.cs
+//    File: NotificationSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
-using System;
+using System.Collections.Generic;
 
 using PlexRequests.Core.Models;
 
-namespace PlexRequests.Services.Notification
+namespace PlexRequests.Core.SettingModels
 {
-    public class NotificationModel
+    public class NotificationSettings : Settings
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public DateTime DateTime { get; set; }
-        public NotificationType NotificationType { get; set; }
-        public string User { get; set; }
-        public string UserEmail { get; set; }
-        public RequestType RequestType { get; set; }
+        public Dictionary<NotificationType, string> Message { get; set; }
+        public Dictionary<string,string> CustomParamaters { get; set; }
     }
 }

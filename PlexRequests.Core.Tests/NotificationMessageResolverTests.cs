@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationModel.cs
+//    File: AuthenticationSettingsTests.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,36 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
-using System;
+using NUnit.Framework;
 
-using PlexRequests.Core.Models;
+using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Services.Notification
+namespace PlexRequests.Core.Tests
 {
-    public class NotificationModel
+    [TestFixture]
+    public class AuthenticationSettingsTests
     {
-        public string Title { get; set; }
-        public string Body { get; set; }
-        public DateTime DateTime { get; set; }
-        public NotificationType NotificationType { get; set; }
-        public string User { get; set; }
-        public string UserEmail { get; set; }
-        public RequestType RequestType { get; set; }
+        [Test, TestCaseSource(nameof(UserData))]
+        public void DeniedUserListTest(string users, string[] expected)
+        {
+            var model = new AuthenticationSettings { DeniedUsers = users };
+
+            var result = model.DeniedUserList;
+
+            Assert.That(result.Count, Is.EqualTo(expected.Length));
+            for (var i = 0; i < expected.Length; i++)
+            {
+                Assert.That(result[i], Is.EqualTo(expected[i]));
+            }
+        }
+
+        static readonly object[] UserData =
+        {
+            new object[] { "john", new [] {"john"} },
+            new object[] { "john , abc   ,", new [] {"john", "abc"} },
+            new object[] { "john,, cde", new [] {"john", "cde"} },
+            new object[] { "john,,, aaa , baaa  ,       ", new [] {"john","aaa","baaa"} },
+            new object[] { "john, aaa , baaa  ,       maaa, caaa", new [] {"john","aaa","baaa", "maaa", "caaa"} },
+        };
     }
 }

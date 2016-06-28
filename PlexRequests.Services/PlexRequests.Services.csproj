@@ -93,7 +93,6 @@
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
-    <Compile Include="Notification\NotificationType.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
     <Compile Include="Notification\SlackNotification.cs" />

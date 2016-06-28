@@ -31,6 +31,7 @@ using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;

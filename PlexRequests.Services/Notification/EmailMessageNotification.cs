@@ -33,6 +33,7 @@ using MimeKit;
 using NLog;
 
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
