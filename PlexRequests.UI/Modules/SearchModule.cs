@@ -877,6 +877,9 @@ namespace PlexRequests.UI.Modules
 
         private async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
         {
+            if (IsAdmin)
+                return true;
+
             var requestLimit = GetRequestLimitForType(type, s);
             if (requestLimit == 0)
             {
