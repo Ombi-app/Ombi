@@ -71,7 +71,7 @@ namespace PlexRequests.UI.Modules
             var response = Context.GetRedirect(returnUrl);
 
             response.WithCookie(CultureCookieName, cookie ?? culture, DateTime.Now.AddYears(1));
-            await Analytics.TrackEventAsync(Category.Navbar, PlexRequests.Helpers.Analytics.Action.Language, culture, Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Navbar, PlexRequests.Helpers.Analytics.Action.Language, culture, Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             return response;
         }

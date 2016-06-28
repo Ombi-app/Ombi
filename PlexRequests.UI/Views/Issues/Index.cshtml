@@ -83,10 +83,12 @@
             <div class="col-sm-1">
                 <a href="" id="{{id}}link" class="btn btn-sm btn-info-outline approve"><i class="fa fa-info"></i> Details</a>
                 <br />
+                {{#if admin}}
                 <form action="@formAction/issues/remove" method="post" id="delete{{id}}">
                     <input id="issueId" name="issueId" value="{{id}}" hidden="hidden" />
                     <button type="submit" id="{{id}}" class="btn btn-sm btn-danger-outline dropdown-toggle delete">Remove</button>
                 </form>  
+                {{/if}}
             </div>
         </div>
     </div>

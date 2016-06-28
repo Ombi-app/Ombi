@@ -158,19 +158,19 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> UpcomingMovies()
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Movie, "Upcoming", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, "Upcoming", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Upcoming, string.Empty);
         }
 
         private async Task<Response> CurrentlyPlayingMovies()
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Movie, "CurrentlyPlaying", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, "CurrentlyPlaying", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
         }
 
         private async Task<Response> SearchMovie(string searchTerm)
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Movie, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
@@ -285,7 +285,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
             Log.Trace("Searching for TV Show {0}", searchTerm);
 
@@ -373,7 +373,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchMusic(string searchTerm)
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiAlbums = new List<Release>();
             await Task.Run(() => MusicBrainzApi.SearchAlbum(searchTerm)).ContinueWith((t) =>
             {
@@ -431,7 +431,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for Movies! Please contact your admin." });
             }
 
-            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
             Log.Trace("Getting movie info from TheMovieDb");
@@ -536,7 +536,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for TV Shows! Please contact your admin." });
             }
-            await Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
@@ -689,7 +689,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for Albums! Please contact your admin." });
             }
-            await Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var existingRequest = await RequestService.CheckRequestAsync(releaseId);
             Log.Debug("Checking for an existing request");
 
@@ -808,7 +808,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> NotifyUser(bool notify)
         {
-            await Analytics.TrackEventAsync(Category.Search, Action.Save, "NotifyUser", Username, CookieHelper.GetAnalyticClientId(Cookies), notify ? 1 : 0);
+            Analytics.TrackEventAsync(Category.Search, Action.Save, "NotifyUser", Username, CookieHelper.GetAnalyticClientId(Cookies), notify ? 1 : 0);
             var authSettings = await Auth.GetSettingsAsync();
             var auth = authSettings.UserAuthentication;
             var emailSettings = await EmailNotificationSettings.GetSettingsAsync();

@@ -78,7 +78,7 @@ namespace PlexRequests.UI.Modules
 
             foreach (var i in issuesModels)
             {
-                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), };
+                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), Admin = IsAdmin };
 
                 // Create a string with all of the current issue states with a "," delimiter in e.g. Wrong Content, Playback Issues
                 var state = i.Issues.Select(x => x.Issue).ToArray();

@@ -262,11 +262,11 @@ namespace PlexRequests.UI.Modules
             }
             if (!model.CollectAnalyticData)
             {
-                await Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
             }
             var result = PrService.SaveSettings(model);
             
-            await Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "We could not save to the database, please try again" });
