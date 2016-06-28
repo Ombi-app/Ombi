@@ -121,13 +121,13 @@
     <value>Anmelden</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Möchten Sie einen Film oder eine TV-Show zu sehen, aber es ist derzeit nicht auf Plex? Loggen Sie sich unten mit Ihrem Plex.tv Benutzernamen und Passwort !!</value>
+    <value>Möchten Sie einen Film oder eine TV-Show zu sehen, aber es ist derzeit nicht auf Plex? Loggen Sie sich unten mit Ihrem Plex.tv Benutzernamen und Passwort !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Ihre Login-Daten werden verwendet, nur Ihr Plex Konto zu authentifizieren.!</value>
+    <value>Ihre Login-Daten werden verwendet, nur Ihr Plex Konto zu authentifizieren.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Benutzername!</value>
+    <value>Plex.tv Benutzername</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Benutzername</value>
@@ -136,7 +136,7 @@
     <value>Passwort</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Anmelden!</value>
+    <value>Anmelden</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
     <value>Irgendetwas ist falsch gelaufen</value>
@@ -148,7 +148,7 @@
     <value>Plex Requests</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
-    <value>Suche!</value>
+    <value>Suche</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
     <value>Anfragen</value>
@@ -172,7 +172,7 @@
     <value>Ausloggen</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Es gibt ein neues Update verfügbar! Klicken!</value>
+    <value>Es gibt ein neues Update verfügbar! Klicken</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Englisch</value>
@@ -193,7 +193,7 @@
     <value>Schwedisch</value>
   </data>
   <data name="Layout_Italian" xml:space="preserve">
-    <value>ITALIENISCH</value>
+    <value>Italienisch</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
     <value>hier</value>
@@ -211,10 +211,10 @@
     <value>Alben</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Möchten Sie etwas zu sehen, die derzeit nicht auf Plex ist ?! Kein Problem! Suchen Sie einfach nach unten und es es wünschen !!</value>
+    <value>Möchten Sie etwas zu sehen, die derzeit nicht auf Plex ist ?! Kein Problem! Suchen Sie einfach nach unten und es es wünschen !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>Suche!</value>
+    <value>Suche</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Vorschläge</value>
@@ -226,10 +226,10 @@
     <value>Theatern</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Senden Sie mir eine Benachrichtigung, wenn Gegenstände, die ich angefordert wurden hinzugefügt!</value>
+    <value>Senden Sie mir eine Benachrichtigung, wenn Gegenstände, die ich angefordert wurden hinzugefügt</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
-    <value>Speichern!</value>
+    <value>Speichern</value>
   </data>
   <data name="Search_Available" xml:space="preserve">
     <value>V ERFÜGBAR</value>
@@ -244,19 +244,19 @@
     <value>alle Saisonen</value>
   </data>
   <data name="Search_FirstSeason" xml:space="preserve">
-    <value>Erste Saison!</value>
+    <value>Erste Saison</value>
   </data>
   <data name="Search_LatestSeason" xml:space="preserve">
-    <value>Neueste Saison!</value>
+    <value>Neueste Saison</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
     <value>Auswählen</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
-    <value>Report Ausgabe!</value>
+    <value>Report Ausgabe</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Falsche Audio!</value>
+    <value>Falsche Audio</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
     <value>Keine Untertitel</value>
@@ -265,25 +265,25 @@
     <value>Falscher Inhaltstyp.</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
-    <value>Wiedergabe-Probleme!</value>
+    <value>Wiedergabe-Probleme</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
     <value>Sonstige</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Track-Count!</value>
+    <value>Track-Count</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Land</value>
   </data>
   <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
-    <value>Jahreszeiten!</value>
+    <value>Jahreszeiten</value>
   </data>
   <data name="Common_Close" xml:space="preserve">
     <value>Schließen</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Fügen Sie ein Problem!</value>
+    <value>Fügen Sie ein Problem</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Änderungen speichern</value>

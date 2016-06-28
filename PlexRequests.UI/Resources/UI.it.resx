@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UserLogin_Title" xml:space="preserve">
-    <value>Login</value>
+    <value>Accesso</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vuoi guardare un film o tv ma non è attualmente in Plex? Effettua il login con il tuo username e la password Plex.tv !!</value>
+    <value>Vuoi guardare un film o tv ma non è attualmente in Plex? Effettua il login con il tuo username e la password Plex.tv !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>I dati di accesso vengono utilizzati solo per autenticare l&amp;#39;account Plex.!</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Nome utente!</value>
+    <value>Plex.tv Nome utente</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Nome utente</value>
   </data>
   <data name="UserLogin_Password" xml:space="preserve">
-    <value>Password</value>
+    <value>Parola d'ordine</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Accedi!</value>
+    <value>Accedi</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
     <value>Errore</value>
@@ -148,7 +148,7 @@
     <value>Plex Requests</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>C'è un nuovo aggiornamento disponibile! Clic!</value>
+    <value>C'è un nuovo aggiornamento disponibile! Clic</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
     <value>Cerca!</value>
@@ -172,10 +172,10 @@
     <value>Modifica password</value>
   </data>
   <data name="Layout_Logout" xml:space="preserve">
-    <value>LOGOUT</value>
+    <value>Disconnettersi</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
-    <value>Inglese!</value>
+    <value>Inglese</value>
   </data>
   <data name="Layout_Spanish" xml:space="preserve">
     <value>Spagnolo</value>
@@ -196,13 +196,13 @@
     <value>Italiano</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
-    <value>Here</value>
+    <value>Qui!</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Olandese</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>Cerca!</value>
+    <value>Cerca</value>
   </data>
   <data name="Search_Movies" xml:space="preserve">
     <value>Film</value>
@@ -274,7 +274,7 @@
     <value>Conta di pista</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
-    <value>PAESE</value>
+    <value>Nazione</value>
   </data>
   <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
     <value>Stagioni</value>
@@ -283,7 +283,7 @@
     <value>Chiudi</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Aggiungere un problema!</value>
+    <value>Aggiungere un problema</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Salva Cambia</value>

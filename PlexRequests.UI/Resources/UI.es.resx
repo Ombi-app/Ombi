@@ -121,13 +121,13 @@
     <value>INICIAR SESIÓN</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>¿Quieres ver una película o programa de televisión, pero no es actualmente en Plex? Ingresa abajo con su nombre de usuario y contraseña Plex.tv !!</value>
+    <value>¿Quieres ver una película o programa de televisión, pero no es actualmente en Plex? Ingresa abajo con su nombre de usuario y contraseña Plex.tv !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Sus datos de acceso sólo se utilizan para autenticar su cuenta Plex.!</value>
+    <value>Sus datos de acceso sólo se utilizan para autenticar su cuenta Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv nombre de usuario!</value>
+    <value>Plex.tv nombre de usuario</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Username</value>
@@ -139,16 +139,16 @@
     <value>Iniciar sesión</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Algo salió mal.</value>
+    <value>Algo salió mal</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>CRÍTICOS</value>
+    <value>¡Éxito!</value>
   </data>
   <data name="Layout_Title" xml:space="preserve">
     <value>Plex Requests</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
-    <value>¡Buscar!</value>
+    <value>Buscar</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
     <value>Peticiones</value>
@@ -157,7 +157,7 @@
     <value>Problemas</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
-    <value>«¡Dona!»</value>
+    <value>Dona</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
     <value>Administración</value>
@@ -172,7 +172,7 @@
     <value>Desconectarse</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Hay una nueva actualización disponible! ¡Hacer clic!</value>
+    <value>Hay una nueva actualización disponible! Hacer clic</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Inglés</value>
@@ -211,31 +211,31 @@
     <value>Álbumes</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>¿Quieres ver algo que no se encuentra actualmente en Plex ?! ¡No hay problema! Sólo la búsqueda de abajo y que solicitarlo !!</value>
+    <value>¿Quieres ver algo que no se encuentra actualmente en Plex ?! ¡No hay problema! Sólo la búsqueda de abajo y que solicitarlo !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>¡Buscar!</value>
+    <value>Buscar</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Sugerencias</value>
   </data>
   <data name="Search_ComingSoon" xml:space="preserve">
-    <value>Muy Pronto!</value>
+    <value>Muy Pronto</value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
-    <value>¡En los cines!</value>
+    <value>En los cines</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Envíame una notificación cuando se han añadido elementos que he solicitado!</value>
+    <value>Envíame una notificación cuando se han añadido elementos que he solicitado</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
-    <value>Ahorra!</value>
+    <value>Ahorra</value>
   </data>
   <data name="Search_Available" xml:space="preserve">
     <value>disponible</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
-    <value>¡Pedido!</value>
+    <value>Pedido</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
     <value>Solicitud</value>
@@ -244,34 +244,34 @@
     <value>Todas las temporadas</value>
   </data>
   <data name="Search_FirstSeason" xml:space="preserve">
-    <value>Primera Temporada!</value>
+    <value>Primera Temporada</value>
   </data>
   <data name="Search_LatestSeason" xml:space="preserve">
-    <value>Última estación!</value>
+    <value>Última estación</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
     <value>Seleccionar</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
-    <value>Informe del problema!</value>
+    <value>Informe del problema</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Audio mal!</value>
+    <value>Audio mal</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
     <value>Subtitles</value>
   </data>
   <data name="Issues_WrongContent" xml:space="preserve">
-    <value>Contenido incorrecto!</value>
+    <value>Contenido incorrecto</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
-    <value>Problemas de reproducción!</value>
+    <value>Problemas de reproducción</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
     <value>Otro</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>El número de pistas!</value>
+    <value>El número de pistas</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>País</value>
@@ -283,7 +283,7 @@
     <value>Cerrar</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Añadir un problema!</value>
+    <value>Añadir un problema</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Guardar cambios</value>
@@ -292,6 +292,6 @@
     <value>Temporada</value>
   </data>
   <data name="Layout_Welcome" xml:space="preserve">
-    <value>¡Bienvenido</value>
+    <value>Bienvenido</value>
   </data>
 </root>

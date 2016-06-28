@@ -124,7 +124,7 @@
     <value>Ønsker du at se en film eller tv-show, men det er i øjeblikket ikke på Plex? Log nedenfor med dit Plex.tv brugernavn og password !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Dine login-oplysninger bruges kun til at godkende din Plex konto.!</value>
+    <value>Dine login-oplysninger bruges kun til at godkende din Plex konto.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
     <value>Plex.tv Brugernavn</value>
@@ -172,7 +172,7 @@
     <value>Log ud</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Der er en ny opdatering tilgængelig! Klik!</value>
+    <value>Der er en ny opdatering tilgængelig! Klik</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Dansk</value>
@@ -271,7 +271,7 @@
     <value>Andet</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Track Count!</value>
+    <value>Track Count</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Land</value>

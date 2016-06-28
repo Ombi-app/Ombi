@@ -136,10 +136,10 @@
     <value>Mot de passe</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Se connecter!</value>
+    <value>Se connecter</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Quelque-chose s'est mal passé!</value>
+    <value>Quelque-chose s'est mal passé</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
     <value>Succès</value>
@@ -157,7 +157,7 @@
     <value>Sortie</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
-    <value>FAIRE UN DON</value>
+    <value>Faire Un Don</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
     <value>d'Administration</value>
@@ -172,7 +172,7 @@
     <value>Déconnexion</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Il y a une nouvelle mise à jour disponible! Cliquez!</value>
+    <value>Il y a une nouvelle mise à jour disponible! Cliquez</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Anglais</value>
@@ -205,13 +205,13 @@
     <value>Films</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
-    <value>Émissions de télévision!</value>
+    <value>Émissions de télévision</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
     <value>Albums</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vous voulez regarder quelque chose qui est pas actuellement sur Plex ?! Pas de problème! Il suffit de chercher ci-dessous et demander !!</value>
+    <value>Vous voulez regarder quelque chose qui est pas actuellement sur Plex ?! Pas de problème! Il suffit de chercher ci-dessous et demander !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Chercher</value>
@@ -220,13 +220,13 @@
     <value>Suggestions</value>
   </data>
   <data name="Search_ComingSoon" xml:space="preserve">
-    <value>Bientôt disponible !</value>
+    <value>Bientôt disponible </value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
     <value>Théâtre</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Envoyez-moi une notification lorsque des éléments que  j'ai  demandés ont été ajoutés!</value>
+    <value>Envoyez-moi une notification lorsque des éléments que  j'ai  demandés ont été ajoutés</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
     <value>Enregistrer</value>
@@ -235,7 +235,7 @@
     <value>Disponible</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
-    <value>Demandé!</value>
+    <value>Demandé</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
     <value>Requête</value>
@@ -244,10 +244,10 @@
     <value>Saisons</value>
   </data>
   <data name="Search_FirstSeason" xml:space="preserve">
-    <value>Première saison!</value>
+    <value>Première saison</value>
   </data>
   <data name="Search_LatestSeason" xml:space="preserve">
-    <value>Dernière saison!</value>
+    <value>Dernière saison</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
     <value>Sélectionner</value>
@@ -256,22 +256,22 @@
     <value>Formulaire de rapport d'incident</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Mauvais Audio!</value>
+    <value>Mauvais Audio</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
     <value>Pas de sous-titres</value>
   </data>
   <data name="Issues_WrongContent" xml:space="preserve">
-    <value>Contenu erroné!</value>
+    <value>Contenu erroné</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
-    <value>Problèmes de lecture!</value>
+    <value>Problèmes de lecture</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
     <value>Autre</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Nombre de pistes!</value>
+    <value>Nombre de pistes</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Pays</value>
@@ -283,7 +283,7 @@
     <value>Fermer</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Ajouter une question!</value>
+    <value>Ajouter une question</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Sauvegarder les modifications</value>

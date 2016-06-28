@@ -124,10 +124,10 @@
     <value>Wilt u een film of tv-show te kijken, maar het is op het moment niet op Plex? Log hieronder in met uw gebruikersnaam en wachtwoord Plex.tv !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren Plex.!</value>
+    <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Gebruikersnaam!</value>
+    <value>Plex.tv Gebruikersnaam</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Gebruikersnaam</value>
@@ -148,7 +148,7 @@
     <value>Plex Requests</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
-    <value>Zoeken!</value>
+    <value>Zoeken</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
     <value>Verzoeken</value>
@@ -157,7 +157,7 @@
     <value>UItgaves</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
-    <value>Doneren.</value>
+    <value>Doneren</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
     <value>Admin</value>
@@ -172,7 +172,7 @@
     <value>Uitloggen</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Er is een nieuwe update beschikbaar is! Klik!</value>
+    <value>Er is een nieuwe update beschikbaar is! Klik</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>English</value>
@@ -196,13 +196,13 @@
     <value>Italian</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
-    <value>samples/testers</value>
+    <value>Hier!</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Dutch</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>Zoeken!</value>
+    <value>Zoeken</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
     <value>Aangevraagd</value>
@@ -253,7 +253,7 @@
     <value>Selecteer</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
-    <value>Probleem melden…</value>
+    <value>Probleem melden</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
     <value>Verkeerde Audio</value>
@@ -280,7 +280,7 @@
     <value>Seasons</value>
   </data>
   <data name="Common_Close" xml:space="preserve">
-    <value>DICHTBIJ</value>
+    <value>Dichtbij</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
     <value>Een actie-item toevoegen</value>

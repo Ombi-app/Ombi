@@ -124,10 +124,10 @@
     <value>Vill du titta på en film eller TV-show, men det är inte närvarande på Plex? Logga in nedan med Plex.tv användarnamn och lösenord !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.!</value>
+    <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv användarnamn!</value>
+    <value>Plex.tv användarnamn</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Användarnamn</value>
@@ -136,7 +136,7 @@
     <value>Lösenord</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Logga in!</value>
+    <value>Logga in</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
     <value>Något gick fel</value>
@@ -148,13 +148,13 @@
     <value>Plex Requests</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
-    <value>Sök!</value>
+    <value>Sök</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
     <value>Begäran</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>Frågor!</value>
+    <value>Frågor</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
     <value>Donera</value>
@@ -172,7 +172,7 @@
     <value>Logga ut</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Det finns en ny uppdatering tillgänglig! Klick!</value>
+    <value>Det finns en ny uppdatering tillgänglig! Klick</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Svenska</value>
@@ -196,7 +196,7 @@
     <value>Italienska</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
-    <value>Här.”</value>
+    <value>Här</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
     <value>dutch</value>
@@ -208,22 +208,22 @@
     <value>Filmer</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
-    <value>Tv program!</value>
+    <value>Tv program</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vill titta på något som inte är närvarande på Plex ?! Inga problem! Bara söka efter den nedan och begär det !!</value>
+    <value>Vill titta på något som inte är närvarande på Plex ?! Inga problem! Bara söka efter den nedan och begär det !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>Sök!</value>
+    <value>Sök</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Förslag</value>
   </data>
   <data name="Search_ComingSoon" xml:space="preserve">
-    <value>Kommer snart!</value>
+    <value>Kommer snart</value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
     <value>Teater</value>
@@ -250,19 +250,19 @@
     <value>Senaste säsongen</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>Välj...</value>
+    <value>Välj</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
     <value>Rapporten fråga</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Fel ljud!</value>
+    <value>Fel ljud</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
     <value>Inga undertexter</value>
   </data>
   <data name="Issues_WrongContent" xml:space="preserve">
-    <value>Fel innehåll!</value>
+    <value>Fel innehåll</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
     <value>Uppspelningsproblem</value>
