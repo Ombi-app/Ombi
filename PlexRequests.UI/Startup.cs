@@ -28,12 +28,17 @@ using System;
 
 using Nancy.TinyIoc;
 
+using Ninject;
+using Ninject.Modules;
+using Ninject.Planning.Bindings.Resolvers;
+
 using NLog;
 
 using Owin;
 
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
+using PlexRequests.UI.NinjectModules;
 
 namespace PlexRequests.UI
 {
@@ -45,7 +50,28 @@ namespace PlexRequests.UI
         {
             try
             {
-                app.UseNancy();
+                var resolver = new DependancyResolver();
+                var modules = resolver.GetModules();
+                var kernel = new StandardKernel(modules);
+
+                //kernel.Bind(x => x.FromThisAssembly()
+                //    .SelectAllClasses()
+                //    .InheritedFromAny(
+                //        new[]
+                //        {
+                //            typeof(IRequestHandler<,>),
+                //            typeof(IAsyncRequestHandler<,>),
+                //        })
+                //    .BindDefaultInterfaces());
+
+                //kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+                //kernel.Bind(scan => scan.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
+                //kernel.Bind(scan => scan.FromAssemblyContaining<LandingPageCommand>().SelectAllInterfaces().BindAllInterfaces());
+
+                //kernel.Bind<SingleInstanceFactory>().ToMethod(ctx => t => ctx.Kernel.Get(t));
+                //kernel.Bind<MultiInstanceFactory>().ToMethod(ctx => t => ctx.Kernel.GetAll(t));
+
+                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
             }

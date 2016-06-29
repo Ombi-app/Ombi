@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServiceLocator.cs
+//    File: SettingServiceModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Ninject.Modules;
 
-using Nancy.TinyIoc;
+using PlexRequests.Core;
 
-using Ninject;
-
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.UI.NinjectModules
 {
-    public class ServiceLocator : IServiceLocator
+    public class SettingServiceModule : NinjectModule
     {
-        static ServiceLocator()
+        public override void Load()
         {
-            Singleton = new ServiceLocator();
+            Bind(typeof(ISettingsService<>)).To(typeof(SettingsServiceV2<>));
         }
-        private static ServiceLocator Singleton { get; }
-        private IKernel Container { get; set; }
-        public static ServiceLocator Instance => Singleton;
-
-        public void SetContainer(IKernel con)
-        {
-            Container = con;
-        }
-        public T Resolve<T>() where T : class
-        {
-            return Container?.Get<T>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return Container.Get(type);
-        }
-    }
-
-    public interface IServiceLocator
-    {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
     }
 }

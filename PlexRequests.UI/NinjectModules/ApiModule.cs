@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServiceLocator.cs
+//    File: ApiModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,27 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Ninject.Modules;
 
-using Nancy.TinyIoc;
+using PlexRequests.Api;
+using PlexRequests.Api.Interfaces;
 
-using Ninject;
-
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.UI.NinjectModules
 {
-    public class ServiceLocator : IServiceLocator
+    public class ApiModule : NinjectModule
     {
-        static ServiceLocator()
+        public override void Load()
         {
-            Singleton = new ServiceLocator();
+            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
+            Bind<IPushbulletApi>().To<PushbulletApi>();
+            Bind<IPushoverApi>().To<PushoverApi>();
+            Bind<ISickRageApi>().To<SickrageApi>();
+            Bind<ISonarrApi>().To<SonarrApi>();
+            Bind<IPlexApi>().To<PlexApi>();
+            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
+            Bind<IHeadphonesApi>().To<HeadphonesApi>();
+            Bind<ISlackApi>().To<SlackApi>();
+            Bind<IApiRequest>().To<ApiRequest>();
         }
-        private static ServiceLocator Singleton { get; }
-        private IKernel Container { get; set; }
-        public static ServiceLocator Instance => Singleton;
-
-        public void SetContainer(IKernel con)
-        {
-            Container = con;
-        }
-        public T Resolve<T>() where T : class
-        {
-            return Container?.Get<T>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return Container.Get(type);
-        }
-    }
-
-    public interface IServiceLocator
-    {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
     }
 }

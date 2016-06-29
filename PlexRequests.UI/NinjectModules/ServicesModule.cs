@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServiceLocator.cs
+//    File: ServicesModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,32 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Ninject.Modules;
 
-using Nancy.TinyIoc;
+using PlexRequests.Helpers.Analytics;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Jobs;
 
-using Ninject;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.UI.NinjectModules
 {
-    public class ServiceLocator : IServiceLocator
+    public class ServicesModule : NinjectModule
     {
-        static ServiceLocator()
+        public override void Load()
         {
-            Singleton = new ServiceLocator();
+            Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
+            Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
+            Bind<ISonarrCacher>().To<SonarrCacher>();
+            Bind<ISickRageCacher>().To<SickRageCacher>();
+            Bind<IJobFactory>().To<CustomJobFactory>();
+     
+            Bind<IAnalytics>().To<Analytics>();
+            Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
+            Bind<IJobScheduler>().To<Scheduler>();
         }
-        private static ServiceLocator Singleton { get; }
-        private IKernel Container { get; set; }
-        public static ServiceLocator Instance => Singleton;
-
-        public void SetContainer(IKernel con)
-        {
-            Container = con;
-        }
-        public T Resolve<T>() where T : class
-        {
-            return Container?.Get<T>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return Container.Get(type);
-        }
-    }
-
-    public interface IServiceLocator
-    {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
     }
 }

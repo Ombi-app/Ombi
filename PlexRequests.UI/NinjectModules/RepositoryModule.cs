@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServiceLocator.cs
+//    File: RepositoryModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,42 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+using Ninject.Modules;
 
-using Nancy.TinyIoc;
+using PlexRequests.Core;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Jobs;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
-using Ninject;
-
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.UI.NinjectModules
 {
-    public class ServiceLocator : IServiceLocator
+    public class RepositoryModule : NinjectModule
     {
-        static ServiceLocator()
+        public override void Load()
         {
-            Singleton = new ServiceLocator();
-        }
-        private static ServiceLocator Singleton { get; }
-        private IKernel Container { get; set; }
-        public static ServiceLocator Instance => Singleton;
+            Bind<IRepository<UsersModel>>().To<UserRepository<UsersModel>>();
+            Bind(typeof(IRepository<>)).To(typeof(GenericRepository<>));
 
-        public void SetContainer(IKernel con)
-        {
-            Container = con;
-        }
-        public T Resolve<T>() where T : class
-        {
-            return Container?.Get<T>();
+            Bind<IRequestService>().To<JsonRequestModelRequestService>();
+            Bind<IRequestRepository>().To<RequestJsonRepository>();
+            Bind<IIssueService>().To<IssueJsonService>();
+            Bind<ISettingsRepository>().To<SettingsJsonRepository>();
+            Bind<IJobRecord>().To<JobRecord>();
         }
 
-        public object Resolve(Type type)
-        {
-            return Container.Get(type);
-        }
-    }
-
-    public interface IServiceLocator
-    {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
     }
 }

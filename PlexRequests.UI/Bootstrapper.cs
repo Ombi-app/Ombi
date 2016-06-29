@@ -32,43 +32,46 @@ using Mono.Data.Sqlite;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
+using Nancy.Bootstrappers.Ninject;
 using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
 using Nancy.Session;
-using Nancy.TinyIoc;
 
-using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Services;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
-using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using Nancy.Json;
 
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Services.Jobs;
-using PlexRequests.UI.Jobs;
-
-using Quartz;
-using Quartz.Impl;
-using Quartz.Spi;
+using Ninject;
 
 namespace PlexRequests.UI
 {
-    public class Bootstrapper : DefaultNancyBootstrapper
+    public class Bootstrapper : NinjectNancyBootstrapper
     {
         // The bootstrapper enables you to reconfigure the composition of the framework,
         // by overriding the various methods and properties.
         // For more information https://github.com/NancyFx/Nancy/wiki/Bootstrapper
 
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        public Bootstrapper(IKernel kernel)
+        {
+            _kernel = kernel;
+        }
+
+        private IKernel _kernel;
+        protected override IKernel GetApplicationContainer()
+        {
+            _kernel.Load<FactoryModule>();
+            return _kernel;
+        }
+
+        protected override void ApplicationStartup(IKernel container, IPipelines pipelines)
         {
             ConfigureContainer(container);
 
@@ -87,7 +90,7 @@ namespace PlexRequests.UI
             var formsAuthConfiguration = new FormsAuthenticationConfiguration
             {
                 RedirectUrl = redirect,
-                UserMapper = container.Resolve<IUserMapper>()
+                UserMapper = container.Get<IUserMapper>()
             };
 
             FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
@@ -115,40 +118,40 @@ namespace PlexRequests.UI
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
 
-        private void SubscribeAllObservers(TinyIoCContainer container)
+        private void SubscribeAllObservers(IKernel container)
         {
-            var notificationService = container.Resolve<INotificationService>();
+            var notificationService = container.Get<INotificationService>();
 
-            var emailSettingsService = container.Resolve<ISettingsService<EmailNotificationSettings>>();
+            var emailSettingsService = container.Get<ISettingsService<EmailNotificationSettings>>();
             var emailSettings = emailSettingsService.GetSettings();
             if (emailSettings.Enabled)
             {
                 notificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
             }
 
-            var pushbulletService = container.Resolve<ISettingsService<PushbulletNotificationSettings>>();
+            var pushbulletService = container.Get<ISettingsService<PushbulletNotificationSettings>>();
             var pushbulletSettings = pushbulletService.GetSettings();
             if (pushbulletSettings.Enabled)
             {
-                notificationService.Subscribe(new PushbulletNotification(container.Resolve<IPushbulletApi>(), pushbulletService));
+                notificationService.Subscribe(new PushbulletNotification(container.Get<IPushbulletApi>(), pushbulletService));
             }
 
-            var pushoverService = container.Resolve<ISettingsService<PushoverNotificationSettings>>();
+            var pushoverService = container.Get<ISettingsService<PushoverNotificationSettings>>();
             var pushoverSettings = pushoverService.GetSettings();
             if (pushoverSettings.Enabled)
             {
-                notificationService.Subscribe(new PushoverNotification(container.Resolve<IPushoverApi>(), pushoverService));
+                notificationService.Subscribe(new PushoverNotification(container.Get<IPushoverApi>(), pushoverService));
             }
 
-            var slackService = container.Resolve<ISettingsService<SlackNotificationSettings>>();
+            var slackService = container.Get<ISettingsService<SlackNotificationSettings>>();
             var slackSettings = slackService.GetSettings();
             if (slackSettings.Enabled)
             {
-                notificationService.Subscribe(new SlackNotification(container.Resolve<ISlackApi>(), slackService));
+                notificationService.Subscribe(new SlackNotification(container.Get<ISlackApi>(), slackService));
             }
         }
         
-        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        protected override void RequestStartup(IKernel container, IPipelines pipelines, NancyContext context)
         {
             //CORS Enable
             pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
@@ -161,68 +164,9 @@ namespace PlexRequests.UI
             base.RequestStartup(container, pipelines, context);
         }
 
-        private void ConfigureContainer(TinyIoCContainer container)
+        private void ConfigureContainer(IKernel container)
         {
-            container.Register<ICacheProvider, MemoryCacheProvider>().AsSingleton();
-            container.Register<ISqliteConfiguration, DbConfiguration>(new DbConfiguration(new SqliteFactory()));
-            container.Register<IRepository<UsersModel>, UserRepository<UsersModel>>();
-            container.Register<IUserMapper, UserMapper>();
-            container.Register<ICustomUserMapper, UserMapper>();
-            container.Register<ISettingsService<EmailNotificationSettings>, SettingsServiceV2<EmailNotificationSettings>>();
-            container.Register<ISettingsService<PushbulletNotificationSettings>, SettingsServiceV2<PushbulletNotificationSettings>>();
-            container.Register<ISettingsService<PushoverNotificationSettings>, SettingsServiceV2<PushoverNotificationSettings>>();
-            container.Register<ISettingsService<SlackNotificationSettings>, SettingsServiceV2<SlackNotificationSettings>>();
-            container.Register<ISettingsService<ScheduledJobsSettings>, SettingsServiceV2<ScheduledJobsSettings>>();
-
-            // Notification Service
-            container.Register<INotificationService, NotificationService>().AsSingleton();
-            // Settings
-            container.Register<ISettingsService<PlexRequestSettings>, SettingsServiceV2<PlexRequestSettings>>();
-            container.Register<ISettingsService<CouchPotatoSettings>, SettingsServiceV2<CouchPotatoSettings>>();
-            container.Register<ISettingsService<AuthenticationSettings>, SettingsServiceV2<AuthenticationSettings>>();
-            container.Register<ISettingsService<PlexSettings>, SettingsServiceV2<PlexSettings>>();
-            container.Register<ISettingsService<SonarrSettings>, SettingsServiceV2<SonarrSettings>>();
-            container.Register<ISettingsService<SickRageSettings>, SettingsServiceV2<SickRageSettings>>();
-
-            container.Register<ISettingsService<HeadphonesSettings>, SettingsServiceV2<HeadphonesSettings>>();
-            container.Register<ISettingsService<LogSettings>, SettingsServiceV2<LogSettings>>();
-            container.Register<ISettingsService<LandingPageSettings>, SettingsServiceV2<LandingPageSettings>>();
-
-            // Repo's
-            container.Register<IRepository<LogEntity>, GenericRepository<LogEntity>>();
-            container.Register<IRepository<UsersToNotify>, GenericRepository<UsersToNotify>>();
-            container.Register<IRepository<ScheduledJobs>, GenericRepository<ScheduledJobs>>();
-            container.Register<IRepository<IssueBlobs>, GenericRepository<IssueBlobs>>();
-            container.Register<IRepository<RequestLimit>, GenericRepository<RequestLimit>>();
-            container.Register<IRepository<PlexUsers>, GenericRepository<PlexUsers>>();
-            container.Register<IRequestService, JsonRequestModelRequestService>();
-            container.Register<IIssueService, IssueJsonService>();
-            container.Register<ISettingsRepository, SettingsJsonRepository>();
-            container.Register<IJobRecord, JobRecord>();
-
-            // Services
-            container.Register<IAvailabilityChecker, PlexAvailabilityChecker>();
-            container.Register<ICouchPotatoCacher, CouchPotatoCacher>();
-            container.Register<ISonarrCacher, SonarrCacher>();
-            container.Register<ISickRageCacher, SickRageCacher>();
-            container.Register<IJobFactory, CustomJobFactory>();
-
-            container.Register<IAnalytics, Analytics>();
-            container.Register<ISchedulerFactory, StdSchedulerFactory>();
-            container.Register<IJobScheduler, Scheduler>();
-
-            
-            // Api
-            container.Register<ICouchPotatoApi, CouchPotatoApi>();
-            container.Register<IPushbulletApi, PushbulletApi>();
-            container.Register<IPushoverApi, PushoverApi>();
-            container.Register<ISickRageApi, SickrageApi>();
-            container.Register<ISonarrApi, SonarrApi>();
-            container.Register<IPlexApi, PlexApi>();
-            container.Register<IMusicBrainzApi, MusicBrainzApi>();
-            container.Register<IHeadphonesApi, HeadphonesApi>();
-            container.Register<ISlackApi, SlackApi>();
-
+         
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }

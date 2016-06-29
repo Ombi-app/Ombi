@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServiceLocator.cs
+//    File: DependancyResolver.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,41 +25,24 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Linq;
+using System.Reflection;
 
-using Nancy.TinyIoc;
+using Ninject.Modules;
 
-using Ninject;
-
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.UI.NinjectModules
 {
-    public class ServiceLocator : IServiceLocator
+    public class DependancyResolver
     {
-        static ServiceLocator()
+        public NinjectModule[] GetModules()
         {
-            Singleton = new ServiceLocator();
-        }
-        private static ServiceLocator Singleton { get; }
-        private IKernel Container { get; set; }
-        public static ServiceLocator Instance => Singleton;
+            var path = Assembly.GetAssembly(typeof(SettingServiceModule)).Location;
+            var result = Assembly.LoadFrom(path).GetTypes()
+               .Where(a =>
+                   a.IsClass &&
+                   a.BaseType == typeof(NinjectModule));
 
-        public void SetContainer(IKernel con)
-        {
-            Container = con;
+            return result.Select(r => Activator.CreateInstance(r) as NinjectModule).ToArray();
         }
-        public T Resolve<T>() where T : class
-        {
-            return Container?.Get<T>();
-        }
-
-        public object Resolve(Type type)
-        {
-            return Container.Get(type);
-        }
-    }
-
-    public interface IServiceLocator
-    {
-        T Resolve<T>() where T : class;
-        object Resolve(Type type);
     }
 }
