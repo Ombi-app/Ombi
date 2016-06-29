@@ -719,7 +719,7 @@ namespace PlexRequests.UI.Modules
         private Response UpdateLogLevels(int level)
         {
             var settings = LogService.GetSettings();
-
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Updated Log Levels", Username, CookieHelper.GetAnalyticClientId(Cookies), level);
             // apply the level
             var newLevel = LogLevel.FromOrdinal(level);
             LoggingHelper.ReconfigureLogLevel(newLevel);
@@ -760,6 +760,7 @@ namespace PlexRequests.UI.Modules
         private Response CreateApiKey()
         {
             this.RequiresClaims(UserClaims.Admin);
+            Analytics.TrackEventAsync(Category.Admin, Action.Create, "Created API Key", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();
 
@@ -847,6 +848,7 @@ namespace PlexRequests.UI.Modules
         {
             var settings = this.Bind<LandingPageSettings>();
 
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update Landing Page", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
             if (string.IsNullOrEmpty(plexSettings.Ip))
             {
@@ -885,6 +887,8 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SaveScheduledJobs()
         {
+
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update ScheduledJobs", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var settings = this.Bind<ScheduledJobsSettings>();
 
             var result = await ScheduledJobSettings.SaveSettingsAsync(settings);
@@ -898,6 +902,7 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
+                Analytics.TrackEventAsync(Category.Admin, Action.Delete, "Clear Logs", Username, CookieHelper.GetAnalyticClientId(Cookies));
                 var allLogs = await LogsRepo.GetAllAsync();
                 foreach (var logEntity in allLogs)
                 {
