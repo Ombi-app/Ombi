@@ -19,7 +19,7 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading landing-title">Notice</h4>
-                @Model.NoticeMessage<br />
+                @Html.Raw(Model.NoticeMessage)<br />
                 @if (Model.EnabledNoticeTime)
                 {
                     <strong><span id="startDate"></span> <span id="endDate"></span></strong>
