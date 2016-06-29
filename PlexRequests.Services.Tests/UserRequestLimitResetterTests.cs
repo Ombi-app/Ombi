@@ -121,7 +121,6 @@ namespace PlexRequests.Services.Tests
             new TestCaseData(-3, RequestType.TvShow).SetName("-3 Day(s)"),
             new TestCaseData(-4, RequestType.Movie).SetName("-4 Day(s)"),
             new TestCaseData(-5, RequestType.TvShow).SetName("-5 Day(s)"),
-            new TestCaseData(-6, RequestType.Movie).SetName("-6 Day(s)"),
             new TestCaseData(0, RequestType.TvShow).SetName("0 Day(s)")
         };
 
