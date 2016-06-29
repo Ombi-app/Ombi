@@ -903,7 +903,7 @@ namespace PlexRequests.UI.Modules
                 {
                     await LogsRepo.DeleteAsync(logEntity);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = true });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Logs cleared successfully."});
             }
             catch (Exception e)
             {
