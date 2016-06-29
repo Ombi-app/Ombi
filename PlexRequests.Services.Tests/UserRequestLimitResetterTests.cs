@@ -115,6 +115,7 @@ namespace PlexRequests.Services.Tests
         private static readonly IEnumerable<TestCaseData> DoNotResetData = new List<TestCaseData>
         {
             new TestCaseData(1, RequestType.Movie).SetName("1 Day(s)"),
+            new TestCaseData(100, RequestType.Movie).SetName("100 Day(s)"),
             new TestCaseData(-6, RequestType.TvShow).SetName("-6 Day(s)"),
             new TestCaseData(-1, RequestType.TvShow).SetName("-1 Day(s)"),
             new TestCaseData(-2, RequestType.Album).SetName("-2 Day(s)"),

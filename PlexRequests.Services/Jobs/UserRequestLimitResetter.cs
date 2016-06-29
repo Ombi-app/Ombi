@@ -88,7 +88,7 @@ namespace PlexRequests.Services.Jobs
             var users = allUsers.Where(x => x.RequestType == type);
             foreach (var u in users)
             {
-                var daysDiff = (u.FirstRequestDate - DateTime.UtcNow.AddDays(-7)).Days;
+                var daysDiff = (u.FirstRequestDate - DateTime.UtcNow.AddDays(-7)).TotalDays;
                 if (daysDiff <= 0)
                 {
                     Repo.Delete(u);
