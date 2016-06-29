@@ -34,6 +34,8 @@ namespace PlexRequests.Core
 {
     public class NotificationMessageResolver
     {
+        private const char StartChar = (char)123;
+        private const char EndChar = (char)125;
         public string ParseMessage<T>(T notification, NotificationType type) where T : NotificationSettings
         {
             var notificationToParse = notification.Message.FirstOrDefault(x => x.Key == type).Value;
@@ -75,13 +77,13 @@ namespace PlexRequests.Core
                     continue;
                 }
 
-                if (c == 123) // Start of curly '{'
+                if (c == StartChar) // Start of curly '{'
                 {
                     insideCurly = true;
                     continue;
                 }
 
-                if (c == 125) // End of curly '}'
+                if (c == EndChar) // End of curly '}'
                 {
                     fields.Add(currentWord); // We have finished the curly, add the word into the list
                     currentWord = string.Empty;

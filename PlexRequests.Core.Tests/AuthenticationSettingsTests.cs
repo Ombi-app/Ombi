@@ -84,6 +84,31 @@ namespace PlexRequests.Core.Tests
                     new Dictionary<string, string> { { "son", "HEY!" } })
                     .Returns(new string(')', 5000))
                     .SetName("Long String");
+
+
+                yield return new TestCaseData(
+                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "This is a {Username} and {Username} Because {Curly}{Curly}" } },
+                    new Dictionary<string, string> { { "Username", "HEY!" }, {"Curly","Bob"} })
+                    .Returns("This is a HEY! and HEY! Because BobBob")
+                    .SetName("Double Curly");
+
+                yield return new TestCaseData(
+                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "This is a {Username} and {Username} Because {Curly}{Curly}" } },
+                    new Dictionary<string, string> { { "username", "HEY!" }, { "Curly", "Bob" } })
+                    .Returns("This is a {Username} and {Username} Because BobBob")
+                    .SetName("Case sensitive");
+
+                yield return new TestCaseData(
+                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}" } },
+                    new Dictionary<string, string> { { "a", "b" } })
+                    .Returns("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+                    .SetName("Lots of curlys");
+
+                yield return new TestCaseData(
+                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, $"{{{new string('b', 10000)}}}" } },
+                    new Dictionary<string, string> { { new string('b', 10000), "Hello" } })
+                    .Returns("Hello")
+                    .SetName("Very long Curly");
             }
         }
 
