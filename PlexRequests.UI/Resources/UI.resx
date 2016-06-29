@@ -383,4 +383,49 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Issue</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>was successfully added!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>has already been requested!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>We could not check if {0} is in Plex, are you sure it's correctly setup?</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Something went wrong adding the movie to CouchPotato! Please check your settings.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>You have reached your weekly request limit for Movies! Please contact your admin.</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>is already in Plex!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Something went wrong adding the movie to SickRage! Please check your settings.</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>The request of TV Shows is not correctly set up. Please contact your admin.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>You have reached your weekly request limit for Albums! Please contact your admin.</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>We could not find the artist on MusicBrainz. Please try again later or contact your admin</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>You have reached your weekly request limit for TV Shows! Please contact your admin.</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Sorry, but this functionality is currently only for users with Plex accounts</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Sorry, but your administrator has not yet enabled this functionality.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>We could not remove this notification because you never had it!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Could not save, please try again</value>
+  </data>
 </root>

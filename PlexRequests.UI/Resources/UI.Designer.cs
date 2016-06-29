@@ -88,6 +88,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not save, please try again.
+        /// </summary>
+        public static string Common_CouldNotSave {
+            get {
+                return ResourceManager.GetString("Common_CouldNotSave", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove.
         /// </summary>
         public static string Common_Remove {
@@ -682,6 +691,24 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to is already in Plex!.
+        /// </summary>
+        public static string Search_AlreadyInPlex {
+            get {
+                return ResourceManager.GetString("Search_AlreadyInPlex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to has already been requested!.
+        /// </summary>
+        public static string Search_AlreadyRequested {
+            get {
+                return ResourceManager.GetString("Search_AlreadyRequested", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Available.
         /// </summary>
         public static string Search_Available {
@@ -700,11 +727,47 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong adding the movie to CouchPotato! Please check your settings..
+        /// </summary>
+        public static string Search_CouchPotatoError {
+            get {
+                return ResourceManager.GetString("Search_CouchPotatoError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We could not check if {0} is in Plex, are you sure it&apos;s correctly setup?.
+        /// </summary>
+        public static string Search_CouldNotCheckPlex {
+            get {
+                return ResourceManager.GetString("Search_CouldNotCheckPlex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Country.
         /// </summary>
         public static string Search_Country {
             get {
                 return ResourceManager.GetString("Search_Country", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, but your administrator has not yet enabled this functionality..
+        /// </summary>
+        public static string Search_ErrorNotEnabled {
+            get {
+                return ResourceManager.GetString("Search_ErrorNotEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorry, but this functionality is currently only for users with Plex accounts.
+        /// </summary>
+        public static string Search_ErrorPlexAccountOnly {
+            get {
+                return ResourceManager.GetString("Search_ErrorPlexAccountOnly", resourceCulture);
             }
         }
         
@@ -750,6 +813,24 @@ namespace PlexRequests.UI.Resources {
         public static string Search_Movies {
             get {
                 return ResourceManager.GetString("Search_Movies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We could not find the artist on MusicBrainz. Please try again later or contact your admin.
+        /// </summary>
+        public static string Search_MusicBrainzError {
+            get {
+                return ResourceManager.GetString("Search_MusicBrainzError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We could not remove this notification because you never had it!.
+        /// </summary>
+        public static string Search_NotificationError {
+            get {
+                return ResourceManager.GetString("Search_NotificationError", resourceCulture);
             }
         }
         
@@ -817,6 +898,24 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Something went wrong adding the movie to SickRage! Please check your settings..
+        /// </summary>
+        public static string Search_SickrageError {
+            get {
+                return ResourceManager.GetString("Search_SickrageError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to was successfully added!.
+        /// </summary>
+        public static string Search_SuccessfullyAdded {
+            get {
+                return ResourceManager.GetString("Search_SuccessfullyAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suggestions.
         /// </summary>
         public static string Search_Suggestions {
@@ -844,11 +943,47 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The request of TV Shows is not correctly set up. Please contact your admin..
+        /// </summary>
+        public static string Search_TvNotSetUp {
+            get {
+                return ResourceManager.GetString("Search_TvNotSetUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TV Shows.
         /// </summary>
         public static string Search_TvShows {
             get {
                 return ResourceManager.GetString("Search_TvShows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have reached your weekly request limit for Albums! Please contact your admin..
+        /// </summary>
+        public static string Search_WeeklyRequestLimitAlbums {
+            get {
+                return ResourceManager.GetString("Search_WeeklyRequestLimitAlbums", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have reached your weekly request limit for Movies! Please contact your admin..
+        /// </summary>
+        public static string Search_WeeklyRequestLimitMovie {
+            get {
+                return ResourceManager.GetString("Search_WeeklyRequestLimitMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have reached your weekly request limit for TV Shows! Please contact your admin..
+        /// </summary>
+        public static string Search_WeeklyRequestLimitTVShow {
+            get {
+                return ResourceManager.GetString("Search_WeeklyRequestLimitTVShow", resourceCulture);
             }
         }
         
