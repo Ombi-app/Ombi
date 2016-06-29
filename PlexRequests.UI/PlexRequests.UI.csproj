@@ -73,12 +73,16 @@
       <HintPath>..\packages\Nancy.Swagger.0.1.0-alpha3\lib\net40\Nancy.Swagger.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ninject, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.3.0.1.10\lib\net45-full\Ninject.dll</HintPath>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.0.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ninject.Extensions.ChildKernel, Version=3.0.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.0.0.5\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
+    <Reference Include="Ninject.Extensions.ChildKernel, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.2.0.0\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Extensions.Conventions, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.Conventions.3.2.0.0\lib\net45-full\Ninject.Extensions.Conventions.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
@@ -175,6 +179,7 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
+    <Compile Include="Helpers\ContravariantBindingResolver.cs" />
     <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
@@ -221,6 +226,7 @@
     <Compile Include="NinjectModules\ApiModule.cs" />
     <Compile Include="NinjectModules\ConfigurationModule.cs" />
     <Compile Include="NinjectModules\DependancyResolver.cs" />
+    <Compile Include="NinjectModules\MediatRModule.cs" />
     <Compile Include="NinjectModules\RepositoryModule.cs" />
     <Compile Include="NinjectModules\ServicesModule.cs" />
     <Compile Include="NinjectModules\SettingServiceModule.cs" />

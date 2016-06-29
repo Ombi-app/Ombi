@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Startup.cs
+//    File: ContravariantBindingResolver.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,51 +25,41 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
-using MediatR;
-
-using Nancy.TinyIoc;
-
-using Ninject;
-using Ninject.Extensions.Conventions;
-using Ninject.Modules;
+using Ninject.Components;
+using Ninject.Infrastructure;
+using Ninject.Planning.Bindings;
 using Ninject.Planning.Bindings.Resolvers;
 
-using NLog;
-
-using Owin;
-
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Jobs;
-using PlexRequests.UI.NinjectModules;
-
-namespace PlexRequests.UI
+namespace PlexRequests.UI.Helpers
 {
-    public class Startup
+    public class ContravariantBindingResolver : NinjectComponent, IBindingResolver
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        public void Configuration(IAppBuilder app)
+        /// <summary>
+        /// Returns any bindings from the specified collection that match the specified service.
+        /// </summary>
+        public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
         {
-            try
+            if (service.IsGenericType)
             {
-                var resolver = new DependancyResolver();
-                var modules = resolver.GetModules();
-                var kernel = new StandardKernel(modules);
-
-                kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
-
-               
-
-                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
-                var scheduler = new Scheduler();
-                scheduler.StartScheduler();
+                var genericType = service.GetGenericTypeDefinition();
+                var genericArguments = genericType.GetGenericArguments();
+                if (genericArguments.Length == 1 && genericArguments.Single().GenericParameterAttributes.HasFlag(GenericParameterAttributes.Contravariant))
+                {
+                    var argument = service.GetGenericArguments().Single();
+                    var matches =
+                        bindings.Where(
+                            kvp =>
+                            kvp.Key.IsGenericType && kvp.Key.GetGenericTypeDefinition() == genericType && kvp.Key.GetGenericArguments().Single() != argument
+                            && kvp.Key.GetGenericArguments().Single().IsAssignableFrom(argument)).SelectMany(kvp => kvp.Value);
+                    return matches;
+                }
             }
-            catch (Exception exception)
-            {
-                Log.Fatal(exception);
-                throw;
-            }
+
+            return Enumerable.Empty<IBinding>();
         }
     }
 }

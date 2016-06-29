@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Startup.cs
+//    File: MediatRModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,52 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-
 using MediatR;
-
-using Nancy.TinyIoc;
 
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Ninject.Modules;
-using Ninject.Planning.Bindings.Resolvers;
 
-using NLog;
-
-using Owin;
-
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Jobs;
-using PlexRequests.UI.NinjectModules;
-
-namespace PlexRequests.UI
+namespace PlexRequests.UI.NinjectModules
 {
-    public class Startup
+    public class MediatRModule : NinjectModule
     {
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-
-        public void Configuration(IAppBuilder app)
+        public override void Load()
         {
-            try
-            {
-                var resolver = new DependancyResolver();
-                var modules = resolver.GetModules();
-                var kernel = new StandardKernel(modules);
+            Kernel.Bind(scan => scan.FromAssemblyContaining<IMediator>().SelectAllClasses().BindDefaultInterface());
 
-                kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+            Bind<SingleInstanceFactory>().ToMethod(ctx => t => ctx.Kernel.Get(t));
+            Bind<MultiInstanceFactory>().ToMethod(ctx => t => ctx.Kernel.GetAll(t));
 
-               
+            Kernel.Bind(x => x.FromThisAssembly()
+                .SelectAllClasses()
+                .InheritedFromAny(typeof(IRequestHandler<,>), typeof(IAsyncRequestHandler<,>))
+                .BindDefaultInterfaces());
 
-                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
-                var scheduler = new Scheduler();
-                scheduler.StartScheduler();
-            }
-            catch (Exception exception)
-            {
-                Log.Fatal(exception);
-                throw;
-            }
+            //kernel.Bind(scan => scan.FromAssemblyContaining<LandingPageCommand>().SelectAllInterfaces().BindAllInterfaces());
         }
     }
 }
