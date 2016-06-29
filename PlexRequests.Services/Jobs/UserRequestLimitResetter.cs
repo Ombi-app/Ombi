@@ -43,38 +43,26 @@ namespace PlexRequests.Services.Jobs
 {
     public class UserRequestLimitResetter : IJob
     {
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
         public UserRequestLimitResetter(IJobRecord record, IRepository<RequestLimit> repo, ISettingsService<PlexRequestSettings> settings)
         {
             Record = record;
             Repo = repo;
             Settings = settings;
         }
+
         private IJobRecord Record { get; }
         private IRepository<RequestLimit> Repo { get; }
         private ISettingsService<PlexRequestSettings> Settings { get; }
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public void Execute(IJobExecutionContext context)
+        public void AlbumLimit(PlexRequestSettings s, IEnumerable<RequestLimit> allUsers)
         {
-            try
+            if (s.AlbumWeeklyRequestLimit == 0)
             {
-                var settings = Settings.GetSettings();
-                var users = Repo.GetAll();
-                var requestLimits = users as RequestLimit[] ?? users.ToArray();
-
-                MovieLimit(settings, requestLimits);
-                TvLimit(settings, requestLimits);
-                AlbumLimit(settings, requestLimits);
+                return; // The limit has not been set
             }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-            finally
-            {
-                Record.Record(JobNames.RequestLimitReset);
-            }
+            CheckAndDelete(allUsers, RequestType.Album);
         }
 
         public void MovieLimit(PlexRequestSettings s, IEnumerable<RequestLimit> allUsers)
@@ -95,15 +83,6 @@ namespace PlexRequests.Services.Jobs
             CheckAndDelete(allUsers, RequestType.TvShow);
         }
 
-        public void AlbumLimit(PlexRequestSettings s, IEnumerable<RequestLimit> allUsers)
-        {
-            if (s.AlbumWeeklyRequestLimit == 0)
-            {
-                return; // The limit has not been set
-            }
-            CheckAndDelete(allUsers, RequestType.Album);
-        }
-
         private void CheckAndDelete(IEnumerable<RequestLimit> allUsers, RequestType type)
         {
             var users = allUsers.Where(x => x.RequestType == type);
@@ -114,6 +93,28 @@ namespace PlexRequests.Services.Jobs
                 {
                     Repo.Delete(u);
                 }
+            }
+        }
+
+        public void Execute(IJobExecutionContext context)
+        {
+            try
+            {
+                var settings = Settings.GetSettings();
+                var users = Repo.GetAll();
+                var requestLimits = users as RequestLimit[] ?? users.ToArray();
+
+                MovieLimit(settings, requestLimits);
+                TvLimit(settings, requestLimits);
+                AlbumLimit(settings, requestLimits);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                Record.Record(JobNames.RequestLimitReset);
             }
         }
     }
