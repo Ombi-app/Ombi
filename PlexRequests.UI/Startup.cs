@@ -26,13 +26,7 @@
 #endregion
 using System;
 
-using MediatR;
-
-using Nancy.TinyIoc;
-
 using Ninject;
-using Ninject.Extensions.Conventions;
-using Ninject.Modules;
 using Ninject.Planning.Bindings.Resolvers;
 
 using NLog;
@@ -59,9 +53,7 @@ namespace PlexRequests.UI
 
                 kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
-               
-
-                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
+               app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
             }

@@ -166,7 +166,6 @@ namespace PlexRequests.UI
 
         private void ConfigureContainer(IKernel container)
         {
-         
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }
