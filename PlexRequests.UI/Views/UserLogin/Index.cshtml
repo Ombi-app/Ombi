@@ -1,19 +1,19 @@
 ﻿@using PlexRequests.UI.Helpers
+@using PlexRequests.UI.Resources
 <div class="home">
-    <h1>Login</h1>
+    <h1>@UI.UserLogin_Title</h1>
     <div>
         <p>
-            Want to watch a movie or tv show but it's not currently on Plex?
-            Login below with your Plex.tv username and password! <span title="Your login details are only used to authenticate your Plex account."><i class="fa fa-question-circle"></i></span>
+            @UI.UserLogin_Paragraph <span title="@UI.UserLogin_Paragraph_SpanHover"><i class="fa fa-question-circle"></i></span>
         </p>
     </div>
     <form method="POST" id="loginForm">
         <div>
             <div>
-                <label>Plex.tv Username </label>
+                <label>@UI.UserLogin_Username</label>
             </div>
             <div>
-                <input class="form-control form-control-custom" type="text" name="Username" placeholder="Username" />
+                <input class="form-control form-control-custom" type="text" name="Username" placeholder="@UI.UserLogin_Username_Placeholder" />
             </div>
         </div>
         <br />
@@ -21,16 +21,16 @@
         {
             <div>
                 <div>
-                    <label> Password </label>
+                    <label> @UI.UserLogin_Password </label>
                 </div>
                 <div>
-                    <input class="form-control form-control-custom" name="Password" type="password" placeholder="Password"/>
+                    <input class="form-control form-control-custom" name="Password" type="password" placeholder="@UI.UserLogin_Password"/>
                 </div>
             </div>
             <br />
         }
 
-        <button id="loginBtn" class="btn btn-success-outline" type="submit"><i class="fa fa-user fa-fw"></i> Sign In</button>
+        <button id="loginBtn" class="btn btn-success-outline" type="submit"><i class="fa fa-user fa-fw"></i> @UI.UserLogin_SignIn</button>
     </form>
 </div>
 
@@ -62,7 +62,7 @@
                 },
                 error: function (e) {
                     console.log(e);
-                    generateNotify("Something went wrong!", "danger");
+                    generateNotify("@UI.Javascript_SomethingWentWrong", "danger");
                 }
             });
         });

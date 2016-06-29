@@ -61,6 +61,15 @@
                     <input type="text" class="form-control form-control-custom " id="StoreCleanup" name="StoreCleanup" value="@Model.StoreCleanup">
                 </div>
             </div>
+
+            <small>Please note, this will not reset the users request limit, it will just check every X hours to see if it needs to be reset.</small>
+            <div class="form-group">
+                <label for="UserRequestLimitResetter" class="control-label">User Request Limit Reset (hour)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="UserRequestLimitResetter" name="UserRequestLimitResetter" value="@Model.UserRequestLimitResetter">
+                </div>
+            </div>
+
             <div class="form-group">
                 <div>
                     <button id="save" type="submit" class="btn btn-primary-outline ">Submit</button>

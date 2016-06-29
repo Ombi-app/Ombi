@@ -36,6 +36,7 @@ namespace PlexRequests.UI.Models
         public string Title { get; set; }
         public string Issues { get; set; }
         public string Type { get; set; }
+        public bool Admin { get; set; }
 
     }
 }

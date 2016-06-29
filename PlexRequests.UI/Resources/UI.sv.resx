@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="UserLogin_Title" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="UserLogin_Paragraph" xml:space="preserve">
+    <value>Vill du titta på en film eller TV-show, men det är inte närvarande på Plex? Logga in nedan med Plex.tv användarnamn och lösenord !!</value>
+  </data>
+  <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
+    <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.</value>
+  </data>
+  <data name="UserLogin_Username" xml:space="preserve">
+    <value>Plex.tv användarnamn</value>
+  </data>
+  <data name="UserLogin_Username_Placeholder" xml:space="preserve">
+    <value>Användarnamn</value>
+  </data>
+  <data name="UserLogin_Password" xml:space="preserve">
+    <value>Lösenord</value>
+  </data>
+  <data name="UserLogin_SignIn" xml:space="preserve">
+    <value>Logga in</value>
+  </data>
+  <data name="Javascript_SomethingWentWrong" xml:space="preserve">
+    <value>Något gick fel</value>
+  </data>
+  <data name="Javascript_Success" xml:space="preserve">
+    <value>Lyckades</value>
+  </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Plex Requests</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Sök</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Begäran</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>Frågor</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>Donera</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>admin</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Inställningar</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Byt lösenord</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>Logga ut</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>Det finns en ny uppdatering tillgänglig! Klick</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Spanska</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>Tyska</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Danska</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portugisiska</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Svenska</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italienska</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>Här</value>
+  </data>
+  <data name="Layout_Dutch" xml:space="preserve">
+    <value>dutch</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Fråga</value>
+  </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Filmer</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>Tv program</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Vill titta på något som inte är närvarande på Plex ?! Inga problem! Bara söka efter den nedan och begär det !</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Sök</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Förslag</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Kommer snart</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>Teater</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Skicka mig ett meddelande när objekt jag har begärt har lagts till!</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Spara</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>Tillgänglig</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>Begärd</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Alla säsonger</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Första säsongen</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Senaste säsongen</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Välj</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Rapporten fråga</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Fel ljud</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Inga undertexter</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Fel innehåll</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Uppspelningsproblem</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Annat</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Spår räknas</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Säsonger</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Stäng</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Lägg till en fråga</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Spara Ändringar</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Årstid</value>
+  </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Välkommen</value>
+  </data>
+  <data name="Requests_Title" xml:space="preserve">
+    <value>Begäran</value>
+  </data>
+  <data name="Requests_Paragraph" xml:space="preserve">
+    <value>Nedan kan du se din och alla andra förfrågningar, liksom deras nedladdning och godkännandestatus.</value>
+  </data>
+  <data name="Requests_MoviesTabTitle" xml:space="preserve">
+    <value>Filmer</value>
+  </data>
+  <data name="Requests_TvShowTabTitle" xml:space="preserve">
+    <value>Tv program</value>
+  </data>
+  <data name="Requests_AlbumsTabTitle" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Requests_DeleteMovies" xml:space="preserve">
+    <value>Radera filmer</value>
+  </data>
+  <data name="Requests_ApproveMovies" xml:space="preserve">
+    <value>Godkänn filmer</value>
+  </data>
+  <data name="Requests_DeleteTVShows" xml:space="preserve">
+    <value>Radera TV-program</value>
+  </data>
+  <data name="Requests_ApproveTvShows" xml:space="preserve">
+    <value>Godkänna TV-program</value>
+  </data>
+  <data name="Requests_DeleteMusic" xml:space="preserve">
+    <value>Radera musik</value>
+  </data>
+  <data name="Requests_ApproveMusic" xml:space="preserve">
+    <value>Godkänn musik</value>
+  </data>
+  <data name="Requests_Filter_All" xml:space="preserve">
+    <value>Alla</value>
+  </data>
+  <data name="Requests_Filter_Approved" xml:space="preserve">
+    <value>Godkänd</value>
+  </data>
+  <data name="Requests_Filter_NotApproved" xml:space="preserve">
+    <value>Ej Godkänd</value>
+  </data>
+  <data name="Requests_Filter_Available" xml:space="preserve">
+    <value>Tillgänglig</value>
+  </data>
+  <data name="Requests_Filter_NotAvailable" xml:space="preserve">
+    <value>Inte tillgängligt</value>
+  </data>
+  <data name="Requests_Filter_Released" xml:space="preserve">
+    <value>Släppte ut</value>
+  </data>
+  <data name="Requests_Filter_NotReleased" xml:space="preserve">
+    <value>Inte släppt</value>
+  </data>
+  <data name="Requests_Order" xml:space="preserve">
+    <value>Beställning</value>
+  </data>
+  <data name="Requests_Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Requests_Order_LatestRequests" xml:space="preserve">
+    <value>Senaste förfrågningar</value>
+  </data>
+  <data name="Requests_Order_OldestRequests" xml:space="preserve">
+    <value>Äldsta önskemål</value>
+  </data>
+  <data name="Requests_Order_LatestReleases" xml:space="preserve">
+    <value>Senaste versionerna</value>
+  </data>
+  <data name="Requests_Order_OldestReleases" xml:space="preserve">
+    <value>Äldsta meddelanden</value>
+  </data>
+  <data name="Requests_ReleaseDate" xml:space="preserve">
+    <value>Släpptes</value>
+  </data>
+  <data name="Requests_SeasonsRequested" xml:space="preserve">
+    <value>Säsonger Requested</value>
+  </data>
+  <data name="Requests_RequestedBy" xml:space="preserve">
+    <value>Begärd av</value>
+  </data>
+  <data name="Requests_RequestedDate" xml:space="preserve">
+    <value>Önskat datum</value>
+  </data>
+  <data name="Requests_ToggleDropdown" xml:space="preserve">
+    <value>﻿Växla rullgardinslista</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>Godkänn</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>ta bort</value>
+  </data>
+  <data name="Requests_MarkUnavailable" xml:space="preserve">
+    <value>Ej tillgänglig</value>
+  </data>
+  <data name="Requests_MarkAvailable" xml:space="preserve">
+    <value>Tillgänglig</value>
+  </data>
+  <data name="Common_Approved" xml:space="preserve">
+    <value>Godkänd</value>
+  </data>
+  <data name="Requests_Available" xml:space="preserve">
+    <value>Tillgänglig</value>
+  </data>
+  <data name="Issues_Issue" xml:space="preserve">
+    <value>Problem</value>
+  </data>
+</root>

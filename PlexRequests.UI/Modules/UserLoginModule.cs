@@ -80,13 +80,14 @@ namespace PlexRequests.UI.Modules
 
                     if (landingSettings.BeforeLogin)
                     {
-                        await
-                            Analytics.TrackEventAsync(
-                                Category.LandingPage,
-                                Action.View,
-                                "Going To LandingPage before login",
-                                Username,
-                                CookieHelper.GetAnalyticClientId(Cookies));
+#pragma warning disable 4014
+                        Analytics.TrackEventAsync(
+#pragma warning restore 4014
+                                 Category.LandingPage,
+                                 Action.View,
+                                 "Going To LandingPage before login",
+                                 Username,
+                                 CookieHelper.GetAnalyticClientId(Cookies));
 
                         var model = new LandingPageViewModel
                         {

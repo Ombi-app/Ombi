@@ -33,6 +33,7 @@ using MimeKit;
 using NLog;
 
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
@@ -120,8 +121,8 @@ namespace PlexRequests.Services.Notification
         {
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested the {RequestTypeDisplay.Get(model.RequestType)?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },
-                Subject = $"Plex Requests: New {RequestTypeDisplay.Get(model.RequestType)?.ToLower()} request for {model.Title}!"
+                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },
+                Subject = $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));

@@ -264,8 +264,9 @@ function buildIssueContext(result) {
         requestId: result.requestId,
         type: result.type,
         title: result.title,
-        issues: result.issues
-    };
+        issues: result.issues,
+        admin: result.admin
+};
 
     return context;
 }

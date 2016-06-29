@@ -27,6 +27,8 @@
 using PlexRequests.Store;
 using System;
 
+using PlexRequests.Core.Models;
+
 namespace PlexRequests.Services.Notification
 {
     public class NotificationModel

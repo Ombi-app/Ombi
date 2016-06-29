@@ -43,9 +43,9 @@ namespace PlexRequests.Helpers.Tests
         {
             get
             {
-                yield return new TestCaseData(new Dictionary<string, string>()).Returns(string.Empty);
-                yield return new TestCaseData(new Dictionary<string, string> { { "_ga", "GA1.1.306549087.1464005217" } }).Returns("306549087.1464005217");
-                yield return new TestCaseData(new Dictionary<string,string> { {"_ga", "GA1.1.306549087" } }).Returns(string.Empty);
+                yield return new TestCaseData(new Dictionary<string, string>()).Returns(string.Empty).SetName("Empty");
+                yield return new TestCaseData(new Dictionary<string, string> { { "_ga", "GA1.1.306549087.1464005217" } }).Returns("306549087.1464005217").SetName("Returns correctly");
+                yield return new TestCaseData(new Dictionary<string,string> { {"_ga", "GA1.1.306549087" } }).Returns(string.Empty).SetName("Invalid Cookie");
             }
         }
     }

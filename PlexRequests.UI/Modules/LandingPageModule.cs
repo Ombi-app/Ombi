@@ -58,6 +58,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Negotiator> Index()
         {
+            
             var s = await LandingSettings.GetSettingsAsync();
             var model = new LandingPageViewModel
             {

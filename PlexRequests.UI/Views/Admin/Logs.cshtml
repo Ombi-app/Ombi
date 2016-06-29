@@ -5,9 +5,11 @@
 @{
     var baseUrl = Html.GetBaseUrl();
     var formAction = "/admin/loglevel";
+    var clearAction = "/admin/clearlogs";
     if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
     {
         formAction = "/" + baseUrl.ToHtmlString() + formAction;
+        clearAction = "/" + baseUrl.ToHtmlString() + clearAction;
     }
 }
 
@@ -33,6 +35,10 @@
                     <button id="save" type="submit" class="btn btn-primary-outline ">Submit</button>
                 </div>
             </div>
+        </form>
+
+        <form method="post" id="clearForm" action="@clearAction">
+            <button id="clearLogs" type="submit" class="btn btn-danger-outline ">Clear Logs</button>
         </form>
 
         <table id="example" class="table table-striped table-hover table-responsive">
@@ -102,6 +108,28 @@
             $.ajax({
                 type: $form.prop("method"),
                 data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#clearLogs').click(function(e) {
+            e.preventDefault();
+            var $form = $("#clearForm");
+
+            $.ajax({
+                type: $form.prop("method"),
                 url: $form.prop("action"),
                 dataType: "json",
                 success: function (response) {

@@ -52,9 +52,9 @@ namespace PlexRequests.UI.Tests
         {
             get
             {
-                yield return new TestCaseData("abcCba").Returns("AbcCba");
-                yield return new TestCaseData("").Returns("");
-                yield return new TestCaseData("12DSAda").Returns("12DSAda");
+                yield return new TestCaseData("abcCba").Returns("AbcCba").SetName("pascalCase");
+                yield return new TestCaseData("").Returns("").SetName("Empty");
+                yield return new TestCaseData("12DSAda").Returns("12DSAda").SetName("With numbers");
             }
         }
 
@@ -62,14 +62,13 @@ namespace PlexRequests.UI.Tests
         {
             get
             {
-                yield return new TestCaseData("abcCba").Returns("Abc Cba");
-                yield return new TestCaseData("").Returns("");
-                yield return new TestCaseData("JamieRees").Returns("Jamie Rees");
-                yield return new TestCaseData("Jamierees").Returns("Jamierees");
-                yield return new TestCaseData("ThisIsANewString").Returns("This Is A New String");
-                yield return new TestCaseData("").Returns("");
-                yield return new TestCaseData(IssueStatus.PendingIssue.ToString()).Returns("Pending Issue");
-                yield return new TestCaseData(IssueStatus.ResolvedIssue.ToString()).Returns("Resolved Issue");
+                yield return new TestCaseData("abcCba").Returns("Abc Cba").SetName("spaces");
+                yield return new TestCaseData("").Returns("").SetName("empty");
+                yield return new TestCaseData("JamieRees").Returns("Jamie Rees").SetName("Name");
+                yield return new TestCaseData("Jamierees").Returns("Jamierees").SetName("single word");
+                yield return new TestCaseData("ThisIsANewString").Returns("This Is A New String").SetName("longer string");
+                yield return new TestCaseData(IssueStatus.PendingIssue.ToString()).Returns("Pending Issue").SetName("enum pending");
+                yield return new TestCaseData(IssueStatus.ResolvedIssue.ToString()).Returns("Resolved Issue").SetName("enum resolved");
             }
         }
     }

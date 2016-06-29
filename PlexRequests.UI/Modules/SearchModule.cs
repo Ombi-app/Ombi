@@ -53,10 +53,13 @@ using Nancy.Responses;
 
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 using TMDbLib.Objects.General;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
@@ -69,7 +72,7 @@ namespace PlexRequests.UI.Modules
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth, IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue) : base("search", prSettings)
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl) : base("search", prSettings)
         {
             Auth = auth;
             PlexService = plexService;
@@ -95,6 +98,8 @@ namespace PlexRequests.UI.Modules
             UsersToNotifyRepo = u;
             EmailNotificationSettings = email;
             IssueService = issue;
+            Analytics = a;
+            RequestLimitRepo = rl;
 
 
             Get["/", true] = async (x, ct) => await RequestLoad();
@@ -140,31 +145,32 @@ namespace PlexRequests.UI.Modules
         private IHeadphonesApi HeadphonesApi { get; }
         private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
         private IIssueService IssueService { get; }
+        private IAnalytics Analytics { get; }
+        private IRepository<RequestLimit> RequestLimitRepo { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
         {
             var settings = await PrService.GetSettingsAsync();
 
-            Log.Trace("Loading Index");
             return View["Search/Index", settings];
         }
 
         private async Task<Response> UpcomingMovies()
         {
-            Log.Trace("Loading upcoming movies");
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, "Upcoming", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Upcoming, string.Empty);
         }
 
         private async Task<Response> CurrentlyPlayingMovies()
         {
-            Log.Trace("Loading currently playing movies");
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, "CurrentlyPlaying", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
         }
 
         private async Task<Response> SearchMovie(string searchTerm)
         {
-            Log.Trace("Searching for Movie {0}", searchTerm);
+            Analytics.TrackEventAsync(Category.Search, Action.Movie, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
@@ -279,8 +285,8 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+            Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
-            Log.Trace("Searching for TV Show {0}", searchTerm);
 
             var apiTv = new List<TvMazeSearch>();
             await Task.Factory.StartNew(() => new TvMazeApi().Search(searchTerm)).ContinueWith((t) =>
@@ -295,7 +301,6 @@ namespace PlexRequests.UI.Modules
 
             if (!apiTv.Any())
             {
-                Log.Trace("TV Show data is null");
                 return Response.AsJson("");
             }
 
@@ -366,6 +371,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchMusic(string searchTerm)
         {
+            Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiAlbums = new List<Release>();
             await Task.Run(() => MusicBrainzApi.SearchAlbum(searchTerm)).ContinueWith((t) =>
             {
@@ -417,14 +423,16 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.Movie))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "You have reached your weekly request limit for Movies! Please contact your admin." });
+            }
+
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
-            Log.Trace("Getting movie info from TheMovieDb");
-
-            var settings = await PrService.GetSettingsAsync();
-
-            // check if the movie has already been requested
-            Log.Info("Requesting movie with id {0}", movieId);
+   
             var existingRequest = await RequestService.CheckRequestAsync(movieId);
             if (existingRequest != null)
             {
@@ -435,11 +443,9 @@ namespace PlexRequests.UI.Modules
                     await RequestService.UpdateRequestAsync(existingRequest);
                 }
 
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} was successfully added!" : $"{fullMovieName} has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}" : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}" });
             }
-
-            Log.Debug("movie with id {0} doesnt exists", movieId);
-
+            
             try
             {
                 var movies = Checker.GetPlexMovies();
@@ -451,7 +457,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Error(e);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullMovieName} is in Plex, are you sure it's correctly setup?" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullMovieName) });
             }
             //#endif
 
@@ -484,70 +490,28 @@ namespace PlexRequests.UI.Modules
                     Log.Debug("Adding movie to CP result {0}", result);
                     if (result)
                     {
-                        model.Approved = true;
-                        Log.Info("Adding movie to database (No approval required)");
-                        await RequestService.AddRequestAsync(model);
-
-                        if (ShouldSendNotification(RequestType.Movie, settings))
-                        {
-                            var notificationModel = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.Movie
-                            };
-                            await NotificationService.Publish(notificationModel);
-                        }
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
-                    return
-                        Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message =
-                                "Something went wrong adding the movie to CouchPotato! Please check your settings."
-                        });
-                }
-                else
-                {
-                    model.Approved = true;
-                    Log.Info("Adding movie to database (No approval required)");
-                    await RequestService.AddRequestAsync(model);
 
-                    if (ShouldSendNotification(RequestType.Movie, settings))
+                    return Response.AsJson(new JsonResponseModel
                     {
-                        var notificationModel = new NotificationModel
-                        {
-                            Title = model.Title,
-                            User = Username,
-                            DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest,
-                            RequestType = RequestType.Movie
-                        };
-                        await NotificationService.Publish(notificationModel);
-                    }
-
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                        Result = false,
+                        Message = Resources.UI.Search_CouchPotatoError
+                    });
                 }
+
+                return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
             }
 
             try
             {
-                Log.Info("Adding movie to database");
-                var id = await RequestService.AddRequestAsync(model);
-
-                var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.Movie };
-                await NotificationService.Publish(notificationModel);
-
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullMovieName} was successfully added!" });
+                return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
             }
             catch (Exception e)
             {
                 Log.Fatal(e);
 
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something went wrong adding the movie to CouchPotato! Please check your settings." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_CouchPotatoError });
             }
         }
 
@@ -559,6 +523,12 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.TvShow))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_WeeklyRequestLimitTVShow });
+            }
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var tvApi = new TvMazeApi();
 
             var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
@@ -567,10 +537,8 @@ namespace PlexRequests.UI.Modules
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
 
-            var settings = await PrService.GetSettingsAsync();
 
             // check if the show has already been requested
-            Log.Info("Requesting tv show with id {0}", showId);
             var existingRequest = await RequestService.CheckRequestAsync(showId);
             if (existingRequest != null)
             {
@@ -580,7 +548,7 @@ namespace PlexRequests.UI.Modules
                     existingRequest.RequestedUsers.Add(Username);
                     await RequestService.UpdateRequestAsync(existingRequest);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} was successfully added!" : $"{fullShowName} has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}" : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}" });
             }
 
             try
@@ -594,12 +562,12 @@ namespace PlexRequests.UI.Modules
                 }
                 if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
                 {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} is already in Plex!" });
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
                 }
             }
             catch (Exception)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"We could not check if {fullShowName} is in Plex, are you sure it's correctly setup?" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName) });
             }
             //#endif
 
@@ -661,28 +629,10 @@ namespace PlexRequests.UI.Modules
                     var result = sender.SendToSonarr(sonarrSettings, model);
                     if (!string.IsNullOrEmpty(result?.title))
                     {
-                        model.Approved = true;
-                        Log.Debug("Adding tv to database requests (No approval required & Sonarr)");
-                        await RequestService.AddRequestAsync(model);
-
-                        if (ShouldSendNotification(RequestType.TvShow, settings))
-                        {
-                            var notify1 = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.TvShow
-                            };
-                            await NotificationService.Publish(notify1);
-                        }
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
 
-
                     return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages));
-
                 }
 
                 var srSettings = SickRageService.GetSettings();
@@ -691,57 +641,20 @@ namespace PlexRequests.UI.Modules
                     var result = sender.SendToSickRage(srSettings, model);
                     if (result?.result == "success")
                     {
-                        model.Approved = true;
-                        Log.Debug("Adding tv to database requests (No approval required & SickRage)");
-                        await RequestService.AddRequestAsync(model);
-                        if (ShouldSendNotification(RequestType.TvShow, settings))
-                        {
-                            var notify2 = new NotificationModel
-                            {
-                                Title = model.Title,
-                                User = Username,
-                                DateTime = DateTime.Now,
-                                NotificationType = NotificationType.NewRequest,
-                                RequestType = RequestType.TvShow
-                            };
-                            await NotificationService.Publish(notify2);
-                        }
-
-                        return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                        return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message != null ? "<b>Message From SickRage: </b>" + result.message : "Something went wrong adding the movie to SickRage! Please check your settings." });
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message ?? Resources.UI.Search_SickrageError });
                 }
 
                 if (!srSettings.Enabled && !sonarrSettings.Enabled)
                 {
-                    model.Approved = true;
-                    Log.Debug("Adding tv to database requests (No approval required) and Sonarr/Sickrage not setup");
-                    await RequestService.AddRequestAsync(model);
-                    if (ShouldSendNotification(RequestType.TvShow, settings))
-                    {
-                        var notify2 = new NotificationModel
-                        {
-                            Title = model.Title,
-                            User = Username,
-                            DateTime = DateTime.Now,
-                            NotificationType = NotificationType.NewRequest,
-                            RequestType = RequestType.TvShow
-                        };
-                        await NotificationService.Publish(notify2);
-                    }
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+                    return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                 }
 
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "The request of TV Shows is not correctly set up. Please contact your admin." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
 
             }
-
-            await RequestService.AddRequestAsync(model);
-
-            var notificationModel = new NotificationModel { Title = model.Title, User = Username, DateTime = DateTime.Now, NotificationType = NotificationType.NewRequest, RequestType = RequestType.TvShow };
-            await NotificationService.Publish(notificationModel);
-
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = $"{fullShowName} was successfully added!" });
+            return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
         }
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
@@ -763,24 +676,23 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> RequestAlbum(string releaseId)
         {
             var settings = await PrService.GetSettingsAsync();
+            if (!await CheckRequestLimit(settings, RequestType.Album))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_WeeklyRequestLimitAlbums });
+            }
+            Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var existingRequest = await RequestService.CheckRequestAsync(releaseId);
-            Log.Debug("Checking for an existing request");
-
+            
             if (existingRequest != null)
             {
-                Log.Debug("We do have an existing album request");
                 if (!existingRequest.UserHasRequested(Username))
                 {
-
-                    Log.Debug("Not in the requested list so adding them and updating the request. User: {0}", Username);
                     existingRequest.RequestedUsers.Add(Username);
                     await RequestService.UpdateRequestAsync(existingRequest);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{existingRequest.Title} was successfully added!" : $"{existingRequest.Title} has already been requested!" });
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{existingRequest.Title} {Resources.UI.Search_SuccessfullyAdded}" : $"{existingRequest.Title} {Resources.UI.Search_AlreadyRequested}" });
             }
-
-            Log.Debug("This is a new request");
-
+            
             var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
             DateTime release;
             DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
@@ -788,7 +700,7 @@ namespace PlexRequests.UI.Modules
             var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
             if (artist == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "We could not find the artist on MusicBrainz. Please try again later or contact your admin" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_MusicBrainzError });
             }
 
             var albums = Checker.GetPlexAlbums();
@@ -799,7 +711,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel
                 {
                     Result = false,
-                    Message = $"{albumInfo.title} is already in Plex!"
+                    Message = $"{albumInfo.title} {Resources.UI.Search_AlreadyInPlex}"
                 });
             }
 
@@ -824,7 +736,6 @@ namespace PlexRequests.UI.Modules
 
             if (ShouldAutoApprove(RequestType.Album, settings))
             {
-                Log.Debug("We don't require approval OR the user is in the whitelist");
                 var hpSettings = HeadphonesService.GetSettings();
 
                 if (!hpSettings.Enabled)
@@ -834,54 +745,16 @@ namespace PlexRequests.UI.Modules
                         Response.AsJson(new JsonResponseModel
                         {
                             Result = true,
-                            Message = $"{model.Title} was successfully added!"
+                            Message = $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}"
                         });
                 }
 
                 var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
                 await sender.AddAlbum(model);
-                model.Approved = true;
-                await RequestService.AddRequestAsync(model);
-
-                if (ShouldSendNotification(RequestType.Album, settings))
-                {
-                    var notify2 = new NotificationModel
-                    {
-                        Title = model.Title,
-                        User = Username,
-                        DateTime = DateTime.Now,
-                        NotificationType = NotificationType.NewRequest,
-                        RequestType = RequestType.Album
-                    };
-                    await NotificationService.Publish(notify2);
-                }
-
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = true,
-                        Message = $"{model.Title} was successfully added!"
-                    });
+                return await AddRequest(model, settings, $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}");
             }
 
-            if (ShouldSendNotification(RequestType.Album, settings))
-            {
-                var notify2 = new NotificationModel
-                {
-                    Title = model.Title,
-                    User = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = RequestType.Album
-                };
-                await NotificationService.Publish(notify2);
-            }
-            await RequestService.AddRequestAsync(model);
-            return Response.AsJson(new JsonResponseModel
-            {
-                Result = true,
-                Message = $"{model.Title} was successfully added!"
-            });
+            return await AddRequest(model, settings, $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}");
         }
 
         private string GetMusicBrainzCoverArt(string id)
@@ -919,17 +792,18 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> NotifyUser(bool notify)
         {
+            Analytics.TrackEventAsync(Category.Search, Action.Save, "NotifyUser", Username, CookieHelper.GetAnalyticClientId(Cookies), notify ? 1 : 0);
             var authSettings = await Auth.GetSettingsAsync();
             var auth = authSettings.UserAuthentication;
             var emailSettings = await EmailNotificationSettings.GetSettingsAsync();
             var email = emailSettings.EnableUserEmailNotifications;
             if (!auth)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but this functionality is currently only for users with Plex accounts" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_ErrorPlexAccountOnly });
             }
             if (!email)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, but your administrator has not yet enabled this functionality." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_ErrorNotEnabled });
             }
             var username = Username;
             var originalList = await UsersToNotifyRepo.GetAllAsync();
@@ -937,7 +811,7 @@ namespace PlexRequests.UI.Modules
             {
                 if (originalList == null)
                 {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "We could not remove this notification because you never had it!" });
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_NotificationError });
                 }
                 var userToRemove = originalList.FirstOrDefault(x => x.Username == username);
                 if (userToRemove != null)
@@ -952,7 +826,7 @@ namespace PlexRequests.UI.Modules
             {
                 var userModel = new UsersToNotify { Username = username };
                 var insertResult = await UsersToNotifyRepo.InsertAsync(userModel);
-                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = "Could not save, please try again" });
+                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = Resources.UI.Common_CouldNotSave });
             }
 
             var existingUser = originalList.FirstOrDefault(x => x.Username == username);
@@ -964,7 +838,7 @@ namespace PlexRequests.UI.Modules
             {
                 var userModel = new UsersToNotify { Username = username };
                 var insertResult = await UsersToNotifyRepo.InsertAsync(userModel);
-                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = "Could not save, please try again" });
+                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = Resources.UI.Common_CouldNotSave });
             }
 
         }
@@ -985,6 +859,89 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
+        private async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
+        {
+            if (IsAdmin)
+                return true;
 
+            if (s.ApprovalWhiteList.Contains(Username))
+                return true;
+
+            var requestLimit = GetRequestLimitForType(type, s);
+            if (requestLimit == 0)
+            {
+                return true;
+            }
+
+            var limit = await RequestLimitRepo.GetAllAsync();
+            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == type);
+            if (usersLimit == null)
+            {
+                // Have not set a requestLimit yet
+                return true;
+            }
+
+            return usersLimit.RequestCount >= requestLimit;
+        }
+
+        private int GetRequestLimitForType(RequestType type, PlexRequestSettings s)
+        {
+            int requestLimit;
+            switch (type)
+            {
+                case RequestType.Movie:
+                    requestLimit = s.MovieWeeklyRequestLimit;
+                    break;
+                case RequestType.TvShow:
+                    requestLimit = s.TvWeeklyRequestLimit;
+                    break;
+                case RequestType.Album:
+                    requestLimit = s.AlbumWeeklyRequestLimit;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            return requestLimit;
+        }
+
+        private async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
+        {
+
+            model.Approved = true;
+            await RequestService.AddRequestAsync(model);
+
+            if (ShouldSendNotification(RequestType.Movie, settings))
+            {
+                var notificationModel = new NotificationModel
+                {
+                    Title = model.Title,
+                    User = Username,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.NewRequest,
+                    RequestType = RequestType.Movie
+                };
+                await NotificationService.Publish(notificationModel);
+            }
+
+            var limit = await RequestLimitRepo.GetAllAsync();
+            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
+            if (usersLimit == null)
+            {
+                await RequestLimitRepo.InsertAsync(new RequestLimit
+                {
+                    Username = Username,
+                    RequestType = model.Type,
+                    FirstRequestDate = DateTime.UtcNow,
+                    RequestCount = 1
+                });
+            }
+            else
+            {
+                usersLimit.RequestCount++;
+                await RequestLimitRepo.UpdateAsync(usersLimit);
+            }
+
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
+        }
     }
 }

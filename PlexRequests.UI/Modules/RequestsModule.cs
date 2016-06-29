@@ -46,6 +46,11 @@ using System.Threading.Tasks;
 
 using NLog;
 
+using PlexRequests.Core.Models;
+using PlexRequests.Helpers.Analytics;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
+
 namespace PlexRequests.UI.Modules
 {
     public class RequestsModule : BaseAuthModule
@@ -61,7 +66,8 @@ namespace PlexRequests.UI.Modules
             ICouchPotatoApi cpApi,
             ISonarrApi sonarrApi,
             ISickRageApi sickRageApi,
-            ICacheProvider cache) : base("requests", prSettings)
+            ICacheProvider cache,
+            IAnalytics an) : base("requests", prSettings)
         {
             Service = service;
             PrSettings = prSettings;
@@ -74,6 +80,7 @@ namespace PlexRequests.UI.Modules
             SickRageApi = sickRageApi;
             CpApi = cpApi;
             Cache = cache;
+            Analytics = an;
 
             Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
@@ -90,6 +97,7 @@ namespace PlexRequests.UI.Modules
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private IRequestService Service { get; }
+        private IAnalytics Analytics { get; }
         private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
@@ -293,6 +301,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> DeleteRequest(int requestid)
         {
             this.RequiresClaims(UserClaims.Admin);
+            Analytics.TrackEventAsync(Category.Requests, Action.Delete, "Delete Request", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var currentEntity = await Service.GetAsync(requestid);
             await Service.DeleteRequestAsync(currentEntity);
@@ -358,6 +367,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> ChangeRequestAvailability(int requestId, bool available)
         {
             this.RequiresClaims(UserClaims.Admin);
+            Analytics.TrackEventAsync(Category.Requests, Action.Update, available ? "Make request available" : "Make request unavailable", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {

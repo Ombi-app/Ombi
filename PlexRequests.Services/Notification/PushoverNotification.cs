@@ -31,6 +31,7 @@ using NLog;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
@@ -105,7 +106,7 @@ namespace PlexRequests.Services.Notification
 
         private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
-            var message = $"Plex Requests: The {RequestTypeDisplay.Get(model.RequestType)?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
+            var message = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
             await Push(settings, message);
         }
 

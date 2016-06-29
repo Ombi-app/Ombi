@@ -46,9 +46,12 @@ using NLog;
 
 using MarkdownSharp;
 
+using Nancy.Responses;
+
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
@@ -204,6 +207,8 @@ namespace PlexRequests.UI.Modules
 
             Get["/scheduledjobs", true] = async (x, ct) => await GetScheduledJobs();
             Post["/scheduledjobs", true] = async (x, ct) => await SaveScheduledJobs();
+
+            Post["/clearlogs", true] = async (x, ct) => await ClearLogs();
         }
 
         private async Task<Negotiator> Authentication()
@@ -256,9 +261,13 @@ namespace PlexRequests.UI.Modules
                     model.BaseUrl = model.BaseUrl.Remove(0, 1);
                 }
             }
+            if (!model.CollectAnalyticData)
+            {
+                Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            }
             var result = PrService.SaveSettings(model);
             
-            await Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "We could not save to the database, please try again" });
@@ -710,7 +719,7 @@ namespace PlexRequests.UI.Modules
         private Response UpdateLogLevels(int level)
         {
             var settings = LogService.GetSettings();
-
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Updated Log Levels", Username, CookieHelper.GetAnalyticClientId(Cookies), level);
             // apply the level
             var newLevel = LogLevel.FromOrdinal(level);
             LoggingHelper.ReconfigureLogLevel(newLevel);
@@ -751,6 +760,7 @@ namespace PlexRequests.UI.Modules
         private Response CreateApiKey()
         {
             this.RequiresClaims(UserClaims.Admin);
+            Analytics.TrackEventAsync(Category.Admin, Action.Create, "Created API Key", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();
 
@@ -838,6 +848,7 @@ namespace PlexRequests.UI.Modules
         {
             var settings = this.Bind<LandingPageSettings>();
 
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update Landing Page", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
             if (string.IsNullOrEmpty(plexSettings.Ip))
             {
@@ -876,6 +887,8 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SaveScheduledJobs()
         {
+
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update ScheduledJobs", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var settings = this.Bind<ScheduledJobsSettings>();
 
             var result = await ScheduledJobSettings.SaveSettingsAsync(settings);
@@ -883,6 +896,25 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
                 : new JsonResponseModel { Result = false, Message = "Could not save to Db Please check the logs" });
+        }
+
+        private async Task<Response> ClearLogs()
+        {
+            try
+            {
+                Analytics.TrackEventAsync(Category.Admin, Action.Delete, "Clear Logs", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                var allLogs = await LogsRepo.GetAllAsync();
+                foreach (var logEntity in allLogs)
+                {
+                    await LogsRepo.DeleteAsync(logEntity);
+                }
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Logs cleared successfully."});
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });   
+            }
         }
     }
 }

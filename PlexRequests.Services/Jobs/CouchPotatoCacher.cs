@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
 using System.Linq;
 
 using NLog;
@@ -86,8 +88,18 @@ namespace PlexRequests.Services.Jobs
         // we do not want to set here...
         public int[] QueuedIds()
         {
-            var movies = Cache.Get<CouchPotatoMovies>(CacheKeys.CouchPotatoQueued);
-            return movies?.movies?.Select(x => x.info.tmdb_id).ToArray() ?? new int[] { };
+            try
+            {
+                var movies = Cache.Get<CouchPotatoMovies>(CacheKeys.CouchPotatoQueued);
+
+                var items = movies?.movies?.Select(x => x.info?.tmdb_id).Cast<int>().ToArray();
+                return items ?? new int[] { };
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new int[] {};
+            }
         }
 
         public void Execute(IJobExecutionContext context)

@@ -80,7 +80,7 @@ namespace PlexRequests.Store
 
     public static class RequestTypeDisplay
     {
-        public static string Get(RequestType type)
+        public static string GetString(this RequestType type)
         {
             switch (type)
             {
