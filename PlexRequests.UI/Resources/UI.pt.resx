@@ -402,4 +402,16 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Questão</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>Adicionado com Sucesso</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>já foi solicitado !!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Nós não poderia verificar se {0} está em Plex, você tem certeza que é configurada corretamente ?!</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Algo deu errado adicionando o filme para CouchPotato! Verifique as suas opções.!</value>
+  </data>
 </root>

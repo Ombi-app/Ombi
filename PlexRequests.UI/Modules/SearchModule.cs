@@ -481,7 +481,7 @@ namespace PlexRequests.UI.Modules
             if (ShouldAutoApprove(RequestType.Movie, settings))
             {
                 var cpSettings = await CpService.GetSettingsAsync();
-
+                model.Approved = true;
                 if (cpSettings.Enabled)
                 {
                     Log.Info("Adding movie to CP (No approval required)");
@@ -495,11 +495,10 @@ namespace PlexRequests.UI.Modules
 
                     return Response.AsJson(new JsonResponseModel
                     {
-                        Result = false,
                         Message = Resources.UI.Search_CouchPotatoError
                     });
                 }
-
+                model.Approved = true;
                 return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
             }
 
@@ -622,6 +621,7 @@ namespace PlexRequests.UI.Modules
 
             if (ShouldAutoApprove(RequestType.TvShow, settings))
             {
+                model.Approved = true;
                 var sonarrSettings = await SonarrService.GetSettingsAsync();
                 var sender = new TvSender(SonarrApi, SickrageApi);
                 if (sonarrSettings.Enabled)
@@ -736,6 +736,7 @@ namespace PlexRequests.UI.Modules
 
             if (ShouldAutoApprove(RequestType.Album, settings))
             {
+                model.Approved = true;
                 var hpSettings = HeadphonesService.GetSettings();
 
                 if (!hpSettings.Enabled)
@@ -906,8 +907,6 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
         {
-
-            model.Approved = true;
             await RequestService.AddRequestAsync(model);
 
             if (ShouldSendNotification(RequestType.Movie, settings))

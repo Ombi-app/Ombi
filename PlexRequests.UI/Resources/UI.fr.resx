@@ -402,4 +402,52 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Question en litige</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>a été ajouté avec succès !!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>a déjà été demandé !!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Nous ne pouvions pas vérifier si {0} est en Plex, vous êtes sûr qu&amp;#39;il est correctement configuré ?!</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Quelque chose a mal tourné en ajoutant le film à CouchPotato! S&amp;#39;il vous plaît vérifier vos paramètres.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Vous avez atteint votre limite de demande hebdomadaire pour Films! S&amp;#39;il vous plaît contacter votre administrateur.!</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>est déjà dans Plex !!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Quelque chose a mal tourné en ajoutant le film à SickRage! S&amp;#39;il vous plaît vérifier vos paramètres.!</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>La demande de Séries TV ne sont pas correctement mis en place. S&amp;#39;il vous plaît contacter votre administrateur.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Vous avez atteint votre limite de demande hebdomadaire pour les albums! S&amp;#39;il vous plaît contacter votre administrateur.!</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Nous ne pouvions pas trouver l&amp;#39;artiste sur MusicBrainz. S&amp;#39;il vous plaît réessayer plus tard ou contactez votre administrateur!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Vous avez atteint votre limite de demande hebdomadaire pour Séries TV! S&amp;#39;il vous plaît contacter votre administrateur.!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Désolé, mais cette fonctionnalité est actuellement uniquement pour les utilisateurs avec des comptes Plex!</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Désolé, mais votre administrateur n&amp;#39;a pas encore activé cette fonctionnalité.!</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Nous ne pouvions pas supprimer cette notification parce que vous ne l&amp;#39;aviez !!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Impossible d'enregistrer la zone. S'il vous plaît essayer de nouveau.</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Français</value>
+  </data>
 </root>

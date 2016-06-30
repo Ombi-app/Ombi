@@ -402,4 +402,52 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Problema</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>è stato aggiunto con successo !!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>è già stato richiesto !!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Non abbiamo potuto verificare se {0} è in Plex, sei sicuro che sia correttamente messa a punto ?!</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Qualcosa è andato storto aggiungendo il film per CouchPotato! Si prega di verificare le impostazioni.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Hai raggiunto il limite di richiesta settimanale per i film! Si prega di contattare l&amp;#39;amministratore.!</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>è già in Plex !!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Qualcosa è andato storto aggiungendo il film per SickRage! Si prega di verificare le impostazioni.!</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>La richiesta di spettacoli televisivi non è impostato correttamente. Si prega di contattare l&amp;#39;amministratore.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Hai raggiunto il limite di richiesta settimanale per gli album! Si prega di contattare l&amp;#39;amministratore.!</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Non siamo riusciti a trovare l&amp;#39;artista su MusicBrainz. Si prega di riprovare più tardi o contatta l&amp;#39;amministratore!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Hai raggiunto il limite di richiesta settimanale per programmi TV! Si prega di contattare l&amp;#39;amministratore.!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Ci dispiace, ma questa funzionalità non è al momento solo per gli utenti con account Plex!</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Ci dispiace, ma l&amp;#39;amministratore non ha ancora attivato questa funzionalità.!</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Non siamo riusciti a rimuovere questa notifica perché non hai mai avuto it !!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Non è possibile salvare, riprova!</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Francese</value>
+  </data>
 </root>
