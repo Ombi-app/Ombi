@@ -402,4 +402,52 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Problemstellung</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>Benutzer erfolgreich hinzugefügt</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>bereits angefordert worden !!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Wir konnten nicht, wenn {0} in Plex ist, sind Sie sicher, dass es richtig eingestellt ?!</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Etwas ist schief gelaufen Hinzufügen um den Film zu Couchpotato! Bitte überprüfen Sie Ihre Einstellungen.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Sie haben Ihre wöchentliche Anfrage Grenze für Filme erreicht! Bitte kontaktieren Sie Ihren Administrator.!</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>ist bereits in Plex !!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Etwas ist schief gelaufen Hinzufügen um den Film zu SickRage! Bitte überprüfen Sie Ihre Einstellungen.!</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>Die Anforderung von TV-Shows ist nicht richtig eingerichtet. Bitte kontaktieren Sie Ihren Administrator.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Sie haben Ihre wöchentliche Anfrage Limit für Alben erreicht! Bitte kontaktieren Sie Ihren Administrator.!</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Wir konnten nicht die Künstler auf MusicBrainz finden. Bitte versuchen Sie es später noch einmal oder kontaktieren Sie Ihren Administrator!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Sie haben Ihre wöchentliche Anfrage Limit für TV-Shows erreicht! Bitte kontaktieren Sie Ihren Administrator.!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Sorry, aber diese Funktion ist derzeit nur für Nutzer mit Plex Konten!</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Sorry, aber Ihr Administrator hat noch nicht diese Funktionalität aktiviert ist.!</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Wir konnten diese Benachrichtigung nicht entfernen, weil Sie es noch nie hatte !!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Versandzone konnte nicht gespeichert werden. Bitte erneut versuchen.</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Französisch</value>
+  </data>
 </root>
