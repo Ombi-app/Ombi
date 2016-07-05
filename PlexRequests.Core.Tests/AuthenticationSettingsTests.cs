@@ -38,12 +38,13 @@ namespace PlexRequests.Core.Tests
     public class NotificationMessageResolverTests
     {
         [TestCaseSource(nameof(MessageResolver))]
-        public string Resolve(Dictionary<NotificationType, string> message, Dictionary<string,string> param)
+        [Ignore("WIP")]
+        public NotificationMessageResolution Resolve(Dictionary<NotificationType, string> body, Dictionary<string,string> param)
         {
             var n = new NotificationMessageResolver();
             var s = new NotificationSettings
             {
-                Message = message,
+                Message = body,
                 CustomParamaters = param
             };
 

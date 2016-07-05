@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="NotificationMessageResolution.cs" />
     <Compile Include="NotificationMessageResolver.cs" />
     <Compile Include="IIssueService.cs" />
     <Compile Include="IRequestService.cs" />

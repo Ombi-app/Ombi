@@ -36,30 +36,41 @@ namespace PlexRequests.Core
     {
         private const char StartChar = (char)123;
         private const char EndChar = (char)125;
-        public string ParseMessage<T>(T notification, NotificationType type) where T : NotificationSettings
+        public NotificationMessageResolution ParseMessage<T>(T notification, NotificationType type) where T : NotificationSettings
         {
-            var notificationToParse = notification.Message.FirstOrDefault(x => x.Key == type).Value;
-            if (string.IsNullOrEmpty(notificationToParse))
-                return string.Empty;
+            var bodyToParse = notification.Message.FirstOrDefault(x => x.Key == type).Value;
+            var subjectToParse = notification.Subject.FirstOrDefault(x => x.Key == type).Value;
+            //if (string.IsNullOrEmpty(notificationToParse))
+            //    return string.Empty;
 
-            return Resolve(notificationToParse, notification.CustomParamaters);
+            return Resolve(bodyToParse, subjectToParse, notification.CustomParamaters);
         }
 
-        private string Resolve(string message, Dictionary<string,string> paramaters)
+        private NotificationMessageResolution Resolve(string body, string subject, Dictionary<string, string> paramaters)
         {
-            var fields = FindCurlyFields(message);
-            
 
-            foreach (var f in fields)
+            var bodyFields = FindCurlyFields(body);
+            var subjectFields = FindCurlyFields(subject);
+
+            foreach (var f in bodyFields)
             {
                 string outString;
                 if (paramaters.TryGetValue(f, out outString))
                 {
-                    message = message.Replace($"{{{f}}}", outString);
+                    body = body.Replace($"{{{f}}}", outString);
                 }
             }
 
-            return message;
+            foreach (var s in subjectFields)
+            {
+                string outString;
+                if (paramaters.TryGetValue(s, out outString))
+                {
+                    subject = subject.Replace($"{{{s}}}", outString);
+                }
+            }
+
+            return new NotificationMessageResolution { Body = body, Subject = subject };
         }
 
         private IEnumerable<string> FindCurlyFields(string message)

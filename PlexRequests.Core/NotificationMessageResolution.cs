@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationSettings.cs
+//    File: NotificationMessageResolution.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
-
-using PlexRequests.Core.Models;
-
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Core
 {
-    public class NotificationSettings : Settings
+    public class NotificationMessageResolution
     {
-        public NotificationSettings()
-        {
-            CustomParamaters = new Dictionary<string, string>
-            {
-                {"Username", string.Empty },
-                {"Date", string.Empty },
-                {"Title", string.Empty },
-                {"RequestType", string.Empty },
-                {"Issue", string.Empty },
-               
-            };
-        }
-        public Dictionary<NotificationType, string> Message { get; set; }
-        public Dictionary<NotificationType, string> Subject { get; set; }
-        public Dictionary<string,string> CustomParamaters { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
     }
 }
