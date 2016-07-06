@@ -910,7 +910,7 @@ namespace PlexRequests.UI.Modules
             model.Approved = true;
             await RequestService.AddRequestAsync(model);
 
-            if (ShouldSendNotification(RequestType.Movie, settings))
+            if (ShouldSendNotification(model.Type, settings))
             {
                 var notificationModel = new NotificationModel
                 {
@@ -918,7 +918,7 @@ namespace PlexRequests.UI.Modules
                     User = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
-                    RequestType = RequestType.Movie
+                    RequestType = model.Type
                 };
                 await NotificationService.Publish(notificationModel);
             }
