@@ -420,7 +420,14 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
-            CheckAndUpdateAll();
+            try
+            {
+                CheckAndUpdateAll();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
         }
     }
 }
