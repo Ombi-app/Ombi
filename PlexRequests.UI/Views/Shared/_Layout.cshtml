@@ -43,7 +43,7 @@
                     @Html.GetNavbarUrl(Context, "/issues", UI.Layout_Issues, "exclamation", "<span id=\"issueCount\"></span>")
                     @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
                     {
-                        <li><a id="donate" onclick="donateClick('https://www.paypal.me/PlexRequestsNet');"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
+                        <li><a id="donate"  href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
                     }
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -112,12 +112,6 @@
 </html>
 <script>
 
-    function donateClick(url) {
-        ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
-        var redirectWindow = window.open(url, '_blank');
-        redirectWindow.location;
-    }
-
     $(function () {
 
         var urlBase = '@Html.GetBaseUrl()';
@@ -177,6 +171,11 @@
             }
         });
         // End issue count
+
+
+        $('#donate').click(function () {
+            ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
+        });
 
 
     });
