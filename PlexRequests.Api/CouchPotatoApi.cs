@@ -126,7 +126,7 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apikey", apiKey);
 
-			var obj = RetryHandler.Execute<CouchPotatoProfiles>(() => Api.Execute<CouchPotatoProfiles> (request, url),null,
+			var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoProfiles> (request, url),null,
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetProfiles for CP, Retrying {0}", timespan));
 			
 			return obj;

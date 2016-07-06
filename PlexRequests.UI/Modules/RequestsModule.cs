@@ -142,9 +142,10 @@ namespace PlexRequests.UI.Modules
                         {
                             return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
                         });
-
-                        qualities = result.list.Select(x => new QualityModel() { Id = x._id, Name = x.label }).ToList();
-
+                        if (result != null)
+                        {
+                            qualities = result.list.Select(x => new QualityModel { Id = x._id, Name = x.label }).ToList();
+                        }
                     }
                     catch (Exception e)
                     {
