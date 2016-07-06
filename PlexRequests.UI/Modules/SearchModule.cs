@@ -102,7 +102,7 @@ namespace PlexRequests.UI.Modules
             RequestLimitRepo = rl;
 
 
-            Get["/", true] = async (x, ct) => await RequestLoad();
+            Get["SearchIndex","/", true] = async (x, ct) => await RequestLoad();
 
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
@@ -151,6 +151,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Negotiator> RequestLoad()
         {
+
             var settings = await PrService.GetSettingsAsync();
 
             return View["Search/Index", settings];
