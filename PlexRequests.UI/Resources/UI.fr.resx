@@ -118,16 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="UserLogin_Title" xml:space="preserve">
-    <value>Se connecter</value>
+    <value>Connexion</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vous voulez regarder un film ou la télévision, mais il est pas actuellement sur Plex? Connectez-vous ci-dessous avec votre nom d'utilisateur et mot de passe Plex.tv!</value>
+    <value>Vous souhaitez avoir accès à un contenu qui n'est pas encore disponible dans Plex ? Demandez-le ici !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Vos informations de connexion sont uniquement utilisées pour authentifier votre compte Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Nom d'utilisateur</value>
+    <value>Nom d'utilisateur Plex.tv</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Nom d’utilisateur</value>
@@ -139,10 +139,10 @@
     <value>Se connecter</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Quelque-chose s'est mal passé</value>
+    <value>Une erreur s'est produite!</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>Succès</value>
+    <value>Succès!</value>
   </data>
   <data name="Layout_Title" xml:space="preserve">
     <value>Plex Requests</value>
@@ -151,16 +151,16 @@
     <value>Chercher</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Requêtes</value>
+    <value>Demandes</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>Sortie</value>
+    <value>Problèmes</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
-    <value>Faire Un Don</value>
+    <value>Faire un don</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
-    <value>d'Administration</value>
+    <value>Administration</value>
   </data>
   <data name="Layout_Settings" xml:space="preserve">
     <value>Paramètres</value>
@@ -172,7 +172,7 @@
     <value>Déconnexion</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Il y a une nouvelle mise à jour disponible! Cliquez</value>
+    <value>Une nouvelle mise à jour est disponible! Cliquez</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Anglais</value>
@@ -190,13 +190,13 @@
     <value>Portugais</value>
   </data>
   <data name="Layout_Swedish" xml:space="preserve">
-    <value>Suédois (homonymie)</value>
+    <value>Suédois</value>
   </data>
   <data name="Layout_Italian" xml:space="preserve">
     <value>Italien</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
-    <value>ici</value>
+    <value>ici!</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
     <value>Néerlandais</value>
@@ -205,31 +205,31 @@
     <value>Films</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
-    <value>Émissions de télévision</value>
+    <value>Séries TV</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
     <value>Albums</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vous voulez regarder quelque chose qui est pas actuellement sur Plex ?! Pas de problème! Il suffit de chercher ci-dessous et demander !</value>
+    <value>Vous souhaitez avoir accès à un contenu qui n'est pas encore disponible dans Plex ?! Aucun problème ! Il suffit d'effectuer une recherche ci-dessous et d'en faire la demande!</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
-    <value>Chercher</value>
+    <value>Rechercher</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggestions</value>
   </data>
   <data name="Search_ComingSoon" xml:space="preserve">
-    <value>Bientôt disponible </value>
+    <value>Prochainement </value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
-    <value>Théâtre</value>
+    <value>Actuellement au cinéma</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Envoyez-moi une notification lorsque des éléments que  j'ai  demandés ont été ajoutés</value>
+    <value>Envoyez-moi une notification lorsque des contenus que j'ai demandé ont été ajoutés</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
-    <value>Enregistrer</value>
+    <value>Sauvegarder</value>
   </data>
   <data name="Search_Available" xml:space="preserve">
     <value>Disponible</value>
@@ -238,10 +238,10 @@
     <value>Demandé</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
-    <value>Requête</value>
+    <value>Demande</value>
   </data>
   <data name="Search_AllSeasons" xml:space="preserve">
-    <value>Saisons</value>
+    <value>Toutes les saisons</value>
   </data>
   <data name="Search_FirstSeason" xml:space="preserve">
     <value>Première saison</value>
@@ -253,16 +253,16 @@
     <value>Sélectionner</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
-    <value>Formulaire de rapport d'incident</value>
+    <value>Signaler un problème</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Mauvais Audio</value>
+    <value>Mauvais piste audio</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
-    <value>Pas de sous-titres</value>
+    <value>Aucun sous-titre</value>
   </data>
   <data name="Issues_WrongContent" xml:space="preserve">
-    <value>Contenu erroné</value>
+    <value>Contenu incorrect</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
     <value>Problèmes de lecture</value>
@@ -283,103 +283,103 @@
     <value>Fermer</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Ajouter une question</value>
+    <value>Ajouter un problème</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Sauvegarder les modifications</value>
   </data>
   <data name="Search_Season" xml:space="preserve">
-    <value>SAISON</value>
+    <value>Saison</value>
   </data>
   <data name="Layout_Welcome" xml:space="preserve">
     <value>Bienvenue</value>
   </data>
   <data name="Requests_Title" xml:space="preserve">
-    <value>Requêtes</value>
+    <value>Demandes</value>
   </data>
   <data name="Requests_Paragraph" xml:space="preserve">
-    <value>Ci-dessous vous pouvez voir la vôtre et toutes les autres demandes, ainsi que le téléchargement et l'état d'approbation</value>
+    <value>Ci-dessous, vous pouvez visualiser vos demandes, celles des autres utilisateurs, ainsi que leur disponibilité effective et leur état d'approbation.</value>
   </data>
   <data name="Requests_MoviesTabTitle" xml:space="preserve">
     <value>Films</value>
   </data>
   <data name="Requests_TvShowTabTitle" xml:space="preserve">
-    <value>Émissions de télévision</value>
+    <value>Séries TV</value>
   </data>
   <data name="Requests_AlbumsTabTitle" xml:space="preserve">
     <value>Albums</value>
   </data>
   <data name="Requests_DeleteMovies" xml:space="preserve">
-    <value>Supprimer Films</value>
+    <value>Supprimer tous les films</value>
   </data>
   <data name="Requests_ApproveMovies" xml:space="preserve">
-    <value>Approuver Films</value>
+    <value>Approuver tous les films</value>
   </data>
   <data name="Requests_DeleteTVShows" xml:space="preserve">
-    <value>Supprimer Séries TV</value>
+    <value>Supprimer toutes les séries TV</value>
   </data>
   <data name="Requests_ApproveTvShows" xml:space="preserve">
-    <value>Approuver Séries TV</value>
+    <value>Approuver toutes les séries TV</value>
   </data>
   <data name="Requests_DeleteMusic" xml:space="preserve">
-    <value>Supprimer la musique</value>
+    <value>Supprimer tous les albums</value>
   </data>
   <data name="Requests_ApproveMusic" xml:space="preserve">
-    <value>Approuver la musique</value>
+    <value>Approuver tous les albums</value>
   </data>
   <data name="Requests_Filter_All" xml:space="preserve">
-    <value>Tous</value>
+    <value>Toutes</value>
   </data>
   <data name="Requests_Filter_Approved" xml:space="preserve">
-    <value>Approuvé</value>
+    <value>Approuvées</value>
   </data>
   <data name="Requests_Filter_NotApproved" xml:space="preserve">
-    <value>Par voie orale pas approuvée</value>
+    <value>Non approuvées</value>
   </data>
   <data name="Requests_Filter_Available" xml:space="preserve">
-    <value>Disponible</value>
+    <value>Disponibles</value>
   </data>
   <data name="Requests_Filter_NotAvailable" xml:space="preserve">
-    <value>Non disponible</value>
+    <value>Non disponibles</value>
   </data>
   <data name="Requests_Filter_Released" xml:space="preserve">
-    <value>Publié</value>
+    <value>Publiées</value>
   </data>
   <data name="Requests_Filter_NotReleased" xml:space="preserve">
-    <value>Publié</value>
+    <value>Non publiées</value>
   </data>
   <data name="Requests_Order" xml:space="preserve">
-    <value>Commandez </value>
+    <value>Trier </value>
   </data>
   <data name="Requests_Filter" xml:space="preserve">
     <value>Filtrer</value>
   </data>
   <data name="Requests_Order_LatestRequests" xml:space="preserve">
-    <value>Dernières demandes</value>
+    <value>Demandes les plus récentes</value>
   </data>
   <data name="Requests_Order_OldestRequests" xml:space="preserve">
-    <value>Le plus ancien demandes</value>
+    <value>Demandes les plus anciennes</value>
   </data>
   <data name="Requests_Order_LatestReleases" xml:space="preserve">
-    <value>Dernières informations</value>
+    <value>Sorties les plus récentes</value>
   </data>
   <data name="Requests_Order_OldestReleases" xml:space="preserve">
-    <value>Le plus ancien de presse</value>
+    <value>Sorties les plus anciennes</value>
   </data>
   <data name="Requests_ReleaseDate" xml:space="preserve">
-    <value>Date de commercialisation</value>
+    <value>Date de sortie</value>
   </data>
   <data name="Requests_SeasonsRequested" xml:space="preserve">
-    <value>Seasons Demandés</value>
+    <value>Saisons demandées</value>
   </data>
   <data name="Requests_RequestedBy" xml:space="preserve">
     <value>Demandé par</value>
   </data>
   <data name="Requests_RequestedDate" xml:space="preserve">
-    <value>Date demandée</value>
+    <value>Date de la demande</value>
   </data>
   <data name="Requests_ToggleDropdown" xml:space="preserve">
-    <value>Basculer Dropdown</value>
+    <value>Activer le basculement</value>
   </data>
   <data name="Common_Approve" xml:space="preserve">
     <value>Approuver</value>
@@ -400,6 +400,51 @@
     <value>Disponible</value>
   </data>
   <data name="Issues_Issue" xml:space="preserve">
-    <value>Question en litige</value>
+    <value>Problème</value>
+  </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>a été ajouté avec succès!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>a déjà été demandé!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Nous ne pouvons pas vérifier que {0} est présent dans Plex, êtes-vous sûr que la configuration est correcte?</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'ajout du film dans CouchPotato! Merci de bien vouloir vérifier vos paramètres.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Vous avez atteint votre quota hebdomadaire de demandes pour les films! Merci de bien vouloir contacter l'administrateur.</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>est déjà présent dans Plex!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Une erreur s'est produite lors de l'ajout de la série TV dans SickRage! Merci de bien vouloir vérifier vos paramètres.</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>Le système de demandes de séries TV n'est pas correctement configuré. Merci de bien vouloir contacter l'administrateur.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Vous avez atteint votre quota hebdomadaire de demandes pour les albums! Merci de bien vouloir contacter l'administrateur.</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Impossible de trouver l'artiste demandé via MusicBrainz. Merci de bien vouloir réessayer plus tard ou contacter l'administrateur.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Vous avez atteint votre quota hebdomadaire de demandes pour les séries TV! Merci de bien vouloir contacter l'administrateur.</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Désolé mais cette fonctionnalité est réservée aux utilisateurs possédant un compte Plex.</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Désolé mais l'administrateur n'a pas encore activé cette fonctionnalité.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Il n'est pas possible de supprimer cette notification car vous ne l'avez jamais reçue!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Sauvegarde impossible, merci de bien vouloir réessayer</value>
   </data>
 </root>

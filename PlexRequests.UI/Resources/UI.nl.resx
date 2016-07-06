@@ -121,10 +121,10 @@
     <value>Inloggen</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Wilt u een film of tv-show te kijken, maar het is op het moment niet op Plex? Log hieronder in met uw gebruikersnaam en wachtwoord Plex.tv !!</value>
+    <value>Wilt u een film of een tv serie kijken, maar staat deze niet op Plex? Log hieronder in met uw gebruikersnaam en wachtwoord van Plex.tv</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren Plex.</value>
+    <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren bij Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
     <value>Plex.tv Gebruikersnaam</value>
@@ -136,13 +136,13 @@
     <value>Wachtwoord</value>
   </data>
   <data name="UserLogin_SignIn" xml:space="preserve">
-    <value>Aanmelden!</value>
+    <value>Aanmelden</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Er is iets fout gegaan</value>
+    <value>Er is iets fout gegaan!</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>Succes</value>
+    <value>Succes!</value>
   </data>
   <data name="Layout_Title" xml:space="preserve">
     <value>Plex Requests</value>
@@ -151,10 +151,10 @@
     <value>Zoeken</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Verzoeken</value>
+    <value>Aanvragen</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>UItgaves</value>
+    <value>Problemen</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
     <value>Doneren</value>
@@ -172,34 +172,34 @@
     <value>Uitloggen</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Er is een nieuwe update beschikbaar is! Klik</value>
+    <value>Er is een nieuwe update beschikbaar! Klik</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
-    <value>English</value>
+    <value>Engels</value>
   </data>
   <data name="Layout_Spanish" xml:space="preserve">
-    <value>Spanish</value>
+    <value>Spaans</value>
   </data>
   <data name="Layout_German" xml:space="preserve">
-    <value>German</value>
+    <value>Duits</value>
   </data>
   <data name="Layout_Danish" xml:space="preserve">
-    <value>Koffiebroodje</value>
+    <value>Deens</value>
   </data>
   <data name="Layout_Portuguese" xml:space="preserve">
-    <value>Portuguese</value>
+    <value>Portuguees</value>
   </data>
   <data name="Layout_Swedish" xml:space="preserve">
     <value>Zweeds</value>
   </data>
   <data name="Layout_Italian" xml:space="preserve">
-    <value>Italian</value>
+    <value>Italiaans</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
     <value>Hier!</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
-    <value>Dutch</value>
+    <value>Nederlands</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Zoeken</value>
@@ -208,16 +208,16 @@
     <value>Aangevraagd</value>
   </data>
   <data name="Search_Movies" xml:space="preserve">
-    <value>films</value>
+    <value>Films</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
     <value>TV programma's</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
-    <value>albums</value>
+    <value>Albums</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Wilt u kijken naar iets dat is momenteel niet op de Plex?! Geen probleem! Onderzoek enkel naar het hieronder en vraag het!</value>
+    <value>Wilt u kijken naar iets dat dat momenteel niet op Plex is?! Geen probleem! zoek hieronder en vraag het aan!</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggesties</value>
@@ -226,7 +226,7 @@
     <value>Binnenkort verwacht</value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
-    <value>In de Theaters</value>
+    <value>Nu in de Bioscoop</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
     <value>Stuur me een bericht wanneer objecten die ik heb gevraagd zijn toegevoegd</value>
@@ -271,19 +271,19 @@
     <value>Overig</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Spoor de graaf</value>
+    <value>Track Count</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Land</value>
   </data>
   <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
-    <value>Seasons</value>
+    <value>Seizoenen</value>
   </data>
   <data name="Common_Close" xml:space="preserve">
-    <value>Dichtbij</value>
+    <value>Sluiten</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Een actie-item toevoegen</value>
+    <value>Een probleem toevoegen</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Wijzigingen opslaan</value>
@@ -310,22 +310,22 @@
     <value>albums</value>
   </data>
   <data name="Requests_DeleteMovies" xml:space="preserve">
-    <value>Verwijder Movies</value>
+    <value>Verwijder Films</value>
   </data>
   <data name="Requests_ApproveMovies" xml:space="preserve">
-    <value>Goedkeuren Movies</value>
+    <value>Films goedkeuren</value>
   </data>
   <data name="Requests_DeleteTVShows" xml:space="preserve">
-    <value>Verwijder TV Shows</value>
+    <value>Verwijder TV Series</value>
   </data>
   <data name="Requests_ApproveTvShows" xml:space="preserve">
-    <value>Goedkeuren TV Shows</value>
+    <value> TV series goedkeuren</value>
   </data>
   <data name="Requests_DeleteMusic" xml:space="preserve">
-    <value>Verwijderen Muziek</value>
+    <value> Muziek verwijderen</value>
   </data>
   <data name="Requests_ApproveMusic" xml:space="preserve">
-    <value>Goedkeuren Music</value>
+    <value>Muziek goedkeuren</value>
   </data>
   <data name="Requests_Filter_All" xml:space="preserve">
     <value>Alle</value>
@@ -334,7 +334,7 @@
     <value>Goedgekeurd</value>
   </data>
   <data name="Requests_Filter_NotApproved" xml:space="preserve">
-    <value>Nog niet gestart</value>
+    <value>Niet goedgekeurd</value>
   </data>
   <data name="Requests_Filter_Available" xml:space="preserve">
     <value>Beschikbaar</value>
@@ -343,7 +343,7 @@
     <value>Niet beschikbaar</value>
   </data>
   <data name="Requests_Filter_Released" xml:space="preserve">
-    <value>Released</value>
+    <value>vrijgegeven</value>
   </data>
   <data name="Requests_Filter_NotReleased" xml:space="preserve">
     <value>Niet vrijgegeven</value>
@@ -352,7 +352,7 @@
     <value>Bestel</value>
   </data>
   <data name="Requests_Filter" xml:space="preserve">
-    <value>Filter!</value>
+    <value>Filter</value>
   </data>
   <data name="Requests_Order_LatestRequests" xml:space="preserve">
     <value>Laatste aanvragen</value>
@@ -370,7 +370,7 @@
     <value>Uitgiftedatum</value>
   </data>
   <data name="Requests_SeasonsRequested" xml:space="preserve">
-    <value>Seasons gevraagd</value>
+    <value>Gevraagde seizoenen</value>
   </data>
   <data name="Requests_RequestedBy" xml:space="preserve">
     <value>Verzocht door</value>
@@ -388,10 +388,10 @@
     <value>verwijder</value>
   </data>
   <data name="Requests_MarkUnavailable" xml:space="preserve">
-    <value>Niet beschikbaar</value>
+    <value>Markeer niet beschikbaar</value>
   </data>
   <data name="Requests_MarkAvailable" xml:space="preserve">
-    <value>Mark beschikbaar</value>
+    <value>Markeer beschikbaar</value>
   </data>
   <data name="Common_Approved" xml:space="preserve">
     <value>Goedgekeurd</value>
@@ -400,6 +400,27 @@
     <value>Beschikbaar</value>
   </data>
   <data name="Issues_Issue" xml:space="preserve">
-    <value>Uitgave</value>
+    <value>Probleem</value>
+  </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>Is successvol toegevoegd!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>Is al aangevraagd!</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>Staat al op Plex!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Sorry, deze functie is momenteel alleen voor gebruikers met een Plex account.</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Sorry, uw administrator heeft deze functie nog niet geactiveerd.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>We konden deze notificatie niet verwijderen omdat u deze nooit heeft gehad!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Kon niet opslaan, probeer het later nog eens.</value>
   </data>
 </root>
