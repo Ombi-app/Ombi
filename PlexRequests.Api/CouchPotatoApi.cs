@@ -49,8 +49,8 @@ namespace PlexRequests.Api
         public bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileId = default(string))
         {
             RestRequest request;
-            request = string.IsNullOrEmpty(profileId) 
-                ? new RestRequest {Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}"}
+            request = string.IsNullOrEmpty(profileId)
+                ? new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}" }
                 : new RestRequest { Resource = "/api/{apikey}/movie.add?title={title}&identifier={imdbid}&profile_id={profileId}" };
 
             if (!string.IsNullOrEmpty(profileId))
@@ -62,11 +62,11 @@ namespace PlexRequests.Api
             request.AddUrlSegment("imdbid", imdbid);
             request.AddUrlSegment("title", title);
 
-			var obj = RetryHandler.Execute(() => Api.ExecuteJson<JObject> (request, baseUrl),new[] { 
-				TimeSpan.FromSeconds (2),
-				TimeSpan.FromSeconds(5),
-				TimeSpan.FromSeconds(10)},
-				(exception, timespan) => Log.Error (exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan));
+            var obj = RetryHandler.Execute(() => Api.ExecuteJson<JObject>(request, baseUrl), new[] {
+                TimeSpan.FromSeconds (2),
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(10)},
+                (exception, timespan) => Log.Error(exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan));
 
             Log.Trace("CP movie Add result count {0}", obj.Count);
 
@@ -106,18 +106,17 @@ namespace PlexRequests.Api
             request.AddUrlSegment("apikey", apiKey);
 
 
-			var obj = RetryHandler.Execute<CouchPotatoStatus>(() => Api.Execute<CouchPotatoStatus> (request, url),new TimeSpan[] { 
-				TimeSpan.FromSeconds (2),
-				TimeSpan.FromSeconds(5),
-				TimeSpan.FromSeconds(10)},
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for CP, Retrying {0}", timespan));
-		
-			return obj;
+            var obj = RetryHandler.Execute<CouchPotatoStatus>(() => Api.Execute<CouchPotatoStatus>(request, url), new TimeSpan[] {
+                TimeSpan.FromSeconds (2),
+                TimeSpan.FromSeconds(5),
+                TimeSpan.FromSeconds(10)},
+                (exception, timespan) => Log.Error(exception, "Exception when calling GetStatus for CP, Retrying {0}", timespan));
+
+            return obj;
         }
 
         public CouchPotatoProfiles GetProfiles(Uri url, string apiKey)
         {
-            Log.Trace("Getting CP Profiles, ApiKey = {0}", apiKey);
             var request = new RestRequest
             {
                 Resource = "api/{apikey}/profile.list/",
@@ -126,10 +125,10 @@ namespace PlexRequests.Api
 
             request.AddUrlSegment("apikey", apiKey);
 
-			var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoProfiles> (request, url),null,
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetProfiles for CP, Retrying {0}", timespan));
-			
-			return obj;
+            var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoProfiles>(request, url), null,
+                (exception, timespan) => Log.Error(exception, "Exception when calling GetProfiles for CP, Retrying {0}", timespan));
+
+            return obj;
         }
 
         public CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status)
@@ -147,21 +146,21 @@ namespace PlexRequests.Api
             request.AddUrlSegment("status", string.Join(",", status));
             try
             {
-				var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoMovies> (request, baseUrl),
-					new[] { 
-						TimeSpan.FromSeconds (5),
-						TimeSpan.FromSeconds(10),
-						TimeSpan.FromSeconds(30)
-					},
-					(exception, timespan) => Log.Error (exception, "Exception when calling GetMovies for CP, Retrying {0}", timespan));
-				
-				return obj;
+                var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoMovies>(request, baseUrl),
+                    new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    },
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMovies for CP, Retrying {0}", timespan));
+
+                return obj;
             }
-			catch (Exception e) // Request error is already logged in the ApiRequest class
+            catch (Exception e) // Request error is already logged in the ApiRequest class
             {
                 Log.Error("Error when attempting to GetMovies.");
-				Log.Error (e);
-                return new CouchPotatoMovies();    
+                Log.Error(e);
+                return new CouchPotatoMovies();
             }
         }
     }
