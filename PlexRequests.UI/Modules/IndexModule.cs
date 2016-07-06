@@ -24,7 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Threading.Tasks;
+
+using Nancy;
 using Nancy.Extensions;
+using Nancy.Linker;
 using Nancy.Responses;
 
 using PlexRequests.Core;
@@ -34,16 +38,44 @@ namespace PlexRequests.UI.Modules
 {
     public class IndexModule : BaseAuthModule
     {
-        public IndexModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
+        public IndexModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> l, IResourceLinker rl) : base(pr)
         {
-            Get["/"] = x =>  Index();
+            LandingPage = l;
+            Linker = rl;
+            Get["Index", "/", true] = async (x, ct) => await Index();
 
-            Get["/Index"] = x => Index();
+            Get["/Index", true] = async (x, ct) => await Index();
         }
+        private ISettingsService<LandingPageSettings> LandingPage { get; }
+        private IResourceLinker Linker { get; }
 
-        public RedirectResponse Index()
+        public async Task<RedirectResponse> Index()
         {
-            return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/search" : "~/search");
+            var settings = await LandingPage.GetSettingsAsync();
+            if (settings.Enabled)
+            {
+                if (settings.BeforeLogin) // Before login
+                {
+                    if (!string.IsNullOrEmpty(Username))
+                    {
+                        // They are not logged in
+                        return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "LandingPageIndex").ToString());
+                    }
+                    return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "SearchIndex").ToString());
+                }
+
+                // After login
+                if (string.IsNullOrEmpty(Username))
+                {
+                    // Not logged in yet
+                    return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "UserLoginIndex").ToString());
+                }
+                // Send them to landing
+                var landingUrl = Linker.BuildAbsoluteUri(Context, "LandingPageIndex").ToString();
+                return Context.GetRedirect(landingUrl);
+            }
+
+            return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "UserLoginIndex").ToString());
         }
     }
 }

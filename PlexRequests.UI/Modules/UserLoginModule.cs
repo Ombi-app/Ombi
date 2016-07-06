@@ -55,7 +55,7 @@ namespace PlexRequests.UI.Modules
             LandingPageSettings = lp;
             Analytics = a;
             Api = api;
-            Get["/", true] = async (x, ct) => await Index();
+            Get["UserLoginIndex","/", true] = async (x, ct) => await Index();
             Post["/"] = x => LoginUser();
             Get["/logout"] = x => Logout();
         }
@@ -69,42 +69,7 @@ namespace PlexRequests.UI.Modules
 
         public async Task<Negotiator> Index()
         {
-            var query = Request.Query["landing"];
-            var landingCheck = (bool?)query ?? true;
-            if (landingCheck)
-            {
-                var landingSettings = await LandingPageSettings.GetSettingsAsync();
-
-                if (landingSettings.Enabled)
-                {
-
-                    if (landingSettings.BeforeLogin)
-                    {
-#pragma warning disable 4014
-                        Analytics.TrackEventAsync(
-#pragma warning restore 4014
-                                 Category.LandingPage,
-                                 Action.View,
-                                 "Going To LandingPage before login",
-                                 Username,
-                                 CookieHelper.GetAnalyticClientId(Cookies));
-
-                        var model = new LandingPageViewModel
-                        {
-                            Enabled = landingSettings.Enabled,
-                            Id = landingSettings.Id,
-                            EnabledNoticeTime = landingSettings.EnabledNoticeTime,
-                            NoticeEnable = landingSettings.NoticeEnable,
-                            NoticeEnd = landingSettings.NoticeEnd,
-                            NoticeMessage = landingSettings.NoticeMessage,
-                            NoticeStart = landingSettings.NoticeStart,
-                            ContinueUrl = landingSettings.BeforeLogin ? $"userlogin" : $"search"
-                        };
-
-                        return View["Landing/Index", model];
-                    }
-                }
-            }
+           
             var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
         }
