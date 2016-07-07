@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationMessageResolution.cs
+//    File: NotificationMessageContent.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,7 +26,7 @@
 #endregion
 namespace PlexRequests.Core
 {
-    public class NotificationMessageResolution
+    public class NotificationMessageContent
     {
         public string Subject { get; set; }
         public string Body { get; set; }

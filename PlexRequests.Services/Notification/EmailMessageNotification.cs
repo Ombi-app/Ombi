@@ -25,6 +25,9 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 using MailKit.Security;
@@ -119,6 +122,10 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
+            //var r = new NotificationMessageCurlys(model.User, model.Title, DateTime.Now.ToString(), model.RequestType.ToString(), string.Empty);
+            //var resolver = new NotificationMessageResolver();
+            //var bodyResult = resolver.ParseMessage(settings, NotificationType.NewRequest, r);
+            
             var message = new MimeMessage
             {
                 Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },

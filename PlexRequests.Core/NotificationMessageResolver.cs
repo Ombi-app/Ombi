@@ -36,17 +36,17 @@ namespace PlexRequests.Core
     {
         private const char StartChar = (char)123;
         private const char EndChar = (char)125;
-        public NotificationMessageResolution ParseMessage<T>(T notification, NotificationType type) where T : NotificationSettings
+        public NotificationMessageContent ParseMessage<T>(T notification, NotificationType type, NotificationMessageCurlys c) where T : NotificationSettings
         {
-            var bodyToParse = notification.Message.FirstOrDefault(x => x.Key == type).Value;
-            var subjectToParse = notification.Subject.FirstOrDefault(x => x.Key == type).Value;
+            var content = notification.Message.FirstOrDefault(x => x.Key == type).Value;
+
             //if (string.IsNullOrEmpty(notificationToParse))
             //    return string.Empty;
 
-            return Resolve(bodyToParse, subjectToParse, notification.CustomParamaters);
+            return Resolve(content.Body, content.Subject, c.Curlys);
         }
 
-        private NotificationMessageResolution Resolve(string body, string subject, Dictionary<string, string> paramaters)
+        private NotificationMessageContent Resolve(string body, string subject, Dictionary<string, string> paramaters)
         {
 
             var bodyFields = FindCurlyFields(body);
@@ -70,11 +70,15 @@ namespace PlexRequests.Core
                 }
             }
 
-            return new NotificationMessageResolution { Body = body, Subject = subject };
+            return new NotificationMessageContent { Body = body ?? string.Empty, Subject = subject ?? string.Empty };
         }
 
         private IEnumerable<string> FindCurlyFields(string message)
         {
+            if (string.IsNullOrEmpty(message))
+            {
+                return new List<string>();
+            }
             var insideCurly = false;
             var fields = new List<string>();
             var currentWord = string.Empty;

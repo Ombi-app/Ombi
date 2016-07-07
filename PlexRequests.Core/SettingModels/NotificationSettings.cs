@@ -34,18 +34,28 @@ namespace PlexRequests.Core.SettingModels
     {
         public NotificationSettings()
         {
-            CustomParamaters = new Dictionary<string, string>
+            Message = new Dictionary<NotificationType, NotificationMessageContent>
             {
-                {"Username", string.Empty },
-                {"Date", string.Empty },
-                {"Title", string.Empty },
-                {"RequestType", string.Empty },
-                {"Issue", string.Empty },
-               
+                {NotificationType.NewRequest, new NotificationMessageContent() },
+                {NotificationType.Issue, new NotificationMessageContent() },
+                {NotificationType.AdminNote, new NotificationMessageContent() },
+                {NotificationType.RequestApproved, new NotificationMessageContent() },
+                {NotificationType.RequestAvailable, new NotificationMessageContent() },
+                {NotificationType.Test, new NotificationMessageContent() },
             };
         }
-        public Dictionary<NotificationType, string> Message { get; set; }
-        public Dictionary<NotificationType, string> Subject { get; set; }
-        public Dictionary<string,string> CustomParamaters { get; set; }
+        public Dictionary<NotificationType, NotificationMessageContent> Message { get; set; }
+    }
+
+    public static class NotificationCurly
+    {
+        public static readonly List<string> Curlys = new List<string>
+        {
+            "Username",
+            "Title",
+            "Date",
+            "Issue",
+            "Type"
+        };
     }
 }

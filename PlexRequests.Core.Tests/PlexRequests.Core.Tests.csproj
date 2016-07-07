@@ -59,9 +59,9 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="NotificationMessageResolverTests.cs" />
-    <Compile Include="StatusCheckerTests.cs" />
     <Compile Include="AuthenticationSettingsTests.cs" />
+    <Compile Include="StatusCheckerTests.cs" />
+    <Compile Include="NotificationMessageResolverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

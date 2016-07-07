@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AuthenticationSettingsTests.cs
+//    File: NotificationMessageCurlys.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,36 +24,34 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.Core.Tests
+namespace PlexRequests.Core
 {
-    [TestFixture]
-    public class AuthenticationSettingsTests
+    public class NotificationMessageCurlys
     {
-        [Test, TestCaseSource(nameof(UserData))]
-        public void DeniedUserListTest(string users, string[] expected)
+        public NotificationMessageCurlys(string username, string title, string dateTime, string type, string issue)
         {
-            var model = new AuthenticationSettings { DeniedUsers = users };
-
-            var result = model.DeniedUserList;
-
-            Assert.That(result.Count, Is.EqualTo(expected.Length));
-            for (var i = 0; i < expected.Length; i++)
-            {
-                Assert.That(result[i], Is.EqualTo(expected[i]));
-            }
+            Username = username;
+            Title = title;
+            Date = dateTime;
+            Type = type;
+            Issue = issue;
         }
+        private string Username { get; }
+        private string Title { get;  }
+        private string Date { get;  }
+        private string Type { get; }
+        private string Issue { get;  }
 
-        static readonly object[] UserData =
+        public Dictionary<string, string> Curlys => new Dictionary<string, string>
         {
-            new object[] { "john", new [] {"john"} },
-            new object[] { "john , abc   ,", new [] {"john", "abc"} },
-            new object[] { "john,, cde", new [] {"john", "cde"} },
-            new object[] { "john,,, aaa , baaa  ,       ", new [] {"john","aaa","baaa"} },
-            new object[] { "john, aaa , baaa  ,       maaa, caaa", new [] {"john","aaa","baaa", "maaa", "caaa"} },
+            {nameof(Username), Username },
+            {nameof(Title), Title },
+            {nameof(Date), Date },
+            {nameof(Type), Type },
+            {nameof(Issue), Issue }
         };
     }
 }
