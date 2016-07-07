@@ -24,7 +24,6 @@ deploy:
   draft: true
   on:
     branch: master
-deploy:
 - provider: Environment
   name: Microserver
   on:
