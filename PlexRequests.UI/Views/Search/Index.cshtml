@@ -9,7 +9,7 @@
     }
 }
 <div>
-    <h1>@UI.Search_Title</h1>
+    <h1 id="searchTitle">@UI.Search_Title</h1>
     <h4>@UI.Search_Paragraph</h4>
     <br />
     <!-- Nav tabs -->
@@ -19,14 +19,14 @@
         @if (Model.SearchForMovies)
         {
             <li role="presentation" class="active">
-                <a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
+                <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
 
             </li>
         }
         @if (Model.SearchForTvShows)
         {
             <li role="presentation">
-                <a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> @UI.Search_TvShows</a>
+                <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> @UI.Search_TvShows</a>
 
             </li>
         }
