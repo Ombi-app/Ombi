@@ -75,7 +75,7 @@ namespace PlexRequests.UI
             var s = new Setup();
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
-            ConfigureTargets(cn);
+            ConfigureTargets(cn); 
             SetupLogging();
 
             if (port == -1 || port == 3579)
