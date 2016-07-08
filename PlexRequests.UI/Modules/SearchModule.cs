@@ -496,6 +496,7 @@ namespace PlexRequests.UI.Modules
 
                     return Response.AsJson(new JsonResponseModel
                     {
+                        Result = false,
                         Message = Resources.UI.Search_CouchPotatoError
                     });
                 }

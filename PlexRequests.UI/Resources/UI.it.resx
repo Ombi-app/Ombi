@@ -148,19 +148,19 @@
     <value>Plex Requests</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>C'è un nuovo aggiornamento disponibile! Clic</value>
+    <value>C'è un nuovo aggiornamento disponibile!</value>
   </data>
   <data name="Layout_Search" xml:space="preserve">
-    <value>Cerca!</value>
+    <value>Cerca</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Requests</value>
+    <value>Richieste</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>problemi quantificati</value>
+    <value>Problemi</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
-    <value>Donazione</value>
+    <value>Dona!</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
     <value>admin</value>
@@ -172,7 +172,7 @@
     <value>Modifica password</value>
   </data>
   <data name="Layout_Logout" xml:space="preserve">
-    <value>Disconnettersi</value>
+    <value>Disconnettiti</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Inglese</value>
@@ -208,31 +208,31 @@
     <value>Film</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
-    <value>Spettacoli TV</value>
+    <value>Serie TV</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
-    <value>Album</value>
+    <value>Msuica</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Voglia di guardare qualcosa che non è attualmente il Plex?! Non c'è problema! Basta cercare per esso qui sotto e richiederla!</value>
+    <value>Vuoi guardare qualcosa che non è attualmente in Plex?! Non c'è problema! Basta cercarla qui sotto e richiederla!</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggerimenti</value>
   </data>
   <data name="Search_ComingSoon" xml:space="preserve">
-    <value>Novita</value>
+    <value>Novità</value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
     <value>Nei Cinema</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Inviami una notifica quando sono stati aggiunti elementi che ho chiesto!</value>
+    <value>Inviami una notifica quando sono stati aggiunti gli elementi che ho richiesto!</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
     <value>Salva</value>
   </data>
   <data name="Search_Available" xml:space="preserve">
-    <value>disponibili</value>
+    <value>Disponibile</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
     <value>Richiesto</value>
@@ -250,7 +250,7 @@
     <value>Ultima stagione</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>seleziona</value>
+    <value>Seleziona</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
     <value>Segnala il problema</value>
@@ -268,10 +268,10 @@
     <value>Problemi di riproduzione</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
-    <value>Altre</value>
+    <value>Altro</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Conta di pista</value>
+    <value>Numero della traccia</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Nazione</value>
@@ -286,19 +286,19 @@
     <value>Aggiungere un problema</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
-    <value>Salva Cambia</value>
+    <value>Salva cambiamenti</value>
   </data>
   <data name="Search_Season" xml:space="preserve">
     <value>Stagione</value>
   </data>
   <data name="Layout_Welcome" xml:space="preserve">
-    <value>Benvenuta</value>
+    <value>Benvenuto/a</value>
   </data>
   <data name="Requests_Title" xml:space="preserve">
-    <value>Requests</value>
+    <value>Richieste</value>
   </data>
   <data name="Requests_Paragraph" xml:space="preserve">
-    <value>Qui sotto potete vedere il vostro e tutte le altre richieste, così come il loro download e l'approvazione dello stato</value>
+    <value>Qui sotto potete vedere le vostre e tutte le altre richieste, così come il loro download e l'approvazione</value>
   </data>
   <data name="Requests_MoviesTabTitle" xml:space="preserve">
     <value>Film</value>
@@ -307,37 +307,37 @@
     <value>Spettacoli TV</value>
   </data>
   <data name="Requests_AlbumsTabTitle" xml:space="preserve">
-    <value>Album</value>
+    <value>Musica</value>
   </data>
   <data name="Requests_DeleteMovies" xml:space="preserve">
-    <value>Cancellare i filmati</value>
+    <value>Elimina richiesta film</value>
   </data>
   <data name="Requests_ApproveMovies" xml:space="preserve">
     <value>Approva Film</value>
   </data>
   <data name="Requests_DeleteTVShows" xml:space="preserve">
-    <value>Cancellare programmi TV</value>
+    <value>Elimina richiesta Serie TV</value>
   </data>
   <data name="Requests_ApproveTvShows" xml:space="preserve">
-    <value>Approvare programmi TV</value>
+    <value>Approva Serie TV</value>
   </data>
   <data name="Requests_DeleteMusic" xml:space="preserve">
-    <value>Eliminare la musica</value>
+    <value>Elimina richieste musica</value>
   </data>
   <data name="Requests_ApproveMusic" xml:space="preserve">
     <value>Approva Musica</value>
   </data>
   <data name="Requests_Filter_All" xml:space="preserve">
-    <value>Tutto ciò</value>
+    <value>Tutto</value>
   </data>
   <data name="Requests_Filter_Approved" xml:space="preserve">
     <value>Approvato</value>
   </data>
   <data name="Requests_Filter_NotApproved" xml:space="preserve">
-    <value>Approvato</value>
+    <value>Non approvato</value>
   </data>
   <data name="Requests_Filter_Available" xml:space="preserve">
-    <value>disponibili</value>
+    <value>Disponibile</value>
   </data>
   <data name="Requests_Filter_NotAvailable" xml:space="preserve">
     <value>Non disponibile</value>
@@ -355,28 +355,28 @@
     <value>Filtro</value>
   </data>
   <data name="Requests_Order_LatestRequests" xml:space="preserve">
-    <value>Ultimi Richieste</value>
+    <value>Ultime richieste</value>
   </data>
   <data name="Requests_Order_OldestRequests" xml:space="preserve">
-    <value>I più vecchi richieste</value>
+    <value>Richieste più vecchie</value>
   </data>
   <data name="Requests_Order_LatestReleases" xml:space="preserve">
     <value>Ultime uscite</value>
   </data>
   <data name="Requests_Order_OldestReleases" xml:space="preserve">
-    <value>I più vecchi uscite</value>
+    <value>Uscite più vecchie</value>
   </data>
   <data name="Requests_ReleaseDate" xml:space="preserve">
     <value>Data di disponibilità</value>
   </data>
   <data name="Requests_SeasonsRequested" xml:space="preserve">
-    <value>Stagioni obbligatorio</value>
+    <value>Stagioni richieste</value>
   </data>
   <data name="Requests_RequestedBy" xml:space="preserve">
-    <value>Richiesto</value>
+    <value>Richiesto da</value>
   </data>
   <data name="Requests_RequestedDate" xml:space="preserve">
-    <value>Richiesto</value>
+    <value>Richiesto il</value>
   </data>
   <data name="Requests_ToggleDropdown" xml:space="preserve">
     <value>Imposta/rimuovi a discesa</value>
@@ -385,7 +385,7 @@
     <value>Approva</value>
   </data>
   <data name="Common_Remove" xml:space="preserve">
-    <value>Togliere</value>
+    <value>Rimuovere</value>
   </data>
   <data name="Requests_MarkUnavailable" xml:space="preserve">
     <value>Segna non disponibile</value>
@@ -397,9 +397,54 @@
     <value>Approvato</value>
   </data>
   <data name="Requests_Available" xml:space="preserve">
-    <value>disponibili</value>
+    <value>Disponibile</value>
   </data>
   <data name="Issues_Issue" xml:space="preserve">
     <value>Problema</value>
+  </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>è stato aggiunto correttamente!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>è già stato richiesto!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Non siamo riusciti a controllare se {0} è in Plex, sei sicuro che sia configurato correttamente?</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Qualcosa è andato storto aggiungendo il film a CouchPotato! Controlla le impostazioni</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Hai raggiunto il numero massimo di richieste settimanali per i Film! Contatta l'amministratore</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>è già disponibile in Plex!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Qualcosa è andato storto aggiungendo il film a SickRage! Controlla le impostazioni</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>Le richieste per le Serie TV non sono correttamente impostate. Contatta l'amministratore</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Hai raggiunto il numero massimo di richieste settimanali per la Musica! Contatta l'amministratore</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Non siamo riusciti a trovare l'artista in MusicBrainz. Riprova più tardi oppure contatta l'amministratore</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Hai raggiunto il numero massimo di richieste settimanali per le Serie TV! Contatta l'amministratore</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Spiacente, ma questa funzione è disponibile solo per gli utenti con un account Plex.</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Spiacente, ma l'amministratore non ha ancora abilitato questa funzionalità.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Non è stato possibile rimuovere la notifica perchè non l'hai mai avuta.</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Impossibile salvare, riprova più tardi.</value>
   </data>
 </root>
