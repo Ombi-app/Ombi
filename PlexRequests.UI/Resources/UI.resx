@@ -428,4 +428,7 @@
   <data name="Common_CouldNotSave" xml:space="preserve">
     <value>Could not save, please try again</value>
   </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>French</value>
+  </data>
 </root>

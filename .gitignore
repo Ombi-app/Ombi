@@ -236,4 +236,7 @@ _Pvt_Extensions
 .fake/
 *.ncrunchproject
 *.ncrunchsolution
+<<<<<<< HEAD
 /Package.nuspec
+=======
+>>>>>>> master

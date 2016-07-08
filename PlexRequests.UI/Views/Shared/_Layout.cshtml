@@ -93,25 +93,28 @@
                     <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
                     <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
                 </ul>
-                <li/>
-            </ul>
+            </div>
         </div>
-    </div>
-    <div id="updateAvailable" hidden="hidden"></div>
-</nav>
+        <div id="updateAvailable" hidden="hidden"></div>
+    </nav>
 
-<div class="container">
-    @RenderBody()
-</div>
-<div class="scroll-top-wrapper ">
-    <span class="scroll-top-inner">
+    <div class="container">
+        @RenderBody()
+    </div>
+    <div class="scroll-top-wrapper ">
+        <span class="scroll-top-inner">
             <i class="fa fa-2x fa-arrow-circle-up"></i>
         </span>
-</div>
+    </div>
 </body>
-@Html.GetInformationalVersion();
 </html>
 <script>
+
+    function donateClick(url) {
+        ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
+        var redirectWindow = window.open(url, '_blank');
+        redirectWindow.location;
+    }
 
     $(function () {
 
@@ -172,11 +175,6 @@
             }
         });
         // End issue count
-
-
-        $('#donate').click(function () {
-            ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
-        });
 
 
     });
