@@ -38,10 +38,11 @@ namespace PlexRequests.Core
         private const char EndChar = (char)125;
         public NotificationMessageContent ParseMessage<T>(T notification, NotificationType type, NotificationMessageCurlys c) where T : NotificationSettings
         {
-            var content = notification.Message.FirstOrDefault(x => x.Key == type).Value;
-
-            //if (string.IsNullOrEmpty(notificationToParse))
-            //    return string.Empty;
+            var content = notification.Message.FirstOrDefault(x => x.NotificationType == type);
+            if (content == null)
+            {
+                return new NotificationMessageContent();
+            }
 
             return Resolve(content.Body, content.Subject, c.Curlys);
         }

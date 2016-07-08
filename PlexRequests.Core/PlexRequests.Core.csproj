@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="NotificationMessage.cs" />
     <Compile Include="NotificationMessageContent.cs" />
     <Compile Include="NotificationMessageCurlys.cs" />
     <Compile Include="NotificationMessageResolver.cs" />

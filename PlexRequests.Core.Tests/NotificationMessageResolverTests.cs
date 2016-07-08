@@ -43,7 +43,7 @@ namespace PlexRequests.Core.Tests
             var n = new NotificationMessageResolver();
             var s = new NotificationSettings
             {
-                Message = new Dictionary<NotificationType, NotificationMessageContent> { { NotificationType.NewRequest, new NotificationMessageContent { Body = body } } }
+                Message = new List<NotificationMessage> { new NotificationMessage { NotificationType = NotificationType.NewRequest, Body = body } } 
             };
 
             var result = n.ParseMessage(s, NotificationType.NewRequest, param);
@@ -56,7 +56,7 @@ namespace PlexRequests.Core.Tests
             var n = new NotificationMessageResolver();
             var s = new NotificationSettings
             {
-                Message = new Dictionary<NotificationType, NotificationMessageContent> { { NotificationType.NewRequest, new NotificationMessageContent {Subject = subject} } }
+                Message = new List<NotificationMessage> { new NotificationMessage { NotificationType = NotificationType.NewRequest, Subject = subject }} 
             };
 
             var result = n.ParseMessage(s, NotificationType.NewRequest, param);
