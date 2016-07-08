@@ -40,6 +40,8 @@ namespace PlexRequests.Core.SettingModels
         public bool Ssl { get; set; }
         public string ProfileId { get; set; }
         public string SubDir { get; set; }
+        public string Username { get; set; }
+        public string Password { get; set; }
 
         [JsonIgnore]
         public Uri FullUri

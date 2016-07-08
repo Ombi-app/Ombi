@@ -80,6 +80,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializerSettings.cs" />
     <Compile Include="StringCipher.cs" />
+    <Compile Include="StringHasher.cs" />
     <Compile Include="UriHelper.cs" />
     <Compile Include="UserClaims.cs" />
   </ItemGroup>

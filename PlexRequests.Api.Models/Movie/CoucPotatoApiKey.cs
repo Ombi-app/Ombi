@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: CoucPotatoApiKey.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,20 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using Newtonsoft.Json;
 
-using System;
-
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Movie
 {
-    public interface ICouchPotatoApi
+    public class CoucPotatoApiKey
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
-        CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status);
-
-        CoucPotatoApiKey GetApiKey(Uri baseUrl, string username, string password);
+        [JsonProperty("success")]
+        public bool Result { get; set; }
+        [JsonProperty("api_key")]
+        public string ApiKey { get; set; }
     }
 }

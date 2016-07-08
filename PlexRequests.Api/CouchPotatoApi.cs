@@ -31,6 +31,7 @@ using Newtonsoft.Json.Linq;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Movie;
+using PlexRequests.Helpers;
 using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
@@ -158,6 +159,23 @@ namespace PlexRequests.Api
                 Log.Error(e);
                 return new CouchPotatoMovies();
             }
+        }
+
+        public CoucPotatoApiKey GetApiKey(Uri baseUrl, string username, string password)
+        {
+            var request = new RestRequest
+            {
+                Resource = "getkey/?p={username}&u={password}",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("username", StringHasher.CalcuateMD5Hash(username));
+            request.AddUrlSegment("password", StringHasher.CalcuateMD5Hash(password));
+
+            var obj = RetryHandler.Execute(() => Api.Execute<CoucPotatoApiKey>(request, baseUrl), null,
+                (exception, timespan) => Log.Error(exception, "Exception when calling GetApiKey for CP, Retrying {0}", timespan));
+
+            return obj;
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ICouchPotatoApi.cs
+//    File: StringHasher.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,20 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System.Security.Cryptography;
+using System.Text;
 
-using System;
-
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Helpers
 {
-    public interface ICouchPotatoApi
+    public class StringHasher
     {
-        bool AddMovie(string imdbid, string apiKey, string title, Uri baseUrl, string profileID = default(string));
-        CouchPotatoStatus GetStatus(Uri url, string apiKey);
-        CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
-        CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status);
+        public static string CalcuateMD5Hash(string input)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var inputBytes = Encoding.ASCII.GetBytes(input);
+                var hash = md5.ComputeHash(inputBytes);
 
-        CoucPotatoApiKey GetApiKey(Uri baseUrl, string username, string password);
+                var sb = new StringBuilder();
+
+                foreach (byte t in hash)
+                {
+                    sb.Append(t.ToString("x2"));
+                }
+
+                return sb.ToString();
+            }
+        }
     }
 }

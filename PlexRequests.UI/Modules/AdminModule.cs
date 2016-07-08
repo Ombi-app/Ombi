@@ -171,6 +171,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
             Post["/cpprofiles", true] = async (x,ct) => await GetCpProfiles();
+            Post["/cpapikey", true] = async (x,ct) => await GetCpApiKey();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -694,6 +695,20 @@ namespace PlexRequests.UI.Modules
             await CpService.SaveSettingsAsync(settings);
 
             return Response.AsJson(profiles);
+        }
+
+        private async Task<Response> GetCpApiKey()
+        {
+            var settings = this.Bind<CouchPotatoSettings>();
+            
+            if (string.IsNullOrEmpty(settings.Username) || string.IsNullOrEmpty(settings.Password))
+            {
+                return Response.AsJson(new { Message = "Please enter a username and password to request the Api Key", Result = false });
+            }
+            var key = CpApi.GetApiKey(settings.FullUri, settings.Username, settings.Password);
+
+
+            return Response.AsJson(key);
         }
 
         private Negotiator Logs()
