@@ -31,7 +31,7 @@ namespace PlexRequests.Helpers
 {
     public class StringHasher
     {
-        public static string CalcuateMD5Hash(string input)
+        public static string CalcuateMd5Hash(string input)
         {
             using (var md5 = MD5.Create())
             {
@@ -40,7 +40,7 @@ namespace PlexRequests.Helpers
 
                 var sb = new StringBuilder();
 
-                foreach (byte t in hash)
+                foreach (var t in hash)
                 {
                     sb.Append(t.ToString("x2"));
                 }

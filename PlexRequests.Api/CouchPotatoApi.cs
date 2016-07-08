@@ -169,8 +169,8 @@ namespace PlexRequests.Api
                 Method = Method.GET
             };
 
-            request.AddUrlSegment("username", StringHasher.CalcuateMD5Hash(username));
-            request.AddUrlSegment("password", StringHasher.CalcuateMD5Hash(password));
+            request.AddUrlSegment("username", StringHasher.CalcuateMd5Hash(username));
+            request.AddUrlSegment("password", StringHasher.CalcuateMd5Hash(password));
 
             var obj = RetryHandler.Execute(() => Api.Execute<CoucPotatoApiKey>(request, baseUrl), null,
                 (exception, timespan) => Log.Error(exception, "Exception when calling GetApiKey for CP, Retrying {0}", timespan));
