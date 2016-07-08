@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: StringHelper.cs
+//    File: CustomHtmlHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,27 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Linq;
-using System.Text.RegularExpressions;
+using System.Reflection;
+
+using Nancy.ViewEngines.Razor;
+
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Helpers
 {
-    public static class StringHelper
+    public static class CustomHtmlHelper
     {
-        public static string FirstCharToUpper(this string input)
+        public static IHtmlString GetInformationalVersion(this HtmlHelpers helper)
         {
-            if (string.IsNullOrEmpty(input))
-                return input;
+            var fileVersion = AssemblyHelper.GetAssemblyVersion();
+            var htmlString = $"<!--\r\n##################################################################\r\nVersion: {fileVersion}\r\n##################################################################\r\n--> ";
 
-            var firstUpper = char.ToUpper(input[0]);
-            return firstUpper + string.Join("", input.Skip(1));
-        }
-
-        public static string ToCamelCaseWords(this string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-            return Regex.Replace(input.FirstCharToUpper(), "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+            return helper.Raw(htmlString);
         }
     }
 }
