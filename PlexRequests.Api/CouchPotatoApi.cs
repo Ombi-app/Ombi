@@ -67,16 +67,13 @@ namespace PlexRequests.Api
                 TimeSpan.FromSeconds(5),
                 TimeSpan.FromSeconds(10)},
                 (exception, timespan) => Log.Error(exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan));
-
-            Log.Trace("CP movie Add result count {0}", obj.Count);
+            
 
             if (obj.Count > 0)
             {
                 try
                 {
-                    Log.Trace("CP movie obj[\"success\"] = {0}", obj["success"]);
                     var result = (bool)obj["success"];
-                    Log.Trace("CP movie Add result {0}", result);
                     return result;
                 }
                 catch (Exception e)
@@ -96,7 +93,6 @@ namespace PlexRequests.Api
         /// <returns></returns>
         public CouchPotatoStatus GetStatus(Uri url, string apiKey)
         {
-            Log.Trace("Getting CP Status, ApiKey = {0}", apiKey);
             var request = new RestRequest
             {
                 Resource = "api/{apikey}/app.available/",

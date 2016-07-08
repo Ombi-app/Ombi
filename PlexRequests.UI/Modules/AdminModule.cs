@@ -170,7 +170,7 @@ namespace PlexRequests.UI.Modules
             Post["/sickrage"] = _ => SaveSickrage();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
-            Post["/cpprofiles"] = _ => GetCpProfiles();
+            Post["/cpprofiles", true] = async (x,ct) => await GetCpProfiles();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -673,7 +673,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
         }
 
-        private Response GetCpProfiles()
+        private async Task<Response> GetCpProfiles()
         {
             var settings = this.Bind<CouchPotatoSettings>();
             var valid = this.Validate(settings);
@@ -688,6 +688,10 @@ namespace PlexRequests.UI.Modules
             {
                 Cache.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
             }
+
+            // Save the first profile found (user might not press save...)
+            settings.ProfileId = profiles?.list?.FirstOrDefault()?._id;
+            await CpService.SaveSettingsAsync(settings);
 
             return Response.AsJson(profiles);
         }
