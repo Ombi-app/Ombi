@@ -180,8 +180,9 @@
     <Compile Include="Helpers\ContravariantBindingResolver.cs" />
     <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Helpers\CustomHtmlHelper.cs" />
-    <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
+    <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Themes.cs" />
@@ -246,6 +247,9 @@
     <Compile Include="Validators\RequestedModelValidator.cs" />
     <Compile Include="Validators\SickRageValidator.cs" />
     <Compile Include="Validators\SonarrValidator.cs" />
+    <Content Include="Content\app\app.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\awesome-bootstrap-checkbox.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -297,6 +301,9 @@
     </Content>
     <Content Include="Content\issues.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\services\userManagement\userManagementService.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\swagger\backbone-min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -494,6 +501,9 @@
     <None Include="sqlite3.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Content\app\controllers\userManagement\userManagementController.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -594,6 +604,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\SchedulerSettings.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Partial\_Navbar.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Partial\_Head.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Partial\_LayoutScripts.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_AngularLayout.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
@@ -698,6 +720,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="NewFolder1\" />
+  </ItemGroup>
   <Import Project="..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets" Condition="Exists('..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets')" />
 </Project>

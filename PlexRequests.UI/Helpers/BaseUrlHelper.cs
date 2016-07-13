@@ -69,6 +69,7 @@ namespace PlexRequests.UI.Helpers
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/datepicker.min.css\" type=\"text/css\"/>");
 
             sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/app/app.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap.min.js\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap-notify.min.js\"></script>");

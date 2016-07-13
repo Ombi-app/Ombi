@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserProperties.cs
+//    File: EmptyViewBase.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,21 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.Models
+using Nancy.ViewEngines.Razor;
+
+namespace PlexRequests.UI.Helpers
 {
-    public class UserProperties
+    public class AngularViewBase : NancyRazorViewBase
     {
-        public string EmailAddress { get; set; }
-        public string UserAlias { get; set; }
+
+        public AngularViewBase()
+        {
+            Layout = "Shared/_AngularLayout.cshtml";
+        }
+
+        public override void Execute()
+        {
+
+        }
     }
 }

@@ -1,20 +1,19 @@
-﻿using System;
-
-namespace PlexRequests.UI
+﻿namespace PlexRequests.UI.Models
 {
-	public class UserManagementUsersViewModel
-	{
-		public string Username{get;set;}
-		public string Claims{get;set;}
-		public int Id {get;set;}
-		public string Alias {get;set;}
-		public UserType Type { get; set;}
-	}
+    public class UserManagementUsersViewModel
+    {
+        public string Username { get; set; }
+        public string Claims { get; set; }
+        public int Id { get; set; }
+        public string Alias { get; set; }
+        public UserType Type { get; set; }
+        public string EmailAddress { get; set; }
+    }
 
-	public enum UserType
-	{
-		PlexUser,
-		LocalUser
-	}
+    public enum UserType
+    {
+        PlexUser,
+        LocalUser
+    }
 }
 
