@@ -236,4 +236,4 @@ _Pvt_Extensions
 .fake/
 *.ncrunchproject
 *.ncrunchsolution
-/Package.nuspec
+
