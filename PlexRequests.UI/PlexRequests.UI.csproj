@@ -180,6 +180,7 @@
     <Compile Include="Helpers\ContravariantBindingResolver.cs" />
     <Compile Include="Helpers\CultureHelper.cs" />
     <Compile Include="Helpers\CustomHtmlHelper.cs" />
+    <Compile Include="Helpers\DebugRootPathProvider.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
     <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\AngularViewBase.cs" />
