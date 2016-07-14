@@ -219,6 +219,7 @@
     <Compile Include="Modules\ApiUserModule.cs" />
     <Compile Include="Modules\BaseApiModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\BetaModule.cs" />
     <Compile Include="Modules\CultureModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
@@ -720,8 +721,6 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="NewFolder1\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets" Condition="Exists('..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets')" />
 </Project>
