@@ -31,7 +31,7 @@ namespace PlexRequests.UI.Modules
             Get["/users", true] = async (x, ct) => await LoadUsers();
             Post["/createuser"] = x => CreateUser(Request.Form["userName"].ToString(), Request.Form["password"].ToString());
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
-            Get["/plex/{id}", true] = async (x,ct) => await PlexDetails((int)x.id);
+            Get["/plex/{id}", true] = async (x,ct) => await PlexDetails(x.id);
         }
 
         private ICustomUserMapper UserMapper { get; }
@@ -56,6 +56,7 @@ namespace PlexRequests.UI.Modules
 
                 model.Add(new UserManagementUsersViewModel
                 {
+                    Id= user.UserGuid,
                     Claims = claimsString,
                     Username = user.UserName,
                     Type = UserType.LocalUser,
@@ -71,13 +72,18 @@ namespace PlexRequests.UI.Modules
 
                 foreach (var u in plexUsers.User)
                 {
+
                     model.Add(new UserManagementUsersViewModel
                     {
                         Username = u.Username,
                         Type = UserType.PlexUser,
                         Id = u.Id,
                         Claims = "Requestor",
-                        EmailAddress = u.Email
+                        EmailAddress = u.Email,
+                        PlexInfo = new UserManagementPlexInformation
+                        {
+                            Thumb = u.Thumb
+                        }
                     });
                 }
             }
@@ -114,7 +120,7 @@ namespace PlexRequests.UI.Modules
             return Nancy.Response.NoBody;
         }
 
-        private async Task<Response> PlexDetails(int id)
+        private async Task<Response> PlexDetails(string id)
         {
             var plexSettings = await PlexSettings.GetSettingsAsync();
             if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
@@ -122,7 +128,7 @@ namespace PlexRequests.UI.Modules
                 //Get Plex Users
                 var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
 
-                var selectedUser = plexUsers.User?.FirstOrDefault(x => x.Id == id);
+                var selectedUser = plexUsers.User?.FirstOrDefault(x => x.Id.ToString() == id);
                 if (selectedUser != null)
                 {
                     return Response.AsJson(selectedUser);
