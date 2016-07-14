@@ -39,5 +39,6 @@ namespace PlexRequests.UI.Helpers
             var dirInfo = new DirectoryInfo(assemblyLocation);
             var webFolder = dirInfo.Parent?.Parent?.Parent;
             return webFolder?.FullName;
+        }
     }
 }
