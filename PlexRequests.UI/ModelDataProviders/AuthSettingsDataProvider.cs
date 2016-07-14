@@ -46,7 +46,6 @@ namespace PlexRequests.UI.ModelDataProviders
                         .Description("The blacklisted users, this is for internal use by the application, do not modify this list.")
                         .Required(false);
                     with.Property(x => x.DeniedUsers).Description("The blacklisted users, comma separated.").Required(false);
-                    with.Property(x => x.PlexAuthToken).Description("The Plex authentication token").Required(false);
                     with.Property(x => x.UsePassword)
                         .Description("Require users to use a password to login when authentication is enabled")
                         .Required(false)

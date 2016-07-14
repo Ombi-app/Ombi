@@ -35,7 +35,9 @@ namespace PlexRequests.Core.SettingModels
     {
         public bool UserAuthentication { get; set; }
         public bool UsePassword { get; set; }
-        public string PlexAuthToken { get; set; }
+        [JsonProperty("PlexAuthToken")]
+        [Obsolete("This should be migrated over into the Plex Settings and then removed in the next release")]
+        public string OldPlexAuthToken { get; set; }
 
 
         /// <summary>

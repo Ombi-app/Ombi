@@ -68,6 +68,30 @@
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="authToken" class="control-label">Plex Authorization Token</label>
+                <div class="">
+                    <input type="text" class="form-control-custom form-control" id="authToken" name="PlexAuthToken" placeholder="Plex Auth Token" value="@Model.PlexAuthToken">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username" class="control-label">Username and Password</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom" id="username" name="Username" placeholder="username">
+                </div>
+                <br />
+                <div>
+                    <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="">
+                    <button id="requestToken" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div>
                     <button id="testPlex" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
@@ -115,6 +139,30 @@
                 error: function (e) {
 
         		$('#spinner').attr("class", "fa fa-times");
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#requestToken').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: "requestauth",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                        $('#authToken').val(response.authToken);
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

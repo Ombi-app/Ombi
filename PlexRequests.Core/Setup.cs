@@ -61,6 +61,10 @@ namespace PlexRequests.Core
                 {
                     MigrateToVersion1800();
                 }
+                if (version > 1899 && version <= 1900)
+                {
+                    MigrateToVersion1900();
+                }
             }
 
             return Db.DbConnection().ConnectionString;
@@ -167,11 +171,23 @@ namespace PlexRequests.Core
                 Log.Error(ex, "Failed to cache CouchPotato quality profiles!");
             }
         }
-        public void MigrateToVersion1700()
+        public void MigrateToVersion1900()
         {
-            // Drop old tables
-            TableCreation.DropTable(Db.DbConnection(), "User");
-            TableCreation.DropTable(Db.DbConnection(), "Log");
+            // Need to change the Plex Token location
+            var authSettings = new SettingsServiceV2<AuthenticationSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+            var auth = authSettings.GetSettings();
+            var plexSettings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+
+            var currentSettings = plexSettings.GetSettings();
+            if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
+            {
+                currentSettings.PlexAuthToken = auth.OldPlexAuthToken;
+                plexSettings.SaveSettings(currentSettings);
+
+                // Clear out the old value
+                auth.OldPlexAuthToken = string.Empty;
+                authSettings.SaveSettings(auth);
+            }
         }
 
         /// <summary>

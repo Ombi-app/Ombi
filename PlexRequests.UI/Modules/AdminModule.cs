@@ -290,19 +290,19 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new { Result = false, Message = "Incorrect username or password!" });
             }
 
-            var oldSettings = AuthService.GetSettings();
+            var oldSettings = PlexService.GetSettings();
             if (oldSettings != null)
             {
                 oldSettings.PlexAuthToken = model.user.authentication_token;
-                AuthService.SaveSettings(oldSettings);
+                PlexService.SaveSettings(oldSettings);
             }
             else
             {
-                var newModel = new AuthenticationSettings
+                var newModel = new PlexSettings
                 {
                     PlexAuthToken = model.user.authentication_token
                 };
-                AuthService.SaveSettings(newModel);
+                PlexService.SaveSettings(newModel);
             }
 
             return Response.AsJson(new { Result = true, AuthToken = model.user.authentication_token });
@@ -311,7 +311,7 @@ namespace PlexRequests.UI.Modules
 
         private Response GetUsers()
         {
-            var settings = AuthService.GetSettings();
+            var settings = PlexService.GetSettings();
 
             var token = settings?.PlexAuthToken;
             if (token == null)

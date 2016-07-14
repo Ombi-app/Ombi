@@ -65,7 +65,7 @@ namespace PlexRequests.Services.Tests
             CacheMock = new Mock<ICacheProvider>();
             NotifyUsers = new Mock<IRepository<UsersToNotify>>();
             JobRec = new Mock<IJobRecord>();
-            Checker = new PlexAvailabilityChecker(SettingsMock.Object, AuthMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object);
+            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object);
 
         }
 

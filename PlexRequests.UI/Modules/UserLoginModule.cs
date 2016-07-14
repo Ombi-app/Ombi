@@ -49,19 +49,22 @@ namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp, IAnalytics a) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp, IAnalytics a) : base("userlogin", pr)
         {
             AuthService = auth;
             LandingPageSettings = lp;
             Analytics = a;
             Api = api;
+            PlexSettings = plexSettings;
+
             Get["UserLoginIndex","/", true] = async (x, ct) => await Index();
-            Post["/"] = x => LoginUser();
+            Post["/", true] = async (x,ct) =>  await LoginUser();
             Get["/logout"] = x => Logout();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
         private IPlexApi Api { get; }
         private IAnalytics Analytics { get; }
 
@@ -74,7 +77,7 @@ namespace PlexRequests.UI.Modules
             return View["Index", settings];
         }
 
-        private Response LoginUser()
+        private async Task<Response> LoginUser()
         {
             var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
@@ -86,7 +89,8 @@ namespace PlexRequests.UI.Modules
 
             var authenticated = false;
 
-            var settings = AuthService.GetSettings();
+            var settings = await AuthService.GetSettingsAsync();
+            var plexSettings = await PlexSettings.GetSettingsAsync();
 
             if (IsUserInDeniedList(username, settings))
             {
@@ -109,14 +113,14 @@ namespace PlexRequests.UI.Modules
                 if (signedIn.user?.authentication_token != null)
                 {
                     Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
-                    if (CheckIfUserIsOwner(settings.PlexAuthToken, signedIn.user?.username))
+                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, signedIn.user?.username))
                     {
                         Log.Debug("User is the account owner");
                         authenticated = true;
                     }
                     else
                     {
-                        authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                        authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
                         Log.Debug("Friends list result = {0}", authenticated);
                     }
                 }
@@ -124,8 +128,8 @@ namespace PlexRequests.UI.Modules
             else if (settings.UserAuthentication) // Check against the users in Plex
             {
                 Log.Debug("Need to auth");
-                authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
-                if (CheckIfUserIsOwner(settings.PlexAuthToken, username))
+                authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
                 {
                     Log.Debug("User is the account owner");
                     authenticated = true;

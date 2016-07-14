@@ -38,7 +38,9 @@ namespace PlexRequests.Core.SettingModels
         public bool Ssl { get; set; }
         public string SubDir { get; set; }
         public bool AdvancedSearch { get; set; }
-       
+
+        public string PlexAuthToken { get; set; }
+
         [JsonIgnore]
         public Uri FullUri
         {

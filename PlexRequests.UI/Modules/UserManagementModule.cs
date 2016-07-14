@@ -18,13 +18,13 @@ namespace PlexRequests.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<AuthenticationSettings> auth) : base("usermanagement", pr)
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex) : base("usermanagement", pr)
         {
             //this.RequiresClaims(UserClaims.Admin);
 
             UserMapper = m;
             PlexApi = plexApi;
-            AuthSettings = auth;
+            PlexSettings = plex;
 
             Get["/"] = x => Load();
 
@@ -36,7 +36,7 @@ namespace PlexRequests.UI.Modules
 
         private ICustomUserMapper UserMapper { get; }
         private IPlexApi PlexApi { get; }
-        private ISettingsService<AuthenticationSettings> AuthSettings { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
 
         private Negotiator Load()
         {
@@ -63,11 +63,11 @@ namespace PlexRequests.UI.Modules
                 });
             }
 
-            var authSettings = await AuthSettings.GetSettingsAsync();
-            if (!string.IsNullOrEmpty(authSettings.PlexAuthToken))
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
             {
                 //Get Plex Users
-                var plexUsers = PlexApi.GetUsers(authSettings.PlexAuthToken);
+                var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
 
                 foreach (var u in plexUsers.User)
                 {
@@ -116,11 +116,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> PlexDetails(int id)
         {
-            var authSettings = await AuthSettings.GetSettingsAsync();
-            if (!string.IsNullOrEmpty(authSettings.PlexAuthToken))
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
             {
                 //Get Plex Users
-                var plexUsers = PlexApi.GetUsers(authSettings.PlexAuthToken);
+                var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
 
                 var selectedUser = plexUsers.User?.FirstOrDefault(x => x.Id == id);
                 if (selectedUser != null)

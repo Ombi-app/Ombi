@@ -36,7 +36,6 @@ using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
 using PlexRequests.Services.Notification;
@@ -52,11 +51,10 @@ namespace PlexRequests.Services.Jobs
 {
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
-        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, ISettingsService<AuthenticationSettings> auth, IRequestService request, IPlexApi plex, ICacheProvider cache,
+        public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
             INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users)
         {
             Plex = plexSettings;
-            Auth = auth;
             RequestService = request;
             PlexApi = plex;
             Cache = cache;
@@ -66,7 +64,6 @@ namespace PlexRequests.Services.Jobs
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
-        private ISettingsService<AuthenticationSettings> Auth { get; }
         private IRequestService RequestService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private IPlexApi PlexApi { get; }
@@ -77,15 +74,14 @@ namespace PlexRequests.Services.Jobs
         public void CheckAndUpdateAll()
         {
             var plexSettings = Plex.GetSettings();
-            var authSettings = Auth.GetSettings();
 
-            if (!ValidateSettings(plexSettings, authSettings))
+            if (!ValidateSettings(plexSettings))
             {
                 Log.Debug("Validation of the plex settings failed.");
                 return;
             }
 
-            var libraries = CachedLibraries(authSettings, plexSettings, true); //force setting the cache (10 min intervals via scheduler)
+            var libraries = CachedLibraries(plexSettings, true); //force setting the cache (10 min intervals via scheduler)
 
             if (libraries == null || !libraries.Any())
             {
@@ -140,7 +136,7 @@ namespace PlexRequests.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotifyUsers(modifiedModel, authSettings.PlexAuthToken);
+                NotifyUsers(modifiedModel, plexSettings.PlexAuthToken);
                 RequestService.BatchUpdate(modifiedModel);
             }
 
@@ -275,11 +271,11 @@ namespace PlexRequests.Services.Jobs
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        private List<PlexSearch> CachedLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings, bool setCache)
+        private List<PlexSearch> CachedLibraries(PlexSettings plexSettings, bool setCache)
         {
             var results = new List<PlexSearch>();
 
-            if (!ValidateSettings(plexSettings, authSettings))
+            if (!ValidateSettings(plexSettings))
             {
                 Log.Warn("The settings are not configured");
                 return results; // don't error out here, just let it go! let it goo!!!
@@ -289,7 +285,7 @@ namespace PlexRequests.Services.Jobs
             {
                 if (setCache)
                 {
-                    results = GetLibraries(authSettings, plexSettings);
+                    results = GetLibraries(plexSettings);
                     if (plexSettings.AdvancedSearch)
                     {
                         for (var i = 0; i < results.Count; i++)
@@ -297,7 +293,7 @@ namespace PlexRequests.Services.Jobs
                             for (var j = 0; j < results[i].Directory.Count; j++)
                             {
                                 var currentItem = results[i].Directory[j];
-                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
                                 results[i].Directory[j].ProviderId = providerId;
@@ -305,7 +301,7 @@ namespace PlexRequests.Services.Jobs
                             for (var j = 0; j < results[i].Video.Count; j++)
                             {
                                 var currentItem = results[i].Video[j];
-                                var metaData = PlexApi.GetMetadata(authSettings.PlexAuthToken, plexSettings.FullUri,
+                                var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Video.Guid);
                                 results[i].Video[j].ProviderId = providerId;
@@ -320,7 +316,7 @@ namespace PlexRequests.Services.Jobs
                 else
                 {
                     results = Cache.GetOrSet(CacheKeys.PlexLibaries, () =>
-                    GetLibraries(authSettings, plexSettings), CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                    GetLibraries(plexSettings), CacheKeys.TimeFrameMinutes.SchedulerCaching);
                 }
             }
             catch (Exception ex)
@@ -331,16 +327,16 @@ namespace PlexRequests.Services.Jobs
             return results;
         }
 
-        private List<PlexSearch> GetLibraries(AuthenticationSettings authSettings, PlexSettings plexSettings)
+        private List<PlexSearch> GetLibraries(PlexSettings plexSettings)
         {
-            var sections = PlexApi.GetLibrarySections(authSettings.PlexAuthToken, plexSettings.FullUri);
+            var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
             List<PlexSearch> libs = new List<PlexSearch>();
             if (sections != null)
             {
                 foreach (var dir in sections.Directories)
                 {
-                    var lib = PlexApi.GetLibrary(authSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
+                    var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
                     if (lib != null)
                     {
                         libs.Add(lib);
@@ -351,9 +347,9 @@ namespace PlexRequests.Services.Jobs
             return libs;
         }
 
-        private bool ValidateSettings(PlexSettings plex, AuthenticationSettings auth)
+        private bool ValidateSettings(PlexSettings plex)
         {
-            if (plex?.Ip == null || auth?.PlexAuthToken == null)
+            if (plex?.Ip == null || plex?.PlexAuthToken == null)
             {
                 Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
                 return false;
