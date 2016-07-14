@@ -1,18 +1,7 @@
-﻿@using PlexRequests.UI.Helpers
+﻿@inherits PlexRequests.UI.Helpers.AngularViewBase
 
-@inherits PlexRequests.UI.Helpers.AngularViewBase
-
-@Html.LoadTableAssets()
-@{
-    var baseUrl = Html.GetBaseUrl().ToHtmlString();
-    var url = string.Empty;
-    if (!string.IsNullOrEmpty(baseUrl))
-    {
-        url = "/" + baseUrl;
-    }
-}
-<script src="/Content/app/controllers/userManagement/userManagementController.js"></script>
-<script src="/Content/app/services/userManagement/userManagementService.js"></script>
+<script src="~/Content/app/controllers/userManagement/userManagementController.js"></script>
+<script src="~/Content/app/services/userManagement/userManagementService.js"></script>
 <div ng-controller="userManagementController" ng-init="getUsers()">
     
     <br>
@@ -24,7 +13,7 @@
                 <th>Id</th>
                 <th>Username</th>
                 <th>Email</th>
-                <th>User T</th>
+                <th>User Type</th>
             </tr>
             </thead>
             <tbody>

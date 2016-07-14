@@ -2,7 +2,7 @@
 
     var controller = function ($scope, userManagementService) {
 
-        $scope.user = {}; // The local user to create
+        $scope.user = {}; // The local user
         $scope.users = []; // list of users
 
         $scope.error = false;
@@ -16,9 +16,6 @@
         };
 
         $scope.addUser = function () {
-            if ($scope.users.length === 0) {
-                $scope.getUsers();
-            }
             userManagementService.addUser($scope.user).then(function (data) {
                 if (data.message) {
                     $scope.error = true;

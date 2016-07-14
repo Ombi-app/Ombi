@@ -54,7 +54,7 @@ namespace PlexRequests.Api.Models.Plex
         [XmlElement(ElementName = "Server")]
         public Server Server { get; set; }
         [XmlAttribute(AttributeName = "id")]
-        public string Id { get; set; }
+        public int Id { get; set; }
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
         [XmlAttribute(AttributeName = "username")]

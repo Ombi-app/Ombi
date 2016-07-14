@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +30,8 @@ namespace PlexRequests.UI.Modules
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
             Post["/createuser"] = x => CreateUser(Request.Form["userName"].ToString(), Request.Form["password"].ToString());
+            Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
+            Get["/plex/{id}", true] = async (x,ct) => await PlexDetails((int)x.id);
         }
 
         private ICustomUserMapper UserMapper { get; }
@@ -72,7 +75,7 @@ namespace PlexRequests.UI.Modules
                     {
                         Username = u.Username,
                         Type = UserType.PlexUser,
-                        //Alias = 
+                        Id = u.Id,
                         Claims = "Requestor",
                         EmailAddress = u.Email
                     });
@@ -98,6 +101,36 @@ namespace PlexRequests.UI.Modules
             }
 
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user" });
+        }
+
+        private Response LocalDetails(Guid id)
+        {
+            var localUser = UserMapper.GetUser(id);
+            if (localUser != null)
+            {
+                return Response.AsJson(localUser);
+            }
+
+            return Nancy.Response.NoBody;
+        }
+
+        private async Task<Response> PlexDetails(int id)
+        {
+            var authSettings = await AuthSettings.GetSettingsAsync();
+            if (!string.IsNullOrEmpty(authSettings.PlexAuthToken))
+            {
+                //Get Plex Users
+                var plexUsers = PlexApi.GetUsers(authSettings.PlexAuthToken);
+
+                var selectedUser = plexUsers.User?.FirstOrDefault(x => x.Id == id);
+                if (selectedUser != null)
+                {
+                    return Response.AsJson(selectedUser);
+                }
+
+            }
+
+            return Nancy.Response.NoBody;
         }
     }
 }
