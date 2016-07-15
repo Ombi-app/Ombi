@@ -100,6 +100,7 @@ namespace PlexRequests.UI.Modules
             IssueService = issue;
             Analytics = a;
             RequestLimitRepo = rl;
+            TvApi = new TvMazeApi();
 
 
             Get["SearchIndex","/", true] = async (x, ct) => await RequestLoad();
@@ -120,7 +121,9 @@ namespace PlexRequests.UI.Modules
             Get["/notifyuser", true] = async (x, ct) => await GetUserNotificationSettings();
 
             Get["/seasons"] = x => GetSeasons();
+            Get["/episodes"] = x => GetEpisodes();
         }
+        private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
@@ -854,12 +857,19 @@ namespace PlexRequests.UI.Modules
 
         private Response GetSeasons()
         {
-            var tv = new TvMazeApi();
             var seriesId = (int)Request.Query.tvId;
-            var show = tv.ShowLookupByTheTvDbId(seriesId);
-            var seasons = tv.GetSeasons(show.id);
+            var show = TvApi.ShowLookupByTheTvDbId(seriesId);
+            var seasons = TvApi.GetSeasons(show.id);
             var model = seasons.Select(x => x.number);
             return Response.AsJson(model);
+        }
+
+        private Response GetEpisodes()
+        {
+            var seriesId = (int)Request.Query.tvId;
+            var show = TvApi.ShowLookupByTheTvDbId(seriesId);
+            var seasons = TvApi.EpisodeLookup(show.id);
+            return Response.AsJson(seasons);
         }
 
         private async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)

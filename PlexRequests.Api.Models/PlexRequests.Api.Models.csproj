@@ -84,6 +84,7 @@
     <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />
+    <Compile Include="Tv\TvMazeEpisodes.cs" />
     <Compile Include="Tv\TvMazeSearch.cs" />
     <Compile Include="Tv\TvMazeSeasons.cs" />
     <Compile Include="Tv\TVMazeShow.cs" />

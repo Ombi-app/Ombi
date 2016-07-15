@@ -431,4 +431,7 @@
   <data name="Layout_French" xml:space="preserve">
     <value>French</value>
   </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Select Episode</value>
+  </data>
 </root>

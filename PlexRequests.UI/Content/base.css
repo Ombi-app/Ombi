@@ -329,3 +329,7 @@ label {
 .landing-title {
   font-weight: bold; }
 
+.checkbox-custom {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important; }
+

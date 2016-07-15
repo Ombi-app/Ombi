@@ -12,9 +12,14 @@ $(function () {
     var searchSource = $("#search-template").html();
     var seasonsSource = $("#seasons-template").html();
     var musicSource = $("#music-template").html();
+    var seasonsNumberSource = $("#seasonNumber-template").html();
+    var episodeSource = $("#episode-template").html();
+
     var searchTemplate = Handlebars.compile(searchSource);
     var musicTemplate = Handlebars.compile(musicSource);
     var seasonsTemplate = Handlebars.compile(seasonsSource);
+    var seasonsNumberTemplate = Handlebars.compile(seasonsNumberSource);
+    var episodesTemplate = Handlebars.compile(episodeSource);
 
     var base = $('#baseUrl').text();
 
@@ -255,6 +260,7 @@ $(function () {
         $('#providerIdModal').val(id);
         $('#typeModal').val(type);
     });
+
 
     function focusSearch($content) {
         if ($content.length > 0) {
@@ -529,6 +535,73 @@ $(function () {
 
         sendRequestAjax(data, type, url, tvId);
        
+    });
+
+    $('#episodesModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget); // Button that triggered the modal
+        var id = button.data('identifier'); // Extract info from data-* attributes
+        var url = createBaseUrl(base, '/search/episodes/');
+        var seenSeasons = [];
+        $.ajax({
+            type: "get",
+            url: url,
+            data: { tvId: id },
+            dataType: "json",
+            success: function (results) {
+                var $content = $("#episodesBody");
+                $content.html("");
+                $('#selectedEpisodeId').val(id);
+                results.forEach(function (result) {
+
+
+                    var episodes = buildEpisodesView(result);
+
+                    if (!seenSeasons.find(x => x === episodes.season)) {
+                        // Create the seasons heading
+                        seenSeasons.push(episodes.season);
+                        var context = buildSeasonsCount(result);
+                        $content.append(seasonsNumberTemplate(context));
+                    }
+                    var episodesResult = episodesTemplate(episodes);
+                    $content.append(episodesResult);
+                });
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+
+        function buildSeasonsContext(result) {
+            var context = {
+                id: result
+            };
+            return context;
+        };
+
+        function buildSeasonsCount(result) {
+            return {
+                seasonNumber: result.season
+            }
+        }
+
+
+        function buildEpisodesView(result) {
+            return {
+                id: result.id,
+                url: result.url,
+                name: result.name,
+                season: result.season,
+                number: result.number,
+                airdate: result.airdate,
+                airtime: result.airtime,
+                airstamp: result.airstamp,
+                runtime: result.runtime,
+                image: result.image,
+                summary: result.summary,
+                links : result._links
+            }
+        }
     });
 
 });

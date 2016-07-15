@@ -192,6 +192,7 @@
                         <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">@UI.Search_FirstSeason</a></li>
                         <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">@UI.Search_LatestSeason</a></li>
                         <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">@UI.Search_SelectSeason...</a></li>
+                        <li><a id="EpisodeSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#episodesModal" href="#">@UI.Search_SelectEpisode...</a></li>
                     </ul>
                 </div>
                 {{/if_eq}}
@@ -291,6 +292,26 @@
     </div>
 </div>
 
+<div class="modal fade" id="episodesModal">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">@UI.Search_Modal_SeasonsTitle</h4>
+            </div>
+            <div class="modal-body" id="episodesBody">
+
+            </div>
+
+            <div hidden="hidden" id="selectedEpisodeId"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@UI.Common_Close</button>
+                <button type="button" id="episodesRequest" class="btn btn-primary">@UI.Search_Request</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="issuesModal">
     <div class="modal-dialog">
@@ -319,6 +340,24 @@
     <div class="form-group">
         <div class="checkbox">
             <input type="checkbox" class="selectedSeasons" id="{{id}}" name="{{id}}"><label for="{{id}}">@UI.Search_Season {{id}}</label>
+        </div>
+    </div>
+</script>
+
+<script id="seasonNumber-template" type="text/x-handlebars-template">
+    <div class="row"></div>
+    <div id="seasonNumber{{seasonNumber}}">
+        <strong>@UI.Search_Season {{seasonNumber}}</strong>
+    </div>
+
+
+</script>
+
+
+<script id="episode-template" type="text/x-handlebars-template">
+    <div class="form-group col-md-6">
+        <div class="checkbox" style="margin-bottom:0px; margin-top:0px;">
+            <input type="checkbox" class="selectedEpisodes" id="{{id}}" name="{{id}}"><label for="{{id}}">{{number}}. {{name}}</label>
         </div>
     </div>
 
