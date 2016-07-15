@@ -51,7 +51,7 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(movieSearch, 400);
+        searchTimer = setTimeout(movieSearch, 800);
 
     });
 

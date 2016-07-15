@@ -93,37 +93,37 @@
                 </div>
             </div>
 
-            <!--Accordion Item-->
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                @for (var i = 0; i < Model.Message.Count; i++)
-                {
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="@(i)headingOne">
-                        <h4 class="panel-title">
-                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#@(i)collapseOne" aria-controls="@(i)collapseOne">
-                                @Model.Message[i].NotificationType.ToString()
-                            </a>
-                        </h4>
+           @* <!--Accordion Item-->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        @for (var i = 0; i < Model.Message.Count; i++)
+        {
+        <div class="panel panel-default">
+            <div class="panel-heading" role="tab" id="@(i)headingOne">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#@(i)collapseOne" aria-controls="@(i)collapseOne">
+                        @Model.Message[i].NotificationType.ToString()
+                    </a>
+                </h4>
+            </div>
+            <div id="@(i)collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="@(i)headingOne">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="@(Model.Message[i])" class="control-label"> @Model.Message[i].NotificationType.ToString() Subject</label>
+                        <div>
+                            <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Subject)" name="Message[@(i)].Subject" value="@(Model.Message[i].Subject)">
+                        </div>
                     </div>
-                    <div id="@(i)collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="@(i)headingOne">
-                        <div class="panel-body">
-                            <div class="form-group">
-                                <label for="@(Model.Message[i])" class="control-label"> @Model.Message[i].NotificationType.ToString() Subject</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Subject)" name="Message[@(i)].Subject" value="@(Model.Message[i].Subject)">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="@(Model.Message[i].Body)" class="control-label">@Model.Message[i].NotificationType.ToString() Body</label>
-                                <div>
-                                    <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Body)" name="Message[@(i)].Body" value="@(Model.Message[i].Body)">
-                                </div>
-                            </div>
+                    <div class="form-group">
+                        <label for="@(Model.Message[i].Body)" class="control-label">@Model.Message[i].NotificationType.ToString() Body</label>
+                        <div>
+                            <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Body)" name="Message[@(i)].Body" value="@(Model.Message[i].Body)">
                         </div>
                     </div>
                 </div>
-                }
             </div>
+        </div>
+        }
+    </div>*@
 
             <div class="form-group">
                 <div>

@@ -303,7 +303,7 @@
     <Content Include="Content\issues.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\app\services\userManagement\userManagementService.js">
+    <Content Include="Content\app\userManagement\userManagementService.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\swagger\backbone-min.js">
@@ -502,7 +502,7 @@
     <None Include="sqlite3.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="Content\app\controllers\userManagement\userManagementController.js">
+    <Content Include="Content\app\userManagement\userManagementController.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="web.config">
