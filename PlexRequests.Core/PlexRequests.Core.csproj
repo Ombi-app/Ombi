@@ -81,6 +81,7 @@
     <Compile Include="Models\StatusModel.cs" />
     <Compile Include="Models\UserProperties.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
+    <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
     <Compile Include="SettingModels\LandingPageSettings.cs" />
     <Compile Include="SettingModels\NotificationSettings.cs" />

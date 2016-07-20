@@ -30,7 +30,7 @@ using System.Collections.Generic;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public class PlexRequestSettings : Settings
+    public sealed class PlexRequestSettings : Settings
     {
         public PlexRequestSettings()
         {

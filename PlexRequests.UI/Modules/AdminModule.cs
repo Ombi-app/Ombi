@@ -171,7 +171,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
             Post["/cpprofiles", true] = async (x,ct) => await GetCpProfiles();
-            Post["/cpapikey", true] = async (x,ct) => await GetCpApiKey();
+            Post["/cpapikey"] = x => GetCpApiKey();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -362,6 +362,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
 
+            couchPotatoSettings.ApiKey = couchPotatoSettings.ApiKey.Trim();
             var result = CpService.SaveSettings(couchPotatoSettings);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
@@ -413,6 +414,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
             }
+            sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
             var result = SonarrService.SaveSettings(sonarrSettings);
 
             return Response.AsJson(result
@@ -442,6 +444,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sonarr is enabled, we cannot enable Sonarr and SickRage" });
             }
+            sickRageSettings.ApiKey = sickRageSettings.ApiKey.Trim();
             var result = SickRageService.SaveSettings(sickRageSettings);
 
             return Response.AsJson(result
@@ -697,7 +700,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(profiles);
         }
 
-        private async Task<Response> GetCpApiKey()
+        private Response GetCpApiKey()
         {
             var settings = this.Bind<CouchPotatoSettings>();
             
@@ -767,7 +770,7 @@ namespace PlexRequests.UI.Modules
                 Log.Info("Error validating Headphones settings, message: {0}", error.Message);
                 return Response.AsJson(error);
             }
-
+            settings.ApiKey = settings.ApiKey.Trim();
             var result = HeadphonesService.SaveSettings(settings);
 
             Log.Info("Saved headphones settings, result: {0}", result);

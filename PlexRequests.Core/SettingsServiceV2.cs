@@ -30,7 +30,6 @@ using Newtonsoft.Json;
 
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -46,8 +45,8 @@ namespace PlexRequests.Core
             EntityName = typeof(T).Name;
         }
 
-        private ISettingsRepository Repo { get; set; }
-        private string EntityName { get; set; }
+        private ISettingsRepository Repo { get; }
+        private string EntityName { get; }
 
         public T GetSettings()
         {
@@ -78,7 +77,7 @@ namespace PlexRequests.Core
         public bool SaveSettings(T model)
         {
             var entity = Repo.Get(EntityName);
-
+            
             if (entity == null)
             {
                 var newEntity = model;

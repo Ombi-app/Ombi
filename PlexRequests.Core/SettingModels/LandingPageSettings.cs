@@ -30,7 +30,7 @@ using Newtonsoft.Json;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public class LandingPageSettings : Settings
+    public sealed class LandingPageSettings : Settings
     {
         public bool Enabled { get; set; }
         public bool BeforeLogin { get; set; }

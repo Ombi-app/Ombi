@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: PushoverNotificationSettings.cs
+//    File: ExternalSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,12 +24,34 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+
+using Newtonsoft.Json;
+
+using PlexRequests.Helpers;
+
 namespace PlexRequests.Core.SettingModels
 {
-    public sealed class PushoverNotificationSettings : NotificationSettings
+    public abstract class ExternalSettings : Settings
     {
-        public string AccessToken { get; set; }
-        public bool Enabled { get; set; }
-        public string UserToken { get; set; }
+        public bool Ssl { get; set; }
+        public string SubDir { get; set; }
+        public string Ip { get; set; }
+        public int Port { get; set; }
+
+        [JsonIgnore]
+        public virtual Uri FullUri
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(SubDir))
+                {
+                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
+                    return formattedSubDir;
+                }
+                var formatted = Ip.ReturnUri(Port, Ssl);
+                return formatted;
+            }
+        }
     }
 }

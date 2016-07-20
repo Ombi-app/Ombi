@@ -24,54 +24,27 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
 using System.Collections.Generic;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public class SickRageSettings : Settings
+    public sealed class SickRageSettings : ExternalSettings
     {
         public bool Enabled { get; set; }
-        public string Ip { get; set; }
-        public int Port { get; set; }
         public string ApiKey { get; set; }
         public string QualityProfile { get; set; }
-        public bool Ssl { get; set; }
-        public string SubDir { get; set; }
-        public Dictionary<string, string> Qualities
-        {
-            get
-            {
-                return new Dictionary<string, string>() {
-                    { "default", "Use Deafult" },
-                    { "sdtv", "SD TV" },
-                    { "sddvd", "SD DVD" },
-                    { "hdtv", "HD TV" },
-                    { "rawhdtv", "Raw HD TV" },
-                    { "hdwebdl", "HD Web DL" },
-                    { "fullhdwebdl", "Full HD Web DL" },
-                    { "hdbluray", "HD Bluray" },
-                    { "fullhdbluray", "Full HD Bluray" }
-                };
-            }
-        }
 
-        [JsonIgnore]
-        public Uri FullUri
+        public Dictionary<string, string> Qualities => new Dictionary<string, string>
         {
-            get
-            {
-                if (!string.IsNullOrEmpty(SubDir))
-                {
-                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
-                    return formattedSubDir;
-                }
-                var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
-            }
-        }
+            { "default", "Use Deafult" },
+            { "sdtv", "SD TV" },
+            { "sddvd", "SD DVD" },
+            { "hdtv", "HD TV" },
+            { "rawhdtv", "Raw HD TV" },
+            { "hdwebdl", "HD Web DL" },
+            { "fullhdwebdl", "Full HD Web DL" },
+            { "hdbluray", "HD Bluray" },
+            { "fullhdbluray", "Full HD Bluray" }
+        };
     }
 }

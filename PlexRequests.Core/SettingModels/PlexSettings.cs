@@ -24,36 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using Newtonsoft.Json;
-using PlexRequests.Helpers;
-
 namespace PlexRequests.Core.SettingModels
 {
-    public class PlexSettings : Settings
+    public sealed class PlexSettings : ExternalSettings
     {
-        public string Ip { get; set; }
-        public int Port { get; set; }
-        public bool Ssl { get; set; }
-        public string SubDir { get; set; }
         public bool AdvancedSearch { get; set; }
 
         public string PlexAuthToken { get; set; }
-
-        [JsonIgnore]
-        public Uri FullUri
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(SubDir))
-                {
-                    var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
-                    return formattedSubDir;
-                }
-                var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
-            }
-        }
     }
 }

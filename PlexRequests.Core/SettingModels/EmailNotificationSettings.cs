@@ -26,7 +26,7 @@
 #endregion
 namespace PlexRequests.Core.SettingModels
 {
-    public class EmailNotificationSettings : NotificationSettings
+    public sealed class EmailNotificationSettings : NotificationSettings
     {
         public string EmailHost { get; set; }
         public string EmailPassword { get; set; }
