@@ -116,10 +116,12 @@ namespace PlexRequests.UI
             var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var assetLocation = settings.GetSettings().BaseUrl;
             nancyConventions.StaticContentsConventions.Add(
-                    StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content", "Content")
+                    StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content_{AssemblyHelper.GetProductVersion()}", "Content")
                 );
 
             nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/docs", "swagger-ui");
+
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/fonts", "Content/fonts");
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };

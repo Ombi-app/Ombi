@@ -24,8 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System.IO;
+using System.Collections.Generic;
 using System.Text;
 using Nancy;
 using Nancy.ViewEngines.Razor;
@@ -45,6 +44,20 @@ namespace PlexRequests.UI.Helpers
         }
         private static ICacheProvider Cache { get; }
         private static ServiceLocator Locator { get; }
+        private static string _Assembly;
+
+        // We don't need to call the AssemblyHelper every time, the value will never change in the application life cycle.
+        private static string Assembly
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_Assembly))
+                {
+                    _Assembly = AssemblyHelper.GetProductVersion();
+                }
+                return _Assembly;
+            }
+        }
 
         public static IHtmlString LoadAssets(this HtmlHelpers helper)
         {
@@ -60,24 +73,44 @@ namespace PlexRequests.UI.Helpers
             if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
             if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
 
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/font-awesome.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/pace.min.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/base.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/Themes/{settings.ThemeName}\" type=\"text/css\"/>");
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/datepicker.min.css\" type=\"text/css\"/>");
+            var startUrl = $"{content}/Content_{Assembly}";
 
-            sb.AppendLine($"<script src=\"{content}/Content/jquery-2.2.1.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/app/app.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/handlebars.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/bootstrap.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-notify.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/site-1.7.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/pace.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/jquery.mixitup.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/moment.min.js\"></script>");
-            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-datetimepicker.min.js\"></script>");
+            var styleAssets = new List<string>
+            {
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/bootstrap.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/font-awesome.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>"
+            };
+
+
+            var scriptAssets = new List<string>
+            {
+                $"<script src=\"{startUrl}/jquery-2.2.1.min.js\"></script>",
+                $"<script src=\"{startUrl}/app/app.js\"></script>",
+                $"<script src=\"{startUrl}/handlebars.min.js\"></script>",
+                $"<script src=\"{startUrl}/bootstrap.min.js\"></script>",
+                $"<script src=\"{startUrl}/bootstrap-notify.min.js\"></script>",
+                $"<script src=\"{startUrl}/site.js\"></script>",
+                $"<script src=\"{startUrl}/pace.min.js\"></script>",
+                $"<script src=\"{startUrl}/jquery.mixitup.js\"></script>",
+                $"<script src=\"{startUrl}/moment.min.js\"></script>",
+                $"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>"
+            };
+
+
+            foreach (var a in styleAssets)
+            {
+                sb.AppendLine(a);
+            }
+
+            foreach (var a in scriptAssets)
+            {
+                sb.AppendLine(a);
+            }
 
 
             return helper.Raw(sb.ToString());
@@ -90,7 +123,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/search-1.7.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/search.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -102,7 +135,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/requests-1.7.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/requests.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -114,7 +147,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/issues.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/issues.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -124,7 +157,7 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content_{Assembly}/issue-details.js\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }
@@ -136,8 +169,8 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/datatables.min.js\" type=\"text/javascript\"></script>");
-            sb.AppendLine($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}/Content/dataTables.bootstrap.css\" />");
+            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/datatables.min.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}/Content_{Assembly}/dataTables.bootstrap.css\" />");
 
             return helper.Raw(sb.ToString());
         }
@@ -153,68 +186,50 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content/analytics.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content_{Assembly}/analytics.js\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }
 
         public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
         {
-            var returnString = string.Empty;
             var content = GetLinkUrl(GetBaseUrl());
             if (!string.IsNullOrEmpty(content))
             {
                 url = $"/{content}{url}";
             }
-            if (context.Request.Path == url)
-            {
-                returnString = $"<a class=\"list-group-item active\" href=\"{url}\">{title}</a>";
-            }
-            else
-            {
-                returnString = $"<a class=\"list-group-item\" href=\"{url}\">{title}</a>";
-            }
+            var returnString = context.Request.Path == url 
+                                      ? $"<a class=\"list-group-item active\" href=\"{url}\">{title}</a>" 
+                                      : $"<a class=\"list-group-item\" href=\"{url}\">{title}</a>";
 
             return helper.Raw(returnString);
         }
 
         public static IHtmlString GetNavbarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string fontIcon)
         {
-            var returnString = string.Empty;
             var content = GetLinkUrl(GetBaseUrl());
             if (!string.IsNullOrEmpty(content))
             {
                 url = $"/{content}{url}";
             }
-            if (context.Request.Path == url)
-            {
-                returnString = $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
-            }
-            else
-            {
-                returnString = $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
-            }
+            var returnString = context.Request.Path == url ? 
+                                      $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>" 
+                                      : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
 
             return helper.Raw(returnString);
         }
 
         public static IHtmlString GetNavbarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string fontIcon, string extraHtml)
         {
-            var returnString = string.Empty;
             var content = GetLinkUrl(GetBaseUrl());
             if (!string.IsNullOrEmpty(content))
             {
                 url = $"/{content}{url}";
             }
 
-            if (context.Request.Path == url)
-            {
-                returnString = $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
-            }
-            else
-            {
-                returnString = $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
-            }
+            var returnString = context.Request.Path == url 
+                ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>" 
+                : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
 
             return helper.Raw(returnString);
         }

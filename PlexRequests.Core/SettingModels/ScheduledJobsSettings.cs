@@ -26,7 +26,7 @@
 #endregion
 namespace PlexRequests.Core.SettingModels
 {
-    public sealed class ScheduledJobsSettings : Settings
+    public class ScheduledJobsSettings : Settings
     {
         public ScheduledJobsSettings()
         {
