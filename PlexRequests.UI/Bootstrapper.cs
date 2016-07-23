@@ -36,6 +36,7 @@ using Nancy.Bootstrappers.Ninject;
 using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
+using Nancy.Hosting.Self;
 using Nancy.Session;
 
 using PlexRequests.Api.Interfaces;
@@ -107,7 +108,11 @@ namespace PlexRequests.UI
         /// <summary>
         /// Set's the root path to the views folder, this means we don't have to recompile the views for every change.
         /// </summary>
-//        protected override IRootPathProvider RootPathProvider => new DebugRootPathProvider();
+        protected override IRootPathProvider RootPathProvider => new DebugRootPathProvider();
+#endif
+#if !DEBUG
+
+        protected override IRootPathProvider RootPathProvider => new FileSystemRootPathProvider();
 #endif
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
