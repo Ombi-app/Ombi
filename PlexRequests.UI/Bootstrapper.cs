@@ -107,7 +107,7 @@ namespace PlexRequests.UI
         /// <summary>
         /// Set's the root path to the views folder, this means we don't have to recompile the views for every change.
         /// </summary>
-        protected override IRootPathProvider RootPathProvider => new DebugRootPathProvider();
+//        protected override IRootPathProvider RootPathProvider => new DebugRootPathProvider();
 #endif
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
