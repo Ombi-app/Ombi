@@ -18,7 +18,7 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Email Notifications</legend>
-
+ 
             <div class="form-group">
                 <div class="checkbox">
 
@@ -33,21 +33,35 @@
 
                 </div>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
+          <div class="form-group">
+            <div class="checkbox">
 
-                    @if (Model.EnableUserEmailNotifications)
-                    {
-                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-                    }
+              @if (Model.EnableUserEmailNotifications)
+              {
+                <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
+              }
+              else
+              {
+                <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
+              }
 
-                </div>
             </div>
-            <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
+          </div>
+          <div class="form-group">
+            <div class="checkbox">
+
+              @if (Model.Authentication)
+              {
+                <input type="checkbox" id="Authentication" name="Authentication" checked="checked"><label for="Authentication">Enable SMTP Authentication</label>
+              }
+              else
+              {
+                <input type="checkbox" id="Authentication" name="Authentication"><label for="Authentication">Enable SMTP Authentication</label>
+              }
+
+            </div>
+          </div>
+          <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
             <div class="form-group">
                 <label for="EmailHost" class="control-label">SMTP Host name or IP</label>
                 <div class="">
@@ -144,6 +158,15 @@
 <script>
     $(function () {
 
+      var auth = $('#Authentication').prop('checked');
+      ChangeUsernameAndPassword(auth);
+
+
+      $("#Authentication")
+        .change(function(e) {
+           ChangeUsernameAndPassword(auth);
+        });
+
         var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
             e.preventDefault();
@@ -207,6 +230,17 @@
                 }
             });
         });
+function ChangeUsernameAndPassword(checked) {
+      var $userName = $('#EmailUsername');
+      var $password = $('#EmailPassword');
+      if (!checked) {
+        $userName.attr('disabled', 'disabled');
+        $password.attr('disabled', 'disabled');
+      } else {
+        $userName.removeAttr('disabled', 'disabled');
+        $password.removeAttr('disabled', 'disabled');
+      }
+};
 
 
     });

@@ -38,8 +38,6 @@ namespace PlexRequests.UI.Validators
             RuleFor(request => request.EmailPort).NotEmpty().WithMessage("You must specify a Port.");
             RuleFor(request => request.RecipientEmail).NotEmpty().WithMessage("You must specify a Recipient.");
             RuleFor(request => request.RecipientEmail).EmailAddress().WithMessage("You must specify a valid Recipient.");
-            RuleFor(request => request.EmailUsername).NotEmpty().WithMessage("You must specify a Username.");
-            RuleFor(request => request.EmailPassword).NotEmpty().WithMessage("You must specify a valid password.");
             RuleFor(request => request.EmailSender).EmailAddress().WithMessage("You must specify a valid Email for the email sender.");
             RuleFor(request => request.EmailSender).NotEmpty().WithMessage("You must specify a Email Sender.");
         }
