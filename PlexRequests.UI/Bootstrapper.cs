@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Diagnostics;
 using System.Net;
 
 using Mono.Data.Sqlite;
@@ -68,12 +69,14 @@ namespace PlexRequests.UI
         private IKernel _kernel;
         protected override IKernel GetApplicationContainer()
         {
+          Debug.WriteLine("GetAppContainer");
             _kernel.Load<FactoryModule>();
             return _kernel;
         }
 
         protected override void ApplicationStartup(IKernel container, IPipelines pipelines)
         {
+          Debug.WriteLine("Bootstrapper.ApplicationStartup");
             ConfigureContainer(container);
 
             JsonSettings.MaxJsonLength = int.MaxValue;
@@ -116,14 +119,18 @@ namespace PlexRequests.UI
 #endif
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
+          Debug.WriteLine("Configuring the conventions");
             base.ConfigureConventions(nancyConventions);
+Debug.WriteLine("Finished BASE");
+            var settingsService = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var settings = settingsService.GetSettings();
+            var assetLocation = settings.BaseUrl ?? string.Empty;
 
-            var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
-            var assetLocation = settings.GetSettings().BaseUrl;
+          Debug.WriteLine($"AssetLocation {assetLocation}");
             nancyConventions.StaticContentsConventions.Add(
                     StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content_{AssemblyHelper.GetProductVersion()}", "Content")
                 );
-
+Debug.WriteLine("Added Content");
             nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/docs", "swagger-ui");
 
             nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/fonts", "Content/fonts");
@@ -166,6 +173,7 @@ namespace PlexRequests.UI
         
         protected override void RequestStartup(IKernel container, IPipelines pipelines, NancyContext context)
         {
+          Debug.WriteLine("RequestStartup");
             //CORS Enable
             pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
             {
@@ -179,6 +187,7 @@ namespace PlexRequests.UI
 
         private void ConfigureContainer(IKernel container)
         {
+          Debug.WriteLine("Configuring ServiceLoc/Container");
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }

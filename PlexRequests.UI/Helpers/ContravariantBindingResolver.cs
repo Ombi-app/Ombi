@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -43,10 +44,16 @@ namespace PlexRequests.UI.Helpers
         /// </summary>
         public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
         {
+          Debug.WriteLine("Contrar thing");
+
             if (service.IsGenericType)
             {
                 var genericType = service.GetGenericTypeDefinition();
                 var genericArguments = genericType.GetGenericArguments();
+              if (!genericArguments.Any())
+              {
+                return Enumerable.Empty<IBinding>();
+              }
                 if (genericArguments.Length == 1 && genericArguments.Single().GenericParameterAttributes.HasFlag(GenericParameterAttributes.Contravariant))
                 {
                     var argument = service.GetGenericArguments().Single();

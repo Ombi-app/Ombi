@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
-
+using System.Diagnostics;
 using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
 
@@ -47,13 +47,24 @@ namespace PlexRequests.UI
         {
             try
             {
+              Debug.WriteLine("Starting StartupConfiguration");
                 var resolver = new DependancyResolver();
-                var modules = resolver.GetModules();
-                var kernel = new StandardKernel(modules);
 
+              Debug.WriteLine("Created DI Resolver");
+                var modules = resolver.GetModules();
+              Debug.WriteLine("Getting all the modules");
+
+
+              Debug.WriteLine("Modules found finished.");
+                var kernel = new StandardKernel(modules);
+              Debug.WriteLine("Created Kernel and Injected Modules");
+
+              Debug.WriteLine("Added Contravariant Binder");
                 kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
+              Debug.WriteLine("Start the bootstrapper with the Kernel.ı");
                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
+              Debug.WriteLine("Finished bootstrapper");
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
             }
