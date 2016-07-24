@@ -543,6 +543,10 @@ namespace PlexRequests.UI.Modules
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
             //#if !DEBUG
 
+            if (showInfo.externals?.thetvdb == null)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this item. Please report this to TVMaze. We cannot add the series sorry." });
+            }
 
             // check if the show has already been requested
             var existingRequest = await RequestService.CheckRequestAsync(showId);
