@@ -35,25 +35,29 @@ namespace PlexRequests.Api
     {
         private static readonly TimeSpan[] DefaultTime = { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10) };
 
-        public static T Execute<T>(Func<T> action, TimeSpan[] timeSpan)
-        {
-            var policy = RetryAndWaitPolicy(timeSpan);
-
-            return policy.Execute(action);
-        }
-
-        public static T Execute<T>(Func<T> func, TimeSpan[] timeSpan, Action<Exception, TimeSpan> action)
+        public static T Execute<T>(Func<T> action, TimeSpan[] timeSpan = null)
         {
             if (timeSpan == null)
             {
                 timeSpan = DefaultTime;
             }
-            var policy = RetryAndWaitPolicy(timeSpan, action);
+            var policy = RetryAndWaitPolicy(timeSpan);
+
+            return policy.Execute(action);
+        }
+
+        public static T Execute<T>(Func<T> func, Action<Exception, TimeSpan> action, TimeSpan[] timeSpan = null)
+        {
+            if (timeSpan == null)
+            {
+                timeSpan = DefaultTime;
+            }
+            var policy = RetryAndWaitPolicy(action, timeSpan);
 
             return policy.Execute(func);
         }
 
-        public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] timeSpan, Action action)
+        public static RetryPolicy RetryAndWaitPolicy(Action action, TimeSpan[] timeSpan = null)
         {
             if (timeSpan == null)
             {
@@ -75,7 +79,7 @@ namespace PlexRequests.Api
             return policy;
         }
 
-        public static RetryPolicy RetryAndWaitPolicy(TimeSpan[] timeSpan, Action<Exception, TimeSpan> action)
+        public static RetryPolicy RetryAndWaitPolicy(Action<Exception, TimeSpan> action, TimeSpan[] timeSpan = null)
         {
             if (timeSpan == null)
             {

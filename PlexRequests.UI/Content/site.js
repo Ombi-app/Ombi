@@ -8,6 +8,8 @@
     return s;
 }
 
+var mainBaseUrl = $('#baseUrl').text();
+
 function Humanize(date) {
     var mNow = moment();
     var mDate = moment(date).local();

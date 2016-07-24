@@ -49,8 +49,10 @@ using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 
 using Nancy.Extensions;
+using Nancy.ModelBinding;
 using Nancy.Responses;
-
+using Newtonsoft.Json;
+using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
@@ -103,7 +105,7 @@ namespace PlexRequests.UI.Modules
             TvApi = new TvMazeApi();
 
 
-            Get["SearchIndex","/", true] = async (x, ct) => await RequestLoad();
+            Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
@@ -115,6 +117,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
             Post["request/tv", true] = async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
+            Post["request/tvEpisodes", true] = async (x, ct) => await RequestEpisodes();
             Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
 
             Post["/notifyuser", true] = async (x, ct) => await NotifyUser((bool)Request.Form.notify);
@@ -436,7 +439,7 @@ namespace PlexRequests.UI.Modules
             Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
-   
+
             var existingRequest = await RequestService.CheckRequestAsync(movieId);
             if (existingRequest != null)
             {
@@ -449,7 +452,7 @@ namespace PlexRequests.UI.Modules
 
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}" : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}" });
             }
-            
+
             try
             {
                 var movies = Checker.GetPlexMovies();
@@ -533,9 +536,8 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_WeeklyRequestLimitTVShow });
             }
             Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
-            var tvApi = new TvMazeApi();
 
-            var showInfo = tvApi.ShowLookupByTheTvDbId(showId);
+            var showInfo = TvApi.ShowLookupByTheTvDbId(showId);
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
@@ -687,7 +689,7 @@ namespace PlexRequests.UI.Modules
             }
             Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var existingRequest = await RequestService.CheckRequestAsync(releaseId);
-            
+
             if (existingRequest != null)
             {
                 if (!existingRequest.UserHasRequested(Username))
@@ -697,7 +699,7 @@ namespace PlexRequests.UI.Modules
                 }
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{existingRequest.Title} {Resources.UI.Search_SuccessfullyAdded}" : $"{existingRequest.Title} {Resources.UI.Search_AlreadyRequested}" });
             }
-            
+
             var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
             DateTime release;
             DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
@@ -954,5 +956,65 @@ namespace PlexRequests.UI.Modules
 
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
+
+        private async Task<Response> RequestEpisodes()
+        {
+            var req = (Dictionary<string, object>.ValueCollection)this.Request.Form.Values;
+            var json = req.FirstOrDefault().ToString();
+            var model = JsonConvert.DeserializeObject<EpisodeRequestModel>(json);
+            //var model = this.Bind<EpisodeRequestModel>();
+            if (model == null)
+            {
+                return Nancy.Response.NoBody;
+            }
+            var sonarrSettings = await SonarrService.GetSettingsAsync();
+            if (!sonarrSettings.Enabled)
+            {
+                return Response.AsJson("Need sonarr");
+            }
+
+            var existingRequest = await RequestService.CheckRequestAsync(model.ShowId);
+
+
+
+
+            // Find the correct series
+            var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
+            var selectedSeries = task.FirstOrDefault(series => series.tvdbId == model.ShowId);
+            if (selectedSeries == null)
+            {
+
+                // Need to add the series as unmonitored.
+                return Response.AsJson("");
+            }
+
+            // Show Exists
+            // Look up all episodes
+            var episodes = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri).ToList();
+            var internalEpisodeIds = new List<int>();
+            var tasks = new List<Task>();
+            foreach (var r in model.Episodes)
+            {
+                var episode =
+                    episodes.FirstOrDefault(
+                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
+                if (episode == null)
+                {
+                    continue;
+                }
+                var episodeInfo = SonarrApi.GetEpisode(episode.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                episodeInfo.monitored = true; // Set the episode to monitored
+                tasks.Add(Task.Run(() => SonarrApi.UpdateEpisode(episodeInfo, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri)));
+                internalEpisodeIds.Add(episode.id);
+            }
+            Task.WaitAll(tasks.ToArray());
+
+            SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+
+
+            return Response.AsJson(new JsonResponseModel() { Result = true });
+        }
+
     }
 }

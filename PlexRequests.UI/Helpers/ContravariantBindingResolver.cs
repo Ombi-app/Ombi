@@ -44,24 +44,34 @@ namespace PlexRequests.UI.Helpers
         /// </summary>
         public IEnumerable<IBinding> Resolve(Multimap<Type, IBinding> bindings, Type service)
         {
-          Debug.WriteLine("Contrar thing");
-
             if (service.IsGenericType)
             {
                 var genericType = service.GetGenericTypeDefinition();
                 var genericArguments = genericType.GetGenericArguments();
-              if (!genericArguments.Any())
-              {
-                return Enumerable.Empty<IBinding>();
-              }
+                if (!genericArguments.Any())
+                {
+                    return Enumerable.Empty<IBinding>();
+                }
                 if (genericArguments.Length == 1 && genericArguments.Single().GenericParameterAttributes.HasFlag(GenericParameterAttributes.Contravariant))
                 {
-                    var argument = service.GetGenericArguments().Single();
+                    var argument = service.GetGenericArguments().FirstOrDefault();
+                    if (argument == null)
+                    {
+                        return Enumerable.Empty<IBinding>();
+                    }
+
                     var matches =
                         bindings.Where(
                             kvp =>
-                            kvp.Key.IsGenericType && kvp.Key.GetGenericTypeDefinition() == genericType && kvp.Key.GetGenericArguments().Single() != argument
-                            && kvp.Key.GetGenericArguments().Single().IsAssignableFrom(argument)).SelectMany(kvp => kvp.Value);
+                            {
+                                var assignableFrom = kvp.Key.GetGenericArguments().FirstOrDefault();
+                                
+                                return kvp.Key.IsGenericType && kvp.Key.GetGenericTypeDefinition() == genericType &&
+                                       kvp.Key.GetGenericArguments().FirstOrDefault() != argument
+                                       && assignableFrom.IsAssignableFrom(argument);
+
+
+                            }).SelectMany(kvp => kvp.Value); 
                     return matches;
                 }
             }

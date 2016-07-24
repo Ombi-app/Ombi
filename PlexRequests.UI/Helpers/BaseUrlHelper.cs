@@ -73,7 +73,7 @@ namespace PlexRequests.UI.Helpers
             if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
             if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
 
-            var startUrl = $"{content}/Content_{Assembly}";
+            var startUrl = $"{content}/Content";
 
             var styleAssets = new List<string>
             {
@@ -123,7 +123,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/search.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/search.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -135,7 +135,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/requests.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/requests.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -147,7 +147,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/issues.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/issues.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -157,7 +157,7 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content_{Assembly}/issue-details.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }
@@ -169,8 +169,8 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content_{Assembly}/datatables.min.js\" type=\"text/javascript\"></script>");
-            sb.AppendLine($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}/Content_{Assembly}/dataTables.bootstrap.css\" />");
+            sb.AppendLine($"<script src=\"{content}/Content/datatables.min.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}/Content/dataTables.bootstrap.css\" />");
 
             return helper.Raw(sb.ToString());
         }
@@ -186,7 +186,7 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content_{Assembly}/analytics.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content/analytics.js\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }

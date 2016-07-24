@@ -69,14 +69,14 @@ namespace PlexRequests.UI
         private IKernel _kernel;
         protected override IKernel GetApplicationContainer()
         {
-          Debug.WriteLine("GetAppContainer");
+            Debug.WriteLine("GetAppContainer");
             _kernel.Load<FactoryModule>();
             return _kernel;
         }
 
         protected override void ApplicationStartup(IKernel container, IPipelines pipelines)
         {
-          Debug.WriteLine("Bootstrapper.ApplicationStartup");
+            Debug.WriteLine("Bootstrapper.ApplicationStartup");
             ConfigureContainer(container);
 
             JsonSettings.MaxJsonLength = int.MaxValue;
@@ -119,21 +119,22 @@ namespace PlexRequests.UI
 #endif
         protected override void ConfigureConventions(NancyConventions nancyConventions)
         {
-          Debug.WriteLine("Configuring the conventions");
+            Debug.WriteLine("Configuring the conventions");
             base.ConfigureConventions(nancyConventions);
-Debug.WriteLine("Finished BASE");
+
             var settingsService = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var settings = settingsService.GetSettings();
-            var assetLocation = settings.BaseUrl ?? string.Empty;
+            var assetLocation = string.Empty;
+            if (!string.IsNullOrEmpty(settings.BaseUrl))
+            {
+                assetLocation = $"{settings.BaseUrl}/";
+            }
 
-          Debug.WriteLine($"AssetLocation {assetLocation}");
-            nancyConventions.StaticContentsConventions.Add(
-                    StaticContentConventionBuilder.AddDirectory($"{assetLocation}/Content_{AssemblyHelper.GetProductVersion()}", "Content")
-                );
-Debug.WriteLine("Added Content");
-            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/docs", "swagger-ui");
+            Debug.WriteLine($"AssetLocation {assetLocation}");
 
-            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}/fonts", "Content/fonts");
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}Content", "Content");
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}docs", "swagger-ui");
+            nancyConventions.StaticContentsConventions.AddDirectory($"{assetLocation}fonts", "Content/fonts");
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
@@ -170,10 +171,9 @@ Debug.WriteLine("Added Content");
                 notificationService.Subscribe(new SlackNotification(container.Get<ISlackApi>(), slackService));
             }
         }
-        
+
         protected override void RequestStartup(IKernel container, IPipelines pipelines, NancyContext context)
         {
-          Debug.WriteLine("RequestStartup");
             //CORS Enable
             pipelines.AfterRequest.AddItemToEndOfPipeline((ctx) =>
             {
@@ -187,7 +187,7 @@ Debug.WriteLine("Added Content");
 
         private void ConfigureContainer(IKernel container)
         {
-          Debug.WriteLine("Configuring ServiceLoc/Container");
+            Debug.WriteLine("Configuring ServiceLoc/Container");
             var loc = ServiceLocator.Instance;
             loc.SetContainer(container);
         }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISonarrApi.cs
+//    File: SonarrEpisode.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +24,50 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
 
-using PlexRequests.Api.Models.Sonarr;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public interface ISonarrApi
+
+    public class Revision
     {
-        List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl);
-
-        SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
-            int seasonCount, int[] seasons, string apiKey, Uri baseUrl);
-
-        SystemStatus SystemStatus(string apiKey, Uri baseUrl);
-
-        List<Series> GetSeries(string apiKey, Uri baseUrl);
-        Series GetSeries(string seriesId, string apiKey, Uri baseUrl);
-        IEnumerable<SonarrEpisodes> GetEpisodes(string seriesId, string apiKey, Uri baseUrl);
-        SonarrEpisode GetEpisode(string episodeId, string apiKey, Uri baseUrl);
-        SonarrEpisode UpdateEpisode(SonarrEpisode episodeInfo, string apiKey, Uri baseUrl);
-        SonarrAddEpisodeResult SearchForEpisodes(int[] episodeIds, string apiKey, Uri baseUrl);
-
+        public int version { get; set; }
+        public int real { get; set; }
     }
+
+    public class EpisodeFile
+    {
+        public int seriesId { get; set; }
+        public int seasonNumber { get; set; }
+        public string relativePath { get; set; }
+        public string path { get; set; }
+        public long size { get; set; }
+        public string dateAdded { get; set; }
+        public Quality quality { get; set; }
+        public bool qualityCutoffNotMet { get; set; }
+        public int id { get; set; }
+    }
+
+
+
+    public class SonarrEpisode
+    {
+        public int seriesId { get; set; }
+        public int episodeFileId { get; set; }
+        public int seasonNumber { get; set; }
+        public int episodeNumber { get; set; }
+        public string title { get; set; }
+        public string airDate { get; set; }
+        public string airDateUtc { get; set; }
+        public string overview { get; set; }
+        public EpisodeFile episodeFile { get; set; }
+        public bool hasFile { get; set; }
+        public bool monitored { get; set; }
+        public int absoluteEpisodeNumber { get; set; }
+        public bool unverifiedSceneNumbering { get; set; }
+        public Series series { get; set; }
+        public int id { get; set; }
+    }
+
+
+
 }

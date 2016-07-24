@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ISonarrApi.cs
+//    File: SonarrAddEpisodeResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,28 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+
 using System.Collections.Generic;
 
-using PlexRequests.Api.Models.Sonarr;
-
-namespace PlexRequests.Api.Interfaces
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public interface ISonarrApi
+    public class Body
     {
-        List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl);
-
-        SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
-            int seasonCount, int[] seasons, string apiKey, Uri baseUrl);
-
-        SystemStatus SystemStatus(string apiKey, Uri baseUrl);
-
-        List<Series> GetSeries(string apiKey, Uri baseUrl);
-        Series GetSeries(string seriesId, string apiKey, Uri baseUrl);
-        IEnumerable<SonarrEpisodes> GetEpisodes(string seriesId, string apiKey, Uri baseUrl);
-        SonarrEpisode GetEpisode(string episodeId, string apiKey, Uri baseUrl);
-        SonarrEpisode UpdateEpisode(SonarrEpisode episodeInfo, string apiKey, Uri baseUrl);
-        SonarrAddEpisodeResult SearchForEpisodes(int[] episodeIds, string apiKey, Uri baseUrl);
-
+        public List<int> episodeIds { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public string completionMessage { get; set; }
+        public string name { get; set; }
+        public string trigger { get; set; }
     }
+
+    public class SonarrAddEpisodeResult
+    {
+        public string name { get; set; }
+        public Body body { get; set; }
+        public string priority { get; set; }
+        public string status { get; set; }
+        public string queued { get; set; }
+        public string trigger { get; set; }
+        public string state { get; set; }
+        public bool manual { get; set; }
+        public string startedOn { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public int id { get; set; }
+    }
+
 }

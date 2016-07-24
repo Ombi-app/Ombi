@@ -60,5 +60,30 @@ namespace PlexRequests.Api.Mocks
         {
             throw new NotImplementedException();
         }
+
+        public Series GetSeries(string seriesId, string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<SonarrEpisodes> GetEpisodes(string seriesId, string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SonarrEpisode GetEpisode(string episodeId, string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SonarrEpisode UpdateEpisode(SonarrEpisode episodeInfo, string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SonarrAddEpisodeResult SearchForEpisodes(int[] episodeIds, string apiKey, Uri baseUrl)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

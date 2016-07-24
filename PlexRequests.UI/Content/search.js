@@ -538,6 +538,7 @@ $(function () {
     });
 
     $('#episodesModal').on('show.bs.modal', function (event) {
+        finishLoading("episodesRequest", "primary");
         var button = $(event.relatedTarget); // Button that triggered the modal
         var id = button.data('identifier'); // Extract info from data-* attributes
         var url = createBaseUrl(base, '/search/episodes/');
@@ -552,8 +553,6 @@ $(function () {
                 $content.html("");
                 $('#selectedEpisodeId').val(id);
                 results.forEach(function (result) {
-
-
                     var episodes = buildEpisodesView(result);
 
                     if (!seenSeasons.find(x => x === episodes.season)) {
@@ -570,6 +569,42 @@ $(function () {
                 console.log(e);
                 generateNotify("Something went wrong!", "danger");
             }
+        });
+
+        // Save Modal click
+        $("#episodesRequest").click(function (e) {
+            e.preventDefault();
+
+            var tvId = $('#selectedEpisodeId').val();
+
+            $("#episodesRequest").prop("disabled", true);
+            loadingButton("episodesRequest", "primary");
+
+
+            var $form = $('#form' + tvId);
+
+            var model = [];
+
+
+
+            var $checkedEpisodes = $('.selectedEpisodes:checkbox:checked');
+            $checkedEpisodes.each(function (index, element) {
+                var $element = $('#' + element.id);
+                var tempObj = {};
+                tempObj.episodeNumber = $element.attr("epNumber");
+                tempObj.seasonNumber = $element.attr("epSeason");
+                model.push(tempObj);
+            });
+
+            var finalObj = {
+                ShowId: tvId,
+                Episodes: model
+            }
+
+            var url = createBaseUrl(mainBaseUrl, "search/request/tvEpisodes");
+            var type = $form.prop('method');
+
+            sendRequestAjax(JSON.stringify(finalObj), type, url, tvId);
         });
 
         function buildSeasonsContext(result) {
