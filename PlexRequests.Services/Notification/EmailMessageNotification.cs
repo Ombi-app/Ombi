@@ -176,13 +176,16 @@ namespace PlexRequests.Services.Notification
             {
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.EmailHost, settings.EmailPort, SecureSocketOptions.Auto); // Let MailKit figure out the correct SecureSocketOptions.
+                    client.Connect(settings.EmailHost, settings.EmailPort); // Let MailKit figure out the correct SecureSocketOptions.
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                    client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+                    if (settings.Authentication)
+                    {
+                        client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+                    }
 
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
