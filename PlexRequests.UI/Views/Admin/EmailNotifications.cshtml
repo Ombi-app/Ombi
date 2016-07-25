@@ -18,7 +18,6 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Email Notifications</legend>
- 
             <div class="form-group">
                 <div class="checkbox">
 
@@ -33,35 +32,35 @@
 
                 </div>
             </div>
-          <div class="form-group">
-            <div class="checkbox">
+            <div class="form-group">
+                <div class="checkbox">
 
-              @if (Model.EnableUserEmailNotifications)
-              {
-                <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-              }
-              else
-              {
-                <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-              }
+                    @if (Model.EnableUserEmailNotifications)
+                    {
+                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
+                    }
 
+                </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="checkbox">
+            <div class="form-group">
+                <div class="checkbox">
 
-              @if (Model.Authentication)
-              {
-                <input type="checkbox" id="Authentication" name="Authentication" checked="checked"><label for="Authentication">Enable SMTP Authentication</label>
-              }
-              else
-              {
-                <input type="checkbox" id="Authentication" name="Authentication"><label for="Authentication">Enable SMTP Authentication</label>
-              }
+                    @if (Model.Authentication)
+                    {
+                        <input type="checkbox" id="Authentication" name="Authentication" checked="checked"><label for="Authentication">Enable SMTP Authentication</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="Authentication" name="Authentication"><label for="Authentication">Enable SMTP Authentication</label>
+                    }
 
+                </div>
             </div>
-          </div>
-          <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
+            <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
             <div class="form-group">
                 <label for="EmailHost" class="control-label">SMTP Host name or IP</label>
                 <div class="">
@@ -107,37 +106,37 @@
                 </div>
             </div>
 
-           @* <!--Accordion Item-->
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-        @for (var i = 0; i < Model.Message.Count; i++)
-        {
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="@(i)headingOne">
-                <h4 class="panel-title">
-                    <a role="button" data-toggle="collapse" data-parent="#accordion" href="#@(i)collapseOne" aria-controls="@(i)collapseOne">
-                        @Model.Message[i].NotificationType.ToString()
-                    </a>
-                </h4>
-            </div>
-            <div id="@(i)collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="@(i)headingOne">
-                <div class="panel-body">
-                    <div class="form-group">
-                        <label for="@(Model.Message[i])" class="control-label"> @Model.Message[i].NotificationType.ToString() Subject</label>
-                        <div>
-                            <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Subject)" name="Message[@(i)].Subject" value="@(Model.Message[i].Subject)">
+            @* <!--Accordion Item-->
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    @for (var i = 0; i < Model.Message.Count; i++)
+                    {
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="@(i)headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#@(i)collapseOne" aria-controls="@(i)collapseOne">
+                                    @Model.Message[i].NotificationType.ToString()
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="@(i)collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="@(i)headingOne">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="@(Model.Message[i])" class="control-label"> @Model.Message[i].NotificationType.ToString() Subject</label>
+                                    <div>
+                                        <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Subject)" name="Message[@(i)].Subject" value="@(Model.Message[i].Subject)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="@(Model.Message[i].Body)" class="control-label">@Model.Message[i].NotificationType.ToString() Body</label>
+                                    <div>
+                                        <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Body)" name="Message[@(i)].Body" value="@(Model.Message[i].Body)">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="@(Model.Message[i].Body)" class="control-label">@Model.Message[i].NotificationType.ToString() Body</label>
-                        <div>
-                            <input type="text" class="form-control form-control-custom " id="@(Model.Message[i].Body)" name="Message[@(i)].Body" value="@(Model.Message[i].Body)">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        }
-    </div>*@
+                    }
+                </div>*@
 
             <div class="form-group">
                 <div>
@@ -158,14 +157,15 @@
 <script>
     $(function () {
 
-      var auth = $('#Authentication').prop('checked');
-      ChangeUsernameAndPassword(auth);
+        var auth = $('#Authentication').prop('checked');
+        changeUsernameAndPassword(auth);
 
 
-      $("#Authentication")
-        .change(function(e) {
-           ChangeUsernameAndPassword(auth);
-        });
+        $("#Authentication")
+          .change(function () {
+              auth = $('#Authentication').prop('checked');
+              changeUsernameAndPassword(auth);
+          });
 
         var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
@@ -198,8 +198,8 @@
             });
         });
 
-	        $('#testEmail').click(function (e) {
-	         	$('#spinner').attr("class", "fa fa-spinner fa-spin");
+        $('#testEmail').click(function (e) {
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
 
             var url = createBaseUrl(base, '/admin/testemailnotification');
             e.preventDefault();
@@ -216,31 +216,43 @@
                 dataType: "json",
                 success: function (response) {
                     if (response.result === true) {
-        				$('#spinner').attr("class", "fa fa-check");
+                        $('#spinner').attr("class", "fa fa-check");
                         generateNotify(response.message, "success");
                     } else {
-        				$('#spinner').attr("class", "fa fa-times");
+                        $('#spinner').attr("class", "fa fa-times");
                         generateNotify(response.message, "warning");
                     }
                 },
                 error: function (e) {
                     console.log(e);
-        				$('#spinner').attr("class", "fa fa-times");
+                    $('#spinner').attr("class", "fa fa-times");
                     generateNotify("Something went wrong!", "danger");
                 }
             });
         });
-function ChangeUsernameAndPassword(checked) {
-      var $userName = $('#EmailUsername');
-      var $password = $('#EmailPassword');
-      if (!checked) {
-        $userName.attr('disabled', 'disabled');
-        $password.attr('disabled', 'disabled');
-      } else {
-        $userName.removeAttr('disabled', 'disabled');
-        $password.removeAttr('disabled', 'disabled');
-      }
-};
+        function changeUsernameAndPassword(checked) {
+            var $userName = $('#EmailUsername');
+            var $password = $('#EmailPassword');
+            if (!checked) {
+                disableElement($userName);
+                disableElement($password);
+            } else {
+                enableElement($userName);
+                enableElement($password);
+            }
+        };
+
+        function disableElement(element) {
+            element.attr('disabled', 'disabled');
+            element.removeClass('form-control-custom');
+            element.addClass('form-control-custom-disabled');
+        }
+
+        function enableElement(element) {
+            element.removeAttr('disabled', 'disabled');
+            element.addClass('form-control-custom');
+            element.removeClass('form-control-custom-disabled');
+        }
 
 
     });

@@ -512,6 +512,13 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            if (settings.Authentication)
+            {
+                if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
+                {
+                    return Response.AsJson(new JsonResponseModel {Result = false, Message = "SMTP Authentication is enabled, please specify a username and password"});
+                }
+            }
 
             var result = EmailService.SaveSettings(settings);
 
