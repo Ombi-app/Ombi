@@ -467,7 +467,7 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
-                            res?.ErrorMessages.ForEach(x => Log.Error("Error messages: {0}", x));
+                            res?.ErrorMessages?.ForEach(x => Log.Error("Error messages: {0}", x));
                         }
                     }
                     else

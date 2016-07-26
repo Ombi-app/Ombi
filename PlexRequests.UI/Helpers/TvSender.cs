@@ -68,10 +68,7 @@ namespace PlexRequests.UI.Helpers
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
-
-            Log.Trace("Sonarr Add Result: ");
-            Log.Trace(result.DumpJson());
-
+           
             return result;
         }
 

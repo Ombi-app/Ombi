@@ -900,7 +900,7 @@ namespace PlexRequests.UI.Modules
                 return true;
             }
 
-            return usersLimit.RequestCount >= requestLimit;
+            return requestLimit >= usersLimit.RequestCount;
         }
 
         private int GetRequestLimitForType(RequestType type, PlexRequestSettings s)
