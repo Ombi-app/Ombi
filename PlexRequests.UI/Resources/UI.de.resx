@@ -450,4 +450,10 @@
   <data name="Layout_French" xml:space="preserve">
     <value>Französisch</value>
   </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Wählen Sie Episode</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Falsche Benutzer oder Passwort</value>
+  </data>
 </root>

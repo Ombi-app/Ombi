@@ -447,4 +447,13 @@
   <data name="Common_CouldNotSave" xml:space="preserve">
     <value>Impossibile salvare, riprova più tardi.</value>
   </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Francese</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Selezionare episodio</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Nome utente o password non corretta</value>
+  </data>
 </root>

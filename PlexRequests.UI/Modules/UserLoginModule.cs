@@ -87,7 +87,7 @@ namespace PlexRequests.UI.Modules
             Log.Debug("Username \"{0}\" attempting to login", username);
             if (string.IsNullOrWhiteSpace(username))
             {
-                Session["TempMessage"] = "username";
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
                 return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
@@ -100,7 +100,8 @@ namespace PlexRequests.UI.Modules
             if (IsUserInDeniedList(username, settings))
             {
                 Log.Debug("User is in denied list, not allowing them to authenticate");
-                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex", "error=check");
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
                 return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
@@ -159,7 +160,8 @@ namespace PlexRequests.UI.Modules
 
             if (!authenticated)
             {
-                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex", "error=incorrect");
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 return Response.AsRedirect(uri.ToString()); // TODO Check this
             }
 

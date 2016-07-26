@@ -434,4 +434,7 @@
   <data name="Search_SelectEpisode" xml:space="preserve">
     <value>Select Episode</value>
   </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Incorrect User or Password</value>
+  </data>
 </root>

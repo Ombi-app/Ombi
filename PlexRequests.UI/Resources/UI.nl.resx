@@ -423,52 +423,37 @@
   <data name="Common_CouldNotSave" xml:space="preserve">
     <value>Kon niet opslaan, probeer het later nog eens.</value>
   </data>
-  <data name="Search_SuccessfullyAdded" xml:space="preserve">
-    <value>Succesvol toegevoegd</value>
-  </data>
-  <data name="Search_AlreadyRequested" xml:space="preserve">
-    <value>reeds aangevraagd !!</value>
-  </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>We konden niet controleren of {0} is in Plex, weet je zeker dat het de juiste setup ?!</value>
+    <value>We konden niet controleren of {0} al in plex bestaat, weet je zeker dat het correct is ingesteld?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
-    <value>Er is iets misgegaan toevoegen van de film naar couchpotato! Controleer uw instellingen.!</value>
+    <value>Er is iets foutgegaan tijdens het toevoegen van de film aan CouchPotato! Controleer je instellingen</value>
   </data>
   <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
-    <value>U heeft uw wekelijkse verzoek limiet voor films bereikt! Neem contact op met admin.!</value>
-  </data>
-  <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>is al in Plex !!</value>
+    <value>Je hebt je weekelijkse request limiet bereikt voor films! Neem contact op met je Administrator</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
-    <value>Er is iets misgegaan toevoegen van de film naar SickRage! Controleer uw instellingen.!</value>
+    <value>Er is iets foutgegaan tijdens het toevoegen van de film aan SickRage! Controleer je instellingen</value>
   </data>
   <data name="Search_TvNotSetUp" xml:space="preserve">
-    <value>Het verzoek van de tv-programma&amp;#39;s is niet correct ingesteld. Neem contact op met admin.!</value>
+    <value>Het aanvragen van TV Series is niet correct ingesteld, neem contact op met je Administator</value>
   </data>
   <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
-    <value>U heeft uw wekelijkse verzoek limiet voor albums bereikt! Neem contact op met admin.!</value>
+    <value>Je hebt je weekelijkse request limiet bereikt voor Albums! Neem contact op met je Administrator</value>
   </data>
   <data name="Search_MusicBrainzError" xml:space="preserve">
-    <value>We konden het niet vinden van de kunstenaar op MusicBrainz. Probeer het later opnieuw of neem contact op admin!</value>
+    <value>Kon de artiest niet vinden op MusicBrainz. Probeer het nog eens of neem contact op met de Administrator</value>
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
-    <value>U heeft uw wekelijkse verzoek limiet voor TV Shows bereikt! Neem contact op met admin.!</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Sorry, maar deze functionaliteit is momenteel alleen voor gebruikers met Plex accounts!</value>
-  </data>
-  <data name="Search_ErrorNotEnabled" xml:space="preserve">
-    <value>Sorry, maar de beheerder nog niet geactiveerd deze functionaliteit.!</value>
-  </data>
-  <data name="Search_NotificationError" xml:space="preserve">
-    <value>We konden deze melding niet verwijderen omdat je nog nooit gehad !!</value>
-  </data>
-  <data name="Common_CouldNotSave" xml:space="preserve">
-    <value>Kon niet opslaan, probeer het opnieuw!</value>
+    <value>Je hebt je weekelijkse request limiet bereikt voor TV Series! Neem contact op met je Administrator</value>
   </data>
   <data name="Layout_French" xml:space="preserve">
     <value>French</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Selecteer aflevering!</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Onjuiste gebruikersnaam of wachtwoord</value>
   </data>
 </root>
