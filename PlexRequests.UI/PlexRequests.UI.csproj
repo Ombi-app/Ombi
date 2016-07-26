@@ -231,11 +231,6 @@
     <Compile Include="NinjectModules\RepositoryModule.cs" />
     <Compile Include="NinjectModules\ServicesModule.cs" />
     <Compile Include="NinjectModules\SettingServiceModule.cs" />
-    <Compile Include="Resources\UI.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UI.resx</DependentUpon>
-    </Compile>
     <Compile Include="Resources\UI1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
