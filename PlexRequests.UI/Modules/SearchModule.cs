@@ -637,8 +637,8 @@ namespace PlexRequests.UI.Modules
                     {
                         return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
-
-                    return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages));
+                    Log.Debug("Error with sending to sonarr.");
+                    return Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages ?? new List<string>()));
                 }
 
                 var srSettings = SickRageService.GetSettings();
