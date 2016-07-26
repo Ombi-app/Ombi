@@ -117,7 +117,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
             Post["request/tv", true] = async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
-            Post["request/tvEpisodes", true] = async (x, ct) => await RequestEpisodes();
+            Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0,"episode");
             Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
 
             Post["/notifyuser", true] = async (x, ct) => await NotifyUser((bool)Request.Form.notify);
@@ -525,12 +525,38 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            // Get the JSON from the request
+            var req = (Dictionary<string, object>.ValueCollection)Request.Form.Values;
+            var json = req.FirstOrDefault()?.ToString();
+            var episodeModel = JsonConvert.DeserializeObject<EpisodeRequestModel>(json); // Convert it into the object
+
+            var episodeResult = false;
+            var episodeRequest = false;
+
             var settings = await PrService.GetSettingsAsync();
             if (!await CheckRequestLimit(settings, RequestType.TvShow))
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_WeeklyRequestLimitTVShow });
             }
             Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
+
+            // This means we are requesting an episode rather than a whole series or season
+            if (episodeModel != null)
+            {
+                episodeRequest = true;
+                var sonarrSettings = await SonarrService.GetSettingsAsync();
+                if (!sonarrSettings.Enabled)
+                {
+                    return Response.AsJson("This is currently only supported with Sonarr");
+                }
+
+                var series = await GetSonarrSeries(sonarrSettings, episodeModel.ShowId);
+                if (series != null)
+                {
+                    // The series already exists in Sonarr
+                    episodeResult = RequestEpisodesWithExistingSeries(episodeModel, series, sonarrSettings);
+                }
+            }
 
             var showInfo = TvApi.ShowLookupByTheTvDbId(showId);
             DateTime firstAir;
@@ -565,6 +591,7 @@ namespace PlexRequests.UI.Modules
                 {
                     providerId = showId.ToString();
                 }
+                // TODO: If it's an episode request, check if the episode exists
                 if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
                 {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
@@ -596,6 +623,7 @@ namespace PlexRequests.UI.Modules
             };
 
             var seasonsList = new List<int>();
+            //TODO something here for the episodes
             switch (seasons)
             {
                 case "first":
@@ -609,6 +637,8 @@ namespace PlexRequests.UI.Modules
                 case "all":
                     model.SeasonsRequested = "All";
                     break;
+                case "episode":
+                    
                 default:
                     model.SeasonsRequested = seasons;
                     var split = seasons.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -956,37 +986,8 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
-        private async Task<Response> RequestEpisodes()
+        private bool RequestEpisodesWithExistingSeries(EpisodeRequestModel model, Series selectedSeries, SonarrSettings sonarrSettings)
         {
-            var req = (Dictionary<string, object>.ValueCollection)this.Request.Form.Values;
-            var json = req.FirstOrDefault().ToString();
-            var model = JsonConvert.DeserializeObject<EpisodeRequestModel>(json);
-            //var model = this.Bind<EpisodeRequestModel>();
-            if (model == null)
-            {
-                return Nancy.Response.NoBody;
-            }
-            var sonarrSettings = await SonarrService.GetSettingsAsync();
-            if (!sonarrSettings.Enabled)
-            {
-                return Response.AsJson("Need sonarr");
-            }
-
-            var existingRequest = await RequestService.CheckRequestAsync(model.ShowId);
-
-
-
-
-            // Find the correct series
-            var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
-            var selectedSeries = task.FirstOrDefault(series => series.tvdbId == model.ShowId);
-            if (selectedSeries == null)
-            {
-
-                // Need to add the series as unmonitored.
-                return Response.AsJson("");
-            }
-
             // Show Exists
             // Look up all episodes
             var episodes = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri).ToList();
@@ -1010,9 +1011,16 @@ namespace PlexRequests.UI.Modules
             Task.WaitAll(tasks.ToArray());
 
             SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            
+            return true;
+        }
 
+        private async Task<Series> GetSonarrSeries(SonarrSettings sonarrSettings, int showId)
+        {
+            var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
+            var selectedSeries = task.FirstOrDefault(series => series.tvdbId == showId);
 
-            return Response.AsJson(new JsonResponseModel() { Result = true });
+            return selectedSeries;
         }
 
     }
