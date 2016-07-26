@@ -107,6 +107,7 @@
     <Compile Include="BootstrapperExtensions.cs" />
     <Compile Include="LandingPageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SearchModuleTests.cs" />
     <Compile Include="StringHelperTests.cs" />
     <Compile Include="TestRootPathProvider.cs" />
     <Compile Include="UserLoginModuleTests.cs" />

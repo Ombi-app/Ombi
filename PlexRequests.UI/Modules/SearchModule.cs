@@ -873,7 +873,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(seasons);
         }
 
-        private async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
+        public async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
         {
             if (IsAdmin)
                 return true;
@@ -895,7 +895,7 @@ namespace PlexRequests.UI.Modules
                 return true;
             }
 
-            return requestLimit >= usersLimit.RequestCount;
+            return requestLimit > usersLimit.RequestCount;
         }
 
         private int GetRequestLimitForType(RequestType type, PlexRequestSettings s)

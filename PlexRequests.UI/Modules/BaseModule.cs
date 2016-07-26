@@ -122,11 +122,11 @@ namespace PlexRequests.UI.Modules
         {
             get
             {
-                if (Context.CurrentUser == null)
+                if (Context?.CurrentUser == null)
                 {
                     return false;
                 }
-                var claims = Context.CurrentUser.Claims.ToList();
+                var claims = Context?.CurrentUser.Claims.ToList();
                 return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
             }
         }
