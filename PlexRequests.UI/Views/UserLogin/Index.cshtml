@@ -1,5 +1,14 @@
-﻿@using PlexRequests.UI.Helpers
+﻿
+@using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Resources
+@{
+    var nullableError = Context.ViewBag.TempMessage ?? string.Empty;
+    var error = false;
+    if (!string.IsNullOrEmpty(nullableError))
+    {
+        error = true;
+    }
+}
 <div class="home">
     <h1>@UI.UserLogin_Title</h1>
     <div>
@@ -8,6 +17,7 @@
         </p>
     </div>
     <form method="POST" id="loginForm">
+        <input id="dateTimeOffset" name="DateTimeOffset" hidden="hidden" />
         <div>
             <div>
                 <label>@UI.UserLogin_Username</label>
@@ -24,7 +34,7 @@
                     <label> @UI.UserLogin_Password </label>
                 </div>
                 <div>
-                    <input id="password" class="form-control form-control-custom" name="Password" type="password" placeholder="@UI.UserLogin_Password"/>
+                    <input id="password" class="form-control form-control-custom" name="Password" type="password" placeholder="@UI.UserLogin_Password" />
                 </div>
             </div>
             <br />
@@ -36,15 +46,25 @@
 
 <script>
     $(function () {
-        var base = '@Html.GetBaseUrl()';
-        $('#loginBtn').click(function (e) {
+
+        $('#dateTimeOffset').val(new Date().getTimezoneOffset());
+
+        @if (error)
+            {
+                <text>
+
+        generateNotify('@nullableError',"warning");
+
+        </text>
+            }
+
+        @*$('#loginBtn').click(function (e) {
             e.preventDefault();
             var $form = $("#loginForm");
             var formData = $form.serialize();
             var dtOffset = new Date().getTimezoneOffset();
             formData += ('&DateTimeOffset=' + dtOffset);
 
-            var url = createBaseUrl(base, '/search');
             $.ajax({
                 type: $form.prop("method"),
                 url: $form.prop("action"),
@@ -53,9 +73,8 @@
                 success: function (response) {
                     console.log(response);
                     if (response.result === true) {
-
                         location.replace(response.message);
-             
+
                     } else {
                         generateNotify(response.message, "warning");
                     }
@@ -65,6 +84,7 @@
                     generateNotify("@UI.Javascript_SomethingWentWrong", "danger");
                 }
             });
-        });
+        });*@
+
     });
 </script>

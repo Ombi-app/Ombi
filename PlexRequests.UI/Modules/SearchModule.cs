@@ -183,48 +183,43 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-            var apiMovies = new List<MovieResult>();
-            await Task.Factory.StartNew(
-                () =>
-                {
-                    switch (searchType)
-                    {
-                        case MovieSearchType.Search:
-                            return
-                                MovieApi.SearchMovie(searchTerm)
-                                        .Result.Select(
-                                            x =>
-                                            new MovieResult()
-                                            {
-                                                Adult = x.Adult,
-                                                BackdropPath = x.BackdropPath,
-                                                GenreIds = x.GenreIds,
-                                                Id = x.Id,
-                                                OriginalLanguage = x.OriginalLanguage,
-                                                OriginalTitle = x.OriginalTitle,
-                                                Overview = x.Overview,
-                                                Popularity = x.Popularity,
-                                                PosterPath = x.PosterPath,
-                                                ReleaseDate = x.ReleaseDate,
-                                                Title = x.Title,
-                                                Video = x.Video,
-                                                VoteAverage = x.VoteAverage,
-                                                VoteCount = x.VoteCount
-                                            })
-                                        .ToList();
-                        case MovieSearchType.CurrentlyPlaying:
-                            return MovieApi.GetCurrentPlayingMovies().Result.ToList();
-                        case MovieSearchType.Upcoming:
-                            return MovieApi.GetUpcomingMovies().Result.ToList();
-                        default:
-                            return new List<MovieResult>();
-                    }
-                }).ContinueWith(
-                    (t) =>
-                    {
-                        apiMovies = t.Result;
-                    });
+            List<MovieResult> apiMovies;
 
+            switch (searchType)
+            {
+                case MovieSearchType.Search:
+                    var movies = await MovieApi.SearchMovie(searchTerm);
+                    apiMovies = movies.Select(x =>
+                                    new MovieResult()
+                                    {
+                                        Adult = x.Adult,
+                                        BackdropPath = x.BackdropPath,
+                                        GenreIds = x.GenreIds,
+                                        Id = x.Id,
+                                        OriginalLanguage = x.OriginalLanguage,
+                                        OriginalTitle = x.OriginalTitle,
+                                        Overview = x.Overview,
+                                        Popularity = x.Popularity,
+                                        PosterPath = x.PosterPath,
+                                        ReleaseDate = x.ReleaseDate,
+                                        Title = x.Title,
+                                        Video = x.Video,
+                                        VoteAverage = x.VoteAverage,
+                                        VoteCount = x.VoteCount
+                                    })
+                                .ToList();
+                    break;
+                case MovieSearchType.CurrentlyPlaying:
+                    apiMovies = await MovieApi.GetCurrentPlayingMovies();
+                    break;
+                case MovieSearchType.Upcoming:
+                    apiMovies = await MovieApi.GetUpcomingMovies();
+                    break;
+                default:
+                    apiMovies = new List<MovieResult>();
+                    break;
+            }
+            
             var allResults = await RequestService.GetAllAsync();
             allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
@@ -236,7 +231,7 @@ namespace PlexRequests.UI.Modules
             var plexMovies = Checker.GetPlexMovies();
             var settings = await PrService.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
-            foreach (MovieResult movie in apiMovies)
+            foreach (var movie in apiMovies)
             {
                 var viewMovie = new SearchMovieViewModel
                 {
@@ -437,7 +432,7 @@ namespace PlexRequests.UI.Modules
             }
 
             Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username, CookieHelper.GetAnalyticClientId(Cookies));
-            var movieInfo = MovieApi.GetMovieInformation(movieId).Result;
+            var movieInfo = await MovieApi.GetMovieInformation(movieId);
             var fullMovieName = $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
 
             var existingRequest = await RequestService.CheckRequestAsync(movieId);

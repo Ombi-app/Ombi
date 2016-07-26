@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 
 using Nancy;
 using Nancy.Extensions;
+using Nancy.Linker;
 using Nancy.Responses.Negotiation;
 
 using NLog;
@@ -49,16 +50,18 @@ namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp, IAnalytics a) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker) : base("userlogin", pr)
         {
             AuthService = auth;
             LandingPageSettings = lp;
             Analytics = a;
             Api = api;
             PlexSettings = plexSettings;
+            Linker = linker;
 
-            Get["UserLoginIndex","/", true] = async (x, ct) => await Index();
-            Post["/", true] = async (x,ct) =>  await LoginUser();
+            Get["UserLoginIndex", "/", true] = async (x, ct) => await Index();
+            Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
         }
 
@@ -66,13 +69,13 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private IPlexApi Api { get; }
+        private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task<Negotiator> Index()
         {
-           
             var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
         }
@@ -84,7 +87,9 @@ namespace PlexRequests.UI.Modules
             Log.Debug("Username \"{0}\" attempting to login", username);
             if (string.IsNullOrWhiteSpace(username))
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                Session["TempMessage"] = "username";
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
             var authenticated = false;
@@ -95,7 +100,8 @@ namespace PlexRequests.UI.Modules
             if (IsUserInDeniedList(username, settings))
             {
                 Log.Debug("User is in denied list, not allowing them to authenticate");
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex", "error=check");
+                return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
             var password = string.Empty;
@@ -153,7 +159,8 @@ namespace PlexRequests.UI.Modules
 
             if (!authenticated)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex", "error=incorrect");
+                return Response.AsRedirect(uri.ToString()); // TODO Check this
             }
 
             var landingSettings = LandingPageSettings.GetSettings();
@@ -161,16 +168,19 @@ namespace PlexRequests.UI.Modules
             if (landingSettings.Enabled)
             {
                 if (!landingSettings.BeforeLogin)
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = "landing" });
+                {
+                    var uri = Linker.BuildAbsoluteUri(Context, "LandingPageIndex");
+                    return Response.AsRedirect(uri.ToString());
+                }
             }
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = "search" });
+            var retVal = Linker.BuildAbsoluteUri(Context, "SearchIndex");
+            return Response.AsRedirect(retVal.ToString()); // TODO Check this
         }
 
 
 
         private Response Logout()
         {
-            Log.Debug("Logging Out");
             if (Session[SessionKeys.UsernameKey] != null)
             {
                 Session.Delete(SessionKeys.UsernameKey);

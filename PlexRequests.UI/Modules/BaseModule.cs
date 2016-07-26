@@ -69,7 +69,18 @@ namespace PlexRequests.UI.Modules
 
             ModulePath = settingModulePath;
 
-            Before += (ctx) => SetCookie();
+            Before += (ctx) =>
+            {
+                SetCookie();
+
+                if (!string.IsNullOrEmpty(ctx.Request.Session["TempMessage"] as string))
+                {
+                    ctx.ViewBag.TempMessage = ctx.Request.Session["TempMessage"];
+                    ctx.ViewBag.TempType = ctx.Request.Session["TempType"];
+                    ctx.Request.Session.DeleteAll();
+                }
+                return null;
+            };
         }
 
         private int _dateTimeOffset = -1;
