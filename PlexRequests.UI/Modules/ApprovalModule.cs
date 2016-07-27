@@ -124,7 +124,7 @@ namespace PlexRequests.UI.Modules
             if (sonarrSettings.Enabled)
             {
                 Log.Trace("Sending to Sonarr");
-                var result = sender.SendToSonarr(sonarrSettings, request, qualityId);
+                var result = await sender.SendToSonarr(sonarrSettings, request, qualityId);
                 Log.Trace("Sonarr Result: ");
                 Log.Trace(result.DumpJson());
                 if (!string.IsNullOrEmpty(result.title))

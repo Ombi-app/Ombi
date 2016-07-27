@@ -590,10 +590,16 @@ namespace PlexRequests.UI.Modules
                 {
                     providerId = showId.ToString();
                 }
-                // TODO: If it's an episode request, check if the episode exists
-                if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
+                if (episodeRequest)
                 {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
+                    // TODO: If it's an episode request, check if the episode exists
+                }
+                else
+                {
+                    if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
+                    {
+                        return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
+                    }
                 }
             }
             catch (Exception)
