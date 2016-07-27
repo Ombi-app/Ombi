@@ -443,7 +443,8 @@ $(function () {
             requested: result.requested,
             approved: result.approved,
             available: result.available,
-            episodes : result.episodes
+            episodes: result.episodes,
+            tvFullyAvailable: result.tvFullyAvailable
         };
         return context;
     }

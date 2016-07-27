@@ -40,7 +40,6 @@ using PlexRequests.Api.Models.Music;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -49,10 +48,9 @@ using PlexRequests.UI.Models;
 using System.Threading.Tasks;
 
 using Nancy.Extensions;
-using Nancy.ModelBinding;
-using Nancy.Responses;
+
 using Newtonsoft.Json;
-using PlexRequests.Api.Models.Sonarr;
+
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
@@ -289,6 +287,7 @@ namespace PlexRequests.UI.Modules
         {
             Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
+            var providerId = string.Empty;
 
             var apiTv = new List<TvMazeSearch>();
             await Task.Factory.StartNew(() => new TvMazeApi().Search(searchTerm)).ContinueWith((t) =>
@@ -313,10 +312,12 @@ namespace PlexRequests.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                var tvInfoTask = Task.Run(() => TvApi.EpisodeLookup(t.show.id));
+
                 var banner = t.show.image?.medium;
                 if (!string.IsNullOrEmpty(banner))
                 {
-                    banner = banner.Replace("http", "https");
+                    banner = banner.Replace("http", "https"); // Always use the Https banners
                 }
 
                 var viewT = new SearchTvShowViewModel
@@ -334,9 +335,7 @@ namespace PlexRequests.UI.Modules
                     SeriesName = t.show.name,
                     Status = t.show.status
                 };
-
-
-                var providerId = string.Empty;
+                
 
                 if (plexSettings.AdvancedSearch)
                 {
@@ -349,7 +348,7 @@ namespace PlexRequests.UI.Modules
                 }
                 else if (t.show?.externals?.thetvdb != null)
                 {
-                    int tvdbid = (int)t.show.externals.thetvdb;
+                    var tvdbid = (int)t.show.externals.thetvdb;
 
                     if (dbTv.ContainsKey(tvdbid))
                     {
@@ -365,7 +364,15 @@ namespace PlexRequests.UI.Modules
                         viewT.Requested = true;
                     }
                 }
+                var tvInfo = await tvInfoTask;
 
+                // Check if we have every episode in all seasons
+                var epModel = tvInfo.Select(tvIn => new Store.EpisodesModel { SeasonNumber = tvIn.season, EpisodeNumber = tvIn.number }).ToList();
+                var diff = viewT.Episodes.Except(epModel);
+                if (diff.Any())
+                {
+                    viewT.TvFullyAvailable = true;
+                }
                 viewTv.Add(viewT);
             }
 

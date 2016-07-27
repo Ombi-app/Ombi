@@ -50,5 +50,6 @@ namespace PlexRequests.UI.Models
         public string ImdbId { get; set; }
         public int SiteRating { get; set; }
         public Store.EpisodesModel[] Episodes { get; set; }
+        public bool TvFullyAvailable { get; set; }
     }
 }
