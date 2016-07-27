@@ -200,6 +200,7 @@
     <Compile Include="ModelDataProviders\UserUpdateViewModelDataProvider.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\EpisodeListViewModel.cs" />
     <Compile Include="Models\EpisodeRequestModel.cs" />
     <Compile Include="Models\IssuesDetailsViewModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />

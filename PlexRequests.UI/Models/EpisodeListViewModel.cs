@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SearchTvShowViewModel.cs
+//    File: EpisodeListViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,31 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System.Collections.Generic;
-
 namespace PlexRequests.UI.Models
 {
-    public class SearchTvShowViewModel : SearchViewModel
+    public class EpisodeListViewModel
     {
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
+        public bool Requested { get; set; }
+        public string Name { get; set; }
         public int Id { get; set; }
-        public string SeriesName { get; set; }
-        public List<string> Aliases { get; set; }
-        public string Banner { get; set; }
-        public int SeriesId { get; set; }
-        public string Status { get; set; }
-        public string FirstAired { get; set; }
-        public string Network { get; set; }
-        public string NetworkId { get; set; }
-        public string Runtime { get; set; }
-        public List<string> Genre { get; set; }
-        public string Overview { get; set; }
-        public int LastUpdated { get; set; }
-        public string AirsDayOfWeek { get; set; }
-        public string AirsTime { get; set; }
-        public string Rating { get; set; }
-        public string ImdbId { get; set; }
-        public int SiteRating { get; set; }
-        public Store.EpisodesModel[] Episodes { get; set; }
     }
 }

@@ -442,7 +442,8 @@ $(function () {
             imdb: result.imdbId,
             requested: result.requested,
             approved: result.approved,
-            available: result.available
+            available: result.available,
+            episodes : result.episodes
         };
         return context;
     }
@@ -585,8 +586,6 @@ $(function () {
 
             var model = [];
 
-
-
             var $checkedEpisodes = $('.selectedEpisodes:checkbox:checked');
             $checkedEpisodes.each(function (index, element) {
                 var $element = $('#' + element.id);
@@ -616,7 +615,7 @@ $(function () {
 
         function buildSeasonsCount(result) {
             return {
-                seasonNumber: result.season
+                seasonNumber: result.seasonNumber
             }
         }
 
@@ -624,17 +623,10 @@ $(function () {
         function buildEpisodesView(result) {
             return {
                 id: result.id,
-                url: result.url,
                 name: result.name,
-                season: result.season,
-                number: result.number,
-                airdate: result.airdate,
-                airtime: result.airtime,
-                airstamp: result.airstamp,
-                runtime: result.runtime,
-                image: result.image,
-                summary: result.summary,
-                links : result._links
+                season: result.seasonNumber,
+                number: result.episodeNumber,
+                requested: result.requested
             }
         }
     });

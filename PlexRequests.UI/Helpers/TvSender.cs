@@ -33,13 +33,11 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
 using PlexRequests.Store;
 using System.Linq;
 using System.Threading.Tasks;
 
 using PlexRequests.Helpers.Exceptions;
-using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Helpers
 {
@@ -73,15 +71,16 @@ namespace PlexRequests.UI.Helpers
                 int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
             }
 
-            // Does series exist?
-            var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
 
+            var seriesTask = GetSonarrSeries(sonarrSettings, model.ProviderId);
 
-            // Series Exists
             if (episodeRequest)
-            {
+            {            
+                // Does series exist?
+                var series = await seriesTask;
                 if (series != null)
                 {
+                    // Series Exists
                     // Request the episodes in the existing series
                     RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
                 }
@@ -113,11 +112,10 @@ namespace PlexRequests.UI.Helpers
 
                     // We now have the series in Sonarr
                     RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
-                    
+
                     return addResult;
                 }
             }
-
 
 
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,

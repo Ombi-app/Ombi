@@ -124,7 +124,7 @@ namespace PlexRequests.UI.Modules
             Get["/notifyuser", true] = async (x, ct) => await GetUserNotificationSettings();
 
             Get["/seasons"] = x => GetSeasons();
-            Get["/episodes"] = x => GetEpisodes();
+            Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
         private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
@@ -356,6 +356,7 @@ namespace PlexRequests.UI.Modules
                         var dbt = dbTv[tvdbid];
 
                         viewT.Requested = true;
+                        viewT.Episodes = dbt.Episodes;
                         viewT.Approved = dbt.Approved;
                         viewT.Available = dbt.Available;
                     }
@@ -545,10 +546,11 @@ namespace PlexRequests.UI.Modules
             if (episodeModel != null)
             {
                 episodeRequest = true;
+                showId = episodeModel.ShowId;
                 var s = await sonarrSettings;
                 if (!s.Enabled)
                 {
-                    return Response.AsJson("This is currently only supported with Sonarr");
+                    return Response.AsJson(new JsonResponseModel { Message = "This is currently only supported with Sonarr", Result = false });
                 }
             }
 
@@ -924,12 +926,35 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
-        private Response GetEpisodes()
+        private async Task<Response> GetEpisodes()
         {
+            var allResults = await RequestService.GetAllAsync();
+            var model = new List<EpisodeListViewModel>();
             var seriesId = (int)Request.Query.tvId;
+            var enumerable = allResults as RequestedModel[] ?? allResults.ToArray();
+
+            var dbDbShow = enumerable.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
             var show = TvApi.ShowLookupByTheTvDbId(seriesId);
             var seasons = TvApi.EpisodeLookup(show.id);
-            return Response.AsJson(seasons);
+
+
+            foreach (var ep in seasons)
+            {
+                var requested = dbDbShow?.Episodes
+                    .Any(episodesModel =>
+                    ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber);
+
+                model.Add(new EpisodeListViewModel
+                {
+                    Id = show.id,
+                    SeasonNumber = ep.season,
+                    EpisodeNumber = ep.number,
+                    Requested = requested ?? false,
+                    Name = ep.name
+                });
+            }
+
+            return Response.AsJson(model);
         }
 
         public async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
