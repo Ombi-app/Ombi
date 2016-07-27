@@ -42,6 +42,7 @@ namespace PlexRequests.Store
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
         public int IssueId { get; set; }
+        public EpisodesModel[] Episodes { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers
@@ -104,5 +105,11 @@ namespace PlexRequests.Store
         WrongContent = 2,
         PlaybackIssues = 3,
         Other = 4, // Provide a message
+    }
+
+    public class EpisodesModel
+    {
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
     }
 }

@@ -24,6 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
@@ -32,6 +36,10 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
 using System.Linq;
+using System.Threading.Tasks;
+
+using PlexRequests.Helpers.Exceptions;
+using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Helpers
 {
@@ -46,15 +54,15 @@ namespace PlexRequests.UI.Helpers
         private ISickRageApi SickrageApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            return SendToSonarr(sonarrSettings, model, string.Empty);
+            return await SendToSonarr(sonarrSettings, model, string.Empty);
         }
 
-        public SonarrAddSeries SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
             var qualityProfile = 0;
-
+            var episodeRequest = model.Episodes.Length > 0;
             if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
             {
                 int.TryParse(qualityId, out qualityProfile);
@@ -65,10 +73,57 @@ namespace PlexRequests.UI.Helpers
                 int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
             }
 
+            // Does series exist?
+            var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+
+
+            // Series Exists
+            if (episodeRequest)
+            {
+                if (series != null)
+                {
+                    // Request the episodes in the existing series
+                    RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                }
+                else
+                {
+                    // Series doesn't exist, need to add it as unmonitored.
+                    var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                            sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
+                            sonarrSettings.FullUri));
+
+                    if (string.IsNullOrEmpty(addResult?.title))
+                    {
+                        var sw = new Stopwatch();
+                        sw.Start();
+                        while (series == null)
+                        {
+                            await Task.Delay(TimeSpan.FromSeconds(5));
+                            series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+
+                            // Check how long we have been doing this for
+                            if (sw.Elapsed > TimeSpan.FromSeconds(30))
+                            {
+                                // 30 seconds is a long time, it's not going to work.
+                                throw new ApiRequestException("Sonarr still didn't have the series added after 30 seconds.");
+                            }
+                        }
+                        sw.Stop();
+                    }
+
+                    // We now have the series in Sonarr
+                    RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                    
+                    return addResult;
+                }
+            }
+
+
+
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri);
-           
+
             return result;
         }
 
@@ -92,6 +147,42 @@ namespace PlexRequests.UI.Helpers
 
 
             return result;
+        }
+
+        private bool RequestEpisodesWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
+        {
+            // Show Exists
+            // Look up all episodes
+            var episodes = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri).ToList();
+            var internalEpisodeIds = new List<int>();
+            var tasks = new List<Task>();
+            foreach (var r in model.Episodes)
+            {
+                var episode =
+                    episodes.FirstOrDefault(
+                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
+                if (episode == null)
+                {
+                    continue;
+                }
+                var episodeInfo = SonarrApi.GetEpisode(episode.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                episodeInfo.monitored = true; // Set the episode to monitored
+                tasks.Add(Task.Run(() => SonarrApi.UpdateEpisode(episodeInfo, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri)));
+                internalEpisodeIds.Add(episode.id);
+            }
+            Task.WaitAll(tasks.ToArray());
+
+            SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+
+            return true;
+        }
+        private async Task<Series> GetSonarrSeries(SonarrSettings sonarrSettings, int showId)
+        {
+            var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
+            var selectedSeries = task.FirstOrDefault(series => series.tvdbId == showId);
+
+            return selectedSeries;
         }
     }
 }

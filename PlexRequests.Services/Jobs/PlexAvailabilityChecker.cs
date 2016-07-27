@@ -205,7 +205,7 @@ namespace PlexRequests.Services.Jobs
 
                 foreach (var lib in tvLibs)
                 {
-                    shows.AddRange(lib.Directory.Select(x => new PlexTvShow() // shows are in the directory list
+                    shows.AddRange(lib.Directory.Select(x => new PlexTvShow // shows are in the directory list
                     {
                         Title = x.Title,
                         ReleaseYear = x.Year,

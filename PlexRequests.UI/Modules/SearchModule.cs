@@ -117,7 +117,7 @@ namespace PlexRequests.UI.Modules
 
             Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
             Post["request/tv", true] = async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
-            Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0,"episode");
+            Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
             Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
 
             Post["/notifyuser", true] = async (x, ct) => await NotifyUser((bool)Request.Form.notify);
@@ -219,7 +219,7 @@ namespace PlexRequests.UI.Modules
                     apiMovies = new List<MovieResult>();
                     break;
             }
-            
+
             var allResults = await RequestService.GetAllAsync();
             allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
@@ -530,7 +530,6 @@ namespace PlexRequests.UI.Modules
             var json = req.FirstOrDefault()?.ToString();
             var episodeModel = JsonConvert.DeserializeObject<EpisodeRequestModel>(json); // Convert it into the object
 
-            var episodeResult = false;
             var episodeRequest = false;
 
             var settings = await PrService.GetSettingsAsync();
@@ -540,21 +539,16 @@ namespace PlexRequests.UI.Modules
             }
             Analytics.TrackEventAsync(Category.Search, Action.Request, "TvShow", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
+            var sonarrSettings = SonarrService.GetSettingsAsync();
+
             // This means we are requesting an episode rather than a whole series or season
             if (episodeModel != null)
             {
                 episodeRequest = true;
-                var sonarrSettings = await SonarrService.GetSettingsAsync();
-                if (!sonarrSettings.Enabled)
+                var s = await sonarrSettings;
+                if (!s.Enabled)
                 {
                     return Response.AsJson("This is currently only supported with Sonarr");
-                }
-
-                var series = await GetSonarrSeries(sonarrSettings, episodeModel.ShowId);
-                if (series != null)
-                {
-                    // The series already exists in Sonarr
-                    episodeResult = RequestEpisodesWithExistingSeries(episodeModel, series, sonarrSettings);
                 }
             }
 
@@ -562,24 +556,29 @@ namespace PlexRequests.UI.Modules
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
-            //#if !DEBUG
 
             if (showInfo.externals?.thetvdb == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this item. Please report this to TVMaze. We cannot add the series sorry." });
             }
 
-            // check if the show has already been requested
+            // check if the show/episodes have already been requested
             var existingRequest = await RequestService.CheckRequestAsync(showId);
             if (existingRequest != null)
             {
-                // check if the current user is already marked as a requester for this show, if not, add them
-                if (!existingRequest.UserHasRequested(Username))
+                if (episodeRequest)
                 {
-                    existingRequest.RequestedUsers.Add(Username);
-                    await RequestService.UpdateRequestAsync(existingRequest);
+                    var difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
+                    if (!difference.Any())
+                    {
+                        return await AddUserToRequest(existingRequest, settings, fullShowName);
+                    }
+                    // We have an episode that has not yet been requested, let's continue
                 }
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = settings.UsersCanViewOnlyOwnRequests ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}" : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}" });
+                else
+                {
+                    return await AddUserToRequest(existingRequest, settings, fullShowName);
+                }
             }
 
             try
@@ -601,7 +600,6 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName) });
             }
-            //#endif
 
 
             var model = new RequestedModel
@@ -622,8 +620,8 @@ namespace PlexRequests.UI.Modules
                 TvDbId = showId.ToString()
             };
 
+
             var seasonsList = new List<int>();
-            //TODO something here for the episodes
             switch (seasons)
             {
                 case "first":
@@ -638,7 +636,12 @@ namespace PlexRequests.UI.Modules
                     model.SeasonsRequested = "All";
                     break;
                 case "episode":
-                    
+                    model.Episodes = new Store.EpisodesModel[episodeModel.Episodes.Length];
+                    for (var i = 0; i < episodeModel.Episodes.Length; i++)
+                    {
+                        model.Episodes[i] = new Store.EpisodesModel { EpisodeNumber = episodeModel.Episodes[i].EpisodeNumber, SeasonNumber = episodeModel.Episodes[i].SeasonNumber };
+                    }
+                    break;
                 default:
                     model.SeasonsRequested = seasons;
                     var split = seasons.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
@@ -658,11 +661,11 @@ namespace PlexRequests.UI.Modules
             if (ShouldAutoApprove(RequestType.TvShow, settings))
             {
                 model.Approved = true;
-                var sonarrSettings = await SonarrService.GetSettingsAsync();
+                var s = await sonarrSettings;
                 var sender = new TvSender(SonarrApi, SickrageApi);
-                if (sonarrSettings.Enabled)
+                if (s.Enabled)
                 {
-                    var result = sender.SendToSonarr(sonarrSettings, model);
+                    var result = await sender.SendToSonarr(s, model);
                     if (!string.IsNullOrEmpty(result?.title))
                     {
                         return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
@@ -682,7 +685,7 @@ namespace PlexRequests.UI.Modules
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = result?.message ?? Resources.UI.Search_SickrageError });
                 }
 
-                if (!srSettings.Enabled && !sonarrSettings.Enabled)
+                if (!srSettings.Enabled && !s.Enabled)
                 {
                     return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                 }
@@ -691,6 +694,26 @@ namespace PlexRequests.UI.Modules
 
             }
             return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+        }
+
+        private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings, string fullShowName)
+        {
+            // check if the current user is already marked as a requester for this show, if not, add them
+            if (!existingRequest.UserHasRequested(Username))
+            {
+                existingRequest.RequestedUsers.Add(Username);
+                await RequestService.UpdateRequestAsync(existingRequest);
+            }
+            return
+                Response.AsJson(
+                    new JsonResponseModel
+                    {
+                        Result = true,
+                        Message =
+                            settings.UsersCanViewOnlyOwnRequests
+                                ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
+                                : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}"
+                    });
         }
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
@@ -986,42 +1009,17 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
-        private bool RequestEpisodesWithExistingSeries(EpisodeRequestModel model, Series selectedSeries, SonarrSettings sonarrSettings)
+        private IEnumerable<Store.EpisodesModel> GetListDifferences(IEnumerable<Store.EpisodesModel> model, IEnumerable<Models.EpisodesModel> request)
         {
-            // Show Exists
-            // Look up all episodes
-            var episodes = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri).ToList();
-            var internalEpisodeIds = new List<int>();
-            var tasks = new List<Task>();
-            foreach (var r in model.Episodes)
-            {
-                var episode =
-                    episodes.FirstOrDefault(
-                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
-                if (episode == null)
-                {
-                    continue;
-                }
-                var episodeInfo = SonarrApi.GetEpisode(episode.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                episodeInfo.monitored = true; // Set the episode to monitored
-                tasks.Add(Task.Run(() => SonarrApi.UpdateEpisode(episodeInfo, sonarrSettings.ApiKey,
-                    sonarrSettings.FullUri)));
-                internalEpisodeIds.Add(episode.id);
-            }
-            Task.WaitAll(tasks.ToArray());
+            var newRequest = request
+                .Select(r =>
+                    new Store.EpisodesModel
+                    {
+                        SeasonNumber = r.SeasonNumber,
+                        EpisodeNumber = r.EpisodeNumber
+                    }).ToList();
 
-            SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
-            
-            return true;
+            return newRequest.Except(model);
         }
-
-        private async Task<Series> GetSonarrSeries(SonarrSettings sonarrSettings, int showId)
-        {
-            var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
-            var selectedSeries = task.FirstOrDefault(series => series.tvdbId == showId);
-
-            return selectedSeries;
-        }
-
     }
 }

@@ -458,7 +458,7 @@ namespace PlexRequests.UI.Modules
 
                     else if (sonarr.Enabled)
                     {
-                        var res = sender.SendToSonarr(sonarr, r);
+                        var res = await sender.SendToSonarr(sonarr, r);
                         if (!string.IsNullOrEmpty(res?.title))
                         {
                             r.Approved = true;
