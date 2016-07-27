@@ -31,6 +31,10 @@ namespace PlexRequests.UI.Models
 {
     public class SearchTvShowViewModel : SearchViewModel
     {
+        public SearchTvShowViewModel()
+        {
+            Episodes = new List<Store.EpisodesModel>();
+        }
         public int Id { get; set; }
         public string SeriesName { get; set; }
         public List<string> Aliases { get; set; }
@@ -49,7 +53,7 @@ namespace PlexRequests.UI.Models
         public string Rating { get; set; }
         public string ImdbId { get; set; }
         public int SiteRating { get; set; }
-        public Store.EpisodesModel[] Episodes { get; set; }
+        public List<Store.EpisodesModel> Episodes { get; set; }
         public bool TvFullyAvailable { get; set; }
     }
 }

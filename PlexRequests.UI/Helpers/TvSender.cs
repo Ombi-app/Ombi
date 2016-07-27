@@ -89,7 +89,7 @@ namespace PlexRequests.UI.Helpers
                     // Series doesn't exist, need to add it as unmonitored.
                     var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                             sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
-                            sonarrSettings.FullUri));
+                            sonarrSettings.FullUri, false));
 
                     if (string.IsNullOrEmpty(addResult?.title))
                     {

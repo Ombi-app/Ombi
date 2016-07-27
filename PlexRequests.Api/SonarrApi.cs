@@ -64,7 +64,7 @@ namespace PlexRequests.Api
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl)
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true)
         {
             Log.Debug("Adding series {0}", title);
             Log.Debug("Seasons = {0}, out of {1} seasons", seasons.DumpJson(), seasonCount);
@@ -82,7 +82,7 @@ namespace PlexRequests.Api
                 tvdbId = tvdbId,
                 titleSlug = title,
                 seasons = new List<Season>(),
-                rootFolderPath = rootPath
+                rootFolderPath = rootPath,
             };
 
             for (var i = 1; i <= seasonCount; i++)
@@ -95,12 +95,17 @@ namespace PlexRequests.Api
                 options.seasons.Add(season);
             }
 
+            if (!monitor)
+            {
+                options.monitored = false;
+            }
+
             Log.Debug("Sonarr API Options:");
             Log.Debug(options.DumpJson());
 
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
-
+            
             SonarrAddSeries result;
             try
             {

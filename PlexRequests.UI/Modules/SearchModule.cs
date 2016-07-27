@@ -355,7 +355,7 @@ namespace PlexRequests.UI.Modules
                         var dbt = dbTv[tvdbid];
 
                         viewT.Requested = true;
-                        viewT.Episodes = dbt.Episodes;
+                        viewT.Episodes = dbt.Episodes.ToList();
                         viewT.Approved = dbt.Approved;
                         viewT.Available = dbt.Available;
                     }
