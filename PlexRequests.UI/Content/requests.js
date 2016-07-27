@@ -637,7 +637,8 @@ function buildRequestContext(result, type) {
         qualities: result.qualities,
         hasQualities: result.qualities && result.qualities.length > 0,
         artist: result.artistName,
-        musicBrainzId : result.musicBrainzId
+        musicBrainzId: result.musicBrainzId,
+        episodes : result.episodes
     };
 
     return context;

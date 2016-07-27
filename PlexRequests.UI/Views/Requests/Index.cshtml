@@ -173,6 +173,9 @@
                     {{/if_eq}}
                 </div>
                 {{#if_eq type "tv"}}
+                {{#each episodes}}
+                    {{this.seasonNumber}} - {{this.episodeNumber}} @*// TODO Show the episodes requested*@
+                {{/each}}
                 <div>@UI.Requests_SeasonsRequested: {{seriesRequested}}</div>
                 {{/if_eq}}
                 {{#if requestedUsers}}

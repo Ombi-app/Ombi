@@ -183,13 +183,13 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> GetTvShows()
         {
-            var settings = PrSettings.GetSettings();
+            var settingsTask = PrSettings.GetSettingsAsync();
 
             var requests = await Service.GetAllAsync();
             requests = requests.Where(x => x.Type == RequestType.TvShow);
 
             var dbTv = requests;
-
+            var settings = await settingsTask;
             if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
             {
                 dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
@@ -200,21 +200,21 @@ namespace PlexRequests.UI.Modules
             {
                 try
                 {
-                    var sonarrSettings = SonarrSettings.GetSettings();
+                    var sonarrSettings = await SonarrSettings.GetSettingsAsync();
                     if (sonarrSettings.Enabled)
                     {
                         var result = Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
                         {
                             return await Task.Run(() => SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri));
                         });
-                        qualities = result.Result.Select(x => new QualityModel() { Id = x.id.ToString(), Name = x.name }).ToList();
+                        qualities = result.Result.Select(x => new QualityModel { Id = x.id.ToString(), Name = x.name }).ToList();
                     }
                     else
                     {
-                        var sickRageSettings = SickRageSettings.GetSettings();
+                        var sickRageSettings = await SickRageSettings.GetSettingsAsync();
                         if (sickRageSettings.Enabled)
                         {
-                            qualities = sickRageSettings.Qualities.Select(x => new QualityModel() { Id = x.Key, Name = x.Value }).ToList();
+                            qualities = sickRageSettings.Qualities.Select(x => new QualityModel { Id = x.Key, Name = x.Value }).ToList();
                         }
                     }
                 }
@@ -225,32 +225,30 @@ namespace PlexRequests.UI.Modules
 
             }
 
-            var viewModel = dbTv.Select(tv =>
+            var viewModel = dbTv.Select(tv => new RequestViewModel
             {
-                return new RequestViewModel
-                {
-                    ProviderId = tv.ProviderId,
-                    Type = tv.Type,
-                    Status = tv.Status,
-                    ImdbId = tv.ImdbId,
-                    Id = tv.Id,
-                    PosterPath = tv.PosterPath,
-                    ReleaseDate = tv.ReleaseDate,
-                    ReleaseDateTicks = tv.ReleaseDate.Ticks,
-                    RequestedDate = tv.RequestedDate,
-                    RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
-                    Released = DateTime.Now > tv.ReleaseDate,
-                    Approved = tv.Available || tv.Approved,
-                    Title = tv.Title,
-                    Overview = tv.Overview,
-                    RequestedUsers = IsAdmin ? tv.AllUsers.ToArray() : new string[] { },
-                    ReleaseYear = tv.ReleaseDate.Year.ToString(),
-                    Available = tv.Available,
-                    Admin = IsAdmin,
-                    IssueId = tv.IssueId,
-                    TvSeriesRequestType = tv.SeasonsRequested,
-                    Qualities = qualities.ToArray()
-                };
+                ProviderId = tv.ProviderId,
+                Type = tv.Type,
+                Status = tv.Status,
+                ImdbId = tv.ImdbId,
+                Id = tv.Id,
+                PosterPath = tv.PosterPath,
+                ReleaseDate = tv.ReleaseDate,
+                ReleaseDateTicks = tv.ReleaseDate.Ticks,
+                RequestedDate = tv.RequestedDate,
+                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(tv.RequestedDate, DateTimeOffset).Ticks,
+                Released = DateTime.Now > tv.ReleaseDate,
+                Approved = tv.Available || tv.Approved,
+                Title = tv.Title,
+                Overview = tv.Overview,
+                RequestedUsers = IsAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                ReleaseYear = tv.ReleaseDate.Year.ToString(),
+                Available = tv.Available,
+                Admin = IsAdmin,
+                IssueId = tv.IssueId,
+                TvSeriesRequestType = tv.SeasonsRequested,
+                Qualities = qualities.ToArray(),
+                Episodes = tv.Episodes,
             }).ToList();
 
             return Response.AsJson(viewModel);
