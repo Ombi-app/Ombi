@@ -300,5 +300,26 @@ namespace PlexRequests.Api
                 return null;
             }
         }
+
+        public Series UpdateSeries(Series series, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/Series", Method = Method.PUT };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            request.AddJsonBody(series);
+
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                    Log.Error(exception, "Exception when calling UpdateSeries for Sonarr, Retrying {0}", timespan));
+
+                return policy.Execute(() => Api.ExecuteJson<Series>(request, baseUrl));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been an API exception when put the Sonarr UpdateSeries");
+                return null;
+            }
+        }
     }
 }

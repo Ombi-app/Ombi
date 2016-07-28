@@ -108,6 +108,9 @@ namespace PlexRequests.UI.Helpers
                             }
                         }
                         sw.Stop();
+
+                        // Update the series, Since we cannot add as unmonitoed due to the following bug: https://github.com/Sonarr/Sonarr/issues/1404
+                        SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                     }
 
                     // We now have the series in Sonarr
