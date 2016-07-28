@@ -56,21 +56,20 @@ namespace PlexRequests.UI.Jobs
         {
             var jobs = new List<IJobDetail>();
 
-            var plex = JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build();
-            var sickrage = JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build();
-            var sonarr = JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build();
-            var cp = JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build();
-            var store = JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build();
-            var storeClean = JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build();
-            var userRequestLimitReset = JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build();
+            var jobList = new List<IJobDetail>
+            {
+               JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
+               JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Cache").Build(),
+               JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
+               JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
+               JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
+               JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
+               JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
+               JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build()
+            };
 
-            jobs.Add(plex);
-            jobs.Add(sickrage);
-            jobs.Add(sonarr);
-            jobs.Add(cp);
-            jobs.Add(store);
-            jobs.Add(storeClean);
-            jobs.Add(userRequestLimitReset);
+
+            jobs.AddRange(jobList);
 
             return jobs;
         }
@@ -145,19 +144,26 @@ namespace PlexRequests.UI.Jobs
                               .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreBackup).RepeatForever())
                               .Build();
 
-        var storeCleanup =
-            TriggerBuilder.Create()
-                          .WithIdentity("StoreCleanup", "Database")
-                          .StartNow()
-                          .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreCleanup).RepeatForever())
-                          .Build();
+            var storeCleanup =
+                TriggerBuilder.Create()
+                              .WithIdentity("StoreCleanup", "Database")
+                              .StartNow()
+                              .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreCleanup).RepeatForever())
+                              .Build();
 
             var userRequestLimiter =
-    TriggerBuilder.Create()
-                  .WithIdentity("UserRequestLimiter", "Request")
-                  .StartAt(DateTimeOffset.Now.AddMinutes(5)) // Everything has started on application start, lets wait 5 minutes
-                  .WithSimpleSchedule(x => x.WithIntervalInHours(s.UserRequestLimitResetter).RepeatForever())
-                  .Build();
+                TriggerBuilder.Create()
+                                .WithIdentity("UserRequestLimiter", "Request")
+                                .StartAt(DateTimeOffset.Now.AddMinutes(5)) // Everything has started on application start, lets wait 5 minutes
+                                .WithSimpleSchedule(x => x.WithIntervalInHours(s.UserRequestLimitResetter).RepeatForever())
+                                .Build();
+
+            var plexEpCacher =
+                TriggerBuilder.Create()
+                                .WithIdentity("PlexEpisodeCacher", "Cache")
+                                .StartAt(DateTimeOffset.Now.AddMinutes(2)) // Everything has started on application start, lets wait 5 minutes
+                                .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexEpisodeCacher).RepeatForever())
+                                .Build();
 
 
             triggers.Add(plexAvailabilityChecker);
@@ -167,6 +173,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(storeBackup);
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);
+            triggers.Add(plexEpCacher);
 
             return triggers;
         }

@@ -36,9 +36,23 @@ namespace PlexRequests.Helpers.Tests
     public class PlexHelperTests
     {
         [TestCaseSource(nameof(PlexGuids))]
-        public string CreateUriWithSubDir(string guid)
+        public string GetProviderId(string guid)
         {
             return PlexHelper.GetProviderIdFromPlexGuid(guid);
+        }
+
+        [TestCaseSource(nameof(PlexTvEpisodeGuids))]
+        public List<string> GetEpisodeAndSeasons(string guid)
+        {
+            var ep = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(guid);
+            var list = new List<string>
+            {
+                ep.ProviderId,
+                ep.SeasonNumber.ToString(),
+                ep.EpisodeNumber.ToString(),
+            };
+
+            return list;
         }
 
 
@@ -56,6 +70,17 @@ namespace PlexRequests.Helpers.Tests
             }
         }
 
-     
+        private static IEnumerable<TestCaseData> PlexTvEpisodeGuids
+        {
+            get
+            {
+                yield return new TestCaseData("com.plexapp.agents.thetvdb://269586/2/8?lang=en").Returns(new List<string> { "269586","2","8" })
+                    .SetName("Valid");
+                yield return new TestCaseData("com.plexapp.agents.thetvdb://abc/112/388?lang=en").Returns(new List<string> { "abc", "112","388" })
+                    .SetName("Valid Long");
+            }
+        }
+
+
     }
 }

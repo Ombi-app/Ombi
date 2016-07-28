@@ -34,6 +34,7 @@ namespace PlexRequests.Core
         }
 
         public const string PlexLibaries = nameof(PlexLibaries);
+        public const string PlexEpisodes = nameof(PlexEpisodes);
 
         public const string TvDbToken = nameof(TvDbToken);
 

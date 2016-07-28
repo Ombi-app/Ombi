@@ -572,12 +572,14 @@ namespace PlexRequests.UI.Modules
             }
 
             // check if the show/episodes have already been requested
+
             var existingRequest = await RequestService.CheckRequestAsync(showId);
+            var difference = new List<Store.EpisodesModel>();
             if (existingRequest != null)
             {
                 if (episodeRequest)
                 {
-                    var difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
+                    difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
                     if (!difference.Any())
                     {
                         return await AddUserToRequest(existingRequest, settings, fullShowName);
@@ -601,7 +603,13 @@ namespace PlexRequests.UI.Modules
                 }
                 if (episodeRequest)
                 {
-                    // TODO: If it's an episode request, check if the episode exists
+                    foreach (var d in difference)
+                    {
+                        if (Checker.IsEpisodeAvailable(providerId, d.SeasonNumber, d.EpisodeNumber))
+                        {
+                            return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
+                        }
+                    }
                 }
                 else
                 {
@@ -949,14 +957,16 @@ namespace PlexRequests.UI.Modules
             {
                 var requested = dbDbShow?.Episodes
                     .Any(episodesModel =>
-                    ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber);
+                    ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
+
+                var alreadyInPlex = Checker.IsEpisodeAvailable(seriesId.ToString(), ep.season, ep.number);
 
                 model.Add(new EpisodeListViewModel
                 {
                     Id = show.id,
                     SeasonNumber = ep.season,
                     EpisodeNumber = ep.number,
-                    Requested = requested ?? false,
+                    Requested = requested || alreadyInPlex,
                     Name = ep.name,
                     EpisodeId = ep.id
                 });

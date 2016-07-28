@@ -73,6 +73,7 @@
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
+    <Compile Include="Jobs\PlexEpisodeCacher.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
     <Compile Include="Jobs\StoreCleanup.cs" />
     <Compile Include="Jobs\CouchPotatoCacher.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Jobs\SonarrCacher.cs" />
     <Compile Include="Jobs\UserRequestLimitResetter.cs" />
     <Compile Include="Models\PlexAlbum.cs" />
+    <Compile Include="Models\PlexEpisodeModel.cs" />
     <Compile Include="Models\PlexMovie.cs" />
     <Compile Include="Models\PlexTvShow.cs" />
     <Compile Include="Interfaces\ISickRageCacher.cs" />

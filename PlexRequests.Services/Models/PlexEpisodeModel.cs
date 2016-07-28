@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: IAvailabilityChecker.cs
+//    File: PlexEpisodeModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,20 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Services.Models;
-using System.Collections.Generic;
+using PlexRequests.Helpers;
 
-namespace PlexRequests.Services.Interfaces
+namespace PlexRequests.Services.Models
 {
-    public interface IAvailabilityChecker
+    public class PlexEpisodeModel
     {
-        void CheckAndUpdateAll();
-        List<PlexMovie> GetPlexMovies();
-        bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null);
-        List<PlexTvShow> GetPlexTvShows();
-        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null);
-        List<PlexAlbum> GetPlexAlbums();
-        bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
-        bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
+        public EpisodeModelHelper Episodes => PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(Guid);
+        public string Guid { get; set; }
+        public string RatingKey { get; set; }
+        public string EpisodeTitle { get; set; }
+        public string ShowTitle { get; set; }
+
     }
 }

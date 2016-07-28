@@ -43,5 +43,29 @@ namespace PlexRequests.Helpers
             }
             return string.Empty;
         }
+
+        public static EpisodeModelHelper GetSeasonsAndEpisodesFromPlexGuid(string guid)
+        {
+            var ep = new EpisodeModelHelper();
+            //guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+            if (string.IsNullOrEmpty(guid))
+                return null;
+
+            var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
+            if (guidSplit.Length > 2)
+            {
+                ep.ProviderId = guidSplit[1];
+                ep.SeasonNumber = int.Parse(guidSplit[2]);
+                ep.EpisodeNumber = int.Parse(guidSplit[3]);
+            }
+            return ep;
+        }
+    }
+
+    public class EpisodeModelHelper
+    {
+        public string ProviderId { get; set; }
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
     }
 }

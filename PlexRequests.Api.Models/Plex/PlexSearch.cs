@@ -326,6 +326,8 @@ namespace PlexRequests.Api.Models.Plex
         public List<Provider> Provider { get; set; }
         [XmlAttribute(AttributeName = "size")]
         public string Size { get; set; }
+        [XmlAttribute(AttributeName = "totalSize")]
+        public string TotalSize { get; set; }
         [XmlAttribute(AttributeName = "identifier")]
         public string Identifier { get; set; }
         [XmlAttribute(AttributeName = "mediaTagPrefix")]

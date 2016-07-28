@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NLog;
 
@@ -238,6 +239,19 @@ namespace PlexRequests.Services.Jobs
             return false;
         }
 
+        public bool IsEpisodeAvailable(string theTvDbId, int season, int episode)
+        {
+            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            foreach (var result in episodes)
+            {
+                if (result.Episodes.ProviderId.Equals(theTvDbId) && result.Episodes.EpisodeNumber == episode && result.Episodes.SeasonNumber == season)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public List<PlexAlbum> GetPlexAlbums()
         {
             var albums = new List<PlexAlbum>();
@@ -246,7 +260,7 @@ namespace PlexRequests.Services.Jobs
             {
                 var albumLibs = libs.Where(x =>
                         x.Directory.Any(y =>
-                            y.Type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)
+                            y.Type.Equals(PlexMediaType.Artist.ToString(), StringComparison.CurrentCultureIgnoreCase)
                         )
                     ).ToArray();
 

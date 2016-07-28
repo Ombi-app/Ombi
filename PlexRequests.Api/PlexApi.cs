@@ -168,7 +168,7 @@ namespace PlexRequests.Api
 
             try
             {
-				var lib = RetryHandler.Execute<PlexLibraries>(() => Api.ExecuteXml<PlexLibraries> (request, plexFullHost),
+				var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexLibraries> (request, plexFullHost),
 					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrarySections for Plex, Retrying {0}", timespan), new TimeSpan[] { 
 					    TimeSpan.FromSeconds (5),
 					    TimeSpan.FromSeconds(10),
@@ -197,7 +197,7 @@ namespace PlexRequests.Api
 
             try
             {
-				var lib = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+				var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
 					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrary for Plex, Retrying {0}", timespan), new TimeSpan[] { 
 					    TimeSpan.FromSeconds (5),
 					    TimeSpan.FromSeconds(10),
@@ -209,6 +209,65 @@ namespace PlexRequests.Api
 			catch (Exception e)
             {
                 Log.Error(e,"There has been a API Exception when attempting to get the Plex Library");
+                return new PlexSearch();
+            }
+        }
+
+        public PlexEpisodeMetadata GetEpisodeMetaData(string authToken, Uri host, string ratingKey)
+        {
+
+            //192.168.1.69:32400/library/metadata/3662/allLeaves
+            // The metadata ratingkey should be in the Cache
+            // Search for it and then call the above with the Directory.RatingKey
+            // THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")
+            // We then have the GUID which contains the TVDB ID plus the season and episode number: guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "/library/metadata/{ratingKey}/allLeaves"
+            };
+
+            request.AddUrlSegment("ratingKey", ratingKey);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexEpisodeMetadata>(request, host),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetEpisodeMetaData for Plex, Retrying {0}", timespan));
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get GetEpisodeMetaData");
+                return new PlexEpisodeMetadata();
+            }
+        }
+
+        public PlexSearch GetAllEpisodes(string authToken, Uri host, string section, int startPage, int returnCount)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "/library/sections/{section}/all"
+            };
+
+            request.AddQueryParameter("type", 4.ToString());
+            request.AddQueryParameter("X-Plex-Container-Start", startPage.ToString());
+            request.AddQueryParameter("X-Plex-Container-Size", returnCount.ToString());
+            request.AddUrlSegment("section", section);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch>(request, host),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetAllEpisodes for Plex, Retrying {0}", timespan));
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get GetAllEpisodes");
                 return new PlexSearch();
             }
         }
