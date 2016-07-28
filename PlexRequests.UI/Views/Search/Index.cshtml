@@ -366,9 +366,9 @@
     <div class="form-group col-md-6">
         <div class="checkbox" style="margin-bottom:0px; margin-top:0px;">
             {{#if_eq requested true}}
-                <input type="checkbox" checked="checked" disabled="disabled" class="selectedEpisodes" id="{{id}}" epNumber="{{number}}" epSeason="{{season}}" name="{{id}}"><label for="{{id}}">{{number}}. {{name}}</label>
+                <input type="checkbox" checked="checked" disabled="disabled" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
             {{else}}
-                <input type="checkbox" class="selectedEpisodes" id="{{id}}" epNumber="{{number}}" epSeason="{{season}}" name="{{id}}"><label for="{{id}}">{{number}}. {{name}}</label>
+                <input type="checkbox" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
             {{/if_eq}}
         </div>
     </div>

@@ -898,7 +898,7 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Select .
+        ///   Looks up a localized string similar to Select Season.
         /// </summary>
         public static string Search_SelectSeason {
             get {

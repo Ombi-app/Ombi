@@ -603,7 +603,7 @@ $(function () {
 
             var url = createBaseUrl(mainBaseUrl, "search/request/tvEpisodes");
             var type = $form.prop('method');
-
+            $('#episodesModal').modal('toggle');
             sendRequestAjax(JSON.stringify(finalObj), type, url, tvId);
         });
 
@@ -627,7 +627,8 @@ $(function () {
                 name: result.name,
                 season: result.seasonNumber,
                 number: result.episodeNumber,
-                requested: result.requested
+                requested: result.requested,
+                episodeId: result.episodeId
             }
         }
     });

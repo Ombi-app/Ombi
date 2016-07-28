@@ -33,5 +33,6 @@ namespace PlexRequests.UI.Models
         public bool Requested { get; set; }
         public string Name { get; set; }
         public int Id { get; set; }
+        public int EpisodeId { get; set; } // Not used other than in the view to keep everything unique
     }
 }

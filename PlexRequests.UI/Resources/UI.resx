@@ -231,7 +231,7 @@
     <value>Latest Season</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>Select </value>
+    <value>Select Season</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
     <value>Report Issue</value>

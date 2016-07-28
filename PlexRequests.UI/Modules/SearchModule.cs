@@ -557,7 +557,7 @@ namespace PlexRequests.UI.Modules
                 var s = await sonarrSettings;
                 if (!s.Enabled)
                 {
-                    return Response.AsJson(new JsonResponseModel { Message = "This is currently only supported with Sonarr", Result = false });
+                    return Response.AsJson(new JsonResponseModel { Message = "This is currently only supported with Sonarr, Please enable Sonarr for this feature", Result = false });
                 }
             }
 
@@ -941,8 +941,8 @@ namespace PlexRequests.UI.Modules
             var enumerable = allResults as RequestedModel[] ?? allResults.ToArray();
 
             var dbDbShow = enumerable.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
-            var show = TvApi.ShowLookupByTheTvDbId(seriesId);
-            var seasons = TvApi.EpisodeLookup(show.id);
+            var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(seriesId));
+            var seasons = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
 
             foreach (var ep in seasons)
@@ -957,7 +957,8 @@ namespace PlexRequests.UI.Modules
                     SeasonNumber = ep.season,
                     EpisodeNumber = ep.number,
                     Requested = requested ?? false,
-                    Name = ep.name
+                    Name = ep.name,
+                    EpisodeId = ep.id
                 });
             }
 
