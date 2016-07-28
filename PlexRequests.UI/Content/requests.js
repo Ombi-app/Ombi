@@ -236,7 +236,7 @@ $('#deleteMusic').click(function (e) {
     }
 
     loadingButton(buttonId, "warning");
-    var url = createBaseUrl(base, '/approval/deletealltvshows');
+    var url = createBaseUrl(base, '/approval/deleteallalbums');
     $.ajax({
         type: 'post',
         url: url,
