@@ -242,6 +242,10 @@ namespace PlexRequests.Services.Jobs
         public bool IsEpisodeAvailable(string theTvDbId, int season, int episode)
         {
             var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            if (episodes == null)
+            {
+                return false;
+            }
             foreach (var result in episodes)
             {
                 if (result.Episodes.ProviderId.Equals(theTvDbId) && result.Episodes.EpisodeNumber == episode && result.Episodes.SeasonNumber == season)

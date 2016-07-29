@@ -14,24 +14,41 @@ I wanted to write a similar application in .Net!
 
 # Features
 
-* Movie and TV Show searching, can't find something on Plex? Just request it! 
-* Notifications! Get notified via Email, Pushbullet and Pushover for new requests and issue reports!
-* Send your TV Shows to either [Sonarr](https://sonarr.tv/) or [SickRage](http://www.sickrage.ca/)!
+Here some of the features Plex Requests.Net has:
+* All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
+* Easily manage your requests
+* Allow your users to report issues and manage them seperatly
+* A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
+* Allow your users to get notifications!
 * Secure authentication so you don't have to worry about those script kiddies
 * We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
 * We have allowed the ability for a user to add a custom note on a request
 * It automatically update the status of requests when they are available on Plex
 * Slick, responsive and mobile friendly UI
-* Headphones integration!
-* Ability to run with a reverse proxy!
+
+### Integration 
+We integrate with the following applications:
+* Plex (Obviously!)
+* Sonarr
+* SickRage
+* CouchPotato
+* Headphones
+
+### Notifications
+Supported notifications:
+* SMTP Notifications (Email)
+* Pushbullet
+* Pushover
+* Slack
+
 
 # Preview
 
 ![Preview](http://i.imgur.com/yrz2pzl.gif)
 
-#Installation
+# Installation
 
-[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)
+[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)  
 [Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
@@ -50,9 +67,7 @@ Please feed free to submit a pull request!
 # Donation
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
-## A massive thanks to everyone below for all their help!
-
-[heartisall](https://github.com/heartisall), [Stuke00](https://github.com/Stuke00), [shiitake](https://github.com/shiitake), [Drewster727](https://github.com/Drewster727), Majawat, [EddiYo](https://github.com/EddiYo), [SaskiFX](https://github.com/SaskiFX), [zenjabba](https://github.com/zenjabba)
+### A massive thanks to everyone for all their help!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
