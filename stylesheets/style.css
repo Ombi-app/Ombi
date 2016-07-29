@@ -1,4 +1,4 @@
-@charset "utf-8";
+﻿@charset "utf-8";
 /*
  Knight Bootstrap theme by BootstrapTaste.com
  Theme URI: http://bootstraptaste.com/knight-free-bootstrap-theme/
@@ -99,7 +99,7 @@ p{
 .header{
 	text-align:center;
 	background:url(../img/pw_maze_black_2X.png) left top repeat;
-	padding:280px 0;
+	padding:150px 0;
 }
 .logo{
 	width:130px;
