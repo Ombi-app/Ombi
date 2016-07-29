@@ -41,7 +41,7 @@ namespace PlexRequests.Helpers
         /// <returns></returns>
         public static string GetAnalyticClientId(IDictionary<string, string> cookies)
         {
-            var outString = string.Empty;
+            string outString;
 
             if (cookies.TryGetValue(GaCookie, out outString))
             {

@@ -27,6 +27,7 @@
 using System.Collections.Generic;
 
 using PlexRequests.Core.Models;
+using PlexRequests.Core.Notification;
 
 namespace PlexRequests.Core.SettingModels
 {
@@ -40,21 +41,15 @@ namespace PlexRequests.Core.SettingModels
                 new NotificationMessage { NotificationType = NotificationType.Issue },
                 new NotificationMessage { NotificationType = NotificationType.AdminNote },
                 new NotificationMessage { NotificationType = NotificationType.RequestApproved },
-                new NotificationMessage { NotificationType = NotificationType.RequestAvailable },
+                new NotificationMessage { NotificationType = NotificationType.RequestAvailable }
             };
         }
+
         public List<NotificationMessage> Message { get; set; }
     }
 
     public static class NotificationCurly
     {
-        public static readonly List<string> Curlys = new List<string>
-        {
-            "Username",
-            "Title",
-            "Date",
-            "Issue",
-            "Type"
-        };
+        public static readonly List<string> Curlys = new List<string> { "Username", "Title", "Date", "Issue", "Type" };
     }
 }

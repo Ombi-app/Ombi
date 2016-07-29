@@ -67,7 +67,7 @@ namespace PlexRequests.Store
             using (var db = Config.DbConnection())
             {
                 db.Open();
-                var result = await db.GetAllAsync<T>();
+                var result = await db.GetAllAsync<T>().ConfigureAwait(false);
                 var selected = result.FirstOrDefault(x => x.UserGuid == id);
                 return selected;
             }

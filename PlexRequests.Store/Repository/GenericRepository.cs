@@ -28,11 +28,9 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
-using NLog;
+
 using PlexRequests.Helpers;
 
 namespace PlexRequests.Store.Repository
@@ -81,7 +79,7 @@ namespace PlexRequests.Store.Repository
                     using (var db = Config.DbConnection())
                     {
                         db.Open();
-                        return await db.GetAsync<T>(id);
+                        return await db.GetAsync<T>(id).ConfigureAwait(false);
                     }
                 });
             return item;

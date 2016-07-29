@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationMessageCurlys.cs
+//    File: NotificationMessageContent.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,34 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
-
-namespace PlexRequests.Core
+namespace PlexRequests.Core.Notification
 {
-    public class NotificationMessageCurlys
+    public class NotificationMessageContent
     {
-        public NotificationMessageCurlys(string username, string title, string dateTime, string type, string issue)
-        {
-            Username = username;
-            Title = title;
-            Date = dateTime;
-            Type = type;
-            Issue = issue;
-        }
-        private string Username { get; }
-        private string Title { get;  }
-        private string Date { get;  }
-        private string Type { get; }
-        private string Issue { get;  }
-
-        public Dictionary<string, string> Curlys => new Dictionary<string, string>
-        {
-            {nameof(Username), Username },
-            {nameof(Title), Title },
-            {nameof(Date), Date },
-            {nameof(Type), Type },
-            {nameof(Issue), Issue }
-        };
+        public string Subject { get; set; }
+        public string Body { get; set; }
     }
 }

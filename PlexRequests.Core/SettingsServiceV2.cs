@@ -65,7 +65,7 @@ namespace PlexRequests.Core
 
         public async Task<T> GetSettingsAsync()
         {
-            var result = await Repo.GetAsync(EntityName);
+            var result = await Repo.GetAsync(EntityName).ConfigureAwait(false);
             if (result == null)
             {
                 return new T();
@@ -110,7 +110,7 @@ namespace PlexRequests.Core
 
                 var settings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(newEntity, SerializerSettings.Settings) };
                 settings.Content = EncryptSettings(settings);
-                var insertResult = await Repo.InsertAsync(settings);
+                var insertResult = await Repo.InsertAsync(settings).ConfigureAwait(false);
 
                 return insertResult != int.MinValue;
             }
@@ -120,7 +120,7 @@ namespace PlexRequests.Core
 
             var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
             globalSettings.Content = EncryptSettings(globalSettings);
-            var result = await Repo.UpdateAsync(globalSettings);
+            var result = await Repo.UpdateAsync(globalSettings).ConfigureAwait(false);
 
             return result;
         }

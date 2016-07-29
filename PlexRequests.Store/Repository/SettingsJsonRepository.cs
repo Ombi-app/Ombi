@@ -36,9 +36,9 @@ namespace PlexRequests.Store.Repository
 {
     public class SettingsJsonRepository : ISettingsRepository
     {
-        private ICacheProvider Cache { get; set; }
+        private ICacheProvider Cache { get; }
 
-        private string TypeName { get; set; }
+        private string TypeName { get; }
         public SettingsJsonRepository(ISqliteConfiguration config, ICacheProvider cacheProvider)
         {
             Db = config;
@@ -46,7 +46,7 @@ namespace PlexRequests.Store.Repository
             TypeName = typeof(SettingsJsonRepository).Name;
         }
 
-        private ISqliteConfiguration Db { get; set; }
+        private ISqliteConfiguration Db { get; }
 
         public long Insert(GlobalSettings entity)
         {
@@ -62,7 +62,7 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return await con.InsertAsync(entity);
+                return await con.InsertAsync(entity).ConfigureAwait(false);
             }
         }
 
@@ -87,7 +87,7 @@ namespace PlexRequests.Store.Repository
             {
                 using (var con = Db.DbConnection())
                 {
-                    var page = await con.GetAllAsync<GlobalSettings>();
+                    var page = await con.GetAllAsync<GlobalSettings>().ConfigureAwait(false);
                     return page;
                 }
             }, 5);
@@ -115,7 +115,7 @@ namespace PlexRequests.Store.Repository
             {
                 using (var con = Db.DbConnection())
                 {
-                    var page = await con.GetAllAsync<GlobalSettings>();
+                    var page = await con.GetAllAsync<GlobalSettings>().ConfigureAwait(false);
                     return page.SingleOrDefault(x => x.SettingsName == settingsName);
                 }
             }, 5);
@@ -127,7 +127,7 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return await con.DeleteAsync(entity);
+                return await con.DeleteAsync(entity).ConfigureAwait(false);
             }
         }
 
@@ -136,7 +136,7 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return await con.UpdateAsync(entity);
+                return await con.UpdateAsync(entity).ConfigureAwait(false);
             }
         }
 

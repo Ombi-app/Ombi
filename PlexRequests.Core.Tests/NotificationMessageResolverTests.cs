@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using PlexRequests.Core.Models;
+using PlexRequests.Core.Notification;
 using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Core.Tests
@@ -43,7 +44,7 @@ namespace PlexRequests.Core.Tests
             var n = new NotificationMessageResolver();
             var s = new NotificationSettings
             {
-                Message = new List<NotificationMessage> { new NotificationMessage { NotificationType = NotificationType.NewRequest, Body = body } } 
+                Message = new List<Notification.NotificationMessage> { new Notification.NotificationMessage { NotificationType = NotificationType.NewRequest, Body = body } } 
             };
 
             var result = n.ParseMessage(s, NotificationType.NewRequest, param);
@@ -56,7 +57,7 @@ namespace PlexRequests.Core.Tests
             var n = new NotificationMessageResolver();
             var s = new NotificationSettings
             {
-                Message = new List<NotificationMessage> { new NotificationMessage { NotificationType = NotificationType.NewRequest, Subject = subject }} 
+                Message = new List<Notification.NotificationMessage> { new Notification.NotificationMessage { NotificationType = NotificationType.NewRequest, Subject = subject }} 
             };
 
             var result = n.ParseMessage(s, NotificationType.NewRequest, param);

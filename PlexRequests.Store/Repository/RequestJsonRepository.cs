@@ -62,7 +62,7 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                var id = await con.InsertAsync(entity);
+                var id = await con.InsertAsync(entity).ConfigureAwait(false);
                 return id;
             }
         }
@@ -88,7 +88,7 @@ namespace PlexRequests.Store.Repository
             {
                 using (var con = Db.DbConnection())
                 {
-                    var page = await con.GetAllAsync<RequestBlobs>();
+                    var page = await con.GetAllAsync<RequestBlobs>().ConfigureAwait(false);
                     return page;
                 }
             }, 5);
@@ -116,7 +116,7 @@ namespace PlexRequests.Store.Repository
             {
                 using (var con = Db.DbConnection())
                 {
-                    var page = await con.GetAsync<RequestBlobs>(id);
+                    var page = await con.GetAsync<RequestBlobs>(id).ConfigureAwait(false);
                     return page;
                 }
             }, 5);
@@ -137,22 +137,24 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return await con.DeleteAsync(entity);
+                return await con.DeleteAsync(entity).ConfigureAwait(false);
             }
         }
 
         public async Task<bool> DeleteAllAsync(IEnumerable<RequestBlobs> entity)
         {
             ResetCache();
-            var result = new HashSet<bool>();
+            var tasks = new List<Task<bool>>();
             using (var db = Db.DbConnection())
             {
                 db.Open();
                 foreach (var e in entity)
                 {
-                    result.Add(await db.DeleteAsync(e));
+                    tasks.Add(db.DeleteAsync(e));
                 }
             }
+            var result = await Task.WhenAll(tasks).ConfigureAwait(false);
+            
             return result.All(x => true);
         }
 
@@ -170,7 +172,7 @@ namespace PlexRequests.Store.Repository
             ResetCache();
             using (var con = Db.DbConnection())
             {
-                return await con.UpdateAsync(entity);
+                return await con.UpdateAsync(entity).ConfigureAwait(false);
             }
         }
 
@@ -198,15 +200,16 @@ namespace PlexRequests.Store.Repository
         public async Task<bool> UpdateAllAsync(IEnumerable<RequestBlobs> entity)
         {
             ResetCache();
-            var result = new HashSet<bool>();
+            var tasks = new List<Task<bool>>();
             using (var db = Db.DbConnection())
             {
                 db.Open();
                 foreach (var e in entity)
                 {
-                    result.Add(await db.UpdateAsync(e));
+                    tasks.Add(db.UpdateAsync(e));
                 }
             }
+            var result = await Task.WhenAll(tasks).ConfigureAwait(false);
             return result.All(x => true);
         }
 

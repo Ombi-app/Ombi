@@ -98,7 +98,7 @@ namespace PlexRequests.Store.Repository
                 using (var db = Config.DbConnection())
                 {
                     db.Open();
-                    await db.DeleteAsync(entity);
+                    await db.DeleteAsync(entity).ConfigureAwait(false);
                 }
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
@@ -134,7 +134,7 @@ namespace PlexRequests.Store.Repository
                 using (var db = Config.DbConnection())
                 {
                     db.Open();
-                    return await db.UpdateAsync(entity);
+                    return await db.UpdateAsync(entity).ConfigureAwait(false);
                 }
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
@@ -173,16 +173,17 @@ namespace PlexRequests.Store.Repository
             try
             {
                 ResetCache();
-                var result = new HashSet<bool>();
+                var tasks = new List<Task<bool>>();
 
                 using (var db = Config.DbConnection())
                 {
                     db.Open();
                     foreach (var e in entity)
                     {
-                        result.Add(await db.UpdateAsync(e));
+                        tasks.Add(db.UpdateAsync(e));
                     }
                 }
+                var result = await Task.WhenAll(tasks).ConfigureAwait(false);
                 return result.All(x => true);
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
@@ -200,7 +201,7 @@ namespace PlexRequests.Store.Repository
                 using (var cnn = Config.DbConnection())
                 {
                     cnn.Open();
-                    return await cnn.InsertAsync(entity);
+                    return await cnn.InsertAsync(entity).ConfigureAwait(false);
                 }
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
@@ -240,7 +241,7 @@ namespace PlexRequests.Store.Repository
                 using (var db = Config.DbConnection())
                 {
                     db.Open();
-                    var result = await db.GetAllAsync<T>();
+                    var result = await db.GetAllAsync<T>().ConfigureAwait(false);
                     return result;
                 }
             }

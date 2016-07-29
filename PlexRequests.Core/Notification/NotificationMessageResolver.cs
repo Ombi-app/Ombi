@@ -30,12 +30,27 @@ using System.Linq;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Core
+namespace PlexRequests.Core.Notification
 {
     public class NotificationMessageResolver
     {
+        /// <summary>
+        /// The start character '{'
+        /// </summary>
         private const char StartChar = (char)123;
+        /// <summary>
+        /// The end character '}'
+        /// </summary>
         private const char EndChar = (char)125;
+
+        /// <summary>
+        /// Parses the message.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="notification">The notification.</param>
+        /// <param name="type">The type.</param>
+        /// <param name="c">The c.</param>
+        /// <returns></returns>
         public NotificationMessageContent ParseMessage<T>(T notification, NotificationType type, NotificationMessageCurlys c) where T : NotificationSettings
         {
             var content = notification.Message.FirstOrDefault(x => x.NotificationType == type);
@@ -47,33 +62,30 @@ namespace PlexRequests.Core
             return Resolve(content.Body, content.Subject, c.Curlys);
         }
 
-        private NotificationMessageContent Resolve(string body, string subject, Dictionary<string, string> paramaters)
+        /// <summary>
+        /// Resolves the specified message curly fields.
+        /// </summary>
+        /// <param name="body">The body.</param>
+        /// <param name="subject">The subject.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        private NotificationMessageContent Resolve(string body, string subject, IReadOnlyDictionary<string, string> parameters)
         {
-
+            // Find the fields
             var bodyFields = FindCurlyFields(body);
             var subjectFields = FindCurlyFields(subject);
 
-            foreach (var f in bodyFields)
-            {
-                string outString;
-                if (paramaters.TryGetValue(f, out outString))
-                {
-                    body = body.Replace($"{{{f}}}", outString);
-                }
-            }
-
-            foreach (var s in subjectFields)
-            {
-                string outString;
-                if (paramaters.TryGetValue(s, out outString))
-                {
-                    subject = subject.Replace($"{{{s}}}", outString);
-                }
-            }
+            body = ReplaceFields(bodyFields, parameters, body);
+            subject = ReplaceFields(subjectFields, parameters, subject);
 
             return new NotificationMessageContent { Body = body ?? string.Empty, Subject = subject ?? string.Empty };
         }
 
+        /// <summary>
+        /// Finds the curly fields.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <returns></returns>
         private IEnumerable<string> FindCurlyFields(string message)
         {
             if (string.IsNullOrEmpty(message))
@@ -115,6 +127,26 @@ namespace PlexRequests.Core
             }
 
             return fields;
+        }
+
+        /// <summary>
+        /// Replaces the fields.
+        /// </summary>
+        /// <param name="fields">The fields.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="mainText">The main text.</param>
+        /// <returns></returns>
+        private string ReplaceFields(IEnumerable<string> fields, IReadOnlyDictionary<string, string> parameters, string mainText)
+        {
+            foreach (var field in fields)
+            {
+                string outString;
+                if (parameters.TryGetValue(field, out outString))
+                {
+                    mainText = mainText.Replace($"{{{field}}}", outString);
+                }
+            }
+            return mainText;
         }
     }
 }

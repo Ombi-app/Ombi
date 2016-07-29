@@ -67,10 +67,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
-    <Compile Include="NotificationMessage.cs" />
-    <Compile Include="NotificationMessageContent.cs" />
-    <Compile Include="NotificationMessageCurlys.cs" />
-    <Compile Include="NotificationMessageResolver.cs" />
+    <Compile Include="Notification\NotificationMessage.cs" />
+    <Compile Include="Notification\NotificationMessageContent.cs" />
+    <Compile Include="Notification\NotificationMessageCurlys.cs" />
+    <Compile Include="Notification\NotificationMessageResolver.cs" />
     <Compile Include="IIssueService.cs" />
     <Compile Include="IRequestService.cs" />
     <Compile Include="ISettingsService.cs" />
@@ -130,6 +130,7 @@
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
