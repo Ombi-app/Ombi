@@ -12,6 +12,7 @@ namespace PlexRequests.Store
         public RequestedModel()
         {
             RequestedUsers = new List<string>();
+            Episodes = new List<EpisodesModel>();
         }
 
         // ReSharper disable once IdentifierTypo
@@ -42,7 +43,7 @@ namespace PlexRequests.Store
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
         public int IssueId { get; set; }
-        public EpisodesModel[] Episodes { get; set; }
+        public List<EpisodesModel> Episodes { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers

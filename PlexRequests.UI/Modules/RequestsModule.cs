@@ -248,7 +248,7 @@ namespace PlexRequests.UI.Modules
                 IssueId = tv.IssueId,
                 TvSeriesRequestType = tv.SeasonsRequested,
                 Qualities = qualities.ToArray(),
-                Episodes = tv.Episodes,
+                Episodes = tv.Episodes.ToArray(),
             }).ToList();
 
             return Response.AsJson(viewModel);

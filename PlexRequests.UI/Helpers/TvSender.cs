@@ -60,7 +60,7 @@ namespace PlexRequests.UI.Helpers
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
             var qualityProfile = 0;
-            var episodeRequest = model.Episodes.Length > 0;
+            var episodeRequest = model.Episodes.Any();
             if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
             {
                 int.TryParse(qualityId, out qualityProfile);
@@ -150,7 +150,7 @@ namespace PlexRequests.UI.Helpers
             return result;
         }
 
-        private async Task RequestEpisodesWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
+        internal async Task RequestEpisodesWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
         {
             // Show Exists
             // Look up all episodes

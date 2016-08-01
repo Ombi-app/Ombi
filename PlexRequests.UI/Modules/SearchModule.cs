@@ -60,6 +60,7 @@ using PlexRequests.Store.Repository;
 using TMDbLib.Objects.General;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
+using EpisodesModel = PlexRequests.Store.EpisodesModel;
 
 namespace PlexRequests.UI.Modules
 {
@@ -659,10 +660,10 @@ namespace PlexRequests.UI.Modules
                     model.SeasonsRequested = "All";
                     break;
                 case "episode":
-                    model.Episodes = new Store.EpisodesModel[episodeModel.Episodes.Length];
+                    model.Episodes = new List<EpisodesModel>();
                     for (var i = 0; i < episodeModel.Episodes.Length; i++)
                     {
-                        model.Episodes[i] = new Store.EpisodesModel { EpisodeNumber = episodeModel.Episodes[i].EpisodeNumber, SeasonNumber = episodeModel.Episodes[i].SeasonNumber };
+                        model.Episodes[i] = new EpisodesModel { EpisodeNumber = episodeModel.Episodes[i].EpisodeNumber, SeasonNumber = episodeModel.Episodes[i].SeasonNumber };
                     }
                     break;
                 default:

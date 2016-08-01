@@ -110,6 +110,7 @@
     <Compile Include="SearchModuleTests.cs" />
     <Compile Include="StringHelperTests.cs" />
     <Compile Include="TestRootPathProvider.cs" />
+    <Compile Include="TvSenderTests.cs" />
     <Compile Include="UserLoginModuleTests.cs" />
     <Compile Include="AdminModuleTests.cs" />
   </ItemGroup>
