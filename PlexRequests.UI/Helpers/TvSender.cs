@@ -82,7 +82,7 @@ namespace PlexRequests.UI.Helpers
                 {
                     // Series Exists
                     // Request the episodes in the existing series
-                    RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                    await RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
                 }
                 else
                 {
@@ -114,7 +114,7 @@ namespace PlexRequests.UI.Helpers
                     }
 
                     // We now have the series in Sonarr
-                    RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                    await RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
 
                     return addResult;
                 }
@@ -150,7 +150,7 @@ namespace PlexRequests.UI.Helpers
             return result;
         }
 
-        private bool RequestEpisodesWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
+        private async Task RequestEpisodesWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
         {
             // Show Exists
             // Look up all episodes
@@ -159,9 +159,11 @@ namespace PlexRequests.UI.Helpers
             var tasks = new List<Task>();
             foreach (var r in model.Episodes)
             {
+                // Match the episode and season number.
+                // Also we need to make sure that the episode is not monitored already, otherwise there is no point.
                 var episode =
                     episodes.FirstOrDefault(
-                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
+                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber && !x.monitored);
                 if (episode == null)
                 {
                     continue;
@@ -172,11 +174,10 @@ namespace PlexRequests.UI.Helpers
                     sonarrSettings.FullUri)));
                 internalEpisodeIds.Add(episode.id);
             }
-            Task.WaitAll(tasks.ToArray());
+
+            await Task.WhenAll(tasks.ToArray());
 
             SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
-
-            return true;
         }
         private async Task<Series> GetSonarrSeries(SonarrSettings sonarrSettings, int showId)
         {
