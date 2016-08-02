@@ -574,10 +574,29 @@ function tvLoad() {
     var url = createBaseUrl(base, '/requests/tvshows');
     $.ajax(url).success(function (results) {
         if (results.length > 0) {
+            var tvObject = new Array();
             results.forEach(function (result) {
+                var ep = result.episodes;
+                ep.forEach(function (episode, index) {
+                    if (!tvObject.find(x => x.seasonNumber === episode.seasonNumber)) {
+                        var obj = { seasonNumber: episode.seasonNumber, episodes: [] }
+                        tvObject.push(obj);
+                        tvObject[index].episodes.push(episode.episodeNumber);
+                    } else {
+                        var selectedObj =tvObject.find(x => x.seasonNumber === episode.seasonNumber);
+                        selectedObj.episodes.push(episode.episodeNumber);
+                    }
+                });
+
                 var context = buildRequestContext(result, "tv");
+                context.episodes = tvObject;
                 var html = searchTemplate(context);
                 $tvl.append(html);
+
+            });
+
+            $('.customTooltip').tooltipster({
+                contentCloning: true
             });
         }
         else {
@@ -638,7 +657,6 @@ function buildRequestContext(result, type) {
         hasQualities: result.qualities && result.qualities.length > 0,
         artist: result.artistName,
         musicBrainzId: result.musicBrainzId,
-        episodes : result.episodes
     };
 
     return context;

@@ -8,6 +8,10 @@
     return s;
 }
 
+$(function() {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+
 var mainBaseUrl = $('#baseUrl').text();
 
 function Humanize(date) {

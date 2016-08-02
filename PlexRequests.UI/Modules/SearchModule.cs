@@ -336,7 +336,7 @@ namespace PlexRequests.UI.Modules
                     SeriesName = t.show.name,
                     Status = t.show.status
                 };
-                
+
 
                 if (plexSettings.AdvancedSearch)
                 {
@@ -664,9 +664,10 @@ namespace PlexRequests.UI.Modules
                     break;
                 case "episode":
                     model.Episodes = new List<EpisodesModel>();
-                    for (var i = 0; i < episodeModel.Episodes.Length; i++)
+
+                    foreach (var ep in episodeModel?.Episodes)
                     {
-                        model.Episodes[i] = new EpisodesModel { EpisodeNumber = episodeModel.Episodes[i].EpisodeNumber, SeasonNumber = episodeModel.Episodes[i].SeasonNumber };
+                        model.Episodes.Add(new EpisodesModel { EpisodeNumber = ep.EpisodeNumber, SeasonNumber = ep.SeasonNumber });
                     }
                     break;
                 default:

@@ -83,7 +83,8 @@ namespace PlexRequests.UI.Helpers
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>"
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/tooltip/tooltipster.bundle.min.css\" type=\"text/css\"/>",
             };
 
 
@@ -98,7 +99,8 @@ namespace PlexRequests.UI.Helpers
                 $"<script src=\"{startUrl}/pace.min.js\"></script>",
                 $"<script src=\"{startUrl}/jquery.mixitup.js\"></script>",
                 $"<script src=\"{startUrl}/moment.min.js\"></script>",
-                $"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>"
+                $"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>",
+                $"<script src=\"{startUrl}/tooltip/tooltipster.bundle.min.js\"></script>"
             };
 
 

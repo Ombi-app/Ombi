@@ -384,6 +384,54 @@
     <Content Include="Content\images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-borderless.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-light.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-noir.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-punk.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-shadow.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\tooltipster-sideTip.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\SVG\tooltipster-SVG.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\SVG\tooltipster-SVG.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
