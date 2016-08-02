@@ -83,6 +83,7 @@ namespace PlexRequests.Api
                 titleSlug = title,
                 seasons = new List<Season>(),
                 rootFolderPath = rootPath,
+                monitored = monitor
             };
 
             for (var i = 1; i <= seasonCount; i++)
@@ -93,11 +94,6 @@ namespace PlexRequests.Api
                     monitored = seasons.Length == 0 || seasons.Any(x => x == i)
                 };
                 options.seasons.Add(season);
-            }
-
-            if (!monitor)
-            {
-                options.monitored = false;
             }
 
             Log.Debug("Sonarr API Options:");
