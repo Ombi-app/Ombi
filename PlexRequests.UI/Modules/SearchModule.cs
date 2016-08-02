@@ -536,9 +536,12 @@ namespace PlexRequests.UI.Modules
         {
             // Get the JSON from the request
             var req = (Dictionary<string, object>.ValueCollection)Request.Form.Values;
-            var json = req.FirstOrDefault()?.ToString();
-            var episodeModel = JsonConvert.DeserializeObject<EpisodeRequestModel>(json); // Convert it into the object
-
+            EpisodeRequestModel episodeModel = null;
+            if (req.Count == 1)
+            {
+                var json = req.FirstOrDefault()?.ToString();
+                episodeModel = JsonConvert.DeserializeObject<EpisodeRequestModel>(json); // Convert it into the object
+            }
             var episodeRequest = false;
 
             var settings = await PrService.GetSettingsAsync();
