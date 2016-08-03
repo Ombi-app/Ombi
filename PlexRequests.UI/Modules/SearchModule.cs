@@ -948,16 +948,28 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> GetEpisodes()
         {
-            var allResults = await RequestService.GetAllAsync();
-            var model = new List<EpisodeListViewModel>();
             var seriesId = (int)Request.Query.tvId;
+            var s = await SonarrService.GetSettingsAsync();
+            var allResults = await RequestService.GetAllAsync();
+            var seriesTask = Task.Run(
+                () =>
+                {
+                    var allSeries = SonarrApi.GetSeries(s.ApiKey, s.FullUri);
+                    var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == seriesId);
+                    return selectedSeries;
+                });
+
+            var model = new List<EpisodeListViewModel>();
+
             var enumerable = allResults as RequestedModel[] ?? allResults.ToArray();
 
             var dbDbShow = enumerable.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
             var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(seriesId));
             var seasons = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
-
+            var sonarrSeries = await seriesTask;
+            var sonarrEpisodes = SonarrApi.GetEpisodes(sonarrSeries.id.ToString(), s.ApiKey, s.FullUri).ToList();
+            
             foreach (var ep in seasons)
             {
                 var requested = dbDbShow?.Episodes
@@ -965,13 +977,14 @@ namespace PlexRequests.UI.Modules
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 
                 var alreadyInPlex = Checker.IsEpisodeAvailable(seriesId.ToString(), ep.season, ep.number);
+                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number);
 
                 model.Add(new EpisodeListViewModel
                 {
                     Id = show.id,
                     SeasonNumber = ep.season,
                     EpisodeNumber = ep.number,
-                    Requested = requested || alreadyInPlex,
+                    Requested = requested || alreadyInPlex || inSonarr,
                     Name = ep.name,
                     EpisodeId = ep.id
                 });
