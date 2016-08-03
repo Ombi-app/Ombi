@@ -51,6 +51,7 @@ using Nancy.Extensions;
 
 using Newtonsoft.Json;
 
+using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
@@ -665,7 +666,7 @@ namespace PlexRequests.UI.Modules
                 case "episode":
                     model.Episodes = new List<EpisodesModel>();
 
-                    foreach (var ep in episodeModel?.Episodes)
+                    foreach (var ep in episodeModel?.Episodes ?? new Models.EpisodesModel[0])
                     {
                         model.Episodes.Add(new EpisodesModel { EpisodeNumber = ep.EpisodeNumber, SeasonNumber = ep.SeasonNumber });
                     }
@@ -954,9 +955,13 @@ namespace PlexRequests.UI.Modules
             var seriesTask = Task.Run(
                 () =>
                 {
-                    var allSeries = SonarrApi.GetSeries(s.ApiKey, s.FullUri);
-                    var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == seriesId);
-                    return selectedSeries;
+                    if (s.Enabled)
+                    {
+                        var allSeries = SonarrApi.GetSeries(s.ApiKey, s.FullUri);
+                        var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == seriesId) ?? new Series();
+                        return selectedSeries;
+                    }
+                    return new Series();
                 });
 
             var model = new List<EpisodeListViewModel>();
@@ -968,8 +973,9 @@ namespace PlexRequests.UI.Modules
             var seasons = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
             var sonarrSeries = await seriesTask;
-            var sonarrEpisodes = SonarrApi.GetEpisodes(sonarrSeries.id.ToString(), s.ApiKey, s.FullUri).ToList();
-            
+            var sonarrEp = SonarrApi.GetEpisodes(sonarrSeries.id.ToString(), s.ApiKey, s.FullUri);
+            var sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
+
             foreach (var ep in seasons)
             {
                 var requested = dbDbShow?.Episodes
