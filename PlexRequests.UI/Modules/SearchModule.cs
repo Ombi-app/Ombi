@@ -977,7 +977,7 @@ namespace PlexRequests.UI.Modules
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 
                 var alreadyInPlex = Checker.IsEpisodeAvailable(seriesId.ToString(), ep.season, ep.number);
-                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number);
+                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.monitored);
 
                 model.Add(new EpisodeListViewModel
                 {
