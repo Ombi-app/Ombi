@@ -39,6 +39,7 @@ namespace PlexRequests.Core.SettingModels
             UserRequestLimitResetter = 12;
             PlexEpisodeCacher = 20;
         }
+
         public int PlexAvailabilityChecker { get; set; }
         public int SickRageCacher { get; set; }
         public int SonarrCacher { get; set; }

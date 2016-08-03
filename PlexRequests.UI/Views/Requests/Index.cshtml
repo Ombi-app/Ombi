@@ -136,13 +136,13 @@
         {{#if episodes}}
         <div id="{{requestId}}toolTipContent">
             {{#each episodes}}
-            Season: {{this.seasonNumber}}
-            <br />
-            Episodes Requested:
-            {{#each this.episodes}}
-            {{this}}
-            {{/each}}
-            <hr />
+                Season: {{this.seasonNumber}}
+                <br />
+                Episodes Requested:
+                {{#each this.episodes}}
+                    {{this}}
+                {{/each}}
+                <hr />
             {{/each}}
         </div>
         {{/if}}
