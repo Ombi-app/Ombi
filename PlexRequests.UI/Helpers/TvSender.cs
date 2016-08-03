@@ -154,7 +154,9 @@ namespace PlexRequests.UI.Helpers
         {
             // Show Exists
             // Look up all episodes
-            var episodes = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri).ToList();
+            var ep = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            var episodes = ep?.ToList() ?? new List<SonarrEpisodes>();
+
             var internalEpisodeIds = new List<int>();
             var tasks = new List<Task>();
             foreach (var r in model.Episodes)
