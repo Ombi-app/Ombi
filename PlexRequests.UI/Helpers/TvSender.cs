@@ -136,7 +136,7 @@ namespace PlexRequests.UI.Helpers
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model, string qualityId)
         {
             Log.Info("Sending to SickRage {0}", model.Title);
-            if (!sickRageSettings.Qualities.Any(x => x.Key == qualityId))
+            if (sickRageSettings.Qualities.All(x => x.Key != qualityId))
             {
                 qualityId = sickRageSettings.QualityProfile;
             }

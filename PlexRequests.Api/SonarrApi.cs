@@ -91,7 +91,8 @@ namespace PlexRequests.Api
                 var season = new Season
                 {
                     seasonNumber = i,
-                    monitored = seasons.Length == 0 || seasons.Any(x => x == i)
+                    // ReSharper disable once SimplifyConditionalTernaryExpression
+                    monitored = monitor ? seasons.Length == 0 || seasons.Any(x => x == i) : false
                 };
                 options.seasons.Add(season);
             }
