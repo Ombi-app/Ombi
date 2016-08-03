@@ -59,11 +59,12 @@ namespace PlexRequests.Services.Jobs
         private ICacheProvider Cache { get; }
         private IJobRecord Job { get; }
         private const int ResultCount = 25;
+        private const string PlexType = "episode";
 
 
         public void CacheEpisodes()
         {
-            var results = new List<PlexSearch>();
+            var results = new PlexSearch();
             var settings = Plex.GetSettings();
             var sections = PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
             var tvSection = sections.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
@@ -73,28 +74,27 @@ namespace PlexRequests.Services.Jobs
             int totalSize;
 
             var episodes = PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount);
-            results.Add(episodes);
+            results = episodes;
             int.TryParse(episodes.TotalSize, out totalSize);
-            
+
             currentPosition += ResultCount;
             while (currentPosition < totalSize)
             {
-                results.Add(PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount));
+                results.Video.AddRange(PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount).Video);
                 currentPosition += ResultCount;
             }
 
-
+            var filteredList = results.Video.Where(x => x.Type.Equals(PlexType, StringComparison.InvariantCultureIgnoreCase));
             var episodesModel = new List<PlexEpisodeModel>();
             var metadataList = new List<PlexEpisodeMetadata>();
-            foreach (var r in results)
+
+            foreach (var video in filteredList)
             {
-                foreach (var video in r.Video)
-                {
-                    var ratingKey = video.RatingKey;
-                    var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, ratingKey);
-                    metadataList.Add(metadata);
-                }
+                var ratingKey = video.RatingKey;
+                var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, ratingKey);
+                metadataList.Add(metadata);
             }
+
 
             foreach (var m in metadataList)
             {
@@ -111,7 +111,7 @@ namespace PlexRequests.Services.Jobs
             }
 
 
-            if (results.Any())
+            if (results.Video.Any())
             {
                 Cache.Set(CacheKeys.PlexEpisodes, episodesModel, CacheKeys.TimeFrameMinutes.SchedulerCaching);
             }

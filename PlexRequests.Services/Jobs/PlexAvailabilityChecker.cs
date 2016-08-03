@@ -244,13 +244,11 @@ namespace PlexRequests.Services.Jobs
             var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
             if (episodes == null)
             {
-                Log.Trace("Episode is not available. tvdbid: {0}, season: {1}, episode: {2}",theTvDbId, season, episode);
+                Log.Info("Episode cache info is not available. tvdbid: {0}, season: {1}, episode: {2}",theTvDbId, season, episode);
                 return false;
             }
             foreach (var result in episodes)
             {
-                Log.Trace("Result:");
-                Log.Trace(result.DumpJson());
                 if (result.Episodes.ProviderId.Equals(theTvDbId) && result.Episodes.EpisodeNumber == episode && result.Episodes.SeasonNumber == season)
                 {
                     return true;

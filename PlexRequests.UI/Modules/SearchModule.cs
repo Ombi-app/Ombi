@@ -951,11 +951,13 @@ namespace PlexRequests.UI.Modules
         {
             var seriesId = (int)Request.Query.tvId;
             var s = await SonarrService.GetSettingsAsync();
+            var sonarrEnabled = s.Enabled;
             var allResults = await RequestService.GetAllAsync();
+
             var seriesTask = Task.Run(
                 () =>
                 {
-                    if (s.Enabled)
+                    if (sonarrEnabled)
                     {
                         var allSeries = SonarrApi.GetSeries(s.ApiKey, s.FullUri);
                         var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == seriesId) ?? new Series();
@@ -972,9 +974,13 @@ namespace PlexRequests.UI.Modules
             var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(seriesId));
             var seasons = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
-            var sonarrSeries = await seriesTask;
-            var sonarrEp = SonarrApi.GetEpisodes(sonarrSeries.id.ToString(), s.ApiKey, s.FullUri);
-            var sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
+            var sonarrEpisodes = new List<SonarrEpisodes>();
+            if (sonarrEnabled)
+            {
+                var sonarrSeries = await seriesTask;
+                var sonarrEp = SonarrApi.GetEpisodes(sonarrSeries.id.ToString(), s.ApiKey, s.FullUri);
+                sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
+            }
 
             foreach (var ep in seasons)
             {

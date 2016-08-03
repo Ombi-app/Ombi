@@ -224,7 +224,7 @@ namespace PlexRequests.Api
             var request = new RestRequest
             {
                 Method = Method.GET,
-                Resource = "/library/metadata/{ratingKey}/allLeaves"
+                Resource = "/library/metadata/{ratingKey}"
             };
 
             request.AddUrlSegment("ratingKey", ratingKey);
