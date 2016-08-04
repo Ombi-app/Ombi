@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@*@using StackExchange.Profiling*@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
 <html>
 @Html.Partial("Shared/Partial/_Head")
@@ -10,11 +11,13 @@
     <div class="container" style="padding-top: 5%">
         @RenderBody()
     </div>
-    <div class="scroll-top-wrapper ">
-        <span class="scroll-top-inner">
+<div class="scroll-top-wrapper ">
+    <span class="scroll-top-inner">
             <i class="fa fa-2x fa-arrow-circle-up"></i>
         </span>
-    </div>
+</div>
+
+    @*@MiniProfiler.RenderIncludes()*@
 </body>
 
 @Html.GetInformationalVersion()

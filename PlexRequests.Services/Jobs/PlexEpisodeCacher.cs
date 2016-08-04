@@ -66,6 +66,11 @@ namespace PlexRequests.Services.Jobs
         {
             var results = new PlexSearch();
             var settings = Plex.GetSettings();
+            if (string.IsNullOrEmpty(settings.PlexAuthToken))
+            {
+                return;
+            }
+
             var sections = PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
             var tvSection = sections.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
             var tvSectionId = tvSection?.Key;
