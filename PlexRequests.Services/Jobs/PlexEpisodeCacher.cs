@@ -65,6 +65,7 @@ namespace PlexRequests.Services.Jobs
         public void CacheEpisodes()
         {
             var results = new PlexSearch();
+            var videoHashset = new HashSet<Video>();
             var settings = Plex.GetSettings();
             if (string.IsNullOrEmpty(settings.PlexAuthToken))
             {
@@ -85,32 +86,26 @@ namespace PlexRequests.Services.Jobs
             currentPosition += ResultCount;
             while (currentPosition < totalSize)
             {
-                results.Video.AddRange(PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount).Video);
+                videoHashset.UnionWith(PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount).Video
+                    .Where(x => x.Type.Equals(PlexType, StringComparison.InvariantCultureIgnoreCase)));
                 currentPosition += ResultCount;
             }
 
-            var filteredList = results.Video.Where(x => x.Type.Equals(PlexType, StringComparison.InvariantCultureIgnoreCase));
-            var episodesModel = new List<PlexEpisodeModel>();
-            var metadataList = new List<PlexEpisodeMetadata>();
+            var episodesModel = new HashSet<PlexEpisodeModel>();
 
-            foreach (var video in filteredList)
+            foreach (var video in videoHashset)
             {
                 var ratingKey = video.RatingKey;
                 var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, ratingKey);
-                metadataList.Add(metadata);
-            }
 
-
-            foreach (var m in metadataList)
-            {
-                foreach (var video in m.Video)
+                foreach (var metadataVideo in metadata.Video)
                 {
                     episodesModel.Add(new PlexEpisodeModel
                     {
-                        RatingKey = video.RatingKey,
-                        EpisodeTitle = video.Title,
-                        Guid = video.Guid,
-                        ShowTitle = video.GrandparentTitle
+                        RatingKey = metadataVideo.RatingKey,
+                        EpisodeTitle = metadataVideo.Title,
+                        Guid = metadataVideo.Guid,
+                        ShowTitle = metadataVideo.GrandparentTitle
                     });
                 }
             }

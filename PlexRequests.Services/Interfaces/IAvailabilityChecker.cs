@@ -43,7 +43,7 @@ namespace PlexRequests.Services.Interfaces
         /// Gets the episode's stored in the cache.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<PlexEpisodeModel> GetEpisodeCache();
+        HashSet<PlexEpisodeModel> GetEpisodeCache();
         /// <summary>
         /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
         /// </summary>

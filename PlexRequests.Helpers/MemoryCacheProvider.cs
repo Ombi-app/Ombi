@@ -34,6 +34,7 @@ namespace PlexRequests.Helpers
     public class MemoryCacheProvider : ICacheProvider
     {
         private ObjectCache Cache => MemoryCache.Default;
+        private readonly object _lock = new object();
 
         /// <summary>
         /// Gets the item from the cache, if the item is not present 
@@ -91,8 +92,10 @@ namespace PlexRequests.Helpers
         /// <returns></returns>
         public T Get<T>(string key) where T : class
         {
-            lock (key)
+            lock (_lock)
+            {
                 return Cache.Get(key) as T;
+            }
         }
 
         /// <summary>
@@ -104,7 +107,7 @@ namespace PlexRequests.Helpers
         public void Set(string key, object data, int cacheTime = 20)
         {
             var policy = new CacheItemPolicy { AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(cacheTime) };
-            lock (key)
+            lock (_lock)
             {
                 Cache.Remove(key);
                 Cache.Add(new CacheItem(key, data), policy);
@@ -120,7 +123,7 @@ namespace PlexRequests.Helpers
             var keys = Cache.Where(x => x.Key.Contains(key));
             foreach (var k in keys)
             {
-                lock (key)
+                lock (_lock)
                 {
                     Cache.Remove(k.Key);
                 }

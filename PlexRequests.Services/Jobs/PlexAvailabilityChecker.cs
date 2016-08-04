@@ -241,7 +241,7 @@ namespace PlexRequests.Services.Jobs
 
         public bool IsEpisodeAvailable(string theTvDbId, int season, int episode)
         {
-            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            var episodes = Cache.Get<HashSet<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
             if (episodes == null)
             {
                 Log.Info("Episode cache info is not available. tvdbid: {0}, season: {1}, episode: {2}",theTvDbId, season, episode);
@@ -261,13 +261,13 @@ namespace PlexRequests.Services.Jobs
         /// Gets the episode's stored in the cache.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<PlexEpisodeModel> GetEpisodeCache()
+        public HashSet<PlexEpisodeModel> GetEpisodeCache()
         {
-            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            var episodes = Cache.Get<HashSet<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
             if (episodes == null)
             {
                 Log.Info("Episode cache info is not available.");
-                return new List<PlexEpisodeModel>();
+                return new HashSet<PlexEpisodeModel>();
             }
             return episodes;
         }
