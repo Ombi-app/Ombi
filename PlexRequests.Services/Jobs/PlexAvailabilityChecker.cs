@@ -257,6 +257,38 @@ namespace PlexRequests.Services.Jobs
             return false;
         }
 
+        /// <summary>
+        /// Gets the episode's stored in the cache.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<PlexEpisodeModel> GetEpisodeCache()
+        {
+            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            if (episodes == null)
+            {
+                Log.Info("Episode cache info is not available.");
+                return new List<PlexEpisodeModel>();
+            }
+            return episodes;
+        }
+
+        /// <summary>
+        /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
+        /// </summary>
+        /// <param name="theTvDbId">The tv database identifier.</param>
+        /// <returns></returns>
+        public IEnumerable<PlexEpisodeModel> GetEpisodeCache(int theTvDbId)
+        {
+            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            if (episodes == null)
+            {
+                Log.Info("Episode cache info is not available.");
+                return new List<PlexEpisodeModel>();
+            }
+
+            return episodes.Where(x => x.Episodes.ProviderId == theTvDbId.ToString());
+        }
+
         public List<PlexAlbum> GetPlexAlbums()
         {
             var albums = new List<PlexAlbum>();

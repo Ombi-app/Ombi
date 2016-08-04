@@ -39,5 +39,16 @@ namespace PlexRequests.Services.Interfaces
         List<PlexAlbum> GetPlexAlbums();
         bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
+        /// <summary>
+        /// Gets the episode's stored in the cache.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<PlexEpisodeModel> GetEpisodeCache();
+        /// <summary>
+        /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
+        /// </summary>
+        /// <param name="theTvDbId">The tv database identifier.</param>
+        /// <returns></returns>
+        IEnumerable<PlexEpisodeModel> GetEpisodeCache(int theTvDbId);
     }
 }

@@ -608,9 +608,10 @@ namespace PlexRequests.UI.Modules
                 }
                 if (episodeRequest)
                 {
+                    var cachedEpisodes = Checker.GetEpisodeCache().ToList();
                     foreach (var d in difference)
                     {
-                        if (Checker.IsEpisodeAvailable(providerId, d.SeasonNumber, d.EpisodeNumber))
+                        if (cachedEpisodes.Any(x => x.Episodes.SeasonNumber == d.SeasonNumber && x.Episodes.EpisodeNumber == d.EpisodeNumber && x.Episodes.ProviderId == providerId))
                         {
                             return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
                         }
@@ -982,13 +983,15 @@ namespace PlexRequests.UI.Modules
                 sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
             }
 
+            var plexCache = Checker.GetEpisodeCache(seriesId).ToList();
+            
             foreach (var ep in seasons)
             {
                 var requested = dbDbShow?.Episodes
                     .Any(episodesModel =>
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 
-                var alreadyInPlex = Checker.IsEpisodeAvailable(seriesId.ToString(), ep.season, ep.number);
+                var alreadyInPlex = plexCache.Any(x => x.Episodes.EpisodeNumber == ep.number && x.Episodes.SeasonNumber == ep.season);
                 var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.monitored);
 
                 model.Add(new EpisodeListViewModel

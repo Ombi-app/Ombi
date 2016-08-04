@@ -37,22 +37,21 @@ namespace PlexRequests.Helpers
 {
     public static class LoggingHelper
     {
+        /// <summary>
+        /// WARNING, This method uses up a LOT of memory and can lead to leaks.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
         public static string DumpJson(this object value)
         {
-            var dumpTarget = value;
+            object dumpTarget;
             //if this is a string that contains a JSON object, do a round-trip serialization to format it:
             var stringValue = value as string;
             if (stringValue != null)
             {
-                if (stringValue.Trim().StartsWith("{", StringComparison.Ordinal))
-                {
-                    var obj = JsonConvert.DeserializeObject(stringValue);
-                    dumpTarget = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                }
-                else
-                {
-                    dumpTarget = stringValue;
-                }
+                dumpTarget = stringValue.Trim().StartsWith("{", StringComparison.Ordinal) 
+                    ? JsonConvert.SerializeObject(JsonConvert.DeserializeObject(stringValue), Formatting.Indented) 
+                    : stringValue;
             }
             else
             {
@@ -73,7 +72,8 @@ namespace PlexRequests.Helpers
                 CommandType = CommandType.Text,
                 ConnectionString = connectionString,
                 DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
-                Name = "database"
+                Name = "database",
+               
             };
 
             var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
@@ -94,7 +94,7 @@ namespace PlexRequests.Helpers
             config.AddTarget("database", databaseTarget);
 
             // Step 4. Define rules
-            var rule1 = new LoggingRule("*", LogLevel.Info, databaseTarget);
+            var rule1 = new LoggingRule("*", LogLevel.Debug, databaseTarget);
             config.LoggingRules.Add(rule1);
 
 
@@ -106,7 +106,7 @@ namespace PlexRequests.Helpers
                 CreateDirs = true
             };
             config.AddTarget(fileTarget);
-            var rule2 = new LoggingRule("*", LogLevel.Info, fileTarget);
+            var rule2 = new LoggingRule("*", LogLevel.Debug, fileTarget);
             config.LoggingRules.Add(rule2);
 
             // Step 5. Activate the configuration
