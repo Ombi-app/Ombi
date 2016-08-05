@@ -64,7 +64,6 @@ namespace PlexRequests.Services.Jobs
 
         public void CacheEpisodes()
         {
-            var results = new PlexSearch();
             var videoHashset = new HashSet<Video>();
             var settings = Plex.GetSettings();
             if (string.IsNullOrEmpty(settings.PlexAuthToken))
@@ -80,7 +79,6 @@ namespace PlexRequests.Services.Jobs
             int totalSize;
 
             var episodes = PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount);
-            results = episodes;
             int.TryParse(episodes.TotalSize, out totalSize);
 
             currentPosition += ResultCount;
@@ -111,7 +109,7 @@ namespace PlexRequests.Services.Jobs
             }
 
 
-            if (results.Video.Any())
+            if (episodesModel.Any())
             {
                 Cache.Set(CacheKeys.PlexEpisodes, episodesModel, CacheKeys.TimeFrameMinutes.SchedulerCaching);
             }
