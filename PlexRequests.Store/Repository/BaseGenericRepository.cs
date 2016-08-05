@@ -277,7 +277,8 @@ namespace PlexRequests.Store.Repository
         public bool BatchInsert(IEnumerable<T> entities, string tableName, params string[] values)
         {
             // If we have nothing to update, then it didn't fail...
-            if (!entities.Any())
+            var enumerable = entities as T[] ?? entities.ToArray();
+            if (!enumerable.Any())
             {
                 return true;
             }
@@ -291,7 +292,7 @@ namespace PlexRequests.Store.Repository
                     var format = values.AddPrefix("@", ",");
                     var processQuery = $"INSERT INTO {tableName} VALUES ({format})";
                     var result = db.Execute(processQuery, entities);
-                    return result == values.Length;
+                    return result == enumerable.Length;
                 }
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
