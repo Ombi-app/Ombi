@@ -119,7 +119,7 @@ namespace PlexRequests.Api
             request.AddUrlSegment("searchTerm", searchTerm);
             AddHeaders(ref request, authToken);
 
-			var search = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+			var search = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
 				(exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan), null);
 
             return search;
@@ -134,7 +134,7 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-			var users = RetryHandler.Execute<PlexStatus>(() => Api.ExecuteXml<PlexStatus> (request, uri),
+			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexStatus> (request, uri),
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan), null);
 		
             return users;
@@ -149,7 +149,7 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-			var account = RetryHandler.Execute<PlexAccount>(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
+			var account = RetryHandler.Execute(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying {0}", timespan), null);
 			
             return account;
@@ -308,8 +308,8 @@ namespace PlexRequests.Api
 
         private void AddHeaders(ref RestRequest request)
         {
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
+            request.AddHeader("X-Plex-Product", "Plex Requests .Net");
             request.AddHeader("X-Plex-Version", Version);
             request.AddHeader("Content-Type", "application/xml");
         }
