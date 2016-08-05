@@ -60,7 +60,7 @@ namespace PlexRequests.Store.Repository
         private IDbConnection Connection => Config.DbConnection();
 
 
-        public IEnumerable<T> Custom(Func<IDbConnection , IEnumerable<T>> func)
+        public IEnumerable<T> Custom(Func<IDbConnection, IEnumerable<T>> func)
         {
             using (var cnn = Connection)
             {
@@ -291,9 +291,14 @@ namespace PlexRequests.Store.Repository
 
                     var format = values.AddPrefix("@", ",");
                     var processQuery = $"INSERT INTO {tableName} VALUES ({format})";
-                    var result = db.Execute(processQuery, entities);
+                    var result = 0;
+                    foreach (var e in enumerable)
+                    {
+                        result += db.Execute(processQuery, e);
+                    }
                     return result == enumerable.Length;
                 }
+
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
             {
@@ -301,6 +306,7 @@ namespace PlexRequests.Store.Repository
                 throw;
             }
         }
+
 
         public void DeleteAll(string tableName)
         {
