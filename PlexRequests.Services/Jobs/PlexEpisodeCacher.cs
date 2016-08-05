@@ -129,6 +129,8 @@ namespace PlexRequests.Services.Jobs
             // Delete all of the current items
             Repo.DeleteAll(TableName);
 
+            Log.Debug("Inserting The following (1st item)");
+            Log.Debug(entities.FirstOrDefault().DumpJson());
             // Insert the new items
             var result = Repo.BatchInsert(entities, TableName, typeof(PlexEpisodes).GetPropertyNames());
 
