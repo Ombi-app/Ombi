@@ -26,6 +26,8 @@
 #endregion
 using System;
 using System.Data;
+using System.IO;
+using System.Windows.Forms;
 
 using Newtonsoft.Json;
 
@@ -49,8 +51,8 @@ namespace PlexRequests.Helpers
             var stringValue = value as string;
             if (stringValue != null)
             {
-                dumpTarget = stringValue.Trim().StartsWith("{", StringComparison.Ordinal) 
-                    ? JsonConvert.SerializeObject(JsonConvert.DeserializeObject(stringValue), Formatting.Indented) 
+                dumpTarget = stringValue.Trim().StartsWith("{", StringComparison.Ordinal)
+                    ? JsonConvert.SerializeObject(JsonConvert.DeserializeObject(stringValue), Formatting.Indented)
                     : stringValue;
             }
             else
@@ -60,7 +62,7 @@ namespace PlexRequests.Helpers
             return dumpTarget.ToString();
         }
 
-        public static void  ConfigureLogging(string connectionString)
+        public static void ConfigureLogging(string connectionString)
         {
             LogManager.ThrowExceptions = true;
             // Step 1. Create configuration object 
@@ -73,7 +75,7 @@ namespace PlexRequests.Helpers
                 ConnectionString = connectionString,
                 DBProvider = "Mono.Data.Sqlite.SqliteConnection, Mono.Data.Sqlite, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756",
                 Name = "database",
-               
+
             };
 
             var messageParam = new DatabaseParameterInfo { Name = "@Message", Layout = "${message}" };
@@ -96,12 +98,12 @@ namespace PlexRequests.Helpers
             // Step 4. Define rules
             var rule1 = new LoggingRule("*", LogLevel.Debug, databaseTarget);
             config.LoggingRules.Add(rule1);
-
+            var currentPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, "logs/${shortdate}.log");
 
             var fileTarget = new FileTarget
             {
                 Name = "file",
-                FileName = "logs/${shortdate}.log",
+                FileName = currentPath,
                 Layout = "${date} ${logger} ${level}: ${message} ${exception:tostring}",
                 CreateDirs = true
             };
