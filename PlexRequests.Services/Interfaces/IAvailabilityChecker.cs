@@ -26,6 +26,9 @@
 #endregion
 using PlexRequests.Services.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using PlexRequests.Store.Models;
 
 namespace PlexRequests.Services.Interfaces
 {
@@ -43,12 +46,12 @@ namespace PlexRequests.Services.Interfaces
         /// Gets the episode's stored in the cache.
         /// </summary>
         /// <returns></returns>
-        HashSet<PlexEpisodeModel> GetEpisodeCache();
+        Task<IEnumerable<PlexEpisodes>> GetEpisodes();
         /// <summary>
         /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
         /// </summary>
         /// <param name="theTvDbId">The tv database identifier.</param>
         /// <returns></returns>
-        IEnumerable<PlexEpisodeModel> GetEpisodeCache(int theTvDbId);
+        Task<IEnumerable<PlexEpisodes>> GetEpisodes(int theTvDbId);
     }
 }

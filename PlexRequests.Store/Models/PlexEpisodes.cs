@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ScheduledJobsSettings.cs
+//    File: LogEntity.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,29 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
-{
-    public class ScheduledJobsSettings : Settings
-    {
-        public ScheduledJobsSettings()
-        {
-            PlexAvailabilityChecker = 10;
-            SickRageCacher = 10;
-            SonarrCacher = 10;
-            CouchPotatoCacher = 10;
-            StoreBackup = 24;
-            StoreCleanup = 24;
-            UserRequestLimitResetter = 12;
-            PlexEpisodeCacher = 2;
-        }
+using Dapper.Contrib.Extensions;
 
-        public int PlexAvailabilityChecker { get; set; }
-        public int SickRageCacher { get; set; }
-        public int SonarrCacher { get; set; }
-        public int CouchPotatoCacher { get; set; }
-        public int StoreBackup { get; set; }
-        public int StoreCleanup { get; set; }
-        public int UserRequestLimitResetter { get; set; }
-        public int PlexEpisodeCacher { get; set; }
+namespace PlexRequests.Store.Models
+{
+    [Table("PlexEpisodes")]
+    public class PlexEpisodes : Entity
+    {
+        public string EpisodeTitle { get; set; }
+        public string ShowTitle { get; set; }
+        public string RatingKey { get; set; }
+        public string ProviderId { get; set; }
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
     }
 }

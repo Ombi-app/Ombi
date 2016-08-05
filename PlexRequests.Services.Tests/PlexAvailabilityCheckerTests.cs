@@ -53,6 +53,7 @@ namespace PlexRequests.Services.Tests
         private Mock<INotificationService> NotificationMock { get; set; }
         private Mock<IJobRecord> JobRec { get; set; }
         private Mock<IRepository<UsersToNotify>> NotifyUsers { get; set; }
+        private Mock<IRepository<PlexEpisodes>> PlexEpisodes { get; set; }
 
         [SetUp]
         public void Setup()
@@ -64,8 +65,9 @@ namespace PlexRequests.Services.Tests
             NotificationMock = new Mock<INotificationService>();
             CacheMock = new Mock<ICacheProvider>();
             NotifyUsers = new Mock<IRepository<UsersToNotify>>();
+            PlexEpisodes = new Mock<IRepository<PlexEpisodes>>();
             JobRec = new Mock<IJobRecord>();
-            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object);
+            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object, PlexEpisodes.Object);
 
         }
 

@@ -34,7 +34,6 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
-using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
 
@@ -81,7 +80,7 @@ namespace PlexRequests.Api
             request.AddJsonBody(userModel);
 
 			var obj = RetryHandler.Execute<PlexAuthentication>(() => Api.Execute<PlexAuthentication> (request, new Uri(SignInUri)),
-				(exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan), null);
+				(exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan));
 			
 			return obj;
         }

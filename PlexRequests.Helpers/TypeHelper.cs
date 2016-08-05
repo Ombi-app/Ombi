@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ScheduledJobsSettings.cs
+//    File: TypeHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,29 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
-{
-    public class ScheduledJobsSettings : Settings
-    {
-        public ScheduledJobsSettings()
-        {
-            PlexAvailabilityChecker = 10;
-            SickRageCacher = 10;
-            SonarrCacher = 10;
-            CouchPotatoCacher = 10;
-            StoreBackup = 24;
-            StoreCleanup = 24;
-            UserRequestLimitResetter = 12;
-            PlexEpisodeCacher = 2;
-        }
+using System;
+using System.Linq;
 
-        public int PlexAvailabilityChecker { get; set; }
-        public int SickRageCacher { get; set; }
-        public int SonarrCacher { get; set; }
-        public int CouchPotatoCacher { get; set; }
-        public int StoreBackup { get; set; }
-        public int StoreCleanup { get; set; }
-        public int UserRequestLimitResetter { get; set; }
-        public int PlexEpisodeCacher { get; set; }
+namespace PlexRequests.Helpers
+{
+    public static class TypeHelper
+    {
+        public static string[] GetPropertyNames(this Type t)
+        {
+            return t.GetProperties().Select(x => x.Name).ToArray();
+        }
     }
 }

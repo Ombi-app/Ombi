@@ -37,6 +37,8 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Models;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 
 using Quartz;
 
@@ -45,12 +47,13 @@ namespace PlexRequests.Services.Jobs
     public class PlexEpisodeCacher : IJob
     {
         public PlexEpisodeCacher(ISettingsService<PlexSettings> plexSettings, IPlexApi plex, ICacheProvider cache,
-            IJobRecord rec)
+            IJobRecord rec, IRepository<PlexEpisodes> repo)
         {
             Plex = plexSettings;
             PlexApi = plex;
             Cache = cache;
             Job = rec;
+            Repo = repo;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -58,19 +61,23 @@ namespace PlexRequests.Services.Jobs
         private IPlexApi PlexApi { get; }
         private ICacheProvider Cache { get; }
         private IJobRecord Job { get; }
+        private IRepository<PlexEpisodes> Repo { get; }
         private const int ResultCount = 25;
         private const string PlexType = "episode";
+        private const string TableName = "PlexEpisodes";
 
 
         public void CacheEpisodes()
         {
             var videoHashset = new HashSet<Video>();
             var settings = Plex.GetSettings();
+            // Ensure Plex is setup correctly
             if (string.IsNullOrEmpty(settings.PlexAuthToken))
             {
                 return;
             }
 
+            // Get the librarys and then get the tv section
             var sections = PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
             var tvSection = sections.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
             var tvSectionId = tvSection?.Key;
@@ -78,10 +85,15 @@ namespace PlexRequests.Services.Jobs
             var currentPosition = 0;
             int totalSize;
 
+            // Get the first 25 episodes (Paged)
             var episodes = PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount);
+
+            // Parse the total amount of episodes
             int.TryParse(episodes.TotalSize, out totalSize);
 
             currentPosition += ResultCount;
+
+            // Get all of the episodes in batches until we them all (Got'a catch 'em all!)
             while (currentPosition < totalSize)
             {
                 videoHashset.UnionWith(PlexApi.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, tvSectionId, currentPosition, ResultCount).Video
@@ -89,29 +101,40 @@ namespace PlexRequests.Services.Jobs
                 currentPosition += ResultCount;
             }
 
-            var episodesModel = new HashSet<PlexEpisodeModel>();
+            var entities = new HashSet<PlexEpisodes>();
 
             foreach (var video in videoHashset)
             {
-                var ratingKey = video.RatingKey;
-                var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, ratingKey);
 
+                // Get the individual episode Metadata (This is for us to get the TheTVDBId which also includes the episode number and season number)
+                var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, video.RatingKey);
+
+                // Loop through the metadata and create the model to insert into the DB
                 foreach (var metadataVideo in metadata.Video)
                 {
-                    episodesModel.Add(new PlexEpisodeModel
-                    {
-                        RatingKey = metadataVideo.RatingKey,
-                        EpisodeTitle = metadataVideo.Title,
-                        Guid = metadataVideo.Guid,
-                        ShowTitle = metadataVideo.GrandparentTitle
-                    });
+                    var epInfo = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(metadataVideo.Guid);
+                    entities.Add(
+                        new PlexEpisodes
+                        {
+                            EpisodeNumber = epInfo.EpisodeNumber,
+                            EpisodeTitle = metadataVideo.Title,
+                            ProviderId = epInfo.ProviderId,
+                            RatingKey = metadataVideo.RatingKey,
+                            SeasonNumber = epInfo.SeasonNumber,
+                            ShowTitle = metadataVideo.Title
+                        });
                 }
             }
 
+            // Delete all of the current items
+            Repo.DeleteAll(TableName);
 
-            if (episodesModel.Any())
+            // Insert the new items
+            var result = Repo.BatchInsert(entities, TableName, typeof(PlexEpisodes).GetPropertyNames());
+
+            if (!result)
             {
-                Cache.Set(CacheKeys.PlexEpisodes, episodesModel, CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                Log.Error("Saving the plex episodes to the DB Failed");
             }
         }
 

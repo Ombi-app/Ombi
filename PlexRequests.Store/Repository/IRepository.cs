@@ -24,7 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace PlexRequests.Store.Repository
@@ -77,5 +79,11 @@ namespace PlexRequests.Store.Repository
         /// <returns></returns>
         bool UpdateAll(IEnumerable<T> entity);
         Task<bool> UpdateAllAsync(IEnumerable<T> entity);
+
+        bool BatchInsert(IEnumerable<T> entities, string tableName, params string[] values);
+
+        IEnumerable<T> Custom(Func<IDbConnection, IEnumerable<T>> func);
+        Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func);
+        void DeleteAll(string tableName);
     }
 }

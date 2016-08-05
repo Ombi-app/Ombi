@@ -53,8 +53,6 @@ using Nancy.Json;
 
 using Ninject;
 
-using StackExchange.Profiling;
-
 namespace PlexRequests.UI
 {
     public class Bootstrapper : NinjectNancyBootstrapper
@@ -88,10 +86,7 @@ namespace PlexRequests.UI
 
             base.ApplicationStartup(container, pipelines);
 
-#if DEBUG
-            pipelines.BeforeRequest += StartProfiler;
-            pipelines.AfterRequest += EndProfiler;
-#endif
+
             var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var baseUrl = settings.GetSettings().BaseUrl;
             var redirect = string.IsNullOrEmpty(baseUrl) ? "~/login" : $"~/{baseUrl}/login";
@@ -198,15 +193,5 @@ namespace PlexRequests.UI
             loc.SetContainer(container);
         }
 
-        private static Response StartProfiler(NancyContext ctx)
-        {
-            MiniProfiler.Start();
-            return null;
-        }
-
-        private static void EndProfiler(NancyContext ctx)
-        {
-            MiniProfiler.Stop();
-        }
     }
 }

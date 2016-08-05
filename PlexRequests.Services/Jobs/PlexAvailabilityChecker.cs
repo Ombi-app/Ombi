@@ -29,6 +29,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+using Dapper;
+
 using NLog;
 
 using PlexRequests.Api.Interfaces;
@@ -53,7 +55,7 @@ namespace PlexRequests.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -62,9 +64,11 @@ namespace PlexRequests.Services.Jobs
             Notification = notify;
             Job = rec;
             UserNotifyRepo = users;
+            EpisodeRepo = repo;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
+        private IRepository<PlexEpisodes> EpisodeRepo { get; }
         private IRequestService RequestService { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private IPlexApi PlexApi { get; }
@@ -241,15 +245,23 @@ namespace PlexRequests.Services.Jobs
 
         public bool IsEpisodeAvailable(string theTvDbId, int season, int episode)
         {
-            var episodes = Cache.Get<HashSet<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
-            if (episodes == null)
+            var ep = EpisodeRepo.Custom(
+                connection =>
+                {
+                    connection.Open();
+                    var result =  connection.Query<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId});
+
+                    return result;
+                }).ToList();
+
+            if (!ep.Any())
             {
                 Log.Info("Episode cache info is not available. tvdbid: {0}, season: {1}, episode: {2}",theTvDbId, season, episode);
                 return false;
             }
-            foreach (var result in episodes)
+            foreach (var result in ep)
             {
-                if (result.Episodes.ProviderId.Equals(theTvDbId) && result.Episodes.EpisodeNumber == episode && result.Episodes.SeasonNumber == season)
+                if (result.ProviderId.Equals(theTvDbId) && result.EpisodeNumber == episode && result.SeasonNumber == season)
                 {
                     return true;
                 }
@@ -258,35 +270,43 @@ namespace PlexRequests.Services.Jobs
         }
 
         /// <summary>
-        /// Gets the episode's stored in the cache.
+        /// Gets the episode's db in the cache.
         /// </summary>
         /// <returns></returns>
-        public HashSet<PlexEpisodeModel> GetEpisodeCache()
+        public async Task<IEnumerable<PlexEpisodes>> GetEpisodes()
         {
-            var episodes = Cache.Get<HashSet<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
+            var episodes = await EpisodeRepo.GetAllAsync();
             if (episodes == null)
             {
                 Log.Info("Episode cache info is not available.");
-                return new HashSet<PlexEpisodeModel>();
+                return new HashSet<PlexEpisodes>();
             }
             return episodes;
         }
 
         /// <summary>
-        /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
+        /// Gets the episode's stored in the db and then filters on the TheTvDBId.
         /// </summary>
         /// <param name="theTvDbId">The tv database identifier.</param>
         /// <returns></returns>
-        public IEnumerable<PlexEpisodeModel> GetEpisodeCache(int theTvDbId)
+        public async Task<IEnumerable<PlexEpisodes>> GetEpisodes(int theTvDbId)
         {
-            var episodes = Cache.Get<List<PlexEpisodeModel>>(CacheKeys.PlexEpisodes);
-            if (episodes == null)
+            var ep =  await EpisodeRepo.CustomAsync(async connection =>
+                {
+                    connection.Open();
+                    var result = await connection.QueryAsync<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId });
+
+                    return result;
+                });
+
+            var plexEpisodeses = ep as PlexEpisodes[] ?? ep.ToArray();
+            if (!plexEpisodeses.Any())
             {
-                Log.Info("Episode cache info is not available.");
-                return new List<PlexEpisodeModel>();
+                Log.Info("Episode db info is not available.");
+                return new List<PlexEpisodes>();
             }
 
-            return episodes.Where(x => x.Episodes.ProviderId == theTvDbId.ToString());
+            return plexEpisodeses;
         }
 
         public List<PlexAlbum> GetPlexAlbums()

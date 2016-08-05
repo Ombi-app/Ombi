@@ -25,9 +25,10 @@
 //  ************************************************************************/
 #endregion
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Helpers
 {
     public static class StringHelper
     {
@@ -45,6 +46,23 @@ namespace PlexRequests.UI.Helpers
             if (string.IsNullOrEmpty(input))
                 return input;
             return Regex.Replace(input.FirstCharToUpper(), "([a-z](?=[A-Z])|[A-Z](?=[A-Z][a-z]))", "$1 ");
+        }
+
+        public static string AddPrefix(this string[] values, string prefix, string separator)
+        {
+            var sb = new StringBuilder();
+            var len = values.Length;
+            for (var i = 0; i < len; i++)
+            {
+                sb.Append(prefix).Append(values[i]);
+
+                // If it's not the last item in the collection, then add a separator
+                if (i < len - 1)
+                {
+                    sb.Append(separator);
+                }
+            }
+            return sb.ToString();
         }
     }
 }

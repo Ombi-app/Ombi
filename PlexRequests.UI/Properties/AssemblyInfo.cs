@@ -35,3 +35,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 [assembly: AssemblyInformationalVersionAttribute("1.0.0.0")]
 [assembly: InternalsVisibleTo("PlexRequests.UI.Tests")]
+[assembly: InternalsVisibleTo("PlexRequests.UI.Tests1")]
+[assembly: InternalsVisibleTo("PlexRequests.Explorables")]
+

@@ -29,9 +29,8 @@ using System.Collections.Generic;
 using NUnit.Framework;
 
 using PlexRequests.Core.Models;
-using PlexRequests.UI.Helpers;
 
-namespace PlexRequests.UI.Tests
+namespace PlexRequests.Helpers.Tests
 {
     [TestFixture]
     public class StringHelperTests
@@ -46,6 +45,12 @@ namespace PlexRequests.UI.Tests
         public string ToCamelCaseWordsTest(string input)
         {
             return input.ToCamelCaseWords();
+        }
+
+        [TestCaseSource(nameof(PrefixData))]
+        public string AddPrefix(string[] input, string prefix, string separator)
+        {
+            return input.AddPrefix(prefix, separator);
         }
 
         private static IEnumerable<TestCaseData> StringData
@@ -69,6 +74,20 @@ namespace PlexRequests.UI.Tests
                 yield return new TestCaseData("ThisIsANewString").Returns("This Is A New String").SetName("longer string");
                 yield return new TestCaseData(IssueStatus.PendingIssue.ToString()).Returns("Pending Issue").SetName("enum pending");
                 yield return new TestCaseData(IssueStatus.ResolvedIssue.ToString()).Returns("Resolved Issue").SetName("enum resolved");
+            }
+        }
+
+        private static IEnumerable<TestCaseData> PrefixData
+        {
+            get
+            {
+                yield return new TestCaseData(new[] {"abc","def","ghi"}, "@", ",").Returns("@abc,@def,@ghi").SetName("Happy Path");
+                yield return new TestCaseData(new[] {"abc","def","ghi"}, "!!", "").Returns("!!abc!!def!!ghi").SetName("Different Separator Path");
+                yield return new TestCaseData(new[] {"abc"}, "", "").Returns("abc").SetName("Single Item");
+                yield return new TestCaseData(new string[0], "", "").Returns(string.Empty).SetName("Empty Array");
+                yield return new TestCaseData(new [] {"abc","aaaa"}, null, ",").Returns("abc,aaaa").SetName("Null prefix");
+                yield return new TestCaseData(new [] {"abc","aaaa"}, "@", null).Returns("@abc@aaaa").SetName("Null separator test");
+                yield return new TestCaseData(new [] {"abc","aaaa"}, null, null).Returns("abcaaaa").SetName("Null separator and prefix");
             }
         }
     }

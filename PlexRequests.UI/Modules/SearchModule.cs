@@ -608,10 +608,11 @@ namespace PlexRequests.UI.Modules
                 }
                 if (episodeRequest)
                 {
-                    var cachedEpisodes = Checker.GetEpisodeCache().ToList();
+                    var cachedEpisodesTask = await Checker.GetEpisodes();
+                    var cachedEpisodes = cachedEpisodesTask.ToList();
                     foreach (var d in difference)
                     {
-                        if (cachedEpisodes.Any(x => x.Episodes.SeasonNumber == d.SeasonNumber && x.Episodes.EpisodeNumber == d.EpisodeNumber && x.Episodes.ProviderId == providerId))
+                        if (cachedEpisodes.Any(x => x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber && x.ProviderId == providerId))
                         {
                             return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
                         }
@@ -983,15 +984,15 @@ namespace PlexRequests.UI.Modules
                 sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
             }
 
-            var plexCache = Checker.GetEpisodeCache(seriesId).ToList();
-            
+            var plexCacheTask = await Checker.GetEpisodes(seriesId);
+            var plexCache = plexCacheTask.ToList();
             foreach (var ep in seasons)
             {
                 var requested = dbDbShow?.Episodes
                     .Any(episodesModel =>
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 
-                var alreadyInPlex = plexCache.Any(x => x.Episodes.EpisodeNumber == ep.number && x.Episodes.SeasonNumber == ep.season);
+                var alreadyInPlex = plexCache.Any(x => x.EpisodeNumber == ep.number && x.SeasonNumber == ep.season);
                 var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.monitored);
 
                 model.Add(new EpisodeListViewModel

@@ -44,7 +44,6 @@ using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Models;
 
-using StackExchange.Profiling;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
 
@@ -78,17 +77,8 @@ namespace PlexRequests.UI.Modules
 
         public async Task<Negotiator> Index()
         {
-            var profiler = MiniProfiler.Current;
-            using (profiler.Step("Loading Index"))
-            {
-                using (profiler.Step("Loading AuthSettingsAsync and returning View"))
-                {
-                    var settings = await AuthService.GetSettingsAsync();
-                    return View["Index", settings];
-                }
-
-            }
-
+            var settings = await AuthService.GetSettingsAsync();
+            return View["Index", settings];
         }
 
         private async Task<Response> LoginUser()

@@ -24,10 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+
+using Dapper;
 using Dapper.Contrib.Extensions;
 
 using Mono.Data.Sqlite;
@@ -53,6 +57,24 @@ namespace PlexRequests.Store.Repository
         public abstract Task<T> GetAsync(int id);
         public abstract T Get(int id);
         public abstract Task<T> GetAsync(string id);
+        private IDbConnection Connection => Config.DbConnection();
+
+
+        public IEnumerable<T> Custom(Func<IDbConnection , IEnumerable<T>> func)
+        {
+            using (var cnn = Connection)
+            {
+                return func(cnn);
+            }
+        }
+
+        public async Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func)
+        {
+            using (var cnn = Connection)
+            {
+                return await func(cnn);
+            }
+        }
 
         public long Insert(T entity)
         {
@@ -243,6 +265,51 @@ namespace PlexRequests.Store.Repository
                     db.Open();
                     var result = await db.GetAllAsync<T>().ConfigureAwait(false);
                     return result;
+                }
+            }
+            catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
+            {
+                Log.Fatal(CorruptMessage);
+                throw;
+            }
+        }
+
+        public bool BatchInsert(IEnumerable<T> entities, string tableName, params string[] values)
+        {
+            // If we have nothing to update, then it didn't fail...
+            if (!entities.Any())
+            {
+                return true;
+            }
+
+            try
+            {
+                ResetCache();
+                using (var db = Config.DbConnection())
+                {
+
+                    var format = values.AddPrefix("@", ",");
+                    var processQuery = $"INSERT INTO {tableName} VALUES ({format})";
+                    var result = db.Execute(processQuery, entities);
+                    return result == values.Length;
+                }
+            }
+            catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
+            {
+                Log.Fatal(CorruptMessage);
+                throw;
+            }
+        }
+
+        public void DeleteAll(string tableName)
+        {
+            try
+            {
+                ResetCache();
+                using (var db = Config.DbConnection())
+                {
+                    db.Open();
+                    db.Execute($"delete from {tableName}");
                 }
             }
             catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
