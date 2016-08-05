@@ -127,7 +127,7 @@ namespace PlexRequests.Services.Jobs
             }
 
             // Delete all of the current items
-            Repo.DeleteAll(TableName);
+            //Repo.DeleteAll(TableName);
 
             Log.Debug("Inserting The following (1st item)");
             Log.Debug(entities.FirstOrDefault().DumpJson());
