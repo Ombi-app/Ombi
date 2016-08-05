@@ -112,4 +112,4 @@ CREATE TABLE IF NOT EXISTS PlexEpisodes
 	EpisodeNumber						INTEGER NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_Id ON PlexEpisodes (Id);
-CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);
+CREATE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);

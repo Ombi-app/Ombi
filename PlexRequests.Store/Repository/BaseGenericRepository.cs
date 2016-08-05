@@ -289,14 +289,8 @@ namespace PlexRequests.Store.Repository
                 ResetCache();
                 using (var db = Config.DbConnection())
                 {
+                    var result = enumerable.Sum(e => db.Insert(e));
 
-                    var format = values.AddPrefix("@", ",");
-                    var processQuery = $"INSERT INTO {tableName} VALUES ({format})";
-                    var result = 0;
-                    foreach (var e in enumerable)
-                    {
-                        result += db.Execute(processQuery, e);
-                    }
                     return result == enumerable.Length;
                 }
 
