@@ -100,6 +100,7 @@ namespace PlexRequests.UI.Tests
         }
 
         [Test]
+        [Ignore("Needs rework")]
         public async Task HappyPathSendEpisodeWithExistingSeriesToSonarr()
         {
             var seriesResult = new SonarrAddSeries { monitored = true, title = "TitleReturned" };
