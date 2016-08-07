@@ -592,6 +592,7 @@ function tvLoad() {
                 context.episodes = tvObject;
                 var html = searchTemplate(context);
                 $tvl.append(html);
+                tvObject = new Array();
 
             });
 

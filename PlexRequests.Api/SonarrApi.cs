@@ -64,7 +64,7 @@ namespace PlexRequests.Api
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true)
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
         {
             Log.Debug("Adding series {0}", title);
             Log.Debug("Seasons = {0}, out of {1} seasons", seasons.DumpJson(), seasonCount);
@@ -85,6 +85,16 @@ namespace PlexRequests.Api
                 rootFolderPath = rootPath,
                 monitored = monitor
             };
+
+            if (!searchForMissingEpisodes)
+            {
+                options.addOptions = new AddOptions
+                {
+                    searchForMissingEpisodes = false,
+                    ignoreEpisodesWithFiles = true,
+                    ignoreEpisodesWithoutFiles = true
+                };
+            }
 
             for (var i = 1; i <= seasonCount; i++)
             {
@@ -107,9 +117,8 @@ namespace PlexRequests.Api
             try
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
-                    TimeSpan.FromSeconds (2),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)
+                    TimeSpan.FromSeconds (1),
+                    TimeSpan.FromSeconds(2),
                 });
 
                 result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));

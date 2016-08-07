@@ -26,17 +26,20 @@
 #endregion
 
 using System;
+using NLog;
 
 namespace PlexRequests.Helpers
 {
     public class PlexHelper
     {
+
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public static string GetProviderIdFromPlexGuid(string guid)
         {
             if (string.IsNullOrEmpty(guid))
                 return guid;
 
-            var guidSplit = guid.Split(new[] {'/', '?'}, StringSplitOptions.RemoveEmptyEntries);
+            var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
             if (guidSplit.Length > 1)
             {
                 return guidSplit[1];
@@ -50,15 +53,23 @@ namespace PlexRequests.Helpers
             //guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
             if (string.IsNullOrEmpty(guid))
                 return null;
-
-            var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
-            if (guidSplit.Length > 2)
+            try
             {
-                ep.ProviderId = guidSplit[1];
-                ep.SeasonNumber = int.Parse(guidSplit[2]);
-                ep.EpisodeNumber = int.Parse(guidSplit[3]);
+                var guidSplit = guid.Split(new[] { '/', '?' }, StringSplitOptions.RemoveEmptyEntries);
+                if (guidSplit.Length > 2)
+                {
+                    ep.ProviderId = guidSplit[1];
+                    ep.SeasonNumber = int.Parse(guidSplit[2]);
+                    ep.EpisodeNumber = int.Parse(guidSplit[3]);
+                }
+                return ep;
+
             }
-            return ep;
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return ep;
+            }
         }
     }
 

@@ -585,8 +585,16 @@ namespace PlexRequests.UI.Modules
                 if (episodeRequest)
                 {
                     difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
-                    if (!difference.Any())
+                    if (difference.Any())
                     {
+                        existingRequest.Episodes = episodeModel.Episodes
+                                                    .Select(r =>
+                                                        new EpisodesModel
+                                                        {
+                                                            SeasonNumber = r.SeasonNumber,
+                                                            EpisodeNumber = r.EpisodeNumber
+                                                        }).ToList();
+
                         return await AddUserToRequest(existingRequest, settings, fullShowName);
                     }
                     // We have an episode that has not yet been requested, let's continue
@@ -730,7 +738,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings, string fullShowName)
         {
             // check if the current user is already marked as a requester for this show, if not, add them
-            if (!existingRequest.UserHasRequested(Username))
+            if (!existingRequest.UserHasRequested(Username) || existingRequest.Episodes.Any())
             {
                 existingRequest.RequestedUsers.Add(Username);
                 await RequestService.UpdateRequestAsync(existingRequest);
@@ -1092,17 +1100,17 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
-        private IEnumerable<Store.EpisodesModel> GetListDifferences(IEnumerable<Store.EpisodesModel> model, IEnumerable<Models.EpisodesModel> request)
+        private IEnumerable<Store.EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
         {
             var newRequest = request
                 .Select(r =>
-                    new Store.EpisodesModel
+                    new EpisodesModel
                     {
                         SeasonNumber = r.SeasonNumber,
                         EpisodeNumber = r.EpisodeNumber
                     }).ToList();
 
-            return newRequest.Except(model);
+            return newRequest.Except(existing);
         }
     }
 }

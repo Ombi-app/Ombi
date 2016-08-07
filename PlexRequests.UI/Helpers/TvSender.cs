@@ -75,7 +75,7 @@ namespace PlexRequests.UI.Helpers
             var seriesTask = GetSonarrSeries(sonarrSettings, model.ProviderId);
 
             if (episodeRequest)
-            {            
+            {
                 // Does series exist?
                 var series = await seriesTask;
                 if (series != null)
@@ -83,6 +83,7 @@ namespace PlexRequests.UI.Helpers
                     // Series Exists
                     // Request the episodes in the existing series
                     await RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                    return new SonarrAddSeries {title = series.title};
                 }
                 else
                 {
@@ -91,29 +92,22 @@ namespace PlexRequests.UI.Helpers
                             sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
                             sonarrSettings.FullUri, false));
 
-                    if (string.IsNullOrEmpty(addResult?.title))
+
+                    // Get the series that was just added
+                    series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+                    series.monitored = false; // Un-monitor the series
+
+                    // Un-monitor all seasons
+                    foreach (var season in series.seasons)
                     {
-                        var sw = new Stopwatch();
-                        sw.Start();
-                        while (series == null)
-                        {
-                            await Task.Delay(TimeSpan.FromSeconds(5));
-                            series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
-
-                            // Check how long we have been doing this for
-                            if (sw.Elapsed > TimeSpan.FromSeconds(30))
-                            {
-                                // 30 seconds is a long time, it's not going to work.
-                                throw new ApiRequestException("Sonarr still didn't have the series added after 30 seconds.");
-                            }
-                        }
-                        sw.Stop();
-
-                        // Update the series, Since we cannot add as unmonitoed due to the following bug: https://github.com/Sonarr/Sonarr/issues/1404
-                        SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                        season.monitored = false;
                     }
 
-                    // We now have the series in Sonarr
+                    // Update the series, Since we cannot add as un-monitored due to the following bug: https://github.com/Sonarr/Sonarr/issues/1404
+                    SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+
+
+                    // We now have the series in Sonarr, update it to request the episodes.
                     await RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
 
                     return addResult;
