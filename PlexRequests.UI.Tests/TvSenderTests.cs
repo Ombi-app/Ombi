@@ -79,7 +79,7 @@ namespace PlexRequests.UI.Tests
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
-                    It.IsAny<bool>())).Returns(seriesResult);
+                    It.IsAny<bool>(), It.IsAny<bool>())).Returns(seriesResult);
             Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
 
             var request = new RequestedModel();
@@ -96,7 +96,7 @@ namespace PlexRequests.UI.Tests
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
-                    true), Times.Once);
+                    true,  It.IsAny<bool>()), Times.Once);
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace PlexRequests.UI.Tests
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
-                    It.IsAny<bool>())).Returns(seriesResult);
+                    It.IsAny<bool>(), It.IsAny<bool>())).Returns(seriesResult);
             var sonarrEpisodes = new SonarrEpisodes()
             {
                 title = "abc",
@@ -153,7 +153,7 @@ namespace PlexRequests.UI.Tests
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
-                    true), Times.Once);
+                    true, It.IsAny<bool>()), Times.Once);
         }
 
         [Test]
