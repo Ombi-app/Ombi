@@ -290,26 +290,17 @@ namespace PlexRequests.Store.Repository
                 using (var db = Config.DbConnection())
                 {
                     db.Open();
-                    //using (var tran = db.BeginTransaction())
-                    //{
-                        Log.Trace("Starting Transaction");
+                    using (var tran = db.BeginTransaction())
+                    {
                         var result = enumerable.Sum(e => db.Insert(e));
-                        var done = result == enumerable.Length;
-
-                        Log.Trace($"Total Result: {done}");
-                        Log.Trace($"db result: {result}");
-                        Log.Trace($"totalitems result: {enumerable.Length}");
-                        if (done)
+                        if (result != 0)
                         {
-                            Log.Trace("Commiting");
-                            //tran.Commit();
+                            tran.Commit();
                             return true;
                         }
-                        Log.Trace("Rolling back the tran");
-
-                        //tran.Rollback();
+                        tran.Rollback();
                         return false;
-                    //}
+                    }
                 }
 
             }

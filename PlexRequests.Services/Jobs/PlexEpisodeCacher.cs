@@ -49,13 +49,14 @@ namespace PlexRequests.Services.Jobs
     public class PlexEpisodeCacher : IJob
     {
         public PlexEpisodeCacher(ISettingsService<PlexSettings> plexSettings, IPlexApi plex, ICacheProvider cache,
-            IJobRecord rec, IRepository<PlexEpisodes> repo)
+            IJobRecord rec, IRepository<PlexEpisodes> repo, ISettingsService<ScheduledJobsSettings> jobs)
         {
             Plex = plexSettings;
             PlexApi = plex;
             Cache = cache;
             Job = rec;
             Repo = repo;
+            Jobs = jobs;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -64,6 +65,7 @@ namespace PlexRequests.Services.Jobs
         private ICacheProvider Cache { get; }
         private IJobRecord Job { get; }
         private IRepository<PlexEpisodes> Repo { get; }
+        private ISettingsService<ScheduledJobsSettings> Jobs { get; }
         private const int ResultCount = 25;
         private const string PlexType = "episode";
         private const string TableName = "PlexEpisodes";
@@ -142,6 +144,15 @@ namespace PlexRequests.Services.Jobs
         {
             try
             {
+                var jobs = Job.GetJobs();
+                var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
+                if (job != null)
+                {
+                    if (job.LastRun > DateTime.Now.AddHours(-1)) // If it's been run in the last hour
+                    {
+                        return;
+                    }
+                }
                 CacheEpisodes();
             }
             catch (Exception e)

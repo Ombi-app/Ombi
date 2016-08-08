@@ -37,7 +37,7 @@ namespace PlexRequests.Core.SettingModels
             StoreBackup = 24;
             StoreCleanup = 24;
             UserRequestLimitResetter = 12;
-            PlexEpisodeCacher = 2;
+            PlexEpisodeCacher = 12;
         }
 
         public int PlexAvailabilityChecker { get; set; }
