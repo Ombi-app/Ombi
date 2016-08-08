@@ -161,8 +161,8 @@ namespace PlexRequests.UI.Jobs
             var plexEpCacher =
                 TriggerBuilder.Create()
                                 .WithIdentity("PlexEpisodeCacher", "Cache")
-                                .StartAt(DateTimeOffset.Now.AddMinutes(2)) // Everything has started on application start, lets wait 5 minutes
-                                .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexEpisodeCacher).RepeatForever())
+                                .StartAt(DateTimeOffset.Now.AddMinutes(5))
+                                .WithSimpleSchedule(x => x.WithIntervalInHours(s.PlexEpisodeCacher).RepeatForever())
                                 .Build();
 
 
