@@ -68,6 +68,7 @@ namespace PlexRequests.Helpers
             catch (Exception e)
             {
                 Log.Error(e);
+                Log.Error(guid);
                 return ep;
             }
         }
