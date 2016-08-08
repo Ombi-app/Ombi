@@ -314,8 +314,6 @@ namespace PlexRequests.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
-                var tvInfoTask = Task.Run(() => TvApi.EpisodeLookup(t.show.id));
-
                 var banner = t.show.image?.medium;
                 if (!string.IsNullOrEmpty(banner))
                 {
@@ -351,7 +349,6 @@ namespace PlexRequests.UI.Modules
                 else if (t.show?.externals?.thetvdb != null)
                 {
                     var tvdbid = (int)t.show.externals.thetvdb;
-
                     if (dbTv.ContainsKey(tvdbid))
                     {
                         var dbt = dbTv[tvdbid];
@@ -361,20 +358,12 @@ namespace PlexRequests.UI.Modules
                         viewT.Approved = dbt.Approved;
                         viewT.Available = dbt.Available;
                     }
-                    else if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
+                    if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
                     {
                         viewT.Requested = true;
                     }
                 }
-                var tvInfo = await tvInfoTask;
-
-                // Check if we have every episode in all seasons
-                var epModel = tvInfo.Select(tvIn => new Store.EpisodesModel { SeasonNumber = tvIn.season, EpisodeNumber = tvIn.number }).ToList();
-                var diff = viewT.Episodes.Except(epModel);
-                if (diff.Any())
-                {
-                    viewT.TvFullyAvailable = true;
-                }
+                
                 viewTv.Add(viewT);
             }
 
@@ -978,11 +967,11 @@ namespace PlexRequests.UI.Modules
 
             var model = new List<EpisodeListViewModel>();
 
-            var enumerable = allResults as RequestedModel[] ?? allResults.ToArray();
+            var requests = allResults as RequestedModel[] ?? allResults.ToArray();
 
-            var dbDbShow = enumerable.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
+            var existingRequest = requests.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
             var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(seriesId));
-            var seasons = await Task.Run(() => TvApi.EpisodeLookup(show.id));
+            var tvMaxeEpisodes = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
             var sonarrEpisodes = new List<SonarrEpisodes>();
             if (sonarrEnabled)
@@ -994,9 +983,9 @@ namespace PlexRequests.UI.Modules
 
             var plexCacheTask = await Checker.GetEpisodes(seriesId);
             var plexCache = plexCacheTask.ToList();
-            foreach (var ep in seasons)
+            foreach (var ep in tvMaxeEpisodes)
             {
-                var requested = dbDbShow?.Episodes
+                var requested = existingRequest?.Episodes
                     .Any(episodesModel =>
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 

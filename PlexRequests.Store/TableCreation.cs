@@ -75,6 +75,17 @@ namespace PlexRequests.Store
             connection.Close();
         }
 
+        public static void Vacuum(IDbConnection con)
+        {
+            using (con)
+            {
+                con.Open();
+
+                con.Query("VACUUM;");
+
+            }
+        }
+
         public static DbInfo GetSchemaVersion(this IDbConnection con)
         {
             con.Open();

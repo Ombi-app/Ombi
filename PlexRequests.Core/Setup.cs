@@ -48,10 +48,15 @@ namespace PlexRequests.Core
             Db = new DbConfiguration(new SqliteFactory());
             var created = Db.CheckDb();
             TableCreation.CreateTables(Db.DbConnection());
-
+            
             if (created)
             {
                 CreateDefaultSettingsPage(urlBase);
+            }
+            else
+            {
+                // Shrink DB
+                TableCreation.Vacuum(Db.DbConnection());
             }
 
             var version = CheckSchema();
