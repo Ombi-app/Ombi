@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -100,7 +101,7 @@ namespace PlexRequests.Services.Jobs
                 currentPosition += ResultCount;
             }
 
-            var entities = new HashSet<PlexEpisodes>();
+            var entities = new ConcurrentDictionary<PlexEpisodes, byte>();
 
             Parallel.ForEach(videoHashset, video =>
             {
@@ -111,15 +112,17 @@ namespace PlexRequests.Services.Jobs
                 foreach (var metadataVideo in metadata.Video)
                 {
                     var epInfo = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(metadataVideo.Guid);
-                    entities.Add(new PlexEpisodes
-                                {
-                                    EpisodeNumber = epInfo.EpisodeNumber,
-                                    EpisodeTitle = metadataVideo.Title,
-                                    ProviderId = epInfo.ProviderId,
-                                    RatingKey = metadataVideo.RatingKey,
-                                    SeasonNumber = epInfo.SeasonNumber,
-                                    ShowTitle = metadataVideo.GrandparentThumb
-                                });
+                    entities.TryAdd(
+                        new PlexEpisodes
+                        {
+                            EpisodeNumber = epInfo.EpisodeNumber,
+                            EpisodeTitle = metadataVideo.Title,
+                            ProviderId = epInfo.ProviderId,
+                            RatingKey = metadataVideo.RatingKey,
+                            SeasonNumber = epInfo.SeasonNumber,
+                            ShowTitle = metadataVideo.GrandparentThumb
+                        },
+                        1);
                 }
             });
 
@@ -127,7 +130,7 @@ namespace PlexRequests.Services.Jobs
             Repo.DeleteAll(TableName);
 
             // Insert the new items
-            var result = Repo.BatchInsert(entities, TableName, typeof(PlexEpisodes).GetPropertyNames());
+            var result = Repo.BatchInsert(entities.Select(x => x.Key).ToList(), TableName, typeof(PlexEpisodes).GetPropertyNames());
 
             if (!result)
             {
