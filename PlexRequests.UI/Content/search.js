@@ -576,15 +576,12 @@ $(function () {
         // Save Modal click
         $("#episodesRequest").click(function (e) {
             e.preventDefault();
-
+            var origHtml = $('#episodesRequest').html();
             var tvId = $('#selectedEpisodeId').val();
 
-            $("#episodesRequest").prop("disabled", true);
             loadingButton("episodesRequest", "primary");
-
-
+            
             var $form = $('#form' + tvId);
-
             var model = [];
 
             var $checkedEpisodes = $('.selectedEpisodes:checkbox:checked');
@@ -601,10 +598,28 @@ $(function () {
                 Episodes: model
             }
 
-            var url = createBaseUrl(mainBaseUrl, "search/request/tvEpisodes");
-            var type = $form.prop('method');
+            var methodUrl = createBaseUrl(mainBaseUrl, "search/request/tvEpisodes");
+            var methodType = $form.prop('method');
             $('#episodesModal').modal('toggle');
-            sendRequestAjax(JSON.stringify(finalObj), type, url, tvId);
+
+            $.ajax({
+                type: methodType,
+                url: methodUrl,
+                data: JSON.stringify(finalObj),
+                dataType: "json",
+                success: function (response) {
+                    finishLoading("episodesRequest", "primary", origHtml);
+                    if (response.result === true) {
+                        generateNotify(response.message);
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function(e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
         });
 
         function buildSeasonsContext(result) {
