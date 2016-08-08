@@ -27,6 +27,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 using NLog;
 
@@ -91,8 +92,6 @@ namespace PlexRequests.Services.Jobs
             // Parse the total amount of episodes
             int.TryParse(episodes.TotalSize, out totalSize);
 
-            currentPosition += ResultCount;
-
             // Get all of the episodes in batches until we them all (Got'a catch 'em all!)
             while (currentPosition < totalSize)
             {
@@ -103,9 +102,8 @@ namespace PlexRequests.Services.Jobs
 
             var entities = new HashSet<PlexEpisodes>();
 
-            foreach (var video in videoHashset)
+            Parallel.ForEach(videoHashset, video =>
             {
-
                 // Get the individual episode Metadata (This is for us to get the TheTVDBId which also includes the episode number and season number)
                 var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, video.RatingKey);
 
@@ -113,28 +111,27 @@ namespace PlexRequests.Services.Jobs
                 foreach (var metadataVideo in metadata.Video)
                 {
                     var epInfo = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(metadataVideo.Guid);
-                    entities.Add(
-                        new PlexEpisodes
-                        {
-                            EpisodeNumber = epInfo.EpisodeNumber,
-                            EpisodeTitle = metadataVideo.Title,
-                            ProviderId = epInfo.ProviderId,
-                            RatingKey = metadataVideo.RatingKey,
-                            SeasonNumber = epInfo.SeasonNumber,
-                            ShowTitle = metadataVideo.GrandparentThumb
-                        });
+                    entities.Add(new PlexEpisodes
+                                {
+                                    EpisodeNumber = epInfo.EpisodeNumber,
+                                    EpisodeTitle = metadataVideo.Title,
+                                    ProviderId = epInfo.ProviderId,
+                                    RatingKey = metadataVideo.RatingKey,
+                                    SeasonNumber = epInfo.SeasonNumber,
+                                    ShowTitle = metadataVideo.GrandparentThumb
+                                });
                 }
-            }
+            });
 
             // Delete all of the current items
             Repo.DeleteAll(TableName);
-            // TODO Fix the datatype mismatch...
+
             // Insert the new items
             var result = Repo.BatchInsert(entities, TableName, typeof(PlexEpisodes).GetPropertyNames());
 
             if (!result)
             {
-                Log.Error("Saving the plex episodes to the DB Failed");
+                Log.Error("Saving the Plex episodes to the DB Failed");
             }
         }
 
