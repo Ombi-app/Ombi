@@ -292,14 +292,20 @@ namespace PlexRequests.Store.Repository
                     db.Open();
                     using (var tran = db.BeginTransaction())
                     {
+                        Log.Trace("Starting Transaction");
                         var result = enumerable.Sum(e => db.Insert(e));
                         var done = result == enumerable.Length;
 
+                        Log.Trace($"Total Result: {done}");
+                        Log.Trace($"db result: {result}");
+                        Log.Trace($"totalitems result: {enumerable.Length}");
                         if (done)
                         {
+                            Log.Trace("Committed the tran");
                             tran.Commit();
                             return true;
                         }
+                        Log.Trace("Rolling back the tran");
 
                         tran.Rollback();
                         return false;
