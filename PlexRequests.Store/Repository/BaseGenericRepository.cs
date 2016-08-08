@@ -289,9 +289,21 @@ namespace PlexRequests.Store.Repository
                 ResetCache();
                 using (var db = Config.DbConnection())
                 {
-                    var result = enumerable.Sum(e => db.Insert(e));
+                    db.Open();
+                    using (var tran = db.BeginTransaction())
+                    {
+                        var result = enumerable.Sum(e => db.Insert(e));
+                        var done = result == enumerable.Length;
 
-                    return result == enumerable.Length;
+                        if (done)
+                        {
+                            tran.Commit();
+                            return true;
+                        }
+
+                        tran.Rollback();
+                        return false;
+                    }
                 }
 
             }
