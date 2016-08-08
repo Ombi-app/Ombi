@@ -122,7 +122,7 @@ namespace PlexRequests.Services.Jobs
                             ProviderId = epInfo.ProviderId,
                             RatingKey = metadataVideo.RatingKey,
                             SeasonNumber = epInfo.SeasonNumber,
-                            ShowTitle = metadataVideo.GrandparentThumb
+                            ShowTitle = metadataVideo.GrandparentTitle
                         },
                         1);
                 }
