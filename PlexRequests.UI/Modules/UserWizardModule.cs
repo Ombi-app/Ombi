@@ -24,10 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
+using Nancy.Authentication.Forms;
+using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Validation;
@@ -43,33 +46,37 @@ namespace PlexRequests.UI.Modules
     public class UserWizardModule : BaseModule
     {
         public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> auth) : base("wizard", pr)
+            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m) : base("wizard", pr)
         {
             PlexSettings = plex;
             PlexApi = plexApi;
             PlexRequestSettings = pr;
             Auth = auth;
+            Mapper = m;
 
-            Get["/"] = x => Index();
+            Get["/", true] = async (x, ct) =>
+            {
+                var settings = await PlexRequestSettings.GetSettingsAsync();
+                if (settings.Wizard)
+                {
+                    return Context.GetRedirect("~/search");
+                }
+                return View["Index"];
+            };
             Post["/plexAuth"] = x => PlexAuth();
-            Post["/plex", true] = async (x,ct) => await Plex();
-            Post["/plexrequest", true] = async (x,ct) => await PlexRequest();
-            Post["/auth", true] = async (x,ct) => await Authentication();
+            Post["/plex", true] = async (x, ct) => await Plex();
+            Post["/plexrequest", true] = async (x, ct) => await PlexRequest();
+            Post["/auth", true] = async (x, ct) => await Authentication();
+            Post["/createuser",true] = async (x,ct) => await CreateUser();
         }
 
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<AuthenticationSettings> Auth { get; }
+        private ICustomUserMapper Mapper { get; }
 
-        private Negotiator Index()
-        {
-            return View["Index"];
-        }
-
-
-
-
+     
         private Response PlexAuth()
         {
             var user = this.Bind<PlexAuth>();
@@ -140,6 +147,23 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save the settings to the database, please try again." });
+        }
+
+        private async Task<Response> CreateUser()
+        {
+            var username = (string)Request.Form.Username;
+            var userId = Mapper.CreateAdmin(username, Request.Form.Password);
+            Session[SessionKeys.UsernameKey] = username;
+
+            // Destroy the Plex Auth Token
+            Session.Delete(SessionKeys.UserWizardPlexAuth);
+
+            // Update the settings so we know we have been through the wizard
+            var settings = await PlexRequestSettings.GetSettingsAsync();
+            settings.Wizard = true;
+            await PlexRequestSettings.SaveSettingsAsync(settings);
+
+            return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: "/search");
         }
     }
 }

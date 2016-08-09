@@ -94,7 +94,7 @@
             success: function (response) {
                 if (response.result === true) {
                     //Next
-                    loadArea("createAdminArea");
+                    loadArea("adminArea");
                 } else {
                     generateNotify(response.message, "warning");
                 }
@@ -105,6 +105,7 @@
         });
     });
 
+    
     $('#contentBody').on('click', '#SearchForMovies', function () {
         var checked = this.checked;
         changeDisabledStatus($('#RequireMovieApproval'), checked, $('#RequireMovieApprovalLabel'));

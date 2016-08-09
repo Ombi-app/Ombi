@@ -184,14 +184,24 @@ namespace PlexRequests.Core
             var plexSettings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
 
             var currentSettings = plexSettings.GetSettings();
-            if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
+            if (!string.IsNullOrEmpty(auth?.OldPlexAuthToken))
             {
-                currentSettings.PlexAuthToken = auth.OldPlexAuthToken;
+                currentSettings.PlexAuthToken = auth?.OldPlexAuthToken;
                 plexSettings.SaveSettings(currentSettings);
 
                 // Clear out the old value
                 auth.OldPlexAuthToken = string.Empty;
                 authSettings.SaveSettings(auth);
+            }
+
+
+            //If we have an authToken we do not need to go through the setup
+            if (!string.IsNullOrEmpty(auth?.OldPlexAuthToken))
+            {
+                var prServuce = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var settings = prServuce.GetSettings();
+                settings.Wizard = true;
+                prServuce.SaveSettings(settings);
             }
         }
 

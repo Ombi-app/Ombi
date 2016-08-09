@@ -32,7 +32,7 @@
 
 
 <script id="plexAuthArea" type="text/html">
-    <form method="post" action="plexAuth" id="plexAuthForm">
+    <form method="post" action="/wizard/plexAuth" id="plexAuthForm">
         <h4 class="media-heading landing-title">Plex Authentication</h4>
         <div class="form-group">
             <label for="username" class="control-label">Username and Password</label>
@@ -55,7 +55,7 @@
 
 
 <script id="plexArea" type="text/html">
-    <form method="post" action="plex" id="plexForm">
+    <form method="post" action="/wizard/plex" id="plexForm">
         <h4 class="media-heading landing-title">Plex Settings</h4>
         <div class="form-group">
             <label for="Ip" class="control-label">Plex Hostname or IP Address</label>
@@ -86,7 +86,7 @@
 </script>
 
 <script id="plexRequestArea" type="text/html">
-    <form method="post" action="plexrequest" id="plexRequestForm">
+    <form method="post" action="/wizard/plexrequest" id="plexRequestForm">
         <div class="form-group">
             <div class="checkbox">
                 <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label id="SearchForMoviesLabel" for="SearchForMovies">Allow searching for Movies</label>
@@ -128,7 +128,7 @@
 </script>
 
 <script id="authArea" type="text/html">
-    <form method="post" action="auth" id="authForm">
+    <form method="post" action="/wizard/auth" id="authForm">
         <div class="form-group">
             <div class="checkbox userAuthTooltip" title="This will only allow the users that are your friends on Plex to log into Plex Requests. Note: They only need to enter their username, unless the below option is selected.">
                 <input type="checkbox" id="userAuth" name="UserAuthentication">
@@ -146,6 +146,26 @@
         <div class="form-group">
             <div style="text-align: center; margin-top: 20px">
                 <a href="#" id="submitAuth" class="btn btn-primary-outline">Next</a>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script id="adminArea" type="text/html">
+    <form method="post" action="/wizard/createuser" id="adminForm">
+        <div class="form-group">
+            <div>
+                <label for="adminUsername">Username</label><input type="text" class="form-control form-control-custom" id="adminUsername" name="Username" placeholder="Username">
+            </div>
+            <br />
+            <div>
+                <label for="adminPassword">Password</label><input type="password" class="form-control form-control-custom" id="adminPassword" name="Password" placeholder="Password">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align: center; margin-top: 20px">
+                <button id="submitAdmin" type="submit" class="btn btn-success-outline">Finish</button>
             </div>
         </div>
     </form>

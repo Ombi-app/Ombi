@@ -55,6 +55,7 @@ namespace PlexRequests.Core.SettingModels
         public string NoApprovalUsers { get; set; }
         public bool CollectAnalyticData { get; set; }
         public bool IgnoreNotifyForAutoApprovedRequests { get; set; }
+        public bool Wizard { get; set; }
 
         /// <summary>
         /// The CSS name of the theme we want

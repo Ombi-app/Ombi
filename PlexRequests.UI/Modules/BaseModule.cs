@@ -42,7 +42,7 @@ namespace PlexRequests.UI.Modules
     public abstract class BaseModule : NancyModule
     {
         protected string BaseUrl { get; set; }
-        
+
 
         protected BaseModule(ISettingsService<PlexRequestSettings> settingsService)
         {
@@ -66,7 +66,7 @@ namespace PlexRequests.UI.Modules
             BaseUrl = baseUrl;
 
             var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
-
+    
             ModulePath = settingModulePath;
 
             Before += (ctx) =>
