@@ -38,24 +38,31 @@ using Nancy.Validation;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+
+using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserWizardModule : BaseModule
     {
         public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m) : base("wizard", pr)
+            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a) : base("wizard", pr)
         {
             PlexSettings = plex;
             PlexApi = plexApi;
             PlexRequestSettings = pr;
             Auth = auth;
             Mapper = m;
+            Analytics = a;
 
             Get["/", true] = async (x, ct) =>
             {
+                a.TrackEventAsync(Category.Wizard, Action.Start, "Started the wizard", Username, CookieHelper.GetAnalyticClientId(Cookies));
+
                 var settings = await PlexRequestSettings.GetSettingsAsync();
                 if (settings.Wizard)
                 {
@@ -75,6 +82,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private ICustomUserMapper Mapper { get; }
+        private IAnalytics Analytics { get; }
 
      
         private Response PlexAuth()
@@ -153,6 +161,7 @@ namespace PlexRequests.UI.Modules
         {
             var username = (string)Request.Form.Username;
             var userId = Mapper.CreateAdmin(username, Request.Form.Password);
+            Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username, CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
 
             // Destroy the Plex Auth Token
@@ -162,6 +171,7 @@ namespace PlexRequests.UI.Modules
             var settings = await PlexRequestSettings.GetSettingsAsync();
             settings.Wizard = true;
             await PlexRequestSettings.SaveSettingsAsync(settings);
+
 
             return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: "/search");
         }
