@@ -91,7 +91,7 @@ namespace PlexRequests.UI.Helpers
             var scriptAssets = new List<string>
             {
                 $"<script src=\"{startUrl}/jquery-2.2.1.min.js\"></script>",
-                $"<script src=\"{startUrl}/app/app.js\"></script>",
+                //$"<script src=\"{startUrl}/app/app.js\"></script>",
                 $"<script src=\"{startUrl}/handlebars.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap-notify.min.js\"></script>",
@@ -150,6 +150,18 @@ namespace PlexRequests.UI.Helpers
             var content = GetContentUrl(assetLocation);
 
             sb.AppendLine($"<script src=\"{content}/Content/issues.js\" type=\"text/javascript\"></script>");
+
+            return helper.Raw(sb.ToString());
+        }
+
+        public static IHtmlString LoadWizardAssets(this HtmlHelpers helper)
+        {
+            var sb = new StringBuilder();
+            var assetLocation = GetBaseUrl();
+
+            var content = GetContentUrl(assetLocation);
+            
+            sb.AppendLine($"<script src=\"{content}/Content/wizard.js\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }

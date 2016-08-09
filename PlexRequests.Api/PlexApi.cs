@@ -56,6 +56,7 @@ namespace PlexRequests.Api
 		private const string SignInUri = "https://plex.tv/users/sign_in.json";
 		private const string FriendsUri = "https://plex.tv/pms/friends/all";
 		private const string GetAccountUri = "https://plex.tv/users/account";
+        private const string ServerUri = "https://plex.tv/pms/servers.xml";
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private static string Version { get; }
@@ -87,18 +88,18 @@ namespace PlexRequests.Api
 
         public PlexFriends GetUsers(string authToken)
         {
-            var request = new RestRequest
-            {
-                Method = Method.GET,
-            };
+                var request = new RestRequest
+                {
+                    Method = Method.GET,
+                };
 
-            AddHeaders(ref request, authToken);
+                AddHeaders(ref request, authToken);
 
-			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan), null);
+			    var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
+				    (exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan), null);
 			
 
-            return users;
+                return users;
         }
 
         /// <summary>
@@ -298,6 +299,22 @@ namespace PlexRequests.Api
                 Log.Error(e, "There has been a API Exception when attempting to get the Plex GetMetadata");
                 return new PlexMetadata();
             }
+        }
+
+        public PlexServer GetServer(string authToken)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+            };
+
+            AddHeaders(ref request, authToken);
+
+            var servers = RetryHandler.Execute(() => Api.ExecuteXml<PlexServer>(request, new Uri(ServerUri)),
+                (exception, timespan) => Log.Error(exception, "Exception when calling GetServer for Plex, Retrying {0}", timespan));
+
+
+            return servers;
         }
 
         private void AddHeaders(ref RestRequest request, string authToken)

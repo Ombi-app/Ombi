@@ -69,6 +69,7 @@
     <Compile Include="Plex\PlexLibraries.cs" />
     <Compile Include="Plex\PlexMetadata.cs" />
     <Compile Include="Plex\PlexSearch.cs" />
+    <Compile Include="Plex\PlexServer.cs" />
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexMediaType.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />

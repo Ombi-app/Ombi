@@ -1,0 +1,152 @@
+﻿
+@using PlexRequests.UI.Helpers
+@inherits PlexRequests.UI.Helpers.EmptyViewBase<PlexRequests.UI.Models.LandingPageViewModel>
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString();
+    }
+}
+@Html.LoadWizardAssets()
+
+<img class="landing-header" src="@formAction/Content/images/logo.png" width="300" />
+<div id="area" class="landing-block">
+
+
+    <div class="media">
+        <div id="contentBody" class="media-body">
+            <h4 class="media-heading landing-title" id="statusTitle">Welcome to Plex Requests</h4>
+            <div class="form-group">
+                <small>we are just going to run though the initial Plex Requests setup!</small>
+
+                <div style="text-align: center; margin-top: 20px">
+                    <a href="#" id="firstNext" class="btn btn-primary-outline">Next</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script id="plexAuthArea" type="text/html">
+    <form method="post" action="plexAuth" id="plexAuthForm">
+        <h4 class="media-heading landing-title">Plex Authentication</h4>
+        <div class="form-group">
+            <label for="username" class="control-label">Username and Password</label>
+            <div>
+                <input type="text" class="form-control form-control-custom" id="username" name="Username" placeholder="Username">
+            </div>
+            <br />
+            <div>
+                <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
+            </div>
+        </div>
+        <small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Plex Requests to view your media and friends</small>
+        <div class="form-group">
+            <div style="text-align: center; margin-top: 20px">
+                <button href="#" id="requestToken" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
+            </div>
+        </div>
+    </form>
+</script>
+
+
+<script id="plexArea" type="text/html">
+    <form method="post" action="plex" id="plexForm">
+        <h4 class="media-heading landing-title">Plex Settings</h4>
+        <div class="form-group">
+            <label for="Ip" class="control-label">Plex Hostname or IP Address</label>
+            <div>
+                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="192.168.1.1">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="portNumber" class="control-label">Port</label>
+
+            <div>
+                <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="32400">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align: center; margin-top: 20px">
+                <a href="#" id="submitPlex" class="btn btn-primary-outline">Next</a>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script id="plexRequestArea" type="text/html">
+    <form method="post" action="plexrequest" id="plexRequestForm">
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label id="SearchForMoviesLabel" for="SearchForMovies">Allow searching for Movies</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><label id="SearchForTvShowsLabel" for="SearchForTvShows">Allow searching for TV Shows</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label id="SearchForMusicLabel" for="SearchForMusic">Allow searching for Music</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" disabled="disabled" id="RequireMovieApproval" name="RequireMovieApproval"><label style="color:grey" id="RequireMovieApprovalLabel" for="RequireMovieApproval">Require approval of all Movie requests</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" disabled="disabled" id="RequireTvShowApproval" name="RequireTvShowApproval"><label style="color:grey" id="RequireTvShowApprovalLabel" for="RequireTvShowApproval">Require approval of all TV show requests</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" disabled="disabled" id="RequireMusicApproval" name="RequireMusicApproval"><label style="color:grey" id="RequireMusicApprovalLabel" for="RequireMusicApproval">Require approval of all Music requests</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align: center; margin-top: 20px">
+                <a href="#" id="submitPlexRequest" class="btn btn-primary-outline">Next</a>
+            </div>
+        </div>
+    </form>
+</script>
+
+<script id="authArea" type="text/html">
+    <form method="post" action="auth" id="authForm">
+        <div class="form-group">
+            <div class="checkbox userAuthTooltip" title="This will only allow the users that are your friends on Plex to log into Plex Requests. Note: They only need to enter their username, unless the below option is selected.">
+                <input type="checkbox" id="userAuth" name="UserAuthentication">
+                <label for="userAuth">Enable User Authentication</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox passwordAuthTooltip" title="When a user logs in, they are required to enter their Plex.tv username and Plex.tv password to authenticate. Note: They still need to be in your Plex Friends">
+                <input type="checkbox" id="UsePassword" name="UsePassword">
+                <label for="UsePassword">Require users to login with their passwords</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align: center; margin-top: 20px">
+                <a href="#" id="submitAuth" class="btn btn-primary-outline">Next</a>
+            </div>
+        </div>
+    </form>
+</script>

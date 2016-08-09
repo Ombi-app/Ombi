@@ -26,7 +26,6 @@
 #endregion
 using System;
 
-using PlexRequests.Api.Models;
 using PlexRequests.Api.Models.Plex;
 
 namespace PlexRequests.Api.Interfaces
@@ -43,5 +42,6 @@ namespace PlexRequests.Api.Interfaces
         PlexMetadata GetMetadata(string authToken, Uri plexFullHost, string itemId);
         PlexEpisodeMetadata GetEpisodeMetaData(string authToken, Uri host, string ratingKey);
         PlexSearch GetAllEpisodes(string authToken, Uri host, string section, int startPage, int returnCount);
+        PlexServer GetServer(string authToken);
     }
 }

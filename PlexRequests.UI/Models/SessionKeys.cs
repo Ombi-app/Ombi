@@ -30,5 +30,6 @@ namespace PlexRequests.UI.Models
     {
         public const string UsernameKey = "Username";
         public const string ClientDateTimeOffsetKey = "ClientDateTimeOffset";
+        public const string UserWizardPlexAuth = nameof(UserWizardPlexAuth);
     }
 }
