@@ -669,6 +669,7 @@ namespace PlexRequests.UI.Modules
                     {
                         model.Episodes.Add(new EpisodesModel { EpisodeNumber = ep.EpisodeNumber, SeasonNumber = ep.SeasonNumber });
                     }
+                    Analytics.TrackEventAsync(Category.Requests, Action.TvShow, $"Episode request for {model.Title}", Username, CookieHelper.GetAnalyticClientId(Cookies));
                     break;
                 default:
                     model.SeasonsRequested = seasons;
