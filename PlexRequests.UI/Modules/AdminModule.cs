@@ -254,6 +254,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            model.Wizard = true;
 
             if (!string.IsNullOrWhiteSpace(model.BaseUrl))
             {
