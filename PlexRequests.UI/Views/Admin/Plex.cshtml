@@ -63,6 +63,25 @@
             </div>
 
             <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.EnableTvEpisodeSearching)
+                    {
+                        <input type="checkbox" id="EnableTvEpisodeSearching" name="EnableTvEpisodeSearching" checked="checked"><label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="EnableTvEpisodeSearching" name="EnableTvEpisodeSearching"><label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
+                    }
+
+                </div>
+                <small>
+                    If enabled then we will lookup all episodes on your Plex server and store them in the local database. This will stop episode requests that already exist on Plex (that might not be in Sonarr).
+                    Please be aware that this is a very resource intensive process and while the Plex Episode Cacher job is running the application may appear slow (Depending on the size of your Plex library).
+                </small>
+            </div>
+
+            <div class="form-group">
                 <label for="SubDir" class="control-label">Plex Base Url</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">

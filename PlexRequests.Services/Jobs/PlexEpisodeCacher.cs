@@ -71,10 +71,9 @@ namespace PlexRequests.Services.Jobs
         private const string TableName = "PlexEpisodes";
 
 
-        public void CacheEpisodes()
+        public void CacheEpisodes(PlexSettings settings)
         {
             var videoHashset = new HashSet<Video>();
-            var settings = Plex.GetSettings();
             // Ensure Plex is setup correctly
             if (string.IsNullOrEmpty(settings.PlexAuthToken))
             {
@@ -144,6 +143,12 @@ namespace PlexRequests.Services.Jobs
         {
             try
             {
+                var s = Plex.GetSettings();
+                if (!s.EnableTvEpisodeSearching)
+                {
+                    return;
+                }
+
                 var jobs = Job.GetJobs();
                 var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
                 if (job != null)
@@ -153,7 +158,7 @@ namespace PlexRequests.Services.Jobs
                         return;
                     }
                 }
-                CacheEpisodes();
+                CacheEpisodes(s);
             }
             catch (Exception e)
             {
