@@ -148,7 +148,7 @@ namespace PlexRequests.Services.Jobs
                 var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
                 if (job != null)
                 {
-                    if (job.LastRun > DateTime.Now.AddHours(-1)) // If it's been run in the last hour
+                    if (job.LastRun > DateTime.Now.AddHours(-11)) // If it's been run in the last 11 hours
                     {
                         return;
                     }
