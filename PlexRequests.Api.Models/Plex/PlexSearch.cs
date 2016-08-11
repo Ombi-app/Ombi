@@ -244,6 +244,10 @@ namespace PlexRequests.Api.Models.Plex
     [XmlRoot(ElementName = "Directory")]
     public class Directory1
     {
+        public Directory1()
+        {
+            Seasons = new List<Directory1>();
+        }
         public string ProviderId { get; set; }
         [XmlAttribute(AttributeName = "guid")]
         public string Guid { get; set; }

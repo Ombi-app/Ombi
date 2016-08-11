@@ -26,6 +26,9 @@ function utcToLocal(date) {
 
 function generateNotify(message, type) {
     // type = danger, warning, info, successs
+    if (!type) {
+        type = "success";
+    }
     $.notify({
         // options
         message: message

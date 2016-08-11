@@ -302,7 +302,7 @@ namespace PlexRequests.Api
         }
 
 
-        public PlexMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey)
+        public PlexSeasonMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey)
         {
             var request = new RestRequest
             {
@@ -315,7 +315,7 @@ namespace PlexRequests.Api
 
             try
             {
-                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexMetadata>(request, plexFullHost),
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSeasonMetadata>(request, plexFullHost),
                     (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan), new[] {
                         TimeSpan.FromSeconds (5),
                         TimeSpan.FromSeconds(10),
@@ -327,7 +327,7 @@ namespace PlexRequests.Api
             catch (Exception e)
             {
                 Log.Error(e, "There has been a API Exception when attempting to get the Plex GetMetadata");
-                return new PlexMetadata();
+                return new PlexSeasonMetadata();
             }
         }
 

@@ -181,7 +181,7 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (!string.IsNullOrEmpty(movie.ProviderId) && 
+                    if (!string.IsNullOrEmpty(movie.ProviderId) &&
                         movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
@@ -209,7 +209,8 @@ namespace PlexRequests.Services.Jobs
                     ).ToArray();
 
                 foreach (var lib in tvLibs)
-                { 
+                {
+
                     shows.AddRange(lib.Directory.Select(x => new PlexTvShow // shows are in the directory list
                     {
                         Title = x.Title,
@@ -229,14 +230,15 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (seasons != null)
+                    if (seasons != null && show.ProviderId == providerId)
                     {
                         if (seasons.Any(season => show.Seasons.Contains(season)))
                         {
                             return true;
                         }
+                        return false;
                     }
-                    if (!string.IsNullOrEmpty(show.ProviderId) && 
+                    if (!string.IsNullOrEmpty(show.ProviderId) &&
                         show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
                         return true;
@@ -257,14 +259,14 @@ namespace PlexRequests.Services.Jobs
                 connection =>
                 {
                     connection.Open();
-                    var result =  connection.Query<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId});
+                    var result = connection.Query<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId });
 
                     return result;
                 }).ToList();
 
             if (!ep.Any())
             {
-                Log.Info("Episode cache info is not available. tvdbid: {0}, season: {1}, episode: {2}",theTvDbId, season, episode);
+                Log.Info("Episode cache info is not available. tvdbid: {0}, season: {1}, episode: {2}", theTvDbId, season, episode);
                 return false;
             }
             foreach (var result in ep)
@@ -298,13 +300,13 @@ namespace PlexRequests.Services.Jobs
         /// <returns></returns>
         public async Task<IEnumerable<PlexEpisodes>> GetEpisodes(int theTvDbId)
         {
-            var ep =  await EpisodeRepo.CustomAsync(async connection =>
-                {
-                    connection.Open();
-                    var result = await connection.QueryAsync<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId });
+            var ep = await EpisodeRepo.CustomAsync(async connection =>
+               {
+                   connection.Open();
+                   var result = await connection.QueryAsync<PlexEpisodes>("select * from PlexEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId });
 
-                    return result;
-                });
+                   return result;
+               });
 
             var plexEpisodeses = ep as PlexEpisodes[] ?? ep.ToArray();
             if (!plexEpisodeses.Any())
@@ -373,8 +375,23 @@ namespace PlexRequests.Services.Jobs
                                 var currentItem = results[i].Directory[j];
                                 var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
-                                var seasons = PlexApi.GetSeasons(plexSettings.PlexAuthToken, plexSettings.FullUri, currentItem.RatingKey);
-                                results[i].Directory[j] = seasons.Directory;
+
+                                // Get the seasons for each show
+                                if (currentItem.Type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    var seasons = PlexApi.GetSeasons(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                                        currentItem.RatingKey);
+
+                                    // We do not want "all episodes" this as a season
+                                    var filtered =
+                                        seasons.Directory.Where(
+                                            x =>
+                                                !x.Title.Equals("All episodes",
+                                                    StringComparison.CurrentCultureIgnoreCase));
+
+                                    results[i].Directory[j].Seasons.AddRange(filtered);
+                                }
+
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
                                 results[i].Directory[j].ProviderId = providerId;
                             }

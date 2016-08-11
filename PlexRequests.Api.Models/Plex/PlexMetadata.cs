@@ -55,4 +55,29 @@ namespace PlexRequests.Api.Models.Plex
         public string MediaTagVersion { get; set; }
     }
 
+    [XmlRoot(ElementName = "MediaContainer")]
+    public class PlexSeasonMetadata
+    {
+        [XmlElement(ElementName = "Video")]
+        public Video Video { get; set; }
+        [XmlElement(ElementName = "Directory")]
+        public List<Directory1> Directory { get; set; }
+        [XmlAttribute(AttributeName = "size")]
+        public string Size { get; set; }
+        [XmlAttribute(AttributeName = "allowSync")]
+        public string AllowSync { get; set; }
+        [XmlAttribute(AttributeName = "identifier")]
+        public string Identifier { get; set; }
+        [XmlAttribute(AttributeName = "librarySectionID")]
+        public string LibrarySectionID { get; set; }
+        [XmlAttribute(AttributeName = "librarySectionTitle")]
+        public string LibrarySectionTitle { get; set; }
+        [XmlAttribute(AttributeName = "librarySectionUUID")]
+        public string LibrarySectionUUID { get; set; }
+        [XmlAttribute(AttributeName = "mediaTagPrefix")]
+        public string MediaTagPrefix { get; set; }
+        [XmlAttribute(AttributeName = "mediaTagVersion")]
+        public string MediaTagVersion { get; set; }
+    }
+
 }
