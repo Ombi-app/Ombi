@@ -72,6 +72,29 @@ namespace PlexRequests.Helpers
                 return ep;
             }
         }
+
+        public static int GetSeasonNumberFromTitle(string title)
+        {
+            if (string.IsNullOrEmpty(title))
+            {
+                return 0;
+            }
+
+            var split = title.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (split.Length < 2)
+            {
+                // Cannot get the season number, it's not in the usual format
+                return 0;
+            }
+
+            int season;
+            if (int.TryParse(split[1], out season))
+            {
+                return season;
+            }
+
+            return 0;
+        }
     }
 
     public class EpisodeModelHelper

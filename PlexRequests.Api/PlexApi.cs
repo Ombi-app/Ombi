@@ -301,6 +301,36 @@ namespace PlexRequests.Api
             }
         }
 
+
+        public PlexMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/metadata/{ratingKey}/children"
+            };
+
+            request.AddUrlSegment("ratingKey", ratingKey);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexMetadata>(request, plexFullHost),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan), new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    });
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex GetMetadata");
+                return new PlexMetadata();
+            }
+        }
+
         public PlexServer GetServer(string authToken)
         {
             var request = new RestRequest

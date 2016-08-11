@@ -209,25 +209,33 @@ namespace PlexRequests.Services.Jobs
                     ).ToArray();
 
                 foreach (var lib in tvLibs)
-                {
+                { 
                     shows.AddRange(lib.Directory.Select(x => new PlexTvShow // shows are in the directory list
                     {
                         Title = x.Title,
                         ReleaseYear = x.Year,
                         ProviderId = x.ProviderId,
+                        Seasons = x.Seasons.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray()
                     }));
                 }
             }
             return shows;
         }
 
-        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null)
+        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
             foreach (var show in plexShows)
             {
                 if (advanced)
                 {
+                    if (seasons != null)
+                    {
+                        if (seasons.Any(season => show.Seasons.Contains(season)))
+                        {
+                            return true;
+                        }
+                    }
                     if (!string.IsNullOrEmpty(show.ProviderId) && 
                         show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -366,6 +374,8 @@ namespace PlexRequests.Services.Jobs
                                 var currentItem = results[i].Directory[j];
                                 var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
+                                var seasons = PlexApi.GetSeasons(plexSettings.PlexAuthToken, plexSettings.FullUri, currentItem.RatingKey);
+                                results[i].Directory[j] = seasons.Directory;
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
                                 results[i].Directory[j].ProviderId = providerId;
                             }

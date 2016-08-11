@@ -311,6 +311,7 @@ namespace PlexRequests.Api.Models.Plex
         public string UpdatedAt { get; set; }
         [XmlAttribute(AttributeName = "parentTitle")]
         public string ParentTitle { get; set; }
+        public List<Directory1> Seasons { get; set; }
     }
 
 

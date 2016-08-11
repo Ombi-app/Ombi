@@ -38,7 +38,7 @@ namespace PlexRequests.Services.Interfaces
         List<PlexMovie> GetPlexMovies();
         bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null);
         List<PlexTvShow> GetPlexTvShows();
-        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null);
+        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
         List<PlexAlbum> GetPlexAlbums();
         bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);

@@ -59,6 +59,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 using TMDbLib.Objects.General;
+using TMDbLib.Objects.Search;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
 using EpisodesModel = PlexRequests.Store.EpisodesModel;
@@ -190,7 +191,7 @@ namespace PlexRequests.UI.Modules
                 case MovieSearchType.Search:
                     var movies = await MovieApi.SearchMovie(searchTerm);
                     apiMovies = movies.Select(x =>
-                                    new MovieResult()
+                                    new MovieResult
                                     {
                                         Adult = x.Adult,
                                         BackdropPath = x.BackdropPath,
@@ -594,41 +595,6 @@ namespace PlexRequests.UI.Modules
                 }
             }
 
-            try
-            {
-                var shows = Checker.GetPlexTvShows();
-                var providerId = string.Empty;
-                var plexSettings = await PlexService.GetSettingsAsync();
-                if (plexSettings.AdvancedSearch)
-                {
-                    providerId = showId.ToString();
-                }
-                if (episodeRequest)
-                {
-                    var cachedEpisodesTask = await Checker.GetEpisodes();
-                    var cachedEpisodes = cachedEpisodesTask.ToList();
-                    foreach (var d in difference)
-                    {
-                        if (cachedEpisodes.Any(x => x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber && x.ProviderId == providerId))
-                        {
-                            return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
-                        }
-                    }
-                }
-                else
-                {
-                    if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId))
-                    {
-                        return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName) });
-            }
-
-
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -686,6 +652,41 @@ namespace PlexRequests.UI.Modules
             }
 
             model.SeasonList = seasonsList.ToArray();
+
+            try
+            {
+                var shows = Checker.GetPlexTvShows();
+                var providerId = string.Empty;
+                var plexSettings = await PlexService.GetSettingsAsync();
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = showId.ToString();
+                }
+                if (episodeRequest)
+                {
+                    var cachedEpisodesTask = await Checker.GetEpisodes();
+                    var cachedEpisodes = cachedEpisodesTask.ToList();
+                    foreach (var d in difference)
+                    {
+                        if (cachedEpisodes.Any(x => x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber && x.ProviderId == providerId))
+                        {
+                            return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
+                        }
+                    }
+                }
+                else
+                {
+                    if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId, model.SeasonList))
+                    {
+                        return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName) });
+            }
+
 
             if (ShouldAutoApprove(RequestType.TvShow, settings))
             {
