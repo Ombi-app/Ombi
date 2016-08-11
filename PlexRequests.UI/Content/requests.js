@@ -577,14 +577,14 @@ function tvLoad() {
             var tvObject = new Array();
             results.forEach(function (result) {
                 var ep = result.episodes;
-                ep.forEach(function (episode, index) {
-                    if (!tvObject.find(x => x.seasonNumber === episode.seasonNumber)) {
+                ep.forEach(function (episode) {
+                    var foundItem = tvObject.find(x => x.seasonNumber === episode.seasonNumber);
+                    if (!foundItem) {
                         var obj = { seasonNumber: episode.seasonNumber, episodes: [] }
                         tvObject.push(obj);
-                        tvObject[index].episodes.push(episode.episodeNumber);
+                        tvObject[tvObject.length - 1].episodes.push(episode.episodeNumber);
                     } else {
-                        var selectedObj =tvObject.find(x => x.seasonNumber === episode.seasonNumber);
-                        selectedObj.episodes.push(episode.episodeNumber);
+                        foundItem.episodes.push(episode.episodeNumber);
                     }
                 });
 

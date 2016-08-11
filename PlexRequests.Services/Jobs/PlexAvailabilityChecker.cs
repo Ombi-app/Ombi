@@ -286,7 +286,6 @@ namespace PlexRequests.Services.Jobs
             var episodes = await EpisodeRepo.GetAllAsync();
             if (episodes == null)
             {
-                Log.Info("Episode cache info is not available.");
                 return new HashSet<PlexEpisodes>();
             }
             return episodes;

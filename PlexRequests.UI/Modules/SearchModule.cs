@@ -567,9 +567,8 @@ namespace PlexRequests.UI.Modules
             }
 
             // check if the show/episodes have already been requested
-
             var existingRequest = await RequestService.CheckRequestAsync(showId);
-            var difference = new List<Store.EpisodesModel>();
+            var difference = new List<EpisodesModel>();
             if (existingRequest != null)
             {
                 if (episodeRequest)
@@ -666,13 +665,20 @@ namespace PlexRequests.UI.Modules
                 {
                     var cachedEpisodesTask = await Checker.GetEpisodes();
                     var cachedEpisodes = cachedEpisodesTask.ToList();
-                    foreach (var d in difference)
+                    foreach (var d in difference) // difference is from an existing request
                     {
                         if (cachedEpisodes.Any(x => x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber && x.ProviderId == providerId))
                         {
                             return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}" });
                         }
                     }
+
+                    var episodes = await GetEpisodes(showId);
+                    var availableEpisodes = episodes.Where(x => x.Requested).ToList();
+                    var availble = availableEpisodes.Select(a => new EpisodesModel { EpisodeNumber = a.EpisodeNumber, SeasonNumber = a.SeasonNumber }).ToList();
+
+                    var diff = model.Episodes.Except(availble);
+                    model.Episodes = diff.ToList();
                 }
                 else
                 {
@@ -951,6 +957,13 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> GetEpisodes()
         {
             var seriesId = (int)Request.Query.tvId;
+            var model = await GetEpisodes(seriesId);
+
+            return Response.AsJson(model);
+        }
+
+        private async Task<List<EpisodeListViewModel>> GetEpisodes(int providerId)
+        {
             var s = await SonarrService.GetSettingsAsync();
             var sonarrEnabled = s.Enabled;
             var allResults = await RequestService.GetAllAsync();
@@ -961,7 +974,7 @@ namespace PlexRequests.UI.Modules
                     if (sonarrEnabled)
                     {
                         var allSeries = SonarrApi.GetSeries(s.ApiKey, s.FullUri);
-                        var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == seriesId) ?? new Series();
+                        var selectedSeries = allSeries.FirstOrDefault(x => x.tvdbId == providerId) ?? new Series();
                         return selectedSeries;
                     }
                     return new Series();
@@ -971,8 +984,8 @@ namespace PlexRequests.UI.Modules
 
             var requests = allResults as RequestedModel[] ?? allResults.ToArray();
 
-            var existingRequest = requests.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == seriesId.ToString());
-            var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(seriesId));
+            var existingRequest = requests.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == providerId.ToString());
+            var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(providerId));
             var tvMaxeEpisodes = await Task.Run(() => TvApi.EpisodeLookup(show.id));
 
             var sonarrEpisodes = new List<SonarrEpisodes>();
@@ -983,7 +996,7 @@ namespace PlexRequests.UI.Modules
                 sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
             }
 
-            var plexCacheTask = await Checker.GetEpisodes(seriesId);
+            var plexCacheTask = await Checker.GetEpisodes(providerId);
             var plexCache = plexCacheTask.ToList();
             foreach (var ep in tvMaxeEpisodes)
             {
@@ -1003,9 +1016,8 @@ namespace PlexRequests.UI.Modules
                     Name = ep.name,
                     EpisodeId = ep.id
                 });
-            }
+            }return model;
 
-            return Response.AsJson(model);
         }
 
         public async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
