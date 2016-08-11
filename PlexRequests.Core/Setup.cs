@@ -62,10 +62,6 @@ namespace PlexRequests.Core
             var version = CheckSchema();
             if (version > 0)
             {
-                if (version > 1799 && version <= 1800)
-                {
-                    MigrateToVersion1800();
-                }
                 if (version > 1899 && version <= 1900)
                 {
                     MigrateToVersion1900();
