@@ -170,7 +170,12 @@
                     <span class="label label-success">{{status}}</span>
                 </div>
                 <br />
+                {{#if_eq releaseDate "01/01/0001 00:00:00"}} <!--TheTVDB didn't provide any premier info-->
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
+                {{else}}
+                <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
+                {{/if_eq}}
+
                 <div>
                     @UI.Common_Approved:
                     {{#if_eq approved false}}

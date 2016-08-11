@@ -456,4 +456,7 @@
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
     <value>Felaktig användare eller lösenord</value>
   </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Det finns ingen information tillgänglig för release datum</value>
+  </data>
 </root>

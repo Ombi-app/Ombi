@@ -456,4 +456,7 @@
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
     <value>Onjuiste gebruikersnaam of wachtwoord</value>
   </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Er is geen informatie beschikbaar voor de release datum</value>
+  </data>
 </root>

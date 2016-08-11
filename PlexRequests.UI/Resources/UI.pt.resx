@@ -456,4 +456,7 @@
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
     <value>Usuário incorreto ou senha</value>
   </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Não há informações disponíveis para a data de lançamento</value>
+  </data>
 </root>

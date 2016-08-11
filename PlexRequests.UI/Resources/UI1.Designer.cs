@@ -628,6 +628,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no information available for the release date.
+        /// </summary>
+        public static string Requests_ReleaseDate_Unavailable {
+            get {
+                return ResourceManager.GetString("Requests_ReleaseDate_Unavailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Requested By.
         /// </summary>
         public static string Requests_RequestedBy {
