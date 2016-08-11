@@ -336,3 +336,8 @@ label {
 .tooltip_templates {
   display: none; }
 
+.shadow {
+  -moz-box-shadow: 3px 3px 5px 6px #191919;
+  -webkit-box-shadow: 3px 3px 5px 6px #191919;
+  box-shadow: 3px 3px 5px 6px #191919; }
+

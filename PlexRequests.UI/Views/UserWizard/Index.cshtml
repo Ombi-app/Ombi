@@ -12,7 +12,7 @@
 @Html.LoadWizardAssets()
 
 <img class="landing-header" src="@formAction/Content/images/logo.png" width="300" />
-<div id="area" class="landing-block">
+<div id="area" class="landing-block shadow">
 
 
     <div class="media">
@@ -30,6 +30,7 @@
 </div>
 
 
+<!--Templates-->
 
 <script id="plexAuthArea" type="text/html">
     <form method="post" action="/wizard/plexAuth" id="plexAuthForm">
@@ -153,6 +154,8 @@
 
 <script id="adminArea" type="text/html">
     <form method="post" action="/wizard/createuser" id="adminForm">
+        <h4 class="media-heading landing-title">Create the Admin account</h4>
+        <small>This account will be used to configure your settings and also manage all of the requests.</small>
         <div class="form-group">
             <div>
                 <label for="adminUsername">Username</label><input type="text" class="form-control form-control-custom" id="adminUsername" name="Username" placeholder="Username">

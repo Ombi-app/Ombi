@@ -176,6 +176,14 @@ namespace PlexRequests.Core
                 Log.Error(ex, "Failed to cache CouchPotato quality profiles!");
             }
         }
+
+
+        /// <summary>
+        /// Migrates to version 1.9.
+        /// Move the Plex auth token to the new field.
+        /// Reconfigure the log level
+        /// Set the wizard flag to true if we already have settings
+        /// </summary>
         public void MigrateToVersion1900()
         {
             // Need to change the Plex Token location
@@ -183,58 +191,33 @@ namespace PlexRequests.Core
             var auth = authSettings.GetSettings();
             var plexSettings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
 
-            var currentSettings = plexSettings.GetSettings();
-            if (!string.IsNullOrEmpty(auth?.OldPlexAuthToken))
+            if (auth != null)
             {
-                currentSettings.PlexAuthToken = auth?.OldPlexAuthToken;
-                plexSettings.SaveSettings(currentSettings);
-
-                // Clear out the old value
-                auth.OldPlexAuthToken = string.Empty;
-                authSettings.SaveSettings(auth);
-            }
-
-
-            //If we have an authToken we do not need to go through the setup
-            if (!string.IsNullOrEmpty(auth?.OldPlexAuthToken))
-            {
-                var prServuce = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-                var settings = prServuce.GetSettings();
-                settings.Wizard = true;
-                prServuce.SaveSettings(settings);
-            }
-        }
-
-        /// <summary>
-        /// Migrates to version 1.8.
-        /// <para>This includes updating the admin account to have all roles.</para>
-        /// <para>Set the log level to Error</para>
-        /// <para>Enable Analytics by default</para>
-        /// </summary>
-        private void MigrateToVersion1800()
-        {
-
-            // Give admin all roles/claims
-            try
-            {
-                var userMapper = new UserMapper(new UserRepository<UsersModel>(Db, new MemoryCacheProvider()));
-                var users = userMapper.GetUsers();
-
-                foreach (var u in users)
+                //If we have an authToken we do not need to go through the setup
+                if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
                 {
-                    var claims = new[] { UserClaims.User, UserClaims.Admin, UserClaims.PowerUser };
-                    u.Claims = ByteConverterHelper.ReturnBytes(claims);
-
-                    userMapper.EditUser(u);
+                    var prServuce = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                    var settings = prServuce.GetSettings();
+                    settings.Wizard = true;
+                    prServuce.SaveSettings(settings);
                 }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
+
+                // Clear out the old token and save it to the new field
+                var currentSettings = plexSettings.GetSettings();
+                if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
+                {
+                    currentSettings.PlexAuthToken = auth.OldPlexAuthToken;
+                    plexSettings.SaveSettings(currentSettings);
+
+                    // Clear out the old value
+                    auth.OldPlexAuthToken = string.Empty;
+                    authSettings.SaveSettings(auth);
+                }
+
             }
 
 
-            // Set log level
+            // Set the log level
             try
             {
                 var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
@@ -243,7 +226,6 @@ namespace PlexRequests.Core
                 settingsService.SaveSettings(logSettings);
 
                 LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
-
             }
             catch (Exception e)
             {
@@ -265,7 +247,6 @@ namespace PlexRequests.Core
             {
                 Log.Error(e);
             }
-
         }
     }
 }
