@@ -992,7 +992,7 @@ namespace PlexRequests.UI.Modules
                     ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
 
                 var alreadyInPlex = plexCache.Any(x => x.EpisodeNumber == ep.number && x.SeasonNumber == ep.season);
-                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.monitored);
+                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.hasFile);
 
                 model.Add(new EpisodeListViewModel
                 {

@@ -156,10 +156,10 @@ namespace PlexRequests.UI.Helpers
             foreach (var r in model.Episodes)
             {
                 // Match the episode and season number.
-                // Also we need to make sure that the episode is not monitored already, otherwise there is no point.
+                // If the episode is monitored we might not be searching for it.
                 var episode =
                     episodes.FirstOrDefault(
-                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber && !x.monitored);
+                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
                 if (episode == null)
                 {
                     continue;
