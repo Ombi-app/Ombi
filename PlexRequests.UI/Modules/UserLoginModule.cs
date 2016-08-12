@@ -166,7 +166,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsRedirect(uri.ToString()); // TODO Check this
             }
 
-            var landingSettings = LandingPageSettings.GetSettings();
+            var landingSettings = await LandingPageSettings.GetSettingsAsync();
 
             if (landingSettings.Enabled)
             {

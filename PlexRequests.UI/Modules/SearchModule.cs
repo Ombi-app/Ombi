@@ -673,6 +673,7 @@ namespace PlexRequests.UI.Modules
                         }
                     }
 
+                    //TODO this is not working correctly.
                     var episodes = await GetEpisodes(showId);
                     var availableEpisodes = episodes.Where(x => x.Requested).ToList();
                     var availble = availableEpisodes.Select(a => new EpisodesModel { EpisodeNumber = a.EpisodeNumber, SeasonNumber = a.SeasonNumber }).ToList();

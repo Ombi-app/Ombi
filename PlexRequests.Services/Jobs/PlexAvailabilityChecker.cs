@@ -48,8 +48,6 @@ using PlexRequests.Store.Repository;
 
 using Quartz;
 
-using Action = PlexRequests.Helpers.Analytics.Action;
-
 namespace PlexRequests.Services.Jobs
 {
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
@@ -202,7 +200,8 @@ namespace PlexRequests.Services.Jobs
             var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
             if (libs != null)
             {
-                var tvLibs = libs.Where(x =>
+                var withDir = libs.Where(x => x.Directory != null);
+                var tvLibs = withDir.Where(x =>
                         x.Directory.Any(y =>
                             y.Type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)
                         )
@@ -215,7 +214,7 @@ namespace PlexRequests.Services.Jobs
                         Title = x.Title,
                         ReleaseYear = x.Year,
                         ProviderId = x.ProviderId,
-                        Seasons = x.Seasons.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray()
+                        Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray()
                     }));
                 }
             }

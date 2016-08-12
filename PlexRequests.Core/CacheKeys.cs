@@ -35,20 +35,14 @@ namespace PlexRequests.Core
 
         public const string PlexLibaries = nameof(PlexLibaries);
         public const string PlexEpisodes = nameof(PlexEpisodes);
-
         public const string TvDbToken = nameof(TvDbToken);
-
         public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
         public const string SonarrQueued = nameof(SonarrQueued);
-
         public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
         public const string SickRageQueued = nameof(SickRageQueued);
-
         public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);
         public const string CouchPotatoQueued = nameof(CouchPotatoQueued);
-
         public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
-
         public const string LastestProductVersion = nameof(LastestProductVersion);
     }
 }
