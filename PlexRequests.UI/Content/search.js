@@ -584,7 +584,7 @@ $(function () {
             var $form = $('#form' + tvId);
             var model = [];
 
-            var $checkedEpisodes = $('.selectedEpisodes:checkbox:checked');
+            var $checkedEpisodes = $('.selectedEpisodes:checkbox:checked:not(:disabled)');
             $checkedEpisodes.each(function (index, element) {
                 var $element = $('#' + element.id);
                 var tempObj = {};
@@ -610,7 +610,7 @@ $(function () {
                 success: function (response) {
                     finishLoading("episodesRequest", "primary", origHtml);
                     if (response.result === true) {
-                        generateNotify(response.message);
+                        generateNotify(response.message, "success");
                     } else {
                         generateNotify(response.message, "warning");
                     }

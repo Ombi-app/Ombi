@@ -30,10 +30,10 @@ namespace PlexRequests.Core.SettingModels
     {
         public ScheduledJobsSettings()
         {
-            PlexAvailabilityChecker = 10;
-            SickRageCacher = 10;
-            SonarrCacher = 10;
-            CouchPotatoCacher = 10;
+            PlexAvailabilityChecker = 60;
+            SickRageCacher = 60;
+            SonarrCacher = 60;
+            CouchPotatoCacher = 60;
             StoreBackup = 24;
             StoreCleanup = 24;
             UserRequestLimitResetter = 12;

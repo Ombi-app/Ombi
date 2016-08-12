@@ -43,6 +43,6 @@ namespace PlexRequests.Api.Interfaces
         PlexEpisodeMetadata GetEpisodeMetaData(string authToken, Uri host, string ratingKey);
         PlexSearch GetAllEpisodes(string authToken, Uri host, string section, int startPage, int returnCount);
         PlexServer GetServer(string authToken);
-        PlexMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey);
+        PlexSeasonMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey);
     }
 }

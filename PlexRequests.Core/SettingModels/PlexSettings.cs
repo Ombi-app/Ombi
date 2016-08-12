@@ -28,6 +28,10 @@ namespace PlexRequests.Core.SettingModels
 {
     public sealed class PlexSettings : ExternalSettings
     {
+        public PlexSettings()
+        {
+            AdvancedSearch = true;
+        }
         public bool AdvancedSearch { get; set; }
         public bool EnableTvEpisodeSearching { get; set; }
 

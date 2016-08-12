@@ -566,34 +566,6 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this item. Please report this to TVMaze. We cannot add the series sorry." });
             }
 
-            // check if the show/episodes have already been requested
-            var existingRequest = await RequestService.CheckRequestAsync(showId);
-            var difference = new List<EpisodesModel>();
-            if (existingRequest != null)
-            {
-                if (episodeRequest)
-                {
-                    difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
-                    if (difference.Any())
-                    {
-                        existingRequest.Episodes = episodeModel.Episodes
-                                                    .Select(r =>
-                                                        new EpisodesModel
-                                                        {
-                                                            SeasonNumber = r.SeasonNumber,
-                                                            EpisodeNumber = r.EpisodeNumber
-                                                        }).ToList();
-
-                        return await AddUserToRequest(existingRequest, settings, fullShowName);
-                    }
-                    // We have an episode that has not yet been requested, let's continue
-                }
-                else
-                {
-                    return await AddUserToRequest(existingRequest, settings, fullShowName);
-                }
-            }
-
             var model = new RequestedModel
             {
                 ProviderId = showInfo.externals?.thetvdb ?? 0,
@@ -652,6 +624,45 @@ namespace PlexRequests.UI.Modules
 
             model.SeasonList = seasonsList.ToArray();
 
+            // check if the show/episodes have already been requested
+            var existingRequest = await RequestService.CheckRequestAsync(showId);
+            var difference = new List<EpisodesModel>();
+            if (existingRequest != null)
+            {
+                if (episodeRequest)
+                {
+                    // Make sure we are not somehow adding dupes
+                    difference = GetListDifferences(existingRequest.Episodes, episodeModel.Episodes).ToList();
+                    if (difference.Any())
+                    {
+                        // Convert the request into the correct shape
+                        var newEpisodes = episodeModel.Episodes?.Select(x => new EpisodesModel
+                        {
+                            SeasonNumber = x.SeasonNumber,
+                            EpisodeNumber = x.EpisodeNumber
+                        });
+
+                        // Add it to the existing requests
+                        existingRequest.Episodes.AddRange(newEpisodes ?? Enumerable.Empty<EpisodesModel>());
+
+                        // It's technically a new request now, so set the status to not approved.
+                        existingRequest.Approved = false;
+
+                        return await AddUserToRequest(existingRequest, settings, fullShowName);
+                    }
+                    // We have an episode that has not yet been requested, let's continue
+                }
+                else if (model.SeasonList.Except(existingRequest.SeasonList).Any())
+                {
+                    // This is a season being requested that we do not yet have
+                    // Let's just continue
+                }
+                else
+                {
+                    return await AddUserToRequest(existingRequest, settings, fullShowName);
+                }
+            }
+
             try
             {
                 var shows = Checker.GetPlexTvShows();
@@ -673,12 +684,7 @@ namespace PlexRequests.UI.Modules
                         }
                     }
 
-                    //TODO this is not working correctly.
-                    var episodes = await GetEpisodes(showId);
-                    var availableEpisodes = episodes.Where(x => x.Requested).ToList();
-                    var availble = availableEpisodes.Select(a => new EpisodesModel { EpisodeNumber = a.EpisodeNumber, SeasonNumber = a.SeasonNumber }).ToList();
-
-                    var diff = model.Episodes.Except(availble);
+                    var diff = await GetEpisodeRequestDifference(showId, model);
                     model.Episodes = diff.ToList();
                 }
                 else
@@ -705,6 +711,11 @@ namespace PlexRequests.UI.Modules
                     var result = await sender.SendToSonarr(s, model);
                     if (!string.IsNullOrEmpty(result?.title))
                     {
+                        if (existingRequest != null)
+                        {
+                            return await UpdateRequest(model, settings,
+                                        $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                        }
                         return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
                     Log.Debug("Error with sending to sonarr.");
@@ -736,21 +747,14 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings, string fullShowName)
         {
             // check if the current user is already marked as a requester for this show, if not, add them
-            if (!existingRequest.UserHasRequested(Username) || existingRequest.Episodes.Any())
+            if (!existingRequest.UserHasRequested(Username))
             {
                 existingRequest.RequestedUsers.Add(Username);
-                await RequestService.UpdateRequestAsync(existingRequest);
             }
-            return
-                Response.AsJson(
-                    new JsonResponseModel
-                    {
-                        Result = true,
-                        Message =
-                            settings.UsersCanViewOnlyOwnRequests
-                                ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
-                                : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}"
-                    });
+
+            return await UpdateRequest(existingRequest, settings, settings.UsersCanViewOnlyOwnRequests
+                ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
+                : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}");
         }
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
@@ -1104,6 +1108,44 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
+        private async Task<Response> UpdateRequest(RequestedModel model, PlexRequestSettings settings, string message)
+        {
+            await RequestService.UpdateRequestAsync(model);
+
+            if (ShouldSendNotification(model.Type, settings))
+            {
+                var notificationModel = new NotificationModel
+                {
+                    Title = model.Title,
+                    User = Username,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.NewRequest,
+                    RequestType = model.Type
+                };
+                await NotificationService.Publish(notificationModel);
+            }
+
+            var limit = await RequestLimitRepo.GetAllAsync();
+            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
+            if (usersLimit == null)
+            {
+                await RequestLimitRepo.InsertAsync(new RequestLimit
+                {
+                    Username = Username,
+                    RequestType = model.Type,
+                    FirstRequestDate = DateTime.UtcNow,
+                    RequestCount = 1
+                });
+            }
+            else
+            {
+                usersLimit.RequestCount++;
+                await RequestLimitRepo.UpdateAsync(usersLimit);
+            }
+
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
+        }
+
         private IEnumerable<Store.EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
         {
             var newRequest = request
@@ -1115,6 +1157,16 @@ namespace PlexRequests.UI.Modules
                     }).ToList();
 
             return newRequest.Except(existing);
+        }
+
+        private async Task<IEnumerable<EpisodesModel>> GetEpisodeRequestDifference(int showId, RequestedModel model)
+        {
+            var episodes = await GetEpisodes(showId);
+            var availableEpisodes = episodes.Where(x => x.Requested).ToList();
+            var available = availableEpisodes.Select(a => new EpisodesModel { EpisodeNumber = a.EpisodeNumber, SeasonNumber = a.SeasonNumber }).ToList();
+
+            var diff = model.Episodes.Except(available);
+            return diff;
         }
     }
 }
