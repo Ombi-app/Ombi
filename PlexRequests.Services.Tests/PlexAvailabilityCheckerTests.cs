@@ -200,7 +200,7 @@ namespace PlexRequests.Services.Tests
             {
                 yield return new TestCaseData("title", "2011", "9999", new[] { 1, 2, 3 }).Returns(true).SetName("Advanced IsTvSeasonsAvailable True");
                 yield return new TestCaseData("title2", "2011", "99929", new[] { 5, 6 }).Returns(false).SetName("Advanced IsTvSeasonsAvailable False no seasons");
-                yield return new TestCaseData("title2", "2011", "99929", new[] { 1, 6 }).Returns(true).SetName("Advanced IsTvSeasonsAvailable true one season");
+                yield return new TestCaseData("title2", "2011", "9999", new[] { 1, 6 }).Returns(true).SetName("Advanced IsTvSeasonsAvailable true one season");
             }
         }
 
