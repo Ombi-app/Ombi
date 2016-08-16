@@ -109,15 +109,23 @@ namespace PlexRequests.Services.Jobs
             foreach (var r in requestedModels)
             {
                 var releaseDate = r.ReleaseDate == DateTime.MinValue ? string.Empty : r.ReleaseDate.ToString("yyyy");
-
                 bool matchResult;
+
                 switch (r.Type)
                 {
                     case RequestType.Movie:
                         matchResult = IsMovieAvailable(movies, r.Title, releaseDate, r.ImdbId);
                         break;
                     case RequestType.TvShow:
-                        matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId);
+                        if (!plexSettings.EnableTvEpisodeSearching)
+                        {
+                            matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId);
+                        }
+                        else
+                        {
+                            matchResult =
+                                r.Episodes.All(x => IsEpisodeAvailable(r.TvDbId, x.SeasonNumber, x.EpisodeNumber));
+                        }
                         break;
                     case RequestType.Album:
                         matchResult = IsAlbumAvailable(albums, r.Title, r.ReleaseDate.Year.ToString(), r.ArtistName);
@@ -125,6 +133,7 @@ namespace PlexRequests.Services.Jobs
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+
 
                 if (matchResult)
                 {
