@@ -563,7 +563,7 @@ namespace PlexRequests.UI.Modules
 
             if (showInfo.externals?.thetvdb == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this item. Please report this to TVMaze. We cannot add the series sorry." });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this TV Show :( We cannot add the TV Show automatically sorry! Please report this problem to the server admin so he can sort it out!" });
             }
 
             var model = new RequestedModel
