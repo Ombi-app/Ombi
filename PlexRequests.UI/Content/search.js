@@ -576,10 +576,11 @@ $(function () {
         // Save Modal click
         $("#episodesRequest").click(function (e) {
             e.preventDefault();
+
+            loadingButton("episodesRequest", "primary");
             var origHtml = $('#episodesRequest').html();
             var tvId = $('#selectedEpisodeId').val();
 
-            loadingButton("episodesRequest", "primary");
             
             var $form = $('#form' + tvId);
             var model = [];

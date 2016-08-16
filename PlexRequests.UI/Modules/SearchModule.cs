@@ -300,8 +300,8 @@ namespace PlexRequests.UI.Modules
 
             var allResults = await RequestService.GetAllAsync();
             allResults = allResults.Where(x => x.Type == RequestType.TvShow);
-
-            var dbTv = allResults.ToDictionary(x => x.ProviderId);
+            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+            var dbTv = distinctResults.ToDictionary(x => x.ProviderId);
 
             if (!apiTv.Any())
             {
@@ -648,7 +648,7 @@ namespace PlexRequests.UI.Modules
                         // It's technically a new request now, so set the status to not approved.
                         existingRequest.Approved = false;
 
-                        return await AddUserToRequest(existingRequest, settings, fullShowName);
+                        return await AddUserToRequest(existingRequest, settings, fullShowName, true);
                     }
                     // We have an episode that has not yet been requested, let's continue
                 }
@@ -744,17 +744,22 @@ namespace PlexRequests.UI.Modules
             return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
         }
 
-        private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings, string fullShowName)
+        private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings, string fullShowName, bool episodeReq = false)
         {
             // check if the current user is already marked as a requester for this show, if not, add them
             if (!existingRequest.UserHasRequested(Username))
             {
                 existingRequest.RequestedUsers.Add(Username);
             }
-
-            return await UpdateRequest(existingRequest, settings, settings.UsersCanViewOnlyOwnRequests
-                ? $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
-                : $"{fullShowName} {Resources.UI.Search_AlreadyRequested}");
+            if (settings.UsersCanViewOnlyOwnRequests || episodeReq)
+            {
+                return
+                    await
+                        UpdateRequest(existingRequest, settings,
+                            $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+            }
+            
+            return await UpdateRequest(existingRequest, settings, $"{fullShowName} {Resources.UI.Search_AlreadyRequested}");
         }
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
