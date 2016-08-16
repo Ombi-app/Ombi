@@ -53,6 +53,13 @@ function checkJsonResponse(response) {
     }
 }
 
+function disableElement(element) {
+    element.attr("disabled", "disabled");
+}
+function enableElement(element) {
+    element.removeAttr("disabled");
+}
+
 function loadingButton(elementId, originalCss) {
     var $element = $('#' + elementId);
     $element.removeClass("btn-" + originalCss + "-outline").addClass("btn-primary-outline").addClass('disabled').html("<i class='fa fa-spinner fa-spin'></i> Loading...");

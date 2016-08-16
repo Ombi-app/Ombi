@@ -540,6 +540,8 @@ $(function () {
     });
 
     $('#episodesModal').on('show.bs.modal', function (event) {
+        $("#episodesBody").html(""); // Clear out the modal body
+        $('#episodeModalLoading').removeAttr('hidden');
         finishLoading("episodesRequest", "primary");
         var button = $(event.relatedTarget); // Button that triggered the modal
         var id = button.data('identifier'); // Extract info from data-* attributes
@@ -551,6 +553,7 @@ $(function () {
             data: { tvId: id },
             dataType: "json",
             success: function (results) {
+                $('#episodeModalLoading').attr('hidden', "hidden");
                 var $content = $("#episodesBody");
                 $content.html("");
                 $('#selectedEpisodeId').val(id);
@@ -576,9 +579,11 @@ $(function () {
         // Save Modal click
         $("#episodesRequest").click(function (e) {
             e.preventDefault();
-
-            loadingButton("episodesRequest", "primary");
+            $("#episodesRequest").unbind();
             var origHtml = $('#episodesRequest').html();
+
+            disableElement($('#episodeRequest'));
+            loadingButton("episodesRequest", "primary");
             var tvId = $('#selectedEpisodeId').val();
 
             
@@ -610,11 +615,13 @@ $(function () {
                 dataType: "json",
                 success: function (response) {
                     finishLoading("episodesRequest", "primary", origHtml);
+                    enableElement($('#episodeRequest'));
                     if (response.result === true) {
                         generateNotify(response.message, "success");
                     } else {
                         generateNotify(response.message, "warning");
                     }
+
                 },
                 error: function(e) {
                     console.log(e);
