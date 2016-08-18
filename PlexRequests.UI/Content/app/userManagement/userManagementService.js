@@ -2,15 +2,18 @@
 
     var userManagementService = function ($http) {
 
-        $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'; // Set default headers
+        $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'; // Set default headers
 
         var getUsers = function () {
             return $http.get('/usermanagement/users');
         };
 
         var addUser = function (user) {
+            if (!user) {
+                return null;
+            }
 
-           return $http({
+            return $http({
                 url: '/usermanagement/createuser',
                 method: "POST",
                 data: $.param(user)

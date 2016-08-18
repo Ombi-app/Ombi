@@ -20,8 +20,9 @@ namespace PlexRequests.UI.Modules
     {
         public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex) : base("usermanagement", pr)
         {
-            //this.RequiresClaims(UserClaims.Admin);
-
+#if !DEBUG
+            this.RequiresClaims(UserClaims.Admin);
+#endif
             UserMapper = m;
             PlexApi = plexApi;
             PlexSettings = plex;
@@ -29,7 +30,7 @@ namespace PlexRequests.UI.Modules
             Get["/"] = x => Load();
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
-            Post["/createuser"] = x => CreateUser(Request.Form["userName"].ToString(), Request.Form["password"].ToString());
+            Post["/createuser"] = x => CreateUser(Request.Form["username"].ToString(), Request.Form["password"].ToString());
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x,ct) => await PlexDetails(x.id);
         }

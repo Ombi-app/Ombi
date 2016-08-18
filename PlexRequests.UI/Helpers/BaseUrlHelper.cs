@@ -42,6 +42,7 @@ namespace PlexRequests.UI.Helpers
             Locator = ServiceLocator.Instance;
             Cache = Locator.Resolve<ICacheProvider>();
         }
+
         private static ICacheProvider Cache { get; }
         private static ServiceLocator Locator { get; }
         private static string _Assembly;
@@ -91,7 +92,6 @@ namespace PlexRequests.UI.Helpers
             var scriptAssets = new List<string>
             {
                 $"<script src=\"{startUrl}/jquery-2.2.1.min.js\"></script>",
-                //$"<script src=\"{startUrl}/app/app.js\"></script>",
                 $"<script src=\"{startUrl}/handlebars.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap-notify.min.js\"></script>",
@@ -114,6 +114,28 @@ namespace PlexRequests.UI.Helpers
                 sb.AppendLine(a);
             }
 
+
+            return helper.Raw(sb.ToString());
+        }
+
+        public static IHtmlString LoadAngularAssets(this HtmlHelpers helper)
+        {
+            var sb = new StringBuilder();
+            var assetLocation = GetBaseUrl();
+
+            var content = GetContentUrl(assetLocation);
+            var settings = GetSettings();
+            if (string.IsNullOrEmpty(settings.ThemeName))
+            {
+                settings.ThemeName = Themes.PlexTheme;
+            }
+            if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
+            if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
+
+            var startUrl = $"{content}/Content";
+
+            sb.AppendLine($"<script src=\"{startUrl}/angular.min.js\"></script>"); // Load angular first
+            sb.AppendLine($"<script src=\"{startUrl}/app/app.js\"></script>");
 
             return helper.Raw(sb.ToString());
         }

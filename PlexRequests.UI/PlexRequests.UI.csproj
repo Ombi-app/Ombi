@@ -276,6 +276,9 @@
     <Compile Include="Validators\RequestedModelValidator.cs" />
     <Compile Include="Validators\SickRageValidator.cs" />
     <Compile Include="Validators\SonarrValidator.cs" />
+    <Content Include="Content\angular.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\app\app.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

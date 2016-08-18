@@ -1,16 +1,20 @@
-﻿@inherits PlexRequests.UI.Helpers.AngularViewBase
-
+﻿@using PlexRequests.UI.Helpers
+@inherits PlexRequests.UI.Helpers.AngularViewBase
+@Html.LoadAngularAssets()
 <script src="~/Content/app/userManagement/userManagementController.js"></script>
 <script src="~/Content/app/userManagement/userManagementService.js"></script>
 <div ng-controller="userManagementController" ng-init="getUsers()">
 
+    <br />
+    <br />
+    <br />
     <div class="col-md-7">
         <br>
         <br>
         <div ng-show="error.error" ng-bind="error.errorMessage"></div>
         <form ng-submit="addUser()">
             <div class="form-group">
-                <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom"/>
+                <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom" />
             </div>
             <div class="form-group">
                 <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
@@ -77,14 +81,23 @@
         </table>
     </div>
 
-    <div class="col-md-5">
-        <img ng-src="{{selectedUser.plexInfo.thumb}}"/>
-        <div ng-bind="selectedUser.id"></div>
-        <div ng-bind="selectedUser.username"></div>
-        <div ng-bind="selectedUser.emailAddress"></div>
-        <div ng-bind="selectedUser.claims"></div>
-        <div ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></div>
-
+    <div class="col-md-5 col-md-push-1" ng-show="selectedUser.username">
+        <br />
+        <br />
+        <img ng-src="{{selectedUser.plexInfo.thumb}}" />
+        <div hidden="hidden" ng-bind="selectedUser.id"></div>
+        <div>
+            <strong>Username: </strong><span ng-bind="selectedUser.username"></span>
+        </div>
+        <div ng-show="selectedUser.emailAddress">
+            <strong>Email Address: </strong><span ng-bind="selectedUser.emailAddress"></span>
+        </div>
+        <div>
+            <strong>Permissions: </strong><span ng-bind="selectedUser.claims"></span>
+        </div>
+        <div>
+            <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
+        </div>
     </div>
 
 
