@@ -42,10 +42,6 @@
       <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FluentScheduler, Version=3.1.46.0, Culture=neutral, PublicKeyToken=b76503528a14ebd1, processorArchitecture=MSIL">
-      <HintPath>..\packages\FluentScheduler.3.1.46\lib\net40\FluentScheduler.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
       <Private>True</Private>
@@ -57,6 +53,10 @@
     </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Linker, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Linker.0.3.1\lib\net40-Client\Nancy.Linker.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Testing, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -71,16 +71,20 @@
       <HintPath>..\packages\Nancy.Viewengines.Razor.1.4.3\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.2.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.2.0\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Ploeh.AutoFixture, Version=3.40.0.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoFixture.3.40.0\lib\net40\Ploeh.AutoFixture.dll</HintPath>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ploeh.AutoFixture, Version=3.49.1.0, Culture=neutral, PublicKeyToken=b24654c590009d4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoFixture.3.49.1\lib\net40\Ploeh.AutoFixture.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -103,8 +107,9 @@
     <Compile Include="BootstrapperExtensions.cs" />
     <Compile Include="LandingPageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StringHelperTests.cs" />
+    <Compile Include="SearchModuleTests.cs" />
     <Compile Include="TestRootPathProvider.cs" />
+    <Compile Include="TvSenderTests.cs" />
     <Compile Include="UserLoginModuleTests.cs" />
     <Compile Include="AdminModuleTests.cs" />
   </ItemGroup>

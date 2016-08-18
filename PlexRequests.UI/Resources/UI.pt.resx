@@ -414,4 +414,49 @@
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Algo deu errado adicionando o filme para CouchPotato! Verifique as suas opções.!</value>
   </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Atingiu seu limite semanal de solicitação para filmes! Entre em contato com seu administrador.</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>Já está no Plex!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Algo deu errado adicionar o filme para SickRage! Por favor, verifique suas configurações.</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>A pedido da TV mostra não está correctamente configurada. Entre em contato com seu administrador.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Atingiu seu limite semanal de solicitação para álbuns! Entre em contato com seu administrador.</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Não conseguimos encontrar a artista na MusicBrainz. Por favor, tente novamente mais tarde ou contacte o seu administrador</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Atingiu seu limite semanal de solicitação para programas de TV! Entre em contato com seu administrador.</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Desculpe, mas essa funcionalidade é atualmente somente para os usuários com contas de Plex</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Desculpe, mas o administrador não permitiu ainda esta funcionalidade.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Nós não poderia remover esta notificação, porque você nunca teve isso!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Não foi possível salvar a Zona de Frete. Por favor, tente novamente.</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Francês</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Selecione o episódio</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Usuário incorreto ou senha</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Não há informações disponíveis para a data de lançamento</value>
+  </data>
 </root>

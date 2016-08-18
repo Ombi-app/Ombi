@@ -31,6 +31,7 @@ using System.Threading.Tasks;
 
 using Nancy;
 using Nancy.Extensions;
+using Nancy.Linker;
 using Nancy.Responses.Negotiation;
 
 using NLog;
@@ -43,90 +44,66 @@ using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.UI.Models;
 
+
 using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
-        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> lp, IAnalytics a) : base("userlogin", pr)
+        public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker) : base("userlogin", pr)
         {
             AuthService = auth;
             LandingPageSettings = lp;
             Analytics = a;
             Api = api;
-            Get["/", true] = async (x, ct) => await Index();
-            Post["/"] = x => LoginUser();
+            PlexSettings = plexSettings;
+            Linker = linker;
+
+            Get["UserLoginIndex", "/", true] = async (x, ct) => await Index();
+            Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
         private IPlexApi Api { get; }
+        private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task<Negotiator> Index()
         {
-            var query = Request.Query["landing"];
-            var landingCheck = (bool?)query ?? true;
-            if (landingCheck)
-            {
-                var landingSettings = await LandingPageSettings.GetSettingsAsync();
-
-                if (landingSettings.Enabled)
-                {
-
-                    if (landingSettings.BeforeLogin)
-                    {
-#pragma warning disable 4014
-                        Analytics.TrackEventAsync(
-#pragma warning restore 4014
-                                 Category.LandingPage,
-                                 Action.View,
-                                 "Going To LandingPage before login",
-                                 Username,
-                                 CookieHelper.GetAnalyticClientId(Cookies));
-
-                        var model = new LandingPageViewModel
-                        {
-                            Enabled = landingSettings.Enabled,
-                            Id = landingSettings.Id,
-                            EnabledNoticeTime = landingSettings.EnabledNoticeTime,
-                            NoticeEnable = landingSettings.NoticeEnable,
-                            NoticeEnd = landingSettings.NoticeEnd,
-                            NoticeMessage = landingSettings.NoticeMessage,
-                            NoticeStart = landingSettings.NoticeStart,
-                            ContinueUrl = landingSettings.BeforeLogin ? $"userlogin" : $"search"
-                        };
-
-                        return View["Landing/Index", model];
-                    }
-                }
-            }
             var settings = await AuthService.GetSettingsAsync();
             return View["Index", settings];
         }
 
-        private Response LoginUser()
+        private async Task<Response> LoginUser()
         {
             var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
             Log.Debug("Username \"{0}\" attempting to login", username);
             if (string.IsNullOrWhiteSpace(username))
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
             var authenticated = false;
 
-            var settings = AuthService.GetSettings();
+            var settings = await AuthService.GetSettingsAsync();
+            var plexSettings = await PlexSettings.GetSettingsAsync();
 
             if (IsUserInDeniedList(username, settings))
             {
                 Log.Debug("User is in denied list, not allowing them to authenticate");
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
             var password = string.Empty;
@@ -144,14 +121,14 @@ namespace PlexRequests.UI.Modules
                 if (signedIn.user?.authentication_token != null)
                 {
                     Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
-                    if (CheckIfUserIsOwner(settings.PlexAuthToken, signedIn.user?.username))
+                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, signedIn.user?.username))
                     {
                         Log.Debug("User is the account owner");
                         authenticated = true;
                     }
                     else
                     {
-                        authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
+                        authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
                         Log.Debug("Friends list result = {0}", authenticated);
                     }
                 }
@@ -159,8 +136,8 @@ namespace PlexRequests.UI.Modules
             else if (settings.UserAuthentication) // Check against the users in Plex
             {
                 Log.Debug("Need to auth");
-                authenticated = CheckIfUserIsInPlexFriends(username, settings.PlexAuthToken);
-                if (CheckIfUserIsOwner(settings.PlexAuthToken, username))
+                authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
                 {
                     Log.Debug("User is the account owner");
                     authenticated = true;
@@ -184,24 +161,29 @@ namespace PlexRequests.UI.Modules
 
             if (!authenticated)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect User or Password" });
+                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
+                return Response.AsRedirect(uri.ToString()); // TODO Check this
             }
 
-            var landingSettings = LandingPageSettings.GetSettings();
+            var landingSettings = await LandingPageSettings.GetSettingsAsync();
 
             if (landingSettings.Enabled)
             {
                 if (!landingSettings.BeforeLogin)
-                    return Response.AsJson(new JsonResponseModel { Result = true, Message = "landing" });
+                {
+                    var uri = Linker.BuildAbsoluteUri(Context, "LandingPageIndex");
+                    return Response.AsRedirect(uri.ToString());
+                }
             }
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = "search" });
+            var retVal = Linker.BuildAbsoluteUri(Context, "SearchIndex");
+            return Response.AsRedirect(retVal.ToString()); // TODO Check this
         }
 
 
 
         private Response Logout()
         {
-            Log.Debug("Logging Out");
             if (Session[SessionKeys.UsernameKey] != null)
             {
                 Session.Delete(SessionKeys.UsernameKey);

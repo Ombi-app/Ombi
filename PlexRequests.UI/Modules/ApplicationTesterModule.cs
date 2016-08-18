@@ -44,14 +44,13 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> authSettings, ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("test", pr)
+             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("test", pr)
         {
             this.RequiresAuthentication();
             
             CpApi = cpApi;
             SonarrApi = sonarrApi;
             PlexApi = plexApi;
-            AuthSettings = authSettings;
             SickRageApi = srApi;
             HeadphonesApi = hpApi;
 
@@ -69,7 +68,6 @@ namespace PlexRequests.UI.Modules
         private IPlexApi PlexApi { get; }
         private ISickRageApi SickRageApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
-        private ISettingsService<AuthenticationSettings> AuthSettings { get; }
 
         private Response CouchPotatoTest()
         {
@@ -137,14 +135,13 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            var settings = AuthSettings.GetSettings();
-            if (settings?.PlexAuthToken == null)
+            if (plexSettings?.PlexAuthToken == null)
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Plex is not setup yet, you need to update your Authentication settings" });
             }
             try
             {
-                var status = PlexApi.GetStatus(settings.PlexAuthToken, plexSettings.FullUri);
+                var status = PlexApi.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri);
                 return status != null
                ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Plex successfully!" })
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Plex, please check your settings." });

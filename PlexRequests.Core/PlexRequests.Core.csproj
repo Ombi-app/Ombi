@@ -34,8 +34,12 @@
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -55,9 +59,6 @@
     <Reference Include="Nancy.Authentication.Forms, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Nancy.Authentication.Forms.1.4.1\lib\net40\Nancy.Authentication.Forms.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Octokit, Version=0.19.0.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Octokit.0.19.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
@@ -67,7 +68,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
-    <Compile Include="NotificationMessageResolver.cs" />
+    <Compile Include="Notification\NotificationMessage.cs" />
+    <Compile Include="Notification\NotificationMessageContent.cs" />
+    <Compile Include="Notification\NotificationMessageCurlys.cs" />
+    <Compile Include="Notification\NotificationMessageResolver.cs" />
     <Compile Include="IIssueService.cs" />
     <Compile Include="IRequestService.cs" />
     <Compile Include="ISettingsService.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Models\StatusModel.cs" />
     <Compile Include="Models\UserProperties.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
+    <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
     <Compile Include="SettingModels\LandingPageSettings.cs" />
     <Compile Include="SettingModels\NotificationSettings.cs" />
@@ -102,7 +107,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
@@ -126,6 +133,7 @@
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -34,7 +34,6 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Helpers;
-using PlexRequests.Helpers.Exceptions;
 
 using RestSharp;
 
@@ -57,6 +56,7 @@ namespace PlexRequests.Api
 		private const string SignInUri = "https://plex.tv/users/sign_in.json";
 		private const string FriendsUri = "https://plex.tv/pms/friends/all";
 		private const string GetAccountUri = "https://plex.tv/users/account";
+        private const string ServerUri = "https://plex.tv/pms/servers.xml";
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private static string Version { get; }
@@ -81,7 +81,6 @@ namespace PlexRequests.Api
             request.AddJsonBody(userModel);
 
 			var obj = RetryHandler.Execute<PlexAuthentication>(() => Api.Execute<PlexAuthentication> (request, new Uri(SignInUri)),
-				null,
 				(exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan));
 			
 			return obj;
@@ -89,19 +88,18 @@ namespace PlexRequests.Api
 
         public PlexFriends GetUsers(string authToken)
         {
-            var request = new RestRequest
-            {
-                Method = Method.GET,
-            };
+                var request = new RestRequest
+                {
+                    Method = Method.GET,
+                };
 
-            AddHeaders(ref request, authToken);
+                AddHeaders(ref request, authToken);
 
-			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
-				null,
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan));
+			    var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
+				    (exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan), null);
 			
 
-            return users;
+                return users;
         }
 
         /// <summary>
@@ -122,9 +120,8 @@ namespace PlexRequests.Api
             request.AddUrlSegment("searchTerm", searchTerm);
             AddHeaders(ref request, authToken);
 
-			var search = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
-				null,
-				(exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan));
+			var search = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+				(exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan), null);
 
             return search;
         }
@@ -138,9 +135,8 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-			var users = RetryHandler.Execute<PlexStatus>(() => Api.ExecuteXml<PlexStatus> (request, uri),
-				null,
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan));
+			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexStatus> (request, uri),
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan), null);
 		
             return users;
         }
@@ -154,9 +150,8 @@ namespace PlexRequests.Api
 
             AddHeaders(ref request, authToken);
 
-			var account = RetryHandler.Execute<PlexAccount>(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
-				null,
-				(exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying {0}", timespan));
+			var account = RetryHandler.Execute(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
+				(exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying {0}", timespan), null);
 			
             return account;
         }
@@ -173,13 +168,12 @@ namespace PlexRequests.Api
 
             try
             {
-				var lib = RetryHandler.Execute<PlexLibraries>(() => Api.ExecuteXml<PlexLibraries> (request, plexFullHost),
-					new TimeSpan[] { 
-						TimeSpan.FromSeconds (5),
-						TimeSpan.FromSeconds(10),
-						TimeSpan.FromSeconds(30)
-					},
-					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrarySections for Plex, Retrying {0}", timespan));
+				var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexLibraries> (request, plexFullHost),
+					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrarySections for Plex, Retrying {0}", timespan), new TimeSpan[] { 
+					    TimeSpan.FromSeconds (5),
+					    TimeSpan.FromSeconds(10),
+					    TimeSpan.FromSeconds(30)
+					});
 
 				return lib;
             }
@@ -203,19 +197,77 @@ namespace PlexRequests.Api
 
             try
             {
-				var lib = RetryHandler.Execute<PlexSearch>(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
-					new TimeSpan[] { 
-						TimeSpan.FromSeconds (5),
-						TimeSpan.FromSeconds(10),
-						TimeSpan.FromSeconds(30)
-					},
-					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrary for Plex, Retrying {0}", timespan));
+				var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
+					(exception, timespan) => Log.Error (exception, "Exception when calling GetLibrary for Plex, Retrying {0}", timespan), new TimeSpan[] { 
+					    TimeSpan.FromSeconds (5),
+					    TimeSpan.FromSeconds(10),
+					    TimeSpan.FromSeconds(30)
+					});
 
 				return lib;
             }
 			catch (Exception e)
             {
                 Log.Error(e,"There has been a API Exception when attempting to get the Plex Library");
+                return new PlexSearch();
+            }
+        }
+
+        public PlexEpisodeMetadata GetEpisodeMetaData(string authToken, Uri host, string ratingKey)
+        {
+
+            //192.168.1.69:32400/library/metadata/3662/allLeaves
+            // The metadata ratingkey should be in the Cache
+            // Search for it and then call the above with the Directory.RatingKey
+            // THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")
+            // We then have the GUID which contains the TVDB ID plus the season and episode number: guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "/library/metadata/{ratingKey}"
+            };
+
+            request.AddUrlSegment("ratingKey", ratingKey);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexEpisodeMetadata>(request, host),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetEpisodeMetaData for Plex, Retrying {0}", timespan));
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get GetEpisodeMetaData");
+                return new PlexEpisodeMetadata();
+            }
+        }
+
+        public PlexSearch GetAllEpisodes(string authToken, Uri host, string section, int startPage, int returnCount)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "/library/sections/{section}/all"
+            };
+
+            request.AddQueryParameter("type", 4.ToString());
+            request.AddQueryParameter("X-Plex-Container-Start", startPage.ToString());
+            request.AddQueryParameter("X-Plex-Container-Size", returnCount.ToString());
+            request.AddUrlSegment("section", section);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch>(request, host),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetAllEpisodes for Plex, Retrying {0}", timespan));
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get GetAllEpisodes");
                 return new PlexSearch();
             }
         }
@@ -234,12 +286,11 @@ namespace PlexRequests.Api
             try
             {
                 var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexMetadata>(request, plexFullHost),
-                    new[] {
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan), new[] {
                         TimeSpan.FromSeconds (5),
                         TimeSpan.FromSeconds(10),
                         TimeSpan.FromSeconds(30)
-                    },
-                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan));
+                    });
 
                 return lib;
             }
@@ -250,6 +301,52 @@ namespace PlexRequests.Api
             }
         }
 
+
+        public PlexSeasonMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/metadata/{ratingKey}/children"
+            };
+
+            request.AddUrlSegment("ratingKey", ratingKey);
+            AddHeaders(ref request, authToken);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteXml<PlexSeasonMetadata>(request, plexFullHost),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling GetMetadata for Plex, Retrying {0}", timespan), new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    });
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex GetMetadata");
+                return new PlexSeasonMetadata();
+            }
+        }
+
+        public PlexServer GetServer(string authToken)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+            };
+
+            AddHeaders(ref request, authToken);
+
+            var servers = RetryHandler.Execute(() => Api.ExecuteXml<PlexServer>(request, new Uri(ServerUri)),
+                (exception, timespan) => Log.Error(exception, "Exception when calling GetServer for Plex, Retrying {0}", timespan));
+
+
+            return servers;
+        }
+
         private void AddHeaders(ref RestRequest request, string authToken)
         {
             request.AddHeader("X-Plex-Token", authToken);
@@ -258,8 +355,8 @@ namespace PlexRequests.Api
 
         private void AddHeaders(ref RestRequest request)
         {
-            request.AddHeader("X-Plex-Client-Identifier", "Test213");
-            request.AddHeader("X-Plex-Product", "Request Plex");
+            request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
+            request.AddHeader("X-Plex-Product", "Plex Requests .Net");
             request.AddHeader("X-Plex-Version", Version);
             request.AddHeader("Content-Type", "application/xml");
         }

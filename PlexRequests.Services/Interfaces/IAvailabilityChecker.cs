@@ -26,6 +26,9 @@
 #endregion
 using PlexRequests.Services.Models;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+
+using PlexRequests.Store.Models;
 
 namespace PlexRequests.Services.Interfaces
 {
@@ -35,8 +38,20 @@ namespace PlexRequests.Services.Interfaces
         List<PlexMovie> GetPlexMovies();
         bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null);
         List<PlexTvShow> GetPlexTvShows();
-        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null);
+        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
         List<PlexAlbum> GetPlexAlbums();
         bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
+        bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
+        /// <summary>
+        /// Gets the episode's stored in the cache.
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<PlexEpisodes>> GetEpisodes();
+        /// <summary>
+        /// Gets the episode's stored in the cache and then filters on the TheTvDBId.
+        /// </summary>
+        /// <param name="theTvDbId">The tv database identifier.</param>
+        /// <returns></returns>
+        Task<IEnumerable<PlexEpisodes>> GetEpisodes(int theTvDbId);
     }
 }

@@ -1,6 +1,9 @@
 ﻿.form-control-custom {
   background-color: #333333 !important; }
 
+.form-control-custom-disabled {
+  background-color: #252424 !important; }
+
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {

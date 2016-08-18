@@ -75,7 +75,7 @@ namespace PlexRequests.UI
             var s = new Setup();
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
-            ConfigureTargets(cn);
+            ConfigureTargets(cn); 
             SetupLogging();
 
             if (port == -1 || port == 3579)
@@ -149,10 +149,7 @@ namespace PlexRequests.UI
             var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             var logSettings = settingsService.GetSettings();
 
-            if (logSettings != null)
-            {
-                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
-            }
+            LoggingHelper.ReconfigureLogLevel(logSettings != null ? LogLevel.FromOrdinal(logSettings.Level) : LogLevel.FromOrdinal(4));
         }
 
         private static void PrintToConsole(string message, ConsoleColor colour = ConsoleColor.Gray)

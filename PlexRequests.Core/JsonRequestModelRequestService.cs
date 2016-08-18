@@ -61,12 +61,12 @@ namespace PlexRequests.Core
         public async Task<int> AddRequestAsync(RequestedModel model)
         {
             var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId };
-            var id = await Repo.InsertAsync(entity);
+            var id = await Repo.InsertAsync(entity).ConfigureAwait(false);
 
             model.Id = id;
 
             entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = id, MusicId = model.MusicBrainzId };
-            var result = await Repo.UpdateAsync(entity);
+            var result = await Repo.UpdateAsync(entity).ConfigureAwait(false);
 
             return result ? id : -1;
         }
@@ -80,7 +80,7 @@ namespace PlexRequests.Core
 
         public async Task<RequestedModel> CheckRequestAsync(int providerId)
         {
-            var blobs = await Repo.GetAllAsync();
+            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
             var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
             return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
@@ -94,7 +94,7 @@ namespace PlexRequests.Core
 
         public async Task<RequestedModel> CheckRequestAsync(string musicId)
         {
-            var blobs = await Repo.GetAllAsync();
+            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
             var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
             return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
         }
@@ -107,8 +107,8 @@ namespace PlexRequests.Core
 
         public async Task DeleteRequestAsync(RequestedModel request)
         {
-            var blob = await Repo.GetAsync(request.Id);
-            await Repo.DeleteAsync(blob);
+            var blob = await Repo.GetAsync(request.Id).ConfigureAwait(false);
+            await Repo.DeleteAsync(blob).ConfigureAwait(false);
         }
 
         public bool UpdateRequest(RequestedModel model)
@@ -120,7 +120,7 @@ namespace PlexRequests.Core
         public async Task<bool> UpdateRequestAsync(RequestedModel model)
         {
             var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
-            return await Repo.UpdateAsync(entity);
+            return await Repo.UpdateAsync(entity).ConfigureAwait(false);
         }
 
         public RequestedModel Get(int id)
@@ -136,7 +136,7 @@ namespace PlexRequests.Core
 
         public async Task<RequestedModel> GetAsync(int id)
         {
-            var blob = await Repo.GetAsync(id);
+            var blob = await Repo.GetAsync(id).ConfigureAwait(false);
             if (blob == null)
             {
                 return new RequestedModel();
@@ -155,7 +155,7 @@ namespace PlexRequests.Core
 
         public async Task<IEnumerable<RequestedModel>> GetAllAsync()
         {
-            var blobs = await Repo.GetAllAsync();
+            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
             return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
                 .Select(JsonConvert.DeserializeObject<RequestedModel>)
                 .ToList();
@@ -169,7 +169,7 @@ namespace PlexRequests.Core
         public async Task<bool> BatchUpdateAsync(IEnumerable<RequestedModel> model)
         {
             var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
-            return await Repo.UpdateAllAsync(entities);
+            return await Repo.UpdateAllAsync(entities).ConfigureAwait(false);
         }
         public bool BatchDelete(IEnumerable<RequestedModel> model)
         {
@@ -180,7 +180,7 @@ namespace PlexRequests.Core
         public async Task<bool> BatchDeleteAsync(IEnumerable<RequestedModel> model)
         {
             var entities = model.Select(m => new RequestBlobs { Type = m.Type, Content = ByteConverterHelper.ReturnBytes(m), ProviderId = m.ProviderId, Id = m.Id }).ToList();
-            return await Repo.DeleteAllAsync(entities);
+            return await Repo.DeleteAllAsync(entities).ConfigureAwait(false);
         }
     }
 }

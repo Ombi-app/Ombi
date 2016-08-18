@@ -231,7 +231,7 @@
     <value>Latest Season</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>Select </value>
+    <value>Select Season</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
     <value>Report Issue</value>
@@ -430,5 +430,14 @@
   </data>
   <data name="Layout_French" xml:space="preserve">
     <value>French</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Select Episode</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Incorrect User or Password</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>There is no information available for the release date</value>
   </data>
 </root>

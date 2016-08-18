@@ -60,6 +60,7 @@ namespace PlexRequests.UI.Helpers
 
         public static JsonResponseModel SendSonarrError(List<string> result)
         {
+
             var model = new JsonResponseModel {Result = false};
             if (!result.Any())
             {

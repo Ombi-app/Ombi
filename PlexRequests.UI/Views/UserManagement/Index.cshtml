@@ -1,48 +1,106 @@
 ﻿@using PlexRequests.UI.Helpers
-@Html.LoadTableAssets()
-@{
-    var baseUrl = Html.GetBaseUrl().ToHtmlString();
-    var url = string.Empty;
-    if (!string.IsNullOrEmpty(baseUrl))
-    {
-        url = "/" + baseUrl;
-    }
-}
+@inherits PlexRequests.UI.Helpers.AngularViewBase
 
+<script src="~/Content/app/userManagement/userManagementController.js"></script>
+<script src="~/Content/app/userManagement/userManagementService.js"></script>
+<div ng-controller="userManagementController" ng-init="getUsers()">
 
-<h2>User Management</h2>
+    <br />
+    <br />
+    <br />
+    <div class="col-md-7">
+        <br>
+        <br>
+        <div ng-show="error.error" ng-bind="error.errorMessage"></div>
+        <form ng-submit="addUser()">
+            <div class="form-group">
+                <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom" />
+            </div>
+            <div class="form-group">
+                <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
+            </div>
+            <input type="submit" class="btn btn-success-outline" value="Add" />
+        </form>
+        <form>
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <i class="fa fa-search"></i>
+                    </div>
 
-<button class="btn btn-success-outline" type="submit">Create User <div class="fa fa-plus"/></button>
-<br>
-<br>
-    <fieldset>
-        <table id="example" class="table table-striped table-hover table-responsive">
+                    <input type="text" class="form-control" placeholder="Search" ng-model="searchTerm">
+
+                </div>
+            </div>
+        </form>
+        <table class="table table-striped table-hover table-responsive table-condensed">
             <thead>
                 <tr>
-                    <th>Id</th>
-                    <th>Username</th>
-                    <th>Permissions</th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
+                            Username
+                            <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'emailAddress'; sortReverse = !sortReverse">
+                            Email
+                            <span ng-show="sortType == 'emailAddress' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'emailAddress' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="#" ng-click="sortType = 'type'; sortReverse = !sortReverse">
+                            User Type
+                            <span ng-show="sortType == 'type' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'type' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
                 </tr>
             </thead>
-
+            <tbody>
+                <tr ng-repeat="u in users | orderBy:sortType:sortReverse | filter:searchTerm">
+                    <td>
+                        {{u.username}}
+                    </td>
+                    <td>
+                        {{u.emailAddress}}
+                    </td>
+                    <td>
+                        {{u.claims}}
+                    </td>
+                    <td>
+                        {{u.type === 1 ? 'Local User' : 'Plex User'}}
+                    </td>
+                    <td>
+                        <a href="#" ng-click="selectUser(u.id)" class="btn btn-info-outline">Details/Edit</a>
+                    </td>
+                </tr>
+            </tbody>
         </table>
-    </fieldset>
+    </div>
 
-<script>
+    <div class="col-md-5 col-md-push-1 user-management-menu" ng-show="selectedUser.username">
+        <br />
+        <br />
+        <img ng-show="selectedUser.plexInfo.thumb" class="col-md-pull-1 img-circle" style="position: absolute" ng-src="{{selectedUser.plexInfo.thumb}}" />
+        <div hidden="hidden" ng-bind="selectedUser.id"></div>
+        <div>
+            <strong>Username: </strong><span ng-bind="selectedUser.username"></span>
+        </div>
+        <div ng-show="selectedUser.emailAddress">
+            <strong>Email Address: </strong><span ng-bind="selectedUser.emailAddress"></span>
+        </div>
+        <div>
+            <strong>Permissions: </strong><span ng-bind="selectedUser.claims"></span>
+        </div>
+        <div>
+            <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
+        </div>
+    </div>
 
-        var baseUrl = '@Html.GetBaseUrl()';
 
-        var url = createBaseUrl(baseUrl, "usermanagement/users");
-        $('#example').DataTable({
-            "ajax": url,
-            "columns": [
-                { "data": "id" },
-                { "data": "username" },
-               	{ "data": "claims" },
-                //{ "data": "type" }
-            ],
-            "order": [[1, "desc"]]
-        });
-       
 
-</script>
+
+</div>

@@ -384,7 +384,7 @@ $border-radius: 10px;
 
 .bootstrap-datetimepicker-widget table td.active,
 .bootstrap-datetimepicker-widget table td.active:hover {
-    color: #fff !important;
+    color: #fff $i;
 }
 
 .landing-header {
@@ -393,7 +393,7 @@ $border-radius: 10px;
 }
 
 .landing-block {
-    background: #2f2f2f !important;
+    background: #2f2f2f $i;
     padding: 5px;
 }
 
@@ -414,4 +414,31 @@ $border-radius: 10px;
 
 .landing-title {
     font-weight: bold;
+}
+
+.checkbox-custom {
+    margin-top: 0 $i;
+    margin-bottom: 0 $i;
+}
+
+.tooltip_templates {
+    display: none;
+}
+
+.shadow {
+    -moz-box-shadow: 3px 3px 5px 6px #191919;
+    -webkit-box-shadow: 3px 3px 5px 6px #191919;
+    box-shadow: 3px 3px 5px 6px #191919;
+}
+.img-circle {
+    border-radius: 50%;
+}
+
+.user-management-menu {
+    border-style: ridge;
+    height: 100%;
+    left: 60%;
+    position: absolute;
+    width: 40%;
+    top: 7%;
 }

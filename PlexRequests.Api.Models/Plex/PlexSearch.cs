@@ -244,6 +244,10 @@ namespace PlexRequests.Api.Models.Plex
     [XmlRoot(ElementName = "Directory")]
     public class Directory1
     {
+        public Directory1()
+        {
+            Seasons = new List<Directory1>();
+        }
         public string ProviderId { get; set; }
         [XmlAttribute(AttributeName = "guid")]
         public string Guid { get; set; }
@@ -311,6 +315,7 @@ namespace PlexRequests.Api.Models.Plex
         public string UpdatedAt { get; set; }
         [XmlAttribute(AttributeName = "parentTitle")]
         public string ParentTitle { get; set; }
+        public List<Directory1> Seasons { get; set; }
     }
 
 
@@ -326,6 +331,8 @@ namespace PlexRequests.Api.Models.Plex
         public List<Provider> Provider { get; set; }
         [XmlAttribute(AttributeName = "size")]
         public string Size { get; set; }
+        [XmlAttribute(AttributeName = "totalSize")]
+        public string TotalSize { get; set; }
         [XmlAttribute(AttributeName = "identifier")]
         public string Identifier { get; set; }
         [XmlAttribute(AttributeName = "mediaTagPrefix")]

@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,15 +43,13 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Movie\CouchPotatoAdd.cs" />
     <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
+    <Compile Include="Movie\CoucPotatoApiKey.cs" />
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
     <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
     <Compile Include="Music\HeadphonesGetIndex.cs" />
@@ -61,11 +63,13 @@
     <Compile Include="Notifications\SlackNotificationBody.cs" />
     <Compile Include="Plex\PlexAccount.cs" />
     <Compile Include="Plex\PlexAuthentication.cs" />
+    <Compile Include="Plex\PlexEpisodeMetadata.cs" />
     <Compile Include="Plex\PlexError.cs" />
     <Compile Include="Plex\PlexFriends.cs" />
     <Compile Include="Plex\PlexLibraries.cs" />
     <Compile Include="Plex\PlexMetadata.cs" />
     <Compile Include="Plex\PlexSearch.cs" />
+    <Compile Include="Plex\PlexServer.cs" />
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexMediaType.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
@@ -77,12 +81,17 @@
     <Compile Include="SickRage\SickRageShowInformation.cs" />
     <Compile Include="SickRage\SickRageStatus.cs" />
     <Compile Include="SickRage\SickRageTvAdd.cs" />
+    <Compile Include="Sonarr\SonarrAddEpisodeBody.cs" />
+    <Compile Include="Sonarr\SonarrAddEpisodeResult.cs" />
     <Compile Include="Sonarr\SonarrAddSeries.cs" />
     <Compile Include="Sonarr\SonarrAllSeries.cs" />
+    <Compile Include="Sonarr\SonarrEpisode.cs" />
+    <Compile Include="Sonarr\SonarrEpisodes.cs" />
     <Compile Include="Sonarr\SonarrError.cs" />
     <Compile Include="Sonarr\SonarrProfile.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />
+    <Compile Include="Tv\TvMazeEpisodes.cs" />
     <Compile Include="Tv\TvMazeSearch.cs" />
     <Compile Include="Tv\TvMazeSeasons.cs" />
     <Compile Include="Tv\TVMazeShow.cs" />
@@ -92,7 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">

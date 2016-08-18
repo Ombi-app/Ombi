@@ -30,6 +30,6 @@ namespace PlexRequests.Services
     {
         Movie,
         Show,
-        Music // double check this one
+        Artist
     }
 }

@@ -79,7 +79,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<SlackNotificationSettings>> SlackSettings { get; set; }
         private Mock<ISettingsService<LandingPageSettings>> LandingPageSettings { get; set; }
         private Mock<ISlackApi> SlackApi { get; set; }
-        private Mock<IAnalytics> IAnalytics { get; set; }
+        private Mock<IAnalytics> Analytics { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -87,17 +87,19 @@ namespace PlexRequests.UI.Tests
         public void Setup()
         {
             AuthMock = new Mock<ISettingsService<AuthenticationSettings>>();
-            var expectedSettings = new AuthenticationSettings { UserAuthentication = false, PlexAuthToken = "abc" };
+            var expectedSettings = new AuthenticationSettings { UserAuthentication = false };
             AuthMock.Setup(x => x.GetSettings()).Returns(expectedSettings);
+            PlexSettingsMock = new Mock<ISettingsService<PlexSettings>>();
+            PlexSettingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings {PlexAuthToken = "abc"});
 
             PlexMock = new Mock<IPlexApi>();
             PlexMock.Setup(x => x.SignIn("Username1", "Password1"))
                     .Returns(new PlexAuthentication { user = new User { authentication_token = "abc", title = "Username1" } });
 
             PlexRequestMock = new Mock<ISettingsService<PlexRequestSettings>>();
-            PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings());
+            PlexRequestMock.Setup(x => x.GetSettings()).Returns(new PlexRequestSettings() );
             CpMock = new Mock<ISettingsService<CouchPotatoSettings>>();
-            PlexSettingsMock = new Mock<ISettingsService<PlexSettings>>();
+
             SonarrApiMock = new Mock<ISonarrApi>();
             SonarrSettingsMock = new Mock<ISettingsService<SonarrSettings>>();
             EmailMock = new Mock<ISettingsService<EmailNotificationSettings>>();
@@ -117,7 +119,7 @@ namespace PlexRequests.UI.Tests
             LandingPageSettings = new Mock<ISettingsService<LandingPageSettings>>();
             ScheduledJobsSettingsMock = new Mock<ISettingsService<ScheduledJobsSettings>>();
             RecorderMock = new Mock<IJobRecord>();
-            IAnalytics = new Mock<IAnalytics>();
+            Analytics = new Mock<IAnalytics>();
 
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
@@ -139,7 +141,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(PushoverSettings.Object);
                 with.Dependency(PushoverApi.Object);
                 with.Dependency(NotificationService.Object);
-                with.Dependency(IAnalytics.Object);
+                with.Dependency(Analytics.Object);
                 with.Dependency(HeadphonesSettings.Object);
                 with.Dependency(Cache.Object);
                 with.Dependency(Log.Object);
@@ -151,7 +153,7 @@ namespace PlexRequests.UI.Tests
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {
-                    context.CurrentUser = new UserIdentity { UserName = "user", Claims = new List<string> {"Admin"} };
+                    context.CurrentUser = new UserIdentity { UserName = "user", Claims = new List<string> { "Admin" } };
                 });
             });
 
@@ -177,8 +179,7 @@ namespace PlexRequests.UI.Tests
             var body = JsonConvert.DeserializeObject<JsonResponseModel>(result.Body.AsString());
             Assert.That(body.Result, Is.EqualTo(true));
             PlexMock.Verify(x => x.SignIn("Username1", "Password1"), Times.Once);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
-            AuthMock.Verify(x => x.SaveSettings(It.IsAny<AuthenticationSettings>()), Times.Once);
+            PlexSettingsMock.Verify(x => x.SaveSettings(It.IsAny<PlexSettings>()), Times.Once);
         }
 
         [Test]
@@ -252,8 +253,6 @@ namespace PlexRequests.UI.Tests
             Assert.That(body.Result, Is.EqualTo(true));
 
             PlexMock.Verify(x => x.SignIn("Username1", "Password1"), Times.Once);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
-            AuthMock.Verify(x => x.SaveSettings(It.IsAny<AuthenticationSettings>()), Times.Once);
         }
 
         [Test]
@@ -281,7 +280,6 @@ namespace PlexRequests.UI.Tests
             Assert.That(user.ToString().Contains("abc"), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
         }
 
         [Test]
@@ -297,7 +295,7 @@ namespace PlexRequests.UI.Tests
                 with.Header("Accept", "application/json");
                 with.FormValue("username", "Username1");
                 with.FormValue("password", "Password1");
-                
+
 
             });
 
@@ -308,7 +306,6 @@ namespace PlexRequests.UI.Tests
             Assert.That(string.IsNullOrWhiteSpace(body), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
         }
 
         [Test]
@@ -333,13 +330,12 @@ namespace PlexRequests.UI.Tests
             Assert.That(string.IsNullOrWhiteSpace(body), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Once);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
         }
 
         [Test]
         public void GetUsersTokenIsNull()
         {
-            AuthMock.Setup(x => x.GetSettings()).Returns(new AuthenticationSettings());
+            PlexSettingsMock.Setup(x => x.GetSettings()).Returns(new PlexSettings());
             var browser = new Browser(Bootstrapper);
 
             var result = browser.Get("/admin/getusers", with =>
@@ -359,7 +355,6 @@ namespace PlexRequests.UI.Tests
             Assert.That(string.IsNullOrWhiteSpace(user), Is.True);
 
             PlexMock.Verify(x => x.GetUsers(It.IsAny<string>()), Times.Never);
-            AuthMock.Verify(x => x.GetSettings(), Times.Once);
         }
     }
 }

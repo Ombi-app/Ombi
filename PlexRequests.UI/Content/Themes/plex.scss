@@ -1,10 +1,15 @@
 ﻿$primary-colour: #df691a;
 $primary-colour-outline: #ff761b;
 $bg-colour: #333333;
+$bg-colour-disabled: #252424;
 $i: !important;
 
 .form-control-custom {
     background-color: $bg-colour $i;
+}
+
+.form-control-custom-disabled {
+    background-color: $bg-colour-disabled $i;
 }
 
 .nav-tabs > li.active > a,

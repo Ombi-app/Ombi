@@ -2,7 +2,7 @@
 @using Nancy.Session
 @using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
     var baseUrl = Html.GetBaseUrl();
     var url = string.Empty;

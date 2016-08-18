@@ -53,7 +53,7 @@ namespace PlexRequests.Core
             model.Id = id;
 
             entity = new IssueBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), RequestId = model.RequestId, Id = id };
-            var result = await Repo.UpdateAsync(entity);
+            var result = await Repo.UpdateAsync(entity).ConfigureAwait(false);
 
             return result ? id : -1;
         }
@@ -61,21 +61,21 @@ namespace PlexRequests.Core
         public async Task<bool> UpdateIssueAsync(IssuesModel model)
         {
             var entity = new IssueBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), RequestId = model.RequestId, Id = model.Id };
-            return await Repo.UpdateAsync(entity);
+            return await Repo.UpdateAsync(entity).ConfigureAwait(false);
         }
 
         public async Task DeleteIssueAsync(int id)
         {
             var entity = await Repo.GetAsync(id);
 
-            await Repo.DeleteAsync(entity);
+            await Repo.DeleteAsync(entity).ConfigureAwait(false);
         }
 
         public async Task DeleteIssueAsync(IssuesModel model)
         {
             var entity = new IssueBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), RequestId = model.RequestId, Id = model.Id };
 
-            await Repo.DeleteAsync(entity);
+            await Repo.DeleteAsync(entity).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace PlexRequests.Core
         /// <returns></returns>
         public async Task<IEnumerable<IssuesModel>> GetAllAsync()
         {
-            var blobs = await Repo.GetAllAsync();
+            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
 
             if (blobs == null)
             {

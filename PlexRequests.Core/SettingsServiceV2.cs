@@ -30,7 +30,6 @@ using Newtonsoft.Json;
 
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -46,8 +45,8 @@ namespace PlexRequests.Core
             EntityName = typeof(T).Name;
         }
 
-        private ISettingsRepository Repo { get; set; }
-        private string EntityName { get; set; }
+        private ISettingsRepository Repo { get; }
+        private string EntityName { get; }
 
         public T GetSettings()
         {
@@ -66,7 +65,7 @@ namespace PlexRequests.Core
 
         public async Task<T> GetSettingsAsync()
         {
-            var result = await Repo.GetAsync(EntityName);
+            var result = await Repo.GetAsync(EntityName).ConfigureAwait(false);
             if (result == null)
             {
                 return new T();
@@ -78,7 +77,7 @@ namespace PlexRequests.Core
         public bool SaveSettings(T model)
         {
             var entity = Repo.Get(EntityName);
-
+            
             if (entity == null)
             {
                 var newEntity = model;
@@ -111,7 +110,7 @@ namespace PlexRequests.Core
 
                 var settings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(newEntity, SerializerSettings.Settings) };
                 settings.Content = EncryptSettings(settings);
-                var insertResult = await Repo.InsertAsync(settings);
+                var insertResult = await Repo.InsertAsync(settings).ConfigureAwait(false);
 
                 return insertResult != int.MinValue;
             }
@@ -121,7 +120,7 @@ namespace PlexRequests.Core
 
             var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
             globalSettings.Content = EncryptSettings(globalSettings);
-            var result = await Repo.UpdateAsync(globalSettings);
+            var result = await Repo.UpdateAsync(globalSettings).ConfigureAwait(false);
 
             return result;
         }

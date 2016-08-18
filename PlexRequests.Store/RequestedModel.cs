@@ -12,6 +12,7 @@ namespace PlexRequests.Store
         public RequestedModel()
         {
             RequestedUsers = new List<string>();
+            Episodes = new List<EpisodesModel>();
         }
 
         // ReSharper disable once IdentifierTypo
@@ -42,6 +43,7 @@ namespace PlexRequests.Store
         public string ArtistName { get; set; }
         public string ArtistId { get; set; }
         public int IssueId { get; set; }
+        public List<EpisodesModel> Episodes { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers
@@ -104,5 +106,31 @@ namespace PlexRequests.Store
         WrongContent = 2,
         PlaybackIssues = 3,
         Other = 4, // Provide a message
+    }
+
+    public class EpisodesModel : IEquatable<EpisodesModel>
+    {
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
+        public bool Equals(EpisodesModel other)
+        {
+            // Check whether the compared object is null.
+            if (ReferenceEquals(other, null)) return false;
+
+            //Check whether the compared object references the same data.
+            if (ReferenceEquals(this, other)) return true;
+
+            //Check whether the properties are equal.
+            return SeasonNumber.Equals(other.SeasonNumber) && EpisodeNumber.Equals(other.EpisodeNumber);
+        }
+
+        public override int GetHashCode()
+        {
+            var hashSeason = SeasonNumber.GetHashCode();
+            var hashEp = EpisodeNumber.GetHashCode();
+            
+            //Calculate the hash code.
+            return hashSeason + hashEp;
+        }
     }
 }

@@ -25,6 +25,9 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 
 using MailKit.Security;
@@ -119,6 +122,10 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
+            //var r = new NotificationMessageCurlys(model.User, model.Title, DateTime.Now.ToString(), model.RequestType.ToString(), string.Empty);
+            //var resolver = new NotificationMessageResolver();
+            //var bodyResult = resolver.ParseMessage(settings, NotificationType.NewRequest, r);
+            
             var message = new MimeMessage
             {
                 Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },
@@ -169,13 +176,16 @@ namespace PlexRequests.Services.Notification
             {
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.EmailHost, settings.EmailPort, SecureSocketOptions.Auto); // Let MailKit figure out the correct SecureSocketOptions.
+                    client.Connect(settings.EmailHost, settings.EmailPort); // Let MailKit figure out the correct SecureSocketOptions.
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
 
-                    client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+                    if (settings.Authentication)
+                    {
+                        client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+                    }
 
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);

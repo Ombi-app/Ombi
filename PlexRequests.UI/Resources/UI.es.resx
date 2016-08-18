@@ -450,4 +450,13 @@
   <data name="Layout_French" xml:space="preserve">
     <value>French</value>
   </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Selecciona el episodio</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Usuario incorrecto o contraseña</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>No hay información disponible para la fecha de lanzamiento</value>
+  </data>
 </root>

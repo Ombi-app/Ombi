@@ -402,4 +402,61 @@
   <data name="Issues_Issue" xml:space="preserve">
     <value>Problem</value>
   </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>Pall är tillagd korrekt</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>har redan begärts</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Vi kunde inte kontrollera om {0} är i Plex, är du säker det är korrekt installation?</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Något gick fel att lägga till filmen i CouchPotato! Kontrollera inställningarna.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Du har nått din weekly begäran gräns för filmer! Kontakta din admin.</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>är redan i Plex</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Något gick fel att lägga till filmen i SickRage! Kontrollera inställningarna.</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>Begäran av TV-program är inte korrekt inställd. Kontakta din admin.</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Du har nått din weekly begäran gräns för album! Kontakta din admin.</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Vi kunde inte hitta artisten på MusicBrainz. Försök igen senare eller kontakta din admin</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Du har nått din weekly begäran gräns för TV-program! Kontakta din admin.</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Ledsen, men denna funktion är för närvarande endast för användare med Plex konton</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Ledsen, men administratören har ännu inte aktiverat denna funktion.</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Vi kunde inte ta bort denna anmälan eftersom du aldrig haft det</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Kunde inte spara, försök igen</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Franska</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Välj avsnitt</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Felaktig användare eller lösenord</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Det finns ingen information tillgänglig för release datum</value>
+  </data>
 </root>

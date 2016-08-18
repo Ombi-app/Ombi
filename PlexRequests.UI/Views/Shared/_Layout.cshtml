@@ -1,192 +1,26 @@
-﻿@using Nancy.Security
-@using Nancy.Session
-@using PlexRequests.UI.Helpers
-@using PlexRequests.UI.Models
-@using PlexRequests.UI.Resources
+﻿@using PlexRequests.UI.Helpers
+@*@using StackExchange.Profiling*@
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase
-@{
-    var baseUrl = Html.GetBaseUrl();
-    var url = string.Empty;
-    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
-    {
-        url = "/" + baseUrl.ToHtmlString();
-    }
-}
 <html>
-<div hidden="hidden" id="baseUrl">@baseUrl.ToHtmlString()</div>
-<head>
-    <title>@UI.Layout_Title</title>
-    <!-- Styles -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    @Html.LoadAnalytics()
-    @Html.LoadAssets()
-</head>
+@Html.Partial("Shared/Partial/_Head")
+
 <body>
 
+    @Html.Partial("Shared/Partial/_Navbar")
 
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="@url/search">@UI.Layout_Title</a>
-            </div>
-
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    @Html.GetNavbarUrl(Context, "/search", UI.Layout_Search, "search")
-                    @Html.GetNavbarUrl(Context, "/requests", UI.Layout_Requests, "plus-circle")
-                    @Html.GetNavbarUrl(Context, "/issues", UI.Layout_Issues, "exclamation", "<span id=\"issueCount\"></span>")
-                    @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
-                    {
-                        <li><a id="donate" onclick="donateClick('https://www.paypal.me/PlexRequestsNet');"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
-                    }
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-
-
-                    @if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null)  // TODO replace with IsAdmin
-                    {
-
-                        <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
-                    }
-                    @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
-                    {
-                        <li><a>@UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</a></li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Admin <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="@url/admin"><i class="fa fa-cog"></i> @UI.Layout_Settings</a></li>
-                                <li><a href="@url/changepassword"><i class="fa fa-key"></i> @UI.Layout_ChangePassword</a></li>
-
-                                <li class="divider"></li>
-                                <li><a href="@url/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
-                            </ul>
-                        </li>
-                    }
-                    @if (Context.Request.Session[SessionKeys.UsernameKey] != null && !Context.CurrentUser.IsAuthenticated())
-                    {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey] <span class="caret"></span></a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
-                                <li class="divider"></li>
-                                <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
-                            </ul>
-                        </li>
-
-                    }
-                    <li class="dropdown">
-
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
-                            <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
-                            <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
-                            <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
-                            <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
-                            <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
-                            <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
-                            <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
-                            <li><a href="@url/culture?l=fr&u=@Context.Request.Path">@UI.Layout_French</a></li>
-                        </ul>
-                    <li />
-                </ul>
-            </div>
-        </div>
-        <div id="updateAvailable" hidden="hidden"></div>
-    </nav>
-
-    <div class="container">
+    <div class="container" style="padding-top: 5%">
         @RenderBody()
     </div>
-    <div class="scroll-top-wrapper ">
-        <span class="scroll-top-inner">
+<div class="scroll-top-wrapper ">
+    <span class="scroll-top-inner">
             <i class="fa fa-2x fa-arrow-circle-up"></i>
         </span>
-    </div>
+</div>
+
+    @*@MiniProfiler.RenderIncludes()*@
 </body>
+
+@Html.GetInformationalVersion()
+
 </html>
-<script>
-
-    function donateClick(url) {
-        ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
-        var redirectWindow = window.open(url, '_blank');
-        redirectWindow.location;
-    }
-
-    $(function () {
-
-        var urlBase = '@Html.GetBaseUrl()';
-
-        // Check for update
-        var url = createBaseUrl(urlBase, '/updatechecker');
-        $.ajax({
-            type: "GET",
-            url: url,
-            dataType: "json",
-            success: function (response) {
-                if (response.updateAvailable) {
-                    var status = createBaseUrl(urlBase, '/admin/status');
-                    $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> @UI.Layout_UpdateAvailablePart1 <a style='color: white' href='" + status + "'>@UI.Layout_UpdateAvailablePart2</a>");
-                    $('#updateAvailable').removeAttr("hidden");
-                    $('body').addClass('update-available');
-                }
-            },
-            error: function (e) {
-                console.log(e);
-            }
-        });
-        // End Check for update
-
-
-        // Scroller
-        $(document).on('scroll', function () {
-
-            if ($(window).scrollTop() > 100) {
-                $('.scroll-top-wrapper').addClass('show');
-            } else {
-                $('.scroll-top-wrapper').removeClass('show');
-            }
-        });
-
-        $('.scroll-top-wrapper').on('click', scrollToTop);
-        // End Scroller
-
-
-
-
-        // Get Issue count
-        var issueUrl = createBaseUrl(urlBase, '/issues/issuecount');
-        $.ajax({
-            type: "GET",
-            url: issueUrl,
-            dataType: "json",
-            success: function (response) {
-                if (response) {
-                    if (response > 0)
-                        $('#issueCount').addClass("badge");
-                    $('#issueCount').html(+response);
-                }
-            },
-            error: function (e) {
-                console.log(e);
-            }
-        });
-        // End issue count
-
-
-    });
-
-    function scrollToTop() {
-        verticalOffset = typeof (verticalOffset) != 'undefined' ? verticalOffset : 0;
-        element = $('body');
-        offset = element.offset();
-        offsetTop = offset.top;
-        $('html, body').animate({ scrollTop: offsetTop }, 500, 'linear');
-    }
-</script>
+@Html.Partial("Shared/Partial/_LayoutScripts")

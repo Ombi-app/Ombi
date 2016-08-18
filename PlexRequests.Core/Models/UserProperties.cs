@@ -29,7 +29,6 @@ namespace PlexRequests.Core.Models
     public class UserProperties
     {
         public string EmailAddress { get; set; }
-        public bool NotifyOnRelease { get; set; } 
-        public bool NotifyOnApprove { get; set; } 
+        public string UserAlias { get; set; }
     }
 }

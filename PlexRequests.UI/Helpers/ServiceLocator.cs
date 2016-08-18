@@ -28,6 +28,8 @@ using System;
 
 using Nancy.TinyIoc;
 
+using Ninject;
+
 namespace PlexRequests.UI.Helpers
 {
     public class ServiceLocator : IServiceLocator
@@ -37,21 +39,21 @@ namespace PlexRequests.UI.Helpers
             Singleton = new ServiceLocator();
         }
         private static ServiceLocator Singleton { get; }
-        private TinyIoCContainer Container { get; set; }
+        private IKernel Container { get; set; }
         public static ServiceLocator Instance => Singleton;
 
-        public void SetContainer(TinyIoCContainer con)
+        public void SetContainer(IKernel con)
         {
             Container = con;
         }
         public T Resolve<T>() where T : class
         {
-            return Container?.Resolve<T>();
+            return Container?.Get<T>();
         }
 
         public object Resolve(Type type)
         {
-            return Container.Resolve(type);
+            return Container.Get(type);
         }
     }
 

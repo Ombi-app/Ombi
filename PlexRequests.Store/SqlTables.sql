@@ -99,4 +99,19 @@ CREATE TABLE IF NOT EXISTS PlexUsers
     PlexUserId							INTEGER NOT NULL,
 	UserAlias							varchar(100) NOT NULL
 );
-CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON RequestLimit (Id);
+CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
+
+BEGIN;
+CREATE TABLE IF NOT EXISTS PlexEpisodes
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    EpisodeTitle						VARCHAR(100) NOT NULL,
+	ShowTitle							VARCHAR(100) NOT NULL,
+	RatingKey							VARCHAR(100) NOT NULL,
+	ProviderId							VARCHAR(100) NOT NULL,
+	SeasonNumber						INTEGER NOT NULL,
+	EpisodeNumber						INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_Id ON PlexEpisodes (Id);
+CREATE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);
+COMMIT;

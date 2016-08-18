@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public class SlackNotificationSettings : NotificationSettings
+    public sealed class SlackNotificationSettings : NotificationSettings
     {
         public bool Enabled { get; set; }
         public string WebhookUrl { get; set; }

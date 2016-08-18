@@ -53,8 +53,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Bootstrappers.Ninject, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Bootstrappers.Ninject.1.4.1\lib\net40\Nancy.Bootstrappers.Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Nancy.Linker, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Linker.0.3.1\lib\net40-Client\Nancy.Linker.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Nancy.Metadata.Modules, Version=1.4.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -65,8 +85,24 @@
       <HintPath>..\packages\Nancy.Swagger.0.1.0-alpha3\lib\net40\Nancy.Swagger.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nancy.ViewEngines.Razor, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Viewengines.Razor.1.4.3\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.0.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Extensions.ChildKernel, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Extensions.ChildKernel.3.2.0.0\lib\net45-full\Ninject.Extensions.ChildKernel.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.4\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -84,6 +120,26 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.20710.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="CommandLine, Version=2.0.275.0, Culture=neutral, PublicKeyToken=de6f01bd326f8c32">
@@ -94,9 +150,6 @@
     </Reference>
     <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
       <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
     </Reference>
     <Reference Include="FluentValidation, Version=6.2.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\FluentValidation.6.2.1.0\lib\Net45\FluentValidation.dll</HintPath>
@@ -109,9 +162,6 @@
     </Reference>
     <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
@@ -137,12 +187,6 @@
     <Reference Include="Nancy.Validation.FluentValidation, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\packages\Nancy.Validation.FluentValidation.1.4.1\lib\net40\Nancy.Validation.FluentValidation.dll</HintPath>
     </Reference>
-    <Reference Include="Nancy.ViewEngines.Razor, Version=1.4.1.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Nancy.Viewengines.Razor.1.4.1\lib\net40\Nancy.ViewEngines.Razor.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
@@ -159,11 +203,14 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
+    <Compile Include="Helpers\ContravariantBindingResolver.cs" />
     <Compile Include="Helpers\CultureHelper.cs" />
-    <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\CustomHtmlHelper.cs" />
+    <Compile Include="Helpers\DebugRootPathProvider.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
+    <Compile Include="Helpers\HeadphonesSender.cs" />
+    <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
-    <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\TvSender.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
@@ -178,6 +225,8 @@
     <Compile Include="ModelDataProviders\UserUpdateViewModelDataProvider.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
+    <Compile Include="Models\EpisodeListViewModel.cs" />
+    <Compile Include="Models\EpisodeRequestModel.cs" />
     <Compile Include="Models\IssuesDetailsViewModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
@@ -197,12 +246,19 @@
     <Compile Include="Modules\ApiUserModule.cs" />
     <Compile Include="Modules\BaseApiModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
+    <Compile Include="Modules\BetaModule.cs" />
     <Compile Include="Modules\CultureModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
-    <Compile Include="Modules\PlexUsersModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
-    <Compile Include="Resources\UI.Designer.cs">
+    <Compile Include="Modules\UserWizardModule.cs" />
+    <Compile Include="NinjectModules\ApiModule.cs" />
+    <Compile Include="NinjectModules\ConfigurationModule.cs" />
+    <Compile Include="NinjectModules\DependancyResolver.cs" />
+    <Compile Include="NinjectModules\RepositoryModule.cs" />
+    <Compile Include="NinjectModules\ServicesModule.cs" />
+    <Compile Include="NinjectModules\SettingServiceModule.cs" />
+    <Compile Include="Resources\UI1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>UI.resx</DependentUpon>
@@ -220,6 +276,12 @@
     <Compile Include="Validators\RequestedModelValidator.cs" />
     <Compile Include="Validators\SickRageValidator.cs" />
     <Compile Include="Validators\SonarrValidator.cs" />
+    <Content Include="Content\angular.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\app.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\awesome-bootstrap-checkbox.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -269,8 +331,14 @@
     <Content Include="Content\analytics.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\wizard.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\issues.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\userManagement\userManagementService.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\swagger\backbone-min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -348,6 +416,54 @@
     <Content Include="Content\images\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-borderless.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-light.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-noir.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-punk.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-shadow.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\sideTip\tooltipster-sideTip.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\SVG\tooltipster-SVG.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\plugins\tooltipster\SVG\tooltipster-SVG.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.bundle.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.min.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\tooltip\tooltipster.core.min.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -418,16 +534,15 @@
       <DependentUpon>pace.css</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\requests-1.7.js">
+    <Content Include="Content\requests.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\site-1.7.js">
+    <Content Include="Content\site.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="app.config" />
-    <Content Include="packages.config" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
     </Content>
     <None Include="compilerconfig.json" />
     <None Include="compilerconfig.json.defaults">
@@ -462,12 +577,12 @@
     <None Include="job_scheduling_data_2_0.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="NLog.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="sqlite3.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <Content Include="Content\app\userManagement\userManagementController.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -570,6 +685,21 @@
     <Content Include="Views\Admin\SchedulerSettings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Shared\Partial\_Navbar.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Partial\_Head.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\Partial\_LayoutScripts.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Shared\_AngularLayout.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\UserWizard\Index.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -587,7 +717,7 @@
     <EmbeddedResource Include="Resources\UI.pt.resx" />
     <EmbeddedResource Include="Resources\UI.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>UI.Designer.cs</LastGenOutput>
+      <LastGenOutput>UI1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI.sv.resx" />
   </ItemGroup>
@@ -626,7 +756,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\search-1.7.js">
+    <Content Include="Content\search.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -648,13 +778,12 @@
     </PostBuildEvent>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Import Project="..\packages\Nancy.Viewengines.Razor.1.4.1\build\Nancy.ViewEngines.Razor.targets" Condition="Exists('..\packages\Nancy.Viewengines.Razor.1.4.1\build\Nancy.ViewEngines.Razor.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\Nancy.Viewengines.Razor.1.4.1\build\Nancy.ViewEngines.Razor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Nancy.Viewengines.Razor.1.4.1\build\Nancy.ViewEngines.Razor.targets'))" />
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.99.0\build\net46\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.99.0\build\net46\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets'))" />
   </Target>
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.99.0\build\net46\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.99.0\build\net46\System.Data.SQLite.Core.targets')" />
   <Target Name="RemoveSatelliteAssemblies" AfterTargets="ResolveAssemblyReferences">
@@ -674,4 +803,5 @@
   </Target>
   -->
   <ItemGroup />
+  <Import Project="..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets" Condition="Exists('..\packages\Nancy.Viewengines.Razor.1.4.3\build\Nancy.ViewEngines.Razor.targets')" />
 </Project>

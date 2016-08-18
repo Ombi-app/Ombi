@@ -62,9 +62,7 @@ namespace PlexRequests.Api
 
             try
             {
-                var policy = RetryHandler.RetryAndWaitPolicy(
-                    null,
-                    (exception, timespan) => Log.Error(exception, "Exception when calling VerifyShowHasLoaded for SR, Retrying {0}", timespan));
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling VerifyShowHasLoaded for SR, Retrying {0}", timespan), null);
 
                 var obj = policy.Execute(() => Api.ExecuteJson<SickRageSeasonList>(request, baseUrl));
                 return obj;
@@ -95,9 +93,7 @@ namespace PlexRequests.Api
                 request.AddQueryParameter("initial", quality);
             }
 
-            var policy = RetryHandler.RetryAndWaitPolicy(
-                null,
-                (exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for SR, Retrying {0}", timespan));
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for SR, Retrying {0}", timespan), null);
 
             var obj = policy.Execute(() => Api.Execute<SickRageTvAdd>(request, baseUrl));
             Log.Trace("obj Result:");
@@ -168,9 +164,7 @@ namespace PlexRequests.Api
         {
             var request = new RestRequest { Resource = "/api/{apiKey}/?cmd=sb.ping", Method = Method.GET };
 
-            var policy = RetryHandler.RetryAndWaitPolicy(
-                null,
-                (exception, timespan) => Log.Error(exception, "Exception when calling Ping for SR, Retrying {0}", timespan));
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling Ping for SR, Retrying {0}", timespan), null);
 
             request.AddUrlSegment("apiKey", apiKey);
             var obj = policy.Execute(() => Api.ExecuteJson<SickRagePing>(request, baseUrl));
@@ -190,9 +184,7 @@ namespace PlexRequests.Api
             return await Task.Run(
                 () =>
                 {
-                    var policy = RetryHandler.RetryAndWaitPolicy(
-                        null,
-                        (exception, timespan) => Log.Error(exception, "Exception when calling AddSeason for SR, Retrying {0}", timespan));
+                    var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeason for SR, Retrying {0}", timespan), null);
 
                     var result = policy.Execute(() => Api.Execute<SickRageTvAdd>(request, baseUrl));
 
@@ -210,9 +202,7 @@ namespace PlexRequests.Api
                 {
                     try
                     {
-                        var policy = RetryHandler.RetryAndWaitPolicy(
-                            new[] { TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) },
-                            (exception, timespan) => Log.Error(exception, "Exception when calling GetShows for SR, Retrying {0}", timespan));
+                        var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetShows for SR, Retrying {0}", timespan), new[] { TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(30) });
 
                         return policy.Execute(() => Api.Execute<SickrageShows>(request, baseUrl));
                     }

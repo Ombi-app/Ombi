@@ -24,93 +24,36 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
-
 using NUnit.Framework;
 
-using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 
 namespace PlexRequests.Core.Tests
 {
     [TestFixture]
-    public class NotificationMessageResolverTests
+    public class AuthenticationSettingsTests
     {
-        [TestCaseSource(nameof(MessageResolver))]
-        public string Resolve(Dictionary<NotificationType, string> message, Dictionary<string,string> param)
+        [Test, TestCaseSource(nameof(UserData))]
+        public void DeniedUserListTest(string users, string[] expected)
         {
-            var n = new NotificationMessageResolver();
-            var s = new NotificationSettings
+            var model = new AuthenticationSettings { DeniedUsers = users };
+
+            var result = model.DeniedUserList;
+
+            Assert.That(result.Count, Is.EqualTo(expected.Length));
+            for (var i = 0; i < expected.Length; i++)
             {
-                Message = message,
-                CustomParamaters = param
-            };
-
-            return n.ParseMessage(s, NotificationType.NewRequest);
-        }
-
-        private static IEnumerable<TestCaseData> MessageResolver
-        {
-            get
-            {
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "There has been a new request from {Username}, Title: {Title} for {Type}" } },
-                    new Dictionary<string, string>{{"Username", "Jamie" },{"Title", "Finding Dory" },{"Type", "Movie" }})
-                    .Returns("There has been a new request from Jamie, Title: Finding Dory for Movie")
-                    .SetName("FindingDory");
-
-                yield return new TestCaseData(
-                     new Dictionary<NotificationType, string> { { NotificationType.NewRequest, string.Empty } },
-                     new Dictionary<string, string>())
-                     .Returns(string.Empty)
-                     .SetName("Empty Message");
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "{{Wowwzer}} Damn}{{son}}}}" } },
-                    new Dictionary<string, string> { {"son","HEY!"} })
-                    .Returns("{{Wowwzer}} Damn}{HEY!}}}")
-                    .SetName("Multiple Curlys");
-
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "This is a message with no curlys" } },
-                    new Dictionary<string, string> { { "son", "HEY!" } })
-                    .Returns("This is a message with no curlys")
-                    .SetName("No Curlys");
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, new string(')', 5000)} },
-                    new Dictionary<string, string> { { "son", "HEY!" } })
-                    .Returns(new string(')', 5000))
-                    .SetName("Long String");
-
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "This is a {Username} and {Username} Because {Curly}{Curly}" } },
-                    new Dictionary<string, string> { { "Username", "HEY!" }, {"Curly","Bob"} })
-                    .Returns("This is a HEY! and HEY! Because BobBob")
-                    .SetName("Double Curly");
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "This is a {Username} and {Username} Because {Curly}{Curly}" } },
-                    new Dictionary<string, string> { { "username", "HEY!" }, { "Curly", "Bob" } })
-                    .Returns("This is a {Username} and {Username} Because BobBob")
-                    .SetName("Case sensitive");
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, "{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}{a}" } },
-                    new Dictionary<string, string> { { "a", "b" } })
-                    .Returns("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
-                    .SetName("Lots of curlys");
-
-                yield return new TestCaseData(
-                    new Dictionary<NotificationType, string> { { NotificationType.NewRequest, $"{{{new string('b', 10000)}}}" } },
-                    new Dictionary<string, string> { { new string('b', 10000), "Hello" } })
-                    .Returns("Hello")
-                    .SetName("Very long Curly");
+                Assert.That(result[i], Is.EqualTo(expected[i]));
             }
         }
 
+        static readonly object[] UserData =
+        {
+            new object[] { "john", new [] {"john"} },
+            new object[] { "john , abc   ,", new [] {"john", "abc"} },
+            new object[] { "john,, cde", new [] {"john", "cde"} },
+            new object[] { "john,,, aaa , baaa  ,       ", new [] {"john","aaa","baaa"} },
+            new object[] { "john, aaa , baaa  ,       maaa, caaa", new [] {"john","aaa","baaa", "maaa", "caaa"} },
+        };
     }
 }

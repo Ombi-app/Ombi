@@ -28,6 +28,7 @@ namespace PlexRequests.Helpers.Analytics
 {
     public enum Category
     {
+        Wizard,
         Startup,
         Search,
         Requests,

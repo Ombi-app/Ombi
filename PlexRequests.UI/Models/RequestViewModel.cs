@@ -54,5 +54,6 @@ namespace PlexRequests.UI.Models
         public string MusicBrainzId { get; set; }
         public QualityModel[] Qualities { get; set; }
         public string ArtistName { get; set; }
+        public Store.EpisodesModel[] Episodes { get; set; }
     }
 }

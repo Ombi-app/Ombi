@@ -25,11 +25,10 @@
 //  ************************************************************************/
 #endregion
 
-using NLog;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public class LogSettings : Settings
+    public sealed class LogSettings : Settings
     {
         public int Level { get; set; }
     }

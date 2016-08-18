@@ -450,4 +450,13 @@
   <data name="Layout_French" xml:space="preserve">
     <value>Fransk</value>
   </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Vælg Episode</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Forkert bruger eller adgangskode</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Der er ingen oplysninger om udgivelsesdatoen</value>
+  </data>
 </root>

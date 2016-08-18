@@ -25,8 +25,9 @@
 //  ************************************************************************/
 #endregion
 using System;
-
-using Nancy.TinyIoc;
+using System.Diagnostics;
+using Ninject;
+using Ninject.Planning.Bindings.Resolvers;
 
 using NLog;
 
@@ -34,6 +35,7 @@ using Owin;
 
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
+using PlexRequests.UI.NinjectModules;
 
 namespace PlexRequests.UI
 {
@@ -45,7 +47,24 @@ namespace PlexRequests.UI
         {
             try
             {
-                app.UseNancy();
+              Debug.WriteLine("Starting StartupConfiguration");
+                var resolver = new DependancyResolver();
+
+              Debug.WriteLine("Created DI Resolver");
+                var modules = resolver.GetModules();
+              Debug.WriteLine("Getting all the modules");
+
+
+              Debug.WriteLine("Modules found finished.");
+                var kernel = new StandardKernel(modules);
+              Debug.WriteLine("Created Kernel and Injected Modules");
+
+              Debug.WriteLine("Added Contravariant Binder");
+                kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
+
+              Debug.WriteLine("Start the bootstrapper with the Kernel.ı");
+               app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
+              Debug.WriteLine("Finished bootstrapper");
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
             }

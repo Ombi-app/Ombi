@@ -61,12 +61,9 @@ namespace PlexRequests.Services.Jobs
 
         public void Queued()
         {
-            Log.Trace("Getting the settings");
-
             var settings = SonarrSettings.GetSettings();
             if (settings.Enabled)
             {
-                Log.Trace("Getting all tv series from Sonarr");
                 try
                 {
                     var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);

@@ -124,7 +124,7 @@ namespace PlexRequests.UI.Modules
             if (sonarrSettings.Enabled)
             {
                 Log.Trace("Sending to Sonarr");
-                var result = sender.SendToSonarr(sonarrSettings, request, qualityId);
+                var result = await sender.SendToSonarr(sonarrSettings, request, qualityId);
                 Log.Trace("Sonarr Result: ");
                 Log.Trace(result.DumpJson());
                 if (!string.IsNullOrEmpty(result.title))
@@ -458,7 +458,7 @@ namespace PlexRequests.UI.Modules
 
                     else if (sonarr.Enabled)
                     {
-                        var res = sender.SendToSonarr(sonarr, r);
+                        var res = await sender.SendToSonarr(sonarr, r);
                         if (!string.IsNullOrEmpty(res?.title))
                         {
                             r.Approved = true;
@@ -467,7 +467,7 @@ namespace PlexRequests.UI.Modules
                         else
                         {
                             Log.Error("Could not approve and send the TV {0} to Sonarr!", r.Title);
-                            res?.ErrorMessages.ForEach(x => Log.Error("Error messages: {0}", x));
+                            res?.ErrorMessages?.ForEach(x => Log.Error("Error messages: {0}", x));
                         }
                     }
                     else

@@ -27,12 +27,29 @@
 using System.Collections.Generic;
 
 using PlexRequests.Core.Models;
+using PlexRequests.Core.Notification;
 
 namespace PlexRequests.Core.SettingModels
 {
     public class NotificationSettings : Settings
     {
-        public Dictionary<NotificationType, string> Message { get; set; }
-        public Dictionary<string,string> CustomParamaters { get; set; }
+        public NotificationSettings()
+        {
+            Message = new List<NotificationMessage>
+            {
+                new NotificationMessage { NotificationType = NotificationType.NewRequest },
+                new NotificationMessage { NotificationType = NotificationType.Issue },
+                new NotificationMessage { NotificationType = NotificationType.AdminNote },
+                new NotificationMessage { NotificationType = NotificationType.RequestApproved },
+                new NotificationMessage { NotificationType = NotificationType.RequestAvailable }
+            };
+        }
+
+        public List<NotificationMessage> Message { get; set; }
+    }
+
+    public static class NotificationCurly
+    {
+        public static readonly List<string> Curlys = new List<string> { "Username", "Title", "Date", "Issue", "Type" };
     }
 }

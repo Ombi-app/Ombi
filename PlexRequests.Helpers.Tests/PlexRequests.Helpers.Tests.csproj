@@ -40,16 +40,16 @@
       <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.0.5813.39031, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=3.4.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
@@ -73,11 +73,14 @@
   <ItemGroup>
     <Compile Include="CookieHelperTests.cs" />
     <Compile Include="DateTimeHelperTests.cs" />
+    <Compile Include="StringHasherTests.cs" />
     <Compile Include="PasswordHasherTests.cs" />
     <Compile Include="HtmlRemoverTests.cs" />
     <Compile Include="AssemblyHelperTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PlexHelperTests.cs" />
+    <Compile Include="TypeHelperTests.cs" />
+    <Compile Include="StringHelperTests.cs" />
     <Compile Include="UriHelperTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,9 +88,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Core\PlexRequests.Core.csproj">
+      <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
+      <Name>PlexRequests.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336d-42a3-482a-804c-836e60173dfa}</Project>
       <Name>PlexRequests.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
+      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
+      <Name>PlexRequests.Store</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

@@ -36,11 +36,30 @@ namespace PlexRequests.Helpers.Tests
     public class PlexHelperTests
     {
         [TestCaseSource(nameof(PlexGuids))]
-        public string CreateUriWithSubDir(string guid)
+        public string GetProviderId(string guid)
         {
             return PlexHelper.GetProviderIdFromPlexGuid(guid);
         }
 
+        [TestCaseSource(nameof(PlexTvEpisodeGuids))]
+        public List<string> GetEpisodeAndSeasons(string guid)
+        {
+            var ep = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(guid);
+            var list = new List<string>
+            {
+                ep.ProviderId,
+                ep.SeasonNumber.ToString(),
+                ep.EpisodeNumber.ToString(),
+            };
+
+            return list;
+        }
+
+        [TestCaseSource(nameof(SeasonNumbers))]
+        public int TitleToSeasonNumber(string title)
+        {
+            return PlexHelper.GetSeasonNumberFromTitle(title);
+        }
 
         private static IEnumerable<TestCaseData> PlexGuids
         {
@@ -56,6 +75,34 @@ namespace PlexRequests.Helpers.Tests
             }
         }
 
-     
+        private static IEnumerable<TestCaseData> SeasonNumbers
+        {
+            get
+            {
+                yield return new TestCaseData("Season 1").Returns(1).SetName("Season 1");
+                yield return new TestCaseData("Season 2").Returns(2).SetName("Season 2");
+                yield return new TestCaseData("Season 3").Returns(3).SetName("Season 3");
+                yield return new TestCaseData("Season 4").Returns(4).SetName("Season 4");
+                yield return new TestCaseData("Season 5").Returns(5).SetName("Season 5");
+                yield return new TestCaseData("Season 100").Returns(100).SetName("Season 100");
+                yield return new TestCaseData("InvalidSeason").Returns(0).SetName("InvalidSeason");
+                yield return new TestCaseData("Invalid Season with no number").Returns(0).SetName("Invalid Season with no number");
+                yield return new TestCaseData("").Returns(0).SetName("Empty string");
+                yield return new TestCaseData(null).Returns(0).SetName("Null string");
+            }
+        }
+
+        private static IEnumerable<TestCaseData> PlexTvEpisodeGuids
+        {
+            get
+            {
+                yield return new TestCaseData("com.plexapp.agents.thetvdb://269586/2/8?lang=en").Returns(new List<string> { "269586","2","8" })
+                    .SetName("Valid");
+                yield return new TestCaseData("com.plexapp.agents.thetvdb://abc/112/388?lang=en").Returns(new List<string> { "abc", "112","388" })
+                    .SetName("Valid Long");
+            }
+        }
+
+
     }
 }

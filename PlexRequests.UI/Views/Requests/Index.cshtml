@@ -22,7 +22,7 @@
         }
         @if (Model.SearchForTvShows)
         {
-            <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i >@UI.Requests_TvShowTabTitle</a></li>
+            <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i>@UI.Requests_TvShowTabTitle</a></li>
         }
         @if (Model.SearchForMusic)
         {
@@ -131,6 +131,23 @@
 
 
 <script id="search-template" type="text/x-handlebars-template">
+    <div hidden="hidden">
+        @*http://iamceege.github.io/tooltipster/#methods*@
+        {{#if episodes}}
+        <div id="{{requestId}}toolTipContent">
+            {{#each episodes}}
+                Season: {{this.seasonNumber}}
+                <br />
+                Episodes Requested:
+                {{#each this.episodes}}
+                    {{this}}
+                {{/each}}
+                <hr />
+            {{/each}}
+        </div>
+        {{/if}}
+    </div>
+
     <div id="{{requestId}}Template" class="mix available-{{available}} approved-{{approved}} released-{{released}}" data-requestorder="{{requestedDateTicks}}" data-releaseorder="{{releaseDateTicks}}">
         <div class="row">
             <div class="col-sm-2">
@@ -153,7 +170,12 @@
                     <span class="label label-success">{{status}}</span>
                 </div>
                 <br />
+                {{#if_eq releaseDate "01/01/0001 00:00:00"}} <!--TheTVDB didn't provide any premier info-->
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
+                {{else}}
+                <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
+                {{/if_eq}}
+
                 <div>
                     @UI.Common_Approved:
                     {{#if_eq approved false}}
@@ -173,7 +195,11 @@
                     {{/if_eq}}
                 </div>
                 {{#if_eq type "tv"}}
+                {{#if episodes}}
+                Episodes: <span class="customTooltip" data-tooltip-content="#{{requestId}}toolTipContent"><i class="fa fa-info-circle"></i></span>
+                {{else}}
                 <div>@UI.Requests_SeasonsRequested: {{seriesRequested}}</div>
+                {{/if}}
                 {{/if_eq}}
                 {{#if requestedUsers}}
                 <div>@UI.Requests_RequestedBy: {{requestedUsers}}</div>
@@ -248,6 +274,10 @@
         </div>
         <hr />
     </div>
+
+
+
+
 </script>
 
 <script id="album-template" type="text/x-handlebars-template">

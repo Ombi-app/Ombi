@@ -53,6 +53,12 @@ namespace PlexRequests.UI.Modules
         private Response CheckAuth()
         {
             var settings = PlexRequestSettings.GetSettings();
+            // Have we been through the wizard?
+            if (!settings.Wizard)
+            {
+                return Context.GetRedirect("~/wizard");
+            }
+
             var baseUrl = settings.BaseUrl;
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";

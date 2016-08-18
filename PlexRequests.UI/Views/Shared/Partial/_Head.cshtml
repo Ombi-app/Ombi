@@ -1,0 +1,26 @@
+﻿@using Nancy.Security
+@using Nancy.Session
+@using PlexRequests.UI.Helpers
+@using PlexRequests.UI.Models
+@using PlexRequests.UI.Resources
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+
+    var baseUrl = Html.GetBaseUrl();
+    var url = string.Empty;
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        url = "/" + baseUrl.ToHtmlString();
+    }
+}
+
+
+
+<div hidden="hidden" id="baseUrl">@baseUrl.ToHtmlString()</div>
+<head>
+    <title>@UI.Layout_Title</title>
+    <!-- Styles -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    @Html.LoadAnalytics()
+    @Html.LoadAssets()
+</head>

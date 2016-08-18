@@ -170,7 +170,8 @@ namespace PlexRequests.UI.Modules
             Post["/sickrage"] = _ => SaveSickrage();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
-            Post["/cpprofiles"] = _ => GetCpProfiles();
+            Post["/cpprofiles", true] = async (x,ct) => await GetCpProfiles();
+            Post["/cpapikey"] = x => GetCpApiKey();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
@@ -253,6 +254,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            model.Wizard = true;
 
             if (!string.IsNullOrWhiteSpace(model.BaseUrl))
             {
@@ -289,19 +291,19 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(new { Result = false, Message = "Incorrect username or password!" });
             }
 
-            var oldSettings = AuthService.GetSettings();
+            var oldSettings = PlexService.GetSettings();
             if (oldSettings != null)
             {
                 oldSettings.PlexAuthToken = model.user.authentication_token;
-                AuthService.SaveSettings(oldSettings);
+                PlexService.SaveSettings(oldSettings);
             }
             else
             {
-                var newModel = new AuthenticationSettings
+                var newModel = new PlexSettings
                 {
                     PlexAuthToken = model.user.authentication_token
                 };
-                AuthService.SaveSettings(newModel);
+                PlexService.SaveSettings(newModel);
             }
 
             return Response.AsJson(new { Result = true, AuthToken = model.user.authentication_token });
@@ -310,7 +312,7 @@ namespace PlexRequests.UI.Modules
 
         private Response GetUsers()
         {
-            var settings = AuthService.GetSettings();
+            var settings = PlexService.GetSettings();
 
             var token = settings?.PlexAuthToken;
             if (token == null)
@@ -361,6 +363,7 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
 
+            couchPotatoSettings.ApiKey = couchPotatoSettings.ApiKey.Trim();
             var result = CpService.SaveSettings(couchPotatoSettings);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
@@ -412,6 +415,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
             }
+            sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
             var result = SonarrService.SaveSettings(sonarrSettings);
 
             return Response.AsJson(result
@@ -441,6 +445,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sonarr is enabled, we cannot enable Sonarr and SickRage" });
             }
+            sickRageSettings.ApiKey = sickRageSettings.ApiKey.Trim();
             var result = SickRageService.SaveSettings(sickRageSettings);
 
             return Response.AsJson(result
@@ -507,6 +512,13 @@ namespace PlexRequests.UI.Modules
             if (!valid.IsValid)
             {
                 return Response.AsJson(valid.SendJsonError());
+            }
+            if (settings.Authentication)
+            {
+                if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
+                {
+                    return Response.AsJson(new JsonResponseModel {Result = false, Message = "SMTP Authentication is enabled, please specify a username and password"});
+                }
             }
 
             var result = EmailService.SaveSettings(settings);
@@ -673,7 +685,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
         }
 
-        private Response GetCpProfiles()
+        private async Task<Response> GetCpProfiles()
         {
             var settings = this.Bind<CouchPotatoSettings>();
             var valid = this.Validate(settings);
@@ -689,7 +701,25 @@ namespace PlexRequests.UI.Modules
                 Cache.Set(CacheKeys.CouchPotatoQualityProfiles, profiles);
             }
 
+            // Save the first profile found (user might not press save...)
+            settings.ProfileId = profiles?.list?.FirstOrDefault()?._id;
+            await CpService.SaveSettingsAsync(settings);
+
             return Response.AsJson(profiles);
+        }
+
+        private Response GetCpApiKey()
+        {
+            var settings = this.Bind<CouchPotatoSettings>();
+            
+            if (string.IsNullOrEmpty(settings.Username) || string.IsNullOrEmpty(settings.Password))
+            {
+                return Response.AsJson(new { Message = "Please enter a username and password to request the Api Key", Result = false });
+            }
+            var key = CpApi.GetApiKey(settings.FullUri, settings.Username, settings.Password);
+
+
+            return Response.AsJson(key);
         }
 
         private Negotiator Logs()
@@ -748,7 +778,7 @@ namespace PlexRequests.UI.Modules
                 Log.Info("Error validating Headphones settings, message: {0}", error.Message);
                 return Response.AsJson(error);
             }
-
+            settings.ApiKey = settings.ApiKey.Trim();
             var result = HeadphonesService.SaveSettings(settings);
 
             Log.Info("Saved headphones settings, result: {0}", result);
