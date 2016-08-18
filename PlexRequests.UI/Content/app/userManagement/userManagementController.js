@@ -16,7 +16,8 @@
             errorMessage: ""
         };
 
-        $scope.selectUser = function(id) {
+        $scope.selectUser = function (id) {
+            $scope.selectedUser = {};
             $scope.selectedUser = $scope.users.find(x => x.id === id);
         }
 

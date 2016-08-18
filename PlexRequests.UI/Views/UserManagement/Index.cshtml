@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.AngularViewBase
-@Html.LoadAngularAssets()
+
 <script src="~/Content/app/userManagement/userManagementController.js"></script>
 <script src="~/Content/app/userManagement/userManagementService.js"></script>
 <div ng-controller="userManagementController" ng-init="getUsers()">
@@ -81,10 +81,10 @@
         </table>
     </div>
 
-    <div class="col-md-5 col-md-push-1" ng-show="selectedUser.username">
+    <div class="col-md-5 col-md-push-1 user-management-menu" ng-show="selectedUser.username">
         <br />
         <br />
-        <img ng-src="{{selectedUser.plexInfo.thumb}}" />
+        <img ng-show="selectedUser.plexInfo.thumb" class="col-md-pull-1 img-circle" style="position: absolute" ng-src="{{selectedUser.plexInfo.thumb}}" />
         <div hidden="hidden" ng-bind="selectedUser.id"></div>
         <div>
             <strong>Username: </strong><span ng-bind="selectedUser.username"></span>

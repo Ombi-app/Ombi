@@ -341,3 +341,14 @@ label {
   -webkit-box-shadow: 3px 3px 5px 6px #191919;
   box-shadow: 3px 3px 5px 6px #191919; }
 
+.img-circle {
+  border-radius: 50%; }
+
+.user-management-menu {
+  border-style: ridge;
+  height: 100%;
+  left: 60%;
+  position: absolute;
+  width: 40%;
+  top: 7%; }
+
