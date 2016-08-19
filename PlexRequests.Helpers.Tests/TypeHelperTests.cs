@@ -26,7 +26,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
-
+using System.Linq;
 using NUnit.Framework;
 
 using PlexRequests.Store;
@@ -42,6 +42,14 @@ namespace PlexRequests.Helpers.Tests
             return input.GetPropertyNames();
         }
 
+        [Test]
+        public void GetConstantsTest()
+        {
+            var consts = typeof(UserClaims).GetConstantsValues<string>();
+            Assert.That(consts.Contains("Admin"),Is.True);
+            Assert.That(consts.Contains("PowerUser"),Is.True);
+            Assert.That(consts.Contains("User"),Is.True);
+        }
 
         private static IEnumerable<TestCaseData> TypeData
         {

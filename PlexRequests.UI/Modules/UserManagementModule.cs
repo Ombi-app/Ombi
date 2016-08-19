@@ -30,9 +30,10 @@ namespace PlexRequests.UI.Modules
             Get["/"] = x => Load();
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
-            Post["/createuser"] = x => CreateUser(Request.Form["username"].ToString(), Request.Form["password"].ToString());
+            Post["/createuser"] = x => CreateUser(Request.Form["username"].ToString(), Request.Form["password"].ToString(), (string[])Request.Form["claims"]);
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x,ct) => await PlexDetails(x.id);
+            Get["/claims"] = x => GetClaims();
         }
 
         private ICustomUserMapper UserMapper { get; }
@@ -91,7 +92,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
-        private Response CreateUser(string username, string password)
+        private Response CreateUser(string username, string password, string[] claims)
         {
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
             {
@@ -101,7 +102,7 @@ namespace PlexRequests.UI.Modules
                     Message = "Please enter in a valid Username and Password"
                 });
             }
-            var user = UserMapper.CreateRegularUser(username, password);
+            var user = UserMapper.Ce(username, password);
             if (user.HasValue)
             {
                 return Response.AsJson(user);
@@ -138,6 +139,21 @@ namespace PlexRequests.UI.Modules
             }
 
             return Nancy.Response.NoBody;
+        }
+
+        /// <summary>
+        /// Returns all claims for the users.
+        /// </summary>
+        /// <returns></returns>
+        private Response GetClaims()
+        {
+            var retVal = new List<dynamic>();
+            var claims = UserMapper.GetAllClaims();
+            foreach (var c in claims)
+            {
+                retVal.Add(new {Name = c, Selected = false});
+            }
+            return Response.AsJson(retVal);
         }
     }
 }

@@ -134,6 +134,17 @@ namespace PlexRequests.Core
             return CreateUser(username, password, new[] { UserClaims.User }, properties);
         }
 
+        public Guid? CreateUser(string username, string password, string[] claims)
+        {
+            return CreateUser(username, password, claims, null);
+        }
+
+        public IEnumerable<string> GetAllClaims()
+        {
+            var properties = typeof(UserClaims).GetConstantsValues<string>();
+            return properties;
+        }
+
         public bool UpdatePassword(string username, string oldPassword, string newPassword)
         {
             var users = Repo.GetAll();
@@ -175,6 +186,8 @@ namespace PlexRequests.Core
 
     public interface ICustomUserMapper
     {
+        Guid? CreateUser(string username, string password, string[] claims);
+        IEnumerable<string> GetAllClaims();
         IEnumerable<UsersModel> GetUsers();
         Task<IEnumerable<UsersModel>> GetUsersAsync();
         UsersModel GetUser(Guid userId);
