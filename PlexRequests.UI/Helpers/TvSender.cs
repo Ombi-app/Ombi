@@ -106,7 +106,7 @@ namespace PlexRequests.UI.Helpers
 
 
                 // We now have the series in Sonarr, update it to request the episodes.
-                await RequestEpisodesWithExistingSeries(model, series, sonarrSettings);
+                await RequestAllEpisodesInASeasonWithExistingSeries(model, series, sonarrSettings);
 
                 return addResult;
             }
@@ -124,7 +124,7 @@ namespace PlexRequests.UI.Helpers
 
                 // Update the series in sonarr with the new monitored status
                 SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                await RequestAllEpisodesWithExistingSeries(model, series, sonarrSettings);
+                await RequestAllEpisodesInASeasonWithExistingSeries(model, series, sonarrSettings);
                 return new SonarrAddSeries { title = series.title }; // We have updated it
             }
 
@@ -220,6 +220,38 @@ namespace PlexRequests.UI.Helpers
             SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
         }
 
+
+        internal async Task RequestAllEpisodesInASeasonWithExistingSeries(RequestedModel model, Series selectedSeries, SonarrSettings sonarrSettings)
+        {
+            // Show Exists
+            // Look up all episodes
+            var ep = SonarrApi.GetEpisodes(selectedSeries.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            var episodes = ep?.ToList() ?? new List<SonarrEpisodes>();
+
+            var internalEpisodeIds = new List<int>();
+            var tasks = new List<Task>();
+            foreach (var r in episodes)
+            {
+                if (r.hasFile || !model.SeasonList.Contains(r.seasonNumber)) // If it already has the file, there is no point in updating it
+                {
+                    continue;
+                }
+
+                // Lookup the individual episode details
+                var episodeInfo = SonarrApi.GetEpisode(r.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                // If the season is not in thr
+
+                episodeInfo.monitored = true; // Set the episode to monitored
+
+                tasks.Add(Task.Run(() => SonarrApi.UpdateEpisode(episodeInfo, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri)));
+                internalEpisodeIds.Add(r.id);
+            }
+
+            await Task.WhenAll(tasks.ToArray());
+
+            SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+        }
         private async Task<Series> GetSonarrSeries(SonarrSettings sonarrSettings, int showId)
         {
             var task = await Task.Run(() => SonarrApi.GetSeries(sonarrSettings.ApiKey, sonarrSettings.FullUri)).ConfigureAwait(false);
