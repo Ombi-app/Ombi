@@ -102,7 +102,7 @@ namespace PlexRequests.UI.Modules
                     Message = "Please enter in a valid Username and Password"
                 });
             }
-            var user = UserMapper.Ce(username, password);
+            var user = UserMapper.CreateUser(username, password, claims);
             if (user.HasValue)
             {
                 return Response.AsJson(user);
