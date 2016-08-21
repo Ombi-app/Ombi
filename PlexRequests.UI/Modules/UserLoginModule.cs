@@ -61,7 +61,17 @@ namespace PlexRequests.UI.Modules
             PlexSettings = plexSettings;
             Linker = linker;
 
-            Get["UserLoginIndex", "/", true] = async (x, ct) => await Index();
+            Get["UserLoginIndex", "/", true] = async (x, ct) =>
+            {
+                if (!string.IsNullOrEmpty(Username) || IsAdmin)
+                {
+                    var uri = Linker.BuildAbsoluteUri(Context, "SearchIndex");
+                    return Response.AsRedirect(uri.ToString()); 
+                }
+                var settings = await AuthService.GetSettingsAsync();
+                return View["Index", settings];
+            };
+
             Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
         }
@@ -74,12 +84,6 @@ namespace PlexRequests.UI.Modules
         private IAnalytics Analytics { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-
-        public async Task<Negotiator> Index()
-        {
-            var settings = await AuthService.GetSettingsAsync();
-            return View["Index", settings];
-        }
 
         private async Task<Response> LoginUser()
         {
