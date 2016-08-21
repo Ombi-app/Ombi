@@ -65,7 +65,7 @@ namespace PlexRequests.UI.Modules
             {
                 if (!string.IsNullOrEmpty(Username) || IsAdmin)
                 {
-                    var uri = Linker.BuildAbsoluteUri(Context, "SearchIndex");
+                    var uri = Linker.BuildRelativeUri(Context, "SearchIndex");
                     return Response.AsRedirect(uri.ToString()); 
                 }
                 var settings = await AuthService.GetSettingsAsync();
@@ -93,7 +93,7 @@ namespace PlexRequests.UI.Modules
             if (string.IsNullOrWhiteSpace(username))
             {
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
-                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
                 return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
@@ -106,7 +106,7 @@ namespace PlexRequests.UI.Modules
             {
                 Log.Debug("User is in denied list, not allowing them to authenticate");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
-                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
                 return Response.AsRedirect(uri.ToString());  // TODO Check this
             }
 
@@ -165,7 +165,7 @@ namespace PlexRequests.UI.Modules
 
             if (!authenticated)
             {
-                var uri = Linker.BuildAbsoluteUri(Context, "UserLoginIndex");
+                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 return Response.AsRedirect(uri.ToString()); // TODO Check this
             }
@@ -176,11 +176,11 @@ namespace PlexRequests.UI.Modules
             {
                 if (!landingSettings.BeforeLogin)
                 {
-                    var uri = Linker.BuildAbsoluteUri(Context, "LandingPageIndex");
+                    var uri = Linker.BuildRelativeUri(Context, "LandingPageIndex");
                     return Response.AsRedirect(uri.ToString());
                 }
             }
-            var retVal = Linker.BuildAbsoluteUri(Context, "SearchIndex");
+            var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
             return Response.AsRedirect(retVal.ToString()); // TODO Check this
         }
 

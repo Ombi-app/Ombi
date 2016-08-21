@@ -59,23 +59,23 @@ namespace PlexRequests.UI.Modules
                     if (!string.IsNullOrEmpty(Username))
                     {
                         // They are not logged in
-                        return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "LandingPageIndex").ToString());
+                        return Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
                     }
-                    return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "SearchIndex").ToString());
+                    return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
                 }
 
                 // After login
                 if (string.IsNullOrEmpty(Username))
                 {
                     // Not logged in yet
-                    return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "UserLoginIndex").ToString());
+                    return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString());
                 }
                 // Send them to landing
-                var landingUrl = Linker.BuildAbsoluteUri(Context, "LandingPageIndex").ToString();
+                var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
                 return Context.GetRedirect(landingUrl);
             }
 
-            return Context.GetRedirect(Linker.BuildAbsoluteUri(Context, "UserLoginIndex").ToString());
+            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString());
         }
     }
 }
