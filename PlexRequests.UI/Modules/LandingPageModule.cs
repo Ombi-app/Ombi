@@ -52,7 +52,7 @@ namespace PlexRequests.UI.Modules
                 var s = await LandingSettings.GetSettingsAsync();
                 if (!s.BeforeLogin && string.IsNullOrEmpty(Username)) //We are signed in
                 {
-                    var url = Linker.BuildAbsoluteUri(Context, "SearchIndex").ToString();
+                    var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
                     return Response.AsRedirect(url);
                 }
 
