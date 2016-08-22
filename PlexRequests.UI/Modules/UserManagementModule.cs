@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
+using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
-
+using Newtonsoft.Json;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.Models;
@@ -30,9 +31,9 @@ namespace PlexRequests.UI.Modules
             Get["/"] = x => Load();
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
-            Post["/createuser"] = x => CreateUser(Request.Form["username"].ToString(), Request.Form["password"].ToString(), (string[])Request.Form["claims"]);
+            Post["/createuser"] = x => CreateUser();
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
-            Get["/plex/{id}", true] = async (x,ct) => await PlexDetails(x.id);
+            Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
             Get["/claims"] = x => GetClaims();
         }
 
@@ -58,7 +59,7 @@ namespace PlexRequests.UI.Modules
 
                 model.Add(new UserManagementUsersViewModel
                 {
-                    Id= user.UserGuid,
+                    Id = user.UserGuid,
                     Claims = claimsString,
                     Username = user.UserName,
                     Type = UserType.LocalUser,
@@ -92,9 +93,17 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
-        private Response CreateUser(string username, string password, string[] claims)
+        private Response CreateUser()
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+            var body = Request.Body.AsString();
+            if (string.IsNullOrEmpty(body))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user, invalid JSON body" });
+            }
+
+            var model = JsonConvert.DeserializeObject<UserManagementCreateModel>(body);
+
+            if (string.IsNullOrWhiteSpace(model.Username) || string.IsNullOrWhiteSpace(model.Password))
             {
                 return Response.AsJson(new JsonResponseModel
                 {
@@ -102,7 +111,7 @@ namespace PlexRequests.UI.Modules
                     Message = "Please enter in a valid Username and Password"
                 });
             }
-            var user = UserMapper.Ce(username, password);
+            var user = UserMapper.CreateUser(model.Username, model.Password, model.Claims, new UserProperties { EmailAddress = model.EmailAddress });
             if (user.HasValue)
             {
                 return Response.AsJson(user);
@@ -151,7 +160,7 @@ namespace PlexRequests.UI.Modules
             var claims = UserMapper.GetAllClaims();
             foreach (var c in claims)
             {
-                retVal.Add(new {Name = c, Selected = false});
+                retVal.Add(new { Name = c, Selected = false });
             }
             return Response.AsJson(retVal);
         }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace PlexRequests.UI.Models
 {
@@ -41,6 +42,19 @@ namespace PlexRequests.UI.Models
     {
         PlexUser,
         LocalUser
+    }
+
+    public class UserManagementCreateModel
+    {
+        [JsonProperty("username")]
+        public string Username { get; set; }
+        [JsonProperty("password")]
+        public string Password { get; set; }
+        [JsonProperty("claims")]
+        public string[] Claims { get; set; }
+
+        [JsonProperty("email")]
+        public string EmailAddress { get; set; }
     }
 }
 

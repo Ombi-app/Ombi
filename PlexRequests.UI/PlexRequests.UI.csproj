@@ -250,6 +250,7 @@
     <Compile Include="Modules\CultureModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
+    <Compile Include="Modules\RequestsBetaModule.cs" />
     <Compile Include="Modules\UpdateCheckerModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />
@@ -280,6 +281,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\app\app.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\requests\requestsController.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\requests\requestsService.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\awesome-bootstrap-checkbox.css">

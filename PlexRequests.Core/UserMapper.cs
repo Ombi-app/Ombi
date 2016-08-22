@@ -99,7 +99,7 @@ namespace PlexRequests.Core
             return users.Any();
         }
 
-        private Guid? CreateUser(string username, string password, string[] claims = default(string[]), UserProperties properties = null)
+        public Guid? CreateUser(string username, string password, string[] claims = default(string[]), UserProperties properties = null)
         {
             var salt = PasswordHasher.GenerateSalt();
 
@@ -134,10 +134,6 @@ namespace PlexRequests.Core
             return CreateUser(username, password, new[] { UserClaims.User }, properties);
         }
 
-        public Guid? CreateUser(string username, string password, string[] claims)
-        {
-            return CreateUser(username, password, claims, null);
-        }
 
         public IEnumerable<string> GetAllClaims()
         {
@@ -186,7 +182,7 @@ namespace PlexRequests.Core
 
     public interface ICustomUserMapper
     {
-        Guid? CreateUser(string username, string password, string[] claims);
+        Guid? CreateUser(string username, string password, string[] claims, UserProperties props);
         IEnumerable<string> GetAllClaims();
         IEnumerable<UsersModel> GetUsers();
         Task<IEnumerable<UsersModel>> GetUsersAsync();
