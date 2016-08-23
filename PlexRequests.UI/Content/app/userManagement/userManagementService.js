@@ -2,7 +2,7 @@
 
     var userManagementService = function ($http) {
 
-        //$http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded'; // Set default headers
+        $http.defaults.headers.common['Content-Type'] = 'application/json'; // Set default headers
 
         var getUsers = function () {
             return $http.get('/usermanagement/users');
@@ -13,17 +13,14 @@
                 return null;
             }
 
-            var claimJson = angular.toJson(claims);
-            var objectToSerialize = { 'claims': claimJson };
-            var data = $.param(user) +"&"+ $.param(objectToSerialize);
             return $http({
                 url: '/usermanagement/createuser',
                 method: "POST",
-                data: data
+                data: { username: user.username, password: user.password, claims: claims, email: user.email }
             });
         }
 
-        var getClaims = function() {
+        var getClaims = function () {
             return $http.get('/usermanagement/claims');
         }
 

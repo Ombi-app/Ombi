@@ -19,6 +19,9 @@
             <div class="form-group">
                 <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
             </div>
+            <div class="form-group">
+                <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
+            </div>
 
             <div class="checkbox" ng-repeat="claim in claims">
                 <input id="claimCheckbox_{{$id}}" class="checkbox-custom" name="selectedClaims[]"
