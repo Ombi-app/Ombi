@@ -131,7 +131,7 @@ namespace PlexRequests.UI.Helpers
 
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
                 sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
-                sonarrSettings.FullUri);
+                sonarrSettings.FullUri, true, true);
 
             return result;
         }
