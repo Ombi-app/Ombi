@@ -56,7 +56,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(movieSearch, 800);
+        searchTimer = setTimeout(function () {
+            movieSearch();
+        }.bind(this), 800);
 
     });
 
@@ -75,7 +77,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(tvSearch, 400);
+         searchTimer = setTimeout(function() {
+            tvSearch();
+        }.bind(this), 800);
     });
 
     // Click TV dropdown option
@@ -116,7 +120,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(musicSearch, 400);
+        searchTimer = setTimeout(function () {
+            musicSearch();
+        }.bind(this), 800);
 
     });
 
