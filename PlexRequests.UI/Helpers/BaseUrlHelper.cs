@@ -84,7 +84,6 @@ namespace PlexRequests.UI.Helpers
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/tooltip/tooltipster.bundle.min.css\" type=\"text/css\"/>",
             };
 
@@ -99,7 +98,6 @@ namespace PlexRequests.UI.Helpers
                 $"<script src=\"{startUrl}/pace.min.js\"></script>",
                 $"<script src=\"{startUrl}/jquery.mixitup.js\"></script>",
                 $"<script src=\"{startUrl}/moment.min.js\"></script>",
-                $"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>",
                 $"<script src=\"{startUrl}/tooltip/tooltipster.bundle.min.js\"></script>"
             };
 
@@ -118,6 +116,16 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(sb.ToString());
         }
 
+        public static IHtmlString LoadDateTimePickerAsset(this HtmlHelpers helper)
+        {
+            var startUrl = GetBaseUrl();
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>");
+
+            return helper.Raw(sb.ToString());
+        }
         public static IHtmlString LoadAngularAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
