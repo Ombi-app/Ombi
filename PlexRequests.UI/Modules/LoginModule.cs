@@ -30,6 +30,7 @@ using System.Dynamic;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Extensions;
+using Nancy.Linker;
 using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
@@ -42,20 +43,22 @@ namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m) : base(pr)
+        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker) : base(pr)
         {
             UserMapper = m;
             Get["/login"] = _ =>
             {
+                if (LoggedIn)
                 {
-                    dynamic model = new ExpandoObject();
-					model.Redirect = Request.Query.redirect.Value ?? string.Empty;
-                    model.Errored = Request.Query.error.HasValue;
-                    var adminCreated = UserMapper.DoUsersExist();
-                    model.AdminExists = adminCreated;
-                    return View["Index", model];
+                    var url = linker.BuildRelativeUri(Context, "SearchIndex");
+                    return Response.AsRedirect(url.ToString());
                 }
-
+                dynamic model = new ExpandoObject();
+                model.Redirect = Request.Query.redirect.Value ?? string.Empty;
+                model.Errored = Request.Query.error.HasValue;
+                var adminCreated = UserMapper.DoUsersExist();
+                model.AdminExists = adminCreated;
+                return View["Index", model];
             };
 
             Get["/logout"] = x => this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
@@ -65,7 +68,7 @@ namespace PlexRequests.UI.Modules
                 var username = (string)Request.Form.Username;
                 var password = (string)Request.Form.Password;
                 var dtOffset = (int)Request.Form.DateTimeOffset;
-				var redirect = (string)Request.Form.Redirect;
+                var redirect = (string)Request.Form.Redirect;
 
                 var userId = UserMapper.ValidateUser(username, password);
 
@@ -80,10 +83,11 @@ namespace PlexRequests.UI.Modules
                 }
                 Session[SessionKeys.UsernameKey] = username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = dtOffset;
-				if(redirect.Contains("userlogin")){
-					redirect = !string.IsNullOrEmpty(BaseUrl) ? $"/{BaseUrl}/search" : "/search";
-				}
-				return this.LoginAndRedirect(userId.Value, expiry, redirect);
+                if (redirect.Contains("userlogin"))
+                {
+                    redirect = !string.IsNullOrEmpty(BaseUrl) ? $"/{BaseUrl}/search" : "/search";
+                }
+                return this.LoginAndRedirect(userId.Value, expiry, redirect);
             };
 
             Get["/register"] = x =>
