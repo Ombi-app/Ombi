@@ -82,9 +82,8 @@ namespace PlexRequests.UI.Helpers
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/font-awesome.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css?v={Assembly}\" type=\"text/css\"/>",
+                $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}?v={Assembly}\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/tooltip/tooltipster.bundle.min.css\" type=\"text/css\"/>",
             };
 
@@ -95,11 +94,10 @@ namespace PlexRequests.UI.Helpers
                 $"<script src=\"{startUrl}/handlebars.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap.min.js\"></script>",
                 $"<script src=\"{startUrl}/bootstrap-notify.min.js\"></script>",
-                $"<script src=\"{startUrl}/site.js\"></script>",
+                $"<script src=\"{startUrl}/site.js?v={Assembly}\"></script>",
                 $"<script src=\"{startUrl}/pace.min.js\"></script>",
                 $"<script src=\"{startUrl}/jquery.mixitup.js\"></script>",
                 $"<script src=\"{startUrl}/moment.min.js\"></script>",
-                $"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>",
                 $"<script src=\"{startUrl}/tooltip/tooltipster.bundle.min.js\"></script>"
             };
 
@@ -118,6 +116,16 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(sb.ToString());
         }
 
+        public static IHtmlString LoadDateTimePickerAsset(this HtmlHelpers helper)
+        {
+            var startUrl = GetBaseUrl();
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>");
+
+            return helper.Raw(sb.ToString());
+        }
         public static IHtmlString LoadAngularAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
@@ -135,7 +143,7 @@ namespace PlexRequests.UI.Helpers
             var startUrl = $"{content}/Content";
 
             sb.AppendLine($"<script src=\"{startUrl}/angular.min.js\"></script>"); // Load angular first
-            sb.AppendLine($"<script src=\"{startUrl}/app/app.js\"></script>");
+            sb.AppendLine($"<script src=\"{startUrl}/app/app.js?v={Assembly}\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -147,7 +155,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/search.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/search.js?v={Assembly}\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -159,7 +167,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/requests.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/requests.js?v={Assembly}\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -171,7 +179,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
-            sb.AppendLine($"<script src=\"{content}/Content/issues.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/issues.js?v={Assembly}\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -183,7 +191,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
             
-            sb.AppendLine($"<script src=\"{content}/Content/wizard.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<script src=\"{content}/Content/wizard.js?v={Assembly}\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -193,7 +201,7 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content/issue-details.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content/issue-details.js?v={Assembly}\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }
@@ -222,7 +230,7 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
 
-            var asset = $"<script src=\"{content}/Content/analytics.js\" type=\"text/javascript\"></script>";
+            var asset = $"<script src=\"{content}/Content/analytics.js?v={Assembly}\" type=\"text/javascript\"></script>";
 
             return helper.Raw(asset);
         }
