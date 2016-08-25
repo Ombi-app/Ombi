@@ -158,6 +158,7 @@ namespace PlexRequests.Services.Jobs
 
         public List<PlexMovie> GetPlexMovies()
         {
+            var settings = Plex.GetSettings();
             var movies = new List<PlexMovie>();
             var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
             if (libs != null)
@@ -175,6 +176,7 @@ namespace PlexRequests.Services.Jobs
                         ReleaseYear = video.Year,
                         Title = video.Title,
                         ProviderId = video.ProviderId,
+                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, video.RatingKey)
                     }));
                 }
             }
@@ -182,6 +184,12 @@ namespace PlexRequests.Services.Jobs
         }
 
         public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null)
+        {
+            var movie = GetMovie(plexMovies, title, year, providerId);
+            return movie != null;
+        }
+
+        public PlexMovie GetMovie(PlexMovie[] plexMovies, string title, string year, string providerId = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
             foreach (var movie in plexMovies)
@@ -191,20 +199,21 @@ namespace PlexRequests.Services.Jobs
                     if (!string.IsNullOrEmpty(movie.ProviderId) &&
                         movie.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return true;
+                        return movie;
                     }
                 }
                 if (movie.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
                     movie.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    return true;
+                    return movie;
                 }
             }
-            return false;
+            return null;
         }
 
         public List<PlexTvShow> GetPlexTvShows()
         {
+            var settings = Plex.GetSettings();
             var shows = new List<PlexTvShow>();
             var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
             if (libs != null)
@@ -224,7 +233,9 @@ namespace PlexRequests.Services.Jobs
                         Title = x.Title,
                         ReleaseYear = x.Year,
                         ProviderId = x.ProviderId,
-                        Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray()
+                        Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray(),
+                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey)
+
                     }));
                 }
             }
@@ -232,6 +243,14 @@ namespace PlexRequests.Services.Jobs
         }
 
         public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
+        {
+            var show = GetTvShow(plexShows, title, year, providerId, seasons);
+            return show != null;
+        }
+
+
+        public PlexTvShow GetTvShow(PlexTvShow[] plexShows, string title, string year, string providerId = null,
+            int[] seasons = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
             foreach (var show in plexShows)
@@ -242,23 +261,23 @@ namespace PlexRequests.Services.Jobs
                     {
                         if (seasons.Any(season => show.Seasons.Contains(season)))
                         {
-                            return true;
+                            return show;
                         }
-                        return false;
+                        return null;
                     }
                     if (!string.IsNullOrEmpty(show.ProviderId) &&
                         show.ProviderId.Equals(providerId, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        return true;
+                        return show;
                     }
                 }
                 if (show.Title.Equals(title, StringComparison.CurrentCultureIgnoreCase) &&
                     show.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    return true;
+                    return show;
                 }
             }
-            return false;
+            return null;
         }
 
         public bool IsEpisodeAvailable(string theTvDbId, int season, int episode)
@@ -328,6 +347,7 @@ namespace PlexRequests.Services.Jobs
 
         public List<PlexAlbum> GetPlexAlbums()
         {
+            var settings = Plex.GetSettings();
             var albums = new List<PlexAlbum>();
             var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
             if (libs != null)
@@ -344,7 +364,8 @@ namespace PlexRequests.Services.Jobs
                     {
                         Title = x.Title,
                         ReleaseYear = x.Year,
-                        Artist = x.ParentTitle
+                        Artist = x.ParentTitle,
+                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey)
                     }));
                 }
             }
@@ -355,7 +376,13 @@ namespace PlexRequests.Services.Jobs
         {
             return plexAlbums.Any(x =>
                 x.Title.Contains(title) &&
-                //x.ReleaseYear.Equals(year, StringComparison.CurrentCultureIgnoreCase) &&
+                x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        public PlexAlbum GetAlbum(PlexAlbum[] plexAlbums, string title, string year, string artist)
+        {
+            return plexAlbums.FirstOrDefault(x =>
+                x.Title.Contains(title) &&
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
 

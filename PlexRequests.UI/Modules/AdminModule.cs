@@ -161,7 +161,7 @@ namespace PlexRequests.UI.Modules
             Post["/couchpotato"] = _ => SaveCouchPotato();
 
             Get["/plex"] = _ => Plex();
-            Post["/plex"] = _ => SavePlex();
+            Post["/plex", true] = async (x, ct) => await SavePlex();
 
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
@@ -170,13 +170,13 @@ namespace PlexRequests.UI.Modules
             Post["/sickrage"] = _ => SaveSickrage();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
-            Post["/cpprofiles", true] = async (x,ct) => await GetCpProfiles();
+            Post["/cpprofiles", true] = async (x, ct) => await GetCpProfiles();
             Post["/cpapikey"] = x => GetCpApiKey();
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
             Post["/testemailnotification"] = _ => TestEmailNotifications();
-            Get["/status", true] = async (x,ct) => await Status();
+            Get["/status", true] = async (x, ct) => await Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
@@ -268,7 +268,7 @@ namespace PlexRequests.UI.Modules
                 Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
             }
             var result = PrService.SaveSettings(model);
-            
+
             Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true }
@@ -377,7 +377,7 @@ namespace PlexRequests.UI.Modules
             return View["Plex", settings];
         }
 
-        private Response SavePlex()
+        private async Task<Response> SavePlex()
         {
             var plexSettings = this.Bind<PlexSettings>();
             var valid = this.Validate(plexSettings);
@@ -386,8 +386,11 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
 
+            //Lookup identifier
+            var server = PlexApi.GetServer(plexSettings.PlexAuthToken);
+            plexSettings.MachineIdentifier = server.Server.FirstOrDefault(x => x.AccessToken == plexSettings.PlexAuthToken)?.MachineIdentifier;
 
-            var result = PlexService.SaveSettings(plexSettings);
+            var result = await PlexService.SaveSettingsAsync(plexSettings);
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Plex!" }
@@ -517,7 +520,7 @@ namespace PlexRequests.UI.Modules
             {
                 if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
                 {
-                    return Response.AsJson(new JsonResponseModel {Result = false, Message = "SMTP Authentication is enabled, please specify a username and password"});
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "SMTP Authentication is enabled, please specify a username and password" });
                 }
             }
 
@@ -542,7 +545,7 @@ namespace PlexRequests.UI.Modules
         {
             var checker = new StatusChecker();
             var status = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async () => await checker.GetStatus(), 30);
-            var md = new Markdown(new MarkdownOptions { AutoNewLines = true, AutoHyperlink = true});
+            var md = new Markdown(new MarkdownOptions { AutoNewLines = true, AutoHyperlink = true });
             status.ReleaseNotes = md.Transform(status.ReleaseNotes);
             return View["Status", status];
         }
@@ -711,7 +714,7 @@ namespace PlexRequests.UI.Modules
         private Response GetCpApiKey()
         {
             var settings = this.Bind<CouchPotatoSettings>();
-            
+
             if (string.IsNullOrEmpty(settings.Username) || string.IsNullOrEmpty(settings.Password))
             {
                 return Response.AsJson(new { Message = "Please enter a username and password to request the Api Key", Result = false });
@@ -938,12 +941,12 @@ namespace PlexRequests.UI.Modules
                 {
                     await LogsRepo.DeleteAsync(logEntity);
                 }
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Logs cleared successfully."});
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Logs cleared successfully." });
             }
             catch (Exception e)
             {
                 Log.Error(e);
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });   
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
             }
         }
     }

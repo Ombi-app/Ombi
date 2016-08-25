@@ -6,5 +6,6 @@
         public string ReleaseYear { get; set; }
         public string ProviderId { get; set; }
         public int[] Seasons { get; set; }
+        public string Url { get; set; }
     }
 }

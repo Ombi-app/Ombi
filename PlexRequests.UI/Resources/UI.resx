@@ -440,4 +440,7 @@
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>There is no information available for the release date</value>
   </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>View In Plex</value>
+  </data>
 </root>
