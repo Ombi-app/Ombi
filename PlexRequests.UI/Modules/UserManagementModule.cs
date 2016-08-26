@@ -63,7 +63,8 @@ namespace PlexRequests.UI.Modules
                     Claims = claimsString,
                     Username = user.UserName,
                     Type = UserType.LocalUser,
-                    EmailAddress = userProps.EmailAddress
+                    EmailAddress = userProps.EmailAddress,
+                    ClaimsArray = claims
                 });
             }
 

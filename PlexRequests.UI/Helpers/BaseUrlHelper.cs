@@ -206,6 +206,20 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(asset);
         }
 
+
+        public static IHtmlString LoadUserManagementAssets(this HtmlHelpers helper)
+        {
+            var assetLocation = GetBaseUrl();
+            var content = GetContentUrl(assetLocation);
+
+            var controller = $"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>";
+            controller += $"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>";
+
+
+            return helper.Raw(controller);
+        }
+
+
         public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
         {
             var sb = new StringBuilder();
