@@ -67,7 +67,8 @@ namespace PlexRequests.UI.Modules
             ISonarrApi sonarrApi,
             ISickRageApi sickRageApi,
             ICacheProvider cache,
-            IAnalytics an) : base("requests", prSettings)
+            IAnalytics an,
+            INotificationEngine engine) : base("requests", prSettings)
         {
             Service = service;
             PrSettings = prSettings;
@@ -81,6 +82,7 @@ namespace PlexRequests.UI.Modules
             CpApi = cpApi;
             Cache = cache;
             Analytics = an;
+            NotificationEngine = engine;
 
             Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
@@ -108,6 +110,7 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private ICacheProvider Cache { get; }
+        private INotificationEngine NotificationEngine { get; }
 
         private async Task<Negotiator> LoadRequests()
         {
@@ -376,6 +379,8 @@ namespace PlexRequests.UI.Modules
             originalRequest.Available = available;
 
             var result = await Service.UpdateRequestAsync(originalRequest);
+            var plexService = await PlexSettings.GetSettingsAsync();
+            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });

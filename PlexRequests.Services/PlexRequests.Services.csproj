@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IJobRecord.cs" />
+    <Compile Include="Interfaces\INotificationEngine.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
+    <Compile Include="Notification\NotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />

@@ -53,7 +53,7 @@ namespace PlexRequests.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -63,6 +63,7 @@ namespace PlexRequests.Services.Jobs
             Job = rec;
             UserNotifyRepo = users;
             EpisodeRepo = repo;
+            NotificationEngine = e;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -74,6 +75,9 @@ namespace PlexRequests.Services.Jobs
         private INotificationService Notification { get; }
         private IJobRecord Job { get; }
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
+        private INotificationEngine NotificationEngine { get; }
+
+
         public void CheckAndUpdateAll()
         {
             var plexSettings = Plex.GetSettings();
@@ -148,7 +152,7 @@ namespace PlexRequests.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotifyUsers(modifiedModel, plexSettings.PlexAuthToken);
+                NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken);
                 RequestService.BatchUpdate(modifiedModel);
             }
 
@@ -460,63 +464,6 @@ namespace PlexRequests.Services.Jobs
                 return false;
             }
             return true;
-        }
-
-        private void NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey)
-        {
-            try
-            {
-                var plexUser = PlexApi.GetUsers(apiKey);
-                var userAccount = PlexApi.GetAccount(apiKey);
-
-                var adminUsername = userAccount.Username ?? string.Empty;
-
-                var users = UserNotifyRepo.GetAll().ToList();
-                Log.Debug("Notifying Users Count {0}", users.Count);
-                foreach (var model in modelChanged)
-                {
-                    var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers);
-                    foreach (var user in selectedUsers)
-                    {
-                        Log.Info("Notifying user {0}", user);
-                        if (user == adminUsername)
-                        {
-                            Log.Info("This user is the Plex server owner");
-                            PublishUserNotification(userAccount.Username, userAccount.Email, model.Title);
-                            return;
-                        }
-
-                        var email = plexUser.User.FirstOrDefault(x => x.Username == user);
-                        if (email == null)
-                        {
-                            Log.Info("There is no email address for this Plex user, cannot send notification");
-                            // We do not have a plex user that requested this!
-                            continue;
-                        }
-
-                        Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                        PublishUserNotification(email.Username, email.Email, model.Title);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-        }
-
-        private void PublishUserNotification(string username, string email, string title)
-        {
-            var notificationModel = new NotificationModel
-            {
-                User = username,
-                UserEmail = email,
-                NotificationType = NotificationType.RequestAvailable,
-                Title = title
-            };
-
-            // Send the notification to the user.
-            Notification.Publish(notificationModel);
         }
 
         public void Execute(IJobExecutionContext context)
