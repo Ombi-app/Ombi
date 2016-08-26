@@ -34,7 +34,7 @@ using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Validation;
-
+using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -84,7 +84,9 @@ namespace PlexRequests.UI.Modules
         private ICustomUserMapper Mapper { get; }
         private IAnalytics Analytics { get; }
 
-     
+        private static Logger Log = LogManager.GetCurrentClassLogger();
+
+
         private Response PlexAuth()
         {
             var user = this.Bind<PlexAuth>();
@@ -103,9 +105,10 @@ namespace PlexRequests.UI.Modules
 
             // Set the auth token in the session so we can use it in the next form
             Session[SessionKeys.UserWizardPlexAuth] = model.user.authentication_token;
-
+            
             var servers = PlexApi.GetServer(model.user.authentication_token);
             var firstServer = servers.Server.FirstOrDefault();
+            
             return Response.AsJson(new { Result = true, firstServer?.Port, Ip = firstServer?.LocalAddresses, firstServer?.Scheme });
         }
 
@@ -118,6 +121,20 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
             form.PlexAuthToken = Session[SessionKeys.UserWizardPlexAuth].ToString(); // Set the auth token from the previous form
+
+            // Get the machine ID from the settings (This could have changed)
+            try
+            {
+                var servers = PlexApi.GetServer(form.PlexAuthToken);
+                var firstServer = servers.Server.FirstOrDefault(x => x.AccessToken == form.PlexAuthToken);
+
+                Session[SessionKeys.UserWizardMachineId] = firstServer?.MachineIdentifier;
+            }
+            catch (Exception e)
+            {
+                // Probably bad settings, just continue
+                Log.Error(e);
+            }
 
             var result = await PlexSettings.SaveSettingsAsync(form);
             if (result)

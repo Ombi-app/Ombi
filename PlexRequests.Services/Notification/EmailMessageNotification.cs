@@ -104,7 +104,14 @@ namespace PlexRequests.Services.Notification
 
         private bool ValidateConfiguration(EmailNotificationSettings settings)
         {
-            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
+            if (settings.Authentication)
+            {
+                if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
+                {
+                    return false;
+                }              
+            }
+            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
             {
                 return false;
             }

@@ -444,7 +444,8 @@ $(function () {
             imdb: result.imdbId,
             requested: result.requested,
             approved: result.approved,
-            available: result.available
+            available: result.available,
+            url: result.plexUrl
         };
 
         return context;
@@ -465,7 +466,8 @@ $(function () {
             approved: result.approved,
             available: result.available,
             episodes: result.episodes,
-            tvFullyAvailable: result.tvFullyAvailable
+            tvFullyAvailable: result.tvFullyAvailable,
+            url: result.plexUrl
         };
         return context;
     }
@@ -485,7 +487,8 @@ $(function () {
             country: result.country,
             requested: result.requested,
             approved: result.approved,
-            available: result.available
+            available: result.available,
+            url: result.plexUrl
         };
 
         return context;

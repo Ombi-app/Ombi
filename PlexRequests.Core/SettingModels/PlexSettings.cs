@@ -24,6 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using Newtonsoft.Json;
+
 namespace PlexRequests.Core.SettingModels
 {
     public sealed class PlexSettings : ExternalSettings
@@ -36,5 +39,6 @@ namespace PlexRequests.Core.SettingModels
         public bool EnableTvEpisodeSearching { get; set; }
 
         public string PlexAuthToken { get; set; }
+        public string MachineIdentifier { get; set; }
     }
 }

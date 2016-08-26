@@ -110,7 +110,7 @@ namespace PlexRequests.UI.Modules
 
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
-            Get["music/{searchTerm}", true] = async (x, ct) => await SearchMusic((string)x.searchTerm);
+            Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
             Get["music/coverArt/{id}"] = p => GetMusicBrainzCoverArt((string)p.id);
 
             Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
@@ -252,9 +252,11 @@ namespace PlexRequests.UI.Modules
                     VoteCount = movie.VoteCount
                 };
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
-                if (Checker.IsMovieAvailable(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString()))
+                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString());
+                if (plexMovie != null)
                 {
                     viewMovie.Available = true;
+                    viewMovie.PlexUrl = plexMovie.Url;
                 }
                 else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
@@ -343,9 +345,12 @@ namespace PlexRequests.UI.Modules
                     providerId = viewT.Id.ToString();
                 }
 
-                if (Checker.IsTvShowAvailable(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId))
+                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
+                    providerId);
+                if (plexShow != null)
                 {
                     viewT.Available = true;
+                    viewT.PlexUrl = plexShow.Url;
                 }
                 else if (t.show?.externals?.thetvdb != null)
                 {
@@ -371,7 +376,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(viewTv);
         }
 
-        private async Task<Response> SearchMusic(string searchTerm)
+        private async Task<Response> SearchAlbum(string searchTerm)
         {
             Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiAlbums = new List<Release>();
@@ -405,9 +410,11 @@ namespace PlexRequests.UI.Modules
                 DateTime release;
                 DateTimeHelper.CustomParse(a.ReleaseEvents?.FirstOrDefault()?.date, out release);
                 var artist = a.ArtistCredit?.FirstOrDefault()?.artist;
-                if (Checker.IsAlbumAvailable(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name))
+                var plexAlbum = Checker.GetAlbum(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name);
+                if (plexAlbum != null)
                 {
                     viewA.Available = true;
+                    viewA.PlexUrl = plexAlbum.Url;
                 }
                 if (!string.IsNullOrEmpty(a.id) && dbAlbum.ContainsKey(a.id))
                 {

@@ -33,5 +33,6 @@ namespace PlexRequests.UI.Models
         public bool Approved { get; set; }
         public bool Requested { get; set; }
         public bool Available { get; set; }
+        public string PlexUrl { get; set; }
     }
 }

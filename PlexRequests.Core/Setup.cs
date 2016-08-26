@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 using Mono.Data.Sqlite;
@@ -65,6 +66,11 @@ namespace PlexRequests.Core
                 if (version > 1899 && version <= 1900)
                 {
                     MigrateToVersion1900();
+                }
+
+                if(version > 1899 && version <= 1910)
+                {
+                    MigrateToVersion1910();
                 }
             }
 
@@ -238,6 +244,31 @@ namespace PlexRequests.Core
                 settings.CollectAnalyticData = true;
                 var updated = prSettings.SaveSettings(settings);
 
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+        /// <summary>
+        /// Migrates to version1910.
+        /// </summary>
+        public void MigrateToVersion1910()
+        {
+            try
+            {
+                // Get the new machine Identifier
+                var settings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var plex = settings.GetSettings();
+                if (!string.IsNullOrEmpty(plex.PlexAuthToken))
+                {
+                    var api = new PlexApi(new ApiRequest());
+                    var server = api.GetServer(plex.PlexAuthToken); // Get the server info
+                    plex.MachineIdentifier = server.Server.FirstOrDefault(x => x.AccessToken == plex.PlexAuthToken)?.MachineIdentifier;
+
+                    settings.SaveSettings(plex); // Save the new settings
+                }
             }
             catch (Exception e)
             {

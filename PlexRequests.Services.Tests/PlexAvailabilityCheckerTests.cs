@@ -242,6 +242,7 @@ namespace PlexRequests.Services.Tests
                 }
             });
             CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedMovies);
+            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
             var movies = Checker.GetPlexMovies();
 
             Assert.That(movies.Any(x => x.ProviderId == "1212"));
@@ -258,6 +259,7 @@ namespace PlexRequests.Services.Tests
                     new Directory1 {Type = "show", Title = "title1", Year = "2016", ProviderId = "1212", Seasons = new List<Directory1>()}
                 }
             });
+            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
             CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedTv);
             var movies = Checker.GetPlexTvShows();
 
