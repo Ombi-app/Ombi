@@ -193,7 +193,7 @@ namespace PlexRequests.Services.Notification
                     {
                         client.Authenticate(settings.EmailUsername, settings.EmailPassword);
                     }
-
+                    Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
                 }
