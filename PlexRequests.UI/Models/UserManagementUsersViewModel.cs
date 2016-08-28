@@ -16,6 +16,7 @@ namespace PlexRequests.UI.Models
         public UserType Type { get; set; }
         public string EmailAddress { get; set; }
         public UserManagementPlexInformation PlexInfo { get; set; }
+        public string[] ClaimsArray { get; set; }
     }
 
     public class UserManagementPlexInformation

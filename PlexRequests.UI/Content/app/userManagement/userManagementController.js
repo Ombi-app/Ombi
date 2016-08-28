@@ -9,6 +9,7 @@
         $scope.selectedUser = {}; // User on the right side
         $scope.selectedClaims = {};
 
+
         $scope.sortType = "username";
         $scope.sortReverse = false;
         $scope.searchTerm = "";
@@ -27,20 +28,20 @@
         // Get all users in the system
         $scope.getUsers = function () {
             $scope.users = userManagementService.getUsers()
-            .then(function (data) {
-                $scope.users = data.data;
-            });
+                .then(function (data) {
+                    $scope.users = data.data;
+                });
         };
 
         // Get the claims and populate the create dropdown
         $scope.getClaims = function () {
             userManagementService.getClaims()
-            .then(function (data) {
-                $scope.claims = data.data;
-            });
+                .then(function (data) {
+                    $scope.claims = data.data;
+                });
         }
 
-        // Create a user, do some validation too
+        // Create a user, do some validation too    
         $scope.addUser = function () {
 
             if (!$scope.user.username || !$scope.user.password) {
@@ -50,23 +51,35 @@
                 return;
             }
 
-            userManagementService.addUser($scope.user, $scope.selectedClaims).then(function (data) {
-                if (data.message) {
-                    $scope.error.error = true;
-                    $scope.error.errorMessage = data.message;
-                } else {
-                    $scope.users.push(data); // Push the new user into the array to update the DOM
-                    $scope.user = {};
-                    $scope.selectedClaims = {};
-                }
-            });
+            userManagementService.addUser($scope.user, $scope.selectedClaims)
+                .then(function (data) {
+                    if (data.message) {
+                        $scope.error.error = true;
+                        $scope.error.errorMessage = data.message;
+                    } else {
+                        $scope.users.push(data); // Push the new user into the array to update the DOM
+                        $scope.user = {};
+                        $scope.selectedClaims = {};
+                    }
+                });
         };
 
-        $scope.$watch('claims|filter:{selected:true}', function (nv) {
-            $scope.selectedClaims = nv.map(function (claim) {
-                return claim.name;
-            });
-        }, true);
+        $scope.$watch('claims|filter:{selected:true}',
+            function (nv) {
+                $scope.selectedClaims = nv.map(function (claim) {
+                    return claim.name;
+                });
+            },
+            true);
+
+
+        $scope.updateUser = function () {
+
+        }
+
+        function getBaseUrl() {
+            return $('#baseUrl').val();
+        }
 
 
         // On page load

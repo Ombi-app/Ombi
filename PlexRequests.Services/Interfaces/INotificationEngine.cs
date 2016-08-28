@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ConfigurationModule.cs
+//    File: INotificationEngine.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,33 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
 
-using Nancy;
-using Nancy.Authentication.Forms;
-
-using Ninject.Modules;
-
-using PlexRequests.Core;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using PlexRequests.Store;
 
-namespace PlexRequests.UI.NinjectModules
+namespace PlexRequests.Services.Interfaces
 {
-    public class ConfigurationModule : NinjectModule
+    public interface INotificationEngine
     {
-        public override void Load()
-        {
-            Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
-            Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
-
-            Bind<IUserMapper>().To<UserMapper>();
-            Bind<ICustomUserMapper>().To<UserMapper>();
-
-            Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
-        }
+        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey);
+        Task NotifyUsers(RequestedModel modelChanged, string apiKey);
     }
 }

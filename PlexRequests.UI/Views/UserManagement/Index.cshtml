@@ -1,8 +1,7 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.AngularViewBase
 
-<script src="~/Content/app/userManagement/userManagementController.js"></script>
-<script src="~/Content/app/userManagement/userManagementService.js"></script>
+@Html.LoadUserManagementAssets()
 <div ng-controller="userManagementController" ng-init="init()">
 
     <br />
@@ -110,9 +109,27 @@
         <div>
             <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
         </div>
-    </div>
+    <br/>
+    <br/>
+        <div ng-show="selectedUser.type === 1">
+            <!--Edit-->
+            
+            <strong>Modify Roles:</strong>
+            <!--Load all claims-->
+                <div class="checkbox" ng-repeat="claim in claims">
+                    <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="@*//TODO: Need to figure our how to preselect them*@" ng-model="claim.selected" type="checkbox" value="claim" />
+                    <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
+                </div>
+        
+
+ 
+            
+            
+            <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
+        </div>
 
 
+    </div> <!-- End of user side menu -->
 
 
 </div>
