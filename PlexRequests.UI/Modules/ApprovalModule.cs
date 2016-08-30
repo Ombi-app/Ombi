@@ -65,6 +65,7 @@ namespace PlexRequests.UI.Modules
             HeadphoneApi = hpApi;
 
             Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
+            Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
             Post["/approveall", true] = async (x, ct) => await ApproveAll();
             Post["/approveallmovies", true] = async (x, ct) => await ApproveAllMovies();
             Post["/approvealltvshows", true] = async (x, ct) => await ApproveAllTVShows();
@@ -262,7 +263,7 @@ namespace PlexRequests.UI.Modules
         {
 
             var requests = await Service.GetAllAsync();
-                requests = requests.Where(x => x.CanApprove && x.Type == RequestType.Movie);
+            requests = requests.Where(x => x.CanApprove && x.Type == RequestType.Movie);
             var requestedModels = requests as RequestedModel[] ?? requests.ToArray();
             if (!requestedModels.Any())
             {
@@ -489,6 +490,24 @@ namespace PlexRequests.UI.Modules
                 Log.Fatal(e);
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Something bad happened, please check the logs!" });
             }
+        }
+
+        private async Task<Response> DenyRequest(int requestId, string reason)
+        {
+            // Get the request from the DB
+            var request = await Service.GetAsync(requestId);
+
+            // Deny it
+            request.Denied = true;
+            request.DeniedReason = reason;
+
+            // Update the new value
+            var result = await Service.UpdateRequestAsync(request);
+
+            return result
+                ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Request has been denied" })
+                : Response.AsJson(new JsonResponseModel { Result = false, Message = "An error happened, could not update the DB" });
+
         }
 
         private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)

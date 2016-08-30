@@ -55,5 +55,7 @@ namespace PlexRequests.UI.Models
         public QualityModel[] Qualities { get; set; }
         public string ArtistName { get; set; }
         public Store.EpisodesModel[] Episodes { get; set; }
+        public bool Denied { get; set; }
+        public string DeniedReason { get; set; }
     }
 }

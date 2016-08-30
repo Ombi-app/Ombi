@@ -1,4 +1,5 @@
 ﻿@using Nancy.Security
+@using Nancy.Security
 @using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Resources
 @{
@@ -136,13 +137,13 @@
         {{#if episodes}}
         <div id="{{requestId}}toolTipContent">
             {{#each episodes}}
-                Season: {{this.seasonNumber}}
-                <br />
-                Episodes Requested:
-                {{#each this.episodes}}
-                    {{this}}
-                {{/each}}
-                <hr />
+            Season: {{this.seasonNumber}}
+            <br />
+            Episodes Requested:
+            {{#each this.episodes}}
+            {{this}}
+            {{/each}}
+            <hr />
             {{/each}}
         </div>
         {{/if}}
@@ -170,12 +171,21 @@
                     <span class="label label-success">{{status}}</span>
                 </div>
                 <br />
+                {{#if denied}}
+                <div>
+                    Denied: <i  style="color:red;" class="fa fa-check"></i>
+                    {{#if deniedReason}}
+                    <span class="customTooltip" title="{{deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                    {{/if}}
+                </div>
+                      
+                {{/if}}
                 {{#if_eq releaseDate "01/01/0001 00:00:00"}} <!--TheTVDB didn't provide any premier info-->
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
                 {{else}}
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
                 {{/if_eq}}
-
+                {{#unless denied}}
                 <div>
                     @UI.Common_Approved:
                     {{#if_eq approved false}}
@@ -185,6 +195,7 @@
                     <i class="fa fa-check"></i>
                     {{/if_eq}}
                 </div>
+                {{/unless}}
                 <div>
                     @UI.Requests_Available
                     {{#if_eq available false}}
@@ -216,6 +227,7 @@
             </div>
             <div class="col-sm-3 col-sm-push-3">
                 {{#if_eq admin true}}
+                {{#unless denied}}
                 {{#if_eq approved false}}
                 <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
@@ -236,7 +248,22 @@
                     <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> @UI.Common_Approve</button>
                     {{/if_eq}}
                 </form>
+                <form method="POST" action="@formAction/approval/deny" id="deny{{requestId}}">
+                    <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
+                    <input name="reason" type="text" hidden="hidden" />
+                    <div class="btn-group btn-split">
+                        <button type="button" class="btn btn-sm btn-danger-outline deny" id="{{requestId}}deny" custom-button="{{requestId}}"><i class="fa fa-times"></i> Deny</button>
+                        <button type="button" class="btn btn-danger-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">@UI.Requests_ToggleDropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="deny-with-reason" id="denyReason{{requestId}}" href="#" data-toggle="modal" data-identifier="{{requestId}}" data-target="#denyReasonModal">Deny with a reason</a></li>
+                        </ul>
+                    </div>
+                </form>
                 {{/if_eq}}
+                {{/unless}}
                 <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> @UI.Common_Remove</button>
@@ -324,6 +351,12 @@
                 <div>@UI.Requests_RequestedBy: {{requestedUsers}}</div>
                 {{/if}}
                 <div>@UI.Requests_RequestedDate: {{requestedDate}}</div>
+                {{#if denied}}
+                <div>Denied: <i class="fa fa-times"></i></div>
+                {{#if deniedReason}}
+                <div>Reason: {{deniedReason}}</div>
+                {{/if}}
+                {{/if}}
             </div>
             <div class="col-sm-2 col-sm-push-3">
                 {{#if_eq admin true}}
@@ -331,6 +364,20 @@
                 <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> @UI.Common_Approve</button>
+                </form>
+                <form method="POST" action="@formAction/approval/deny" id="deny{{requestId}}">
+                    <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
+                    <input name="reason" type="text" hidden="hidden" />
+                    <div class="btn-group btn-split">
+                        <button type="button" class="btn btn-sm btn-danger-outline deny" id="{{requestId}}deny" custom-button="{{requestId}}"><i class="fa fa-times"></i> Deny</button>
+                        <button type="button" class="btn btn-danger-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">@UI.Requests_ToggleDropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="deny-with-reason" id="denyReason{{requestId}}" href="#" data-toggle="modal" data-identifier="{{requestId}}" data-target="#denyReasonModal">Deny with a reason</a></li>
+                        </ul>
+                    </div>
                 </form>
                 {{/if_eq}}
                 <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
@@ -387,6 +434,27 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger-outline" data-dismiss="modal">@UI.Common_Close</button>
                     <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">@UI.Common_Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="denyReasonModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                <h4 class="modal-title">Deny with a reason</h4>
+            </div>
+            <form method="POST" action="@formAction/approval/deny" id="denyReasonForm">
+                <div class="modal-body">
+                    <input name="requestId" class="requestId" type="text" hidden="hidden" value="" />
+                    <textarea class="form-control form-control-custom" rows="3" id="denyReason" name="denyReason"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">@UI.Common_Close</button>
+                    <button type="button" class="btn btn-primary-outline denySaveReason" data-dismiss="modal">@UI.Common_Save</button>
                 </div>
             </form>
         </div>

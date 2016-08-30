@@ -373,6 +373,17 @@ $('#noteModal').on('show.bs.modal', function (event) {
     requestField.val(id);  // Add ID to the hidden field
 });
 
+// Update deny reason modal
+$('#denyReasonModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var id = button.data('identifier'); // Extract info from data-* attributes
+
+    var modal = $(this);
+    modal.find('.denySaveReason').val(id); // Add ID to the button
+    var requestField = modal.find('input');
+    requestField.val(id);  // Add ID to the hidden field
+});
+
 // Delete
 $(document).on("click", ".delete", function (e) {
     e.preventDefault();
@@ -403,27 +414,79 @@ $(document).on("click", ".delete", function (e) {
 // Approve single request
 $(document).on("click", ".approve", function (e) {
     e.preventDefault();
-    var $this = $(this);
-    var $form = $this.parents('form').first();
+    var $self = $(this);
+    var $form = $self.parents('form').first();
 
-    if ($this.text() === " Loading...") {
+    if ($self.text() === " Loading...") {
         return;
     }
 
-    loadingButton($this.attr('id'), "success");
+    loadingButton($self.attr('id'), "success");
 
     approveRequest($form, null, function () {
-        $("#" + $this.attr('id') + "notapproved").prop("class", "fa fa-check");
+        $("#" + $self.attr('id') + "notapproved").prop("class", "fa fa-check");
         
-        var $group = $this.parent('.btn-split');
+        var $group = $self.parent('.btn-split');
         if ($group.length > 0) {
             $group.remove();
         }
         else {
-            $this.remove();
+            $self.remove();
         }              
     });
 });
+
+// Deny single request
+$(document).on("click", ".deny", function (e) {
+    e.preventDefault();
+    var $self = $(this);
+    var $form = $self.parents('form').first();
+
+    if ($self.text() === " Loading...") {
+        return;
+    }
+    loadingButton($self.attr('id')+"deny", "success");
+
+    denyRequest($form, function () {
+        //$("#" + $self.attr('id') + "notapproved").prop("class", "fa fa-check");
+
+        var $group = $self.parent('.btn-split');
+        if ($group.length > 0) {
+            $group.remove();
+        }
+        else {
+            $self.remove();
+        }
+    });
+});
+
+// Deny single request with reason (modal)
+$(document).on("click", ".denySaveReason", function (e) {
+    var comment = $("#denyReason").val();
+    e.preventDefault();
+
+    var $form = $("#denyReasonForm");
+    var data = $form.serialize();
+    data = data + "&reason=" + comment;
+
+    $.ajax({
+        type: $form.prop("method"),
+        url: $form.prop("action"),
+        data: data,
+        dataType: "json",
+        success: function (response) {
+            if (checkJsonResponse(response)) {
+                generateNotify(response.message, "success");
+                $("#denyReasonModal").modal("hide");
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+});
+
 
 $(document).on("click", ".approve-with-quality", function (e) {
     e.preventDefault();
@@ -524,6 +587,35 @@ function approveRequest($form, qualityId, successCallback) {
     });
 }
 
+function denyRequest($form, successCallback) {
+
+    var formData = $form.serialize();
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                if (response.message) {
+                    generateNotify(response.message, "success");
+                } else {
+                    generateNotify("Success! Request Approved.", "success");
+                }
+
+                if (successCallback) {
+                    successCallback();
+                }
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+}
+
 function mixItUpConfig(activeState) {
     var conf = mixItUpDefault;
 
@@ -555,6 +647,11 @@ function movieLoad() {
                 var context = buildRequestContext(result, "movie");
                 var html = searchTemplate(context);
                 $ml.append(html);
+            });
+
+
+            $('.customTooltip').tooltipster({
+                contentCloning: true
             });
         }
         else {
@@ -658,6 +755,8 @@ function buildRequestContext(result, type) {
         hasQualities: result.qualities && result.qualities.length > 0,
         artist: result.artistName,
         musicBrainzId: result.musicBrainzId,
+        denied: result.denied,
+        deniedReason: result.deniedReason,
     };
 
     return context;

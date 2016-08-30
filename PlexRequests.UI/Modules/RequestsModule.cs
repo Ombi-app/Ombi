@@ -178,6 +178,8 @@ namespace PlexRequests.UI.Modules
                 Available = movie.Available,
                 Admin = IsAdmin,
                 IssueId = movie.IssueId,
+                Denied = movie.Denied,
+                DeniedReason = movie.DeniedReason,
                 Qualities = qualities.ToArray()
             }).ToList();
 
@@ -249,6 +251,8 @@ namespace PlexRequests.UI.Modules
                 Available = tv.Available,
                 Admin = IsAdmin,
                 IssueId = tv.IssueId,
+                Denied = tv.Denied,
+                DeniedReason = tv.DeniedReason,
                 TvSeriesRequestType = tv.SeasonsRequested,
                 Qualities = qualities.ToArray(),
                 Episodes = tv.Episodes.ToArray(),
@@ -290,6 +294,8 @@ namespace PlexRequests.UI.Modules
                     Available = album.Available,
                     Admin = IsAdmin,
                     IssueId = album.IssueId,
+                    Denied = album.Denied,
+                    DeniedReason = album.DeniedReason,
                     TvSeriesRequestType = album.SeasonsRequested,
                     MusicBrainzId = album.MusicBrainzId,
                     ArtistName = album.ArtistName
