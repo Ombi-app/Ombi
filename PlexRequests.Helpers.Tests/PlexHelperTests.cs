@@ -61,6 +61,12 @@ namespace PlexRequests.Helpers.Tests
             return PlexHelper.GetSeasonNumberFromTitle(title);
         }
 
+        [TestCaseSource(nameof(MediaUrls))]
+        public string GetPlexMediaUrlTest(string machineId, string mediaId)
+        {
+            return PlexHelper.GetPlexMediaUrl(machineId, mediaId);
+        }
+
         private static IEnumerable<TestCaseData> PlexGuids
         {
             get
@@ -72,6 +78,15 @@ namespace PlexRequests.Helpers.Tests
                 yield return new TestCaseData("com.plexapp.agents.imdb://tt1179933?lang=en").Returns("tt1179933");
                 yield return new TestCaseData("com.plexapp.agents.imdb://tt0284837?lang=en").Returns("tt0284837");
                 yield return new TestCaseData("com.plexapp.agents.imdb://tt0076759?lang=en").Returns("tt0076759");
+            }
+        }
+
+        private static IEnumerable<TestCaseData> MediaUrls
+        {
+            get
+            {
+                yield return new TestCaseData("abcd","99").Returns("https://app.plex.tv/web/app#!/server/abcd/details/%2Flibrary%2Fmetadata%2F99").SetName("Test 1");
+                yield return new TestCaseData("a54d1db669799308cd704b791f331eca6648b952", "51").Returns("https://app.plex.tv/web/app#!/server/a54d1db669799308cd704b791f331eca6648b952/details/%2Flibrary%2Fmetadata%2F51").SetName("Test 2");
             }
         }
 

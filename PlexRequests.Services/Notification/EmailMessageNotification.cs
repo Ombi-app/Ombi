@@ -104,7 +104,14 @@ namespace PlexRequests.Services.Notification
 
         private bool ValidateConfiguration(EmailNotificationSettings settings)
         {
-            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
+            if (settings.Authentication)
+            {
+                if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
+                {
+                    return false;
+                }              
+            }
+            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
             {
                 return false;
             }
@@ -186,7 +193,7 @@ namespace PlexRequests.Services.Notification
                     {
                         client.Authenticate(settings.EmailUsername, settings.EmailPassword);
                     }
-
+                    Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
                     await client.SendAsync(message);
                     await client.DisconnectAsync(true);
                 }

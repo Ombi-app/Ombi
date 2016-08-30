@@ -95,6 +95,13 @@ namespace PlexRequests.Helpers
 
             return 0;
         }
+
+        public static string GetPlexMediaUrl(string machineId, string mediaId)
+        {
+            var url =
+                $"https://app.plex.tv/web/app#!/server/{machineId}/details/%2Flibrary%2Fmetadata%2F{mediaId}";
+            return url;
+        }
     }
 
     public class EpisodeModelHelper

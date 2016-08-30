@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoSettings.cs
+//    File: RequestSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,20 +25,33 @@
 //  ************************************************************************/
 #endregion
 
-using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 
 namespace PlexRequests.Core.SettingModels
 {
-    public sealed class PlexSettings : ExternalSettings
+    public sealed class RequestSettings : Settings
     {
-        public PlexSettings()
-        {
-            AdvancedSearch = true;
-        }
-        public bool AdvancedSearch { get; set; }
-        public bool EnableTvEpisodeSearching { get; set; }
+        public OrderType Order { get; set; }
+        public List<FilterType> Filters { get; set; }
+    }
 
-        public string PlexAuthToken { get; set; }
-        public string MachineIdentifier { get; set; }
+    public enum OrderType
+    {
+        NewRequests,
+        OldRequests,
+        NewReleases,
+        OldReleases
+    }
+
+    public enum FilterType
+    {
+        // ALL is not here, it's managed in the angular controller
+        Approved,
+        NotApproved,
+        Available,
+        NotAvailable,
+        Released,
+        NotReleased
     }
 }

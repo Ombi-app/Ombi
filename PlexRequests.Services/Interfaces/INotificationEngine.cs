@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoSettings.cs
+//    File: INotificationEngine.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,20 +25,15 @@
 //  ************************************************************************/
 #endregion
 
-using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using PlexRequests.Store;
 
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Services.Interfaces
 {
-    public sealed class PlexSettings : ExternalSettings
+    public interface INotificationEngine
     {
-        public PlexSettings()
-        {
-            AdvancedSearch = true;
-        }
-        public bool AdvancedSearch { get; set; }
-        public bool EnableTvEpisodeSearching { get; set; }
-
-        public string PlexAuthToken { get; set; }
-        public string MachineIdentifier { get; set; }
+        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey);
+        Task NotifyUsers(RequestedModel modelChanged, string apiKey);
     }
 }

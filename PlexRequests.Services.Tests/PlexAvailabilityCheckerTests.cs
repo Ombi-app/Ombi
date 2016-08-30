@@ -42,6 +42,7 @@ using PlexRequests.Services.Interfaces;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Jobs;
 using PlexRequests.Services.Models;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -63,6 +64,11 @@ namespace PlexRequests.Services.Tests
         private Mock<IJobRecord> JobRec { get; set; }
         private Mock<IRepository<UsersToNotify>> NotifyUsers { get; set; }
         private Mock<IRepository<PlexEpisodes>> PlexEpisodes { get; set; }
+        private Mock<INotificationEngine> Engine
+        {
+            get;
+            set;
+        }
 
         [SetUp]
         public void Setup()
@@ -76,7 +82,8 @@ namespace PlexRequests.Services.Tests
             NotifyUsers = new Mock<IRepository<UsersToNotify>>();
             PlexEpisodes = new Mock<IRepository<PlexEpisodes>>();
             JobRec = new Mock<IJobRecord>();
-            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object, PlexEpisodes.Object);
+            Engine = new Mock<INotificationEngine>();
+            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object, PlexEpisodes.Object, Engine.Object);
 
         }
 
@@ -212,8 +219,7 @@ namespace PlexRequests.Services.Tests
                 new PlexEpisodes {EpisodeNumber = 1, ShowTitle = "The Flash",ProviderId = 23.ToString(), SeasonNumber = 1, EpisodeTitle = "Pilot"}
             };
             PlexEpisodes.Setup(x => x.Custom(It.IsAny<Func<IDbConnection, IEnumerable<PlexEpisodes>>>())).Returns(expected);
-            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object, PlexEpisodes.Object);
-
+            
             var result = Checker.IsEpisodeAvailable(providerId, season, episode);
 
             return result;
@@ -242,6 +248,7 @@ namespace PlexRequests.Services.Tests
                 }
             });
             CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedMovies);
+            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
             var movies = Checker.GetPlexMovies();
 
             Assert.That(movies.Any(x => x.ProviderId == "1212"));
@@ -258,6 +265,7 @@ namespace PlexRequests.Services.Tests
                     new Directory1 {Type = "show", Title = "title1", Year = "2016", ProviderId = "1212", Seasons = new List<Directory1>()}
                 }
             });
+            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
             CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedTv);
             var movies = Checker.GetPlexTvShows();
 
@@ -268,8 +276,6 @@ namespace PlexRequests.Services.Tests
         public async Task GetAllPlexEpisodes()
         {
             PlexEpisodes.Setup(x => x.GetAllAsync()).ReturnsAsync(F.CreateMany<PlexEpisodes>().ToList());
-            Checker = new PlexAvailabilityChecker(SettingsMock.Object, RequestMock.Object, PlexMock.Object, CacheMock.Object, NotificationMock.Object, JobRec.Object, NotifyUsers.Object, PlexEpisodes.Object);
-
             var episodes = await Checker.GetEpisodes();
 
             Assert.That(episodes.Count(), Is.GreaterThan(0));

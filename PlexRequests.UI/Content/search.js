@@ -5,6 +5,21 @@
         return opts.inverse(this);
 });
 
+Function.prototype.bind = function (parent) {
+    var f = this;
+    var args = [];
+
+    for (var a = 1; a < arguments.length; a++) {
+        args[args.length] = arguments[a];
+    }
+
+    var temp = function () {
+        return f.apply(parent, args);
+    }
+
+    return (temp);
+}
+
 
 
 $(function () {
@@ -56,7 +71,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(movieSearch, 800);
+        searchTimer = setTimeout(function () {
+            movieSearch();
+        }.bind(this), 800);
 
     });
 
@@ -75,7 +92,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(tvSearch, 400);
+        searchTimer = setTimeout(function () {
+            tvSearch();
+        }.bind(this), 800);
     });
 
     // Click TV dropdown option
@@ -116,7 +135,9 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(musicSearch, 400);
+        searchTimer = setTimeout(function () {
+            musicSearch();
+        }.bind(this), 800);
 
     });
 
@@ -423,7 +444,8 @@ $(function () {
             imdb: result.imdbId,
             requested: result.requested,
             approved: result.approved,
-            available: result.available
+            available: result.available,
+            url: result.plexUrl
         };
 
         return context;
@@ -444,7 +466,8 @@ $(function () {
             approved: result.approved,
             available: result.available,
             episodes: result.episodes,
-            tvFullyAvailable: result.tvFullyAvailable
+            tvFullyAvailable: result.tvFullyAvailable,
+            url: result.plexUrl
         };
         return context;
     }
@@ -464,7 +487,8 @@ $(function () {
             country: result.country,
             requested: result.requested,
             approved: result.approved,
-            available: result.available
+            available: result.available,
+            url: result.plexUrl
         };
 
         return context;
@@ -484,7 +508,7 @@ $(function () {
                 var $content = $("#seasonsBody");
                 $content.html("");
                 $('#selectedSeasonsId').val(id);
-                results.forEach(function(result) {
+                results.forEach(function (result) {
                     var context = buildSeasonsContext(result);
                     $content.append(seasonsTemplate(context));
                 });
@@ -503,7 +527,7 @@ $(function () {
         };
     });
 
-    $('#seasonsRequest').click(function(e) {
+    $('#seasonsRequest').click(function (e) {
         e.preventDefault();
         var tvId = $('#selectedSeasonsId').val();
         var url = createBaseUrl(base, '/search/seasons/');
@@ -522,7 +546,7 @@ $(function () {
 
         var $checkedSeasons = $('.selectedSeasons:checkbox:checked');
         $checkedSeasons.each(function (index, element) {
-            if (index < $checkedSeasons.length -1) {
+            if (index < $checkedSeasons.length - 1) {
                 seasonsParam = seasonsParam + element.id + ",";
             } else {
                 seasonsParam = seasonsParam + element.id;
@@ -536,7 +560,7 @@ $(function () {
         var url = $form.prop('action');
 
         sendRequestAjax(data, type, url, tvId);
-       
+
     });
 
     $('#episodesModal').on('show.bs.modal', function (event) {
@@ -560,7 +584,9 @@ $(function () {
                 results.forEach(function (result) {
                     var episodes = buildEpisodesView(result);
 
-                    if (!seenSeasons.find(x => x === episodes.season)) {
+                    if (!seenSeasons.find(function(x) {
+                         return x === episodes.season
+                    })) {
                         // Create the seasons heading
                         seenSeasons.push(episodes.season);
                         var context = buildSeasonsCount(result);
@@ -586,7 +612,7 @@ $(function () {
             loadingButton("episodesRequest", "primary");
             var tvId = $('#selectedEpisodeId').val();
 
-            
+
             var $form = $('#form' + tvId);
             var model = [];
 
@@ -623,7 +649,7 @@ $(function () {
                     }
 
                 },
-                error: function(e) {
+                error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

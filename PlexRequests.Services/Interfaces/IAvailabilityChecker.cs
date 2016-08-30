@@ -42,6 +42,9 @@ namespace PlexRequests.Services.Interfaces
         List<PlexAlbum> GetPlexAlbums();
         bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
+        PlexAlbum GetAlbum(PlexAlbum[] plexAlbums, string title, string year, string artist);
+        PlexMovie GetMovie(PlexMovie[] plexMovies, string title, string year, string providerId = null);
+        PlexTvShow GetTvShow(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
         /// <summary>
         /// Gets the episode's stored in the cache.
         /// </summary>

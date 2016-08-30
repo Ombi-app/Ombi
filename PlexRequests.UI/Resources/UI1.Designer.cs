@@ -988,6 +988,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to View In Plex.
+        /// </summary>
+        public static string Search_ViewInPlex {
+            get {
+                return ResourceManager.GetString("Search_ViewInPlex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You have reached your weekly request limit for Albums! Please contact your admin..
         /// </summary>
         public static string Search_WeeklyRequestLimitAlbums {

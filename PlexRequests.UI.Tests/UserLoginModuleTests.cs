@@ -72,9 +72,9 @@ namespace PlexRequests.UI.Tests
             LandingPageMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new LandingPageSettings());
             IAnalytics = new Mock<IAnalytics>();
             Linker = new Mock<IResourceLinker>();
-            Linker.Setup(x => x.BuildAbsoluteUri(It.IsAny<NancyContext>(), "SearchIndex", null)).Returns(new Uri("http://www.searchindex.com"));
-            Linker.Setup(x => x.BuildAbsoluteUri(It.IsAny<NancyContext>(), "LandingPageIndex", null)).Returns(new Uri("http://www.landingpage.com"));
-            Linker.Setup(x => x.BuildAbsoluteUri(It.IsAny<NancyContext>(), "UserLoginIndex", null)).Returns(new Uri("http://www.userloginindex.com"));
+            Linker.Setup(x => x.BuildRelativeUri(It.IsAny<NancyContext>(), "SearchIndex", null)).Returns(new Uri("http://www.searchindex.com"));
+            Linker.Setup(x => x.BuildRelativeUri(It.IsAny<NancyContext>(), "LandingPageIndex", null)).Returns(new Uri("http://www.landingpage.com"));
+            Linker.Setup(x => x.BuildRelativeUri(It.IsAny<NancyContext>(), "UserLoginIndex", null)).Returns(new Uri("http://www.userloginindex.com"));
             PlexSettingsMock = new Mock<ISettingsService<PlexSettings>>();
             PlexSettingsMock.Setup(x => x.GetSettingsAsync()).ReturnsAsync(new PlexSettings() {PlexAuthToken = "abc"});
             Bootstrapper = new ConfigurableBootstrapper(with =>

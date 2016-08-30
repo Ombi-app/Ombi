@@ -122,7 +122,7 @@ namespace PlexRequests.UI.Modules
         {
             get
             {
-                if (Context?.CurrentUser == null)
+                if (!LoggedIn)
                 {
                     return false;
                 }
@@ -130,6 +130,9 @@ namespace PlexRequests.UI.Modules
                 return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
             }
         }
+
+        protected bool LoggedIn => Context?.CurrentUser != null;
+
         protected string Culture { get; set; }
         protected const string CultureCookieName = "_culture";
         protected Response SetCookie()

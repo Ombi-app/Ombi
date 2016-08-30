@@ -53,11 +53,12 @@ using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
-    public class RequestsModule : BaseAuthModule
+    public class RequestsBetaModule : BaseAuthModule
     {
-        public RequestsModule(
+        public RequestsBetaModule(
             IRequestService service,
             ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<RequestSettings> requestSettings,
             ISettingsService<PlexSettings> plex,
             INotificationService notify,
             ISettingsService<SonarrSettings> sonarrSettings,
@@ -67,8 +68,7 @@ namespace PlexRequests.UI.Modules
             ISonarrApi sonarrApi,
             ISickRageApi sickRageApi,
             ICacheProvider cache,
-            IAnalytics an,
-            INotificationEngine engine) : base("requests", prSettings)
+            IAnalytics an) : base("requestsbeta", prSettings)
         {
             Service = service;
             PrSettings = prSettings;
@@ -82,10 +82,15 @@ namespace PlexRequests.UI.Modules
             CpApi = cpApi;
             Cache = cache;
             Analytics = an;
-            NotificationEngine = engine;
 
-            Get["/", true] = async (x, ct) => await LoadRequests();
+            Get["/"] = x => LoadRequests();
+            Get["/plexrequestsettings", true] = async (x, ct) => await GetPlexRequestSettings();
+            Get["/requestsettings", true] = async (x, ct) => await GetRequestSettings();
             Get["/movies", true] = async (x, ct) => await GetMovies();
+            Get["/movies/{searchTerm}", true] = async (x, ct) => await GetMovies((string)x.searchTerm);
+
+
+            // Everything below is not being used in the beta page
             Get["/tvshows", true] = async (c, ct) => await GetTvShows();
             Get["/albums", true] = async (x, ct) => await GetAlbumRequests();
             Post["/delete", true] = async (x, ct) => await DeleteRequest((int)Request.Form.id);
@@ -103,6 +108,7 @@ namespace PlexRequests.UI.Modules
         private INotificationService NotificationService { get; }
         private ISettingsService<PlexRequestSettings> PrSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<RequestSettings> RequestSettings { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
@@ -110,78 +116,30 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private ICacheProvider Cache { get; }
-        private INotificationEngine NotificationEngine { get; }
 
-        private async Task<Negotiator> LoadRequests()
+        private Negotiator LoadRequests()
         {
-            var settings = await PrSettings.GetSettingsAsync();
-            return View["Index", settings];
+            return View["Index"];
         }
 
-        private async Task<Response> GetMovies()
+        private async Task<Response> GetPlexRequestSettings()
         {
-            var settings = PrSettings.GetSettings();
+            return Response.AsJson(await PrSettings.GetSettingsAsync());
+        }
 
-            var allRequests = await Service.GetAllAsync();
-            allRequests = allRequests.Where(x => x.Type == RequestType.Movie);
+        private async Task<Response> GetRequestSettings()
+        {
+            return Response.AsJson(await RequestSettings.GetSettingsAsync());
+        }
 
-            var dbMovies = allRequests.ToList();
+        private async Task<Response> GetMovies(string searchTerm = null, bool approved = false, bool notApproved = false,
+            bool available = false, bool notAvailable = false, bool released = false, bool notReleased = false)
+        {
+            var dbMovies = await FilterMovies(searchTerm, approved, notApproved, available, notAvailable, released, notReleased);
+            var qualities = await GetQualityProfiles();
+            var model = MapMoviesToView(dbMovies.ToList(), qualities);
 
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
-            {
-                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
-            }
-
-            List<QualityModel> qualities = new List<QualityModel>();
-
-            if (IsAdmin)
-            {
-                var cpSettings = CpSettings.GetSettings();
-                if (cpSettings.Enabled)
-                {
-                    try
-                    {
-                        var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
-                        {
-                            return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
-                        });
-                        if (result != null)
-                        {
-                            qualities = result.list.Select(x => new QualityModel { Id = x._id, Name = x.label }).ToList();
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Info(e);
-                    }
-                }
-            }
-
-            var viewModel = dbMovies.Select(movie => new RequestViewModel
-            {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate,
-                ReleaseDateTicks = movie.ReleaseDate.Ticks,
-                RequestedDate = movie.RequestedDate,
-                Released = DateTime.Now > movie.ReleaseDate,
-                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
-                Approved = movie.Available || movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = IsAdmin,
-                IssueId = movie.IssueId,
-                Qualities = qualities.ToArray()
-            }).ToList();
-
-            return Response.AsJson(viewModel);
+            return Response.AsJson(model);
         }
 
         private async Task<Response> GetTvShows()
@@ -379,13 +337,117 @@ namespace PlexRequests.UI.Modules
             originalRequest.Available = available;
 
             var result = await Service.UpdateRequestAsync(originalRequest);
-            var plexService = await PlexSettings.GetSettingsAsync();
-            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
         }
 
-        
+        private List<RequestViewModel> MapMoviesToView(List<RequestedModel> dbMovies, List<QualityModel> qualities)
+        {
+            return dbMovies.Select(movie => new RequestViewModel
+            {
+                ProviderId = movie.ProviderId,
+                Type = movie.Type,
+                Status = movie.Status,
+                ImdbId = movie.ImdbId,
+                Id = movie.Id,
+                PosterPath = movie.PosterPath,
+                ReleaseDate = movie.ReleaseDate,
+                ReleaseDateTicks = movie.ReleaseDate.Ticks,
+                RequestedDate = movie.RequestedDate,
+                Released = DateTime.Now > movie.ReleaseDate,
+                RequestedDateTicks = DateTimeHelper.OffsetUTCDateTime(movie.RequestedDate, DateTimeOffset).Ticks,
+                Approved = movie.Available || movie.Approved,
+                Title = movie.Title,
+                Overview = movie.Overview,
+                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                Available = movie.Available,
+                Admin = IsAdmin,
+                IssueId = movie.IssueId,
+                Qualities = qualities.ToArray()
+            }).ToList();
+        }
+
+        private async Task<List<QualityModel>> GetQualityProfiles()
+        {
+            var qualities = new List<QualityModel>();
+            if (IsAdmin)
+            {
+                var cpSettings = CpSettings.GetSettings();
+                if (cpSettings.Enabled)
+                {
+                    try
+                    {
+                        var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                        {
+                            return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
+                        });
+                        if (result != null)
+                        {
+                            qualities = result.list.Select(x => new QualityModel { Id = x._id, Name = x.label }).ToList();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Info(e);
+                    }
+                }
+            }
+            return qualities;
+        }
+
+        private async Task<IEnumerable<RequestedModel>> FilterMovies(string searchTerm = null, bool approved = false, bool notApproved = false,
+            bool available = false, bool notAvailable = false, bool released = false, bool notReleased = false)
+        {
+            var settings = PrSettings.GetSettings();
+            var allRequests = await Service.GetAllAsync();
+            allRequests = allRequests.Where(x => x.Type == RequestType.Movie);
+
+            var dbMovies = allRequests;
+
+            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            {
+                dbMovies = dbMovies.Where(x => x.UserHasRequested(Username));
+            }
+
+            // Filter the movies on the search term
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                dbMovies = dbMovies.Where(x => x.Title.Contains(searchTerm));
+            }
+
+            if (approved)
+            {
+                dbMovies = dbMovies.Where(x => x.Approved);
+            }
+
+            if (notApproved)
+            {
+                dbMovies = dbMovies.Where(x => !x.Approved);
+            }
+
+            if (available)
+            {
+                dbMovies = dbMovies.Where(x => x.Available);
+            }
+
+            if (notAvailable)
+            {
+                dbMovies = dbMovies.Where(x => !x.Available);
+            }
+
+            if (released)
+            {
+                dbMovies = dbMovies.Where(x => DateTime.Now > x.ReleaseDate);
+            }
+
+            if (notReleased)
+            {
+                dbMovies = dbMovies.Where(x => DateTime.Now < x.ReleaseDate);
+            }
+
+            return dbMovies;
+        }
     }
 }

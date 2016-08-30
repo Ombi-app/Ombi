@@ -1,9 +1,8 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits PlexRequests.UI.Helpers.AngularViewBase
 
-<script src="~/Content/app/userManagement/userManagementController.js"></script>
-<script src="~/Content/app/userManagement/userManagementService.js"></script>
-<div ng-controller="userManagementController" ng-init="getUsers()">
+@Html.LoadUserManagementAssets()
+<div ng-controller="userManagementController" ng-init="init()">
 
     <br />
     <br />
@@ -12,15 +11,26 @@
         <br>
         <br>
         <div ng-show="error.error" ng-bind="error.errorMessage"></div>
-        <form ng-submit="addUser()">
+        <form name="userform" ng-submit="addUser()" novalidate>
             <div class="form-group">
                 <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom" />
             </div>
             <div class="form-group">
                 <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
             </div>
+            <div class="form-group">
+                <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
+            </div>
+
+            <div class="checkbox" ng-repeat="claim in claims">
+                <input id="claimCheckbox_{{$id}}" class="checkbox-custom" name="selectedClaims[]"
+                       ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
+                <label for="claimCheckbox_{{$id}}">{{claim.name}}</label>
+            </div>
+
             <input type="submit" class="btn btn-success-outline" value="Add" />
         </form>
+
         <form>
             <div class="form-group">
                 <div class="input-group">
@@ -33,6 +43,7 @@
                 </div>
             </div>
         </form>
+
         <table class="table table-striped table-hover table-responsive table-condensed">
             <thead>
                 <tr>
@@ -98,9 +109,27 @@
         <div>
             <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
         </div>
-    </div>
+    <br/>
+    <br/>
+        <div ng-show="selectedUser.type === 1">
+            <!--Edit-->
+            
+            <strong>Modify Roles:</strong>
+            <!--Load all claims-->
+                <div class="checkbox" ng-repeat="claim in claims">
+                    <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="@*//TODO: Need to figure our how to preselect them*@" ng-model="claim.selected" type="checkbox" value="claim" />
+                    <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
+                </div>
+        
+
+ 
+            
+            
+            <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
+        </div>
 
 
+    </div> <!-- End of user side menu -->
 
 
 </div>

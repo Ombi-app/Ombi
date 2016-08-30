@@ -50,6 +50,7 @@ namespace PlexRequests.UI.NinjectModules
             Bind<ICustomUserMapper>().To<UserMapper>();
 
             Bind<INotificationService>().To<NotificationService>().InSingletonScope();
+            Bind<INotificationEngine>().To<NotificationEngine>();
         }
     }
 }

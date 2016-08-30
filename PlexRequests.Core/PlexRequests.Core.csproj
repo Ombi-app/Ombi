@@ -86,6 +86,7 @@
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
     <Compile Include="SettingModels\LandingPageSettings.cs" />
     <Compile Include="SettingModels\NotificationSettings.cs" />
+    <Compile Include="SettingModels\RequestSettings.cs" />
     <Compile Include="SettingModels\ScheduledJobsSettings.cs" />
     <Compile Include="SettingModels\SlackNotificationSettings.cs" />
     <Compile Include="SettingModels\PushoverNotificationSettings.cs" />
