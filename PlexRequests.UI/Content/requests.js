@@ -425,6 +425,7 @@ $(document).on("click", ".approve", function (e) {
 
     approveRequest($form, null, function () {
         $("#" + $self.attr('id') + "notapproved").prop("class", "fa fa-check");
+
         
         var $group = $self.parent('.btn-split');
         if ($group.length > 0) {
@@ -448,7 +449,11 @@ $(document).on("click", ".deny", function (e) {
     loadingButton($self.attr('id')+"deny", "success");
 
     denyRequest($form, function () {
-        //$("#" + $self.attr('id') + "notapproved").prop("class", "fa fa-check");
+        // Remove the form
+        $("#" + "deny" + $self.attr('id')).remove();
+        // remove the approve button
+        var id = $self.attr("custom-button");
+        $("#" + id).remove();
 
         var $group = $self.parent('.btn-split');
         if ($group.length > 0) {

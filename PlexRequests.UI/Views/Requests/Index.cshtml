@@ -227,7 +227,7 @@
             </div>
             <div class="col-sm-3 col-sm-push-3">
                 {{#if_eq admin true}}
-                {{#unless denied}}
+
                 {{#if_eq approved false}}
                 <form method="POST" action="@formAction/approval/approve" id="approve{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
@@ -248,12 +248,13 @@
                     <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> @UI.Common_Approve</button>
                     {{/if_eq}}
                 </form>
+                {{#unless denied}}
                 <form method="POST" action="@formAction/approval/deny" id="deny{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     <input name="reason" type="text" hidden="hidden" />
                     <div class="btn-group btn-split">
                         <button type="button" class="btn btn-sm btn-danger-outline deny" id="{{requestId}}deny" custom-button="{{requestId}}"><i class="fa fa-times"></i> Deny</button>
-                        <button type="button" class="btn btn-danger-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-danger-outline dropdown-toggle"  id="{{requestId}}denyToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">@UI.Requests_ToggleDropdown</span>
                         </button>
@@ -262,8 +263,8 @@
                         </ul>
                     </div>
                 </form>
-                {{/if_eq}}
                 {{/unless}}
+                {{/if_eq}}
                 <form method="POST" action="@formAction/requests/delete" id="delete{{requestId}}">
                     <input name="Id" type="text" value="{{requestId}}" hidden="hidden" />
                     <button id="{{requestId}}" style="text-align: right" class="btn btn-sm btn-danger-outline delete" type="submit"><i class="fa fa-minus"></i> @UI.Common_Remove</button>
