@@ -61,7 +61,14 @@ namespace PlexRequests.UI.Modules
                 return View["Index", model];
             };
 
-            Get["/logout"] = x => this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
+            Get["/logout"] = x =>
+            {
+                if (Session[SessionKeys.UsernameKey] != null)
+                {
+                    Session.Delete(SessionKeys.UsernameKey);
+                }
+                return this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
+            };
 
             Post["/login"] = x =>
             {
