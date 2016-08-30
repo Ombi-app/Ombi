@@ -92,7 +92,7 @@ $(function () {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-         searchTimer = setTimeout(function() {
+        searchTimer = setTimeout(function () {
             tvSearch();
         }.bind(this), 800);
     });
@@ -508,7 +508,7 @@ $(function () {
                 var $content = $("#seasonsBody");
                 $content.html("");
                 $('#selectedSeasonsId').val(id);
-                results.forEach(function(result) {
+                results.forEach(function (result) {
                     var context = buildSeasonsContext(result);
                     $content.append(seasonsTemplate(context));
                 });
@@ -527,7 +527,7 @@ $(function () {
         };
     });
 
-    $('#seasonsRequest').click(function(e) {
+    $('#seasonsRequest').click(function (e) {
         e.preventDefault();
         var tvId = $('#selectedSeasonsId').val();
         var url = createBaseUrl(base, '/search/seasons/');
@@ -546,7 +546,7 @@ $(function () {
 
         var $checkedSeasons = $('.selectedSeasons:checkbox:checked');
         $checkedSeasons.each(function (index, element) {
-            if (index < $checkedSeasons.length -1) {
+            if (index < $checkedSeasons.length - 1) {
                 seasonsParam = seasonsParam + element.id + ",";
             } else {
                 seasonsParam = seasonsParam + element.id;
@@ -560,7 +560,7 @@ $(function () {
         var url = $form.prop('action');
 
         sendRequestAjax(data, type, url, tvId);
-       
+
     });
 
     $('#episodesModal').on('show.bs.modal', function (event) {
@@ -584,7 +584,9 @@ $(function () {
                 results.forEach(function (result) {
                     var episodes = buildEpisodesView(result);
 
-                    if (!seenSeasons.find(x => x === episodes.season)) {
+                    if (!seenSeasons.find(function(x) {
+                         return x === episodes.season
+                    })) {
                         // Create the seasons heading
                         seenSeasons.push(episodes.season);
                         var context = buildSeasonsCount(result);
@@ -610,7 +612,7 @@ $(function () {
             loadingButton("episodesRequest", "primary");
             var tvId = $('#selectedEpisodeId').val();
 
-            
+
             var $form = $('#form' + tvId);
             var model = [];
 
@@ -647,7 +649,7 @@ $(function () {
                     }
 
                 },
-                error: function(e) {
+                error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

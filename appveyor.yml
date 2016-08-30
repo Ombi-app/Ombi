@@ -3,9 +3,9 @@ configuration: Release
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '1.9.0'
+  assembly_version: '1.9.1'
   assembly_file_version: '{version}'
-  assembly_informational_version: '1.9.0' 
+  assembly_informational_version: '1.9.1' 
 before_build:
 - cmd: appveyor-retry nuget restore
 build:

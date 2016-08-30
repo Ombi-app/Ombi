@@ -578,7 +578,7 @@ function tvLoad() {
             results.forEach(function (result) {
                 var ep = result.episodes;
                 ep.forEach(function (episode) {
-                    var foundItem = tvObject.find(x => x.seasonNumber === episode.seasonNumber);
+                    var foundItem = tvObject.find(function(x) { return x.seasonNumber === episode.seasonNumber });
                     if (!foundItem) {
                         var obj = { seasonNumber: episode.seasonNumber, episodes: [] }
                         tvObject.push(obj);
