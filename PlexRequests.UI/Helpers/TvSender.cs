@@ -93,7 +93,7 @@ namespace PlexRequests.UI.Helpers
 
                 // Get the series that was just added
                 series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
-                series.monitored = false; // Un-monitor the series
+                series.monitored = true; // We want to make sure we are monitoring the series
 
                 // Un-monitor all seasons
                 foreach (var season in series.seasons)
