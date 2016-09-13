@@ -260,9 +260,22 @@ namespace PlexRequests.UI.Helpers
 
             var internalEpisodeIds = new List<int>();
             var tasks = new List<Task>();
+
+            var requestedEpisodes = model.Episodes;
+            
             foreach (var r in episodes)
             {
-                if (r.hasFile || !model.SeasonList.Contains(r.seasonNumber)) // If it already has the file, there is no point in updating it
+                if (r.hasFile) // If it already has the file, there is no point in updating it
+                {
+                    continue;
+                }
+                var epComparison = new EpisodesModel
+                {
+                    EpisodeNumber = r.episodeNumber,
+                    SeasonNumber = r.seasonNumber
+                };
+                // Make sure we are looking for the right episode and season
+                if (!requestedEpisodes.Contains(epComparison))
                 {
                     continue;
                 }
