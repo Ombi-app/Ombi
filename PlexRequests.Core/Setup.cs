@@ -135,6 +135,20 @@ namespace PlexRequests.Core
             }
         }
 
+        public void CacheRootFolders()
+        {
+            var mc = new MemoryCacheProvider();
+
+            try
+            {
+                Task.Run(() => { CacheSonarrRootFolders(mc); });
+            }
+            catch (Exception)
+            {
+                Log.Error("Failed to cache quality profiles on startup!");
+            }
+        }
+
         private void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
         {
             try
@@ -149,6 +163,28 @@ namespace PlexRequests.Core
                     var profiles = sonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri);
                     cacheProvider.Set(CacheKeys.SonarrQualityProfiles, profiles);
                     Log.Info("Finished executing GetProfiles call to Sonarr for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to cache Sonarr quality profiles!");
+            }
+        }
+
+        private void CacheSonarrRootFolders(MemoryCacheProvider cacheProvider)
+        {
+            try
+            {
+                Log.Info("Executing GetSettings call to Sonarr for root folders");
+                var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var sonarrSettings = sonarrSettingsService.GetSettings();
+                if (sonarrSettings.Enabled)
+                {
+                    Log.Info("Begin executing GetSettings call to Sonarr for root folders");
+                    SonarrApi sonarrApi = new SonarrApi();
+                    var rootFolders = sonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    cacheProvider.Set(CacheKeys.SonarrRootFolders, rootFolders);
+                    Log.Info("Finished executing GetSettings call to Sonarr for root folders");
                 }
             }
             catch (Exception ex)

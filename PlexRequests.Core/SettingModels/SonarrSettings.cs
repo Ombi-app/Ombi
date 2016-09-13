@@ -31,8 +31,10 @@ namespace PlexRequests.Core.SettingModels
         public bool Enabled { get; set; }
         public string ApiKey { get; set; }
         public string QualityProfile { get; set; }
-        public bool SeasonFolders { get; set; }
+        public string RootFolder { get; set; }
         public string RootPath { get; set; }
+        public bool SeasonFolders { get; set; }
+        
        
     }
 }

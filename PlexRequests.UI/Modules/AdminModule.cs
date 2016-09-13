@@ -170,6 +170,7 @@ namespace PlexRequests.UI.Modules
             Post["/sickrage"] = _ => SaveSickrage();
 
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+            Post["/sonarrrootfolders"] = _ => GetSonarrRootFolders();
             Post["/cpprofiles", true] = async (x, ct) => await GetCpProfiles();
             Post["/cpapikey"] = x => GetCpApiKey();
 
@@ -470,6 +471,19 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(profiles);
         }
 
+        private Response GetSonarrRootFolders()
+        {
+            var settings = this.Bind<SonarrSettings>();
+            var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+
+            // set the cache
+            if (rootFolders != null)
+            {
+                Cache.Set(CacheKeys.SonarrRootFolders, rootFolders);
+            }
+
+            return Response.AsJson(rootFolders);
+        }
 
         private Negotiator EmailNotifications()
         {

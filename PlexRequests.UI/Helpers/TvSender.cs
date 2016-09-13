@@ -55,10 +55,10 @@ namespace PlexRequests.UI.Helpers
 
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            return await SendToSonarr(sonarrSettings, model, string.Empty);
+            return await SendToSonarr(sonarrSettings, model, string.Empty, string.Empty);
         }
 
-        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId, string rootFolderId)
         {
             var qualityProfile = 0;
             var episodeRequest = model.Episodes.Any();
@@ -70,6 +70,17 @@ namespace PlexRequests.UI.Helpers
             if (qualityProfile <= 0)
             {
                 int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
+            }
+
+            var rootFolder = 0;
+            if (!string.IsNullOrEmpty(rootFolderId))
+            {
+                int.TryParse(qualityId, out rootFolder);
+            }
+
+            if (rootFolder <= 0)
+            {
+                int.TryParse(sonarrSettings.RootFolder, out rootFolder);
             }
 
             var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
@@ -88,7 +99,9 @@ namespace PlexRequests.UI.Helpers
 
                 // Series doesn't exist, need to add it as unmonitored.
                 var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 
+                    1, // rootFolderId
+                    0, new int[0], sonarrSettings.ApiKey,
                     sonarrSettings.FullUri, false));
 
 
@@ -160,7 +173,9 @@ namespace PlexRequests.UI.Helpers
 
 
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
+                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 
+                rootFolder,
+                model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri, true, true);
 
             return result;

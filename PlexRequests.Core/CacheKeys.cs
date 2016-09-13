@@ -37,6 +37,7 @@ namespace PlexRequests.Core
         public const string PlexEpisodes = nameof(PlexEpisodes);
         public const string TvDbToken = nameof(TvDbToken);
         public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
+        public const string SonarrRootFolders = nameof(SonarrRootFolders);
         public const string SonarrQueued = nameof(SonarrQueued);
         public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
         public const string SickRageQueued = nameof(SickRageQueued);

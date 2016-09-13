@@ -53,6 +53,7 @@ namespace PlexRequests.UI.Models
         public string TvSeriesRequestType { get; set; }
         public string MusicBrainzId { get; set; }
         public QualityModel[] Qualities { get; set; }
+        public RootFolderModel[] RootFolders { get; set; }
         public string ArtistName { get; set; }
         public Store.EpisodesModel[] Episodes { get; set; }
         public bool Denied { get; set; }

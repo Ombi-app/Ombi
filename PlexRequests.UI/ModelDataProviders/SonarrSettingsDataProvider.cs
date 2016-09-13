@@ -50,6 +50,7 @@ namespace PlexRequests.UI.ModelDataProviders
                     with.Property(x => x.SubDir).Description("Subdir/BaseUrl of Sonarr").Required(false);
                     with.Property(x => x.ApiKey).Description("Sonarr's API key").Required(true);
                     with.Property(x => x.QualityProfile).Description("Sonarr's quality profile").Required(true);
+                    with.Property(x => x.RootFolder).Description("Sonarr's root folder").Required(true);
 
                     with.Property(x => x.SeasonFolders).Description("Sonarr's season folders").Required(false);
 
