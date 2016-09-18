@@ -175,16 +175,16 @@ namespace PlexRequests.UI.Modules
 
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
-            Post["/testemailnotification"] = _ => TestEmailNotifications();
+            Post["/testemailnotification", true] = async (x, ct) => await TestEmailNotifications();
             Get["/status", true] = async (x, ct) => await Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
-            Post["/testpushbulletnotification"] = _ => TestPushbulletNotifications();
+            Post["/testpushbulletnotification", true] = async (x, ct) => await TestPushbulletNotifications();
 
             Get["/pushovernotification"] = _ => PushoverNotifications();
             Post["/pushovernotification"] = _ => SavePushoverNotifications();
-            Post["/testpushovernotification"] = _ => TestPushoverNotifications();
+            Post["/testpushovernotification", true] = async (x, ct) => await TestPushoverNotifications();
 
             Get["/logs"] = _ => Logs();
             Get["/loglevel"] = _ => GetLogLevels();
@@ -198,7 +198,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/autoupdate"] = x => AutoUpdate();
 
-            Post["/testslacknotification"] = _ => TestSlackNotification();
+            Post["/testslacknotification", true] = async (x,ct) => await TestSlackNotification();
 
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
@@ -477,7 +477,7 @@ namespace PlexRequests.UI.Modules
             return View["EmailNotifications", settings];
         }
 
-        private Response TestEmailNotifications()
+        private async Task<Response> TestEmailNotifications()
         {
             var settings = this.Bind<EmailNotificationSettings>();
             var valid = this.Validate(settings);
@@ -485,6 +485,7 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            var currentSettings = await EmailService.GetSettingsAsync();
             var notificationModel = new NotificationModel
             {
                 NotificationType = NotificationType.Test,
@@ -503,7 +504,10 @@ namespace PlexRequests.UI.Modules
             }
             finally
             {
-                NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+                if (!currentSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
+                }
             }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
         }
@@ -595,7 +599,7 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private Response TestPushbulletNotifications()
+        private async Task<Response> TestPushbulletNotifications()
         {
             var settings = this.Bind<PushbulletNotificationSettings>();
             var valid = this.Validate(settings);
@@ -608,6 +612,7 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
+            var currentSettings = await PushbulletService.GetSettingsAsync();
             try
             {
                 NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
@@ -621,7 +626,10 @@ namespace PlexRequests.UI.Modules
             }
             finally
             {
-                NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+                if (!currentSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
+                }
             }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushbullet Notification!" });
         }
@@ -657,7 +665,7 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private Response TestPushoverNotifications()
+        private async Task<Response> TestPushoverNotifications()
         {
             var settings = this.Bind<PushoverNotificationSettings>();
             var valid = this.Validate(settings);
@@ -670,6 +678,7 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
+            var currentSettings = await PushbulletService.GetSettingsAsync();
             try
             {
                 NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
@@ -683,7 +692,10 @@ namespace PlexRequests.UI.Modules
             }
             finally
             {
-                NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+                if (!currentSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new PushoverNotification(PushoverApi, PushoverService));
+                }
             }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Pushover Notification!" });
         }
@@ -803,7 +815,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(apiKey);
         }
 
-        private Response TestSlackNotification()
+        private async Task<Response> TestSlackNotification()
         {
             var settings = this.BindAndValidate<SlackNotificationSettings>();
             if (!ModelValidationResult.IsValid)
@@ -815,11 +827,13 @@ namespace PlexRequests.UI.Modules
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
+
+            var currentSlackSettings = await SlackSettings.GetSettingsAsync();
             try
             {
                 NotificationService.Subscribe(new SlackNotification(SlackApi, SlackSettings));
                 settings.Enabled = true;
-                NotificationService.Publish(notificationModel, settings);
+                await NotificationService.Publish(notificationModel, settings);
                 Log.Info("Sent slack notification test");
             }
             catch (Exception e)
@@ -828,7 +842,10 @@ namespace PlexRequests.UI.Modules
             }
             finally
             {
-                NotificationService.UnSubscribe(new SlackNotification(SlackApi, SlackSettings));
+                if (!currentSlackSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new SlackNotification(SlackApi, SlackSettings));
+                }
             }
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Slack Notification! If you do not receive it please check the logs." });
         }
