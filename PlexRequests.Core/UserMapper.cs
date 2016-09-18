@@ -151,7 +151,7 @@ namespace PlexRequests.Core
             var passwordMatch = PasswordHasher.VerifyPassword(oldPassword, userToChange.Salt, userToChange.Hash);
             if (!passwordMatch)
             {
-                throw new SecurityException("Password does not match");
+                throw new SecurityException("Incorrect password.");
             }
 
             var newSalt = PasswordHasher.GenerateSalt();

@@ -36,6 +36,7 @@ using Newtonsoft.Json;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
@@ -45,6 +46,9 @@ namespace PlexRequests.UI.Modules
             ISettingsService<PlexSettings> plexSettings, ISettingsService<CouchPotatoSettings> cp,
             ISettingsService<SonarrSettings> sonarr, ISettingsService<SickRageSettings> sr, ISettingsService<HeadphonesSettings> hp) : base("api", pr)
         {
+            Get["GetVersion", "/version"] = x => GetVersion();
+
+
             Get["GetAuthSettings", "/settings/authentication"] = x => GetAuthSettings();
             Post["PostAuthSettings", "/settings/authentication"] = x => PostAuthSettings();
 
@@ -82,6 +86,12 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesSettings { get; }
+
+        private Response GetVersion()
+        {
+            return ReturnReponse(AssemblyHelper.GetProductVersion());
+        }
+
 
         private Response GetPrSettings()
         {

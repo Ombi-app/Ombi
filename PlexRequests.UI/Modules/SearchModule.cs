@@ -369,7 +369,7 @@ namespace PlexRequests.UI.Modules
                         viewT.Requested = true;
                     }
                 }
-                
+
                 viewTv.Add(viewT);
             }
 
@@ -657,7 +657,11 @@ namespace PlexRequests.UI.Modules
 
                         return await AddUserToRequest(existingRequest, settings, fullShowName, true);
                     }
-                    // We have an episode that has not yet been requested, let's continue
+                    else
+                    {
+                        // We no episodes to approve
+                        return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
+                    }
                 }
                 else if (model.SeasonList.Except(existingRequest.SeasonList).Any())
                 {
@@ -765,7 +769,7 @@ namespace PlexRequests.UI.Modules
                         UpdateRequest(existingRequest, settings,
                             $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
             }
-            
+
             return await UpdateRequest(existingRequest, settings, $"{fullShowName} {Resources.UI.Search_AlreadyRequested}");
         }
 
@@ -1033,7 +1037,8 @@ namespace PlexRequests.UI.Modules
                     Name = ep.name,
                     EpisodeId = ep.id
                 });
-            }return model;
+            }
+            return model;
 
         }
 

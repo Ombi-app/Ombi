@@ -64,6 +64,7 @@ namespace PlexRequests.UI.Modules
                 a.TrackEventAsync(Category.Wizard, Action.Start, "Started the wizard", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
                 var settings = await PlexRequestSettings.GetSettingsAsync();
+
                 if (settings.Wizard)
                 {
                     return Context.GetRedirect("~/search");

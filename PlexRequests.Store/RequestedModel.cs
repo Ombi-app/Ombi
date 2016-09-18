@@ -27,7 +27,7 @@ namespace PlexRequests.Store
         public string Status { get; set; }
         public bool Approved { get; set; }
 
-        [Obsolete("Use RequestedUsers")]
+        [Obsolete("Use RequestedUsers")] //TODO remove this obsolete property
         public string RequestedBy { get; set; }
 
         public DateTime RequestedDate { get; set; }
@@ -44,6 +44,8 @@ namespace PlexRequests.Store
         public string ArtistId { get; set; }
         public int IssueId { get; set; }
         public List<EpisodesModel> Episodes { get; set; }
+        public bool Denied { get; set; }
+        public string DeniedReason { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers

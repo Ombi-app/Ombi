@@ -65,7 +65,7 @@ namespace PlexRequests.Helpers.Tests
                         "ProviderId", "ImdbId", "TvDbId", "Overview", "Title", "PosterPath", "ReleaseDate", "Type",
                          "Status", "Approved", "RequestedBy", "RequestedDate", "Available", "Issues", "OtherMessage", "AdminNote",
                          "SeasonList", "SeasonCount", "SeasonsRequested", "MusicBrainzId", "RequestedUsers","ArtistName",
-                         "ArtistId","IssueId","Episodes","AllUsers","CanApprove","Id"
+                         "ArtistId","IssueId","Episodes", "Denied", "DeniedReason", "AllUsers","CanApprove","Id",
                     }).SetName("Requested Model");
             }
         }

@@ -195,9 +195,18 @@ namespace PlexRequests.Services.Jobs
 
         public PlexMovie GetMovie(PlexMovie[] plexMovies, string title, string year, string providerId = null)
         {
+            if (plexMovies.Length == 0)
+            {
+                return null;
+            }
             var advanced = !string.IsNullOrEmpty(providerId);
             foreach (var movie in plexMovies)
             {
+                if (string.IsNullOrEmpty(movie.Title) || string.IsNullOrEmpty(movie.ReleaseYear))
+                {
+                    continue;
+                }
+
                 if (advanced)
                 {
                     if (!string.IsNullOrEmpty(movie.ProviderId) &&

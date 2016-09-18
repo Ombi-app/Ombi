@@ -216,7 +216,7 @@ namespace PlexRequests.UI.Modules
 
         private bool IsUserInDeniedList(string username, AuthenticationSettings settings)
         {
-            return settings.DeniedUserList.Any(x => x.Equals(username));
+            return settings.DeniedUserList.Any(x => x.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }

@@ -1,4 +1,5 @@
 #region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: LoginModule.cs
@@ -23,10 +24,12 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
+
 using System;
 using System.Dynamic;
-
+using System.Security;
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Extensions;
@@ -43,7 +46,8 @@ namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker) : base(pr)
+        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker)
+            : base(pr)
         {
             UserMapper = m;
             Get["/login"] = _ =>
@@ -61,7 +65,14 @@ namespace PlexRequests.UI.Modules
                 return View["Index", model];
             };
 
-            Get["/logout"] = x => this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
+            Get["/logout"] = x =>
+            {
+                if (Session[SessionKeys.UsernameKey] != null)
+                {
+                    Session.Delete(SessionKeys.UsernameKey);
+                }
+                return this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
+            };
 
             Post["/login"] = x =>
             {
@@ -74,7 +85,10 @@ namespace PlexRequests.UI.Modules
 
                 if (userId == null)
                 {
-                    return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/login?error=true&username=" + username : "~/login?error=true&username=" + username);
+                    return
+                        Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl)
+                            ? $"~/{BaseUrl}/login?error=true&username=" + username
+                            : "~/login?error=true&username=" + username);
                 }
                 DateTime? expiry = null;
                 if (Request.Form.RememberMe.HasValue)
@@ -106,7 +120,10 @@ namespace PlexRequests.UI.Modules
                 var exists = UserMapper.DoUsersExist();
                 if (exists)
                 {
-                    return Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/register?error=true" : "~/register?error=true");
+                    return
+                        Context.GetRedirect(!string.IsNullOrEmpty(BaseUrl)
+                            ? $"~/{BaseUrl}/register?error=true"
+                            : "~/register?error=true");
                 }
                 var userId = UserMapper.CreateAdmin(username, Request.Form.Password);
                 Session[SessionKeys.UsernameKey] = username;
@@ -116,6 +133,7 @@ namespace PlexRequests.UI.Modules
             Get["/changepassword"] = _ => ChangePassword();
             Post["/changepassword"] = _ => ChangePasswordPost();
         }
+
         private ICustomUserMapper UserMapper { get; }
 
         private Negotiator ChangePassword()
@@ -141,14 +159,20 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Message = "The passwords do not match", Result = false });
             }
-
-            var result = UserMapper.UpdatePassword(username, oldPass, newPassword);
-            if (result)
+            try
             {
-                return Response.AsJson(new JsonResponseModel { Message = "Password has been changed!", Result = true });
-            }
+                var result = UserMapper.UpdatePassword(username, oldPass, newPassword);
+                if (result)
+                {
+                    return Response.AsJson(new JsonResponseModel { Message = "Password has been changed!", Result = true });
+                }
 
-            return Response.AsJson(new JsonResponseModel { Message = "Could not update the password in the database", Result = false });
+                return Response.AsJson(new JsonResponseModel { Message = "Could not update the password in the database", Result = false });
+            }
+            catch (SecurityException e)
+            {
+                return Response.AsJson(new JsonResponseModel { Message = e.ToString(), Result = false });
+            }
         }
     }
 }
