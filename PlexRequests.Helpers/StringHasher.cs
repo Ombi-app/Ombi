@@ -35,7 +35,7 @@ namespace PlexRequests.Helpers
         {
             using (var md5 = MD5.Create())
             {
-                var inputBytes = Encoding.ASCII.GetBytes(input);
+                var inputBytes = Encoding.UTF8.GetBytes(input);
                 var hash = md5.ComputeHash(inputBytes);
 
                 var sb = new StringBuilder();
