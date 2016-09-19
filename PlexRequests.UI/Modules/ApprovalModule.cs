@@ -64,7 +64,7 @@ namespace PlexRequests.UI.Modules
             HeadphonesSettings = hpSettings;
             HeadphoneApi = hpApi;
 
-            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
+            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId, (string)Request.Form.rootFolderId);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
             Post["/approveall", true] = async (x, ct) => await ApproveAll();
             Post["/approveallmovies", true] = async (x, ct) => await ApproveAllMovies();
@@ -91,7 +91,7 @@ namespace PlexRequests.UI.Modules
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        private async Task<Response> Approve(int requestId, string qualityId)
+        private async Task<Response> Approve(int requestId, string qualityId, string rootFolderId)
         {
             Log.Info("approving request {0}", requestId);
 
@@ -109,7 +109,7 @@ namespace PlexRequests.UI.Modules
                 case RequestType.Movie:
                     return await RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
-                    return await RequestTvAndUpdateStatus(request, qualityId);
+                    return await RequestTvAndUpdateStatus(request, qualityId, rootFolderId);
                 case RequestType.Album:
                     return await RequestAlbumAndUpdateStatus(request);
                 default:
@@ -117,7 +117,7 @@ namespace PlexRequests.UI.Modules
             }
         }
 
-        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
+        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId, string rootFolderId)
         {
             var sender = new TvSender(SonarrApi, SickRageApi);
 
@@ -125,7 +125,7 @@ namespace PlexRequests.UI.Modules
             if (sonarrSettings.Enabled)
             {
                 Log.Trace("Sending to Sonarr");
-                var result = await sender.SendToSonarr(sonarrSettings, request, qualityId);
+                var result = await sender.SendToSonarr(sonarrSettings, request, qualityId, rootFolderId);
                 Log.Trace("Sonarr Result: ");
                 Log.Trace(result.DumpJson());
                 if (!string.IsNullOrEmpty(result.title))

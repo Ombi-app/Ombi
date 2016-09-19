@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CacheKeys.cs
+//    File: SonarrProfile.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,26 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core
-{
-    public class CacheKeys
-    {
-        public struct TimeFrameMinutes
-        {
-            public const int SchedulerCaching = 60;
-        }
 
-        public const string PlexLibaries = nameof(PlexLibaries);
-        public const string PlexEpisodes = nameof(PlexEpisodes);
-        public const string TvDbToken = nameof(TvDbToken);
-        public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
-        public const string SonarrRootFolders = nameof(SonarrRootFolders);
-        public const string SonarrQueued = nameof(SonarrQueued);
-        public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
-        public const string SickRageQueued = nameof(SickRageQueued);
-        public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);
-        public const string CouchPotatoQueued = nameof(CouchPotatoQueued);
-        public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
-        public const string LastestProductVersion = nameof(LastestProductVersion);
+using System.Collections.Generic;
+
+namespace PlexRequests.Api.Models.Sonarr
+{
+    public class SonarrRootFolder
+    {
+        public int id { get; set; }
+        public string path { get; set; }
+        public long freespace { get; set; }
     }
 }

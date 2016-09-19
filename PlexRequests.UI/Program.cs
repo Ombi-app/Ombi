@@ -75,6 +75,7 @@ namespace PlexRequests.UI
             var s = new Setup();
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
+            s.CacheRootFolders();
             ConfigureTargets(cn); 
             SetupLogging();
 

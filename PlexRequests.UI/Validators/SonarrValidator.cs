@@ -38,6 +38,7 @@ namespace PlexRequests.UI.Validators
             RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
             RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
             RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
+            RuleFor(request => request.RootFolder).NotEmpty().WithMessage("You must specify a Root Folder.");
         }
     }
 }
