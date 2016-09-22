@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrAddEpisodeBody.cs
+//    File: SonarrSeriesSearchResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,9 +26,31 @@
 #endregion
 namespace PlexRequests.Api.Models.Sonarr
 {
-    public class SonarrAddEpisodeBody
+    public class SeriesBody
+    {
+        public int seriesId { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public string completionMessage { get; set; }
+        public string name { get; set; }
+        public string trigger { get; set; }
+    }
+
+    public class SonarrSeriesSearchResult
     {
         public string name { get; set; }
-        public int[] episodeIds { get; set; }
+        public SeriesBody body { get; set; }
+        public string priority { get; set; }
+        public string status { get; set; }
+        public string queued { get; set; }
+        public string started { get; set; }
+        public string trigger { get; set; }
+        public string state { get; set; }
+        public bool manual { get; set; }
+        public string startedOn { get; set; }
+        public string stateChangeTime { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public int id { get; set; }
     }
 }

@@ -327,5 +327,58 @@ namespace PlexRequests.Api
                 return null;
             }
         }
+
+        public SonarrSeasonSearchResult SearchForSeason(int seriesId, int seasonNumber, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/Command", Method = Method.POST };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            var body = new SonarrSearchCommand
+            {
+                name = "SeasonSearch",
+                seriesId = seriesId,
+                seasonNumber = seasonNumber
+            };
+            request.AddJsonBody(body);
+
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                    Log.Error(exception, "Exception when calling SearchForSeason for Sonarr, Retrying {0}", timespan));
+
+                return policy.Execute(() => Api.ExecuteJson<SonarrSeasonSearchResult>(request, baseUrl));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been an API exception when put the Sonarr SearchForSeason");
+                return null;
+            }
+        }
+
+        public SonarrSeriesSearchResult SearchForSeries(int seriesId, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/Command", Method = Method.POST };
+            request.AddHeader("X-Api-Key", apiKey);
+
+            var body = new SonarrSearchCommand
+            {
+                name = "SeriesSearch",
+                seriesId = seriesId
+            };
+            request.AddJsonBody(body);
+
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                    Log.Error(exception, "Exception when calling SearchForSeries for Sonarr, Retrying {0}", timespan));
+
+                return policy.Execute(() => Api.ExecuteJson<SonarrSeriesSearchResult>(request, baseUrl));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been an API exception when put the Sonarr SearchForSeries");
+                return null;
+            }
+        }
     }
 }

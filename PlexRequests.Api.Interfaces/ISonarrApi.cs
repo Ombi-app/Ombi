@@ -48,5 +48,7 @@ namespace PlexRequests.Api.Interfaces
         SonarrEpisode UpdateEpisode(SonarrEpisode episodeInfo, string apiKey, Uri baseUrl);
         SonarrAddEpisodeResult SearchForEpisodes(int[] episodeIds, string apiKey, Uri baseUrl);
         Series UpdateSeries(Series series, string apiKey, Uri baseUrl);
+        SonarrSeasonSearchResult SearchForSeason(int seriesId, int seasonNumber, string apiKey, Uri baseUrl);
+        SonarrSeriesSearchResult SearchForSeries(int seriesId, string apiKey, Uri baseUrl);
     }
 }

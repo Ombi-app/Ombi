@@ -112,6 +112,7 @@ namespace PlexRequests.UI.Helpers
                 return addResult;
             }
 
+            // Series exists, don't need to add it
             if (series != null)
             {
                 var requestAll = model.SeasonsRequested.Equals("All", StringComparison.CurrentCultureIgnoreCase);
@@ -127,7 +128,10 @@ namespace PlexRequests.UI.Helpers
                         {
                             season.monitored = true;
                         }
+                        SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                        SonarrApi.SearchForSeason(series.id, season.seasonNumber, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                     }
+                    return new SonarrAddSeries { title = series.title }; // We have updated it
                 }
 
                 if (requestAll)
@@ -137,18 +141,30 @@ namespace PlexRequests.UI.Helpers
                     {
                         season.monitored = true;
                     }
+
+                    SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri); // Search For all episodes!"
+                    return new SonarrAddSeries { title = series.title }; // We have updated it
                 }
 
                 if (first)
                 {
                     var firstSeries = series?.seasons?.OrderBy(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
                     firstSeries.monitored = true;
+                    SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    SonarrApi.SearchForSeason(series.id, firstSeries.seasonNumber, sonarrSettings.ApiKey,
+                        sonarrSettings.FullUri);
+                    return new SonarrAddSeries { title = series.title }; // We have updated it
                 }
 
                 if (latest)
                 {
                     var lastSeries = series?.seasons?.OrderByDescending(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
                     lastSeries.monitored = true;
+                    SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    SonarrApi.SearchForSeason(series.id, lastSeries.seasonNumber, sonarrSettings.ApiKey,
+                        sonarrSettings.FullUri);
+                    return new SonarrAddSeries { title = series.title }; // We have updated it
                 }
 
 

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SonarrAddEpisodeBody.cs
+//    File: SonarrSearchCommand.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Xml.Linq;
+
 namespace PlexRequests.Api.Models.Sonarr
 {
-    public class SonarrAddEpisodeBody
+    public class SonarrSearchCommand
     {
+        public int seriesId { get; set; }
+        public int seasonNumber { get; set; }
         public string name { get; set; }
-        public int[] episodeIds { get; set; }
     }
 }
