@@ -362,7 +362,6 @@ namespace PlexRequests.UI.Modules
                         viewT.Requested = true;
                         viewT.Episodes = dbt.Episodes.ToList();
                         viewT.Approved = dbt.Approved;
-                        viewT.Available = dbt.Available;
                     }
                     if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
                     {

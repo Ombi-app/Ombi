@@ -63,30 +63,18 @@ namespace PlexRequests.UI.Tests
         }
 
         [Test]
-        public async Task HappyPathSendSeriesToSonarr()
+        public async Task HappyPathSendSeriesToSonarrAllSeason()
         {
-            var seriesResult = new SonarrAddSeries() { monitored = true };
-            SonarrMock.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<Uri>())).Returns(new List<Series>());
-            SonarrMock.Setup(
-                x =>
-                x.AddSeries(
-                    It.IsAny<int>(),
-                    It.IsAny<string>(),
-                    It.IsAny<int>(),
-                    It.IsAny<bool>(),
-                    It.IsAny<string>(),
-                    It.IsAny<int>(),
-                    It.IsAny<int[]>(),
-                    It.IsAny<string>(),
-                    It.IsAny<Uri>(),
-                    It.IsAny<bool>(), It.IsAny<bool>())).Returns(seriesResult);
+            var seriesResult = new SonarrAddSeries() { title = "ABC"};
+            SonarrMock.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<Uri>())).Returns(F.Build<Series>().With(x => x.tvdbId, 1).With(x => x.title, "ABC").CreateMany().ToList());
+
             Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
 
-            var request = new RequestedModel();
+            var request = new RequestedModel {SeasonsRequested = "All", ProviderId = 1, Title = "ABC"};
 
             var result = await Sender.SendToSonarr(GetSonarrSettings(), request);
 
-            Assert.That(result, Is.EqualTo(seriesResult));
+            Assert.That(result.title, Is.EqualTo("ABC"));
             SonarrMock.Verify(x => x.AddSeries(It.IsAny<int>(),
                     It.IsAny<string>(),
                     It.IsAny<int>(),
@@ -96,7 +84,7 @@ namespace PlexRequests.UI.Tests
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
-                    true,  It.IsAny<bool>()), Times.Once);
+                    true,  It.IsAny<bool>()), Times.Never);
         }
 
         [Test]
