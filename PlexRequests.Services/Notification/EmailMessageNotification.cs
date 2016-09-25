@@ -25,18 +25,13 @@
 //  ************************************************************************/
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-
-using MailKit.Security;
-
 using MimeKit;
 using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.Models;
+using PlexRequests.Core.Notification.Templates;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Interfaces;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
@@ -109,7 +104,7 @@ namespace PlexRequests.Services.Notification
                 if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
                 {
                     return false;
-                }              
+                }
             }
             if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
             {
@@ -129,13 +124,16 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
-            //var r = new NotificationMessageCurlys(model.User, model.Title, DateTime.Now.ToString(), model.RequestType.ToString(), string.Empty);
-            //var resolver = new NotificationMessageResolver();
-            //var bodyResult = resolver.ParseMessage(settings, NotificationType.NewRequest, r);
-            
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
+                $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, };
+
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" },
+                Body = body.ToMessageBody(),
                 Subject = $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
@@ -147,9 +145,16 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
         {
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                $"Plex Requests: New issue for {model.Title}!",
+                $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, };
+
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") { Text = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!" },
+                Body = body.ToMessageBody(),
                 Subject = $"Plex Requests: New issue for {model.Title}!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
@@ -165,10 +170,16 @@ namespace PlexRequests.Services.Notification
             {
                 await Task.FromResult(false);
             }
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                $"Plex Requests: {model.Title} is now available!",
+                $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, };
 
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") { Text = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)" },
+                Body = body.ToMessageBody(),
                 Subject = $"Plex Requests: {model.Title} is now available!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
@@ -206,10 +217,15 @@ namespace PlexRequests.Services.Notification
 
         private async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
         {
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                "Test Message",
+                "This is just a test! Success!",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, };
             var message = new MimeMessage
             {
-                Body = new TextPart("plain") { Text = "This is just a test! Success!" },
-                Subject = "Plex Requests: Test Message!",
+                Body = body.ToMessageBody()
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));

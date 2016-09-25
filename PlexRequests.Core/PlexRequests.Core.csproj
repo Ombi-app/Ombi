@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -81,11 +82,15 @@
     <Compile Include="Models\NotificationType.cs" />
     <Compile Include="Models\StatusModel.cs" />
     <Compile Include="Models\UserProperties.cs" />
+    <Compile Include="Notification\Templates\EmailBasicTemplate.cs" />
+    <Compile Include="Notification\Templates\IEmailBasicTemplate.cs" />
+    <Compile Include="Notification\TransportType.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
     <Compile Include="SettingModels\LandingPageSettings.cs" />
     <Compile Include="SettingModels\NotificationSettings.cs" />
+    <Compile Include="SettingModels\NotificationSettingsV2.cs" />
     <Compile Include="SettingModels\RequestSettings.cs" />
     <Compile Include="SettingModels\ScheduledJobsSettings.cs" />
     <Compile Include="SettingModels\SlackNotificationSettings.cs" />
@@ -134,7 +139,11 @@
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Notification\Templates\BasicRequestTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
