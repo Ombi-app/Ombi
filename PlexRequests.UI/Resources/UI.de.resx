@@ -451,12 +451,12 @@
     <value>Französisch</value>
   </data>
   <data name="Search_SelectEpisode" xml:space="preserve">
-    <value>Wählen Sie Episode</value>
+    <value>Wählen Sie ihre Episode</value>
   </data>
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
     <value>Falsche Benutzer oder Passwort</value>
   </data>
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
-    <value>Es gibt keine Informationen für die Release-Termin</value>
+    <value>Es gibt noch keine Informationen für diesen Release-Termin</value>
   </data>
 </root>
