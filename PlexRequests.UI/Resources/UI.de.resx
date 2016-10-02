@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -409,13 +409,13 @@
     <value>wurde bereits angefragt!</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>Wir konnten nicht prüfen ob {0} auf Plex ist. Bist du sicher dass es richtig installiert ist?</value>
+    <value>Wir konnten nicht prüfen ob {0} bereits auf Plex ist. Bist du sicher dass alles richtig installiert ist?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Etwas ging etwas schief beim hinzufügen des Filmes zu CouchPotato! Bitte überprüfe deine Einstellungen.</value>
   </data>
   <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
-    <value>Du hast deine wöchentliche Maximalanfragenanzahl für neue Filme erreicht. Bitte kontaktiere deinen Admin.</value>
+    <value>Du hast deine wöchentliche Maximalanfragen für neue Filme erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
     <value>ist bereits auf Plex!</value>
@@ -424,22 +424,22 @@
     <value>Etwas ging etwas schief beim hinzufügen des Filmes zu SickRage! Bitte überprüfe deine Einstellungen.</value>
   </data>
   <data name="Search_TvNotSetUp" xml:space="preserve">
-    <value>The Anfrage für Serien ist momentan nicht richtig installiert. Bitte kontaktiere deinen Admin.</value>
+    <value>Die Anfrage für Serien ist momentan nicht richtig installiert. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
-    <value>Du hast deine wöchentliche Maximalanfragenanzahl für neue Alben erreicht. Bitte kontaktiere deinen Admin.</value>
+    <value>Du hast deine wöchentliche Maximalanfragen für neue Alben erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_MusicBrainzError" xml:space="preserve">
-    <value>Wir konnten den Interpreten auf MusicBrainz leider nicht finden. Bitte versuche es später erneut oder kontaktiere deinen Admin.</value>
+    <value>Wir konnten den Interpreten auf MusicBrainz leider nicht finden. Bitte versuche es später erneut oder kontaktiere den Administrator.</value>
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
-    <value>Du hast deine wöchentliche Maximalanfragenanzahl für neue Serien erreicht. Bitte kontaktiere deinen Admin.</value>
+    <value>Du hast deine wöchentliche Maximalanfragen für neue Serien erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Entschuldige, aber diese Funktion ist momentan nur für Benutzer mit Plex-Accounts freigeschalten.</value>
+    <value>Entschuldige, aber diese Funktion ist momentan nur für Benutzer mit Plex-Accounts freigeschaltet.</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
-    <value>Entschuldige, aber dein Admin hat diese Funktion noch nicht freigeschalten.</value>
+    <value>Entschuldige, aber dein Administrator hat diese Funktion noch nicht freigeschaltet.</value>
   </data>
   <data name="Search_NotificationError" xml:space="preserve">
     <value>Wir konnten diese Meldung nicht entfernen.</value>
@@ -454,7 +454,7 @@
     <value>Wählen Sie ihre Episode</value>
   </data>
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
-    <value>Falsche Benutzer oder Passwort</value>
+    <value>Falscher Benutzer oder Passwort</value>
   </data>
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>Es gibt noch keine Informationen für diesen Release-Termin</value>
