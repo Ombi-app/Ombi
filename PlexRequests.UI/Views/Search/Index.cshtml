@@ -170,10 +170,13 @@
                 {{#if available}}
                 <span class="label label-success">Available</span>
                 {{else}}
+                {{#if approved}}
+                <span class="label label-info">Processing request</span>
+                {{else if requested}}
+                <span class="label label-warning">Pending approval</span>
+                {{else}}                
                 <span class="label label-danger">Not Available</span>
                 {{/if}}
-                {{#if requested}}
-                <span class="label label-success">Requested</span>
                 {{/if}}
                 <br />
                 <br />
