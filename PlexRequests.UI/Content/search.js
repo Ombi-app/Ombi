@@ -468,7 +468,9 @@ $(function () {
             episodes: result.episodes,
             tvFullyAvailable: result.tvFullyAvailable,
             url: result.plexUrl,
-            tvPartialAvailable : result.tvPartialAvailable
+            tvPartialAvailable: result.tvPartialAvailable,
+            disableTvRequestsByEpisode: result.disableTvRequestsByEpisode,
+            disableTvRequestsBySeason: result.disableTvRequestsBySeason
         };
         return context;
     }
