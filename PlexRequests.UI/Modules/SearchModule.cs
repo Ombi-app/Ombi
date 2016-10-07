@@ -290,8 +290,10 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+
             Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
+            var prSettings = await PrService.GetSettingsAsync();
             var providerId = string.Empty;
 
             var apiTv = new List<TvMazeSearch>();
@@ -336,7 +338,9 @@ namespace PlexRequests.UI.Modules
                     Runtime = t.show.runtime.ToString(),
                     SeriesId = t.show.id,
                     SeriesName = t.show.name,
-                    Status = t.show.status
+                    Status = t.show.status,
+                    DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason
                 };
 
 

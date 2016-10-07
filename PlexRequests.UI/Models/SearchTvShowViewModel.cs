@@ -55,5 +55,7 @@ namespace PlexRequests.UI.Models
         public int SiteRating { get; set; }
         public List<Store.EpisodesModel> Episodes { get; set; }
         public bool TvFullyAvailable { get; set; }
+        public bool DisableTvRequestsByEpisode { get; set; }
+        public bool DisableTvRequestsBySeason { get; set; }
     }
 }

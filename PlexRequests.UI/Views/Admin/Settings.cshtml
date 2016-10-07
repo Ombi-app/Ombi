@@ -193,6 +193,36 @@
                     }
                 </div>
             </div>
+        
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.DisableTvRequestsByEpisode)
+                    {
+                        <input type="checkbox" id="DisableTvRequestsByEpisode" name="DisableTvRequestsByEpisode" checked="checked">
+                        <label for="DisableTvRequestsByEpisode">Disable TV requests by episode</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="DisableTvRequestsByEpisode" name="DisableTvRequestsByEpisode"><label for="DisableTvRequestsByEpisode">Disable TV requests by episode</label>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.DisableTvRequestsBySeason)
+                    {
+                        <input type="checkbox" id="DisableTvRequestsBySeason" name="DisableTvRequestsBySeason" checked="checked">
+                        <label for="DisableTvRequestsBySeason">Disable TV requests by season</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="DisableTvRequestsBySeason" name="DisableTvRequestsBySeason"><label for="DisableTvRequestsBySeason">Disable TV requests by season</label>
+                    }
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="checkbox">
