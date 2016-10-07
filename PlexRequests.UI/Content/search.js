@@ -472,6 +472,7 @@ $(function () {
             disableTvRequestsByEpisode: result.disableTvRequestsByEpisode,
             disableTvRequestsBySeason: result.disableTvRequestsBySeason
         };
+
         return context;
     }
 
