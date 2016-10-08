@@ -253,10 +253,31 @@
                     }
                 </div>
             </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.EnablePayPalMe)
+                    {
+                        <input type="checkbox" id="EnablePayPalMe" name="EnablePayPalMe" checked="checked">
+                        <label for="EnablePayPalMe">Enable custom paypal.me link</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="EnablePayPalMe" name="EnablePayPalMe"><label for="EnablePayPalMe">Enable custom paypal.me donate link</label>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PayPalMeName" class="control-label">Paypal.me name</label>
+                <div>
+                    <input type="text" class="form-control-custom form-control " id="PayPalMeName" name="PayPalMeName" placeholder="paypay.me name" value="@Model.PayPalMeName">
+                </div>
+            </div>
+ 
 
 
 
-            <p class="form-group">A comma separated list of users whose requests do not require approval (These users also do not have a request limit).</p>
+
             <div class="form-group">
                 <label for="NoApprovalUsers" class="control-label">Approval White listed Users</label>
                 <div>
