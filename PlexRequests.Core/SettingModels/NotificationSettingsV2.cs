@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: EmailNotificationSettings.cs
+//    File: NotificationSettingsV2.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,39 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
+using PlexRequests.Core.Models;
+using PlexRequests.Core.Notification;
+
 namespace PlexRequests.Core.SettingModels
 {
-    public sealed class EmailNotificationSettings : NotificationSettings
+    public class NotificationSettingsV2 : Settings
     {
-        public string EmailHost { get; set; }
-        public string EmailPassword { get; set; }
-        public int EmailPort { get; set; }
-        public string EmailSender { get; set; }
-        public string EmailUsername { get; set; }
-        public bool Enabled { get; set; }
-        public bool Authentication { get; set; }
-        public bool EnableUserEmailNotifications { get; set; }
-        public string RecipientEmail { get; set; }
+        public NotificationSettingsV2()
+        {
+            EmailNotification = new List<NotificationMessage>
+            {
+                new NotificationMessage
+                {
+                    Body = "BODY",
+                    NotificationType = NotificationType.NewRequest,
+                    Subject = "SUB"
+                },
+                new NotificationMessage
+                {
+                    NotificationType = NotificationType.Issue,
+                    Body = "issue",
+                    Subject = "issuesub"
+                }
+            };
+            SlackNotification = new List<NotificationMessage>();
+            PushoverNotification = new List<NotificationMessage>();
+            PushbulletNotification = new List<NotificationMessage>();
+        }
+        public List<NotificationMessage> EmailNotification { get; set; }
+        public List<NotificationMessage> SlackNotification { get; set; }
+        public List<NotificationMessage> PushbulletNotification { get; set; }
+        public List<NotificationMessage> PushoverNotification { get; set; }
     }
 }

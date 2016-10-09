@@ -29,6 +29,6 @@ namespace PlexRequests.Api.Models.Sonarr
     public class SonarrAddEpisodeBody
     {
         public string name { get; set; }
-        public int[] episodeIds { get; set; } 
+        public int[] episodeIds { get; set; }
     }
 }

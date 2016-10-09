@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: EmailNotificationSettings.cs
+//    File: SonarrSearchCommand.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
+
+using System.Xml.Linq;
+
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public sealed class EmailNotificationSettings : NotificationSettings
+    public class SonarrSearchCommand
     {
-        public string EmailHost { get; set; }
-        public string EmailPassword { get; set; }
-        public int EmailPort { get; set; }
-        public string EmailSender { get; set; }
-        public string EmailUsername { get; set; }
-        public bool Enabled { get; set; }
-        public bool Authentication { get; set; }
-        public bool EnableUserEmailNotifications { get; set; }
-        public string RecipientEmail { get; set; }
+        public int seriesId { get; set; }
+        public int seasonNumber { get; set; }
+        public string name { get; set; }
     }
 }

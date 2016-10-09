@@ -38,6 +38,6 @@ namespace PlexRequests.Api.Interfaces
         CouchPotatoProfiles GetProfiles(Uri url, string apiKey);
         CouchPotatoMovies GetMovies(Uri baseUrl, string apiKey, string[] status);
 
-        CoucPotatoApiKey GetApiKey(Uri baseUrl, string username, string password);
+        CouchPotatoApiKey GetApiKey(Uri baseUrl, string username, string password);
     }
 }

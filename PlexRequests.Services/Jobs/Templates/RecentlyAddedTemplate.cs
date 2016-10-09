@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: EmailNotificationSettings.cs
+//    File: RecentlyAddedTemplate.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
+
+using System;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
+using NLog;
+
+namespace PlexRequests.Services.Jobs.Templates
 {
-    public sealed class EmailNotificationSettings : NotificationSettings
-    {
-        public string EmailHost { get; set; }
-        public string EmailPassword { get; set; }
-        public int EmailPort { get; set; }
-        public string EmailSender { get; set; }
-        public string EmailUsername { get; set; }
-        public bool Enabled { get; set; }
-        public bool Authentication { get; set; }
-        public bool EnableUserEmailNotifications { get; set; }
-        public string RecipientEmail { get; set; }
+    public class RecentlyAddedTemplate
+    { 
+        public string TemplateLocation => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, "Jobs", "Templates", "RecentlyAddedTemplate.html");
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private const string RecentlyAddedKey = "{@RECENTLYADDED}";
+
+        public string LoadTemplate(string html)
+        {
+            try
+            {
+                var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
+                sb.Replace(RecentlyAddedKey, html);
+                return sb.ToString();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return string.Empty;
+            }
+        }
     }
 }

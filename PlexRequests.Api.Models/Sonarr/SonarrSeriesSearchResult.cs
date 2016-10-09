@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: EmailNotificationSettings.cs
+//    File: SonarrSeriesSearchResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,33 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.Api.Models.Sonarr
 {
-    public sealed class EmailNotificationSettings : NotificationSettings
+    public class SeriesBody
     {
-        public string EmailHost { get; set; }
-        public string EmailPassword { get; set; }
-        public int EmailPort { get; set; }
-        public string EmailSender { get; set; }
-        public string EmailUsername { get; set; }
-        public bool Enabled { get; set; }
-        public bool Authentication { get; set; }
-        public bool EnableUserEmailNotifications { get; set; }
-        public string RecipientEmail { get; set; }
+        public int seriesId { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public string completionMessage { get; set; }
+        public string name { get; set; }
+        public string trigger { get; set; }
+    }
+
+    public class SonarrSeriesSearchResult
+    {
+        public string name { get; set; }
+        public SeriesBody body { get; set; }
+        public string priority { get; set; }
+        public string status { get; set; }
+        public string queued { get; set; }
+        public string started { get; set; }
+        public string trigger { get; set; }
+        public string state { get; set; }
+        public bool manual { get; set; }
+        public string startedOn { get; set; }
+        public string stateChangeTime { get; set; }
+        public bool sendUpdatesToClient { get; set; }
+        public bool updateScheduledTask { get; set; }
+        public int id { get; set; }
     }
 }

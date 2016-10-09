@@ -160,18 +160,18 @@ namespace PlexRequests.Api
             }
         }
 
-        public CoucPotatoApiKey GetApiKey(Uri baseUrl, string username, string password)
+        public CouchPotatoApiKey GetApiKey(Uri baseUrl, string username, string password)
         {
             var request = new RestRequest
             {
-                Resource = "getkey/?p={username}&u={password}",
+                Resource = "getkey/?u={username}&p={password}",
                 Method = Method.GET
             };
 
             request.AddUrlSegment("username", StringHasher.CalcuateMd5Hash(username));
             request.AddUrlSegment("password", StringHasher.CalcuateMd5Hash(password));
 
-            var obj = RetryHandler.Execute(() => Api.Execute<CoucPotatoApiKey>(request, baseUrl),
+            var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoApiKey>(request, baseUrl),
                 (exception, timespan) => Log.Error(exception, "Exception when calling GetApiKey for CP, Retrying {0}", timespan), null);
 
             return obj;

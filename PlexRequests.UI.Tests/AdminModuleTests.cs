@@ -48,6 +48,7 @@ using PlexRequests.UI.Models;
 using PlexRequests.UI.Modules;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Tests
@@ -80,6 +81,8 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<LandingPageSettings>> LandingPageSettings { get; set; }
         private Mock<ISlackApi> SlackApi { get; set; }
         private Mock<IAnalytics> Analytics { get; set; }
+        private Mock<ISettingsService<NotificationSettingsV2>> NotifyV2 { get; set; }
+        private Mock<IRecentlyAdded> RecentlyAdded { get; set; }
 
         private ConfigurableBootstrapper Bootstrapper { get; set; }
 
@@ -120,6 +123,8 @@ namespace PlexRequests.UI.Tests
             ScheduledJobsSettingsMock = new Mock<ISettingsService<ScheduledJobsSettings>>();
             RecorderMock = new Mock<IJobRecord>();
             Analytics = new Mock<IAnalytics>();
+            NotifyV2= new Mock<ISettingsService<NotificationSettingsV2>>();
+            RecentlyAdded = new Mock<IRecentlyAdded>();
 
 
             Bootstrapper = new ConfigurableBootstrapper(with =>
@@ -140,6 +145,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(LogRepo.Object);
                 with.Dependency(PushoverSettings.Object);
                 with.Dependency(PushoverApi.Object);
+                with.Dependency(NotifyV2.Object);
                 with.Dependency(NotificationService.Object);
                 with.Dependency(Analytics.Object);
                 with.Dependency(HeadphonesSettings.Object);
@@ -150,6 +156,7 @@ namespace PlexRequests.UI.Tests
                 with.Dependency(SlackSettings.Object);
                 with.Dependency(ScheduledJobsSettingsMock.Object);
                 with.Dependency(RecorderMock.Object);
+                with.Dependency(RecentlyAdded.Object);
                 with.RootPathProvider<TestRootPathProvider>();
                 with.RequestStartup((container, pipelines, context) =>
                 {

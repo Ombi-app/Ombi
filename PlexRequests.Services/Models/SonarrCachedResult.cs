@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CoucPotatoApiKey.cs
+//    File: SonarrCachedResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,15 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Newtonsoft.Json;
 
-namespace PlexRequests.Api.Models.Movie
+using System.Collections.Generic;
+
+namespace PlexRequests.Services.Models
 {
-    public class CoucPotatoApiKey
+    public class SonarrCachedResult
     {
-        [JsonProperty("success")]
-        public bool Result { get; set; }
-        [JsonProperty("api_key")]
-        public string ApiKey { get; set; }
+        public SonarrCachedResult()
+        {
+            Seasons = new List<SonarrSeasons>( );
+        }
+        public List<SonarrSeasons> Seasons { get; set; }
+        public int TvdbId { get; set; }
+    }
+
+    public class SonarrSeasons
+    {
+        public int SeasonNumber { get; set; }
+        public bool Monitored { get; set; }
     }
 }

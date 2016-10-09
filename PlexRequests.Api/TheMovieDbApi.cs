@@ -74,6 +74,12 @@ namespace PlexRequests.Api
             return movies;
         }
 
+        public async Task<Movie> GetMovieInformation(string imdbId)
+        {
+            var movies = await Client.GetMovie(imdbId);
+            return movies;
+        }
+
         [Obsolete("Should use TvMaze for TV")]
         public async Task<TvShow> GetTvShowInformation(int tmdbId)
         {

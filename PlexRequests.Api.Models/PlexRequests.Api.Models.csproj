@@ -49,7 +49,7 @@
     <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
-    <Compile Include="Movie\CoucPotatoApiKey.cs" />
+    <Compile Include="Movie\CouchPotatoApiKey.cs" />
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
     <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
     <Compile Include="Music\HeadphonesGetIndex.cs" />
@@ -73,6 +73,7 @@
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexMediaType.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
+    <Compile Include="Plex\RecentlyAdded.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SickRage\SickRageBase.cs" />
     <Compile Include="SickRage\SickrageShows.cs" />
@@ -89,6 +90,9 @@
     <Compile Include="Sonarr\SonarrEpisodes.cs" />
     <Compile Include="Sonarr\SonarrError.cs" />
     <Compile Include="Sonarr\SonarrProfile.cs" />
+    <Compile Include="Sonarr\SonarrSearchCommand.cs" />
+    <Compile Include="Sonarr\SonarrSeasonSearchResult.cs" />
+    <Compile Include="Sonarr\SonarrSeriesSearchResult.cs" />
     <Compile Include="Sonarr\SystemStatus.cs" />
     <Compile Include="Tv\Authentication.cs" />
     <Compile Include="Tv\TvMazeEpisodes.cs" />

@@ -57,6 +57,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Jobs;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -94,6 +95,8 @@ namespace PlexRequests.UI.Modules
         private ISlackApi SlackApi { get; }
         private IJobRecord JobRecorder { get; }
         private IAnalytics Analytics { get; }
+        private IRecentlyAdded RecentlyAdded { get; }
+        private ISettingsService<NotificationSettingsV2> NotifySettings { get; } 
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -116,7 +119,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<LogSettings> logs,
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
-            ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics) : base("admin", prService)
+            ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -143,6 +147,8 @@ namespace PlexRequests.UI.Modules
             ScheduledJobSettings = scheduler;
             JobRecorder = rec;
             Analytics = analytics;
+            NotifySettings = notifyService;
+            RecentlyAdded = recentlyAdded;
 
             this.RequiresClaims(UserClaims.Admin);
 
@@ -210,6 +216,11 @@ namespace PlexRequests.UI.Modules
             Post["/scheduledjobs", true] = async (x, ct) => await SaveScheduledJobs();
 
             Post["/clearlogs", true] = async (x, ct) => await ClearLogs();
+
+            Get["/notificationsettings", true] = async (x, ct) => await NotificationSettings();
+            Post["/notificationsettings", true] = async (x, ct) => await SaveNotificationSettings();
+
+            Post["/recentlyAddedTest"] = x => RecentlyAddedTest();
         }
 
         private async Task<Negotiator> Authentication()
@@ -489,7 +500,8 @@ namespace PlexRequests.UI.Modules
             var notificationModel = new NotificationModel
             {
                 NotificationType = NotificationType.Test,
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now,
+                ImgSrc = "http://3.bp.blogspot.com/-EFM-XoKoZ0o/UznF567wCRI/AAAAAAAAALM/6ut7MCF2LrU/s1600/xkcd.png"
             };
             try
             {
@@ -963,6 +975,32 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Error(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
+            }
+        }
+
+        private async Task<Negotiator> NotificationSettings()
+        {
+            var s = await NotifySettings.GetSettingsAsync();
+            return View["NotificationSettings", s];
+        }
+
+        private async Task<Negotiator> SaveNotificationSettings()
+        {
+            var model = this.Bind<NotificationSettingsV2>();
+            return View["NotificationSettings", model];
+        }
+
+        private Response RecentlyAddedTest()
+        {
+            try
+            {
+                RecentlyAdded.Test();
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
+            }
+            catch (Exception e)
+            {
+
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
             }
         }

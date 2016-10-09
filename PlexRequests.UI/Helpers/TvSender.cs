@@ -74,6 +74,11 @@ namespace PlexRequests.UI.Helpers
 
             var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
 
+            var requestAll = model.SeasonsRequested?.Equals("All", StringComparison.CurrentCultureIgnoreCase);
+            var first = model.SeasonsRequested?.Equals("First", StringComparison.CurrentCultureIgnoreCase);
+            var latest = model.SeasonsRequested?.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
+            var specificSeasonRequest = model.SeasonList?.Any();
+
             if (episodeRequest)
             {
                 // Does series exist?
@@ -112,58 +117,102 @@ namespace PlexRequests.UI.Helpers
                 return addResult;
             }
 
-            if (series != null)
+            // Series exists, don't need to add it
+            if (series == null)
             {
-                var requestAll = model.SeasonsRequested.Equals("All", StringComparison.CurrentCultureIgnoreCase);
-                var first = model.SeasonsRequested.Equals("First", StringComparison.CurrentCultureIgnoreCase);
-                var latest = model.SeasonsRequested.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
+                // Set the series as monitored with a season count as 0 so it doesn't search for anything
+                SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, model.SeasonList, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri);
 
-                if (model.SeasonList.Any())
+                await Task.Delay(TimeSpan.FromSeconds(1));
+                
+                series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+            }
+           
+            if (requestAll ?? false)
+            {
+                // Monitor all seasons
+                foreach (var season in series.seasons)
                 {
-                    // Monitor the seasons that we have chosen
-                    foreach (var season in series.seasons)
-                    {
-                        if (model.SeasonList.Contains(season.seasonNumber))
-                        {
-                            season.monitored = true;
-                        }
-                    }
+                    season.monitored = true;
                 }
 
-                if (requestAll)
-                {
-                    // Monitor all seasons
-                    foreach (var season in series.seasons)
-                    {
-                        season.monitored = true;
-                    }
-                }
-
-                if (first)
-                {
-                    var firstSeries = series?.seasons?.OrderBy(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
-                    firstSeries.monitored = true;
-                }
-
-                if (latest)
-                {
-                    var lastSeries = series?.seasons?.OrderByDescending(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
-                    lastSeries.monitored = true;
-                }
-
-
-                // Update the series in sonarr with the new monitored status
                 SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                await RequestAllEpisodesInASeasonWithExistingSeries(model, series, sonarrSettings);
+                SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri); // Search For all episodes!"
                 return new SonarrAddSeries { title = series.title }; // We have updated it
             }
 
+            if (first ?? false)
+            {
+                var firstSeries = (series?.seasons?.OrderBy(x => x.seasonNumber)).FirstOrDefault(x => x.seasonNumber > 0) ?? new Season();
+                firstSeries.monitored = true;
+                var episodes = SonarrApi.GetEpisodes(series.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri); // Need to get the episodes so we mark them as monitored
 
-            var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
-                sonarrSettings.FullUri, true, true);
+                var episodesToUpdate = new List<SonarrEpisodes>();
+                foreach (var e in episodes)
+                {
+                    if (e.hasFile || e.seasonNumber != firstSeries.seasonNumber)
+                    {
+                        continue;
+                    }
+                    e.monitored = true; // Mark only the episodes we want as monitored
+                    episodesToUpdate.Add(e);
+                }
+                foreach (var sonarrEpisode in episodesToUpdate)
+                {
+                    SonarrApi.UpdateEpisode(sonarrEpisode, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                }
 
-            return result;
+                SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                SonarrApi.SearchForSeason(series.id, firstSeries.seasonNumber, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri);
+                return new SonarrAddSeries { title = series.title }; // We have updated it
+            }
+
+            if (latest ?? false)
+            {
+                var lastSeries = series?.seasons?.OrderByDescending(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
+                lastSeries.monitored = true;
+
+                var episodes = SonarrApi.GetEpisodes(series.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri); // Need to get the episodes so we mark them as monitored
+
+                var episodesToUpdate = new List<SonarrEpisodes>();
+                foreach (var e in episodes)
+                {
+                    if (e.hasFile || e.seasonNumber != lastSeries.seasonNumber)
+                    {
+                        continue;
+                    }
+                    e.monitored = true; // Mark only the episodes we want as monitored
+                    episodesToUpdate.Add(e);
+                }
+                foreach (var sonarrEpisode in episodesToUpdate)
+                {
+                    SonarrApi.UpdateEpisode(sonarrEpisode, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                }
+                SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                SonarrApi.SearchForSeason(series.id, lastSeries.seasonNumber, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri);
+                return new SonarrAddSeries { title = series.title }; // We have updated it
+            }
+
+            if (specificSeasonRequest ?? false)
+            {
+                // Monitor the seasons that we have chosen
+                foreach (var season in series.seasons)
+                {
+                    if (model.SeasonList.Contains(season.seasonNumber))
+                    {
+                        season.monitored = true;
+                        SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                        SonarrApi.SearchForSeason(series.id, season.seasonNumber, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                    }
+                }
+                return new SonarrAddSeries { title = series.title }; // We have updated it
+            }
+
+            return null;
         }
 
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
@@ -231,7 +280,7 @@ namespace PlexRequests.UI.Helpers
             var tasks = new List<Task>();
             foreach (var r in episodes)
             {
-                if (r.monitored || r.hasFile) // If it's already montiored or has the file, there is no point in updating it
+                if (r.monitored || r.hasFile) // If it's already monitored or has the file, there is no point in updating it
                 {
                     continue;
                 }
@@ -262,7 +311,7 @@ namespace PlexRequests.UI.Helpers
             var tasks = new List<Task>();
 
             var requestedEpisodes = model.Episodes;
-            
+
             foreach (var r in episodes)
             {
                 if (r.hasFile) // If it already has the file, there is no point in updating it

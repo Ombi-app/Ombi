@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SearchTvShowViewModel.cs
+//    File: EmailBasicTemplate.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,37 +25,46 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using NLog;
+using PlexRequests.Core.Models;
+using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.UI.Models
+namespace PlexRequests.Core.Notification.Templates
 {
-    public class SearchTvShowViewModel : SearchViewModel
-    {
-        public SearchTvShowViewModel()
+    public class EmailBasicTemplate : IEmailBasicTemplate
+    { 
+        public string TemplateLocation => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, "Notification", "Templates", "BasicRequestTemplate.html");
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private const string SubjectKey = "{@SUBJECT}";
+        private const string BodyKey = "{@BODY}";
+        private const string ImgSrc = "{@IMGSRC}";
+        private const string DateKey = "{@DATENOW}";
+        
+        public string LoadTemplate(string subject, string body, string imgSrc)
         {
-            Episodes = new List<Store.EpisodesModel>();
+            try
+            {
+                var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
+                sb.Replace(SubjectKey, subject);
+                sb.Replace(BodyKey, body);
+                sb.Replace(ImgSrc, imgSrc);
+                sb.Replace(DateKey, DateTime.Now.ToString("f"));
+
+                return sb.ToString();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return string.Empty;
+            }
         }
-        public int Id { get; set; }
-        public string SeriesName { get; set; }
-        public List<string> Aliases { get; set; }
-        public string Banner { get; set; }
-        public int SeriesId { get; set; }
-        public string Status { get; set; }
-        public string FirstAired { get; set; }
-        public string Network { get; set; }
-        public string NetworkId { get; set; }
-        public string Runtime { get; set; }
-        public List<string> Genre { get; set; }
-        public string Overview { get; set; }
-        public int LastUpdated { get; set; }
-        public string AirsDayOfWeek { get; set; }
-        public string AirsTime { get; set; }
-        public string Rating { get; set; }
-        public string ImdbId { get; set; }
-        public int SiteRating { get; set; }
-        public List<Store.EpisodesModel> Episodes { get; set; }
-        public bool TvFullyAvailable { get; set; }
-        public bool DisableTvRequestsByEpisode { get; set; }
-        public bool DisableTvRequestsBySeason { get; set; }
     }
 }

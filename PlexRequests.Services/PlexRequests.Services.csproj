@@ -72,19 +72,26 @@
     <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4">
       <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
     </Reference>
+    <Reference Include="TMDbLib, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Interfaces\INotificationEngine.cs" />
+    <Compile Include="Jobs\IRecentlyAdded.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
+    <Compile Include="Jobs\RecentlyAdded.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
     <Compile Include="Jobs\StoreCleanup.cs" />
     <Compile Include="Jobs\CouchPotatoCacher.cs" />
     <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
     <Compile Include="Jobs\SickRageCacher.cs" />
     <Compile Include="Jobs\SonarrCacher.cs" />
+    <Compile Include="Jobs\Templates\RecentlyAddedTemplate.cs" />
     <Compile Include="Jobs\UserRequestLimitResetter.cs" />
     <Compile Include="Models\PlexAlbum.cs" />
     <Compile Include="Models\PlexEpisodeModel.cs" />
@@ -97,6 +104,7 @@
     <Compile Include="Interfaces\IIntervals.cs" />
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
+    <Compile Include="Models\SonarrCachedResult.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\NotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
@@ -135,6 +143,11 @@
       <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
       <Name>PlexRequests.Store</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jobs\Templates\RecentlyAddedTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

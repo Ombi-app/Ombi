@@ -290,8 +290,10 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> SearchTvShow(string searchTerm)
         {
+
             Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
+            var prSettings = await PrService.GetSettingsAsync();
             var providerId = string.Empty;
 
             var apiTv = new List<TvMazeSearch>();
@@ -336,7 +338,9 @@ namespace PlexRequests.UI.Modules
                     Runtime = t.show.runtime.ToString(),
                     SeriesId = t.show.id,
                     SeriesName = t.show.name,
-                    Status = t.show.status
+                    Status = t.show.status,
+                    DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason
                 };
 
 
@@ -362,9 +366,8 @@ namespace PlexRequests.UI.Modules
                         viewT.Requested = true;
                         viewT.Episodes = dbt.Episodes.ToList();
                         viewT.Approved = dbt.Approved;
-                        viewT.Available = dbt.Available;
                     }
-                    if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
+                    if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
                     {
                         viewT.Requested = true;
                     }
@@ -570,7 +573,7 @@ namespace PlexRequests.UI.Modules
 
             if (showInfo.externals?.thetvdb == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this TV Show :( We cannot add the TV Show automatically sorry! Please report this problem to the server admin so he can sort it out!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this TV Show :( We cannot add the TV Show automatically sorry! Please report this problem to the server admin so he/she can sort it out!" });
             }
 
             var model = new RequestedModel

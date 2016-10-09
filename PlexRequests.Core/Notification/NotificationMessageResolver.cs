@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -50,16 +52,37 @@ namespace PlexRequests.Core.Notification
         /// <param name="notification">The notification.</param>
         /// <param name="type">The type.</param>
         /// <param name="c">The c.</param>
+        /// <param name="transportType">Type of the transport.</param>
         /// <returns></returns>
-        public NotificationMessageContent ParseMessage<T>(T notification, NotificationType type, NotificationMessageCurlys c) where T : NotificationSettings
+        public NotificationMessageContent ParseMessage(NotificationSettingsV2 notification, NotificationType type, NotificationMessageCurlys c, TransportType transportType)
         {
-            var content = notification.Message.FirstOrDefault(x => x.NotificationType == type);
+            IEnumerable<NotificationMessage> content = null;
+            switch (transportType)
+            {
+                case TransportType.Email:
+                    content = notification.EmailNotification;
+                    break;
+                case TransportType.Pushbullet:
+                    content = notification.PushbulletNotification;
+                    break;
+                case TransportType.Pushover:
+                    content = notification.PushoverNotification;
+                    break;
+                case TransportType.Slack:
+                    content = notification.SlackNotification;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(transportType), transportType, null);
+            }
+           
             if (content == null)
             {
                 return new NotificationMessageContent();
             }
 
-            return Resolve(content.Body, content.Subject, c.Curlys);
+            var message = content.FirstOrDefault(x => x.NotificationType == type) ?? new NotificationMessage();
+
+            return Resolve(message.Body, message.Subject, c.Curlys);
         }
 
         /// <summary>
@@ -78,7 +101,7 @@ namespace PlexRequests.Core.Notification
             body = ReplaceFields(bodyFields, parameters, body);
             subject = ReplaceFields(subjectFields, parameters, subject);
 
-            return new NotificationMessageContent { Body = body ?? string.Empty, Subject = subject ?? string.Empty };
+            return new NotificationMessageContent {Body = body ?? string.Empty, Subject = subject ?? string.Empty};
         }
 
         /// <summary>
@@ -123,7 +146,6 @@ namespace PlexRequests.Core.Notification
                 {
                     currentWord += c.ToString(); // Add the character onto the word.
                 }
-
             }
 
             return fields;

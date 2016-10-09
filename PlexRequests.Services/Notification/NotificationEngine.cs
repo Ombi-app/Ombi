@@ -75,7 +75,7 @@ namespace PlexRequests.Services.Notification
                         if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Log.Info("This user is the Plex server owner");
-                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title);
+                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath);
                             return;
                         }
 
@@ -88,7 +88,7 @@ namespace PlexRequests.Services.Notification
                         }
 
                         Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                        await PublishUserNotification(email.Username, email.Email, model.Title);
+                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath);
                     }
                 }
             }
@@ -117,7 +117,7 @@ namespace PlexRequests.Services.Notification
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Log.Info("This user is the Plex server owner");
-                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title);
+                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath);
                         return;
                     }
 
@@ -130,7 +130,7 @@ namespace PlexRequests.Services.Notification
                     }
 
                     Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                    await PublishUserNotification(email.Username, email.Email, model.Title);
+                    await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath);
                 }
             }
             catch (Exception e)
@@ -139,14 +139,15 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        private async Task PublishUserNotification(string username, string email, string title)
+        private async Task PublishUserNotification(string username, string email, string title, string img)
         {
             var notificationModel = new NotificationModel
             {
                 User = username,
                 UserEmail = email,
                 NotificationType = NotificationType.RequestAvailable,
-                Title = title
+                Title = title,
+                ImgSrc = img
             };
 
             // Send the notification to the user.

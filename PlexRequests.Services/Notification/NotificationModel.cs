@@ -40,5 +40,6 @@ namespace PlexRequests.Services.Notification
         public string User { get; set; }
         public string UserEmail { get; set; }
         public RequestType RequestType { get; set; }
+        public string ImgSrc { get; set; }
     }
 }
