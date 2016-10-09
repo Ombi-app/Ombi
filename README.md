@@ -40,6 +40,7 @@ Supported notifications:
 * Pushbullet
 * Pushover
 * Slack
+* Weekly Recently Added email notification to all of your Plex Users!
 
 
 # Preview
