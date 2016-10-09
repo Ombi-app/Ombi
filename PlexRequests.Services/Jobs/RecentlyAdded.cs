@@ -151,10 +151,10 @@ namespace PlexRequests.Services.Jobs
                 sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>", info.Overview);
 
                 sb.Append("<td");
-                sb.Append("</tr>");
                 sb.Append("<hr>");
                 sb.Append("<br>");
                 sb.Append("<br>");
+                sb.Append("</tr>");
 
             }
             sb.Append("</table><br/><br/>");
