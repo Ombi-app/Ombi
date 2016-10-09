@@ -97,16 +97,20 @@
         $.ajax({
             url: "/customDonation",
             success: function (result) {
-                $("#customDonate").show();
-                var donateLink = $("#customDonateHref");
-                var donationText = $("#donationText");
-                donateLink.attr("href", result.url);
-                if(result.message) {
-                    donationText.text(result.message);
+                console.log("we win + " + result.url);
+                if (result.url && result.url != "donationLinkError") {
+                    $("#customDonate").show();
+                    var donateLink = $("#customDonateHref");
+                    var donationText = $("#donationText");
+                    donateLink.attr("href", result.url);
+                    if(result.message) {
+                        donationText.text(result.message);
+                    }
                 }
             },
             error: function(xhr, status, error) {
                 console.log("error " + error);
+                $("#customDonate").hide();
             }
         });
     </script>

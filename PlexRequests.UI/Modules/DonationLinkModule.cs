@@ -50,7 +50,7 @@ namespace PlexRequests.UI.Modules
                 Log.Warn("Exception Thrown when attempting to check the custom donation url");
                 Log.Warn(e);
                 JObject o = new JObject();
-                o["url"] = "https://www.paypal.me/PlexRequestsNet";
+                o["url"] = "donationLinkError";
                 o["message"] = "\"" + "Donate to Library Maintainer" + "\"";
                 return Response.AsJson(o);
             }
