@@ -147,6 +147,23 @@ namespace PlexRequests.UI.Helpers
             {
                 var firstSeries = (series?.seasons?.OrderBy(x => x.seasonNumber)).FirstOrDefault(x => x.seasonNumber > 0) ?? new Season();
                 firstSeries.monitored = true;
+                var episodes = SonarrApi.GetEpisodes(series.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri); // Need to get the episodes so we mark them as monitored
+
+                var episodesToUpdate = new List<SonarrEpisodes>();
+                foreach (var e in episodes)
+                {
+                    if (e.hasFile || e.seasonNumber != firstSeries.seasonNumber)
+                    {
+                        continue;
+                    }
+                    e.monitored = true; // Mark only the episodes we want as monitored
+                    episodesToUpdate.Add(e);
+                }
+                foreach (var sonarrEpisode in episodesToUpdate)
+                {
+                    SonarrApi.UpdateEpisode(sonarrEpisode, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                }
+
                 SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                 SonarrApi.SearchForSeason(series.id, firstSeries.seasonNumber, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
@@ -157,6 +174,23 @@ namespace PlexRequests.UI.Helpers
             {
                 var lastSeries = series?.seasons?.OrderByDescending(x => x.seasonNumber)?.FirstOrDefault() ?? new Season();
                 lastSeries.monitored = true;
+
+                var episodes = SonarrApi.GetEpisodes(series.id.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri); // Need to get the episodes so we mark them as monitored
+
+                var episodesToUpdate = new List<SonarrEpisodes>();
+                foreach (var e in episodes)
+                {
+                    if (e.hasFile || e.seasonNumber != lastSeries.seasonNumber)
+                    {
+                        continue;
+                    }
+                    e.monitored = true; // Mark only the episodes we want as monitored
+                    episodesToUpdate.Add(e);
+                }
+                foreach (var sonarrEpisode in episodesToUpdate)
+                {
+                    SonarrApi.UpdateEpisode(sonarrEpisode, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                }
                 SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                 SonarrApi.SearchForSeason(series.id, lastSeries.seasonNumber, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);

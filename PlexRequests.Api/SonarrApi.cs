@@ -273,6 +273,25 @@ namespace PlexRequests.Api
             }
         }
 
+        public SonarrEpisodes UpdateEpisode(SonarrEpisodes episodeInfo, string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/Episode", Method = Method.PUT };
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(episodeInfo);
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                    Log.Error(exception, "Exception when calling UpdateEpisode for Sonarr, Retrying {0}", timespan));
+
+                return policy.Execute(() => Api.ExecuteJson<SonarrEpisodes>(request, baseUrl));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been an API exception when put the Sonarr UpdateEpisode");
+                return null;
+            }
+        }
+
         /// <summary>
         /// Search for one or more episodes
         /// </summary>
