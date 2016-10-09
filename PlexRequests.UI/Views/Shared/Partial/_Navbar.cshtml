@@ -1,6 +1,7 @@
 ﻿@using Nancy.Security
 @using Nancy.Session
 @using Nancy;
+@using PlexRequests.Core.SettingModels
 @using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
 @using PlexRequests.UI.Resources
@@ -38,10 +39,11 @@
                 {
                     <li><a id="donate" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
                 }
+                <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">Donate to Library Maintainer</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
 
-
+               
                 @if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null) // TODO replace with IsAdmin
                 {
 
@@ -91,5 +93,22 @@
             </ul>
         </div>
     </div>
+    <script>
+        $.ajax({
+            url: "/customDonation",
+            success: function (result) {
+                $("#customDonate").show();
+                var donateLink = $("#customDonateHref");
+                var donationText = $("#donationText");
+                donateLink.attr("href", result.url);
+                if(result.message) {
+                    donationText.text(result.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.log("error " + error);
+            }
+        });
+    </script>
     <div id="updateAvailable" hidden="hidden"></div>
 </nav>
