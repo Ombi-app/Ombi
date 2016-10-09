@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: JobNames.cs
+//    File: SonarrCachedResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Services.Jobs
+
+using System.Collections.Generic;
+
+namespace PlexRequests.Services.Models
 {
-    public static class JobNames
+    public class SonarrCachedResult
     {
-        public const string StoreBackup = "Database Backup";
-        public const string CpCacher = "CouchPotato Cacher";
-        public const string SonarrCacher = "Sonarr Cacher";
-        public const string SrCacher = "SickRage Cacher";
-        public const string PlexChecker = "Plex Availability Cacher";
-        public const string StoreCleanup = "Database Cleanup";
-        public const string RequestLimitReset = "Request Limit Reset";
-        public const string EpisodeCacher = "Plex Episode Cacher";
-        public const string RecentlyAddedEmail = "Recently Added Email Notification";
+        public SonarrCachedResult()
+        {
+            Seasons = new List<SonarrSeasons>( );
+        }
+        public List<SonarrSeasons> Seasons { get; set; }
+        public int TvdbId { get; set; }
+    }
+
+    public class SonarrSeasons
+    {
+        public int SeasonNumber { get; set; }
+        public bool Monitored { get; set; }
     }
 }

@@ -35,6 +35,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Models;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -84,10 +85,29 @@ namespace PlexRequests.Services.Jobs
         }
 
         // we do not want to set here...
-        public int[] QueuedIds()
+        public IEnumerable<SonarrCachedResult> QueuedIds()
         {
+            var result = new List<SonarrCachedResult>();
+
             var series = Cache.Get<List<Series>>(CacheKeys.SonarrQueued);
-            return series?.Select(x => x.tvdbId).ToArray() ?? new int[] { };
+            if (series != null)
+            {
+                foreach (var s in series)
+                {
+                    var cached = new SonarrCachedResult {TvdbId = s.tvdbId};
+                    foreach (var season in s.seasons)
+                    {
+                        cached.Seasons.Add(new SonarrSeasons
+                        {
+                            SeasonNumber = season.seasonNumber,
+                            Monitored = season.monitored
+                        });
+                    }
+
+                    result.Add(cached);
+                }
+            }
+            return result;
         }
 
         public void Execute(IJobExecutionContext context)

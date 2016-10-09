@@ -246,7 +246,7 @@ namespace PlexRequests.UI.Helpers
             var tasks = new List<Task>();
             foreach (var r in episodes)
             {
-                if (r.monitored || r.hasFile) // If it's already montiored or has the file, there is no point in updating it
+                if (r.monitored || r.hasFile) // If it's already monitored or has the file, there is no point in updating it
                 {
                     continue;
                 }

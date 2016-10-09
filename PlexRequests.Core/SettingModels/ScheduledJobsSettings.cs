@@ -38,6 +38,7 @@ namespace PlexRequests.Core.SettingModels
             StoreCleanup = 24;
             UserRequestLimitResetter = 12;
             PlexEpisodeCacher = 12;
+            RecentlyAdded = 168;
         }
 
         public int PlexAvailabilityChecker { get; set; }
@@ -48,5 +49,6 @@ namespace PlexRequests.Core.SettingModels
         public int StoreCleanup { get; set; }
         public int UserRequestLimitResetter { get; set; }
         public int PlexEpisodeCacher { get; set; }
+        public int RecentlyAdded { get; set; }
     }
 }

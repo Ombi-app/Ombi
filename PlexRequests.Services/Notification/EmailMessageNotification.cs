@@ -129,7 +129,7 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
                 $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
 
             var message = new MimeMessage
             {
@@ -150,7 +150,7 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: New issue for {model.Title}!",
                 $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
 
             var message = new MimeMessage
             {
@@ -175,7 +175,7 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: {model.Title} is now available!",
                 $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
 
             var message = new MimeMessage
             {

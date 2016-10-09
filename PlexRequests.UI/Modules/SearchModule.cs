@@ -367,7 +367,7 @@ namespace PlexRequests.UI.Modules
                         viewT.Episodes = dbt.Episodes.ToList();
                         viewT.Approved = dbt.Approved;
                     }
-                    if (sonarrCached.Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
+                    if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid)) // compare to the sonarr/sickrage db
                     {
                         viewT.Requested = true;
                     }
@@ -573,7 +573,7 @@ namespace PlexRequests.UI.Modules
 
             if (showInfo.externals?.thetvdb == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this TV Show :( We cannot add the TV Show automatically sorry! Please report this problem to the server admin so he can sort it out!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Our TV Provider (TVMaze) doesn't have a TheTVDBId for this TV Show :( We cannot add the TV Show automatically sorry! Please report this problem to the server admin so he/she can sort it out!" });
             }
 
             var model = new RequestedModel
