@@ -6,15 +6,19 @@
 
 
     <div class="row">
-        <div class="col-md-3"><strong>Job Name</strong></div>
-        <div class="col-md-8"><strong>Last Run</strong></div>
+        <div class="col-md-4"><strong>Job Name</strong>
+        </div>
+        <div class="col-md-6 col-md-push-3"><strong>Last Run</strong>
+        </div>
     </div>
+    <hr style="margin-top: 4px; margin-bottom: 4px"/>
     @foreach (var record in Model.JobRecorder)
     {
         <div class="row">
-            <div class="col-md-3">@record.Key</div>
-            <div class="col-md-8 date">@record.Value.ToString("O")</div>
+            <div class="col-md-4">@record.Key</div>
+            <div class="col-md-5 col-md-push-3 date">@record.Value.ToString("O")</div>
         </div>
+        <hr style="margin-top: 4px; margin-bottom: 4px"/>
     }
     <br/>
     <br/>
@@ -35,7 +39,7 @@
 
             <small>Please note, the minimum time for this to run is 11 hours, if set below 11 then we will ignore that value. This is a very resource intensive job, the less we run it the better.</small>
             <div class="form-group">
-                <label for="PlexEpisodeCacher" class="control-label">Plex Episode Cacher (hour)</label>
+                <label for="PlexEpisodeCacher" class="control-label">Plex Episode Cacher (hours)</label>
                 <input type="text" class="form-control form-control-custom " id="PlexEpisodeCacher" name="PlexEpisodeCacher" value="@Model.PlexEpisodeCacher">
             </div>
             
@@ -54,24 +58,31 @@
             </div>
 
             <div class="form-group">
-                <label for="StoreBackup" class="control-label">Store Backup (hour)</label>
+                <label for="StoreBackup" class="control-label">Store Backup (hours)</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="StoreBackup" name="StoreBackup" value="@Model.StoreBackup">
                 </div>
             </div>
 
             <div class="form-group">
-                <label for="StoreCleanup" class="control-label">Store Cleanup (hour)</label>
+                <label for="StoreCleanup" class="control-label">Store Cleanup (hours)</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="StoreCleanup" name="StoreCleanup" value="@Model.StoreCleanup">
                 </div>
             </div>
 
-            <small>Please note, this will not reset the users request limit, it will just check every X hours to see if it needs to be reset.</small>
+            <small>Please note, this will not reset the users request limit, it will just check every @Model.UserRequestLimitResetter hours to see if it needs to be reset.</small>
             <div class="form-group">
-                <label for="UserRequestLimitResetter" class="control-label">User Request Limit Reset (hour)</label>
+                <label for="UserRequestLimitResetter" class="control-label">User Request Limit Reset (hours)</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="UserRequestLimitResetter" name="UserRequestLimitResetter" value="@Model.UserRequestLimitResetter">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="RecentlyAdded" class="control-label">Recently Added Email (hours)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="RecentlyAdded" name="RecentlyAdded" value="@Model.RecentlyAdded">
                 </div>
             </div>
 

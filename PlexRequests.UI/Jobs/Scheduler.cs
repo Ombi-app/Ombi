@@ -65,7 +65,8 @@ namespace PlexRequests.UI.Jobs
                JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
                JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
-               JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build()
+               JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
+               JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAdded", "Email").Build()
             };
 
 
@@ -165,6 +166,13 @@ namespace PlexRequests.UI.Jobs
                                 .WithSimpleSchedule(x => x.WithIntervalInHours(s.PlexEpisodeCacher).RepeatForever())
                                 .Build();
 
+            var rencentlyAdded =
+                TriggerBuilder.Create()
+                                .WithIdentity("RecentlyAdded", "Email")
+                                .StartNow()
+                                .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
+                                .Build();
+
 
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
@@ -174,6 +182,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);
             triggers.Add(plexEpCacher);
+            triggers.Add(rencentlyAdded);
 
             return triggers;
         }

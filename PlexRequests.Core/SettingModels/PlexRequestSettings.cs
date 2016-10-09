@@ -58,6 +58,7 @@ namespace PlexRequests.Core.SettingModels
         public bool Wizard { get; set; }
         public bool DisableTvRequestsByEpisode { get; set; }
         public bool DisableTvRequestsBySeason { get; set; }
+        public bool SendRecentlyAddedEmail { get; set; }
 
         /// <summary>
         /// The CSS name of the theme we want

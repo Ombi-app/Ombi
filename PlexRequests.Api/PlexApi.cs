@@ -347,6 +347,39 @@ namespace PlexRequests.Api
             return servers;
         }
 
+        public RecentlyAdded RecentlyAdded(string authToken, Uri plexFullHost)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/recentlyAdded"
+            };
+            
+            request.AddHeader("X-Plex-Token", authToken);
+            request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
+            request.AddHeader("X-Plex-Product", "Plex Requests .Net");
+            request.AddHeader("X-Plex-Version", Version);
+            request.AddHeader("Content-Type", "application/json");
+            request.AddHeader("Accept", "application/json");
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteJson<RecentlyAdded>(request, plexFullHost),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling RecentlyAdded for Plex, Retrying {0}", timespan), new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    });
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex RecentlyAdded");
+                return new RecentlyAdded();
+            }
+        }
+
         private void AddHeaders(ref RestRequest request, string authToken)
         {
             request.AddHeader("X-Plex-Token", authToken);

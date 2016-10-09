@@ -1,8 +1,11 @@
-﻿namespace PlexRequests.Services.Interfaces
+﻿using System.Collections.Generic;
+using PlexRequests.Services.Models;
+
+namespace PlexRequests.Services.Interfaces
 {
     public interface ISonarrCacher
     {
         void Queued();
-        int[] QueuedIds();
+        IEnumerable<SonarrCachedResult> QueuedIds();
     }
 }
