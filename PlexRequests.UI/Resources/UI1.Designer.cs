@@ -115,6 +115,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Donate to Library Maintainer.
+        /// </summary>
+        public static string Custom_Donation_Default {
+            get {
+                return ResourceManager.GetString("Custom_Donation_Default", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Issue.
         /// </summary>
         public static string Issues_Issue {

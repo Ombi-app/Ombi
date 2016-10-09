@@ -39,7 +39,7 @@
                 {
                     <li><a id="donate" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
                 }
-                <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">Donate to Library Maintainer</span></a></li>
+                <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">@UI.Custom_Donation_Default</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
 
@@ -94,8 +94,10 @@
         </div>
     </div>
     <script>
+        var base = '@Html.GetBaseUrl()';
+        var url = createBaseUrl(base, '/customDonation');
         $.ajax({
-            url: "/customDonation",
+            url: url,
             success: function (result) {
                 console.log("we win + " + result.url);
                 if (result.url && result.url != "donationLinkError") {

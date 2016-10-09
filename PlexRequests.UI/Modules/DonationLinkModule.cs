@@ -28,31 +28,23 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> GetCustomDonationUrl(ISettingsService<PlexRequestSettings> pr)
         {
-            PlexRequestSettings settings = pr.GetSettings();
+            PlexRequestSettings settings = await pr.GetSettingsAsync();
             try
             {
                 if (settings.EnableCustomDonationUrl)
                 {
-                    JObject o = new JObject();
-                    o["url"] = "\""+ settings.CustomDonationUrl + "\"";
-                    o["message"] = "\"" + settings.CustomDonationMessage + "\"";
-                    return Response.AsJson(o);
+                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
                 }
                 else
                 {
-                    JObject o = new JObject();
-                    o["url"] = "https://www.paypal.me/PlexRequestsNet";
-                    return Response.AsJson(o);
+                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
                 }
             }
             catch (Exception e)
             {
                 Log.Warn("Exception Thrown when attempting to check the custom donation url");
                 Log.Warn(e);
-                JObject o = new JObject();
-                o["url"] = "donationLinkError";
-                o["message"] = "\"" + "Donate to Library Maintainer" + "\"";
-                return Response.AsJson(o);
+                return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
             }
         }
     }
