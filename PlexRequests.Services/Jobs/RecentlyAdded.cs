@@ -45,7 +45,7 @@ using Quartz;
 
 namespace PlexRequests.Services.Jobs
 {
-    public class RecentlyAdded : IJob
+    public class RecentlyAdded : IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmailNotificationSettings> email,
             ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec)
@@ -83,7 +83,7 @@ namespace PlexRequests.Services.Jobs
                     return;
                 }
 
-               Start();
+                Start();
             }
             catch (Exception e)
             {
@@ -95,10 +95,16 @@ namespace PlexRequests.Services.Jobs
             }
         }
 
-        private void Start()
+        public void Test()
+        {
+            Start(true);
+        }
+
+        private void Start(bool testEmail = false)
         {
             var sb = new StringBuilder();
             var plexSettings = PlexSettings.GetSettings();
+
             var recentlyAdded = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
             var movies =
@@ -115,7 +121,7 @@ namespace PlexRequests.Services.Jobs
             var template = new RecentlyAddedTemplate();
             var html = template.LoadTemplate(sb.ToString());
 
-            Send(html, plexSettings);
+            Send(html, plexSettings, testEmail);
         }
 
         private void GenerateMovieHtml(IEnumerable<RecentlyAddedChild> movies, PlexSettings plexSettings, ref StringBuilder sb)
@@ -194,10 +200,15 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
-        private void Send(string html, PlexSettings plexSettings)
+        private void Send(string html, PlexSettings plexSettings, bool testEmail = false)
         {
-            var users = Api.GetUsers(plexSettings.PlexAuthToken);
             var settings = EmailSettings.GetSettings();
+
+            if (!settings.Enabled || string.IsNullOrEmpty(settings.EmailHost))
+            {
+                return;
+            }
+
             var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
             var message = new MimeMessage
             {
@@ -205,11 +216,16 @@ namespace PlexRequests.Services.Jobs
                 Subject = "New Content on Plex!",
             };
 
-            foreach (var user in users.User)
+            if (!testEmail)
             {
-                message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                var users = Api.GetUsers(plexSettings.PlexAuthToken);
+                foreach (var user in users.User)
+                {
+                    message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                }
             }
-            
+            message.Bcc.Add(new MailboxAddress(settings.EmailUsername, settings.EmailSender)); // Include the admin
+
             message.From.Add(new MailboxAddress(settings.EmailUsername, settings.EmailSender));
             try
             {

@@ -49,7 +49,7 @@
     <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
-    <Compile Include="Movie\CoucPotatoApiKey.cs" />
+    <Compile Include="Movie\CouchPotatoApiKey.cs" />
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
     <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
     <Compile Include="Music\HeadphonesGetIndex.cs" />

@@ -45,6 +45,7 @@ namespace PlexRequests.UI.NinjectModules
             Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
+            Bind<IRecentlyAdded>().To<RecentlyAdded>();
             Bind<IJobFactory>().To<CustomJobFactory>();
      
             Bind<IAnalytics>().To<Analytics>();

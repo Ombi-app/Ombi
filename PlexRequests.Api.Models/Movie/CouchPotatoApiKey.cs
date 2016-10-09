@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CoucPotatoApiKey.cs
+//    File: CouchPotatoApiKey.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -28,10 +28,10 @@ using Newtonsoft.Json;
 
 namespace PlexRequests.Api.Models.Movie
 {
-    public class CoucPotatoApiKey
+    public class CouchPotatoApiKey
     {
         [JsonProperty("success")]
-        public bool Result { get; set; }
+        public bool success { get; set; }
         [JsonProperty("api_key")]
         public string ApiKey { get; set; }
     }

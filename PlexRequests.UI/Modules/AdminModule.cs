@@ -57,6 +57,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Exceptions;
 using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Jobs;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -94,6 +95,7 @@ namespace PlexRequests.UI.Modules
         private ISlackApi SlackApi { get; }
         private IJobRecord JobRecorder { get; }
         private IAnalytics Analytics { get; }
+        private IRecentlyAdded RecentlyAdded { get; }
         private ISettingsService<NotificationSettingsV2> NotifySettings { get; } 
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -118,7 +120,7 @@ namespace PlexRequests.UI.Modules
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService) : base("admin", prService)
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded) : base("admin", prService)
         {
             PrService = prService;
             CpService = cpService;
@@ -146,6 +148,7 @@ namespace PlexRequests.UI.Modules
             JobRecorder = rec;
             Analytics = analytics;
             NotifySettings = notifyService;
+            RecentlyAdded = recentlyAdded;
 
             this.RequiresClaims(UserClaims.Admin);
 
@@ -216,6 +219,8 @@ namespace PlexRequests.UI.Modules
 
             Get["/notificationsettings", true] = async (x, ct) => await NotificationSettings();
             Post["/notificationsettings", true] = async (x, ct) => await SaveNotificationSettings();
+
+            Post["/recentlyAddedTest"] = x => RecentlyAddedTest();
         }
 
         private async Task<Negotiator> Authentication()
@@ -984,6 +989,20 @@ namespace PlexRequests.UI.Modules
         {
             var model = this.Bind<NotificationSettingsV2>();
             return View["NotificationSettings", model];
+        }
+
+        private Response RecentlyAddedTest()
+        {
+            try
+            {
+                RecentlyAdded.Test();
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
+            }
+            catch (Exception e)
+            {
+
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
+            }
         }
     }
 }

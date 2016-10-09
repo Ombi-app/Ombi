@@ -160,6 +160,7 @@
 
         $('#requestToken').click(function (e) {
             e.preventDefault();
+            debugger;
             var $form = $("#mainForm");
             $.ajax({
                 type: $form.prop("method"),
@@ -167,7 +168,7 @@
                 data: $form.serialize(),
                 dataType: "json",
                 success: function (response) {
-                    if (response.result === true) {
+                    if (response.apiKey) {
                         generateNotify("Success!", "success");
                         $('#ApiKey').val(response.apiKey);
                     } else {
