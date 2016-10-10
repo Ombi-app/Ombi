@@ -273,10 +273,38 @@
                     }
                 </div>
             </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.EnableCustomDonationUrl)
+                    {
+                        <input type="checkbox" id="EnableCustomDonationUrl" name="EnableCustomDonationUrl" checked="checked">
+                        <label for="EnableCustomDonationUrl">Enable custom donation link</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="EnableCustomDonationUrl" name="EnableCustomDonationUrl"><label for="EnableCustomDonationUrl">Enable custom donation link</label>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CustomDonationUrl" class="control-label">Custom Donation URL</label>
+                <div>
+                    <input type="text" class="form-control-custom form-control " id="CustomDonationUrl" name="CustomDonationUrl" placeholder="http://example.com" value="@Model.CustomDonationUrl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="CustomDonationMessage" class="control-label">Donation Button Message</label>
+                <div>
+                    <input type="text" class="form-control-custom form-control " id="CustomDonationMessage" name="CustomDonationMessage" placeholder="Donation button message" value="@Model.CustomDonationMessage">
+                </div>
+            </div>
+ 
 
 
 
-            <p class="form-group">A comma separated list of users whose requests do not require approval (These users also do not have a request limit).</p>
+
+        <p class="form-group">A comma separated list of users whose requests do not require approval (These users also do not have a request limit).</p>
             <div class="form-group">
                 <label for="NoApprovalUsers" class="control-label">Approval White listed Users</label>
                 <div>

@@ -443,4 +443,7 @@
   <data name="Search_ViewInPlex" xml:space="preserve">
     <value>View In Plex</value>
   </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Donate to Library Maintainer</value>
+  </data>
 </root>
