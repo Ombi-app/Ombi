@@ -65,8 +65,8 @@ namespace PlexRequests.UI.Modules
             {
                 if (!string.IsNullOrEmpty(Username) || IsAdmin)
                 {
-                    var uri = Linker.BuildRelativeUri(Context, "SearchIndex");
-                    return Response.AsRedirect(uri.ToString()); 
+                    var url = Linker.BuildAbsoluteUri(Context, "SearchIndex").ToString();
+                    return Response.AsRedirect(url); 
                 }
                 var settings = await AuthService.GetSettingsAsync();
                 return View["Index", settings];

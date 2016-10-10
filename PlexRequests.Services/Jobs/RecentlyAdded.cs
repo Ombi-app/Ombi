@@ -147,7 +147,12 @@ namespace PlexRequests.Services.Jobs
                 sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2}</p></a>",
                     info.ImdbId, info.Title, info.ReleaseDate?.ToString("yyyy") ?? string.Empty);
 
-                sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>", string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray()));
+                if (info.Genres.Any())
+                {
+                    sb.AppendFormat(
+                        "<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>",
+                        string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray()));
+                }
                 sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>", info.Overview);
 
                 sb.Append("<td");
