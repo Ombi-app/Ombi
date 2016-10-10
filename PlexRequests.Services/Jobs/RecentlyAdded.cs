@@ -48,13 +48,14 @@ namespace PlexRequests.Services.Jobs
     public class RecentlyAdded : IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmailNotificationSettings> email,
-            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec)
+            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<PlexRequestSettings> plexRequest)
         {
             JobRecord = rec;
             Api = api;
             PlexSettings = plexSettings;
             EmailSettings = email;
             ScheduledJobsSettings = scheduledService;
+            PlexRequestSettings = plexRequest;
         }
 
         private IPlexApi Api { get; }
@@ -62,6 +63,7 @@ namespace PlexRequests.Services.Jobs
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
+        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobsSettings { get; }
         private IJobRecord JobRecord { get; }
 
@@ -71,14 +73,19 @@ namespace PlexRequests.Services.Jobs
         {
             try
             {
+                var settings = PlexRequestSettings.GetSettings();
+                if (!settings.SendRecentlyAddedEmail)
+                {
+                    return;
+                }
                 var jobs = JobRecord.GetJobs();
                 var thisJob =
                     jobs.FirstOrDefault(
                         x => x.Name.Equals(JobNames.RecentlyAddedEmail, StringComparison.CurrentCultureIgnoreCase));
 
-                var settings = ScheduledJobsSettings.GetSettings();
+                var jobSettings = ScheduledJobsSettings.GetSettings();
 
-                if (thisJob?.LastRun > DateTime.Now.AddHours(-settings.RecentlyAdded))
+                if (thisJob?.LastRun > DateTime.Now.AddHours(-jobSettings.RecentlyAdded))
                 {
                     return;
                 }
