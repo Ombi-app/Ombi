@@ -192,10 +192,10 @@ namespace PlexRequests.Services.Jobs
                     string.IsNullOrEmpty(parentMetaData.Directory.Summary) ? info.summary : parentMetaData.Directory.Summary); // Episode Summary
 
                 sb.Append("<td");
-                sb.Append("</tr>");
                 sb.Append("<hr>");
                 sb.Append("<br>");
                 sb.Append("<br>");
+                sb.Append("</tr>");
             }
             sb.Append("</table><br/><br/>");
         }
