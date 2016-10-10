@@ -248,6 +248,7 @@
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\BetaModule.cs" />
     <Compile Include="Modules\CultureModule.cs" />
+    <Compile Include="Modules\DonationLinkModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\RequestsBetaModule.cs" />
