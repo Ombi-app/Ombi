@@ -60,6 +60,9 @@ namespace PlexRequests.Core.SettingModels
         public bool DisableTvRequestsBySeason { get; set; }
         public bool SendRecentlyAddedEmail { get; set; }
 
+        public string CustomDonationUrl { get; set; }
+        public bool EnableCustomDonationUrl { get; set; }
+        public string CustomDonationMessage { get; set; }
         /// <summary>
         /// The CSS name of the theme we want
         /// </summary>

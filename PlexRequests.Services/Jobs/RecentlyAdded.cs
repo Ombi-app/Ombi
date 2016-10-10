@@ -48,13 +48,14 @@ namespace PlexRequests.Services.Jobs
     public class RecentlyAdded : IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmailNotificationSettings> email,
-            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec)
+            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<PlexRequestSettings> plexRequest)
         {
             JobRecord = rec;
             Api = api;
             PlexSettings = plexSettings;
             EmailSettings = email;
             ScheduledJobsSettings = scheduledService;
+            PlexRequestSettings = plexRequest;
         }
 
         private IPlexApi Api { get; }
@@ -62,6 +63,7 @@ namespace PlexRequests.Services.Jobs
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
+        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobsSettings { get; }
         private IJobRecord JobRecord { get; }
 
@@ -71,14 +73,19 @@ namespace PlexRequests.Services.Jobs
         {
             try
             {
+                var settings = PlexRequestSettings.GetSettings();
+                if (!settings.SendRecentlyAddedEmail)
+                {
+                    return;
+                }
                 var jobs = JobRecord.GetJobs();
                 var thisJob =
                     jobs.FirstOrDefault(
                         x => x.Name.Equals(JobNames.RecentlyAddedEmail, StringComparison.CurrentCultureIgnoreCase));
 
-                var settings = ScheduledJobsSettings.GetSettings();
+                var jobSettings = ScheduledJobsSettings.GetSettings();
 
-                if (thisJob?.LastRun > DateTime.Now.AddHours(-settings.RecentlyAdded))
+                if (thisJob?.LastRun > DateTime.Now.AddHours(-jobSettings.RecentlyAdded))
                 {
                     return;
                 }
@@ -147,14 +154,19 @@ namespace PlexRequests.Services.Jobs
                 sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2}</p></a>",
                     info.ImdbId, info.Title, info.ReleaseDate?.ToString("yyyy") ?? string.Empty);
 
-                sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>", string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray()));
+                if (info.Genres.Any())
+                {
+                    sb.AppendFormat(
+                        "<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>",
+                        string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray()));
+                }
                 sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>", info.Overview);
 
                 sb.Append("<td");
-                sb.Append("</tr>");
                 sb.Append("<hr>");
                 sb.Append("<br>");
                 sb.Append("<br>");
+                sb.Append("</tr>");
 
             }
             sb.Append("</table><br/><br/>");
@@ -192,10 +204,10 @@ namespace PlexRequests.Services.Jobs
                     string.IsNullOrEmpty(parentMetaData.Directory.Summary) ? info.summary : parentMetaData.Directory.Summary); // Episode Summary
 
                 sb.Append("<td");
-                sb.Append("</tr>");
                 sb.Append("<hr>");
                 sb.Append("<br>");
                 sb.Append("<br>");
+                sb.Append("</tr>");
             }
             sb.Append("</table><br/><br/>");
         }

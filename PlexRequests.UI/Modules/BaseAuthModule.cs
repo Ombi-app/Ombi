@@ -64,9 +64,12 @@ namespace PlexRequests.UI.Modules
 
             var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
 
-            return Session[SessionKeys.UsernameKey] == null
-                ? Context.GetRedirect(redirectPath)
-                : null;
+            if (Session[SessionKeys.UsernameKey] == null && Context?.CurrentUser == null)
+            {
+                return Context.GetRedirect(redirectPath);
+            }
+
+            return null;
         }
     }
 }
