@@ -117,6 +117,29 @@ namespace PlexRequests.UI.Helpers
                 return addResult;
             }
 
+
+           
+            if (requestAll ?? false)
+            {
+                //// Monitor all seasons
+                //foreach (var season in series.seasons)
+                //{
+                //    season.monitored = true;
+                //}
+
+
+                //SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                //SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri); // Search For all episodes!"
+
+
+                // This is a work around for this issue: https://github.com/Sonarr/Sonarr/issues/1507
+                // The above is the previous code.
+                SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, model.SeasonList, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri, true, true);
+                return new SonarrAddSeries { title = series.title }; // We have updated it
+            }
+
             // Series exists, don't need to add it
             if (series == null)
             {
@@ -126,21 +149,8 @@ namespace PlexRequests.UI.Helpers
                     sonarrSettings.FullUri);
 
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                
-                series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
-            }
-           
-            if (requestAll ?? false)
-            {
-                // Monitor all seasons
-                foreach (var season in series.seasons)
-                {
-                    season.monitored = true;
-                }
 
-                SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri); // Search For all episodes!"
-                return new SonarrAddSeries { title = series.title }; // We have updated it
+                series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
             }
 
             if (first ?? false)
