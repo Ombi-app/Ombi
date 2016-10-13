@@ -48,7 +48,7 @@ namespace PlexRequests.Services.Jobs
     public class RecentlyAdded : IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmailNotificationSettings> email,
-            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<PlexRequestSettings> plexRequest)
+            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<NewletterSettings> plexRequest)
         {
             JobRecord = rec;
             Api = api;
@@ -63,7 +63,7 @@ namespace PlexRequests.Services.Jobs
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
-        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private ISettingsService<NewletterSettings> PlexRequestSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobsSettings { get; }
         private IJobRecord JobRecord { get; }
 

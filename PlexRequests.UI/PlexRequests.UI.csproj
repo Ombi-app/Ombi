@@ -711,6 +711,7 @@
     <Content Include="Views\Admin\NotificationSettings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\Admin\NewsletterSettings.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

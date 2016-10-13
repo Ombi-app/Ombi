@@ -80,6 +80,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PushbulletNotificationSettings> PushbulletService { get; }
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
+        private ISettingsService<NewletterSettings> NewsLetterService { get; }
         private ISettingsService<LogSettings> LogService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
@@ -112,6 +113,7 @@ namespace PlexRequests.UI.Modules
             PushbulletApi pbApi,
             ICouchPotatoApi cpApi,
             ISettingsService<PushoverNotificationSettings> pushoverSettings,
+            ISettingsService<NewletterSettings> newsletter,
             IPushoverApi pushoverApi,
             IRepository<LogEntity> logsRepo,
             INotificationService notify,
@@ -139,6 +141,7 @@ namespace PlexRequests.UI.Modules
             PushoverApi = pushoverApi;
             NotificationService = notify;
             HeadphonesService = headphones;
+            NewsLetterService = newsletter;
             LogService = logs;
             Cache = cache;
             SlackSettings = slackSettings;
@@ -199,6 +202,9 @@ namespace PlexRequests.UI.Modules
 
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
+
+            Get["/newsletter"] = _ => Newsletter();
+            Post["/newsletter"] = _ => SaveNewsletter();
 
             Post["/createapikey"] = x => CreateApiKey();
 
@@ -813,6 +819,33 @@ namespace PlexRequests.UI.Modules
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Headphones!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
+
+        private Negotiator Newsletter()
+        {
+            var settings = NewsLetterService.GetSettings();
+            return View["NewsletterSettings", settings];
+        }
+
+        private Response SaveNewsletter()
+        {
+            var settings = this.Bind<NewletterSettings>();
+
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                var error = valid.SendJsonError();
+                Log.Info("Error validating Headphones settings, message: {0}", error.Message);
+                return Response.AsJson(error);
+            }
+            settings.SendRecentlyAddedEmail = settings.SendRecentlyAddedEmail;
+            var result = NewsLetterService.SaveSettings(settings);
+
+            Log.Info("Saved headphones settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Newsletter!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
 
         private Response CreateApiKey()
         {
