@@ -207,8 +207,8 @@
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
                     {{else}}
                         <div class="dropdown">
-                            <button id="{{id}}" class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="fa fa-plus"></i> @UI.Search_Request
+                            <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
