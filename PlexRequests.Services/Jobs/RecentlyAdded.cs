@@ -48,14 +48,14 @@ namespace PlexRequests.Services.Jobs
     public class RecentlyAdded : IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmailNotificationSettings> email,
-            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<NewletterSettings> plexRequest)
+            ISettingsService<ScheduledJobsSettings> scheduledService, IJobRecord rec, ISettingsService<NewletterSettings> newsletter)
         {
             JobRecord = rec;
             Api = api;
             PlexSettings = plexSettings;
             EmailSettings = email;
             ScheduledJobsSettings = scheduledService;
-            PlexRequestSettings = plexRequest;
+            NewsletterSettings = newsletter;
         }
 
         private IPlexApi Api { get; }
@@ -63,7 +63,7 @@ namespace PlexRequests.Services.Jobs
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
-        private ISettingsService<NewletterSettings> PlexRequestSettings { get; }
+        private ISettingsService<NewletterSettings> NewsletterSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobsSettings { get; }
         private IJobRecord JobRecord { get; }
 
@@ -73,7 +73,7 @@ namespace PlexRequests.Services.Jobs
         {
             try
             {
-                var settings = PlexRequestSettings.GetSettings();
+                var settings = NewsletterSettings.GetSettings();
                 if (!settings.SendRecentlyAddedEmail)
                 {
                     return;
