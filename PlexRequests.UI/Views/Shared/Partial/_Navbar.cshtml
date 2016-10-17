@@ -99,7 +99,6 @@
         $.ajax({
             url: url,
             success: function (result) {
-                console.log("we win + " + result.url);
                 if (result.url && result.url != "donationLinkError") {
                     $("#customDonate").show();
                     var donateLink = $("#customDonateHref");

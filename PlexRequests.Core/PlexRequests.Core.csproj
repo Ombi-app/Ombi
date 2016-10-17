@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="IPlexReadOnlyDatabase.cs" />
     <Compile Include="Notification\NotificationMessage.cs" />
     <Compile Include="Notification\NotificationMessageContent.cs" />
     <Compile Include="Notification\NotificationMessageCurlys.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Notification\Templates\EmailBasicTemplate.cs" />
     <Compile Include="Notification\Templates\IEmailBasicTemplate.cs" />
     <Compile Include="Notification\TransportType.cs" />
+    <Compile Include="PlexReadOnlyDatabase.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
