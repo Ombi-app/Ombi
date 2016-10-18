@@ -58,7 +58,7 @@ namespace PlexRequests.Core.SettingModels
         public bool Wizard { get; set; }
         public bool DisableTvRequestsByEpisode { get; set; }
         public bool DisableTvRequestsBySeason { get; set; }
-        //To Remove at some point? 
+        [Obsolete("Moved to NewsLetterSettings")]
         public bool SendRecentlyAddedEmail { get; set; }
         public string CustomDonationUrl { get; set; }
         public bool EnableCustomDonationUrl { get; set; }
