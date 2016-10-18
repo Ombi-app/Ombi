@@ -40,5 +40,6 @@ namespace PlexRequests.Core.SettingModels
 
         public string PlexAuthToken { get; set; }
         public string MachineIdentifier { get; set; }
+        public string PlexDatabaseLocationOverride { get; set; }
     }
 }

@@ -122,8 +122,8 @@ namespace PlexRequests.UI.Helpers
 
             var sb = new StringBuilder();
             var startUrl = $"{content}/Content";
-            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>");
-            sb.AppendLine($"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"/{startUrl}/datepicker.min.css\" type=\"text/css\"/>");
+            sb.AppendLine($"<script src=\"/{startUrl}/bootstrap-datetimepicker.min.js\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -133,14 +133,6 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
-            var settings = GetSettings();
-            if (string.IsNullOrEmpty(settings.ThemeName))
-            {
-                settings.ThemeName = Themes.PlexTheme;
-            }
-            if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
-            if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
-
             var startUrl = $"{content}/Content";
 
             sb.AppendLine($"<script src=\"{startUrl}/angular.min.js\"></script>"); // Load angular first
@@ -160,6 +152,20 @@ namespace PlexRequests.UI.Helpers
 
             return helper.Raw(sb.ToString());
         }
+
+        public static IHtmlString LoadSettingsAssets(this HtmlHelpers helper)
+        {
+            var sb = new StringBuilder();
+            var assetLocation = GetBaseUrl();
+
+            var content = GetContentUrl(assetLocation);
+
+            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-switch.min.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap-switch.min.css\" type=\"text/css\"/>");
+
+            return helper.Raw(sb.ToString());
+        }
+
 
         public static IHtmlString LoadRequestAssets(this HtmlHelpers helper)
         {

@@ -16,7 +16,7 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Plex Settings</legend>
-
+            @*<input id="advancedToggle" type="checkbox"/>*@ @*TODO*@
             <div class="form-group">
                 <label for="Ip" class="control-label">Plex Hostname or IP</label>
                 <div>
@@ -87,6 +87,13 @@
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>
             </div>
+            
+            <div class="form-group">
+                <label for="PlexDatabaseLocationOverride" class="control-label">Plex Database Override</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="PlexDatabaseLocationOverride" name="PlexDatabaseLocationOverride" value="@Model.PlexDatabaseLocationOverride">
+                </div>
+            </div>
 
             <div class="form-group">
                 <label for="authToken" class="control-label">Plex Authorization Token</label>
@@ -129,6 +136,9 @@
 
 <script>
     $(function () {
+
+        $("#advancedToggle").bootstrapSwitch();
+
         var base = '@Html.GetBaseUrl()';
 
         $('#testPlex').click(function (e) {
