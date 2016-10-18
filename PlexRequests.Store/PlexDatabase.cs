@@ -84,7 +84,7 @@ namespace PlexRequests.Store
         {
             using (var con = DbConnection())
             {
-                return con.Query<MetadataItems>(query, param);
+                return (IEnumerable<MetadataItems>)con.Query(query, param);
             }
         }
     }

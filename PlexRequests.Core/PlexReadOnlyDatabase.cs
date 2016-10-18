@@ -44,7 +44,8 @@ namespace PlexRequests.Core
 
             if (!string.IsNullOrEmpty(settings.PlexDatabaseLocationOverride))
             {
-                Plex.DbLocation = settings.PlexDatabaseLocationOverride;
+                //Overriden setting
+                Plex.DbLocation = Path.Combine(settings.PlexDatabaseLocationOverride, "Plug-in Support", "Databases", "com.plexapp.plugins.library.db");
             }
             else if (Type.GetType("Mono.Runtime") != null)
             {
@@ -61,7 +62,11 @@ namespace PlexRequests.Core
 
         public IEnumerable<MetadataItems> GetItemsAddedAfterDate(DateTime dateTime)
         {
-            return Plex.QueryMetadataItems("select * from metadata_items where added_at > @AddedAt",
+            // type 1 = Movie, type 4 = TV Episode
+            return Plex.QueryMetadataItems(@"SELECT * FROM metadata_items 
+                                            WHERE added_at > @AddedAt 
+                                            AND metadata_type in (1,4)
+                                            AND title <> ''",
                 new { AddedAt = dateTime });
         }
     }
