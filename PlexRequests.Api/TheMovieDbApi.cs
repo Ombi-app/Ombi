@@ -46,44 +46,44 @@ namespace PlexRequests.Api
         public TMDbClient Client { get; set; }
         public async Task<List<SearchMovie>> SearchMovie(string searchTerm)
         {
-            var results = await Client.SearchMovie(searchTerm);
+            var results = await Client.SearchMovieAsync(searchTerm);
             return results.Results;
         }
 
         [Obsolete("Should use TvMaze for TV")]
         public async Task<List<SearchTv>> SearchTv(string searchTerm)
         {
-            var results = await Client.SearchTvShow(searchTerm);
+            var results = await Client.SearchTvShowAsync(searchTerm);
             return results.Results;
         }
 
-        public async Task<List<MovieResult>> GetCurrentPlayingMovies()
+        public async Task<List<SearchMovie>> GetCurrentPlayingMovies()
         {
-            var movies = await Client.GetMovieList(MovieListType.NowPlaying);
+            var movies = await Client.GetMovieNowPlayingListAsync();
             return movies.Results;
         }
-        public async Task<List<MovieResult>> GetUpcomingMovies()
+        public async Task<List<SearchMovie>> GetUpcomingMovies()
         {
-            var movies = await Client.GetMovieList(MovieListType.Upcoming);
+            var movies = await Client.GetMovieUpcomingListAsync();
             return movies.Results;
         }
 
         public async Task<Movie> GetMovieInformation(int tmdbId)
         {
-            var movies = await Client.GetMovie(tmdbId);
+            var movies = await Client.GetMovieAsync(tmdbId);
             return movies;
         }
 
         public async Task<Movie> GetMovieInformation(string imdbId)
         {
-            var movies = await Client.GetMovie(imdbId);
+            var movies = await Client.GetMovieAsync(imdbId);
             return movies;
         }
 
         [Obsolete("Should use TvMaze for TV")]
         public async Task<TvShow> GetTvShowInformation(int tmdbId)
         {
-            var show = await Client.GetTvShow(tmdbId);
+            var show = await Client.GetTvShowAsync(tmdbId);
             return show;
         }
     }

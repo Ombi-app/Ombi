@@ -184,14 +184,14 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-            List<MovieResult> apiMovies;
+            List<SearchMovie> apiMovies;
 
             switch (searchType)
             {
                 case MovieSearchType.Search:
-                    var movies = await MovieApi.SearchMovie(searchTerm);
+                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
                     apiMovies = movies.Select(x =>
-                                    new MovieResult
+                                    new SearchMovie
                                     {
                                         Adult = x.Adult,
                                         BackdropPath = x.BackdropPath,
@@ -217,7 +217,7 @@ namespace PlexRequests.UI.Modules
                     apiMovies = await MovieApi.GetUpcomingMovies();
                     break;
                 default:
-                    apiMovies = new List<MovieResult>();
+                    apiMovies = new List<SearchMovie>();
                     break;
             }
 
@@ -234,6 +234,8 @@ namespace PlexRequests.UI.Modules
             var viewMovies = new List<SearchMovieViewModel>();
             foreach (var movie in apiMovies)
             {
+                var movieInfoTask = MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false); // TODO needs to be careful about this, it's adding extra time to search...
+                // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                 var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
@@ -252,7 +254,8 @@ namespace PlexRequests.UI.Modules
                     VoteCount = movie.VoteCount
                 };
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
-                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString());
+                var movieInfo = await movieInfoTask;
+                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(), movieInfo.ImdbId);
                 if (plexMovie != null)
                 {
                     viewMovie.Available = true;
