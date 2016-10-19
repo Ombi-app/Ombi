@@ -48,7 +48,7 @@ using Quartz;
 
 namespace PlexRequests.Services.Jobs
 {
-    public class RecentlyAdded : IJob, IRecentlyAdded
+    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email,
@@ -146,7 +146,7 @@ namespace PlexRequests.Services.Jobs
             var sb = new StringBuilder();
             var plexSettings = PlexSettings.GetSettings();
 
-            var recentlyAdded = PlexDb.GetItemsAddedAfterDate(DateTime.Now.AddDays(-12)).ToList();
+            var recentlyAdded = PlexDb.GetItemsAddedAfterDate(DateTime.Now.AddDays(-12)).ToList(); // TODO Date configurable 
 
             var movies = recentlyAdded.Where(x => x.metadata_type == MetadataTypeMovie);
             var tv = recentlyAdded.Where(x => x.metadata_type == MetadataTypeTv);
@@ -160,12 +160,12 @@ namespace PlexRequests.Services.Jobs
             Send(html, plexSettings, testEmail);
         }
 
-        private void GenerateMovieHtml(IEnumerable<RecentlyAddedChild> movies, PlexSettings plexSettings,ref StringBuilder sb)
+        private void GenerateMovieHtml(IEnumerable<RecentlyAddedChild> movies, PlexSettings plexSettings, ref StringBuilder sb)
         {
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var movie in movies)
+            foreach (var movie in movies.OrderByDescending(x => x.addedAt))
             {
                 var plexGUID = string.Empty;
                 try
@@ -178,36 +178,24 @@ namespace PlexRequests.Services.Jobs
                     var imdbId = PlexHelper.GetProviderIdFromPlexGuid(plexGUID);
                     var info = _movieApi.GetMovieInformation(imdbId).Result;
 
-                    sb.Append("<tr>");
-                    sb.Append("<td align=\"center\">");
-                    sb.AppendFormat(
-                        "<img src=\"https://image.tmdb.org/t/p/w500{0}\" width=\"400px\" text-align=\"center\" />",
-                        info.BackdropPath);
-                    sb.Append("</td>");
-                    sb.Append("</tr>");
+                    AddImageInsideTable(ref sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
+
                     sb.Append("<tr>");
                     sb.Append(
                         "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
 
-                    sb.AppendFormat(
-                        "<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2}</p></a>",
-                        info.ImdbId, info.Title, info.ReleaseDate?.ToString("yyyy") ?? string.Empty);
+                    Href(ref sb, $"https://www.imdb.com/title/{info.ImdbId}/");
+                    Header(ref sb, 3, $"{info.Title} {info.ReleaseDate?.ToString("yyyy") ?? string.Empty}");
+                    EndTag(ref sb, "a");
 
                     if (info.Genres.Any())
                     {
-                        sb.AppendFormat(
-                            "<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>",
-                            string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray()));
+                        AddParagraph(ref sb, $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
                     }
-                    sb.AppendFormat(
-                        "<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>",
-                        info.Overview);
 
-                    sb.Append("<td");
-                    sb.Append("<hr>");
-                    sb.Append("<br>");
-                    sb.Append("<br>");
-                    sb.Append("</tr>");
+                    AddParagraph(ref sb, info.Overview);
+
+                    EndLoopHtml(ref sb);
                 }
                 catch (Exception e)
                 {
@@ -229,7 +217,7 @@ namespace PlexRequests.Services.Jobs
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var movie in items)
+            foreach (var movie in items.OrderByDescending(x => x.added_at))
             {
                 var plexGUID = string.Empty;
                 try
@@ -237,41 +225,35 @@ namespace PlexRequests.Services.Jobs
                     plexGUID = movie.guid;
 
                     var imdbId = PlexHelper.GetProviderIdFromPlexGuid(plexGUID);
-                   
+
                     var info = _movieApi.GetMovieInformation(imdbId).Result; // TODO remove this and get the image info from Plex https://github.com/jakewaldron/PlexEmail/blob/master/scripts/plexEmail.py#L391
 
-                    sb.Append("<tr>");
-                    sb.Append("<td align=\"center\">");
-                    sb.AppendFormat(
-                        "<img src=\"https://image.tmdb.org/t/p/w500{0}\" width=\"400px\" text-align=\"center\" />",
-                        info.BackdropPath);
-                    sb.Append("</td>");
-                    sb.Append("</tr>");
-                    sb.Append("<tr>");
-                    sb.Append(
-                        "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
+                    AddImageInsideTable(ref sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
 
-                    sb.AppendFormat(
-                        "<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2:yyyy}</p></a>",
-                        imdbId, string.IsNullOrEmpty(movie.original_title) ? movie.title : movie.original_title + $" AKA {movie.title}", movie.originally_available_at);
+                    sb.Append("<tr>");
+                    sb.Append("<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
+
+                    Href(ref sb, $"https://www.imdb.com/title/{info.ImdbId}/");
+                    var title = string.IsNullOrEmpty(movie.original_title)
+                        ? $"{movie.title} {movie.originally_available_at:yyyy}"
+                        : $"{movie.original_title} AKA {movie.title} {movie.originally_available_at:yyyy}";
+
+                    Header(ref sb, 3, title);
+                    EndTag(ref sb, "a");
 
                     if (!string.IsNullOrEmpty(movie.tagline))
                     {
-                        sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 15px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>", movie.tagline);
+                        AddParagraph(ref sb, movie.tagline);
                     }
 
                     if (!string.IsNullOrEmpty(movie.tags_genre))
                     {
-                        sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>", PlexHelper.FormatGenres(movie.tags_genre));
+                        AddParagraph(ref sb, $"Genre: {PlexHelper.FormatGenres(movie.tags_genre)}");
                     }
 
-                    sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>", movie.summary);
+                    AddParagraph(ref sb, movie.summary);
 
-                    sb.Append("<td");
-                    sb.Append("<hr>");
-                    sb.Append("<br>");
-                    sb.Append("<br>");
-                    sb.Append("</tr>");
+                    EndLoopHtml(ref sb);
                 }
                 catch (Exception e)
                 {
@@ -283,13 +265,14 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
+        [Obsolete("Use the new DB Version")]
         private void GenerateTvHtml(IEnumerable<RecentlyAddedChild> tv, PlexSettings plexSettings, ref StringBuilder sb)
         {
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var t in tv)
+            foreach (var t in tv.OrderByDescending(x => x.addedAt))
             {
                 var plexGUID = string.Empty;
                 try
@@ -349,12 +332,12 @@ namespace PlexRequests.Services.Jobs
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var t in items)
+            foreach (var t in items.OrderByDescending(x => x.added_at))
             {
                 var plexGUID = string.Empty;
                 try
                 {
-                    
+
                     plexGUID = t.guid;
                     var seasonInfo = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(plexGUID);
 
@@ -373,8 +356,12 @@ namespace PlexRequests.Services.Jobs
                     sb.Append("<tr>");
                     sb.Append("<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
 
-                    sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2:yyyy}</p></a>",
-                        info.externals.imdb, string.IsNullOrEmpty(t.original_title) ? t.title : t.original_title + $" AKA {t.title}", t.originally_available_at); // Only the year
+                    var title = !string.IsNullOrEmpty(t.SeriesTitle)
+                        ? $"{t.SeriesTitle} - {t.title}  {t.originally_available_at:yyyy}"
+                        : $"{t.title}";
+
+                    sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1}</p></a>",
+                        info.externals.imdb, title);
 
                     sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Season: {0}, Episode: {1}</p>", seasonInfo.SeasonNumber, seasonInfo.EpisodeNumber);
 
@@ -453,5 +440,15 @@ namespace PlexRequests.Services.Jobs
                 Log.Error(e);
             }
         }
+
+        private void EndLoopHtml(ref StringBuilder sb)
+        {
+            sb.Append("<td");
+            sb.Append("<hr>");
+            sb.Append("<br>");
+            sb.Append("<br>");
+            sb.Append("</tr>");
+        }
+
     }
 }

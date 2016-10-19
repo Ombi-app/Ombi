@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Interfaces\INotificationEngine.cs" />
+    <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
     <Compile Include="Jobs\IRecentlyAdded.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />

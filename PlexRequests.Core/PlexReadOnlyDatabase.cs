@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 using PlexRequests.Store.Models.Plex;
@@ -63,11 +64,19 @@ namespace PlexRequests.Core
         public IEnumerable<MetadataItems> GetItemsAddedAfterDate(DateTime dateTime)
         {
             // type 1 = Movie, type 4 = TV Episode
-            return Plex.QueryMetadataItems(@"SELECT * FROM metadata_items 
+            var movies = Plex.QueryMetadataItems(@"SELECT * FROM metadata_items 
                                             WHERE added_at > @AddedAt 
-                                            AND metadata_type in (1,4)
-                                            AND title <> ''",
-                new { AddedAt = dateTime });
+                                            AND metadata_type = 1
+                                            AND title <> ''", new { AddedAt = dateTime });
+
+            // Custom query to include the series title
+            var tv = Plex.QueryMetadataItems(@"SELECT series.title AS SeriesTitle, mi.* FROM metadata_items mi
+                        INNER JOIN metadata_items season ON mi.parent_id = season.id
+                        INNER JOIN metadata_items series ON series.id = season.parent_id
+                        WHERE mi.added_at > @AddedAt
+                        AND mi.metadata_type = 4", new { AddedAt = dateTime });
+
+            return movies.Union(tv);
         }
     }
 }

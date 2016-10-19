@@ -63,5 +63,6 @@ namespace PlexRequests.Store.Models.Plex
         public DateTime expires_at { get; set; }
         // Skip RefreshedAt and Year
         public DateTime added_at { get; set; }
+        public string SeriesTitle { get; set; } // Only used in a custom query for the TV Shows
     }
 }
