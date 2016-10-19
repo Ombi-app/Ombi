@@ -271,7 +271,7 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (show.ProviderId == providerId)
+                    if (show.ProviderId == providerId && seasons != null)
                     {
                         if (seasons.Any(season => show.Seasons.Contains(season)))
                         {
