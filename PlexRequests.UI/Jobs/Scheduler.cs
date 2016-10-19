@@ -66,7 +66,7 @@ namespace PlexRequests.UI.Jobs
                JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
-               JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAdded", "Email").Build()
+               JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build()
             };
 
 
@@ -168,7 +168,7 @@ namespace PlexRequests.UI.Jobs
 
             var rencentlyAdded =
                 TriggerBuilder.Create()
-                                .WithIdentity("RecentlyAdded", "Email")
+                                .WithIdentity("RecentlyAddedModel", "Email")
                                 .StartNow()
                                 .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
                                 .Build();

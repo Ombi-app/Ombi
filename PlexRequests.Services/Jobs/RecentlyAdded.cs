@@ -2,7 +2,7 @@
 
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RecentlyAdded.cs
+//    File: RecentlyAddedModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -114,7 +114,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Test()
         {
-            StartDb(true);
+            Start(true);
         }
 
         private void Start(bool testEmail = false)
@@ -122,18 +122,15 @@ namespace PlexRequests.Services.Jobs
             var sb = new StringBuilder();
             var plexSettings = PlexSettings.GetSettings();
 
-            var recentlyAdded = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri);
+            var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
+            var tvSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            var movieSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase));
 
-            var movies =
-                recentlyAdded._children.Where(x => x.type.Equals("Movie", StringComparison.CurrentCultureIgnoreCase));
-            var tv =
-                recentlyAdded._children.Where(
-                        x => x.type.Equals("season", StringComparison.CurrentCultureIgnoreCase))
-                    .GroupBy(x => x.parentTitle)
-                    .Select(x => x.FirstOrDefault());
+            var recentlyAddedTv = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection.Key);
+            var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection.Key);
 
-            GenerateMovieHtml(movies, plexSettings, ref sb);
-            GenerateTvHtml(tv, plexSettings, ref sb);
+            GenerateMovieHtml(recentlyAddedMovies, plexSettings, ref sb);
+            GenerateTvHtml(recentlyAddedTv, plexSettings, ref sb);
 
             var template = new RecentlyAddedTemplate();
             var html = template.LoadTemplate(sb.ToString());
@@ -160,12 +157,12 @@ namespace PlexRequests.Services.Jobs
             Send(html, plexSettings, testEmail);
         }
 
-        private void GenerateMovieHtml(IEnumerable<RecentlyAddedChild> movies, PlexSettings plexSettings, ref StringBuilder sb)
+        private void GenerateMovieHtml(RecentlyAddedModel movies, PlexSettings plexSettings, ref StringBuilder sb)
         {
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var movie in movies.OrderByDescending(x => x.addedAt))
+            foreach (var movie in movies._children.OrderByDescending(x => x.addedAt.UnixTimeStampToDateTime()))
             {
                 var plexGUID = string.Empty;
                 try
@@ -264,15 +261,14 @@ namespace PlexRequests.Services.Jobs
             }
             sb.Append("</table><br/><br/>");
         }
-
-        [Obsolete("Use the new DB Version")]
-        private void GenerateTvHtml(IEnumerable<RecentlyAddedChild> tv, PlexSettings plexSettings, ref StringBuilder sb)
+        
+        private void GenerateTvHtml(RecentlyAddedModel tv, PlexSettings plexSettings, ref StringBuilder sb)
         {
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var t in tv.OrderByDescending(x => x.addedAt))
+            foreach (var t in tv._children.OrderByDescending(x => x.addedAt.UnixTimeStampToDateTime()))
             {
                 var plexGUID = string.Empty;
                 try
@@ -298,12 +294,14 @@ namespace PlexRequests.Services.Jobs
                     sb.Append("<tr>");
                     sb.Append("<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
 
+                    var title = $"{t.grandparentTitle} - {t.title}  {t.originallyAvailableAt.Substring(0, 4)}";
+
                     sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2}</p></a>",
-                        info.externals.imdb, info.name, info.premiered.Substring(0, 4)); // Only the year
+                        info.externals.imdb, title); // Only the year
 
                     sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>", string.Join(", ", info.genres.Select(x => x.ToString()).ToArray()));
                     sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>",
-                        string.IsNullOrEmpty(parentMetaData.Directory.Summary) ? info.summary : parentMetaData.Directory.Summary); // Episode Summary
+                        string.IsNullOrEmpty(t.summary) ? info.summary : t.summary); // Episode Summary
 
                     sb.Append("<td");
                     sb.Append("<hr>");

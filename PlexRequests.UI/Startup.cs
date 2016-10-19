@@ -67,9 +67,6 @@ namespace PlexRequests.UI
               Debug.WriteLine("Finished bootstrapper");
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
-
-                var r = kernel.Get<IRecentlyAdded>();
-                r.Test();
             }
             catch (Exception exception)
             {
