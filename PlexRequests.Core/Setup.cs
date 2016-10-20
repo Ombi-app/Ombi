@@ -72,6 +72,10 @@ namespace PlexRequests.Core
                 {
                     MigrateToVersion1910();
                 }
+                if (version > 1943 && version <= 1945)
+                {
+                    MigrateToVersion1945();
+                }
             }
 
             return Db.DbConnection().ConnectionString;
@@ -268,6 +272,32 @@ namespace PlexRequests.Core
                     plex.MachineIdentifier = server.Server.FirstOrDefault(x => x.AccessToken == plex.PlexAuthToken)?.MachineIdentifier;
 
                     settings.SaveSettings(plex); // Save the new settings
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+
+        /// <summary>
+        /// Migrates to version1945
+        /// </summary>
+        public void MigrateToVersion1945()
+        {
+            try
+            {
+                var settings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var plex = settings.GetSettings();
+                var newsLetterSettings = new SettingsServiceV2<NewletterSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
+                var newsLetter = newsLetterSettings.GetSettings();
+                if (plex.SendRecentlyAddedEmail)
+                {
+                    newsLetter.SendRecentlyAddedEmail = plex.SendRecentlyAddedEmail;
+                    plex.SendRecentlyAddedEmail = false;
+                    settings.SaveSettings(plex);
+                    newsLetterSettings.SaveSettings(newsLetter);
                 }
             }
             catch (Exception e)
