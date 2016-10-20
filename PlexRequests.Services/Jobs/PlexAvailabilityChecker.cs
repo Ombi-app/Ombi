@@ -412,6 +412,8 @@ namespace PlexRequests.Services.Jobs
 
             try
             {
+
+                // TODO what the fuck was I thinking
                 if (setCache)
                 {
                     results = GetLibraries(plexSettings);

@@ -184,14 +184,14 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
-            List<SearchMovie> apiMovies;
+            List<MovieResult> apiMovies;
 
             switch (searchType)
             {
                 case MovieSearchType.Search:
                     var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
                     apiMovies = movies.Select(x =>
-                                    new SearchMovie
+                                    new MovieResult
                                     {
                                         Adult = x.Adult,
                                         BackdropPath = x.BackdropPath,
@@ -217,7 +217,7 @@ namespace PlexRequests.UI.Modules
                     apiMovies = await MovieApi.GetUpcomingMovies();
                     break;
                 default:
-                    apiMovies = new List<SearchMovie>();
+                    apiMovies = new List<MovieResult>();
                     break;
             }
 
