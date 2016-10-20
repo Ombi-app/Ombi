@@ -151,6 +151,15 @@ namespace PlexRequests.UI.Helpers
                 await Task.Delay(TimeSpan.FromSeconds(1));
 
                 series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+
+
+                // Due to the bug above, we need to make sure all seasons are not monitored
+                foreach (var s in series.seasons)
+                {
+                    s.monitored = false;
+                }
+
+                SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
             }
 
             if (first ?? false)

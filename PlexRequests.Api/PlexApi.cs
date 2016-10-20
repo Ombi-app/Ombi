@@ -76,7 +76,7 @@ namespace PlexRequests.Api
                 Method = Method.POST
             };
 
-            AddHeaders(ref request);
+            AddHeaders(ref request, false);
 
             request.AddJsonBody(userModel);
 
@@ -93,7 +93,7 @@ namespace PlexRequests.Api
                     Method = Method.GET,
                 };
 
-                AddHeaders(ref request, authToken);
+                AddHeaders(ref request, authToken, false);
 
 			    var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexFriends> (request, new Uri(FriendsUri)),
 				    (exception, timespan) => Log.Error (exception, "Exception when calling GetUsers for Plex, Retrying {0}", timespan), null);
@@ -118,7 +118,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("searchTerm", searchTerm);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
 			var search = RetryHandler.Execute(() => Api.ExecuteXml<PlexSearch> (request, plexFullHost),
 				(exception, timespan) => Log.Error (exception, "Exception when calling SearchContent for Plex, Retrying {0}", timespan), null);
@@ -133,7 +133,7 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
 			var users = RetryHandler.Execute(() => Api.ExecuteXml<PlexStatus> (request, uri),
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetStatus for Plex, Retrying {0}", timespan), null);
@@ -148,7 +148,7 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
 			var account = RetryHandler.Execute(() => Api.ExecuteXml<PlexAccount> (request, new Uri(GetAccountUri)),
 				(exception, timespan) => Log.Error (exception, "Exception when calling GetAccount for Plex, Retrying {0}", timespan), null);
@@ -164,7 +164,7 @@ namespace PlexRequests.Api
                 Resource = "library/sections"
             };
 
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -193,7 +193,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("libraryId", libraryId);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -228,7 +228,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("ratingKey", ratingKey);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -253,10 +253,9 @@ namespace PlexRequests.Api
             };
 
             request.AddQueryParameter("type", 4.ToString());
-            request.AddQueryParameter("X-Plex-Container-Start", startPage.ToString());
-            request.AddQueryParameter("X-Plex-Container-Size", returnCount.ToString());
+            AddLimitHeaders(ref request, startPage, returnCount);
             request.AddUrlSegment("section", section);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -281,7 +280,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("itemId", itemId);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -311,7 +310,7 @@ namespace PlexRequests.Api
             };
 
             request.AddUrlSegment("ratingKey", ratingKey);
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             try
             {
@@ -338,7 +337,7 @@ namespace PlexRequests.Api
                 Method = Method.GET,
             };
 
-            AddHeaders(ref request, authToken);
+            AddHeaders(ref request, authToken, false);
 
             var servers = RetryHandler.Execute(() => Api.ExecuteXml<PlexServer>(request, new Uri(ServerUri)),
                 (exception, timespan) => Log.Error(exception, "Exception when calling GetServer for Plex, Retrying {0}", timespan));
@@ -347,25 +346,22 @@ namespace PlexRequests.Api
             return servers;
         }
 
-        public RecentlyAdded RecentlyAdded(string authToken, Uri plexFullHost)
+        public RecentlyAddedModel RecentlyAdded(string authToken, Uri plexFullHost, string sectionId)
         {
             var request = new RestRequest
             {
                 Method = Method.GET,
-                Resource = "library/recentlyAdded"
+                Resource = "library/sections/{sectionId}/recentlyAdded"
             };
-            
-            request.AddHeader("X-Plex-Token", authToken);
-            request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
-            request.AddHeader("X-Plex-Product", "Plex Requests .Net");
-            request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("Content-Type", "application/json");
-            request.AddHeader("Accept", "application/json");
+
+            request.AddUrlSegment("sectionId", sectionId);
+            AddHeaders(ref request, authToken, true);
+            AddLimitHeaders(ref request, 0, 25);
 
             try
             {
-                var lib = RetryHandler.Execute(() => Api.ExecuteJson<RecentlyAdded>(request, plexFullHost),
-                    (exception, timespan) => Log.Error(exception, "Exception when calling RecentlyAdded for Plex, Retrying {0}", timespan), new[] {
+                var lib = RetryHandler.Execute(() => Api.ExecuteJson<RecentlyAddedModel>(request, plexFullHost),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling RecentlyAddedModel for Plex, Retrying {0}", timespan), new[] {
                         TimeSpan.FromSeconds (5),
                         TimeSpan.FromSeconds(10),
                         TimeSpan.FromSeconds(30)
@@ -375,23 +371,30 @@ namespace PlexRequests.Api
             }
             catch (Exception e)
             {
-                Log.Error(e, "There has been a API Exception when attempting to get the Plex RecentlyAdded");
-                return new RecentlyAdded();
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex RecentlyAddedModel");
+                return new RecentlyAddedModel();
             }
         }
 
-        private void AddHeaders(ref RestRequest request, string authToken)
+        private void AddLimitHeaders(ref RestRequest request, int from, int to)
         {
-            request.AddHeader("X-Plex-Token", authToken);
-            AddHeaders(ref request);
+            request.AddHeader("X-Plex-Container-Start", from.ToString());
+            request.AddHeader("X-Plex-Container-Size", to.ToString());
         }
 
-        private void AddHeaders(ref RestRequest request)
+        private void AddHeaders(ref RestRequest request, string authToken, bool json)
+        {
+            request.AddHeader("X-Plex-Token", authToken);
+            AddHeaders(ref request, json);
+        }
+
+        private void AddHeaders(ref RestRequest request, bool json)
         {
             request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
             request.AddHeader("X-Plex-Product", "Plex Requests .Net");
             request.AddHeader("X-Plex-Version", Version);
-            request.AddHeader("Content-Type", "application/xml");
+            request.AddHeader("Content-Type", json ? "application/json" : "application/xml");
+            request.AddHeader("Accept", json ? "application/json" : "application/xml");
         }
     }
 }

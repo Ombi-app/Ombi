@@ -122,7 +122,7 @@ namespace PlexRequests.Api
                 });
 
                 result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
-            }
+           }
             catch (JsonSerializationException jse)
             {
                 Log.Error(jse);

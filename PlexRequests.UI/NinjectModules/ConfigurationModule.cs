@@ -46,6 +46,7 @@ namespace PlexRequests.UI.NinjectModules
             Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
             Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
             Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
+            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
 
 
             Bind<IUserMapper>().To<UserMapper>();

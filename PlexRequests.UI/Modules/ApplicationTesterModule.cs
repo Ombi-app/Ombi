@@ -25,7 +25,8 @@
 //  ************************************************************************/
 #endregion
 using System;
-
+using System.IO;
+using Mono.Data.Sqlite;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
@@ -35,6 +36,8 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
@@ -59,7 +62,7 @@ namespace PlexRequests.UI.Modules
             Post["/plex"] = _ => PlexTest();
             Post["/sickrage"] = _ => SickRageTest();
             Post["/headphones"] = _ => HeadphonesTest();
-
+            Post["/plexdb"] = _ => TestPlexDb();
         }
         
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -219,6 +222,66 @@ namespace PlexRequests.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to Headphones, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message }); ;
+            }
+        }
+
+        private Response TestPlexDb()
+        {
+            var settings = this.Bind<PlexSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            try
+            {
+                var location = string.Empty;
+
+                if (string.IsNullOrEmpty(settings.PlexDatabaseLocationOverride))
+                {
+                    if (Type.GetType("Mono.Runtime") != null)
+                    {
+                        // Mono
+                        location = Path.Combine("/var/lib/plexmediaserver/Library/Application Support/",
+                            "Plex Media Server", "Plug-in Support", "Databases", "com.plexapp.plugins.library.db");
+                    }
+                    else
+                    {
+                        // Default Windows
+                        location = Path.Combine(Environment.ExpandEnvironmentVariables("%LOCALAPPDATA%"),
+                            "Plex Media Server", "Plug-in Support", "Databases", "com.plexapp.plugins.library.db");
+                    }
+                }
+                else
+                {
+                    location = Path.Combine(settings.PlexDatabaseLocationOverride, "Plug-in Support", "Databases", "com.plexapp.plugins.library.db");
+                }
+
+                if (File.Exists(location))
+                {
+                    return Response.AsJson(new JsonResponseModel
+                    {
+                        Result = true,
+                        Message = "Found the database!"
+                    });
+                }
+
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = $"Could not find the database at the following full location : {location}"
+                });
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Exception thrown when attempting to find the plex database: ");
+                Log.Warn(e);
+                var message = $"Could not find Plex's DB, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not find Plex's DB, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message }); ;
             }

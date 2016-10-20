@@ -32,7 +32,7 @@ using Ninject.Planning.Bindings.Resolvers;
 using NLog;
 
 using Owin;
-
+using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
 using PlexRequests.UI.NinjectModules;

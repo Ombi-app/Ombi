@@ -60,7 +60,7 @@ namespace PlexRequests.Store
             {
                 throw new SqliteException("Factory returned null");
             }
-            fact.ConnectionString = "Data Source=" + "Plex Path";
+            fact.ConnectionString = "Data Source=" + DbLocation;
             return fact;
         }
 
@@ -84,7 +84,10 @@ namespace PlexRequests.Store
         {
             using (var con = DbConnection())
             {
-                return con.Query<MetadataItems>(query, param);
+                con.Open();
+                var data = con.Query<MetadataItems>(query, param);
+                con.Close();
+                return data;
             }
         }
     }

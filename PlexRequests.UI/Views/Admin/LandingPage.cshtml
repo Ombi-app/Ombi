@@ -121,6 +121,8 @@
         });
 
         $('#save').click(function (e) {
+            e.preventDefault();
+
             var start = '';
             var end = '';
             if ($startDate.data("DateTimePicker").date()) {
@@ -129,8 +131,6 @@
             if ($endDate.data("DateTimePicker").date()) {
                 end = $endDate.data("DateTimePicker").date().toISOString();
             }
-
-            e.preventDefault();
 
             var $form = $("#mainForm");
 

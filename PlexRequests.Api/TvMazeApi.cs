@@ -93,8 +93,18 @@ namespace PlexRequests.Api
             request.AddHeader("Content-Type", "application/json");
 
             var obj = Api.Execute<TvMazeShow>(request, new Uri(Uri));
-            obj.seasonCount = GetSeasonCount(obj.id);
 
+            var episodes = EpisodeLookup(obj.id).ToList();
+
+            foreach (var e in episodes)
+            {
+                obj.Season.Add(new TvMazeCustomSeason
+                {
+                    SeasonNumber = e.season,
+                    EpisodeNumber = e.number
+                });
+            }
+            
             return obj;
         }
 
@@ -110,6 +120,7 @@ namespace PlexRequests.Api
 
             return Api.Execute<List<TvMazeSeasons>>(request, new Uri(Uri));
         }
+
         public int GetSeasonCount(int id)
         {
             var obj = GetSeasons(id);

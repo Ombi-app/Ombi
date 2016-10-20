@@ -26,70 +26,43 @@
 #endregion
 
 using System;
-using System.Data.Linq.Mapping;
+using Dapper;
+using Dapper.Contrib.Extensions;
 
 namespace PlexRequests.Store.Models.Plex
 {
-    [Table(Name = "metadata_items")]
+    [Table("metadata_items")]
     public class MetadataItems
     {
-        [Column(IsPrimaryKey = true)]
-        public int Id { get; set; }
-
-        [Column(Name = "library_section_id")]
-        public int LibrarySectionId { get; set; }
-
-        [Column(Name = "parent_id")]
-        public int ParentId { get; set; }
-
-        [Column(Name = "metadata_type")]
-        public int MetadataType { get; set; }
-
-        [Column(Name = "guid")]
-        public string Guid { get; set; }
-
-        [Column(Name = "media_item_count")]
-        public int MediaItemCount { get; set; }
-
-        [Column(Name = "title")]
-        public string Title { get; set; }
-
-        [Column(Name = "title_sort")]
-        public string TitleSort { get; set; }
-
-        [Column(Name = "OriginalTitle")]
-        public string OriginalTitle { get; set; }
-
-        [Column(Name = "studio")]
-        public string Studio { get; set; }
-        [Column(Name = "rating")]
-        public float Rating { get; set; }
-        [Column(Name = "rating_count")]
-        public int RatingCount { get; set; }
-        [Column(Name = "tagline")]
-        public string Tagline { get; set; }
-        [Column(Name = "summary")]
-        public string Summary { get; set; }
-        [Column(Name = "trivia")]
-        public string Trivia { get; set; }
-        [Column(Name = "quotes")]
-        public string Quotes { get; set; }
-        [Column(Name = "content_rating")]
-        public string ContentRating { get; set; }
-        [Column(Name = "content_rating_age")]
-        public int ContentRatingAge { get; set; }
-        [Column(Name = "Index")]
+        [Key]
+        public int id { get; set; }
+        
+        public int library_section_id { get; set; }
+        public int parent_id { get; set; }
+        public int metadata_type { get; set; }
+        public string guid { get; set; }
+        public int media_item_count { get; set; }
+        public string title { get; set; }
+        public string title_sort { get; set; }
+        public string original_title { get; set; }
+        public string studio { get; set; }
+        public float rating { get; set; }
+        public int rating_count { get; set; }
+        public string tagline { get; set; }
+        public string summary { get; set; }
+        public string trivia { get; set; }
+        public string quotes { get; set; }
+        public string content_rating { get; set; }
+        public int content_rating_age { get; set; }
         public int Index { get; set; }
+        public string tags_genre { get; set; }
         // SKIP Until Date Times
-
-        [Column(Name = "originally_available_at")]
-        public DateTime OriginallyAvailableAt { get; set; }
-        [Column(Name = "available_at")]
-        public DateTime AvailableAt { get; set; }
-        [Column(Name = "expires_at")]
-        public DateTime ExpiresAt { get; set; }
+        
+        public DateTime originally_available_at { get; set; }
+        public DateTime available_at { get; set; }
+        public DateTime expires_at { get; set; }
         // Skip RefreshedAt and Year
-        [Column(Name = "added_at")]
-        public DateTime AddedAt { get; set; }
+        public DateTime added_at { get; set; }
+        public string SeriesTitle { get; set; } // Only used in a custom query for the TV Shows
     }
 }
