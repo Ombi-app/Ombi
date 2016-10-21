@@ -117,6 +117,13 @@ namespace PlexRequests.Store
             public int SchemaVersion { get; set; }
         }
 
+        [Table("VersionInfo")]
+        public class VersionInfo
+        {
+            public int Version { get; set; }
+            public string Description { get; set; }
+        }
+
         [Table("sqlite_master")]
         public class SqliteMasterTable
         {

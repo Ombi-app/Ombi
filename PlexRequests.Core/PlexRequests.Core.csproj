@@ -133,6 +133,10 @@
       <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
       <Name>PlexRequests.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Core.Migration\PlexRequests.Core.Migration.csproj">
+      <Project>{8406ee57-d533-47c0-9302-c6b5f8c31e55}</Project>
+      <Name>PlexRequests.Core.Migration</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>PlexRequests.Helpers</Name>

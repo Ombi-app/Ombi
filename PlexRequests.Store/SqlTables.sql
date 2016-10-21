@@ -59,6 +59,13 @@ CREATE TABLE IF NOT EXISTS DBInfo
     SchemaVersion									INTEGER
 );
 
+CREATE TABLE IF NOT EXISTS VersionInfo
+(
+    Version									INTEGER NOT NULL,
+	Description								VARCHAR(100) NOT NULL
+);
+
+
 CREATE TABLE IF NOT EXISTS ScheduledJobs
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,

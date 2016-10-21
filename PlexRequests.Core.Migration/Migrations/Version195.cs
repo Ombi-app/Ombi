@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ConfigurationModule.cs
+//    File: Version195.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,38 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
 
-using Nancy;
-using Nancy.Authentication.Forms;
+using System.Data;
 
-using Ninject.Modules;
-
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.NinjectModules
+namespace PlexRequests.Core.Migration.Migrations
 {
-    public class ConfigurationModule : NinjectModule
+    [Migration(1950, "v1.9.5.0")]
+    public class Version195 : BaseMigration, IMigration
     {
-        public override void Load()
+        public void Start(IDbConnection con)
         {
-            Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
-            Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
-            Bind<IMigrationRunner>().To<MigrationRunner>();
-
-
-            Bind<IUserMapper>().To<UserMapper>();
-            Bind<ICustomUserMapper>().To<UserMapper>();
-
-            Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
+ 
+            
+            UpdateSchema(con);     
         }
     }
 }
