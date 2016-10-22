@@ -361,7 +361,7 @@
             });
         });
 
-        $('#refreshKey').click(function (e) {
+        $('#refreshKey').click(function(e) {
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
             var url = createBaseUrl(base, '/admin/createapikey');
@@ -370,37 +370,13 @@
                 type: "post",
                 url: url,
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     if (response) {
                         generateNotify("Success!", "success");
                         $('#apiKey').val(response);
                     }
                 },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                }
-            });
-        });
-
-        $('#recentlyAddedBtn').click(function (e) {
-            e.preventDefault();
-            var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-
-            $.ajax({
-                type: "post",
-                url: url,
-                dataType: "json",
-                success: function (response) {
-                    if (response) {
-                        generateNotify(response.message, "success");
-                    } else {
-
-                        generateNotify(response.message, "danger");
-                    }
-                },
-                error: function (e) {
+                error: function(e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }
