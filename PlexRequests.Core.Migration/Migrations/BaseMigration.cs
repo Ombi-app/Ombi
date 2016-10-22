@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ConfigurationModule.cs
+//    File: BaseMigration.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,38 +24,30 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
 
-using Nancy;
-using Nancy.Authentication.Forms;
-
-using Ninject.Modules;
-
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using PlexRequests.Store;
 
-namespace PlexRequests.UI.NinjectModules
+namespace PlexRequests.Core.Migration.Migrations
 {
-    public class ConfigurationModule : NinjectModule
+    public abstract class BaseMigration
     {
-        public override void Load()
+        protected void UpdateSchema(IDbConnection con, int version)
         {
-            Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
-            Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
-            Bind<IMigrationRunner>().To<MigrationRunner>();
+            var migrations = MigrationRunner.GetMigrations();
+            var model = migrations.Select(x => x.Value).FirstOrDefault(x => x.Version == version);
 
+            if (model != null)
+            {
+                con.AddVersionInfo(new TableCreation.VersionInfo { Version = model.Version, Description = model.Description });
+            }
+        }
 
-            Bind<IUserMapper>().To<UserMapper>();
-            Bind<ICustomUserMapper>().To<UserMapper>();
-
-            Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
+        protected IEnumerable<TableCreation.VersionInfo> GetVersionInfo(IDbConnection con)
+        {
+            return con.GetVersionInfo();
         }
     }
 }

@@ -24,6 +24,8 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ***********************************************************************
 #endregion
+
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -109,7 +111,29 @@ namespace PlexRequests.Store
             con.Close();
         }
 
+        public static IEnumerable<VersionInfo> GetVersionInfo(this IDbConnection con)
+        {
+            con.Open();
+            var result = con.Query<VersionInfo>("SELECT * FROM VersionInfo");
+            con.Close();
 
+            return result;
+        }
+
+        public static void AddVersionInfo(this IDbConnection con, VersionInfo ver)
+        {
+            con.Open();
+            con.Insert(ver);
+            con.Close();
+        }
+
+
+        [Table("VersionInfo")]
+        public class VersionInfo
+        {
+            public int Version { get; set; }
+            public string Description { get; set; }
+        }
 
         [Table("DBInfo")]
         public class DbInfo
