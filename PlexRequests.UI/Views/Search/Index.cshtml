@@ -168,14 +168,14 @@
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
                 {{#if available}}
-                <span class="label label-success">Available on Plex</span>
+                <span class="label label-success">@UI.Search_Available_on_plex</span>
                 {{else}}
                 {{#if approved}}
-                <span class="label label-info">Processing request</span>
+                <span class="label label-info">@UI.Search_Processing_Request</span>
                 {{else if requested}}
-                <span class="label label-warning">Pending approval</span>
+                <span class="label label-warning">@UI.Search_Pending_approval</span>
                 {{else}}                
-                <span class="label label-danger">Not Requested yet</span>
+                <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
                 {{/if}}
                 {{/if}}
                 <br />
