@@ -168,15 +168,38 @@
                     <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
                         <h4 class="request-title">{{title}} ({{year}})</h4>
                     </a>
-                    <span class="label label-success">{{status}}</span>
+                    <div>
+                        {{#if_eq type "tv"}}
+                        <span>@UI.Search_TV_Show_Status: </span>
+                        {{else}}
+                        <span>@UI.Search_Movie_Status: </span>
+                        {{/if_eq}}
+                        <span class="label label-success">{{status}}</span>
+                    </div>
+
+                    <div>
+                        <span>Request status: </span>
+                        {{#if available}}
+                        <span class="label label-success">@UI.Search_Available_on_plex</span>
+                        {{else}}
+                        {{#if approved}}
+                        <span class="label label-info">@UI.Search_Processing_Request</span>
+                        {{else if denied}}
+                        <span class="label label-danger">@UI.Search_Request_denied</span>
+                        {{#if deniedReason}}
+                        <span class="customTooltip" title="{{deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                        {{/if}}
+                        {{else}}
+                        <span class="label label-warning">@UI.Search_Pending_approval</span>
+                        {{/if}}
+                        {{/if}}
+                    </div>
                 </div>
                 <br />
                 {{#if denied}}
                 <div>
                     Denied: <i  style="color:red;" class="fa fa-check"></i>
-                    {{#if deniedReason}}
-                    <span class="customTooltip" title="{{deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                    {{/if}}
+                 
                 </div>
                       
                 {{/if}}
@@ -185,31 +208,14 @@
                 {{else}}
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
                 {{/if_eq}}
-                {{#unless denied}}
-                <div>
-                    @UI.Common_Approved:
-                    {{#if_eq approved false}}
-                    <i id="{{requestId}}notapproved" class="fa fa-times"></i>
-                    {{/if_eq}}
-                    {{#if_eq approved true}}
-                    <i class="fa fa-check"></i>
-                    {{/if_eq}}
-                </div>
-                {{/unless}}
-                <div>
-                    @UI.Requests_Available
-                    {{#if_eq available false}}
-                    <i id="availableIcon{{requestId}}" class="fa fa-times"></i>
-                    {{/if_eq}}
-                    {{#if_eq available true}}
-                    <i id="availableIcon{{requestId}}" class="fa fa-check"></i>
-                    {{/if_eq}}
-                </div>
+                <br />
+              
                 {{#if_eq type "tv"}}
                 {{#if episodes}}
                 Episodes: <span class="customTooltip" data-tooltip-content="#{{requestId}}toolTipContent"><i class="fa fa-info-circle"></i></span>
                 {{else}}
                 <div>@UI.Requests_SeasonsRequested: {{seriesRequested}}</div>
+
                 {{/if}}
                 {{/if_eq}}
                 {{#if requestedUsers}}
