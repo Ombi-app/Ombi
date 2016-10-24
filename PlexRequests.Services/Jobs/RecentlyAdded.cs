@@ -138,25 +138,6 @@ namespace PlexRequests.Services.Jobs
             Send(html, plexSettings, testEmail);
         }
 
-        private void StartDb(bool testEmail = false)
-        {
-            var sb = new StringBuilder();
-            var plexSettings = PlexSettings.GetSettings();
-
-            var recentlyAdded = PlexDb.GetItemsAddedAfterDate(DateTime.Now.AddDays(-12)).ToList(); // TODO Date configurable 
-
-            var movies = recentlyAdded.Where(x => x.metadata_type == MetadataTypeMovie);
-            var tv = recentlyAdded.Where(x => x.metadata_type == MetadataTypeTv);
-
-            GenerateMovieHtml(movies, ref sb);
-            GenerateTvHtml(tv, ref sb);
-
-            var template = new RecentlyAddedTemplate();
-            var html = template.LoadTemplate(sb.ToString());
-
-            Send(html, plexSettings, testEmail);
-        }
-
         private void GenerateMovieHtml(RecentlyAddedModel movies, PlexSettings plexSettings, ref StringBuilder sb)
         {
             sb.Append("<h1>New Movies:</h1><br/><br/>");
@@ -294,10 +275,14 @@ namespace PlexRequests.Services.Jobs
                     sb.Append("<tr>");
                     sb.Append("<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
 
-                    var title = $"{t.grandparentTitle} - {t.title}  {t.originallyAvailableAt.Substring(0, 4)}";
+                    var title = $"{t.grandparentTitle} - {t.title}  {t.originallyAvailableAt?.Substring(0, 4)}";
 
-                    sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1} {2}</p></a>",
+                    sb.AppendFormat("<a href=\"https://www.imdb.com/title/{0}/\"><h3 style=\"font-family: sans-serif; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{1}</p></a>",
                         info.externals.imdb, title); // Only the year
+
+
+                    sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Season: {0}, Episode: {1}</p>", t.parentIndex, t.index);
+
 
                     sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">Genre: {0}</p>", string.Join(", ", info.genres.Select(x => x.ToString()).ToArray()));
                     sb.AppendFormat("<p style=\"font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; Margin-bottom: 15px;\">{0}</p>",
@@ -311,6 +296,11 @@ namespace PlexRequests.Services.Jobs
                 }
                 catch (Exception e)
                 {
+                    sb.Append("<td");
+                    sb.Append("<hr>");
+                    sb.Append("<br>");
+                    sb.Append("<br>");
+                    sb.Append("</tr>");
                     Log.Error(e);
                     Log.Error("Exception when trying to process a TV Show, either in getting the metadata from Plex OR getting the information from TVMaze, Plex GUID = {0}", plexGUID);
                 }

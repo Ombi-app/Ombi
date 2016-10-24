@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ConfigurationModule.cs
+//    File: Version195.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,38 +24,40 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
 
-using Nancy;
-using Nancy.Authentication.Forms;
+using System.Data;
+using PlexRequests.Core.SettingModels;
 
-using Ninject.Modules;
-
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.NinjectModules
+namespace PlexRequests.Core.Migration.Migrations
 {
-    public class ConfigurationModule : NinjectModule
+    [Migration(1950, "v1.9.5.0")]
+    public class Version195 : BaseMigration, IMigration
     {
-        public override void Load()
+        public Version195(ISettingsService<PlexRequestSettings> plexRequestSettings, ISettingsService<NewletterSettings> news)
         {
-            Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
-            Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
-            Bind<IMigrationRunner>().To<MigrationRunner>();
+            PlexRequestSettings = plexRequestSettings;
+            NewsletterSettings = news;
+        }
+        public int Version => 1950;
 
+        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private ISettingsService<NewletterSettings> NewsletterSettings { get; }
 
-            Bind<IUserMapper>().To<UserMapper>();
-            Bind<ICustomUserMapper>().To<UserMapper>();
+        public void Start(IDbConnection con)
+        {
+            var plex = PlexRequestSettings.GetSettings();
+      
+            var newsLetter = NewsletterSettings.GetSettings();
+            if (plex.SendRecentlyAddedEmail)
+            {
+                newsLetter.SendRecentlyAddedEmail = plex.SendRecentlyAddedEmail;
+                plex.SendRecentlyAddedEmail = false;
 
-            Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
+                PlexRequestSettings.SaveSettings(plex);
+                NewsletterSettings.SaveSettings(newsLetter);
+            }
+
+            UpdateSchema(con, Version);     
         }
     }
 }

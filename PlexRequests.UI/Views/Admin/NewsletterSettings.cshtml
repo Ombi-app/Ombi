@@ -71,6 +71,29 @@
             });
         });
 
+        $('#recentlyAddedBtn').click(function (e) {
+            e.preventDefault();
+            var base = '@Html.GetBaseUrl()';
+            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
+
+            $.ajax({
+                type: "post",
+                url: url,
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        generateNotify(response.message, "success");
+                    } else {
+
+                        generateNotify(response.message, "danger");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
 
     });
 </script>

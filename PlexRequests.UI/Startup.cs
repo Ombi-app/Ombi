@@ -32,6 +32,7 @@ using Ninject.Planning.Bindings.Resolvers;
 using NLog;
 
 using Owin;
+using PlexRequests.Core.Migration;
 using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
@@ -67,6 +68,10 @@ namespace PlexRequests.UI
               Debug.WriteLine("Finished bootstrapper");
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
+
+                var runner = kernel.Get<IMigrationRunner>();
+                runner.MigrateToLatest();
+
             }
             catch (Exception exception)
             {
