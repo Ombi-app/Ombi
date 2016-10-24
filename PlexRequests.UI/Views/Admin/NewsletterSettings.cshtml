@@ -8,12 +8,13 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Newsletter Settings</legend>
-            
+
             <!-- Email Nofication Section -->
             <div class="form-group">
                 <div class="checkbox">
 
                     <small>Note: This will require you to setup your email notifications</small>
+                    <br />
                     @if (Model.SendRecentlyAddedEmail)
                     {
                         <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable the newsletter of recently added content</label>
@@ -22,7 +23,13 @@
                     {
                         <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable the newsletter of recently added content</label>
                     }
-                    
+
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
                     @if (Model.SendToPlexUsers)
                     {
                         <input type="checkbox" id="SendToPlexUsers" name="SendToPlexUsers" checked="checked"><label for="SendToPlexUsers">Send to all of your Plex 'Friends'</label>
@@ -31,21 +38,23 @@
                     {
                         <input type="checkbox" id="SendToPlexUsers" name="SendToPlexUsers"><label for="SendToPlexUsers">Send to all of your Plex 'Friends'</label>
                     }
-                    
-                    
-                    <div class="form-group">
-                        <label for="StoreCleanup" class="control-label">A comma separated list of email addresses you want the newsletter to go to (For users that are not in your Plex Friends)</label>
-                        <div>
-                            <input type="text" class="form-control form-control-custom " placeholder="email@address.com;second@address.com" id="StoreCleanup" name="StoreCleanup" value="@Model.CustomUsers">
-                        </div>
-                    </div>
-
 
                 </div>
-                <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin</button>
             </div>
-          
-            <br/>
+            <div class="form-group">
+                <label for="StoreCleanup" class="control-label">Email Addresses to Send to (For users that are not in your Plex Friends)</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " placeholder="email@address.com;second@address.com" id="StoreCleanup" name="StoreCleanup" value="@Model.CustomUsers">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin</button>
+                </div>
+            </div>
+
+            <br />
             <br />
             <div class="form-group">
                 <div>
@@ -53,8 +62,9 @@
                 </div>
             </div>
             <!-- Email Nofication Section -->
-           
+
         </fieldset>
+
     </form>
 </div>
 
