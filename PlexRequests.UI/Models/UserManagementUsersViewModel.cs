@@ -17,6 +17,7 @@ namespace PlexRequests.UI.Models
         public string EmailAddress { get; set; }
         public UserManagementPlexInformation PlexInfo { get; set; }
         public string[] ClaimsArray { get; set; }
+        public List<UserManagementUpdateModel.ClaimsModel> ClaimsItem { get; set; }
     }
 
     public class UserManagementPlexInformation
@@ -56,6 +57,23 @@ namespace PlexRequests.UI.Models
 
         [JsonProperty("email")]
         public string EmailAddress { get; set; }
+    }
+
+    public class UserManagementUpdateModel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("claims")]
+        public List<ClaimsModel> Claims { get; set; }
+
+        public class ClaimsModel
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+            [JsonProperty("selected")]
+            public bool Selected { get; set; }
+        }
+        
     }
 }
 

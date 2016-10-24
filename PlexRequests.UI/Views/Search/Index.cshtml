@@ -188,19 +188,20 @@
             <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq type "movie"}}
-                {{#if_eq available true}}
-                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
-                <br />
-                <br />
-                <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                {{else}}
-                {{#if_eq requested true}}
-                <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
-                {{else}}
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                    {{#if_eq available true}}
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
+                        <br />
+                        <br />
+                        <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                    {{else}}
+                        {{#if_eq requested true}}
+                            <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
+                        {{else}}
+                            <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        {{/if_eq}}
+                    {{/if_eq}}
                 {{/if_eq}}
-                {{/if_eq}}
-                {{/if_eq}}
+
                 {{#if_eq type "tv"}}
                     {{#if_eq tvFullyAvailable true}}
                         @*//TODO Not used yet*@

@@ -24,10 +24,20 @@
             return $http.get('/usermanagement/claims');
         }
 
+        var updateUser = function (id, claims) {
+
+            return $http({
+                url: '/usermanagement/updateUser',
+                method: "POST",
+                data: { id: id, claims: claims }
+            });
+        }
+
         return {
             getUsers: getUsers,
             addUser: addUser,
-            getClaims: getClaims
+            getClaims: getClaims,
+            updateUser: updateUser,
         };
     }
 

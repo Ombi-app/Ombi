@@ -22,7 +22,10 @@
 
         // Select a user to populate on the right side
         $scope.selectUser = function (id) {
-            $scope.selectedUser = $scope.users.find(x => x.id === id);
+            var user = $scope.users.filter(function (item) {
+                return item.id === id;
+            });
+            $scope.selectedUser = user[0];
         }
 
         // Get all users in the system
@@ -64,6 +67,15 @@
                 });
         };
 
+        $scope.hasClaim = function(claim) {
+            var claims = $scope.selectedUser.claimsArray;
+
+            var result = claims.some(function (item) {
+                return item === claim.name;
+            });
+            return result;
+        };
+
         $scope.$watch('claims|filter:{selected:true}',
             function (nv) {
                 $scope.selectedClaims = nv.map(function (claim) {
@@ -74,7 +86,7 @@
 
 
         $scope.updateUser = function () {
-
+            userManagementService.updateUser($scope.selectedUser.id, $scope.selectedUser.claimsItem);
         }
 
         function getBaseUrl() {

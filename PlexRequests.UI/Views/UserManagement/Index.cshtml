@@ -116,8 +116,8 @@
             
             <strong>Modify Roles:</strong>
             <!--Load all claims-->
-                <div class="checkbox" ng-repeat="claim in claims">
-                    <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="@*//TODO: Need to figure our how to preselect them*@" ng-model="claim.selected" type="checkbox" value="claim" />
+                <div class="checkbox" ng-repeat="claim in selectedUser.claimsItem">
+                    <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
                     <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
                 </div>
         

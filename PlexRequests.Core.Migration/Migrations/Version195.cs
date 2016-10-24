@@ -25,39 +25,76 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Data;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Store;
+using Quartz;
 
 namespace PlexRequests.Core.Migration.Migrations
 {
     [Migration(1950, "v1.9.5.0")]
     public class Version195 : BaseMigration, IMigration
     {
-        public Version195(ISettingsService<PlexRequestSettings> plexRequestSettings, ISettingsService<NewletterSettings> news)
+        public Version195(ISettingsService<PlexRequestSettings> plexRequestSettings, ISettingsService<NewletterSettings> news, ISettingsService<ScheduledJobsSettings> jobs)
         {
             PlexRequestSettings = plexRequestSettings;
             NewsletterSettings = news;
+            Jobs = jobs;
         }
         public int Version => 1950;
 
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<NewletterSettings> NewsletterSettings { get; }
+        private ISettingsService<ScheduledJobsSettings> Jobs { get; }
 
         public void Start(IDbConnection con)
         {
+            UpdateApplicationSettings();
+            UpdateDb(con);
+
+            UpdateSchema(con, Version);     
+        }
+
+        private void UpdateDb(IDbConnection con)
+        {
+
+        }
+
+        private void UpdateApplicationSettings()
+        {
             var plex = PlexRequestSettings.GetSettings();
-      
+            var jobSettings = Jobs.GetSettings();
             var newsLetter = NewsletterSettings.GetSettings();
+
+            newsLetter.SendToPlexUsers = true;
+            UpdateScheduledSettings(jobSettings);
+
             if (plex.SendRecentlyAddedEmail)
             {
                 newsLetter.SendRecentlyAddedEmail = plex.SendRecentlyAddedEmail;
                 plex.SendRecentlyAddedEmail = false;
-
                 PlexRequestSettings.SaveSettings(plex);
-                NewsletterSettings.SaveSettings(newsLetter);
             }
 
-            UpdateSchema(con, Version);     
+
+            NewsletterSettings.SaveSettings(newsLetter);
+            Jobs.SaveSettings(jobSettings);
+        }
+
+        private void UpdateScheduledSettings(ScheduledJobsSettings settings)
+        {
+            settings.PlexAvailabilityChecker = 60;
+            settings.SickRageCacher = 60;
+            settings.SonarrCacher = 60;
+            settings.CouchPotatoCacher = 60;
+            settings.StoreBackup = 24;
+            settings.StoreCleanup = 24;
+            settings.UserRequestLimitResetter = 12;
+            settings.PlexEpisodeCacher = 12;
+
+            var cron = (Quartz.Impl.Triggers.CronTriggerImpl)CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Friday, 7, 0).Build();
+            settings.RecentlyAddedCron = cron.CronExpressionString; // Weekly CRON at 7 am on Mondays
         }
     }
 }

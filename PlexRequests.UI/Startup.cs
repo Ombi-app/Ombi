@@ -48,29 +48,40 @@ namespace PlexRequests.UI
         {
             try
             {
-              Debug.WriteLine("Starting StartupConfiguration");
+                Debug.WriteLine("Starting StartupConfiguration");
                 var resolver = new DependancyResolver();
 
-              Debug.WriteLine("Created DI Resolver");
+                Debug.WriteLine("Created DI Resolver");
                 var modules = resolver.GetModules();
-              Debug.WriteLine("Getting all the modules");
+                Debug.WriteLine("Getting all the modules");
 
 
-              Debug.WriteLine("Modules found finished.");
+                Debug.WriteLine("Modules found finished.");
                 var kernel = new StandardKernel(modules);
-              Debug.WriteLine("Created Kernel and Injected Modules");
+                Debug.WriteLine("Created Kernel and Injected Modules");
 
-              Debug.WriteLine("Added Contravariant Binder");
+                Debug.WriteLine("Added Contravariant Binder");
                 kernel.Components.Add<IBindingResolver, ContravariantBindingResolver>();
 
-              Debug.WriteLine("Start the bootstrapper with the Kernel.ı");
-               app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
-              Debug.WriteLine("Finished bootstrapper");
+                Debug.WriteLine("Start the bootstrapper with the Kernel.");
+                app.UseNancy(options => options.Bootstrapper = new Bootstrapper(kernel));
+                Debug.WriteLine("Finished bootstrapper");
+
+
+                Debug.WriteLine("Migrating DB Now");
+                var runner = kernel.Get<IMigrationRunner>();
+                runner.MigrateToLatest();
+
+
+                Debug.WriteLine("Settings up Scheduler");
                 var scheduler = new Scheduler();
                 scheduler.StartScheduler();
 
-                var runner = kernel.Get<IMigrationRunner>();
-                runner.MigrateToLatest();
+                //var c = kernel.Get<IRecentlyAdded>();
+                //c.Test();
+
+
+
 
             }
             catch (Exception exception)

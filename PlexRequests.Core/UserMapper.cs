@@ -110,10 +110,9 @@ namespace PlexRequests.Core
                 Salt = salt,
                 Hash = PasswordHasher.ComputeHash(password, salt),
                 Claims = ByteConverterHelper.ReturnBytes(claims),
-                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties())
+                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties()),
             };
             Repo.Insert(userModel);
-
             var userRecord = Repo.Get(userModel.UserGuid);
 
             return new Guid(userRecord.UserGuid);

@@ -39,14 +39,14 @@ namespace PlexRequests.Store
         /// Creates the tables located in the SqlTables.sql file.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public static void CreateTables(IDbConnection connection)
+        public static void CreateTables(this IDbConnection connection)
         {
             connection.Open();
             connection.Execute(Sql.SqlTables);
             connection.Close();
         }
 
-        public static void DropTable(IDbConnection con, string tableName)
+        public static void DropTable(this IDbConnection con, string tableName)
         {
             using (con)
             {
@@ -57,7 +57,7 @@ namespace PlexRequests.Store
             }
         }
 
-        public static void AddColumn(IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
+        public static void AddColumn(this IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
@@ -77,7 +77,7 @@ namespace PlexRequests.Store
             connection.Close();
         }
 
-        public static void Vacuum(IDbConnection con)
+        public static void Vacuum(this IDbConnection con)
         {
             using (con)
             {

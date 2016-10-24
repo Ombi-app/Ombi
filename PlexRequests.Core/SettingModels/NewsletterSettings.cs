@@ -26,13 +26,20 @@
 #endregion
 
 using System.Collections.Generic;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Notification;
+using Newtonsoft.Json;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.Core.SettingModels
 {
     public class NewletterSettings : Settings
     {
         public bool SendRecentlyAddedEmail { get; set; }
+        public bool SendToPlexUsers { get; set; }
+        public string CustomUsers { get; set; }
+        
+
+
+        [JsonIgnore]
+        public IEnumerable<string> CustomUsersEmailAddresses => CustomUsers.SplitEmailsByDelimiter(';');
     }
 }

@@ -35,6 +35,7 @@ namespace PlexRequests.UI.Modules
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
             Get["/claims"] = x => GetClaims();
+            Post["/updateuser"] = x => UpdateUser();
         }
 
         private ICustomUserMapper UserMapper { get; }
@@ -57,15 +58,35 @@ namespace PlexRequests.UI.Modules
 
                 var userProps = ByteConverterHelper.ReturnObject<UserProperties>(user.UserProperties);
 
-                model.Add(new UserManagementUsersViewModel
+                var m = new UserManagementUsersViewModel
                 {
                     Id = user.UserGuid,
                     Claims = claimsString,
                     Username = user.UserName,
                     Type = UserType.LocalUser,
                     EmailAddress = userProps.EmailAddress,
-                    ClaimsArray = claims
-                });
+                    ClaimsArray = claims,
+                    ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>()
+                };
+
+                // Add all of the current claims
+                foreach (var c in claims)
+                {
+                    m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = c, Selected = true });
+                }
+
+                var allClaims = UserMapper.GetAllClaims();
+
+                // Get me the current claims that the user does not have
+                var missingClaims = allClaims.Except(claims);
+
+                // Add them into the view
+                foreach (var missingClaim in missingClaims)
+                {
+                    m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = missingClaim, Selected = false });
+                }
+
+                model.Add(m);
             }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -119,6 +140,44 @@ namespace PlexRequests.UI.Modules
             }
 
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user" });
+        }
+
+        private Response UpdateUser()
+        {
+            var body = Request.Body.AsString();
+            if (string.IsNullOrEmpty(body))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user, invalid JSON body" });
+            }
+
+            var model = JsonConvert.DeserializeObject<UserManagementUpdateModel>(body);
+
+            if (string.IsNullOrWhiteSpace(model.Id))
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = true,
+                    Message = "Couldn't find the user"
+                });
+            }
+
+            var claims = new List<string>();
+
+            foreach (var c in model.Claims)
+            {
+                if (c.Selected)
+                {
+                    claims.Add(c.Name);
+                }
+            }
+
+            var userFound = UserMapper.GetUser(new Guid(model.Id));
+
+            userFound.Claims = ByteConverterHelper.ReturnBytes(claims.ToArray());
+
+            var user = UserMapper.EditUser(userFound);
+
+            return Response.AsJson(user);
         }
 
         private Response LocalDetails(Guid id)

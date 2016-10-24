@@ -63,7 +63,7 @@ using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
-
+using Quartz;
 using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
@@ -97,7 +97,7 @@ namespace PlexRequests.UI.Modules
         private IJobRecord JobRecorder { get; }
         private IAnalytics Analytics { get; }
         private IRecentlyAdded RecentlyAdded { get; }
-        private ISettingsService<NotificationSettingsV2> NotifySettings { get; } 
+        private ISettingsService<NotificationSettingsV2> NotifySettings { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -210,7 +210,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/autoupdate"] = x => AutoUpdate();
 
-            Post["/testslacknotification", true] = async (x,ct) => await TestSlackNotification();
+            Post["/testslacknotification", true] = async (x, ct) => await TestSlackNotification();
 
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
@@ -975,7 +975,8 @@ namespace PlexRequests.UI.Modules
                 SonarrCacher = s.SonarrCacher,
                 StoreBackup = s.StoreBackup,
                 StoreCleanup = s.StoreCleanup,
-                JobRecorder = jobsDict
+                JobRecorder = jobsDict,
+                RecentlyAddedCron = s.RecentlyAddedCron
             };
             return View["SchedulerSettings", model];
         }
@@ -986,6 +987,21 @@ namespace PlexRequests.UI.Modules
             Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update ScheduledJobs", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var settings = this.Bind<ScheduledJobsSettings>();
 
+            if (!string.IsNullOrEmpty(settings.RecentlyAddedCron))
+            {
+                // Validate CRON
+                var isValid = CronExpression.IsValidExpression(settings.RecentlyAddedCron);
+
+                if (!isValid)
+                {
+                    return Response.AsJson(new JsonResponseModel
+                        {
+                            Result = false,
+                            Message =
+                                $"CRON {settings.RecentlyAddedCron} is not valid. Please ensure you are using a valid CRON."
+                        });
+                }
+            }
             var result = await ScheduledJobSettings.SaveSettingsAsync(settings);
 
             return Response.AsJson(result

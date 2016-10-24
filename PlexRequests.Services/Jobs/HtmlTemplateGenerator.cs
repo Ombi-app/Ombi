@@ -33,12 +33,12 @@ namespace PlexRequests.Services.Jobs
 {
     public abstract class HtmlTemplateGenerator
     {
-        protected virtual void AddParagraph(ref StringBuilder stringBuilder, string text, int fontSize = 14, string fontWeight = "normal")
+        protected virtual void AddParagraph(StringBuilder stringBuilder, string text, int fontSize = 14, string fontWeight = "normal")
         {
             stringBuilder.AppendFormat("<p style=\"font-family: sans-serif; font-size: {1}px; font-weight: {2}; margin: 0; Margin-bottom: 15px;\">{0}</p>", text, fontSize, fontWeight);
         }
 
-        protected virtual void AddImageInsideTable(ref StringBuilder sb, string url)
+        protected virtual void AddImageInsideTable(StringBuilder sb, string url)
         {
             sb.Append("<tr>");
             sb.Append("<td align=\"center\">");
@@ -49,17 +49,17 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</tr>");
         }
 
-        protected virtual void Href(ref StringBuilder sb, string url)
+        protected virtual void Href(StringBuilder sb, string url)
         {
             sb.AppendFormat("<a href=\"{0}\">", url);
         }
 
-        protected virtual void EndTag(ref StringBuilder sb, string tag)
+        protected virtual void EndTag(StringBuilder sb, string tag)
         {
             sb.AppendFormat("</{0}>", tag);
         }
 
-        protected virtual void Header(ref StringBuilder sb, int size, string text, string fontWeight = "normal")
+        protected virtual void Header(StringBuilder sb, int size, string text, string fontWeight = "normal")
         {
             sb.AppendFormat(
                 "<h{0} style=\"font-family: sans-serif; font-weight: {2}; margin: 0; Margin-bottom: 15px;\">{1}</h{0}>",
