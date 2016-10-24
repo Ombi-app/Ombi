@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI", "PlexRequests.UI\PlexRequests.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
@@ -44,8 +44,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Automation.Pages", "PlexRequests.Automation.Pages\PlexRequests.Automation.Pages.csproj", "{F8D4A7A7-F0FB-4D04-81DB-637C953E0707}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequestes.Automation.Helpers", "PlexRequestes.Automation.Helpers\PlexRequestes.Automation.Helpers.csproj", "{DC8BACEF-C284-4A8F-A9AA-7F49EFABA288}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core.Migration", "PlexRequests.Core.Migration\PlexRequests.Core.Migration.csproj", "{8406EE57-D533-47C0-9302-C6B5F8C31E55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -110,10 +108,6 @@ Global
 		{DC8BACEF-C284-4A8F-A9AA-7F49EFABA288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DC8BACEF-C284-4A8F-A9AA-7F49EFABA288}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC8BACEF-C284-4A8F-A9AA-7F49EFABA288}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
