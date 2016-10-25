@@ -215,6 +215,7 @@
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\TvSender.cs" />
+    <Compile Include="Helpers\TvSenderOld.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Jobs\CustomJobFactory.cs" />
     <Compile Include="Jobs\Scheduler.cs" />

@@ -119,7 +119,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
         {
-            var sender = new TvSender(SonarrApi, SickRageApi);
+            var sender = new TvSenderOld(SonarrApi, SickRageApi); // TODO put back
 
             var sonarrSettings = await SonarrSettings.GetSettingsAsync();
             if (sonarrSettings.Enabled)
@@ -439,7 +439,7 @@ namespace PlexRequests.UI.Modules
                 }
                 if (r.Type == RequestType.TvShow)
                 {
-                    var sender = new TvSender(SonarrApi, SickRageApi);
+                    var sender = new TvSenderOld(SonarrApi, SickRageApi); // TODO put back
                     var sr = await SickRageSettings.GetSettingsAsync();
                     var sonarr = await SonarrSettings.GetSettingsAsync();
                     if (sr.Enabled)
