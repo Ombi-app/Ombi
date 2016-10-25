@@ -56,10 +56,13 @@ namespace PlexRequests.UI.Modules
         {
             var localUsers = await UserMapper.GetUsersAsync();
             var model = new List<UserManagementUsersViewModel>();
+
+            var usersDb = UserLoginsRepo.GetAll().ToList();
+
             foreach (var user in localUsers)
             {
-                var userDb = UserLoginsRepo.Get(user.UserGuid);   
-                model.Add(MapLocalUser(user, userDb.LastLoggedIn));
+                var userDb = usersDb.FirstOrDefault(x => x.UserId == user.UserGuid);
+                model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
             }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -70,7 +73,7 @@ namespace PlexRequests.UI.Modules
 
                 foreach (var u in plexUsers.User)
                 {
-                    var userDb = UserLoginsRepo.Get(u.Id);
+                    var userDb = usersDb.FirstOrDefault(x => x.UserId == u.Id);
                     model.Add(new UserManagementUsersViewModel
                     {
                         Username = u.Username,
@@ -82,7 +85,7 @@ namespace PlexRequests.UI.Modules
                         {
                             Thumb = u.Thumb
                         },
-                        LastLoggedIn = userDb.LastLoggedIn,
+                        LastLoggedIn = userDb?.LastLoggedIn ?? DateTime.MinValue,
                     });
                 }
             }
@@ -155,8 +158,8 @@ namespace PlexRequests.UI.Modules
             userFound.UserProperties = ByteConverterHelper.ReturnBytes(currentProps);
 
             var user = UserMapper.EditUser(userFound);
-            var dbUser = UserLoginsRepo.Get(user.UserGuid);
-            var retUser = MapLocalUser(user, dbUser.LastLoggedIn);
+            var dbUser = UserLoginsRepo.GetAll().FirstOrDefault(x => x.UserId == user.UserGuid);
+            var retUser = MapLocalUser(user, dbUser?.LastLoggedIn ?? DateTime.MinValue);
             return Response.AsJson(retUser);
         }
 
