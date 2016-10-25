@@ -240,7 +240,8 @@
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
-    <Compile Include="Models\UserUpdateViewModel.cs" />
+    <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
+    <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
     <Compile Include="Modules\ApiUserMetadataModule.cs" />
@@ -496,7 +497,7 @@
     </Content>
     <Compile Include="Modules\ApiRequestModule.cs" />
     <Compile Include="Models\ApiModel.cs" />
-    <Compile Include="Models\UserManagementUsersViewModel.cs" />
+    <Compile Include="Models\UserManagement\UserManagementUsersViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.min.js">

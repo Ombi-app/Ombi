@@ -55,11 +55,21 @@
                         </a>
                     </th>
                     <th>
+                        <a href="#" ng-click="sortType = 'alias'; sortReverse = !sortReverse">
+                            Alias
+                            <span ng-show="sortType == 'alias' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'alias' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
+                    <th>
                         <a href="#" ng-click="sortType = 'emailAddress'; sortReverse = !sortReverse">
                             Email
                             <span ng-show="sortType == 'emailAddress' && !sortReverse" class="fa fa-caret-down"></span>
                             <span ng-show="sortType == 'emailAddress' && sortReverse" class="fa fa-caret-up"></span>
                         </a>
+                    </th>
+                    <th>
+                        Roles
                     </th>
                     <th>
                         <a href="#" ng-click="sortType = 'type'; sortReverse = !sortReverse">
@@ -76,6 +86,9 @@
                         {{u.username}}
                     </td>
                     <td>
+                        {{u.alias}}
+                    </td>
+                    <td>
                         {{u.emailAddress}}
                     </td>
                     <td>
@@ -85,7 +98,7 @@
                         {{u.type === 1 ? 'Local User' : 'Plex User'}}
                     </td>
                     <td>
-                        <a href="#" ng-click="selectUser(u.id)" class="btn btn-info-outline">Details/Edit</a>
+                        <a href="#" ng-click="selectUser(u.id)" class="btn btn-sm btn-info-outline">Details/Edit</a>
                     </td>
                 </tr>
             </tbody>
@@ -109,23 +122,31 @@
         <div>
             <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
         </div>
-    <br/>
-    <br/>
+        <br />
+        <br />
         <div ng-show="selectedUser.type === 1">
             <!--Edit-->
-            
+
             <strong>Modify Roles:</strong>
             <!--Load all claims-->
-                <div class="checkbox" ng-repeat="claim in selectedUser.claimsItem">
-                    <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
-                    <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
-                </div>
-        
+            <div class="checkbox" ng-repeat="claim in selectedUser.claimsItem">
+                <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
+                <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
+            </div>
 
- 
-            
-            
+            <strong>Email Address</strong>
+            <div class="form-group">
+                <input id="emailAddress" type="email" ng-model="selectedUser.emailAddress" class="form-control form-control-custom" />
+            </div>
+
+            <strong>Alias</strong>
+            <div class="form-group">
+                <input id="alias" type="text" ng-model="selectedUser.alias" class="form-control form-control-custom" />
+            </div>
+
+
             <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
+            <button ng-click="deleteUser()" class="btn btn-danger-outline">Delete</button>
         </div>
 
 

@@ -66,6 +66,9 @@ namespace PlexRequests.UI.Models
         [JsonProperty("claims")]
         public List<ClaimsModel> Claims { get; set; }
 
+        public string Alias { get; set; }
+        public string EmailAddress { get; set; }
+
         public class ClaimsModel
         {
             [JsonProperty("name")]

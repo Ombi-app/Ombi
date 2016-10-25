@@ -24,12 +24,19 @@
             return $http.get('/usermanagement/claims');
         }
 
-        var updateUser = function (id, claims) {
-
+        var updateUser = function (id, claims, alias, email) {
             return $http({
                 url: '/usermanagement/updateUser',
                 method: "POST",
-                data: { id: id, claims: claims }
+                data: { id: id, claims: claims, alias: alias, emailAddress: email }
+            });
+        }
+
+        var deleteUser = function (id) {
+            return $http({
+                url: '/usermanagement/deleteUser',
+                method: "POST",
+                data: { id: id }
             });
         }
 
@@ -38,6 +45,7 @@
             addUser: addUser,
             getClaims: getClaims,
             updateUser: updateUser,
+            deleteUser: deleteUser
         };
     }
 

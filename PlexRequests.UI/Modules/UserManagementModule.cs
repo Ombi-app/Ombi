@@ -13,6 +13,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Store;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -36,6 +37,7 @@ namespace PlexRequests.UI.Modules
             Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
             Get["/claims"] = x => GetClaims();
             Post["/updateuser"] = x => UpdateUser();
+            Post["/deleteuser"] = x => DeleteUser();
         }
 
         private ICustomUserMapper UserMapper { get; }
@@ -53,40 +55,7 @@ namespace PlexRequests.UI.Modules
             var model = new List<UserManagementUsersViewModel>();
             foreach (var user in localUsers)
             {
-                var claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims);
-                var claimsString = string.Join(", ", claims);
-
-                var userProps = ByteConverterHelper.ReturnObject<UserProperties>(user.UserProperties);
-
-                var m = new UserManagementUsersViewModel
-                {
-                    Id = user.UserGuid,
-                    Claims = claimsString,
-                    Username = user.UserName,
-                    Type = UserType.LocalUser,
-                    EmailAddress = userProps.EmailAddress,
-                    ClaimsArray = claims,
-                    ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>()
-                };
-
-                // Add all of the current claims
-                foreach (var c in claims)
-                {
-                    m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = c, Selected = true });
-                }
-
-                var allClaims = UserMapper.GetAllClaims();
-
-                // Get me the current claims that the user does not have
-                var missingClaims = allClaims.Except(claims);
-
-                // Add them into the view
-                foreach (var missingClaim in missingClaims)
-                {
-                    m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = missingClaim, Selected = false });
-                }
-
-                model.Add(m);
+                model.Add(MapLocalUser(user));
             }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -136,7 +105,7 @@ namespace PlexRequests.UI.Modules
             var user = UserMapper.CreateUser(model.Username, model.Password, model.Claims, new UserProperties { EmailAddress = model.EmailAddress });
             if (user.HasValue)
             {
-                return Response.AsJson(user);
+                return Response.AsJson(MapLocalUser(UserMapper.GetUser(user.Value)));
             }
 
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user" });
@@ -174,10 +143,40 @@ namespace PlexRequests.UI.Modules
             var userFound = UserMapper.GetUser(new Guid(model.Id));
 
             userFound.Claims = ByteConverterHelper.ReturnBytes(claims.ToArray());
+            var currentProps = ByteConverterHelper.ReturnObject<UserProperties>(userFound.UserProperties);
+            currentProps.UserAlias = model.Alias;
+            currentProps.EmailAddress = model.EmailAddress;
+
+            userFound.UserProperties = ByteConverterHelper.ReturnBytes(currentProps);
 
             var user = UserMapper.EditUser(userFound);
 
-            return Response.AsJson(user);
+            var retUser = MapLocalUser(user);
+            return Response.AsJson(retUser);
+        }
+
+        private Response DeleteUser()
+        {
+            var body = Request.Body.AsString();
+            if (string.IsNullOrEmpty(body))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user, invalid JSON body" });
+            }
+
+            var model = JsonConvert.DeserializeObject<DeleteUserViewModel>(body);
+
+            if (string.IsNullOrWhiteSpace(model.Id))
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = true,
+                    Message = "Couldn't find the user"
+                });
+            }
+
+           UserMapper.DeleteUser(model.Id);
+
+            return Response.AsJson(new JsonResponseModel {Result = true});
         }
 
         private Response LocalDetails(Guid id)
@@ -223,6 +222,44 @@ namespace PlexRequests.UI.Modules
                 retVal.Add(new { Name = c, Selected = false });
             }
             return Response.AsJson(retVal);
+        }
+
+        private UserManagementUsersViewModel MapLocalUser(UsersModel user)
+        {
+            var claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims);
+            var claimsString = string.Join(", ", claims);
+
+            var userProps = ByteConverterHelper.ReturnObject<UserProperties>(user.UserProperties);
+
+            var m = new UserManagementUsersViewModel
+            {
+                Id = user.UserGuid,
+                Claims = claimsString,
+                Username = user.UserName,
+                Type = UserType.LocalUser,
+                EmailAddress = userProps.EmailAddress,
+                Alias = userProps.UserAlias,
+                ClaimsArray = claims,
+                ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>()
+            };
+
+            // Add all of the current claims
+            foreach (var c in claims)
+            {
+                m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = c, Selected = true });
+            }
+
+            var allClaims = UserMapper.GetAllClaims();
+
+            // Get me the current claims that the user does not have
+            var missingClaims = allClaims.Except(claims);
+
+            // Add them into the view
+            foreach (var missingClaim in missingClaims)
+            {
+                m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = missingClaim, Selected = false });
+            }
+            return m;
         }
     }
 }

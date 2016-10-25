@@ -54,20 +54,30 @@
                 return;
             }
 
+            if (!$scope.selectedClaims) {
+                $scope.error.error = true;
+                $scope.error.errorMessage = "Please select a permission";
+                generateNotify($scope.error.errorMessage, 'warning');
+                return;
+            }
+
             userManagementService.addUser($scope.user, $scope.selectedClaims)
                 .then(function (data) {
                     if (data.message) {
                         $scope.error.error = true;
                         $scope.error.errorMessage = data.message;
                     } else {
-                        $scope.users.push(data); // Push the new user into the array to update the DOM
+                        $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};
                         $scope.selectedClaims = {};
+                        $scope.claims.forEach(function (entry) {
+                            entry.selected = false;
+                        });
                     }
                 });
         };
 
-        $scope.hasClaim = function(claim) {
+        $scope.hasClaim = function (claim) {
             var claims = $scope.selectedUser.claimsArray;
 
             var result = claims.some(function (item) {
@@ -86,7 +96,26 @@
 
 
         $scope.updateUser = function () {
-            userManagementService.updateUser($scope.selectedUser.id, $scope.selectedUser.claimsItem);
+            var u = $scope.selectedUser;
+            userManagementService.updateUser(u.id, u.claimsItem, u.alias, u.emailAddress)
+            .then(function (data) {
+                if (data) {
+                    $scope.selectedUser = data;
+                    return successCallback("Updated User", "success");
+                }
+            });
+        }
+
+        $scope.deleteUser = function () {
+            var u = $scope.selectedUser;
+            var result = userManagementService.deleteUser(u.id);
+
+            result.success(function(data) {
+                if (data.result) {
+                    removeUser(u.id, true);
+                    return successCallback("Deleted User", "success");
+                }
+            });
         }
 
         function getBaseUrl() {
@@ -100,7 +129,20 @@
             $scope.getClaims();
             return;
         }
+
+        function removeUser(id, current) {
+            $scope.users = $scope.users.filter(function (user) {
+                return user.id !== id;
+            });
+            if (current) {
+                $scope.selectedUser = null;
+            }
+        }
     }
+
+    function successCallback(message, type) {
+        generateNotify(message, type);
+    };
 
     angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", controller]);
 }());
