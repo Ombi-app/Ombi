@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Models
 {
@@ -18,6 +20,7 @@ namespace PlexRequests.UI.Models
         public UserManagementPlexInformation PlexInfo { get; set; }
         public string[] ClaimsArray { get; set; }
         public List<UserManagementUpdateModel.ClaimsModel> ClaimsItem { get; set; }
+        public DateTime LastLoggedIn { get; set; }
     }
 
     public class UserManagementPlexInformation
@@ -40,11 +43,6 @@ namespace PlexRequests.UI.Models
         public string NumLibraries { get; set; }
     }
 
-    public enum UserType
-    {
-        PlexUser,
-        LocalUser
-    }
 
     public class UserManagementCreateModel
     {

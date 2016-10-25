@@ -87,6 +87,7 @@
     <Compile Include="TypeHelper.cs" />
     <Compile Include="UriHelper.cs" />
     <Compile Include="UserClaims.cs" />
+    <Compile Include="UserType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

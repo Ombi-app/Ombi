@@ -78,6 +78,14 @@
                             <span ng-show="sortType == 'type' && sortReverse" class="fa fa-caret-up"></span>
                         </a>
                     </th>
+                    
+                    <th>
+                        <a href="#" ng-click="sortType = 'lastLoggedIn'; sortReverse = !sortReverse">
+                            Last Logged In
+                            <span ng-show="sortType == 'lastLoggedIn' && !sortReverse" class="fa fa-caret-down"></span>
+                            <span ng-show="sortType == 'lastLoggedIn' && sortReverse" class="fa fa-caret-up"></span>
+                        </a>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -96,6 +104,9 @@
                     </td>
                     <td>
                         {{u.type === 1 ? 'Local User' : 'Plex User'}}
+                    </td>
+                    <td>
+                        {{u.lastLoggedIn}}
                     </td>
                     <td>
                         <a href="#" ng-click="selectUser(u.id)" class="btn btn-sm btn-info-outline">Details/Edit</a>

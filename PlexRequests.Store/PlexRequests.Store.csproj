@@ -87,6 +87,7 @@
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />
+    <Compile Include="UserLogins.cs" />
     <Compile Include="UsersModel.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Sql.Designer.cs">

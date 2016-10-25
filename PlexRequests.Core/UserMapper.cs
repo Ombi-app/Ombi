@@ -139,7 +139,6 @@ namespace PlexRequests.Core
             return CreateUser(username, password, new[] { UserClaims.User }, properties);
         }
 
-
         public IEnumerable<string> GetAllClaims()
         {
             var properties = typeof(UserClaims).GetConstantsValues<string>();
@@ -200,6 +199,5 @@ namespace PlexRequests.Core
         Guid? CreatePowerUser(string username, string password, UserProperties properties = null);
         Guid? CreateRegularUser(string username, string password, UserProperties properties = null);
         void DeleteUser(string userId);
-
     }
 }

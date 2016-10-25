@@ -11,6 +11,15 @@ CREATE TABLE IF NOT EXISTS Users
 	UserProperties						BLOB
 );
 
+CREATE TABLE IF NOT EXISTS UserLogins
+(
+	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    UserId								varchar(50) NOT NULL ,
+    Type								INTEGER NOT NULL,
+    LastLoggedIn						varchar(100) NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS UserLogins_UserId ON UserLogins (UserId);
 
 CREATE TABLE IF NOT EXISTS GlobalSettings
 (

@@ -232,10 +232,18 @@ namespace PlexRequests.UI.Modules
             var plexMovies = Checker.GetPlexMovies();
             var settings = await PrService.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
+            var counter = 0;
             foreach (var movie in apiMovies)
             {
-                var movieInfoTask = MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false); // TODO needs to be careful about this, it's adding extra time to search...
-                // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                var imdbId = string.Empty;
+                if (counter <= 5) // Let's only do it for the first 5 items
+                {
+                    var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false); // TODO needs to be careful about this, it's adding extra time to search...
+                                                                                                            // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                    imdbId = movieInfoTask.ImdbId;
+                    counter++;
+                }
+
                 var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
@@ -254,8 +262,7 @@ namespace PlexRequests.UI.Modules
                     VoteCount = movie.VoteCount
                 };
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
-                var movieInfo = await movieInfoTask;
-                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(), movieInfo.ImdbId);
+                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(), imdbId);
                 if (plexMovie != null)
                 {
                     viewMovie.Available = true;

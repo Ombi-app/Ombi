@@ -14,13 +14,14 @@ using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex) : base("usermanagement", pr)
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins) : base("usermanagement", pr)
         {
 #if !DEBUG
             this.RequiresClaims(UserClaims.Admin);
@@ -28,6 +29,7 @@ namespace PlexRequests.UI.Modules
             UserMapper = m;
             PlexApi = plexApi;
             PlexSettings = plex;
+            UserLoginsRepo = userLogins;
 
             Get["/"] = x => Load();
 
@@ -43,6 +45,7 @@ namespace PlexRequests.UI.Modules
         private ICustomUserMapper UserMapper { get; }
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private IRepository<UserLogins> UserLoginsRepo { get; }
 
         private Negotiator Load()
         {
@@ -55,7 +58,8 @@ namespace PlexRequests.UI.Modules
             var model = new List<UserManagementUsersViewModel>();
             foreach (var user in localUsers)
             {
-                model.Add(MapLocalUser(user));
+                var userDb = UserLoginsRepo.Get(user.UserGuid);   
+                model.Add(MapLocalUser(user, userDb.LastLoggedIn));
             }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -66,7 +70,7 @@ namespace PlexRequests.UI.Modules
 
                 foreach (var u in plexUsers.User)
                 {
-
+                    var userDb = UserLoginsRepo.Get(u.Id);
                     model.Add(new UserManagementUsersViewModel
                     {
                         Username = u.Username,
@@ -77,7 +81,8 @@ namespace PlexRequests.UI.Modules
                         PlexInfo = new UserManagementPlexInformation
                         {
                             Thumb = u.Thumb
-                        }
+                        },
+                        LastLoggedIn = userDb.LastLoggedIn,
                     });
                 }
             }
@@ -105,7 +110,7 @@ namespace PlexRequests.UI.Modules
             var user = UserMapper.CreateUser(model.Username, model.Password, model.Claims, new UserProperties { EmailAddress = model.EmailAddress });
             if (user.HasValue)
             {
-                return Response.AsJson(MapLocalUser(UserMapper.GetUser(user.Value)));
+                return Response.AsJson(MapLocalUser(UserMapper.GetUser(user.Value), DateTime.MinValue));
             }
 
             return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save user" });
@@ -150,8 +155,8 @@ namespace PlexRequests.UI.Modules
             userFound.UserProperties = ByteConverterHelper.ReturnBytes(currentProps);
 
             var user = UserMapper.EditUser(userFound);
-
-            var retUser = MapLocalUser(user);
+            var dbUser = UserLoginsRepo.Get(user.UserGuid);
+            var retUser = MapLocalUser(user, dbUser.LastLoggedIn);
             return Response.AsJson(retUser);
         }
 
@@ -224,7 +229,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(retVal);
         }
 
-        private UserManagementUsersViewModel MapLocalUser(UsersModel user)
+        private UserManagementUsersViewModel MapLocalUser(UsersModel user, DateTime lastLoggedIn)
         {
             var claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims);
             var claimsString = string.Join(", ", claims);
@@ -240,7 +245,8 @@ namespace PlexRequests.UI.Modules
                 EmailAddress = userProps.EmailAddress,
                 Alias = userProps.UserAlias,
                 ClaimsArray = claims,
-                ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>()
+                ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>(),
+                LastLoggedIn = lastLoggedIn
             };
 
             // Add all of the current claims

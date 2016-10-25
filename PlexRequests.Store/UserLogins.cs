@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: PlexAuthentication.cs
+//    File: UserLogins.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,40 +25,17 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
+using System;
+using Dapper.Contrib.Extensions;
+using PlexRequests.Helpers;
 
-namespace PlexRequests.Api.Models.Plex
+namespace PlexRequests.Store
 {
-    public class PlexAuthentication
+    [Table("UserLogins")]
+    public class UserLogins : Entity
     {
-        public User user { get; set; }
-    }
-    public class Subscription
-    {
-        public bool active { get; set; }
-        public string status { get; set; }
-        public object plan { get; set; }
-        public object features { get; set; }
-    }
-
-    public class Roles
-    {
-        public List<object> roles { get; set; }
-    }
-
-    public class User
-    {
-        public string email { get; set; }
-        public string uuid { get; set; }
-        public string joined_at { get; set; }
-        public string username { get; set; }
-        public string title { get; set; }
-        public string authentication_token { get; set; }
-        public Subscription subscription { get; set; }
-        public Roles roles { get; set; }
-        public List<string> entitlements { get; set; }
-        public object confirmed_at { get; set; }
-        public int forum_id { get; set; }
+        public string UserId { get; set; }
+        public UserType Type { get; set; }
+        public DateTime LastLoggedIn { get; set; }
     }
 }
-

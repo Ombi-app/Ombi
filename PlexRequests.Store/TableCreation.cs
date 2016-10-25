@@ -57,7 +57,7 @@ namespace PlexRequests.Store
             }
         }
 
-        public static void AddColumn(this IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
+        public static void AddColumn(this IDbConnection connection, string tableName, string alterType, string newColumn, bool allowNulls, string dataType)
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
@@ -67,7 +67,7 @@ namespace PlexRequests.Store
             }
 
             var query = $"ALTER TABLE {tableName} {alterType} {newColumn} {dataType}";
-            if (isNullable)
+            if (!allowNulls)
             {
                 query = query + " NOT NULL";
             }

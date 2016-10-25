@@ -53,12 +53,11 @@ namespace PlexRequests.Core.Migration.Migrations
             UpdateApplicationSettings();
             UpdateDb(con);
 
-            UpdateSchema(con, Version);     
+            UpdateSchema(con, Version);
         }
 
         private void UpdateDb(IDbConnection con)
         {
-
         }
 
         private void UpdateApplicationSettings()
