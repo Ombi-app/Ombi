@@ -50,7 +50,7 @@
 
             <div class="form-group">
                 <div>
-                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin</button>
+                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="spinner"></div></button>
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
             var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: "post",
                 url: url,
@@ -111,14 +111,17 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
+                        $('#spinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
+                        $('#spinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+                    $('#spinner').attr("class", "fa fa-times");
                 }
             });
         });

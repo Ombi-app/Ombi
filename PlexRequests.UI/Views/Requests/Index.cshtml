@@ -223,11 +223,10 @@
                 {{/if}}
                 <div>@UI.Requests_RequestedDate: {{requestedDate}}</div>
                 <div>
-                    @UI.Issues_Issue:
                     {{#if_eq issueId 0}}
-                    <i class="fa fa-times"></i>
+                    @*Nothing*@
                     {{else}}
-                    <a href="@formAction/issues/{{issueId}}"><i class="fa fa-check"></i></a>
+                    @UI.Issues_Issue: <a href="@formAction/issues/{{issueId}}"><i class="fa fa-check"></i></a>
                     {{/if_eq}}
                 </div>
             </div>

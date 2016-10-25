@@ -135,6 +135,75 @@ namespace PlexRequests.Api
             return result;
         }
 
+        public SonarrAddSeries AddSeriesNew(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
+        {
+            var request = new RestRequest
+            {
+                Resource = "/api/Series?",
+                Method = Method.POST
+            };
+
+            var options = new SonarrAddSeries
+            {
+                seasonFolder = seasonFolders,
+                title = title,
+                qualityProfileId = qualityId,
+                tvdbId = tvdbId,
+                titleSlug = title,
+                seasons = new List<Season>(),
+                rootFolderPath = rootPath,
+                monitored = monitor
+            };
+
+            if (!searchForMissingEpisodes)
+            {
+                options.addOptions = new AddOptions
+                {
+                    searchForMissingEpisodes = false,
+                    ignoreEpisodesWithFiles = true,
+                    ignoreEpisodesWithoutFiles = true
+                };
+            }
+
+            for (var i = 1; i <= seasons.Length; i++)
+            {
+                var season = new Season
+                {
+                    seasonNumber = i,
+                    // ReSharper disable once SimplifyConditionalTernaryExpression
+                    monitored = true
+                };
+                options.seasons.Add(season);
+            }
+
+            Log.Debug("Sonarr API Options:");
+            Log.Debug(options.DumpJson());
+
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(options);
+
+            SonarrAddSeries result;
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
+                    TimeSpan.FromSeconds (1),
+                    TimeSpan.FromSeconds(2),
+                });
+
+                result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                var error = Api.ExecuteJson<List<SonarrError>>(request, baseUrl);
+                var messages = error?.Select(x => x.errorMessage).ToList();
+                messages?.ForEach(x => Log.Error(x));
+                result = new SonarrAddSeries { ErrorMessages = messages };
+            }
+
+            return result;
+        }
+
         public SystemStatus SystemStatus(string apiKey, Uri baseUrl)
         {
             var request = new RestRequest { Resource = "/api/system/status", Method = Method.GET };
