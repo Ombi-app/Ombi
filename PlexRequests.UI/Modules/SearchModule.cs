@@ -488,7 +488,7 @@ namespace PlexRequests.UI.Modules
                 Type = RequestType.Movie,
                 Overview = movieInfo.Overview,
                 ImdbId = movieInfo.ImdbId,
-                PosterPath = movieInfo.PosterPath.Contains("image.tmdb.org") ? movieInfo.PosterPath : "https://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
+                PosterPath = movieInfo.PosterPath,
                 Title = movieInfo.Title,
                 ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
                 Status = movieInfo.Status,
