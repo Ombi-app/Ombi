@@ -2,7 +2,9 @@
 $primary-colour-outline: #ff761b;
 $bg-colour: #333333;
 $bg-colour-disabled: #252424;
-$i: !important;
+$i:
+!important
+;
 
 .form-control-custom {
     background-color: $bg-colour $i;
@@ -201,18 +203,18 @@ button.list-group-item:focus {
 }
 
 .badge {
-  display: inline-block;
-  min-width: 10px;
-  padding: 3px 7px;
-  font-size: 12px;
-  font-weight: 300;
-  color: #ebebeb;
-  line-height: 1;
-  vertical-align: middle;
-  white-space: nowrap;
-  text-align: center;
-  background-color: $bg-colour;
-  border-radius: 10px;
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 300;
+    color: #ebebeb;
+    line-height: 1;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-align: center;
+    background-color: $bg-colour;
+    border-radius: 10px;
 }
 
 .bootstrap-datetimepicker-widget.dropdown-menu {
@@ -221,4 +223,8 @@ button.list-group-item:focus {
 
 .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
     border-bottom: 6px solid $bg-colour $i;
+}
+
+#sidebar-wrapper {
+    background: $bg-colour-disabled;
 }

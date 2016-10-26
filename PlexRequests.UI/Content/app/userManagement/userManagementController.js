@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var controller = function ($scope, userManagementService) {
+    var controller = function ($scope, userManagementService, moment) {
 
         $scope.user = {}; // The local user
         $scope.users = []; // list of users
@@ -9,6 +9,7 @@
         $scope.selectedUser = {}; // User on the right side
         $scope.selectedClaims = {};
 
+        $scope.minDate = "0001-01-01T00:00:00.0000000+00:00";
 
         $scope.sortType = "username";
         $scope.sortReverse = false;
@@ -20,12 +21,19 @@
             errorMessage: ""
         };
 
+        var open = false;
+
         // Select a user to populate on the right side
         $scope.selectUser = function (id) {
             var user = $scope.users.filter(function (item) {
                 return item.id === id;
             });
             $scope.selectedUser = user[0];
+
+            if (!open) {
+                $("#wrapper").toggleClass("toggled");
+                open = true;
+            }
         }
 
         // Get all users in the system
@@ -122,6 +130,10 @@
             return $('#baseUrl').val();
         }
 
+        $scope.formatDate = function (utcDate) {
+            return moment.utc(utcDate).local().format('lll');
+        }
+
 
         // On page load
         $scope.init = function () {
@@ -144,5 +156,6 @@
         generateNotify(message, type);
     };
 
-    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", controller]);
+
+    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService","moment", controller]);
 }());

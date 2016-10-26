@@ -218,12 +218,14 @@ namespace PlexRequests.UI.Helpers
         {
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
+            var sb = new StringBuilder();
 
-            var controller = $"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>";
-            controller += $"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>";
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
 
 
-            return helper.Raw(controller);
+            return helper.Raw(sb.ToString());
         }
 
 
