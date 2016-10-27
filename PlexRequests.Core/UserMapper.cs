@@ -126,17 +126,17 @@ namespace PlexRequests.Core
 
         public Guid? CreateAdmin(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser, UserClaims.Admin }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser, UserClaims.Admin }, properties);
         }
 
         public Guid? CreatePowerUser(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser }, properties);
         }
 
         public Guid? CreateRegularUser(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser }, properties);
         }
 
         public IEnumerable<string> GetAllClaims()

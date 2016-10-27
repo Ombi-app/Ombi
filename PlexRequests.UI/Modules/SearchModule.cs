@@ -444,6 +444,15 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            {
+                return
+                    Response.AsJson(new JsonResponseModel()
+                    {
+                        Result = false,
+                        Message = "Sorry, you do not have the correct permissions to request a movie!"
+                    });
+            }
             var settings = await PrService.GetSettingsAsync();
             if (!await CheckRequestLimit(settings, RequestType.Movie))
             {
@@ -544,6 +553,15 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            {
+                return
+                    Response.AsJson(new JsonResponseModel()
+                    {
+                        Result = false,
+                        Message = "Sorry, you do not have the correct permissions to request a TV Show!"
+                    });
+            }
             // Get the JSON from the request
             var req = (Dictionary<string, object>.ValueCollection)Request.Form.Values;
             EpisodeRequestModel episodeModel = null;

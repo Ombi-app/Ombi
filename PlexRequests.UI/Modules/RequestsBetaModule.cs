@@ -260,7 +260,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> DeleteRequest(int requestid)
         {
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
             Analytics.TrackEventAsync(Category.Requests, Action.Delete, "Delete Request", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var currentEntity = await Service.GetAsync(requestid);
@@ -308,7 +308,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ClearIssue(int requestId)
         {
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
 
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
@@ -326,7 +326,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ChangeRequestAvailability(int requestId, bool available)
         {
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
             Analytics.TrackEventAsync(Category.Requests, Action.Update, available ? "Make request available" : "Make request unavailable", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
