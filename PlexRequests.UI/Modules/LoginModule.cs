@@ -40,13 +40,15 @@ using Nancy.Security;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker)
+        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker, IRepository<UserLogins> userLoginRepo)
             : base(pr)
         {
             UserMapper = m;
@@ -101,6 +103,14 @@ namespace PlexRequests.UI.Modules
                 {
                     redirect = !string.IsNullOrEmpty(BaseUrl) ? $"/{BaseUrl}/search" : "/search";
                 }
+
+                userLoginRepo.Insert(new UserLogins
+                {
+                    LastLoggedIn = DateTime.UtcNow,
+                    Type = UserType.LocalUser,
+                    UserId = userId.ToString()
+                });
+
                 return this.LoginAndRedirect(userId.Value, expiry, redirect);
             };
 

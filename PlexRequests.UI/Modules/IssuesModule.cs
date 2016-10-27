@@ -366,7 +366,7 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
-                this.RequiresClaims(UserClaims.Admin);
+                this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
                 var issue = await IssuesService.GetAsync(issueId);
                 var request = await RequestService.GetAsync(issue.RequestId);
                 if (request.Id > 0)
@@ -399,7 +399,7 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
-                this.RequiresClaims(UserClaims.Admin);
+                this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
 
                 var issue = await IssuesService.GetAsync(issueId);
                 issue.IssueStatus = status;
@@ -417,7 +417,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Negotiator> ClearIssue(int issueId, IssueState state)
         {
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
             var issue = await IssuesService.GetAsync(issueId);
 
             var toRemove = issue.Issues.FirstOrDefault(x => x.Issue == state);
@@ -430,7 +430,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> AddNote(int requestId, string noteArea, IssueState state)
         {
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
             var issue = await IssuesService.GetAsync(requestId);
             if (issue == null)
             {

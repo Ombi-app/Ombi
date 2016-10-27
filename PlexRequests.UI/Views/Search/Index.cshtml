@@ -168,14 +168,14 @@
                 {{/if_eq}}
                 {{#if_eq type "tv"}}
                 {{#if available}}
-                <span class="label label-success">Available on Plex</span>
+                <span class="label label-success">@UI.Search_Available_on_plex</span>
                 {{else}}
                 {{#if approved}}
-                <span class="label label-info">Processing request</span>
+                <span class="label label-info">@UI.Search_Processing_Request</span>
                 {{else if requested}}
-                <span class="label label-warning">Pending approval</span>
+                <span class="label label-warning">@UI.Search_Pending_approval</span>
                 {{else}}                
-                <span class="label label-danger">Not Requested yet</span>
+                <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
                 {{/if}}
                 {{/if}}
                 <br />
@@ -188,27 +188,28 @@
             <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                 <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                 {{#if_eq type "movie"}}
-                {{#if_eq available true}}
-                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
-                <br />
-                <br />
-                <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                {{else}}
-                {{#if_eq requested true}}
-                <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
-                {{else}}
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                    {{#if_eq available true}}
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
+                        <br />
+                        <br />
+                        <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                    {{else}}
+                        {{#if_eq requested true}}
+                            <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
+                        {{else}}
+                            <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        {{/if_eq}}
+                    {{/if_eq}}
                 {{/if_eq}}
-                {{/if_eq}}
-                {{/if_eq}}
+
                 {{#if_eq type "tv"}}
                     {{#if_eq tvFullyAvailable true}}
                         @*//TODO Not used yet*@
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
                     {{else}}
                         <div class="dropdown">
-                            <button id="{{id}}" class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="fa fa-plus"></i> @UI.Search_Request
+                            <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">

@@ -1,6 +1,6 @@
 ﻿(function () {
 
-    var controller = function ($scope, userManagementService) {
+    var controller = function ($scope, userManagementService, moment) {
 
         $scope.user = {}; // The local user
         $scope.users = []; // list of users
@@ -9,6 +9,7 @@
         $scope.selectedUser = {}; // User on the right side
         $scope.selectedClaims = {};
 
+        $scope.minDate = "0001-01-01T00:00:00.0000000+00:00";
 
         $scope.sortType = "username";
         $scope.sortReverse = false;
@@ -20,9 +21,19 @@
             errorMessage: ""
         };
 
+        var open = false;
+
         // Select a user to populate on the right side
         $scope.selectUser = function (id) {
-            $scope.selectedUser = $scope.users.find(x => x.id === id);
+            var user = $scope.users.filter(function (item) {
+                return item.id === id;
+            });
+            $scope.selectedUser = user[0];
+
+            if (!open) {
+                $("#wrapper").toggleClass("toggled");
+                open = true;
+            }
         }
 
         // Get all users in the system
@@ -51,17 +62,36 @@
                 return;
             }
 
+            if (!$scope.selectedClaims) {
+                $scope.error.error = true;
+                $scope.error.errorMessage = "Please select a permission";
+                generateNotify($scope.error.errorMessage, 'warning');
+                return;
+            }
+
             userManagementService.addUser($scope.user, $scope.selectedClaims)
                 .then(function (data) {
                     if (data.message) {
                         $scope.error.error = true;
                         $scope.error.errorMessage = data.message;
                     } else {
-                        $scope.users.push(data); // Push the new user into the array to update the DOM
+                        $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};
                         $scope.selectedClaims = {};
+                        $scope.claims.forEach(function (entry) {
+                            entry.selected = false;
+                        });
                     }
                 });
+        };
+
+        $scope.hasClaim = function (claim) {
+            var claims = $scope.selectedUser.claimsArray;
+
+            var result = claims.some(function (item) {
+                return item === claim.name;
+            });
+            return result;
         };
 
         $scope.$watch('claims|filter:{selected:true}',
@@ -74,11 +104,34 @@
 
 
         $scope.updateUser = function () {
+            var u = $scope.selectedUser;
+            userManagementService.updateUser(u.id, u.claimsItem, u.alias, u.emailAddress)
+            .then(function (data) {
+                if (data) {
+                    $scope.selectedUser = data;
+                    return successCallback("Updated User", "success");
+                }
+            });
+        }
 
+        $scope.deleteUser = function () {
+            var u = $scope.selectedUser;
+            var result = userManagementService.deleteUser(u.id);
+
+            result.success(function(data) {
+                if (data.result) {
+                    removeUser(u.id, true);
+                    return successCallback("Deleted User", "success");
+                }
+            });
         }
 
         function getBaseUrl() {
             return $('#baseUrl').val();
+        }
+
+        $scope.formatDate = function (utcDate) {
+            return moment.utc(utcDate).local().format('lll');
         }
 
 
@@ -88,7 +141,21 @@
             $scope.getClaims();
             return;
         }
+
+        function removeUser(id, current) {
+            $scope.users = $scope.users.filter(function (user) {
+                return user.id !== id;
+            });
+            if (current) {
+                $scope.selectedUser = null;
+            }
+        }
     }
 
-    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", controller]);
+    function successCallback(message, type) {
+        generateNotify(message, type);
+    };
+
+
+    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService","moment", controller]);
 }());

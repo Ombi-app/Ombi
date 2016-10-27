@@ -49,6 +49,7 @@ namespace PlexRequests.Api.Models.Plex
     public class User
     {
         public string email { get; set; }
+        public string uuid { get; set; }
         public string joined_at { get; set; }
         public string username { get; set; }
         public string title { get; set; }

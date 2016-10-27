@@ -179,3 +179,6 @@ button.list-group-item:focus {
 .bootstrap-datetimepicker-widget.dropdown-menu.bottom:after {
   border-bottom: 6px solid #333333 !important; }
 
+#sidebar-wrapper {
+  background: #252424; }
+

@@ -26,8 +26,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
@@ -35,10 +33,7 @@ using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-
-using PlexRequests.Helpers.Exceptions;
 
 namespace PlexRequests.UI.Helpers
 {
@@ -58,6 +53,13 @@ namespace PlexRequests.UI.Helpers
             return await SendToSonarr(sonarrSettings, model, string.Empty);
         }
 
+        /// <summary>
+        /// Broken Way 
+        /// </summary>
+        /// <param name="sonarrSettings"></param>
+        /// <param name="model"></param>
+        /// <param name="qualityId"></param>
+        /// <returns></returns>
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
             var qualityProfile = 0;
@@ -121,15 +123,23 @@ namespace PlexRequests.UI.Helpers
             if (series == null)
             {
                 // Set the series as monitored with a season count as 0 so it doesn't search for anything
-                SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, model.SeasonList, sonarrSettings.ApiKey,
+                SonarrApi.AddSeriesNew(model.ProviderId, model.Title, qualityProfile,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
 
                 await Task.Delay(TimeSpan.FromSeconds(1));
-                
+
                 series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+
+                
+                foreach (var s in series.seasons)
+                {
+                    s.monitored = false;
+                }
+
+                SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
             }
-           
+
             if (requestAll ?? false)
             {
                 // Monitor all seasons
@@ -138,10 +148,20 @@ namespace PlexRequests.UI.Helpers
                     season.monitored = true;
                 }
 
+
                 SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
                 SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri); // Search For all episodes!"
+
+
+                //// This is a work around for this issue: https://github.com/Sonarr/Sonarr/issues/1507
+                //// The above is the previous code.
+                //SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
+                //    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, model.SeasonList, sonarrSettings.ApiKey,
+                //    sonarrSettings.FullUri, true, true);
                 return new SonarrAddSeries { title = series.title }; // We have updated it
             }
+
+            
 
             if (first ?? false)
             {

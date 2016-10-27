@@ -74,27 +74,6 @@
                 </select>
             </div>
         </div>
-            <br/>
-            <br/>
-        <div class="form-group">
-            <div class="checkbox">
-
-                <small>Note: This will require you to setup your email notifications</small>
-                @if (Model.SendRecentlyAddedEmail)
-                {
-                    <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Send out a weekly email of recently added content to all your Plex 'Friends'</label>
-                }
-                else
-                {
-                    <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Send out a weekly email of recently added content to all your Plex 'Friends'</label>
-                }
-
-            </div>
-        </div>
-        <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin</button>
-        <br/>
-        <br/>
-
         <div class="form-group">
                 <div class="checkbox">
 
@@ -382,7 +361,7 @@
             });
         });
 
-        $('#refreshKey').click(function (e) {
+        $('#refreshKey').click(function(e) {
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
             var url = createBaseUrl(base, '/admin/createapikey');
@@ -391,37 +370,13 @@
                 type: "post",
                 url: url,
                 dataType: "json",
-                success: function (response) {
+                success: function(response) {
                     if (response) {
                         generateNotify("Success!", "success");
                         $('#apiKey').val(response);
                     }
                 },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                }
-            });
-        });
-
-        $('#recentlyAddedBtn').click(function (e) {
-            e.preventDefault();
-            var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-
-            $.ajax({
-                type: "post",
-                url: url,
-                dataType: "json",
-                success: function (response) {
-                    if (response) {
-                        generateNotify(response.message, "success");
-                    } else {
-
-                        generateNotify(response.message, "danger");
-                    }
-                },
-                error: function (e) {
+                error: function(e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

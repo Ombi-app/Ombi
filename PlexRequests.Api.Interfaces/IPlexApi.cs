@@ -44,6 +44,6 @@ namespace PlexRequests.Api.Interfaces
         PlexSearch GetAllEpisodes(string authToken, Uri host, string section, int startPage, int returnCount);
         PlexServer GetServer(string authToken);
         PlexSeasonMetadata GetSeasons(string authToken, Uri plexFullHost, string ratingKey);
-        RecentlyAdded RecentlyAdded(string authToken, Uri plexFullHost);
+        RecentlyAddedModel RecentlyAdded(string authToken, Uri plexFullHost, string sectionId);
     }
 }

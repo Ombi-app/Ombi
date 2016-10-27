@@ -16,7 +16,7 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Plex Settings</legend>
-
+            @*<input id="advancedToggle" type="checkbox"/>*@ @*TODO*@
             <div class="form-group">
                 <label for="Ip" class="control-label">Plex Hostname or IP</label>
                 <div>
@@ -87,6 +87,21 @@
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>
             </div>
+            
+            @*<div class="form-group">
+                <label for="PlexDatabaseLocationOverride" class="control-label">Plex Database Override</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="PlexDatabaseLocationOverride" name="PlexDatabaseLocationOverride" placeholder="%LOCALAPPDATA%\Plex Media Server\" value="@Model.PlexDatabaseLocationOverride">
+                </div>
+                <small>
+                    This is your Plex data directory location, if we cannot manually find it then you need to specify the location! See <a href="https://support.plex.tv/hc/en-us/articles/202915258-Where-is-the-Plex-Media-Server-data-directory-located-">Here</a>.
+                </small>
+            </div>
+            <div class="form-group">
+                <div class="">
+                    <button id="dbTest" class="btn btn-primary-outline">Test Database Directory <i class="fa fa-database"></i> <div id="dbSpinner"></div></button>
+                </div>
+            </div>*@
 
             <div class="form-group">
                 <label for="authToken" class="control-label">Plex Authorization Token</label>
@@ -94,6 +109,8 @@
                     <input type="text" class="form-control-custom form-control" id="authToken" name="PlexAuthToken" placeholder="Plex Auth Token" value="@Model.PlexAuthToken">
                 </div>
             </div>
+            
+
 
             <div class="form-group">
                 <label for="username" class="control-label">Username and Password</label>
@@ -129,6 +146,9 @@
 
 <script>
     $(function () {
+
+        $("#advancedToggle").bootstrapSwitch();
+
         var base = '@Html.GetBaseUrl()';
 
         $('#testPlex').click(function (e) {
@@ -157,6 +177,38 @@
                 error: function (e) {
 
         		$('#spinner').attr("class", "fa fa-times");
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#dbTest').click(function (e) {
+            e.preventDefault();
+            var url = createBaseUrl(base, '/test/plexdb');
+            var $form = $("#mainForm");
+
+            $('#dbSpinner').attr("class", "fa fa-spinner fa-spin");
+            $.ajax({
+                type: $form.prop("method"),
+                url: url,
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    $('#dbSpinner').attr("class", "");
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+
+                        $('#dbSpinner').attr("class", "fa fa-check");
+                    } else {
+                        generateNotify(response.message, "warning");
+                        $('#dbSpinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+
+                    $('#spinner').attr("class", "fa fa-times");
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                 }

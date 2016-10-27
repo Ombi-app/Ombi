@@ -24,6 +24,8 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -63,6 +65,37 @@ namespace PlexRequests.Helpers
                 }
             }
             return sb.ToString();
+        }
+
+        public static IEnumerable<string> SplitEmailsByDelimiter(this string input, char delimiter)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                yield return string.Empty;
+            }
+            var startIndex = 0;
+            var delimiterIndex = 0;
+
+            while (delimiterIndex >= 0)
+            {
+                delimiterIndex = input.IndexOf(delimiter, startIndex);
+                string substring = input;
+                if (delimiterIndex > 0)
+                {
+                    substring = input.Substring(0, delimiterIndex).Trim();
+                }
+
+                if (!substring.Contains("\"") || substring.IndexOf("\"") != substring.LastIndexOf("\""))
+                {
+                    yield return substring;
+                    input = input.Substring(delimiterIndex + 1).Trim();
+                    startIndex = 0;
+                }
+                else
+                {
+                    startIndex = delimiterIndex + 1;
+                }
+            }
         }
     }
 }

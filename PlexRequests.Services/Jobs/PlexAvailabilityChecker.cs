@@ -123,12 +123,13 @@ namespace PlexRequests.Services.Jobs
                     case RequestType.TvShow:
                         if (!plexSettings.EnableTvEpisodeSearching)
                         {
-                            matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId);
+                            matchResult = IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId, r.SeasonList);
                         }
                         else
                         {
-                            matchResult =
-                                r.Episodes.All(x => IsEpisodeAvailable(r.TvDbId, x.SeasonNumber, x.EpisodeNumber));
+                            matchResult = r.Episodes.Any() ?
+                                r.Episodes.All(x => IsEpisodeAvailable(r.TvDbId, x.SeasonNumber, x.EpisodeNumber)) :
+                                IsTvShowAvailable(shows, r.Title, releaseDate, r.TvDbId, r.SeasonList);
                         }
                         break;
                     case RequestType.Album:
@@ -270,7 +271,7 @@ namespace PlexRequests.Services.Jobs
             {
                 if (advanced)
                 {
-                    if (seasons != null && show.ProviderId == providerId)
+                    if (show.ProviderId == providerId && seasons != null)
                     {
                         if (seasons.Any(season => show.Seasons.Contains(season)))
                         {
@@ -411,6 +412,8 @@ namespace PlexRequests.Services.Jobs
 
             try
             {
+
+                // TODO what the fuck was I thinking
                 if (setCache)
                 {
                     results = GetLibraries(plexSettings);

@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@Html.LoadSettingsAssets()
 <div class="col-lg-3 col-md-3 col-sm-4">
     <div class="list-group table-of-contents">
         @Html.GetSidebarUrl(Context, "/admin", "Plex Request")
@@ -9,6 +10,7 @@
         @Html.GetSidebarUrl(Context, "/admin/sonarr", "Sonarr")
         @Html.GetSidebarUrl(Context, "/admin/sickrage", "SickRage")
         @Html.GetSidebarUrl(Context, "/admin/headphones", "Headphones (Beta)")
+        @Html.GetSidebarUrl(Context, "/admin/newsletter", "Newsletter Settings")
         @Html.GetSidebarUrl(Context, "/admin/emailnotification", "Email Notifications")
         @Html.GetSidebarUrl(Context, "/admin/pushbulletnotification", "Pushbullet Notifications")
         @Html.GetSidebarUrl(Context, "/admin/pushovernotification", "Pushover Notifications")

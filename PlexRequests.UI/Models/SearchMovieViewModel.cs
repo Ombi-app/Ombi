@@ -46,5 +46,6 @@ namespace PlexRequests.UI.Models
         public bool Video { get; set; }
         public double VoteAverage { get; set; }
         public int VoteCount { get; set; }
+        public bool AlreadyInCp { get; set; }
     }
 }

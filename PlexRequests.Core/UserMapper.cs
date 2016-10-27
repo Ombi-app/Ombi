@@ -110,30 +110,34 @@ namespace PlexRequests.Core
                 Salt = salt,
                 Hash = PasswordHasher.ComputeHash(password, salt),
                 Claims = ByteConverterHelper.ReturnBytes(claims),
-                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties())
+                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties()),
             };
             Repo.Insert(userModel);
-
             var userRecord = Repo.Get(userModel.UserGuid);
 
             return new Guid(userRecord.UserGuid);
         }
 
+        public void DeleteUser(string userId)
+        {
+            var user = Repo.Get(userId);
+            Repo.Delete(user);
+        }
+
         public Guid? CreateAdmin(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser, UserClaims.Admin }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser, UserClaims.Admin }, properties);
         }
 
         public Guid? CreatePowerUser(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User, UserClaims.PowerUser }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser }, properties);
         }
 
         public Guid? CreateRegularUser(string username, string password, UserProperties properties = null)
         {
-            return CreateUser(username, password, new[] { UserClaims.User }, properties);
+            return CreateUser(username, password, new[] { UserClaims.RegularUser }, properties);
         }
-
 
         public IEnumerable<string> GetAllClaims()
         {
@@ -194,7 +198,6 @@ namespace PlexRequests.Core
         Guid? CreateAdmin(string username, string password, UserProperties properties = null);
         Guid? CreatePowerUser(string username, string password, UserProperties properties = null);
         Guid? CreateRegularUser(string username, string password, UserProperties properties = null);
-
-
+        void DeleteUser(string userId);
     }
 }

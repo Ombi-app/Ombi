@@ -745,6 +745,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available on Plex.
+        /// </summary>
+        public static string Search_Available_on_plex {
+            get {
+                return ResourceManager.GetString("Search_Available_on_plex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Coming Soon.
         /// </summary>
         public static string Search_ComingSoon {
@@ -835,6 +844,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Movie status.
+        /// </summary>
+        public static string Search_Movie_Status {
+            get {
+                return ResourceManager.GetString("Search_Movie_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Movies.
         /// </summary>
         public static string Search_Movies {
@@ -849,6 +867,15 @@ namespace PlexRequests.UI.Resources {
         public static string Search_MusicBrainzError {
             get {
                 return ResourceManager.GetString("Search_MusicBrainzError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Requested yet.
+        /// </summary>
+        public static string Search_Not_Requested_Yet {
+            get {
+                return ResourceManager.GetString("Search_Not_Requested_Yet", resourceCulture);
             }
         }
         
@@ -871,6 +898,24 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending approval.
+        /// </summary>
+        public static string Search_Pending_approval {
+            get {
+                return ResourceManager.GetString("Search_Pending_approval", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Processing request.
+        /// </summary>
+        public static string Search_Processing_Request {
+            get {
+                return ResourceManager.GetString("Search_Processing_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Report Issue.
         /// </summary>
         public static string Search_ReportIssue {
@@ -885,6 +930,15 @@ namespace PlexRequests.UI.Resources {
         public static string Search_Request {
             get {
                 return ResourceManager.GetString("Search_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Request denied.
+        /// </summary>
+        public static string Search_Request_denied {
+            get {
+                return ResourceManager.GetString("Search_Request_denied", resourceCulture);
             }
         }
         
@@ -975,6 +1029,15 @@ namespace PlexRequests.UI.Resources {
         public static string Search_TrackCount {
             get {
                 return ResourceManager.GetString("Search_TrackCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TV show status.
+        /// </summary>
+        public static string Search_TV_Show_Status {
+            get {
+                return ResourceManager.GetString("Search_TV_Show_Status", resourceCulture);
             }
         }
         

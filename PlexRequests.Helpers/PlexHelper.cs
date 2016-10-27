@@ -102,6 +102,12 @@ namespace PlexRequests.Helpers
                 $"https://app.plex.tv/web/app#!/server/{machineId}/details/%2Flibrary%2Fmetadata%2F{mediaId}";
             return url;
         }
+
+        public static string FormatGenres(string tags)
+        {
+            var split = tags.Split(new[] {'|'}, StringSplitOptions.RemoveEmptyEntries);
+            return string.Join(", ", split);
+        }
     }
 
     public class EpisodeModelHelper

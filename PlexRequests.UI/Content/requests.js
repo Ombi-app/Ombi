@@ -5,6 +5,7 @@
         return !opts ? null : opts.inverse(this);
 });
 
+
 var searchSource = $("#search-template").html();
 var albumSource = $("#album-template").html();
 var searchTemplate = Handlebars.compile(searchSource);

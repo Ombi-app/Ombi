@@ -4,6 +4,10 @@ namespace PlexRequests.Api.Models.Tv
 {
     public class TvMazeShow
     {
+        public TvMazeShow()
+        {
+            Season = new List<TvMazeCustomSeason>();
+        }
         public int id { get; set; }
         public string url { get; set; }
         public string name { get; set; }
@@ -23,8 +27,14 @@ namespace PlexRequests.Api.Models.Tv
         public string summary { get; set; }
         public int updated { get; set; }
         public Links _links { get; set; }
-        public int seasonCount { get; set; }
+        public List<TvMazeCustomSeason> Season { get; set; }
         public Embedded _embedded { get; set; }
+    }
+
+    public class TvMazeCustomSeason
+    {
+        public int SeasonNumber { get; set; }
+        public int EpisodeNumber { get; set; }
     }
 
     public class Season

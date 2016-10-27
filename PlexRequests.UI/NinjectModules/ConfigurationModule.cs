@@ -32,6 +32,7 @@ using Nancy.Authentication.Forms;
 using Ninject.Modules;
 
 using PlexRequests.Core;
+using PlexRequests.Core.Migration;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
@@ -45,6 +46,10 @@ namespace PlexRequests.UI.NinjectModules
         {
             Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
             Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
+            Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
+            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
+            Bind<IMigrationRunner>().To<MigrationRunner>();
+
 
             Bind<IUserMapper>().To<UserMapper>();
             Bind<ICustomUserMapper>().To<UserMapper>();

@@ -64,12 +64,15 @@
   <ItemGroup>
     <Compile Include="DbConfiguration.cs" />
     <Compile Include="Entity.cs" />
+    <Compile Include="IPlexDatabase.cs" />
     <Compile Include="Models\IssueBlobs.cs" />
     <Compile Include="Models\PlexEpisodes.cs" />
     <Compile Include="Models\PlexUsers.cs" />
+    <Compile Include="Models\Plex\MetadataItems.cs" />
     <Compile Include="Models\ScheduledJobs.cs" />
     <Compile Include="Models\RequestLimit.cs" />
     <Compile Include="Models\UsersToNotify.cs" />
+    <Compile Include="PlexDatabase.cs" />
     <Compile Include="Repository\BaseGenericRepository.cs" />
     <Compile Include="Repository\IRequestRepository.cs" />
     <Compile Include="Repository\ISettingsRepository.cs" />
@@ -84,6 +87,7 @@
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />
+    <Compile Include="UserLogins.cs" />
     <Compile Include="UsersModel.cs" />
     <Compile Include="UserRepository.cs" />
     <Compile Include="Sql.Designer.cs">
@@ -120,6 +124,7 @@
       <Name>PlexRequests.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

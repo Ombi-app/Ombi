@@ -16,7 +16,7 @@
     {
         <div class="row">
             <div class="col-md-4">@record.Key</div>
-            <div class="col-md-5 col-md-push-3 date">@record.Value.ToString("O")</div>
+            <div class="col-md-5 col-md-push-3 date">@record.Value.ToString("R")</div>
         </div>
         <hr style="margin-top: 4px; margin-bottom: 4px"/>
     }
@@ -78,11 +78,12 @@
                     <input type="text" class="form-control form-control-custom " id="UserRequestLimitResetter" name="UserRequestLimitResetter" value="@Model.UserRequestLimitResetter">
                 </div>
             </div>
-
+            
+            <small>Please note, this uses a Quartz CRON job, you can build a CRON <a href="http://www.cronmaker.com/">Here</a></small>
             <div class="form-group">
-                <label for="RecentlyAdded" class="control-label">Recently Added Email (hours)</label>
+                <label for="RecentlyAddedCron" class="control-label">Recently Added Email (CRON)</label>
                 <div>
-                    <input type="text" class="form-control form-control-custom " id="RecentlyAdded" name="RecentlyAdded" value="@Model.RecentlyAdded">
+                    <input type="text" class="form-control form-control-custom " id="RecentlyAddedCron" name="RecentlyAddedCron" value="@Model.RecentlyAddedCron">
                 </div>
             </div>
 

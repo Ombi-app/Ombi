@@ -60,6 +60,8 @@ namespace PlexRequests.Core
                 TableCreation.Vacuum(Db.DbConnection());
             }
 
+
+            // The below code is obsolete, we should use PlexRequests.Core.Migrations.MigrationRunner
             var version = CheckSchema();
             if (version > 0)
             {

@@ -112,6 +112,10 @@ namespace PlexRequests.Services.Jobs
                 // Loop through the metadata and create the model to insert into the DB
                 foreach (var metadataVideo in metadata.Video)
                 {
+                    if(string.IsNullOrEmpty(metadataVideo.GrandparentTitle))
+                    {
+                        continue;
+                    }
                     var epInfo = PlexHelper.GetSeasonsAndEpisodesFromPlexGuid(metadataVideo.Guid);
                     entities.TryAdd(
                         new PlexEpisodes

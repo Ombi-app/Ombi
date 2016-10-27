@@ -42,6 +42,8 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 
 
@@ -52,7 +54,7 @@ namespace PlexRequests.UI.Modules
     public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
-            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker) : base("userlogin", pr)
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins) : base("userlogin", pr)
         {
             AuthService = auth;
             LandingPageSettings = lp;
@@ -60,13 +62,14 @@ namespace PlexRequests.UI.Modules
             Api = api;
             PlexSettings = plexSettings;
             Linker = linker;
+            UserLogins = userLogins;
 
             Get["UserLoginIndex", "/", true] = async (x, ct) =>
             {
                 if (!string.IsNullOrEmpty(Username) || IsAdmin)
                 {
                     var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
-                    return Response.AsRedirect(url); 
+                    return Response.AsRedirect(url);
                 }
                 var settings = await AuthService.GetSettingsAsync();
                 return View["Index", settings];
@@ -82,11 +85,13 @@ namespace PlexRequests.UI.Modules
         private IPlexApi Api { get; }
         private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
+        private IRepository<UserLogins> UserLogins { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Response> LoginUser()
         {
+            var userId = string.Empty;
             var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
             Log.Debug("Username \"{0}\" attempting to login", username);
@@ -135,6 +140,7 @@ namespace PlexRequests.UI.Modules
                         authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
                         Log.Debug("Friends list result = {0}", authenticated);
                     }
+                    userId = signedIn.user.uuid;
                 }
             }
             else if (settings.UserAuthentication) // Check against the users in Plex
@@ -147,6 +153,11 @@ namespace PlexRequests.UI.Modules
                     authenticated = true;
                 }
                 Log.Debug("Friends list result = {0}", authenticated);
+                if (authenticated)
+                {
+                    // Get the user that is authenticated to store in the UserLogins
+                    userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                }
             }
             else if (!settings.UserAuthentication) // No auth, let them pass!
             {
@@ -156,12 +167,12 @@ namespace PlexRequests.UI.Modules
 
             if (authenticated)
             {
+                UserLogins.Insert(new UserLogins { UserId = userId, Type = UserType.PlexUser, LastLoggedIn = DateTime.UtcNow });
                 Log.Debug("We are authenticated! Setting session.");
                 // Add to the session (Used in the BaseModules)
                 Session[SessionKeys.UsernameKey] = (string)username;
+                Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
             }
-
-            Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
 
             if (!authenticated)
             {
@@ -212,6 +223,14 @@ namespace PlexRequests.UI.Modules
             var users = Api.GetUsers(authToken);
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers != null && allUsers.Any(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+
+        private string GetUserIdIsInPlexFriends(string username, string authToken)
+        {
+            var users = Api.GetUsers(authToken);
+            var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
+            return allUsers?.Where(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id).FirstOrDefault();
         }
 
         private bool IsUserInDeniedList(string username, AuthenticationSettings settings)

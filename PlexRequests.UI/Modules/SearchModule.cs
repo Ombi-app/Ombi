@@ -189,7 +189,7 @@ namespace PlexRequests.UI.Modules
             switch (searchType)
             {
                 case MovieSearchType.Search:
-                    var movies = await MovieApi.SearchMovie(searchTerm);
+                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
                     apiMovies = movies.Select(x =>
                                     new MovieResult
                                     {
@@ -232,8 +232,18 @@ namespace PlexRequests.UI.Modules
             var plexMovies = Checker.GetPlexMovies();
             var settings = await PrService.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
+            var counter = 0;
             foreach (var movie in apiMovies)
             {
+                var imdbId = string.Empty;
+                if (counter <= 5) // Let's only do it for the first 5 items
+                {
+                    var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false); // TODO needs to be careful about this, it's adding extra time to search...
+                                                                                                            // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                    imdbId = movieInfoTask.ImdbId;
+                    counter++;
+                }
+
                 var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
@@ -252,7 +262,7 @@ namespace PlexRequests.UI.Modules
                     VoteCount = movie.VoteCount
                 };
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
-                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString());
+                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(), imdbId);
                 if (plexMovie != null)
                 {
                     viewMovie.Available = true;
@@ -349,8 +359,7 @@ namespace PlexRequests.UI.Modules
                     providerId = viewT.Id.ToString();
                 }
 
-                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
-                    providerId);
+                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId);
                 if (plexShow != null)
                 {
                     viewT.Available = true;
@@ -435,6 +444,15 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            {
+                return
+                    Response.AsJson(new JsonResponseModel()
+                    {
+                        Result = false,
+                        Message = "Sorry, you do not have the correct permissions to request a movie!"
+                    });
+            }
             var settings = await PrService.GetSettingsAsync();
             if (!await CheckRequestLimit(settings, RequestType.Movie))
             {
@@ -479,7 +497,7 @@ namespace PlexRequests.UI.Modules
                 Type = RequestType.Movie,
                 Overview = movieInfo.Overview,
                 ImdbId = movieInfo.ImdbId,
-                PosterPath = "https://image.tmdb.org/t/p/w150/" + movieInfo.PosterPath,
+                PosterPath = movieInfo.PosterPath,
                 Title = movieInfo.Title,
                 ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
                 Status = movieInfo.Status,
@@ -535,6 +553,15 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            {
+                return
+                    Response.AsJson(new JsonResponseModel()
+                    {
+                        Result = false,
+                        Message = "Sorry, you do not have the correct permissions to request a TV Show!"
+                    });
+            }
             // Get the JSON from the request
             var req = (Dictionary<string, object>.ValueCollection)Request.Form.Values;
             EpisodeRequestModel episodeModel = null;
@@ -590,7 +617,7 @@ namespace PlexRequests.UI.Modules
                 RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                SeasonCount = showInfo.seasonCount,
+                SeasonCount = showInfo.Season.Count,
                 TvDbId = showId.ToString()
             };
 
@@ -703,7 +730,18 @@ namespace PlexRequests.UI.Modules
                 }
                 else
                 {
-                    if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId, model.SeasonList))
+                    if (plexSettings.EnableTvEpisodeSearching)
+                    {
+                        foreach (var s in showInfo.Season)
+                        {
+                            var result = Checker.IsEpisodeAvailable(showId.ToString(), s.SeasonNumber, s.EpisodeNumber);
+                            if (result)
+                            {
+                                return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
+                            }
+                        }
+                    }
+                    else if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4), providerId, model.SeasonList))
                     {
                         return Response.AsJson(new JsonResponseModel { Result = false, Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}" });
                     }
@@ -719,7 +757,7 @@ namespace PlexRequests.UI.Modules
             {
                 model.Approved = true;
                 var s = await sonarrSettings;
-                var sender = new TvSender(SonarrApi, SickrageApi);
+                var sender = new TvSenderOld(SonarrApi, SickrageApi); // TODO put back
                 if (s.Enabled)
                 {
                     var result = await sender.SendToSonarr(s, model);

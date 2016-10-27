@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
+using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Models
 {
@@ -17,6 +19,8 @@ namespace PlexRequests.UI.Models
         public string EmailAddress { get; set; }
         public UserManagementPlexInformation PlexInfo { get; set; }
         public string[] ClaimsArray { get; set; }
+        public List<UserManagementUpdateModel.ClaimsModel> ClaimsItem { get; set; }
+        public DateTime LastLoggedIn { get; set; }
     }
 
     public class UserManagementPlexInformation
@@ -39,11 +43,6 @@ namespace PlexRequests.UI.Models
         public string NumLibraries { get; set; }
     }
 
-    public enum UserType
-    {
-        PlexUser,
-        LocalUser
-    }
 
     public class UserManagementCreateModel
     {
@@ -56,6 +55,26 @@ namespace PlexRequests.UI.Models
 
         [JsonProperty("email")]
         public string EmailAddress { get; set; }
+    }
+
+    public class UserManagementUpdateModel
+    {
+        [JsonProperty("id")]
+        public string Id { get; set; }
+        [JsonProperty("claims")]
+        public List<ClaimsModel> Claims { get; set; }
+
+        public string Alias { get; set; }
+        public string EmailAddress { get; set; }
+
+        public class ClaimsModel
+        {
+            [JsonProperty("name")]
+            public string Name { get; set; }
+            [JsonProperty("selected")]
+            public bool Selected { get; set; }
+        }
+        
     }
 }
 

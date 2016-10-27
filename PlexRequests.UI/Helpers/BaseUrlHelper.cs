@@ -133,14 +133,6 @@ namespace PlexRequests.UI.Helpers
             var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
-            var settings = GetSettings();
-            if (string.IsNullOrEmpty(settings.ThemeName))
-            {
-                settings.ThemeName = Themes.PlexTheme;
-            }
-            if (settings.ThemeName == "PlexBootstrap.css") settings.ThemeName = Themes.PlexTheme;
-            if (settings.ThemeName == "OriginalBootstrap.css") settings.ThemeName = Themes.OriginalTheme;
-
             var startUrl = $"{content}/Content";
 
             sb.AppendLine($"<script src=\"{startUrl}/angular.min.js\"></script>"); // Load angular first
@@ -160,6 +152,20 @@ namespace PlexRequests.UI.Helpers
 
             return helper.Raw(sb.ToString());
         }
+
+        public static IHtmlString LoadSettingsAssets(this HtmlHelpers helper)
+        {
+            var sb = new StringBuilder();
+            var assetLocation = GetBaseUrl();
+
+            var content = GetContentUrl(assetLocation);
+
+            sb.AppendLine($"<script src=\"{content}/Content/bootstrap-switch.min.js\" type=\"text/javascript\"></script>");
+            sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap-switch.min.css\" type=\"text/css\"/>");
+
+            return helper.Raw(sb.ToString());
+        }
+
 
         public static IHtmlString LoadRequestAssets(this HtmlHelpers helper)
         {
@@ -212,12 +218,14 @@ namespace PlexRequests.UI.Helpers
         {
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
+            var sb = new StringBuilder();
 
-            var controller = $"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>";
-            controller += $"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>";
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
 
 
-            return helper.Raw(controller);
+            return helper.Raw(sb.ToString());
         }
 
 

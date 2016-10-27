@@ -24,6 +24,8 @@
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ***********************************************************************
 #endregion
+
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Dapper;
@@ -37,14 +39,14 @@ namespace PlexRequests.Store
         /// Creates the tables located in the SqlTables.sql file.
         /// </summary>
         /// <param name="connection">The connection.</param>
-        public static void CreateTables(IDbConnection connection)
+        public static void CreateTables(this IDbConnection connection)
         {
             connection.Open();
             connection.Execute(Sql.SqlTables);
             connection.Close();
         }
 
-        public static void DropTable(IDbConnection con, string tableName)
+        public static void DropTable(this IDbConnection con, string tableName)
         {
             using (con)
             {
@@ -55,7 +57,7 @@ namespace PlexRequests.Store
             }
         }
 
-        public static void AddColumn(IDbConnection connection, string tableName, string alterType, string newColumn, bool isNullable, string dataType)
+        public static void AddColumn(this IDbConnection connection, string tableName, string alterType, string newColumn, bool allowNulls, string dataType)
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
@@ -65,7 +67,7 @@ namespace PlexRequests.Store
             }
 
             var query = $"ALTER TABLE {tableName} {alterType} {newColumn} {dataType}";
-            if (isNullable)
+            if (!allowNulls)
             {
                 query = query + " NOT NULL";
             }
@@ -75,7 +77,7 @@ namespace PlexRequests.Store
             connection.Close();
         }
 
-        public static void Vacuum(IDbConnection con)
+        public static void Vacuum(this IDbConnection con)
         {
             using (con)
             {
@@ -109,7 +111,29 @@ namespace PlexRequests.Store
             con.Close();
         }
 
+        public static IEnumerable<VersionInfo> GetVersionInfo(this IDbConnection con)
+        {
+            con.Open();
+            var result = con.Query<VersionInfo>("SELECT * FROM VersionInfo");
+            con.Close();
 
+            return result;
+        }
+
+        public static void AddVersionInfo(this IDbConnection con, VersionInfo ver)
+        {
+            con.Open();
+            con.Insert(ver);
+            con.Close();
+        }
+
+
+        [Table("VersionInfo")]
+        public class VersionInfo
+        {
+            public int Version { get; set; }
+            public string Description { get; set; }
+        }
 
         [Table("DBInfo")]
         public class DbInfo
