@@ -37,6 +37,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Threading.Tasks;
+using Quartz;
 
 namespace PlexRequests.Core
 {
@@ -118,6 +119,24 @@ namespace PlexRequests.Core
             };
             var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
             s.SaveSettings(defaultSettings);
+
+
+            var cron = (Quartz.Impl.Triggers.CronTriggerImpl)CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Friday, 7, 0).Build();
+            var scheduled = new ScheduledJobsSettings
+            {
+                PlexAvailabilityChecker = 60,
+                SickRageCacher = 60,
+                SonarrCacher = 60,
+                CouchPotatoCacher = 60,
+                StoreBackup = 24,
+                StoreCleanup = 24,
+                UserRequestLimitResetter = 12,
+                PlexEpisodeCacher = 12,
+                RecentlyAddedCron = cron.CronExpressionString, // Weekly CRON at 7 am on Mondays
+            };
+
+            var scheduledSettings = new SettingsServiceV2<ScheduledJobsSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            scheduledSettings.SaveSettings(scheduled);
         }
 
         public void CacheQualityProfiles()
