@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: Version1100.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,20 +25,34 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using Dapper.Contrib.Extensions;
+using System.Data;
+using PlexRequests.Store;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Core.Migration.Migrations
 {
-    [Table("Users")]
-    public class UsersModel : UserEntity
+    [Migration(11000, "v1.10.0.0")]
+    public class Version1100 : BaseMigration, IMigration
     {
-        public byte[] Hash { get; set; }
-        public byte[] Salt { get; set; }
-        [Obsolete]
-        public byte[] Claims { get; set; }
-        public byte[] UserProperties { get; set; }
-        public int Permissions { get; set; }
-        public int Features { get; set; }
+        public Version1100()
+        {
+
+        }
+        public int Version => 11000;
+
+
+        public void Start(IDbConnection con)
+        {
+            UpdateDb(con);
+
+            UpdateSchema(con, Version);
+        }
+
+        private void UpdateDb(IDbConnection con)
+        {
+            // Create the two new columns
+            con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
+            con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
+            
+        }
     }
 }

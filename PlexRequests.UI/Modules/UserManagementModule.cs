@@ -13,6 +13,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
@@ -24,7 +25,7 @@ namespace PlexRequests.UI.Modules
         public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins) : base("usermanagement", pr)
         {
 #if !DEBUG
-            this.RequiresClaims(UserClaims.Admin);
+            this.RequiresAnyClaims(UserClaims.Admin);
 #endif
             UserMapper = m;
             PlexApi = plexApi;
@@ -37,7 +38,8 @@ namespace PlexRequests.UI.Modules
             Post["/createuser"] = x => CreateUser();
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
-            Get["/claims"] = x => GetClaims();
+            Get["/permissions"] = x => GetEnum<Permissions>();
+            Get["/features"] = x => GetEnum<Features>();
             Post["/updateuser"] = x => UpdateUser();
             Post["/deleteuser"] = x => DeleteUser();
         }
@@ -79,7 +81,7 @@ namespace PlexRequests.UI.Modules
                         Username = u.Username,
                         Type = UserType.PlexUser,
                         Id = u.Id,
-                        Claims = "Requestor",
+                        FeaturesFormattedString = "Requestor",
                         EmailAddress = u.Email,
                         PlexInfo = new UserManagementPlexInformation
                         {
@@ -110,7 +112,23 @@ namespace PlexRequests.UI.Modules
                     Message = "Please enter in a valid Username and Password"
                 });
             }
-            var user = UserMapper.CreateUser(model.Username, model.Password, model.Claims, new UserProperties { EmailAddress = model.EmailAddress });
+
+            var featuresVal = 0;
+            var permissionsVal = 0;
+
+            foreach (var feature in model.Features)
+            {
+                var f = (int)EnumHelper<Features>.GetValueFromName(feature);
+                featuresVal += f;
+            }
+
+            foreach (var permission in model.Permissions)
+            {
+                var f = (int)EnumHelper<Permissions>.GetValueFromName(permission);
+                permissionsVal += f;
+            }
+            
+            var user = UserMapper.CreateUser(model.Username, model.Password, featuresVal, permissionsVal, new UserProperties { EmailAddress = model.EmailAddress });
             if (user.HasValue)
             {
                 return Response.AsJson(MapLocalUser(UserMapper.GetUser(user.Value), DateTime.MinValue));
@@ -137,20 +155,13 @@ namespace PlexRequests.UI.Modules
                     Message = "Couldn't find the user"
                 });
             }
-
-            var claims = new List<string>();
-
-            foreach (var c in model.Claims)
-            {
-                if (c.Selected)
-                {
-                    claims.Add(c.Name);
-                }
-            }
+            
+            var val = model.Permissions.Where(c => c.Selected).Sum(c => c.Value);
 
             var userFound = UserMapper.GetUser(new Guid(model.Id));
 
-            userFound.Claims = ByteConverterHelper.ReturnBytes(claims.ToArray());
+            userFound.Permissions = val;
+
             var currentProps = ByteConverterHelper.ReturnObject<UserProperties>(userFound.UserProperties);
             currentProps.UserAlias = model.Alias;
             currentProps.EmailAddress = model.EmailAddress;
@@ -221,53 +232,69 @@ namespace PlexRequests.UI.Modules
         /// Returns all claims for the users.
         /// </summary>
         /// <returns></returns>
-        private Response GetClaims()
+        private Response GetEnum<T>()
         {
-            var retVal = new List<dynamic>();
-            var claims = UserMapper.GetAllClaims();
-            foreach (var c in claims)
+            var retVal = new List<CheckBox>();
+            foreach (var p in Enum.GetValues(typeof(T)))
             {
-                retVal.Add(new { Name = c, Selected = false });
+                var perm = (T)p;
+                var displayValue = EnumHelper<T>.GetDisplayValue(perm);
+                
+                retVal.Add(new CheckBox{ Name = displayValue, Selected = false, Value = (int)p });
             }
+
             return Response.AsJson(retVal);
         }
 
         private UserManagementUsersViewModel MapLocalUser(UsersModel user, DateTime lastLoggedIn)
         {
-            var claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims);
-            var claimsString = string.Join(", ", claims);
+            var features = (Features) user.Features;
+            var permissions = (Permissions) user.Permissions;
 
             var userProps = ByteConverterHelper.ReturnObject<UserProperties>(user.UserProperties);
 
             var m = new UserManagementUsersViewModel
             {
                 Id = user.UserGuid,
-                Claims = claimsString,
+                PermissionsFormattedString = permissions == 0 ? "None" : permissions.ToString(),
+                FeaturesFormattedString = features.ToString(),
                 Username = user.UserName,
                 Type = UserType.LocalUser,
                 EmailAddress = userProps.EmailAddress,
                 Alias = userProps.UserAlias,
-                ClaimsArray = claims,
-                ClaimsItem = new List<UserManagementUpdateModel.ClaimsModel>(),
-                LastLoggedIn = lastLoggedIn
+                LastLoggedIn = lastLoggedIn,
             };
 
-            // Add all of the current claims
-            foreach (var c in claims)
+            // Add permissions
+            foreach (var p in Enum.GetValues(typeof(Permissions)))
             {
-                m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = c, Selected = true });
+                var perm = (Permissions)p;
+                var displayValue = EnumHelper<Permissions>.GetDisplayValue(perm);
+                var pm = new CheckBox
+                {
+                    Name = displayValue,
+                    Selected = permissions.HasFlag(perm),
+                    Value = (int)perm
+                };
+
+                m.Permissions.Add(pm);
             }
 
-            var allClaims = UserMapper.GetAllClaims();
-
-            // Get me the current claims that the user does not have
-            var missingClaims = allClaims.Except(claims);
-
-            // Add them into the view
-            foreach (var missingClaim in missingClaims)
+            // Add features
+            foreach (var p in Enum.GetValues(typeof(Features)))
             {
-                m.ClaimsItem.Add(new UserManagementUpdateModel.ClaimsModel { Name = missingClaim, Selected = false });
+                var perm = (Features)p;
+                var displayValue = EnumHelper<Features>.GetDisplayValue(perm);
+                var pm = new CheckBox
+                {
+                    Name = displayValue,
+                    Selected = features.HasFlag(perm),
+                    Value = (int)perm
+                };
+
+                m.Features.Add(pm);
             }
+
             return m;
         }
     }

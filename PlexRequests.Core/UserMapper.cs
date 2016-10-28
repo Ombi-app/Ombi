@@ -36,6 +36,7 @@ using Nancy.Security;
 
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 
@@ -118,6 +119,27 @@ namespace PlexRequests.Core
             return new Guid(userRecord.UserGuid);
         }
 
+        public Guid? CreateUser(string username, string password, int permissions, int features, UserProperties properties = null)
+        {
+            var salt = PasswordHasher.GenerateSalt();
+
+            var userModel = new UsersModel
+            {
+                UserName = username,
+                UserGuid = Guid.NewGuid().ToString(),
+                Salt = salt,
+                Hash = PasswordHasher.ComputeHash(password, salt),
+                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties()),
+                Permissions = permissions,
+                Features = features,
+                Claims = new byte[] {0}
+            };
+            Repo.Insert(userModel);
+            var userRecord = Repo.Get(userModel.UserGuid);
+
+            return new Guid(userRecord.UserGuid);
+        }
+
         public void DeleteUser(string userId)
         {
             var user = Repo.Get(userId);
@@ -187,6 +209,9 @@ namespace PlexRequests.Core
     public interface ICustomUserMapper
     {
         Guid? CreateUser(string username, string password, string[] claims, UserProperties props);
+
+        Guid? CreateUser(string username, string password, int permissions, int features,
+            UserProperties properties = null);
         IEnumerable<string> GetAllClaims();
         IEnumerable<UsersModel> GetUsers();
         Task<IEnumerable<UsersModel>> GetUsersAsync();

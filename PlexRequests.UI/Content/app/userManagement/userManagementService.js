@@ -8,27 +8,31 @@
             return $http.get('/usermanagement/users');
         };
 
-        var addUser = function (user, claims) {
-            if (!user || claims.length === 0) {
+        var addUser = function (user, permissions, features) {
+            if (!user || permissions.length === 0) {
                 return null;
             }
 
             return $http({
                 url: '/usermanagement/createuser',
                 method: "POST",
-                data: { username: user.username, password: user.password, claims: claims, email: user.email }
+                data: { username: user.username, password: user.password, permissions: permissions, features : features, email: user.email }
             });
         }
 
-        var getClaims = function () {
-            return $http.get('/usermanagement/claims');
+        var getFeatures = function () {
+            return $http.get('/usermanagement/features');
         }
 
-        var updateUser = function (id, claims, alias, email) {
+        var getPermissions = function () {
+            return $http.get('/usermanagement/permissions');
+        }
+
+        var updateUser = function (id, permissions, alias, email) {
             return $http({
                 url: '/usermanagement/updateUser',
                 method: "POST",
-                data: { id: id, claims: claims, alias: alias, emailAddress: email }
+                data: { id: id, permissions: permissions, alias: alias, emailAddress: email }
             });
         }
 
@@ -43,7 +47,8 @@
         return {
             getUsers: getUsers,
             addUser: addUser,
-            getClaims: getClaims,
+            getFeatures: getFeatures,
+            getPermissions: getPermissions,
             updateUser: updateUser,
             deleteUser: deleteUser
         };

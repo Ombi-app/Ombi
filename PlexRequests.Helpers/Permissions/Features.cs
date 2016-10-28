@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: Features.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,19 +26,17 @@
 #endregion
 
 using System;
-using Dapper.Contrib.Extensions;
+using System.ComponentModel.DataAnnotations;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Helpers.Permissions
 {
-    [Table("Users")]
-    public class UsersModel : UserEntity
+    [Flags]
+    public enum Features
     {
-        public byte[] Hash { get; set; }
-        public byte[] Salt { get; set; }
-        [Obsolete]
-        public byte[] Claims { get; set; }
-        public byte[] UserProperties { get; set; }
-        public int Permissions { get; set; }
-        public int Features { get; set; }
+        [Display(Name = "Newsletter")]
+        Newsletter = 1,
+        [Display(Name = "Recently Added Notification")]
+        RecentlyAddedNotification = 2,
+
     }
 }

@@ -16,7 +16,10 @@
             <strong>Email Address: </strong><span ng-bind="selectedUser.emailAddress"></span>
         </div>
         <div>
-            <strong>Permissions: </strong><span ng-bind="selectedUser.claims"></span>
+            <strong>Permissions: </strong><span ng-bind="selectedUser.permissionsFormattedString"></span>
+        </div>
+        <div>
+            <strong>Features: </strong><span ng-bind="selectedUser.featuresFormattedString"></span>
         </div>
         <div>
             <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
@@ -28,9 +31,9 @@
 
             <strong>Modify Roles:</strong>
             <!--Load all claims-->
-            <div class="checkbox" ng-repeat="claim in selectedUser.claimsItem">
-                <input id="claimCheckboxEdit_{{$id}}" class="checkbox-custom" name="selectedClaims[]" ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
-                <label for="claimCheckboxEdit_{{$id}}">{{claim.name}}</label>
+            <div class="checkbox" ng-repeat="p in selectedUser.permissions">
+                <input id="permissionsCheckbox_{{$id}}" class="checkbox-custom" name="permissions[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
+                <label for="permissionsCheckbox_{{$id}}">{{p.name}}</label>
             </div>
 
             <strong>Email Address</strong>
@@ -71,12 +74,22 @@
                         <div class="form-group">
                             <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
                         </div>
-
-                        <div class="checkbox" ng-repeat="claim in claims">
-                            <input id="claimCheckbox_{{$id}}" class="checkbox-custom" name="selectedClaims[]"
-                                   ng-checked="claim.selected" ng-model="claim.selected" type="checkbox" value="claim" />
-                            <label for="claimCheckbox_{{$id}}">{{claim.name}}</label>
+                        <h3>Permissions: </h3>
+                        <div class="checkbox" ng-repeat="permission in permissions">
+                            <input id="permission_{{$id}}" class="checkbox-custom" name="permission[]"
+                                   ng-checked="permission.selected" ng-model="permission.selected" type="checkbox" value="{{permission.value}}" />
+                            <label for="permission_{{$id}}">{{permission.name}}</label>
                         </div>
+
+
+                        <h3>Features: </h3>
+                        <div class="checkbox" ng-repeat="f in features">
+                            <input id="features_{{$id}}" class="checkbox-custom" name="f[]"
+                                   ng-checked="f.selected" ng-model="f.selected" type="checkbox" value="{{f.value}}" />
+                            <label for="features_{{$id}}">{{f.name}}</label>
+                        </div>
+
+
 
                         <input type="submit" class="btn btn-success-outline" value="Add" />
                     </form>
@@ -119,7 +132,7 @@
                                     </a>
                                 </th>
                                 <th>
-                                    Roles
+                                    Permissions
                                 </th>
                                 <th>
                                     <a href="#" ng-click="sortType = 'type'; sortReverse = !sortReverse">
@@ -150,7 +163,7 @@
                                     {{u.emailAddress}}
                                 </td>
                                 <td>
-                                    {{u.claims}}
+                                    {{u.permissionsFormattedString}}
                                 </td>
                                 <td>
                                     {{u.type === 1 ? 'Local User' : 'Plex User'}}

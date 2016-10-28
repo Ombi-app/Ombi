@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UserModel.cs
+//    File: Permissions.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,19 +26,26 @@
 #endregion
 
 using System;
-using Dapper.Contrib.Extensions;
+using System.ComponentModel.DataAnnotations;
 
-namespace PlexRequests.Store
+namespace PlexRequests.Helpers.Permissions
 {
-    [Table("Users")]
-    public class UsersModel : UserEntity
+    [Flags]
+    public enum Permissions
     {
-        public byte[] Hash { get; set; }
-        public byte[] Salt { get; set; }
-        [Obsolete]
-        public byte[] Claims { get; set; }
-        public byte[] UserProperties { get; set; }
-        public int Permissions { get; set; }
-        public int Features { get; set; }
+        [Display(Name = "Access Administration Settings")]
+        AdminSettings = 1,
+
+        [Display(Name = "Request Movie")]
+        RequestMovie = 2,
+
+        [Display(Name = "Request TV Show")]
+        RequestTvShow = 4,
+
+        [Display(Name = "Request Music")]
+        RequestMusic = 8,
+
+        [Display(Name = "Report Issue")]
+        ReportIssue = 16
     }
 }

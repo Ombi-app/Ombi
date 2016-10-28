@@ -4,10 +4,14 @@
 
         $scope.user = {}; // The local user
         $scope.users = []; // list of users
-        $scope.claims = []; // List of claims
+
+        $scope.features = []; // List of features
+        $scope.permissions = []; // List of permissions
 
         $scope.selectedUser = {}; // User on the right side
-        $scope.selectedClaims = {};
+
+        $scope.selectedFeatures = {};
+        $scope.selectedPermissions = {};
 
         $scope.minDate = "0001-01-01T00:00:00.0000000+00:00";
 
@@ -44,11 +48,16 @@
                 });
         };
 
-        // Get the claims and populate the create dropdown
-        $scope.getClaims = function () {
-            userManagementService.getClaims()
+        // Get the permissions and features and populate the create dropdown
+        $scope.getFeaturesPermissions = function () {
+            userManagementService.getFeatures()
                 .then(function (data) {
-                    $scope.claims = data.data;
+                    $scope.features = data.data;
+                });
+
+            userManagementService.getPermissions()
+                .then(function (data) {
+                    $scope.permissions = data.data;
                 });
         }
 
@@ -62,14 +71,14 @@
                 return;
             }
 
-            if (!$scope.selectedClaims) {
+            if ($scope.selectedPermissions.length === 0) {
                 $scope.error.error = true;
                 $scope.error.errorMessage = "Please select a permission";
                 generateNotify($scope.error.errorMessage, 'warning');
                 return;
             }
 
-            userManagementService.addUser($scope.user, $scope.selectedClaims)
+            userManagementService.addUser($scope.user, $scope.selectedPermissions, $scope.selectedFeatures)
                 .then(function (data) {
                     if (data.message) {
                         $scope.error.error = true;
@@ -77,27 +86,33 @@
                     } else {
                         $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};
-                        $scope.selectedClaims = {};
-                        $scope.claims.forEach(function (entry) {
+                        $scope.selectedPermissions = {}; // Clear the checkboxes
+                        $scope.selectedFeatures = {};
+                        $scope.features.forEach(function (entry) {
                             entry.selected = false;
                         });
+                        $scope.permissions.forEach(function (entry) {
+                            entry.selected = false;
+                        });
+
+
                     }
                 });
         };
 
-        $scope.hasClaim = function (claim) {
-            var claims = $scope.selectedUser.claimsArray;
-
-            var result = claims.some(function (item) {
-                return item === claim.name;
-            });
-            return result;
-        };
-
-        $scope.$watch('claims|filter:{selected:true}',
+        // Watch the checkboxes for updates (Creating a user)
+        $scope.$watch('features|filter:{selected:true}',
             function (nv) {
-                $scope.selectedClaims = nv.map(function (claim) {
-                    return claim.name;
+                $scope.selectedFeatures = nv.map(function (f) {
+                    return f.name;
+                });
+            },
+            true);
+
+        $scope.$watch('permissions|filter:{selected:true}',
+            function (nv) {
+                $scope.selectedPermissions = nv.map(function (f) {
+                    return f.name;
                 });
             },
             true);
@@ -105,10 +120,15 @@
 
         $scope.updateUser = function () {
             var u = $scope.selectedUser;
-            userManagementService.updateUser(u.id, u.claimsItem, u.alias, u.emailAddress)
+            userManagementService.updateUser(u.id, u.permissions, u.alias, u.emailAddress)
             .then(function (data) {
                 if (data) {
                     $scope.selectedUser = data;
+
+                    if (open) {
+                        open = false;
+                        $("#wrapper").toggleClass("toggled");
+                    }
                     return successCallback("Updated User", "success");
                 }
             });
@@ -118,7 +138,7 @@
             var u = $scope.selectedUser;
             var result = userManagementService.deleteUser(u.id);
 
-            result.success(function(data) {
+            result.success(function (data) {
                 if (data.result) {
                     removeUser(u.id, true);
                     return successCallback("Deleted User", "success");
@@ -138,7 +158,7 @@
         // On page load
         $scope.init = function () {
             $scope.getUsers();
-            $scope.getClaims();
+            $scope.getFeaturesPermissions();
             return;
         }
 
@@ -157,5 +177,5 @@
     };
 
 
-    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService","moment", controller]);
+    angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", "moment", controller]);
 }());

@@ -22,7 +22,7 @@ namespace PlexRequests.Core.Migration
         public void MigrateToLatest()
         {
             var con = Db.DbConnection();
-            var versions = GetMigrations().OrderBy(x => x.Key);
+            var versions = GetMigrations();
             
             var dbVersion = con.GetVersionInfo().OrderByDescending(x => x.Version).FirstOrDefault();
             if (dbVersion == null)

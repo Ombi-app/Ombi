@@ -57,12 +57,13 @@ namespace PlexRequests.Store
             }
         }
 
-        public static void AddColumn(this IDbConnection connection, string tableName, string alterType, string newColumn, bool allowNulls, string dataType)
+        public static void AlterTable(this IDbConnection connection, string tableName, string alterType, string newColumn, bool allowNulls, string dataType)
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
             if (result.Any(x => x.name == newColumn))
             {
+                connection.Close();
                 return;
             }
 
