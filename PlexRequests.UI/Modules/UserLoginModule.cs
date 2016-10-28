@@ -147,17 +147,17 @@ namespace PlexRequests.UI.Modules
             {
                 Log.Debug("Need to auth");
                 authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                if (authenticated)
+                {
+                    userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                }
                 if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
                 {
                     Log.Debug("User is the account owner");
                     authenticated = true;
+                    userId = GetOwnerId(plexSettings.PlexAuthToken, username);
                 }
                 Log.Debug("Friends list result = {0}", authenticated);
-                if (authenticated)
-                {
-                    // Get the user that is authenticated to store in the UserLogins
-                    userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
-                }
             }
             else if (!settings.UserAuthentication) // No auth, let them pass!
             {
@@ -216,6 +216,16 @@ namespace PlexRequests.UI.Modules
                 return false;
             }
             return userAccount.Username != null && userAccount.Username.Equals(userName, StringComparison.CurrentCultureIgnoreCase);
+        }
+
+        private string GetOwnerId(string authToken, string userName)
+        {
+            var userAccount = Api.GetAccount(authToken);
+            if (userAccount == null)
+            {
+                return string.Empty;
+            }
+            return userAccount.Id;
         }
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)

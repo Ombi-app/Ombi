@@ -118,10 +118,11 @@ namespace PlexRequests.UI.Helpers
 
         public static IHtmlString LoadDateTimePickerAsset(this HtmlHelpers helper)
         {
-            var content = GetBaseUrl();
+            var assetLocation = GetBaseUrl();
 
-            var sb = new StringBuilder();
+            var content = GetContentUrl(assetLocation);
             var startUrl = $"{content}/Content";
+            var sb = new StringBuilder();
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{startUrl}/datepicker.min.css\" type=\"text/css\"/>");
             sb.AppendLine($"<script src=\"{startUrl}/bootstrap-datetimepicker.min.js\"></script>");
 
