@@ -844,7 +844,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Newsletter!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
-        }
+            }
 
 
         private Response CreateApiKey()

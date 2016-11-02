@@ -153,8 +153,15 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            var currentSettings = await PlexRequestSettings.GetSettingsAsync();
+            currentSettings.SearchForMovies = form.SearchForMovies;
+            currentSettings.SearchForTvShows = form.SearchForTvShows;
+            currentSettings.SearchForMusic = form.SearchForMusic;
+            currentSettings.RequireMovieApproval = form.RequireMovieApproval;
+            currentSettings.RequireTvShowApproval = form.RequireTvShowApproval;
+            currentSettings.RequireMusicApproval = form.RequireMusicApproval;
 
-            var result = await PlexRequestSettings.SaveSettingsAsync(form);
+            var result = await PlexRequestSettings.SaveSettingsAsync(currentSettings);
             if (result)
             {
                 return Response.AsJson(new { Result = true });
@@ -190,8 +197,9 @@ namespace PlexRequests.UI.Modules
             settings.Wizard = true;
             await PlexRequestSettings.SaveSettingsAsync(settings);
 
+            var baseUrl = string.IsNullOrEmpty(settings.BaseUrl) ? string.Empty : $"/{settings.BaseUrl}";
 
-            return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: "/search");
+            return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
         }
     }
 }
