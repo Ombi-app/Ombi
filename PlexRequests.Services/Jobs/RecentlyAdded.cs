@@ -257,13 +257,17 @@ namespace PlexRequests.Services.Jobs
                 if (newletterSettings.SendToPlexUsers)
                 {
                     var users = Api.GetUsers(plexSettings.PlexAuthToken);
-                    foreach (var user in users.User)
+                    if (users != null)
                     {
-                        message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                        foreach (var user in users.User)
+                        {
+                            message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                        }
                     }
                 }
 
-                if (newletterSettings.CustomUsersEmailAddresses.Any())
+                if (newletterSettings.CustomUsersEmailAddresses != null
+                        && newletterSettings.CustomUsersEmailAddresses.Any())
                 {
                     foreach (var user in newletterSettings.CustomUsersEmailAddresses)
                     {
