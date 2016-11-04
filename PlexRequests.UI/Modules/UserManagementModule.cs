@@ -25,7 +25,7 @@ namespace PlexRequests.UI.Modules
         public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins) : base("usermanagement", pr)
         {
 #if !DEBUG
-            this.RequiresAnyClaims(UserClaims.Admin);
+            this.RequiresAnyClaim(UserClaims.Admin);
 #endif
             UserMapper = m;
             PlexApi = plexApi;
