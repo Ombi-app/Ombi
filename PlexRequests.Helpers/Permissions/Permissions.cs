@@ -34,7 +34,7 @@ namespace PlexRequests.Helpers.Permissions
     public enum Permissions
     {
         [Display(Name = "Access Administration Settings")]
-        AdminSettings = 1,
+        Administrator = 1,
 
         [Display(Name = "Request Movie")]
         RequestMovie = 2,

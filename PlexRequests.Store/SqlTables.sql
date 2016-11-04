@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS Users
     Hash								BLOB NOT NULL,
 	UserProperties						BLOB,
 	Permissions							INTEGER,
-	Features							INTEGER
+	Features							INTEGER,
+	Claims								BLOB
 );
 
 CREATE TABLE IF NOT EXISTS UserLogins

@@ -46,6 +46,8 @@ namespace PlexRequests.UI.NinjectModules
             Bind<IIssueService>().To<IssueJsonService>();
             Bind<ISettingsRepository>().To<SettingsJsonRepository>();
             Bind<IJobRecord>().To<JobRecord>();
+
+            Bind<IUserRepository>().To<UserRepository>();
         }
 
     }
