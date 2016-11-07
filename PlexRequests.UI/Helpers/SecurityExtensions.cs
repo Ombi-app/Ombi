@@ -31,14 +31,25 @@ using System.Linq;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.Security;
+using Ninject;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Helpers
 {
-    public static class SecurityExtensions
+    public class SecurityExtensions
     {
+        public SecurityExtensions(IUserRepository userRepository, NancyModule context)
+        {
+            UserRepository = userRepository;
+            Module = context;
+        }
+        
+        private IUserRepository UserRepository { get; }
+        private NancyModule Module { get; }
 
-        public static bool IsLoggedIn(this NancyContext context)
+        public bool IsLoggedIn(NancyContext context)
         {
             var userName = context.Request.Session[SessionKeys.UsernameKey];
             var realUser = false;
@@ -52,7 +63,7 @@ namespace PlexRequests.UI.Helpers
             return realUser || plexUser;
         }
 
-        public static bool IsPlexUser(this NancyContext context)
+        public bool IsPlexUser(NancyContext context)
         {
             var userName = context.Request.Session[SessionKeys.UsernameKey];
             var plexUser = userName != null;
@@ -62,7 +73,7 @@ namespace PlexRequests.UI.Helpers
             return plexUser && !isAuth;
         }
 
-        public static bool IsNormalUser(this NancyContext context)
+        public bool IsNormalUser(NancyContext context)
         {
             var userName = context.Request.Session[SessionKeys.UsernameKey];
             var plexUser = userName != null;
@@ -72,63 +83,72 @@ namespace PlexRequests.UI.Helpers
             return isAuth && !plexUser;
         }
 
-        /// <summary>
-        /// This module requires authentication and NO certain claims to be present.
-        /// </summary>
-        /// <param name="module">Module to enable</param>
-        /// <param name="requiredClaims">Claim(s) required</param>
-        public static void DoesNotHaveClaim(this INancyModule module, params string[] bannedClaims)
-        {
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
-            module.AddBeforeHookOrExecute(DoesNotHaveClaims(bannedClaims), "Has Banned Claims");
-        }
-
-        public static bool DoesNotHaveClaimCheck(this INancyModule module, params string[] bannedClaims)
-        {
-            if (!module.Context?.CurrentUser?.IsAuthenticated() ?? false)
-            {
-                return false;
-            }
-            if (DoesNotHaveClaims(bannedClaims, module.Context))
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public static bool DoesNotHaveClaimCheck(this NancyContext context, params string[] bannedClaims)
-        {
-            if (!context?.CurrentUser?.IsAuthenticated() ?? false)
-            {
-                return false;
-            }
-            if (DoesNotHaveClaims(bannedClaims, context))
-            {
-                return false;
-            }
-            return true;
-        }
 
         /// <summary>
         /// Creates a hook to be used in a pipeline before a route handler to ensure
         /// that the request was made by an authenticated user does not have the claims.
         /// </summary>
-        /// <param name="claims">Claims the authenticated user needs to have</param>
+        /// <param name="perm">Claims the authenticated user needs to have</param>
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does have the claims, null otherwise</returns>
-        private static Func<NancyContext, Response> DoesNotHaveClaims(IEnumerable<string> claims)
-        {
-            return ForbiddenIfNot(ctx => !ctx.CurrentUser.HasAnyClaim(claims));
+        private Func<NancyContext, Response> DoesNotHavePermissions(int perm)
+        { 
+            return ForbiddenIfNot(ctx =>
+            {
+                var dbUser = UserRepository.GetUserByUsername(ctx.CurrentUser.UserName);
+
+                if (dbUser == null) return false;
+
+                var permissions = (Permissions)dbUser.Permissions;
+                var result = permissions.HasFlag((Permissions)perm);
+                return !result;
+            });
         }
 
-        public static bool DoesNotHaveClaims(IEnumerable<string> claims, NancyContext ctx)
+        public bool DoesNotHavePermissions(int perm, IUserIdentity currentUser)
         {
-            return !ctx.CurrentUser.HasAnyClaim(claims);
+            return DoesNotHavePermissions((Permissions) perm, currentUser);
         }
 
-        public static bool DoesNotHaveClaims(IEnumerable<string> claims, IUserIdentity identity)
+        public bool DoesNotHavePermissions(Permissions perm, IUserIdentity currentUser)
         {
-            return !identity?.HasAnyClaim(claims) ?? true;
+            var dbUser = UserRepository.GetUserByUsername(currentUser.UserName);
+
+            if (dbUser == null) return false;
+
+            var permissions = (Permissions)dbUser.Permissions;
+            var result = permissions.HasFlag((Permissions)perm);
+            return !result;
+        }
+
+        public bool HasPermissions(IUserIdentity user, Permissions perm)
+        {
+           if (user == null) return false;
+
+            var dbUser = UserRepository.GetUserByUsername(user.UserName);
+
+            if (dbUser == null) return false;
+
+            var permissions = (Permissions)dbUser.Permissions;
+            var result = permissions.HasFlag(perm);
+            return result;
+        }
+
+        public void HasPermissionsResponse(Permissions perm)
+        {
+            Module.AddBeforeHookOrExecute(
+            ForbiddenIfNot(ctx =>
+            {
+                if (ctx.CurrentUser == null) return false;
+
+                var dbUser = UserRepository.GetUserByUsername(ctx.CurrentUser.UserName);
+
+                if (dbUser == null) return false;
+
+                var permissions = (Permissions)dbUser.Permissions;
+                var result = permissions.HasFlag(perm);
+                return result;
+            }), "Requires Claims");
         }
 
 
@@ -140,7 +160,7 @@ namespace PlexRequests.UI.Helpers
         /// </summary>
         /// <param name="test">Test that must return true for the request to continue</param>
         /// <returns>Hook that returns an Forbidden response if the test fails, null otherwise</returns>
-        private static Func<NancyContext, Response> ForbiddenIfNot(Func<NancyContext, bool> test)
+        public Func<NancyContext, Response> ForbiddenIfNot(Func<NancyContext, bool> test)
         {
             return HttpStatusCodeIfNot(HttpStatusCode.Forbidden, test);
         }
@@ -152,7 +172,7 @@ namespace PlexRequests.UI.Helpers
         /// <param name="statusCode">HttpStatusCode to use for the response</param>
         /// <param name="test">Test that must return true for the request to continue</param>
         /// <returns>Hook that returns a response with a specific HttpStatusCode if the test fails, null otherwise</returns>
-        private static Func<NancyContext, Response> HttpStatusCodeIfNot(HttpStatusCode statusCode, Func<NancyContext, bool> test)
+        public Func<NancyContext, Response> HttpStatusCodeIfNot(HttpStatusCode statusCode, Func<NancyContext, bool> test)
         {
             return ctx =>
             {

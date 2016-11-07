@@ -27,23 +27,36 @@
 
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
+using Ninject;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.UI.Helpers
 {
     public static class HtmlSecurityHelper
     {
-        public static bool HasAnyPermission(this HtmlHelpers helper, params string[] claims)
+        private static SecurityExtensions Security
         {
-            if (!helper.CurrentUser.IsAuthenticated())
+
+            get
             {
-                return false;
+                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
+                return _security ?? (_security = new SecurityExtensions(userRepo, null));
             }
-            return helper.CurrentUser.HasAnyClaim(claims);
         }
 
-        public static bool DoesNotHaveAnyPermission(this HtmlHelpers helper, params string[] claims)
+        private static SecurityExtensions _security;
+
+
+        public static bool HasAnyPermission(this HtmlHelpers helper, int permission)
         {
-            return SecurityExtensions.DoesNotHaveClaims(claims, helper.CurrentUser);
+            return helper.CurrentUser.IsAuthenticated() 
+                && Security.HasPermissions(helper.CurrentUser, (Permissions) permission);
+        }
+
+        public static bool DoesNotHavePermission(this HtmlHelpers helper, int permission)
+        {
+            return Security.DoesNotHavePermissions(permission, helper.CurrentUser);
         }
     }
 }

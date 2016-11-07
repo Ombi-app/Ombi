@@ -46,6 +46,9 @@ namespace PlexRequests.Helpers.Permissions
         RequestMusic = 8,
 
         [Display(Name = "Report Issue")]
-        ReportIssue = 16
+        ReportIssue = 16,
+
+        [Display(Name = "Read Only User")]
+        ReadOnlyUser = 32,
     }
 }

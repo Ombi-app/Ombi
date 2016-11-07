@@ -56,6 +56,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Exceptions;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Jobs;
 using PlexRequests.Services.Notification;
@@ -153,7 +154,7 @@ namespace PlexRequests.UI.Modules
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
 
-            this.RequiresClaims(UserClaims.Admin);
+            Security.HasPermissionsResponse(Permissions.Administrator);
 
             Get["/"] = _ => Admin();
 
@@ -849,7 +850,8 @@ namespace PlexRequests.UI.Modules
 
         private Response CreateApiKey()
         {
-            this.RequiresClaims(UserClaims.Admin);
+            Security.HasPermissionsResponse(Permissions.Administrator);
+
             Analytics.TrackEventAsync(Category.Admin, Action.Create, "Created API Key", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();

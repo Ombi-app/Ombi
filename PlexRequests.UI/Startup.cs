@@ -33,7 +33,6 @@ using NLog;
 
 using Owin;
 using PlexRequests.Core.Migration;
-using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
 using PlexRequests.UI.NinjectModules;
@@ -57,7 +56,7 @@ namespace PlexRequests.UI
 
 
                 Debug.WriteLine("Modules found finished.");
-                var kernel = new StandardKernel(modules);
+                var kernel = new StandardKernel(new NinjectSettings { InjectNonPublic = true }, modules);
                 Debug.WriteLine("Created Kernel and Injected Modules");
 
                 Debug.WriteLine("Added Contravariant Binder");

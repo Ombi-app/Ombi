@@ -30,6 +30,7 @@ using System.Linq;
 using System.Threading;
 
 using Nancy;
+using Nancy.Security;
 using Ninject;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
@@ -121,10 +122,6 @@ namespace PlexRequests.UI.Modules
 
         protected IDictionary<string, string> Cookies => Request?.Cookies;
 
-        // This is not ideal, but it's cleaner than having to pass it down through each module.
-        [Inject]
-        protected IUserRepository UserRepository { get; set; }
-
         protected bool IsAdmin
         {
             get
@@ -134,7 +131,9 @@ namespace PlexRequests.UI.Modules
                     return false;
                 }
 
-                var user = UserRepository.GetUserByUsername(Context?.CurrentUser?.UserName);
+                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
+
+                var user = userRepo.GetUserByUsername(Context?.CurrentUser?.UserName);
 
                 if (user == null) return false;
 
@@ -143,6 +142,22 @@ namespace PlexRequests.UI.Modules
                 // TODO: Check admin role
             }
         }
+
+        protected IUserIdentity User => Context?.CurrentUser;
+
+        protected SecurityExtensions Security
+        {
+
+            get
+            {
+                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
+                return _security ?? (_security = new SecurityExtensions(userRepo, this));
+            }
+        }
+
+        private SecurityExtensions _security;
+
+        
 
         protected bool LoggedIn => Context?.CurrentUser != null;
 

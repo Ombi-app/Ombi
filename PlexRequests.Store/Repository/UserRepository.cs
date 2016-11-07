@@ -49,21 +49,21 @@ namespace PlexRequests.Store.Repository
 
         public UsersModel GetUser(string userGuid)
         {
-            var sql = @"SELECT * FROM UsersModel
+            var sql = @"SELECT * FROM Users
             WHERE Userguid = @UserGuid";
             return Db.QueryFirstOrDefault<UsersModel>(sql, new {UserGuid = userGuid});
         }
 
         public UsersModel GetUserByUsername(string username)
         {
-            var sql = @"SELECT * FROM UsersModel
+            var sql = @"SELECT * FROM Users
             WHERE UserName = @UserName";
             return Db.QueryFirstOrDefault<UsersModel>(sql, new {UserName = username});
         }
 
         public async Task<UsersModel> GetUserAsync(string userguid)
         {
-            var sql = @"SELECT * FROM UsersModel
+            var sql = @"SELECT * FROM Users
             WHERE UserGuid = @UserGuid";
             return await Db.QueryFirstOrDefaultAsync<UsersModel>(sql, new {UserGuid = userguid});
         }

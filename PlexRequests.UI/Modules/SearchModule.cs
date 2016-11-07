@@ -55,6 +55,7 @@ using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
@@ -444,7 +445,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
-            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            if (Security.DoesNotHavePermissions(Permissions.ReadOnlyUser, User))
             {
                 return
                     Response.AsJson(new JsonResponseModel()
@@ -553,7 +554,7 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
-            if (this.DoesNotHaveClaimCheck(UserClaims.ReadOnlyUser))
+            if (Security.DoesNotHavePermissions(Permissions.ReadOnlyUser, User))
             {
                 return
                     Response.AsJson(new JsonResponseModel()
