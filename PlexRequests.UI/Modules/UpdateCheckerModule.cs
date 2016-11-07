@@ -33,6 +33,7 @@ using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Core.StatusChecker;
 using PlexRequests.Helpers;
 using PlexRequests.UI.Models;
 
@@ -40,9 +41,10 @@ namespace PlexRequests.UI.Modules
 {
     public class UpdateCheckerModule : BaseAuthModule
     {
-        public UpdateCheckerModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr) : base("updatechecker", pr)
+        public UpdateCheckerModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings) : base("updatechecker", pr)
         {
             Cache = provider;
+            SystemSettings = settings;
 
             Get["/", true] = async (x,ct) => await CheckLatestVersion();
         }
@@ -50,6 +52,7 @@ namespace PlexRequests.UI.Modules
         private ICacheProvider Cache { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private ISettingsService<SystemSettings> SystemSettings { get; }
 
         private async Task<Response> CheckLatestVersion()
         {
@@ -62,7 +65,7 @@ namespace PlexRequests.UI.Modules
 #if DEBUG
                 return Response.AsJson(new JsonUpdateAvailableModel {UpdateAvailable = false});
 #endif
-                var checker = new StatusChecker();
+                var checker = new StatusChecker(SystemSettings);
                 var release = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async() => await checker.GetStatus(), 30);
 
                 return Response.AsJson(release.UpdateAvailable 

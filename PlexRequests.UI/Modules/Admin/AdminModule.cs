@@ -186,7 +186,6 @@ namespace PlexRequests.UI.Modules
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
             Post["/testemailnotification", true] = async (x, ct) => await TestEmailNotifications();
-            Get["/status", true] = async (x, ct) => await Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
@@ -209,7 +208,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/createapikey"] = x => CreateApiKey();
 
-            Post["/autoupdate"] = x => AutoUpdate();
+
 
             Post["/testslacknotification", true] = async (x, ct) => await TestSlackNotification();
 
@@ -568,28 +567,6 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private async Task<Negotiator> Status()
-        {
-            var checker = new StatusChecker();
-            var status = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async () => await checker.GetStatus(), 30);
-            var md = new Markdown(new MarkdownOptions { AutoNewLines = true, AutoHyperlink = true });
-            status.ReleaseNotes = md.Transform(status.ReleaseNotes);
-            return View["Status", status];
-        }
-
-        private Response AutoUpdate()
-        {
-            var url = Request.Form["url"];
-
-            var startInfo = Type.GetType("Mono.Runtime") != null
-                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url }
-                                             : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
-
-            Process.Start(startInfo);
-
-            Environment.Exit(0);
-            return Nancy.Response.NoBody;
-        }
 
         private Negotiator PushbulletNotifications()
         {

@@ -1,4 +1,5 @@
 ﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.SystemSettings>
 @Html.Partial("_Sidebar")
 
 <div class="col-sm-8 col-sm-push-1">
@@ -8,16 +9,35 @@
 
         <div class="form-group">
             <label class="control-label">Version: </label>
-            <label class="control-label">@Model.Version</label>
+            <label class="control-label">@Model.Status.Version</label>
         </div>
+
+        <form id="mainForm" method="post" action="save">
+            <div class="form-group">
+                <div class="checkbox">
+
+                    @if (Model.UseEarlyAccessPreviewBuilds)
+                    {
+                        <input type="checkbox" id="UseEarlyAccessPreviewBuilds" name="UseEarlyAccessPreviewBuilds" checked="checked"><label for="UseEarlyAccessPreviewBuilds">Use Early Access Preview Builds</label>
+                    }
+                    else
+                    {
+                        <input type="checkbox" id="UseEarlyAccessPreviewBuilds" name="UseEarlyAccessPreviewBuilds"><label for="UseEarlyAccessPreviewBuilds">Use Early Access Preview Builds</label>
+                    }
+
+                </div>
+            </div>
+            <button id="saveSettings" class="btn btn-success-outline">Save</button>
+        </form>
+
 
         <div class="form-group">
             <label class="control-label">Update Available: </label>
-            @if (Model.UpdateAvailable)
+            @if (Model.Status.UpdateAvailable)
             {
-                <label class="control-label"><a href="@Model.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
+                <label class="control-label"><a href="@Model.Status.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
                 <br />
-                @*<button id="autoUpdate" class="btn btn-success-outline">Automatic Update <i class="fa fa-download"></i></button>*@ //TODO
+                <button id="autoUpdate" class="btn btn-success-outline">Automatic Update (beta) <i class="fa fa-download"></i></button>
             }
             else
             {
@@ -26,14 +46,14 @@
 
         </div>
 
-        @if (Model.UpdateAvailable)
+        @if (Model.Status.UpdateAvailable)
         {
             <h2>
-                <a href="@Model.DownloadUri">@Model.ReleaseTitle</a>
+                <a href="@Model.Status.DownloadUri">@Model.Status.ReleaseTitle</a>
             </h2>
             <hr />
             <label>Release Notes:</label>
-            @Html.Raw(Model.ReleaseNotes)
+            @Html.Raw(Model.Status.ReleaseNotes)
         }
 
 
@@ -58,7 +78,7 @@
             $.ajax({
                 type: "Post",
                 url: "autoupdate",
-                data: { url: "@Model.DownloadUri" },
+                data: { url: "@Model.Status.DownloadUri" },
                 dataType: "json",
                 error: function () {
                     setTimeout(
@@ -68,4 +88,23 @@
                 }
             });
         });
+
+    $('#saveSettings').click(function (e) {
+        e.preventDefault();
+        var $form = $("#mainForm");
+        $.ajax({
+            type: $form.prop("method"),
+            url: $form.prop("action"),
+            data: $form.serialize(),
+            dataType: "json",
+            success: function (response) {
+                if (response.result === true) {
+                    generateNotify(response.message, "success");
+
+                } else {
+                    generateNotify(response.message, "warning");
+                }
+            }
+        });
+    });
 </script>

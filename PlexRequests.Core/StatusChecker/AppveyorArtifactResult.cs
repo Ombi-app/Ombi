@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ConfigurationModule.cs
+//    File: AppveyorArtifactResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,41 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Mono.Data.Sqlite;
-
-using Nancy;
-using Nancy.Authentication.Forms;
-
-using Ninject.Modules;
-
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Core.StatusChecker;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.NinjectModules
+namespace PlexRequests.Core.StatusChecker
 {
-    public class ConfigurationModule : NinjectModule
+    public class AppveyorArtifactResult
     {
-        public override void Load()
-        {
-            Bind<ICacheProvider>().To<MemoryCacheProvider>().InSingletonScope();
-            Bind<ISqliteConfiguration>().To<DbConfiguration>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexDatabase>().To<PlexDatabase>().WithConstructorArgument("provider", new SqliteFactory());
-            Bind<IPlexReadOnlyDatabase>().To<PlexReadOnlyDatabase>();
-            Bind<IMigrationRunner>().To<MigrationRunner>();
-
-
-            Bind<IUserMapper>().To<UserMapper>();
-            Bind<ICustomUserMapper>().To<UserMapper>();
-
-            Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
-
-            Bind<IStatusChecker>().To<StatusChecker>();
-        }
+        public string fileName { get; set; }
+        public string type { get; set; }
+        public int size { get; set; }
     }
 }

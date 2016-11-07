@@ -244,6 +244,7 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\SystemStatusModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
     <Compile Include="Modules\ApiUserMetadataModule.cs" />
@@ -324,7 +325,7 @@
     <Compile Include="Models\RequestViewModel.cs" />
     <Compile Include="Models\SearchTvShowViewModel.cs" />
     <Compile Include="Models\SessionKeys.cs" />
-    <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Modules\Admin\AdminModule.cs" />
     <Compile Include="Modules\ApplicationTesterModule.cs" />
     <Compile Include="Modules\BaseAuthModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
