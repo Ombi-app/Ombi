@@ -404,9 +404,13 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
 
-            //Lookup identifier
-            var server = PlexApi.GetServer(plexSettings.PlexAuthToken);
-            plexSettings.MachineIdentifier = server.Server.FirstOrDefault(x => x.AccessToken == plexSettings.PlexAuthToken)?.MachineIdentifier;
+            if (string.IsNullOrEmpty(plexSettings.MachineIdentifier))
+            {
+                //Lookup identifier
+                var server = PlexApi.GetServer(plexSettings.PlexAuthToken);
+                plexSettings.MachineIdentifier =
+                    server.Server.FirstOrDefault(x => x.AccessToken == plexSettings.PlexAuthToken)?.MachineIdentifier;
+            }
 
             var result = await PlexService.SaveSettingsAsync(plexSettings);
 
