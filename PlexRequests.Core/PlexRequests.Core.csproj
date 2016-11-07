@@ -99,6 +99,7 @@
     <Compile Include="Notification\Templates\IEmailBasicTemplate.cs" />
     <Compile Include="Notification\TransportType.cs" />
     <Compile Include="PlexReadOnlyDatabase.cs" />
+    <Compile Include="Queue\TransientFaultQueue.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />

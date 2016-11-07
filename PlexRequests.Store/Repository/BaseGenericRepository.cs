@@ -327,5 +327,22 @@ namespace PlexRequests.Store.Repository
                 throw;
             }
         }
+        public async Task DeleteAllAsync(string tableName)
+        {
+            try
+            {
+                ResetCache();
+                using (var db = Config.DbConnection())
+                {
+                    db.Open();
+                    await db.ExecuteAsync($"delete from {tableName}");
+                }
+            }
+            catch (SqliteException e) when (e.ErrorCode == SQLiteErrorCode.Corrupt)
+            {
+                Log.Fatal(CorruptMessage);
+                throw;
+            }
+        }
     }
 }

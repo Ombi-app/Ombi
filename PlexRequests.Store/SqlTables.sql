@@ -131,4 +131,15 @@ CREATE TABLE IF NOT EXISTS PlexEpisodes
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_Id ON PlexEpisodes (Id);
 CREATE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);
+
+
+CREATE TABLE IF NOT EXISTS RequestQueue
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    PrimaryIdentifier					INTEGER NOT NULL,
+	Type								INTEGER NOT NULL,
+    Content								BLOB NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
+
 COMMIT;

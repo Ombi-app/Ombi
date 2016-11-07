@@ -85,5 +85,6 @@ namespace PlexRequests.Store.Repository
         IEnumerable<T> Custom(Func<IDbConnection, IEnumerable<T>> func);
         Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func);
         void DeleteAll(string tableName);
+        Task DeleteAllAsync(string tableName);
     }
 }
