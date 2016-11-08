@@ -33,6 +33,7 @@ using NUnit.Framework;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
+using PlexRequests.Core.Queue;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
@@ -73,6 +74,7 @@ namespace PlexRequests.UI.Tests
         private Mock<ISettingsService<EmailNotificationSettings>> _emailSettings;
         private Mock<IIssueService> _issueService;
         private Mock<ICacheProvider> _cache;
+        private Mock<ITransientFaultQueue> _faultQueue;
         private Mock<IRepository<RequestLimit>> RequestLimitRepo { get; set; }
         private SearchModule Search { get; set; }
         private readonly Fixture F = new Fixture();
@@ -145,6 +147,7 @@ namespace PlexRequests.UI.Tests
             RequestLimitRepo = new Mock<IRepository<RequestLimit>>();
             _emailSettings = new Mock<ISettingsService<EmailNotificationSettings>>();
             _issueService = new Mock<IIssueService>();
+            _faultQueue = new Mock<ITransientFaultQueue>();
             CreateModule();
         }
 
@@ -155,7 +158,7 @@ namespace PlexRequests.UI.Tests
                 _sickRageSettingsMock.Object, _cpApi.Object, _srApi.Object, _notificationService.Object,
                 _music.Object, _hpAPi.Object, _headphonesSettings.Object, _cpCache.Object, _sonarrCache.Object,
                 _srCache.Object, _plexApi.Object, _plexSettingsMock.Object, _authMock.Object,
-                _userRepo.Object, _emailSettings.Object, _issueService.Object, _analytics.Object, RequestLimitRepo.Object);
+                _userRepo.Object, _emailSettings.Object, _issueService.Object, _analytics.Object, RequestLimitRepo.Object, _faultQueue.Object);
         }
 
 

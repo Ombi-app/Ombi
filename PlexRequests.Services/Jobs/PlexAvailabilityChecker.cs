@@ -153,7 +153,7 @@ namespace PlexRequests.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken);
+                NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken, NotificationType.RequestAvailable);
                 RequestService.BatchUpdate(modifiedModel);
             }
 

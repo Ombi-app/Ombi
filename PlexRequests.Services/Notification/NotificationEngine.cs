@@ -55,7 +55,7 @@ namespace PlexRequests.Services.Notification
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private INotificationService Notification { get; }
 
-        public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey)
+        public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey, NotificationType type)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace PlexRequests.Services.Notification
                         if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Log.Info("This user is the Plex server owner");
-                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath);
+                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type);
                             return;
                         }
 
@@ -88,7 +88,7 @@ namespace PlexRequests.Services.Notification
                         }
 
                         Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath);
+                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type);
                     }
                 }
             }
@@ -98,7 +98,7 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        public async Task NotifyUsers(RequestedModel model, string apiKey)
+        public async Task NotifyUsers(RequestedModel model, string apiKey, NotificationType type)
         {
             try
             {
@@ -117,7 +117,7 @@ namespace PlexRequests.Services.Notification
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Log.Info("This user is the Plex server owner");
-                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath);
+                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type);
                         return;
                     }
 
@@ -130,7 +130,7 @@ namespace PlexRequests.Services.Notification
                     }
 
                     Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                    await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath);
+                    await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type);
                 }
             }
             catch (Exception e)
@@ -139,13 +139,13 @@ namespace PlexRequests.Services.Notification
             }
         }
 
-        private async Task PublishUserNotification(string username, string email, string title, string img)
+        private async Task PublishUserNotification(string username, string email, string title, string img, NotificationType type)
         {
             var notificationModel = new NotificationModel
             {
                 User = username,
                 UserEmail = email,
-                NotificationType = NotificationType.RequestAvailable,
+                NotificationType = type,
                 Title = title,
                 ImgSrc = img
             };

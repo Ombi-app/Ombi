@@ -37,6 +37,7 @@ using NLog;
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
+using PlexRequests.Core.Queue;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Store;
@@ -50,7 +51,7 @@ namespace PlexRequests.UI.Modules
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("approval", pr)
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue) : base("approval", pr)
         {
             this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
 
@@ -85,6 +86,7 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HeadphoneApi { get; }
+        private ITransientFaultQueue FaultQueue { get}
 
         /// <summary>
         /// Approves the specified request identifier.

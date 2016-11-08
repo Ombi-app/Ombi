@@ -79,8 +79,8 @@ namespace PlexRequests.Services.Notification
                     await EmailAvailableRequest(model, emailSettings);
                     break;
                 case NotificationType.RequestApproved:
-                    throw new NotImplementedException();
-
+                    await EmailRequestApproved(model, emailSettings);
+                    break;
                 case NotificationType.AdminNote:
                     throw new NotImplementedException();
 
@@ -88,8 +88,8 @@ namespace PlexRequests.Services.Notification
                     await EmailTest(model, emailSettings);
                     break;
                 case NotificationType.RequestDeclined:
-                    throw new NotImplementedException();
-                    
+                    await EmailRequestDeclined(model, emailSettings);
+                    break;
                 case NotificationType.ItemAddedToFaultQueue:
                     await EmailAddedToRequestQueue(model, emailSettings);
                     break;
@@ -188,6 +188,48 @@ namespace PlexRequests.Services.Notification
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
+
+            await Send(message, settings);
+        }
+
+        private async Task EmailRequestDeclined(NotificationModel model, EmailNotificationSettings settings)
+        {
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                "Plex Requests: Your request has been declined",
+                $"Hello! Your request for {model.Title} has been declined, Sorry!",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been declined, Sorry!", };
+
+            var message = new MimeMessage
+            {
+                Body = body.ToMessageBody(),
+                Subject = $"Plex Requests: Your request has been declined"
+            };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
+
+
+            await Send(message, settings);
+        }
+
+        private async Task EmailRequestApproved(NotificationModel model, EmailNotificationSettings settings)
+        {
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                "Plex Requests: Your request has been approved!",
+                $"Hello! Your request for {model.Title} has been approved!",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been approved!", };
+
+            var message = new MimeMessage
+            {
+                Body = body.ToMessageBody(),
+                Subject = $"Plex Requests: Your request has been approved!"
+            };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
 
 
             await Send(message, settings);
