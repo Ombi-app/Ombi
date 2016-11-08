@@ -59,12 +59,12 @@ namespace PlexRequests.Core.StatusChecker
         public async Task<StatusModel> GetStatus()
         {
             var settings = await SystemSettings.GetSettingsAsync();
-            var isEap = settings.UseEarlyAccessPreviewBuilds;
+            var stable = settings.Branch == Branches.Stable;
 
-            if (isEap)
+            if (!stable)
             {
                 // Early Access Preview Releases
-                return GetLatestEapRelease();
+                return GetAppveyorRelease(settings.Branch);
             }
 
             // Stable releases
@@ -76,7 +76,7 @@ namespace PlexRequests.Core.StatusChecker
             var assemblyVersion = AssemblyHelper.GetProductVersion();
             var model = new StatusModel
             {
-                Version = assemblyVersion,
+                CurrentVersion = assemblyVersion,
             };
 
             var releases = await Git.Repository.Release.GetAll(Owner, RepoName);
@@ -84,7 +84,7 @@ namespace PlexRequests.Core.StatusChecker
 
             if (latestRelease == null)
             {
-                return new StatusModel { Version = "Unknown" };
+                return new StatusModel { NewVersion = "Unknown" };
             }
             var latestVersionArray = latestRelease.Name.Split(new[] { 'v' }, StringSplitOptions.RemoveEmptyEntries);
             var latestVersion = latestVersionArray.Length > 1 ? latestVersionArray[1] : string.Empty;
@@ -93,6 +93,7 @@ namespace PlexRequests.Core.StatusChecker
             {
                 model.UpdateAvailable = true;
                 model.UpdateUri = latestRelease.HtmlUrl;
+                model.NewVersion = latestVersion;
             }
 
             model.ReleaseNotes = latestRelease.Body;
@@ -102,17 +103,27 @@ namespace PlexRequests.Core.StatusChecker
             return model;
         }
 
-        private StatusModel GetLatestEapRelease()
+        private StatusModel GetAppveyorRelease(Branches branch)
         {
             var request = new ApiRequest();
 
             // Get latest EAP Build
             var eapBranchRequest = new RestRequest
             {
-                Resource = "/projects/tidusjar/requestplex/branch/EAP",
                 Method = Method.GET
             };
 
+
+            switch (branch)
+            {
+                case Branches.Dev:
+                    eapBranchRequest.Resource = "/projects/tidusjar/requestplex/branch/dev";
+                    break;
+                case Branches.EarlyAccessPreview:
+                    eapBranchRequest.Resource = "/projects/tidusjar/requestplex/branch/EAP";
+                    break;
+            }
+            
             var api = StringCipher.Decrypt(Api,"Appveyor");
             eapBranchRequest.AddHeader("Authorization", $"Bearer {api}");
             eapBranchRequest.AddHeader("Content-Type", "application/json");
@@ -139,15 +150,26 @@ namespace PlexRequests.Core.StatusChecker
 
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
-            return new StatusModel
+            var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
+            var localVersion = AssemblyHelper.GetProductVersion();
+            var localVersionExtended = $"{localVersion.Remove(localVersion.Length - 2, 2)}00";
+            
+            var model = new StatusModel
             {
                 DownloadUri = downloadLink,
-                ReleaseNotes = "Early Access Preview (See recent commits for details)",
-                ReleaseTitle = "Plex Requests Early Access Preview",
-                Version = branchResult.build.version,
-                UpdateAvailable = true,
-                UpdateUri = downloadLink
+                ReleaseNotes = $"{branchDisplay} (See recent commits for details)",
+                ReleaseTitle = $"Plex Requests {branchDisplay}",
+                NewVersion = branchResult.build.version,
+                UpdateUri = downloadLink,
+                CurrentVersion = localVersionExtended
             };
+
+            if (!localVersionExtended.Equals(branchResult.build.version, StringComparison.CurrentCultureIgnoreCase))
+            {
+                model.UpdateAvailable = true;
+            }
+
+            return model;
         }
     }
 }

@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using MarkdownSharp;
@@ -49,8 +50,7 @@ namespace PlexRequests.UI.Modules.Admin
             SystemSettings = ss;
 
             Security.HasPermissionsResponse(Permissions.Administrator);
-
-
+            
             Get["/status", true] = async (x, ct) => await Status();
             Post["/save", true] = async (x, ct) => await Save();
 
@@ -70,6 +70,28 @@ namespace PlexRequests.UI.Modules.Admin
 
             settings.Status = status;
 
+            settings.BranchDropdown = new List<BranchDropdown>
+            {
+                new BranchDropdown
+                {
+                    Name = EnumHelper<Branches>.GetDisplayValue(Branches.Stable),
+                    Value = Branches.Stable,
+                    Selected = settings.Branch == Branches.Stable
+                },
+                new BranchDropdown
+                {
+                    Name = EnumHelper<Branches>.GetDisplayValue(Branches.EarlyAccessPreview),
+                    Value = Branches.EarlyAccessPreview,
+                    Selected = settings.Branch == Branches.EarlyAccessPreview
+                },
+                new BranchDropdown
+                {
+                    Name = EnumHelper<Branches>.GetDisplayValue(Branches.Dev),
+                    Value = Branches.Dev,
+                    Selected = settings.Branch == Branches.Dev
+                },
+            };
+
             return View["Status", settings];
         }
 
@@ -79,6 +101,9 @@ namespace PlexRequests.UI.Modules.Admin
 
             await SystemSettings.SaveSettingsAsync(settings);
 
+            // Clear the cache
+            Cache.Remove(CacheKeys.LastestProductVersion);
+            
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully Saved your settings"});
         }
 

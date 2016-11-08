@@ -25,14 +25,38 @@
 //  ************************************************************************/
 #endregion
 
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using PlexRequests.Core.Models;
 
 namespace PlexRequests.Core.SettingModels
 {
     public class SystemSettings : Settings
     {
-        public bool UseEarlyAccessPreviewBuilds { get; set; }
+        public Branches Branch { get; set; }
 
         public StatusModel Status { get; set; }
+
+        public List<BranchDropdown> BranchDropdown { get; set; }
+    }
+
+    public class BranchDropdown
+    {
+        public bool Selected { get; set; }
+        public string Name { get; set; }
+        public Branches Value { get; set; }
+    }
+
+    public enum Branches
+    {
+        [Display(Name = "Stable")]
+        Stable,
+
+        [Display(Name = "Early Access Preview")]
+        EarlyAccessPreview,
+
+        [Display(Name = "Development")]
+        Dev,   
     }
 }

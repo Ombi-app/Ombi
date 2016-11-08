@@ -1,30 +1,43 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.SystemSettings>
 @Html.Partial("_Sidebar")
-
+<div id="lightbox" style="display:none"></div>
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
         <legend>Status</legend>
 
 
         <div class="form-group">
-            <label class="control-label">Version: </label>
-            <label class="control-label">@Model.Status.Version</label>
+            <label class="control-label">Current Version: </label>
+            <label class="control-label">@Model.Status.CurrentVersion</label>
         </div>
+        
+        @if (Model.Status.UpdateAvailable)
+        {
+            <div class="form-group">
+                <label class="control-label">New Version: </label>
+                <label class="control-label">@Model.Status.NewVersion</label>
+            </div>
+        }
 
         <form id="mainForm" method="post" action="save">
+
             <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.UseEarlyAccessPreviewBuilds)
-                    {
-                        <input type="checkbox" id="UseEarlyAccessPreviewBuilds" name="UseEarlyAccessPreviewBuilds" checked="checked"><label for="UseEarlyAccessPreviewBuilds">Use Early Access Preview Builds</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="UseEarlyAccessPreviewBuilds" name="UseEarlyAccessPreviewBuilds"><label for="UseEarlyAccessPreviewBuilds">Use Early Access Preview Builds</label>
-                    }
-
+                <label for="select" class="control-label">Code Branch</label>
+                <div id="branches">
+                    <select class="form-control form-control-custom" id="select">
+                        @foreach (var b in Model.BranchDropdown)
+                        {
+                            if (b.Selected)
+                            {
+                                <option selected='selected' value='@b.Value'>@b.Name</option>
+                            }
+                            else
+                            {
+                                <option value='@b.Value'>@b.Name</option>
+                            }
+                        }
+                    </select>
                 </div>
             </div>
             <button id="saveSettings" class="btn btn-success-outline">Save</button>
@@ -68,6 +81,7 @@
             e.preventDefault();
             $('body').append("<i class=\"fa fa-spinner fa-spin fa-5x fa-fw\" style=\"position: absolute; top: 20%; left: 50%;\"></i>");
             $('#autoUpdate').prop("disabled", "disabled");
+            document.getElementById("lightbox").style.display = "";
             var count = 0;
             setInterval(function () {
                 count++;
@@ -92,10 +106,15 @@
     $('#saveSettings').click(function (e) {
         e.preventDefault();
         var $form = $("#mainForm");
+
+        var branches = $("#branches option:selected").val();
+
+        var data = $form.serialize();
+        data = data + "&branch=" + branches;
         $.ajax({
             type: $form.prop("method"),
             url: $form.prop("action"),
-            data: $form.serialize(),
+            data: data,
             dataType: "json",
             success: function (response) {
                 if (response.result === true) {

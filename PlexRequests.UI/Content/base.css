@@ -436,3 +436,20 @@ label {
     position: relative;
     margin-right: 0; } }
 
+#lightbox {
+  background-color: grey;
+  filter: alpha(opacity=50);
+  /* IE */
+  opacity: 0.5;
+  /* Safari, Opera */
+  -moz-opacity: 0.50;
+  /* FireFox */
+  top: 0px;
+  left: 0px;
+  z-index: 20;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute; }
+
