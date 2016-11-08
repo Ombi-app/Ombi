@@ -42,9 +42,13 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="StoreCleanup" class="control-label">Email Addresses to Send to (For users that are not in your Plex Friends)</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " placeholder="email@address.com;second@address.com" id="StoreCleanup" name="StoreCleanup" value="@Model.CustomUsers">
+
+              <br>
+              <br>
+                <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your Plex Friends)</label>
+              <small>You can add multiple email address by using the ; delimiter</small>
+<div>
+                    <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
                 </div>
             </div>
 
