@@ -86,7 +86,7 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HeadphoneApi { get; }
-        private ITransientFaultQueue FaultQueue { get}
+        private ITransientFaultQueue FaultQueue { get; }
 
         /// <summary>
         /// Approves the specified request identifier.
