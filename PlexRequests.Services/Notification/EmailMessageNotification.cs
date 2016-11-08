@@ -87,6 +87,14 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.Test:
                     await EmailTest(model, emailSettings);
                     break;
+                case NotificationType.RequestDeclined:
+                    throw new NotImplementedException();
+                    
+                case NotificationType.ItemAddedToFaultQueue:
+                    await EmailAddedToRequestQueue(model, emailSettings);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
         }
@@ -129,7 +137,7 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
                 $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" };
 
             var message = new MimeMessage
             {
@@ -150,12 +158,33 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: New issue for {model.Title}!",
                 $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!"};
 
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
                 Subject = $"Plex Requests: New issue for {model.Title}!"
+            };
+            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
+
+            await Send(message, settings);
+        }
+
+        private async Task EmailAddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
+        {
+            var email = new EmailBasicTemplate();
+            var html = email.LoadTemplate(
+                "Plex Requests: A request could not be added.",
+                $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                model.ImgSrc);
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying" };
+
+            var message = new MimeMessage
+            {
+                Body = body.ToMessageBody(),
+                Subject = $"Plex Requests: A request could not be added"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
@@ -175,7 +204,7 @@ namespace PlexRequests.Services.Notification
                 $"Plex Requests: {model.Title} is now available!",
                 $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)" };
 
             var message = new MimeMessage
             {

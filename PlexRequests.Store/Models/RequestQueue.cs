@@ -38,5 +38,12 @@ namespace PlexRequests.Store.Models
 
         public byte[] Content { get; set; }
 
+        public FaultType FaultType { get; set; }
+    }
+
+    public enum FaultType
+    {
+        RequestFault,
+        MissingInformation
     }
 }

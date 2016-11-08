@@ -39,6 +39,10 @@
       <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
@@ -105,6 +109,7 @@
     <Compile Include="Notification\Templates\IEmailBasicTemplate.cs" />
     <Compile Include="Notification\TransportType.cs" />
     <Compile Include="PlexReadOnlyDatabase.cs" />
+    <Compile Include="Queue\ITransientFaultQueue.cs" />
     <Compile Include="Queue\TransientFaultQueue.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
