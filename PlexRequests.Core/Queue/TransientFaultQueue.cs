@@ -46,14 +46,14 @@ namespace PlexRequests.Core.Queue
         private IRepository<RequestQueue> RequestQueue { get; }
 
 
-        public void QueueItem(RequestedModel request, RequestType type, FaultType faultType)
+        public void QueueItem(RequestedModel request, string id, RequestType type, FaultType faultType)
         {
             //Ensure there is not a duplicate queued item
             var existingItem = RequestQueue.Custom(
                connection =>
                {
                    connection.Open();
-                   var result = connection.Query<RequestQueue>("select * from RequestQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = request.ProviderId });
+                   var result = connection.Query<RequestQueue>("select * from RequestQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = id });
 
                    return result;
                }).FirstOrDefault();
@@ -68,19 +68,19 @@ namespace PlexRequests.Core.Queue
             {
                 Type = type,
                 Content =  ByteConverterHelper.ReturnBytes(request),
-                PrimaryIdentifier = request.ProviderId,
+                PrimaryIdentifier = id,
                 FaultType = faultType
             };
             RequestQueue.Insert(queue);
         }
 
-        public async Task QueueItemAsync(RequestedModel request, RequestType type, FaultType faultType)
+        public async Task QueueItemAsync(RequestedModel request, string id, RequestType type, FaultType faultType)
         {
             //Ensure there is not a duplicate queued item
             var existingItem = await RequestQueue.CustomAsync(async connection =>
                {
                    connection.Open();
-                   var result = await connection.QueryAsync<RequestQueue>("select * from RequestQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = request.ProviderId });
+                   var result = await connection.QueryAsync<RequestQueue>("select * from RequestQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = id });
 
                    return result;
                });
@@ -95,7 +95,7 @@ namespace PlexRequests.Core.Queue
             {
                 Type = type,
                 Content = ByteConverterHelper.ReturnBytes(request),
-                PrimaryIdentifier = request.ProviderId,
+                PrimaryIdentifier = id,
                 FaultType = faultType
             };
             await RequestQueue.InsertAsync(queue);

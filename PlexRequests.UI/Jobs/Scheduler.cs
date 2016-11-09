@@ -69,11 +69,10 @@ namespace PlexRequests.UI.Jobs
                 JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                 JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
-                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build()
+                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
+                JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
             };
-
-
-
+            
             jobs.AddRange(jobList);
 
             return jobs;
@@ -151,7 +150,10 @@ namespace PlexRequests.UI.Jobs
             {
                 s.UserRequestLimitResetter = 12;
             }
-
+            if (s.FaultQueueHandler == 0)
+            {
+                s.FaultQueueHandler = 6;
+            }
 
             var triggers = new List<ITrigger>();
 
@@ -221,6 +223,13 @@ namespace PlexRequests.UI.Jobs
                     .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
                     .Build();
 
+            var fault =
+                TriggerBuilder.Create()
+                    .WithIdentity("FaultQueueHandler", "Fault")
+                    .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                    .WithSimpleSchedule(x => x.WithIntervalInHours(s.FaultQueueHandler).RepeatForever())
+                    .Build();
+
             triggers.Add(rencentlyAdded);
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
@@ -230,6 +239,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);
             triggers.Add(plexEpCacher);
+            triggers.Add(fault);
 
             return triggers;
         }

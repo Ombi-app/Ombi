@@ -589,7 +589,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Fatal(e);
-                await FaultQueue.QueueItemAsync(model, RequestType.Movie, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault);
 
                 await NotificationService.Publish(new NotificationModel
                 {
@@ -689,26 +689,6 @@ namespace PlexRequests.UI.Modules
                 SeasonCount = showInfo.Season.Count,
                 TvDbId = showId.ToString()
             };
-
-            if (showInfo.externals?.thetvdb == null)
-            {
-                await FaultQueue.QueueItemAsync(model, RequestType.TvShow, FaultType.MissingInformation);
-                await NotificationService.Publish(new NotificationModel
-                {
-                    DateTime = DateTime.Now,
-                    User = Username,
-                    RequestType = RequestType.TvShow,
-                    Title = model.Title,
-                    NotificationType = NotificationType.ItemAddedToFaultQueue
-                });
-                return Response.AsJson(new JsonResponseModel
-                {
-                    Result = true,
-                    Message = $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
-                });
-            }
-
-            model.ProviderId = showInfo.externals?.thetvdb ?? 0;
 
             var seasonsList = new List<int>();
             switch (seasons)
@@ -876,6 +856,26 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
+            if (showInfo.externals?.thetvdb == null)
+            {
+                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.MissingInformation);
+                await NotificationService.Publish(new NotificationModel
+                {
+                    DateTime = DateTime.Now,
+                    User = Username,
+                    RequestType = RequestType.TvShow,
+                    Title = model.Title,
+                    NotificationType = NotificationType.ItemAddedToFaultQueue
+                });
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = true,
+                    Message = $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}"
+                });
+            }
+
+            model.ProviderId = showInfo.externals?.thetvdb ?? 0;
+
             try
             {
                 if (ShouldAutoApprove(RequestType.TvShow, settings))
@@ -936,7 +936,7 @@ namespace PlexRequests.UI.Modules
             }
             catch (Exception e)
             {
-                await FaultQueue.QueueItemAsync(model, RequestType.TvShow, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.RequestFault);
                 await NotificationService.Publish(new NotificationModel
                 {
                     DateTime = DateTime.Now,
@@ -1102,7 +1102,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Error(e);
-                await FaultQueue.QueueItemAsync(model, RequestType.Movie, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Movie, FaultType.RequestFault);
 
                 await NotificationService.Publish(new NotificationModel
                 {

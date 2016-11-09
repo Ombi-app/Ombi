@@ -93,6 +93,7 @@
     <Compile Include="Jobs\SickRageCacher.cs" />
     <Compile Include="Jobs\SonarrCacher.cs" />
     <Compile Include="Jobs\Templates\RecentlyAddedTemplate.cs" />
+    <Compile Include="Jobs\FaultQueueHandler.cs" />
     <Compile Include="Jobs\UserRequestLimitResetter.cs" />
     <Compile Include="Models\PlexAlbum.cs" />
     <Compile Include="Models\PlexEpisodeModel.cs" />

@@ -137,6 +137,8 @@
     <Compile Include="StatusChecker\AppveyorArtifactResult.cs" />
     <Compile Include="StatusChecker\StatusChecker.cs" />
     <Compile Include="StatusChecker\AppveyorBranchResult.cs" />
+    <Compile Include="TvSender.cs" />
+    <Compile Include="TvSenderOld.cs" />
     <Compile Include="UserIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserMapper.cs" />
