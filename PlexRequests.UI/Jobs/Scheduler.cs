@@ -226,7 +226,8 @@ namespace PlexRequests.UI.Jobs
             var fault =
                 TriggerBuilder.Create()
                     .WithIdentity("FaultQueueHandler", "Fault")
-                    .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                    //.StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                    .StartNow()
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.FaultQueueHandler).RepeatForever())
                     .Build();
 

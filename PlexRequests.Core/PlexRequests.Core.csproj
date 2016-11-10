@@ -112,6 +112,7 @@
     <Compile Include="PlexReadOnlyDatabase.cs" />
     <Compile Include="Queue\ITransientFaultQueue.cs" />
     <Compile Include="Queue\TransientFaultQueue.cs" />
+    <Compile Include="RequestHelper.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />

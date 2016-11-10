@@ -878,7 +878,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (ShouldAutoApprove(RequestType.TvShow, settings))
+                if (RequestType.TvShow.ShouldAutoApprove(settings, IsAdmin, Username))
                 {
                     model.Approved = true;
                     var s = await sonarrSettings;
@@ -974,7 +974,7 @@ namespace PlexRequests.UI.Modules
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
         {
-            var sendNotification = ShouldAutoApprove(type, prSettings)
+            var sendNotification = type.ShouldAutoApprove(prSettings, IsAdmin, Username)
                 ? !prSettings.IgnoreNotifyForAutoApprovedRequests
                 : true;
             var claims = Context.CurrentUser?.Claims;
@@ -1073,7 +1073,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (ShouldAutoApprove(RequestType.Album, settings))
+                if (RequestType.Album.ShouldAutoApprove(settings, IsAdmin, Username))
                 {
                     model.Approved = true;
                     var hpSettings = HeadphonesService.GetSettings();
@@ -1125,25 +1125,6 @@ namespace PlexRequests.UI.Modules
             }
 
             return img;
-        }
-
-        private bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings)
-        {
-            // if the user is an admin or they are whitelisted, they go ahead and allow auto-approval
-            if (IsAdmin || prSettings.ApprovalWhiteList.Any(x => x.Equals(Username, StringComparison.OrdinalIgnoreCase))) return true;
-
-            // check by request type if the category requires approval or not
-            switch (requestType)
-            {
-                case RequestType.Movie:
-                    return !prSettings.RequireMovieApproval;
-                case RequestType.TvShow:
-                    return !prSettings.RequireTvShowApproval;
-                case RequestType.Album:
-                    return !prSettings.RequireMusicApproval;
-                default:
-                    return false;
-            }
         }
 
         private async Task<Response> NotifyUser(bool notify)

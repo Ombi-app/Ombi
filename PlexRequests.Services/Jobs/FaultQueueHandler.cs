@@ -37,6 +37,7 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
@@ -53,7 +54,7 @@ namespace PlexRequests.Services.Jobs
         public FaultQueueHandler(IJobRecord record, IRepository<RequestQueue> repo, ISonarrApi sonarrApi,
             ISickRageApi srApi, ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings,
             ICouchPotatoApi cpApi, ISettingsService<CouchPotatoSettings> cpsettings, IRequestService requestService,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi)
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi, ISettingsService<PlexRequestSettings> prSettings)
         {
             Record = record;
             Repo = repo;
@@ -68,6 +69,7 @@ namespace PlexRequests.Services.Jobs
             SonarrSettings = sonarrSettings;
             CpSettings = cpsettings;
             HeadphoneSettings = hpSettings;
+            PrSettings = prSettings.GetSettings();
         }
 
         private IRepository<RequestQueue> Repo { get; }
@@ -77,6 +79,7 @@ namespace PlexRequests.Services.Jobs
         private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HpApi { get; }
         private IRequestService RequestService { get; }
+        private PlexRequestSettings PrSettings { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickrageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
@@ -87,7 +90,7 @@ namespace PlexRequests.Services.Jobs
             try
             {
                 var faultedRequests = Repo.GetAll().ToList();
-                
+
                 var missingInfo = faultedRequests.Where(x => x.FaultType == FaultType.MissingInformation).ToList();
                 ProcessMissingInformation(missingInfo);
 
@@ -108,13 +111,14 @@ namespace PlexRequests.Services.Jobs
 
         private void ProcessMissingInformation(List<RequestQueue> requests)
         {
-            var sonarrSettings = SonarrSettings.GetSettings();
-            var sickrageSettings = SickrageSettings.GetSettings();
-
             if (!requests.Any())
             {
                 return;
             }
+
+            var sonarrSettings = SonarrSettings.GetSettings();
+            var sickrageSettings = SickrageSettings.GetSettings();
+
             var tv = requests.Where(x => x.Type == RequestType.TvShow);
 
             // TV
@@ -122,7 +126,7 @@ namespace PlexRequests.Services.Jobs
             foreach (var t in tv)
             {
                 var providerId = int.Parse(t.PrimaryIdentifier);
-                var showInfo = tvApi.ShowLookupByTheTvDbId(providerId);
+                var showInfo = tvApi.ShowLookup(providerId);
 
                 if (showInfo.externals?.thetvdb != null)
                 {
@@ -227,8 +231,10 @@ namespace PlexRequests.Services.Jobs
 
                     if (result)
                     {
-                        // Approve it now
-                        model.Approved = true;
+
+                        if (model.Type.ShouldAutoApprove(PrSettings, false, model.RequestedUsers))
+                            // Approve it now
+                            model.Approved = true;
                         RequestService.UpdateRequest(model);
                     };
 
@@ -258,7 +264,7 @@ namespace PlexRequests.Services.Jobs
             foreach (var request in requests)
             {
                 var model = ByteConverterHelper.ReturnObject<RequestedModel>(request.Content);
-                var result = false;
+                bool result;
                 switch (request.Type)
                 {
                     case RequestType.Movie:
