@@ -210,7 +210,6 @@
     <Compile Include="Helpers\CustomHtmlHelper.cs" />
     <Compile Include="Helpers\DebugRootPathProvider.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
-    <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\HtmlSecurityHelper.cs" />
     <Compile Include="Helpers\SecurityExtensions.cs" />

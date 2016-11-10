@@ -90,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CacheKeys.cs" />
+    <Compile Include="HeadphonesSender.cs" />
     <Compile Include="IPlexReadOnlyDatabase.cs" />
     <Compile Include="IStatusChecker.cs" />
     <Compile Include="Notification\NotificationMessage.cs" />

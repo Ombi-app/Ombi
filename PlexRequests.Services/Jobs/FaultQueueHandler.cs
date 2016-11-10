@@ -51,32 +51,43 @@ namespace PlexRequests.Services.Jobs
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public FaultQueueHandler(IJobRecord record, IRepository<RequestQueue> repo, ISonarrApi sonarrApi,
-            ISickRageApi srApi,
-            ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings)
+            ISickRageApi srApi, ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings,
+            ICouchPotatoApi cpApi, ISettingsService<CouchPotatoSettings> cpsettings, IRequestService requestService,
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi)
         {
             Record = record;
             Repo = repo;
             SonarrApi = sonarrApi;
             SrApi = srApi;
+            CpApi = cpApi;
+            HpApi = headphonesApi;
+
+            RequestService = requestService;
+
             SickrageSettings = srSettings;
             SonarrSettings = sonarrSettings;
+            CpSettings = cpsettings;
+            HeadphoneSettings = hpSettings;
         }
 
         private IRepository<RequestQueue> Repo { get; }
         private IJobRecord Record { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SrApi { get; }
-        private ISettingsService<SonarrSettings> SonarrSettings { get; set; }
-        private ISettingsService<SickRageSettings> SickrageSettings { get; set; }
-
+        private ICouchPotatoApi CpApi { get; }
+        private IHeadphonesApi HpApi { get; }
+        private IRequestService RequestService { get; }
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private ISettingsService<SickRageSettings> SickrageSettings { get; }
+        private ISettingsService<CouchPotatoSettings> CpSettings { get; }
+        private ISettingsService<HeadphonesSettings> HeadphoneSettings { get; }
 
         public void Execute(IJobExecutionContext context)
         {
             try
             {
                 var faultedRequests = Repo.GetAll().ToList();
-
-
+                
                 var missingInfo = faultedRequests.Where(x => x.FaultType == FaultType.MissingInformation).ToList();
                 ProcessMissingInformation(missingInfo);
 
@@ -90,7 +101,7 @@ namespace PlexRequests.Services.Jobs
             }
             finally
             {
-                Record.Record(JobNames.RequestLimitReset);
+                Record.Record(JobNames.FaultQueueHandler);
             }
         }
 
@@ -163,9 +174,66 @@ namespace PlexRequests.Services.Jobs
                         // Couldn't send it
                         return false;
                     }
+
+                    // Approve it
+                    tvModel.Approved = true;
+                    RequestService.UpdateRequest(tvModel);
                     return true;
                 }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return false; // It fails so it will get added back into the queue
+            }
+        }
 
+        private bool ProcessMovies(RequestedModel model, CouchPotatoSettings cp)
+        {
+            try
+            {
+                if (cp.Enabled)
+                {
+                    var result = CpApi.AddMovie(model.ImdbId, cp.ApiKey, model.Title,
+                        cp.FullUri, cp.ProfileId);
+
+                    if (result)
+                    {
+                        // Approve it now
+                        model.Approved = true;
+                        RequestService.UpdateRequest(model);
+                    };
+
+                    return result;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return false; // It fails so it will get added back into the queue
+            }
+        }
+
+        private bool ProcessAlbums(RequestedModel model, HeadphonesSettings hp)
+        {
+            try
+            {
+                if (hp.Enabled)
+                {
+                    var sender = new HeadphonesSender(HpApi, hp, RequestService);
+                    var result = sender.AddAlbum(model).Result;
+
+                    if (result)
+                    {
+                        // Approve it now
+                        model.Approved = true;
+                        RequestService.UpdateRequest(model);
+                    };
+
+                    return result;
+                }
                 return false;
             }
             catch (Exception e)
@@ -179,36 +247,45 @@ namespace PlexRequests.Services.Jobs
         {
             var sonarrSettings = SonarrSettings.GetSettings();
             var sickrageSettings = SickrageSettings.GetSettings();
+            var cpSettings = CpSettings.GetSettings();
+            var hpSettings = HeadphoneSettings.GetSettings();
 
             if (!requests.Any())
             {
                 return;
             }
-            var tv = requests.Where(x => x.Type == RequestType.TvShow);
-            var movie = requests.Where(x => x.Type == RequestType.Movie);
-            var album = requests.Where(x => x.Type == RequestType.Album);
 
-
-
-            foreach (var t in tv)
+            foreach (var request in requests)
             {
-                var tvModel = ByteConverterHelper.ReturnObject<RequestedModel>(t.Content);
-                var result = ProcessTvShow(tvModel, sonarrSettings, sickrageSettings);
+                var model = ByteConverterHelper.ReturnObject<RequestedModel>(request.Content);
+                var result = false;
+                switch (request.Type)
+                {
+                    case RequestType.Movie:
+                        result = ProcessMovies(model, cpSettings);
+                        break;
+                    case RequestType.TvShow:
+                        result = ProcessTvShow(model, sonarrSettings, sickrageSettings);
+                        break;
+                    case RequestType.Album:
+                        result = ProcessAlbums(model, hpSettings);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
                 if (!result)
                 {
                     // we now have the info but couldn't add it, so do nothing now.
-                    t.LastRetry = DateTime.UtcNow;
-                    Repo.Update(t);
+                    request.LastRetry = DateTime.UtcNow;
+                    Repo.Update(request);
                 }
                 else
                 {
                     // Successful, remove from the fault queue
-                    Repo.Delete(t);
+                    Repo.Delete(request);
                 }
             }
-
-
         }
     }
 }

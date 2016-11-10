@@ -24,18 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using NLog;
-
 using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core
 {
     public class HeadphonesSender
     {

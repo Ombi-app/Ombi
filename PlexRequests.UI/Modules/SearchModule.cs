@@ -909,9 +909,7 @@ namespace PlexRequests.UI.Modules
                         var result = sender.SendToSickRage(srSettings, model);
                         if (result?.result == "success")
                         {
-                            return
-                                await
-                                    AddRequest(model, settings,
+                            return await AddRequest(model, settings,
                                         $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                         }
                         return
@@ -924,8 +922,7 @@ namespace PlexRequests.UI.Modules
 
                     if (!srSettings.Enabled && !s.Enabled)
                     {
-                        return
-                            await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                        return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
 
                     return
@@ -1102,7 +1099,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Error(e);
-                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Movie, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Album, FaultType.RequestFault);
 
                 await NotificationService.Publish(new NotificationModel
                 {

@@ -37,5 +37,6 @@ namespace PlexRequests.Services.Jobs
         public const string RequestLimitReset = "Request Limit Reset";
         public const string EpisodeCacher = "Plex Episode Cacher";
         public const string RecentlyAddedEmail = "Recently Added Email Notification";
+        public const string FaultQueueHandler = "Request Fault Queue Handler";
     }
 }
