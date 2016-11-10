@@ -133,7 +133,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_Id ON PlexEpisodes (Id);
 CREATE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);
 
 
-CREATE TABLE IF NOT EXISTS RequestQueue
+CREATE TABLE IF NOT EXISTS RequestFaultQueue
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     PrimaryIdentifier					VARCHAR(100) NOT NULL,

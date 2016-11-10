@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RequestQueue.cs
+//    File: FaultedRequestsViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,24 +26,29 @@
 #endregion
 
 using System;
-using Dapper.Contrib.Extensions;
+using PlexRequests.Store;
+using PlexRequests.Store.Models;
 
-namespace PlexRequests.Store.Models
+namespace PlexRequests.UI.Models
 {
-    [Table("RequestFaultQueue")]
-    public class RequestQueue : Entity
+    public class FaultedRequestsViewModel
     {
+        public int Id { get; set; }
         public string PrimaryIdentifier { get; set; }
-
-        public RequestType Type { get; set; }
-
-        public byte[] Content { get; set; }
-
-        public FaultType FaultType { get; set; }
+        public RequestTypeViewModel Type { get; set; }
+        public string Title { get; set; }
+        public FaultTypeViewModel FaultType { get; set; }
         public DateTime? LastRetry { get; set; }
     }
 
-    public enum FaultType
+    public enum RequestTypeViewModel
+    {
+        Movie,
+        TvShow,
+        Album
+    }
+
+    public enum FaultTypeViewModel
     {
         RequestFault,
         MissingInformation

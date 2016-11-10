@@ -616,7 +616,7 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
-            if (Security.DoesNotHavePermissions(Permissions.ReadOnlyUser, User))
+            if (Security.HasPermissions(User, Permissions.ReadOnlyUser))
             {
                 return
                     Response.AsJson(new JsonResponseModel()

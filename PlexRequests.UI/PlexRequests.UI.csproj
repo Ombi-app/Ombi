@@ -229,6 +229,7 @@
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\EpisodeListViewModel.cs" />
     <Compile Include="Models\EpisodeRequestModel.cs" />
+    <Compile Include="Models\FaultedRequestsViewModel.cs" />
     <Compile Include="Models\IssuesDetailsViewModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\FaultQueueModule.cs" />
     <Compile Include="Modules\Admin\SystemStatusModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
@@ -724,6 +726,9 @@
     <None Include="Views\Admin\NewsletterSettings.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Views\Admin\RequestFaultQueue.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

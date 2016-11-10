@@ -2,14 +2,11 @@
 using System.Threading.Tasks;
 
 using Nancy;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {

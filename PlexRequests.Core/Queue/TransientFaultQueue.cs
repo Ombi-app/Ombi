@@ -80,7 +80,7 @@ namespace PlexRequests.Core.Queue
             var existingItem = await RequestQueue.CustomAsync(async connection =>
                {
                    connection.Open();
-                   var result = await connection.QueryAsync<RequestQueue>("select * from RequestQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = id });
+                   var result = await connection.QueryAsync<RequestQueue>("select * from RequestFaultQueue where PrimaryIdentifier = @ProviderId", new { ProviderId = id });
 
                    return result;
                });
