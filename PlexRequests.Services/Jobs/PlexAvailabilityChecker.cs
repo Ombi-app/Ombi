@@ -419,11 +419,11 @@ namespace PlexRequests.Services.Jobs
                     results = GetLibraries(plexSettings);
                     if (plexSettings.AdvancedSearch)
                     {
-                        for (var i = 0; i < results.Count; i++)
+                        foreach (PlexSearch t in results)
                         {
-                            for (var j = 0; j < results[i].Directory.Count; j++)
+                            foreach (Directory1 t1 in t.Directory)
                             {
-                                var currentItem = results[i].Directory[j];
+                                var currentItem = t1;
                                 var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
 
@@ -434,25 +434,21 @@ namespace PlexRequests.Services.Jobs
                                         currentItem.RatingKey);
 
                                     // We do not want "all episodes" this as a season
-                                    var filtered =
-                                        seasons.Directory.Where(
-                                            x =>
-                                                !x.Title.Equals("All episodes",
-                                                    StringComparison.CurrentCultureIgnoreCase));
+                                    var filtered = seasons.Directory.Where( x => !x.Title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
 
-                                    results[i].Directory[j].Seasons.AddRange(filtered);
+                                    t1.Seasons.AddRange(filtered);
                                 }
 
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Directory.Guid);
-                                results[i].Directory[j].ProviderId = providerId;
+                                t1.ProviderId = providerId;
                             }
-                            for (var j = 0; j < results[i].Video.Count; j++)
+                            foreach (Video t1 in t.Video)
                             {
-                                var currentItem = results[i].Video[j];
+                                var currentItem = t1;
                                 var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
                                     currentItem.RatingKey);
                                 var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Video.Guid);
-                                results[i].Video[j].ProviderId = providerId;
+                                t1.ProviderId = providerId;
                             }
                         }
                     }
