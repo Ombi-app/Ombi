@@ -555,7 +555,7 @@ namespace PlexRequests.UI.Modules
             };
             try
             {
-                if (ShouldAutoApprove(RequestType.Movie, settings))
+                if (RequestType.Movie.ShouldAutoApprove(settings, IsAdmin, Username))
                 {
                     var cpSettings = await CpService.GetSettingsAsync();
                     model.Approved = true;
