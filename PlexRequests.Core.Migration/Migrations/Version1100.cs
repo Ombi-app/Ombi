@@ -27,22 +27,26 @@
 
 using System.Data;
 using PlexRequests.Store;
+using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core.Migration.Migrations
 {
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100()
+        public Version1100(IUserRepository userRepo)
         {
 
         }
         public int Version => 11000;
-
+        public IUserRepository UserRepo {get;set;}
 
         public void Start(IDbConnection con)
         {
             UpdateDb(con);
+
+            // Update the current admin permissions set
+            UpdateAdmin(con);
 
             UpdateSchema(con, Version);
         }
@@ -53,6 +57,18 @@ namespace PlexRequests.Core.Migration.Migrations
             con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
             
+        }
+
+        private void UpdateAdmin(IDbConnection con)
+        {
+            var users = UserRepo.GetAll();
+
+            foreach (var user in users)
+            {
+                user.Permissions = Permissions.Administrator | ReportIssue | RequestMusic
+                | RequestTvShow
+                | RequestMovie;
+            }
         }
     }
 }
