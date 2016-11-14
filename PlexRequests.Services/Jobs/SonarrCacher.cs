@@ -62,10 +62,10 @@ namespace PlexRequests.Services.Jobs
 
         public void Queued()
         {
-            Job.SetRunning(true, JobNames.CpCacher);
             var settings = SonarrSettings.GetSettings();
             if (settings.Enabled)
             {
+                Job.SetRunning(true, JobNames.SonarrCacher);
                 try
                 {
                     var series = SonarrApi.GetSeries(settings.ApiKey, settings.FullUri);
@@ -81,7 +81,7 @@ namespace PlexRequests.Services.Jobs
                 finally
                 {
                     Job.Record(JobNames.SonarrCacher);
-                    Job.SetRunning(false, JobNames.CpCacher);
+                    Job.SetRunning(false, JobNames.SonarrCacher);
                 }
             }
         }

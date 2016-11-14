@@ -66,6 +66,7 @@ using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using Quartz;
 using Action = PlexRequests.Helpers.Analytics.Action;
+using HttpStatusCode = Nancy.HttpStatusCode;
 
 namespace PlexRequests.UI.Modules
 {
@@ -154,8 +155,8 @@ namespace PlexRequests.UI.Modules
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
 
-            Security.HasPermissionsResponse(Permissions.Administrator);
-
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
+            
             Get["/"] = _ => Admin();
 
             Get["/authentication", true] = async (x, ct) => await Authentication();
@@ -826,13 +827,11 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Newsletter!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
-            }
+        }
 
 
         private Response CreateApiKey()
         {
-            Security.HasPermissionsResponse(Permissions.Administrator);
-
             Analytics.TrackEventAsync(Category.Admin, Action.Create, "Created API Key", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();
@@ -978,11 +977,11 @@ namespace PlexRequests.UI.Modules
                 if (!isValid)
                 {
                     return Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message =
+                    {
+                        Result = false,
+                        Message =
                                 $"CRON {settings.RecentlyAddedCron} is not valid. Please ensure you are using a valid CRON."
-                        });
+                    });
                 }
             }
             var result = await ScheduledJobSettings.SaveSettingsAsync(settings);

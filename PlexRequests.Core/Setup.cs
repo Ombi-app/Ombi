@@ -60,50 +60,11 @@ namespace PlexRequests.Core
                 // Shrink DB
                 TableCreation.Vacuum(Db.DbConnection());
             }
-
-
-            // The below code is obsolete, we should use PlexRequests.Core.Migrations.MigrationRunner
-            var version = CheckSchema();
-            if (version > 0)
-            {
-                if (version > 1899 && version <= 1900)
-                {
-                    MigrateToVersion1900();
-                }
-
-                if(version > 1899 && version <= 1910)
-                {
-                    MigrateToVersion1910();
-                }
-            }
-
+            
+            // Add the new 'running' item into the scheduled jobs so we can check if the cachers are running
+            Db.DbConnection().AlterTable("ScheduledJobs", "ADD", "Running", true, "INTEGER");
+            
             return Db.DbConnection().ConnectionString;
-        }
-
-        public static string ConnectionString => Db.DbConnection().ConnectionString;
-
-
-        private int CheckSchema()
-        {
-            var productVersion = AssemblyHelper.GetProductVersion();
-            var trimStatus = new Regex("[^0-9]", RegexOptions.Compiled).Replace(productVersion, string.Empty).PadRight(4, '0');
-            var version = int.Parse(trimStatus);
-
-            var connection = Db.DbConnection();
-            var schema = connection.GetSchemaVersion();
-            if (schema == null)
-            {
-                connection.CreateSchema(version); // Set the default.
-                schema = connection.GetSchemaVersion();
-            }
-            if (version > schema.SchemaVersion)
-            {
-                Db.DbConnection().UpdateSchemaVersion(version);
-                schema = connection.GetSchemaVersion();
-            }
-            version = schema.SchemaVersion;
-
-            return version;
         }
 
         private void CreateDefaultSettingsPage(string baseUrl)
@@ -148,7 +109,6 @@ namespace PlexRequests.Core
                 Task.Run(() => { CacheSonarrQualityProfiles(mc); });
                 Task.Run(() => { CacheCouchPotatoQualityProfiles(mc); });
                 // we don't need to cache sickrage profiles, those are static
-                // TODO: cache headphones profiles?
             }
             catch (Exception)
             {
@@ -156,12 +116,12 @@ namespace PlexRequests.Core
             }
         }
 
-        private void CacheSonarrQualityProfiles(MemoryCacheProvider cacheProvider)
+        private void CacheSonarrQualityProfiles(ICacheProvider cacheProvider)
         {
             try
             {
                 Log.Info("Executing GetSettings call to Sonarr for quality profiles");
-                var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), cacheProvider));
                 var sonarrSettings = sonarrSettingsService.GetSettings();
                 if (sonarrSettings.Enabled)
                 {
@@ -178,12 +138,12 @@ namespace PlexRequests.Core
             }
         }
 
-        private void CacheCouchPotatoQualityProfiles(MemoryCacheProvider cacheProvider)
+        private void CacheCouchPotatoQualityProfiles(ICacheProvider cacheProvider)
         {
             try
             {
                 Log.Info("Executing GetSettings call to CouchPotato for quality profiles");
-                var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+                var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), cacheProvider));
                 var cpSettings = cpSettingsService.GetSettings();
                 if (cpSettings.Enabled)
                 {
@@ -197,103 +157,6 @@ namespace PlexRequests.Core
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to cache CouchPotato quality profiles!");
-            }
-        }
-
-
-        /// <summary>
-        /// Migrates to version 1.9.
-        /// Move the Plex auth token to the new field.
-        /// Reconfigure the log level
-        /// Set the wizard flag to true if we already have settings
-        /// </summary>
-        public void MigrateToVersion1900()
-        {
-            // Need to change the Plex Token location
-            var authSettings = new SettingsServiceV2<AuthenticationSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-            var auth = authSettings.GetSettings();
-            var plexSettings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-
-            if (auth != null)
-            {
-                //If we have an authToken we do not need to go through the setup
-                if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
-                {
-                    var prServuce = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-                    var settings = prServuce.GetSettings();
-                    settings.Wizard = true;
-                    prServuce.SaveSettings(settings);
-                }
-
-                // Clear out the old token and save it to the new field
-                var currentSettings = plexSettings.GetSettings();
-                if (!string.IsNullOrEmpty(auth.OldPlexAuthToken))
-                {
-                    currentSettings.PlexAuthToken = auth.OldPlexAuthToken;
-                    plexSettings.SaveSettings(currentSettings);
-
-                    // Clear out the old value
-                    auth.OldPlexAuthToken = string.Empty;
-                    authSettings.SaveSettings(auth);
-                }
-
-            }
-
-
-            // Set the log level
-            try
-            {
-                var settingsService = new SettingsServiceV2<LogSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-                var logSettings = settingsService.GetSettings();
-                logSettings.Level = LogLevel.Error.Ordinal;
-                settingsService.SaveSettings(logSettings);
-
-                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-
-
-            // Enable analytics;
-            try
-            {
-
-                var prSettings = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-                var settings = prSettings.GetSettings();
-                settings.CollectAnalyticData = true;
-                var updated = prSettings.SaveSettings(settings);
-
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-        }
-
-        /// <summary>
-        /// Migrates to version1910.
-        /// </summary>
-        public void MigrateToVersion1910()
-        {
-            try
-            {
-                // Get the new machine Identifier
-                var settings = new SettingsServiceV2<PlexSettings>(new SettingsJsonRepository(Db, new MemoryCacheProvider()));
-                var plex = settings.GetSettings();
-                if (!string.IsNullOrEmpty(plex.PlexAuthToken))
-                {
-                    var api = new PlexApi(new ApiRequest());
-                    var server = api.GetServer(plex.PlexAuthToken); // Get the server info
-                    plex.MachineIdentifier = server.Server.FirstOrDefault(x => x.AccessToken == plex.PlexAuthToken)?.MachineIdentifier;
-
-                    settings.SaveSettings(plex); // Save the new settings
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
             }
         }
     }

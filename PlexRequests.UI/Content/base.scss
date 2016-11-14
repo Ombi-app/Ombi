@@ -327,6 +327,13 @@ $border-radius: 10px;
     padding: 3px 0;
 }
 
+#cacherRunning {
+    background-color: $form-color;
+    text-align: center;
+    font-size: 15px;
+    padding: 3px 0;
+}
+
 .checkbox label {
     display: inline-block;
     cursor: pointer;

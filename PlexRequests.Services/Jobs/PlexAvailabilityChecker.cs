@@ -87,7 +87,6 @@ namespace PlexRequests.Services.Jobs
                 Log.Debug("Validation of the plex settings failed.");
                 return;
             }
-
             var libraries = CachedLibraries(plexSettings, true); //force setting the cache (10 min intervals via scheduler)
 
             if (libraries == null || !libraries.Any())
@@ -156,9 +155,6 @@ namespace PlexRequests.Services.Jobs
                 NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken, NotificationType.RequestAvailable);
                 RequestService.BatchUpdate(modifiedModel);
             }
-
-            Job.Record(JobNames.PlexChecker);
-            Job.SetRunning(false, JobNames.CpCacher);
         }
 
         public List<PlexMovie> GetPlexMovies()
@@ -504,7 +500,7 @@ namespace PlexRequests.Services.Jobs
         public void Execute(IJobExecutionContext context)
         {
 
-            Job.SetRunning(true, JobNames.CpCacher);
+            Job.SetRunning(true, JobNames.PlexChecker);
             try
             {
                 CheckAndUpdateAll();
@@ -512,6 +508,11 @@ namespace PlexRequests.Services.Jobs
             catch (Exception e)
             {
                 Log.Error(e);
+            }
+            finally
+            {
+                Job.Record(JobNames.PlexChecker);
+                Job.SetRunning(false, JobNames.PlexChecker);
             }
         }
     }

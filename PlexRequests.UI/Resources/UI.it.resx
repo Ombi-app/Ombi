@@ -459,4 +459,34 @@
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>Non ci sono informazioni disponibili per la data di uscita</value>
   </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>Guarda In Plex</value>
+  </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Donare alla libreria Maintainer</value>
+  </data>
+  <data name="Search_Available_on_plex" xml:space="preserve">
+    <value>Disponibile su Plex</value>
+  </data>
+  <data name="Search_Movie_Status" xml:space="preserve">
+    <value>lo stato di film</value>
+  </data>
+  <data name="Search_Not_Requested_Yet" xml:space="preserve">
+    <value>Non ancora richiesto</value>
+  </data>
+  <data name="Search_Pending_approval" xml:space="preserve">
+    <value>Approvazione in sospeso</value>
+  </data>
+  <data name="Search_Processing_Request" xml:space="preserve">
+    <value>Elaborazione richiesta</value>
+  </data>
+  <data name="Search_Request_denied" xml:space="preserve">
+    <value>Richiesta negata</value>
+  </data>
+  <data name="Search_TV_Show_Status" xml:space="preserve">
+    <value>Show televisivo di stato</value>
+  </data>
+  <data name="Layout_CacherRunning" xml:space="preserve">
+    <value>Un processo in background è in esecuzione, quindi ci potrebbero essere alcuni comportamenti imprevisti. Questo non dovrebbe richiedere troppo tempo.</value>
+  </data>
 </root>

@@ -25,6 +25,8 @@
 //  ************************************************************************/
 #endregion
 
+using Nancy;
+using Nancy.Linker;
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
 using Ninject;
@@ -41,22 +43,37 @@ namespace PlexRequests.UI.Helpers
             get
             {
                 var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, null));
+                var linker = ServiceLocator.Instance.Resolve<IResourceLinker>();
+                return _security ?? (_security = new SecurityExtensions(userRepo, null, linker));
             }
         }
 
         private static SecurityExtensions _security;
 
 
-        public static bool HasAnyPermission(this HtmlHelpers helper, int permission)
+        public static bool HasAnyPermission(this HtmlHelpers helper, int permission, bool authenticated = true)
         {
-            return helper.CurrentUser.IsAuthenticated() 
-                && Security.HasPermissions(helper.CurrentUser, (Permissions) permission);
+            if (authenticated)
+            {
+                return helper.CurrentUser.IsAuthenticated()
+                       && Security.HasPermissions(helper.CurrentUser, (Permissions) permission);
+            }
+            return Security.HasPermissions(helper.CurrentUser, (Permissions)permission);
         }
 
         public static bool DoesNotHavePermission(this HtmlHelpers helper, int permission)
         {
             return Security.DoesNotHavePermissions(permission, helper.CurrentUser);
+        }
+
+        public static bool IsAdmin(this HtmlHelpers helper, bool isAuthenticated = true)
+        {
+            return HasAnyPermission(helper, (int) Permissions.Administrator, isAuthenticated);
+        }
+
+        public static bool IsLoggedIn(this HtmlHelpers helper, NancyContext context)
+        {
+            return Security.IsLoggedIn(context);
         }
     }
 }

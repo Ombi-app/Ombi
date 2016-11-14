@@ -467,4 +467,7 @@
   <data name="Search_TV_Show_Status" xml:space="preserve">
     <value>TV show status</value>
   </data>
+  <data name="Layout_CacherRunning" xml:space="preserve">
+    <value>A background process is currently running, so there might be some unexpected behavior. This shouldn't take too long.</value>
+  </data>
 </root>

@@ -65,6 +65,7 @@ namespace PlexRequests.Services.Jobs
             var settings = CpSettings.GetSettings();
             if (settings.Enabled)
             {
+                Job.SetRunning(true, JobNames.CpCacher);
                 Log.Trace("Getting all movies from CouchPotato");
                 try
                 {
@@ -109,7 +110,6 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
-            Job.SetRunning(true, JobNames.CpCacher);
             Queued();
         }
     }

@@ -46,7 +46,7 @@ namespace PlexRequests.UI.Modules.Admin
             Cache = cache;
             RequestQueue = requestQueue;
 
-            Security.HasPermissionsResponse(Permissions.Administrator);
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
             Get["Index", "/faultqueue"] = x => Index();
         }

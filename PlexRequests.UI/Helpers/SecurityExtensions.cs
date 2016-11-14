@@ -30,6 +30,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Nancy;
 using Nancy.Extensions;
+using Nancy.Linker;
+using Nancy.Responses;
 using Nancy.Security;
 using Ninject;
 using PlexRequests.Helpers.Permissions;
@@ -40,14 +42,16 @@ namespace PlexRequests.UI.Helpers
 {
     public class SecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, NancyModule context)
+        public SecurityExtensions(IUserRepository userRepository, NancyModule context, IResourceLinker linker)
         {
             UserRepository = userRepository;
             Module = context;
+            Linker = linker;
         }
         
         private IUserRepository UserRepository { get; }
         private NancyModule Module { get; }
+        private IResourceLinker Linker { get; }
 
         public bool IsLoggedIn(NancyContext context)
         {
@@ -117,7 +121,7 @@ namespace PlexRequests.UI.Helpers
             if (dbUser == null) return false;
 
             var permissions = (Permissions)dbUser.Permissions;
-            var result = permissions.HasFlag((Permissions)perm);
+            var result = permissions.HasFlag(perm);
             return !result;
         }
 
@@ -134,10 +138,11 @@ namespace PlexRequests.UI.Helpers
             return result;
         }
 
-        public void HasPermissionsResponse(Permissions perm)
+        public Response HasPermissionsRedirect(Permissions perm, NancyContext context, string routeName, HttpStatusCode code)
         {
-            Module.AddBeforeHookOrExecute(
-            ForbiddenIfNot(ctx =>
+            var url = Linker.BuildRelativeUri(context, routeName);
+
+            var response = ForbiddenIfNot(ctx =>
             {
                 if (ctx.CurrentUser == null) return false;
 
@@ -145,13 +150,24 @@ namespace PlexRequests.UI.Helpers
 
                 if (dbUser == null) return false;
 
-                var permissions = (Permissions)dbUser.Permissions;
+                var permissions = (Permissions) dbUser.Permissions;
                 var result = permissions.HasFlag(perm);
                 return result;
-            }), "Requires Claims");
+            });
+
+            var r = response(context);
+            return r.StatusCode == code
+                ? new RedirectResponse(url.ToString()) 
+                : null;
         }
 
 
+        public Response AdminLoginRedirect(Permissions perm, NancyContext context)
+        {
+            // This will redirect us to the Login Page if we don't have the correct permission passed in (e.g. Admin with Http 403 status code).
+            return HasPermissionsRedirect(perm, context, "LocalLogin", HttpStatusCode.Forbidden);
+        }
+        
         // BELOW IS A COPY FROM THE SecurityHooks CLASS!
 
         /// <summary>

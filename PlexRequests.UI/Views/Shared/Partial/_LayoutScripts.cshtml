@@ -10,7 +10,7 @@
     $(function () {
 
         // Check for update
-        var url = createBaseUrl(urlBase, '/updatechecker');
+        var url = createBaseUrl(urlBase, '/layout');
         $.ajax({
             type: "GET",
             url: url,
@@ -20,7 +20,7 @@
                     var status = createBaseUrl(urlBase, '/admin/status');
                     $('#updateAvailable').html("<i class='fa fa-cloud-download' aria-hidden='true'></i> @UI.Layout_UpdateAvailablePart1 <a style='color: white' href='" + status + "'>@UI.Layout_UpdateAvailablePart2</a>");
                     $('#updateAvailable').removeAttr("hidden");
-                    $('body').addClass('update-available');
+                    //$('body').addClass('update-available');
                 }
             },
             error: function (e) {
@@ -29,6 +29,7 @@
         });
         // End Check for update
 
+        checkCacheInProgress();
 
         // Scroller
         $(document).on('scroll', function () {
@@ -42,9 +43,6 @@
 
         $('.scroll-top-wrapper').on('click', scrollToTop);
         // End Scroller
-
-
-
 
         // Get Issue count
         var issueUrl = createBaseUrl(urlBase, '/issues/issuecount');
@@ -66,6 +64,8 @@
         // End issue count
 
 
+
+
         $('#donate').click(function () {
             ga('send', 'event', 'Navbar', 'Donate', 'Donate Clicked');
         });
@@ -79,5 +79,24 @@
         offset = element.offset();
         offsetTop = offset.top;
         $('html, body').animate({ scrollTop: offsetTop }, 500, 'linear');
+    }
+
+    function checkCacheInProgress() {
+
+        var url = createBaseUrl(urlBase, '/layout/cacher');
+        $.ajax({
+            type: "GET",
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                if (response.currentlyRunning) {
+                    $('#cacherRunning').html("@UI.Layout_CacherRunning");
+                    $('#cacherRunning').removeAttr("hidden");
+                }
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
     }
 </script>

@@ -49,8 +49,8 @@ namespace PlexRequests.UI.Modules.Admin
             Cache = cache;
             SystemSettings = ss;
 
-            Security.HasPermissionsResponse(Permissions.Administrator);
-            
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
+
             Get["/status", true] = async (x, ct) => await Status();
             Post["/save", true] = async (x, ct) => await Save();
 

@@ -78,8 +78,6 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
-
-            JobRecord.SetRunning(true, JobNames.CpCacher);
             try
             {
                 var settings = NewsletterSettings.GetSettings();
@@ -87,7 +85,7 @@ namespace PlexRequests.Services.Jobs
                 {
                     return;
                 }
-                
+                JobRecord.SetRunning(true, JobNames.RecentlyAddedEmail);
                 Start(settings);
             }
             catch (Exception e)
@@ -97,7 +95,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 JobRecord.Record(JobNames.RecentlyAddedEmail);
-                JobRecord.SetRunning(false, JobNames.CpCacher);
+                JobRecord.SetRunning(false, JobNames.RecentlyAddedEmail);
             }
         }
 
@@ -264,7 +262,8 @@ namespace PlexRequests.Services.Jobs
                     {
                         foreach (var user in users.User)
                         {
-                            message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                            if (user.Email != null)
+                                message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
                         }
                     }
                 }

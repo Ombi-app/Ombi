@@ -27,7 +27,10 @@
 
 using System;
 using System.Data;
+using NLog;
 using System.Linq;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
@@ -37,14 +40,16 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo, IRequestService requestService)
+        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log)
         {
             UserRepo = userRepo;
             RequestService = requestService;
+            Log = log;
         }
         public int Version => 11000;
         private IUserRepository UserRepo { get; }
         private IRequestService RequestService { get; }
+        private ISettingsService<LogSettings> Log { get; }
 
         public void Start(IDbConnection con)
         {
@@ -52,9 +57,17 @@ namespace PlexRequests.Core.Migration.Migrations
 
             // Update the current admin permissions set
             UpdateAdmin();
-
-
+            ResetLogLevel();
             UpdateSchema(con, Version);
+        }
+
+        private void ResetLogLevel()
+        {
+            var logSettings = Log.GetSettings();
+            logSettings.Level = LogLevel.Error.Ordinal;
+            Log.SaveSettings(logSettings);
+
+            LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
         }
 
         private void UpdateDb(IDbConnection con)
@@ -62,11 +75,6 @@ namespace PlexRequests.Core.Migration.Migrations
             // Create the two new columns
             con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
-
-            // Add the new 'running' item into the scheduled jobs so we can check if the cachers are running
-            con.AlterTable("ScheduledJobs", "ADD", "Running", true, "INTEGER");
-
-
 
             //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
 

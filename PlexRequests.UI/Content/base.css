@@ -257,6 +257,12 @@ label {
   font-size: 15px;
   padding: 3px 0; }
 
+#cacherRunning {
+  background-color: #4e5d6c;
+  text-align: center;
+  font-size: 15px;
+  padding: 3px 0; }
+
 .checkbox label {
   display: inline-block;
   cursor: pointer;

@@ -52,7 +52,7 @@ namespace PlexRequests.UI.Modules
             : base(pr)
         {
             UserMapper = m;
-            Get["/login"] = _ =>
+            Get["LocalLogin","/login"] = _ =>
             {
                 if (LoggedIn)
                 {

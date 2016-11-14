@@ -459,4 +459,34 @@
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>Er is geen informatie beschikbaar voor de release datum</value>
   </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>Bekijk In Plex</value>
+  </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Doneer aan Library Maintainer</value>
+  </data>
+  <data name="Search_Available_on_plex" xml:space="preserve">
+    <value>Beschikbaar vanaf</value>
+  </data>
+  <data name="Search_Movie_Status" xml:space="preserve">
+    <value>Movie-status!</value>
+  </data>
+  <data name="Search_Not_Requested_Yet" xml:space="preserve">
+    <value>Nog niet gevraagd</value>
+  </data>
+  <data name="Search_Pending_approval" xml:space="preserve">
+    <value>Wacht op goedkeuring</value>
+  </data>
+  <data name="Search_Processing_Request" xml:space="preserve">
+    <value>Verwerking verzoek...</value>
+  </data>
+  <data name="Search_Request_denied" xml:space="preserve">
+    <value>Aanvraag afgewezen</value>
+  </data>
+  <data name="Search_TV_Show_Status" xml:space="preserve">
+    <value>TV-show-status</value>
+  </data>
+  <data name="Layout_CacherRunning" xml:space="preserve">
+    <value>Een achtergrond taak is momenteel actief, dus er misschien een onverwachte gedrag. Dit moet niet te lang duren.</value>
+  </data>
 </root>

@@ -258,7 +258,7 @@
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\RequestsBetaModule.cs" />
-    <Compile Include="Modules\UpdateCheckerModule.cs" />
+    <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />
     <Compile Include="NinjectModules\ConfigurationModule.cs" />
@@ -747,6 +747,7 @@
     <EmbeddedResource Include="Resources\UI.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UI1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI.sv.resx" />
   </ItemGroup>

@@ -30,6 +30,7 @@ using System.Linq;
 using System.Threading;
 
 using Nancy;
+using Nancy.Linker;
 using Nancy.Security;
 using Ninject;
 using PlexRequests.Core;
@@ -151,14 +152,14 @@ namespace PlexRequests.UI.Modules
             get
             {
                 var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, this));
+                var linker = ServiceLocator.Instance.Resolve<IResourceLinker>();
+                return _security ?? (_security = new SecurityExtensions(userRepo, this, linker));
             }
         }
 
         private SecurityExtensions _security;
 
         
-
         protected bool LoggedIn => Context?.CurrentUser != null;
 
         protected string Culture { get; set; }

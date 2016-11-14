@@ -228,3 +228,10 @@ button.list-group-item:focus {
 #sidebar-wrapper {
     background: $bg-colour-disabled;
 }
+
+#cacherRunning {
+    background-color: $bg-colour;
+    text-align: center;
+    font-size: 15px;
+    padding: 3px 0;
+}

@@ -99,7 +99,7 @@ namespace PlexRequests.UI.Modules
             {
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-                return Response.AsRedirect(uri.ToString());  // TODO Check this
+                return Response.AsRedirect(uri.ToString());
             }
 
             var authenticated = false;
@@ -112,7 +112,7 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("User is in denied list, not allowing them to authenticate");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-                return Response.AsRedirect(uri.ToString());  // TODO Check this
+                return Response.AsRedirect(uri.ToString()); 
             }
 
             var password = string.Empty;
@@ -178,7 +178,7 @@ namespace PlexRequests.UI.Modules
             {
                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
-                return Response.AsRedirect(uri.ToString()); // TODO Check this
+                return Response.AsRedirect(uri.ToString()); 
             }
 
             var landingSettings = await LandingPageSettings.GetSettingsAsync();
@@ -192,7 +192,7 @@ namespace PlexRequests.UI.Modules
                 }
             }
             var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
-            return Response.AsRedirect(retVal.ToString()); // TODO Check this
+            return Response.AsRedirect(retVal.ToString()); 
         }
 
 
