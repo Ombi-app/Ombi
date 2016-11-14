@@ -87,6 +87,8 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+
+            Record.SetRunning(true, JobNames.CpCacher);
             try
             {
                 var faultedRequests = Repo.GetAll().ToList();
@@ -105,6 +107,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 Record.Record(JobNames.FaultQueueHandler);
+                Record.SetRunning(false, JobNames.CpCacher);
             }
         }
 

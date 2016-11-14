@@ -145,6 +145,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+            Job.SetRunning(true, JobNames.CpCacher);
             try
             {
                 var s = Plex.GetSettings();
@@ -171,6 +172,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 Job.Record(JobNames.EpisodeCacher);
+                Job.SetRunning(false, JobNames.CpCacher);
             }
         }
     }

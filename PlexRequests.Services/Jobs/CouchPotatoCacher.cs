@@ -81,6 +81,7 @@ namespace PlexRequests.Services.Jobs
                 finally
                 {
                     Job.Record(JobNames.CpCacher);
+                    Job.SetRunning(false, JobNames.CpCacher);
                 }
             }
         }
@@ -108,6 +109,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+            Job.SetRunning(true, JobNames.CpCacher);
             Queued();
         }
     }

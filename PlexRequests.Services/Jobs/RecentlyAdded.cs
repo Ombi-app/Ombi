@@ -78,6 +78,8 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+
+            JobRecord.SetRunning(true, JobNames.CpCacher);
             try
             {
                 var settings = NewsletterSettings.GetSettings();
@@ -95,6 +97,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 JobRecord.Record(JobNames.RecentlyAddedEmail);
+                JobRecord.SetRunning(false, JobNames.CpCacher);
             }
         }
 

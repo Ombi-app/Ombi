@@ -60,6 +60,23 @@ namespace PlexRequests.Services.Jobs
             }
         }
 
+        public void SetRunning(bool running, string jobName)
+        {
+            var allJobs = Repo.GetAll();
+            var storeJob = allJobs.FirstOrDefault(x => x.Name == jobName);
+            if (storeJob != null)
+            {
+                storeJob.Running = running;
+                Repo.Update(storeJob);
+            }
+            else
+            {
+                var job = new ScheduledJobs { Running = running, Name = jobName };
+                Repo.Insert(job);
+            }
+        }
+
+
         public async Task<IEnumerable<ScheduledJobs>> GetJobsAsync()
         {
             return await Repo.GetAllAsync();

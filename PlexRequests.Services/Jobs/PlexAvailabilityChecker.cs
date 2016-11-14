@@ -158,7 +158,7 @@ namespace PlexRequests.Services.Jobs
             }
 
             Job.Record(JobNames.PlexChecker);
-
+            Job.SetRunning(false, JobNames.CpCacher);
         }
 
         public List<PlexMovie> GetPlexMovies()
@@ -503,6 +503,8 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+
+            Job.SetRunning(true, JobNames.CpCacher);
             try
             {
                 CheckAndUpdateAll();

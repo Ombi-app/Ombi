@@ -36,5 +36,6 @@ namespace PlexRequests.Services.Interfaces
         void Record(string jobName);
         Task<IEnumerable<ScheduledJobs>> GetJobsAsync();
         IEnumerable<ScheduledJobs> GetJobs();
+        void SetRunning(bool running, string jobName);
     }
 }

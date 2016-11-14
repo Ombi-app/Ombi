@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS ScheduledJobs
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     Name								varchar(100) NOT NULL,
-    LastRun								varchar(100) NOT NULL
+    LastRun								varchar(100) NOT NULL,
+	Running								INTEGER
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ScheduledJobs_Id ON ScheduledJobs (Id);
 

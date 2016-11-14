@@ -58,6 +58,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Queued()
         {
+            Job.SetRunning(true, JobNames.CpCacher);
             Log.Trace("Getting the settings");
 
             var settings = SrSettings.GetSettings();
@@ -79,6 +80,7 @@ namespace PlexRequests.Services.Jobs
                 finally
                 {
                     Job.Record(JobNames.SrCacher);
+                    Job.SetRunning(false, JobNames.CpCacher);
                 }
             }
         }

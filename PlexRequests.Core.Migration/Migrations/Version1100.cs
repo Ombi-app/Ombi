@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Data;
 using System.Linq;
 using PlexRequests.Helpers.Permissions;
@@ -36,12 +37,14 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo)
+        public Version1100(IUserRepository userRepo, IRequestService requestService)
         {
             UserRepo = userRepo;
+            RequestService = requestService;
         }
         public int Version => 11000;
         private IUserRepository UserRepo { get; }
+        private IRequestService RequestService { get; }
 
         public void Start(IDbConnection con)
         {
@@ -49,6 +52,7 @@ namespace PlexRequests.Core.Migration.Migrations
 
             // Update the current admin permissions set
             UpdateAdmin();
+
 
             UpdateSchema(con, Version);
         }
@@ -59,6 +63,26 @@ namespace PlexRequests.Core.Migration.Migrations
             con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
 
+            // Add the new 'running' item into the scheduled jobs so we can check if the cachers are running
+            con.AlterTable("ScheduledJobs", "ADD", "Running", true, "INTEGER");
+
+
+
+            //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
+
+            // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}
+            // Update old invalid posters
+            var allRequests = RequestService.GetAll().ToList();
+
+            foreach (var req in allRequests)
+            {
+                if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
+                {
+                    var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);
+                    req.PosterPath = newImg;
+                }
+            }
+            RequestService.BatchUpdate(allRequests);
         }
 
         private void UpdateAdmin()
