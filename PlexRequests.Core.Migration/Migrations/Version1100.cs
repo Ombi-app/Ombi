@@ -26,6 +26,8 @@
 #endregion
 
 using System.Data;
+using System.Linq;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 
@@ -36,17 +38,17 @@ namespace PlexRequests.Core.Migration.Migrations
     {
         public Version1100(IUserRepository userRepo)
         {
-
+            UserRepo = userRepo;
         }
         public int Version => 11000;
-        public IUserRepository UserRepo {get;set;}
+        private IUserRepository UserRepo { get; }
 
         public void Start(IDbConnection con)
         {
             UpdateDb(con);
 
             // Update the current admin permissions set
-            UpdateAdmin(con);
+            UpdateAdmin();
 
             UpdateSchema(con, Version);
         }
@@ -56,19 +58,24 @@ namespace PlexRequests.Core.Migration.Migrations
             // Create the two new columns
             con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
-            
+
         }
 
-        private void UpdateAdmin(IDbConnection con)
+        private void UpdateAdmin()
         {
-            var users = UserRepo.GetAll();
+            var users = UserRepo.GetAll().ToList();
 
             foreach (var user in users)
             {
-                user.Permissions = Permissions.Administrator | ReportIssue | RequestMusic
-                | RequestTvShow
-                | RequestMovie;
+                user.Permissions = (int)
+                    (Permissions.Administrator
+                    | Permissions.ReportIssue
+                    | Permissions.RequestMusic
+                    | Permissions.RequestTvShow
+                    | Permissions.RequestMovie);
             }
+
+            UserRepo.UpdateAll(users);
         }
     }
 }

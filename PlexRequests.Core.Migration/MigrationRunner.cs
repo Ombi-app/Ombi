@@ -39,10 +39,6 @@ namespace PlexRequests.Core.Migration
 
                     foreach (var param in ctor.GetParameters())
                     {
-                        Console.WriteLine(string.Format(
-                            "Param {0} is named {1} and is of type {2}",
-                            param.Position, param.Name, param.ParameterType));
-
                         var dep = Kernel.Get(param.ParameterType);
                         dependencies.Add(dep);
                     }
