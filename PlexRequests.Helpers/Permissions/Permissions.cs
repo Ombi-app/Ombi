@@ -50,5 +50,15 @@ namespace PlexRequests.Helpers.Permissions
 
         [Display(Name = "Read Only User")]
         ReadOnlyUser = 32,
+
+        [Display(Name = "Auto Approve Movie Requests")]
+        AutoApproveMovie = 64,
+
+        [Display(Name = "Auto Approve TV Show Requests")]
+        AutoApproveTv = 128,
+
+        [Display(Name = "Auto Approve Album Requests")]
+        AutoApproveAlbum = 256
+
     }
 }

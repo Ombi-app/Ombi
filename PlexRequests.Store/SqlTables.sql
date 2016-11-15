@@ -114,8 +114,10 @@ CREATE UNIQUE INDEX IF NOT EXISTS RequestLimit_Id ON RequestLimit (Id);
 CREATE TABLE IF NOT EXISTS PlexUsers
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    PlexUserId							INTEGER NOT NULL,
-	UserAlias							varchar(100) NOT NULL
+    PlexUserId							varchar(100) NOT NULL,
+	UserAlias							varchar(100) NOT NULL,
+		Permissions							INTEGER,
+	Features							INTEGER
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
 

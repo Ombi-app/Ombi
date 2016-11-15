@@ -470,4 +470,7 @@
   <data name="Layout_CacherRunning" xml:space="preserve">
     <value>A background process is currently running, so there might be some unexpected behavior. This shouldn't take too long.</value>
   </data>
+  <data name="Layout_Usermanagement" xml:space="preserve">
+    <value>User Management</value>
+  </data>
 </root>

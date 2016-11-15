@@ -471,10 +471,10 @@ namespace PlexRequests.Services.Jobs
         {
             var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
 
-            List<PlexSearch> libs = new List<PlexSearch>();
+            var libs = new List<PlexSearch>();
             if (sections != null)
             {
-                foreach (var dir in sections.Directories)
+                foreach (var dir in sections.Directories ?? new List<Directory>())
                 {
                     var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
                     if (lib != null)

@@ -76,6 +76,9 @@ namespace PlexRequests.Core.Migration.Migrations
             con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
 
+            con.AlterTable("PlexUsers", "ADD", "Permissions", true, "INTEGER");
+            con.AlterTable("PlexUsers", "ADD", "Features", true, "INTEGER");
+
             //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
 
             // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}

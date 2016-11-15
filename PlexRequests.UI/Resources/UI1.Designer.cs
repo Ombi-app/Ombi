@@ -403,6 +403,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to User Management.
+        /// </summary>
+        public static string Layout_Usermanagement {
+            get {
+                return ResourceManager.GetString("Layout_Usermanagement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Welcome.
         /// </summary>
         public static string Layout_Welcome {

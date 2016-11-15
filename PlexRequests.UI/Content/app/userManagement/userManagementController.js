@@ -120,29 +120,30 @@
 
         $scope.updateUser = function () {
             var u = $scope.selectedUser;
-            userManagementService.updateUser(u.id, u.permissions, u.alias, u.emailAddress)
-            .then(function (data) {
-                if (data) {
-                    $scope.selectedUser = data;
+            userManagementService.updateUser(u.id, u.permissions, u.features, u.alias, u.emailAddress)
+                .then(function success(data) {
+                    if (data.data) {
+                        $scope.selectedUser = data.data;
 
-                    if (open) {
-                        open = false;
-                        $("#wrapper").toggleClass("toggled");
+                        closeSidebar();
+                        return successCallback("Updated User", "success");
                     }
-                    return successCallback("Updated User", "success");
-                }
-            });
+                }, function errorCallback(response) {
+                    successCallback(response, "danger");
+                });
         }
 
         $scope.deleteUser = function () {
             var u = $scope.selectedUser;
-            var result = userManagementService.deleteUser(u.id);
-
-            result.success(function (data) {
-                if (data.result) {
+            userManagementService.deleteUser(u.id)
+            .then(function sucess(data) {
+                if (data.data.result) {
                     removeUser(u.id, true);
+                    closeSidebar();
                     return successCallback("Deleted User", "success");
                 }
+            }, function errorCallback(response) {
+                successCallback(response, "danger");
             });
         }
 
@@ -168,6 +169,13 @@
             });
             if (current) {
                 $scope.selectedUser = null;
+            }
+        }
+
+        function closeSidebar() {
+            if (open) {
+                open = false;
+                $("#wrapper").toggleClass("toggled");
             }
         }
     }

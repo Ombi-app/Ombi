@@ -35,6 +35,10 @@
                 @Html.GetNavbarUrl(Context, "/search", UI.Layout_Search, "search")
                 @Html.GetNavbarUrl(Context, "/requests", UI.Layout_Requests, "plus-circle")
                 @Html.GetNavbarUrl(Context, "/issues", UI.Layout_Issues, "exclamation", "<span id=\"issueCount\"></span>")
+                @if (Html.IsAdmin())
+                {
+                    @Html.GetNavbarUrl(Context, "/usermanagement", UI.Layout_Usermanagement, "users")
+                }
                 @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
                 @if (Html.IsAdmin())
                 {

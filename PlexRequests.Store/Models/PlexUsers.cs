@@ -24,11 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using Dapper.Contrib.Extensions;
+
 namespace PlexRequests.Store.Models
 {
+    [Table(nameof(PlexUsers))]
     public class PlexUsers : Entity
     {
-        public int PlexUserId { get; set; }
+        public string PlexUserId { get; set; }
         public string UserAlias { get; set; }
+        public int Permissions { get; set; }
+        public int Features { get; set; }
     }
 }

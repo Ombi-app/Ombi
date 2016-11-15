@@ -28,11 +28,11 @@
             return $http.get('/usermanagement/permissions');
         }
 
-        var updateUser = function (id, permissions, alias, email) {
+        var updateUser = function (id, permissions, features, alias, email) {
             return $http({
                 url: '/usermanagement/updateUser',
                 method: "POST",
-                data: { id: id, permissions: permissions, alias: alias, emailAddress: email }
+                data: { id: id, permissions: permissions, features: features, alias: alias, emailAddress: email },
             });
         }
 
