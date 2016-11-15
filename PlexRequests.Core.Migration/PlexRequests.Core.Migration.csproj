@@ -74,6 +74,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
+      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
+      <Name>PlexRequests.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>PlexRequests.Api.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlexRequests.Core\PlexRequests.Core.csproj">
       <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
       <Name>PlexRequests.Core</Name>

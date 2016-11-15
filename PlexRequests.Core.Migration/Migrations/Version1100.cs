@@ -26,13 +26,16 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using NLog;
 using System.Linq;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 
 namespace PlexRequests.Core.Migration.Migrations
@@ -40,16 +43,27 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log)
+        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService, IRepository<PlexUsers> plexusers,
+            ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings)
         {
             UserRepo = userRepo;
             RequestService = requestService;
             Log = log;
+            PlexApi = plexApi;
+            PlexSettings = plexService;
+            PlexUsers = plexusers;
+            PlexRequestSettings = prSettings;
+            UserManagementSettings = umSettings;
         }
         public int Version => 11000;
         private IUserRepository UserRepo { get; }
         private IRequestService RequestService { get; }
         private ISettingsService<LogSettings> Log { get; }
+        private IPlexApi PlexApi { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
+        private IRepository<PlexUsers> PlexUsers { get; }
+        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
         public void Start(IDbConnection con)
         {
@@ -58,7 +72,77 @@ namespace PlexRequests.Core.Migration.Migrations
             // Update the current admin permissions set
             UpdateAdmin();
             ResetLogLevel();
+            UpdatePlexUsers();
+            PopulateDefaultUserManagementSettings();
+
             UpdateSchema(con, Version);
+        }
+
+        private void PopulateDefaultUserManagementSettings()
+        {
+            var plexRequestSettings = PlexRequestSettings.GetSettings();
+
+            UserManagementSettings.SaveSettings(new UserManagementSettings
+            {
+                AutoApproveMovies = !plexRequestSettings.RequireMovieApproval,
+                SearchForTvShows = plexRequestSettings.SearchForTvShows,
+                SearchForMusic = plexRequestSettings.SearchForMusic,
+                SearchForMovies = plexRequestSettings.SearchForMovies,
+                AutoApproveMusic = !plexRequestSettings.RequireMusicApproval,
+                AutoApproveTvShows = !plexRequestSettings.RequireTvShowApproval
+            });
+        }
+
+        private void UpdatePlexUsers()
+        {
+            var settings = PlexSettings.GetSettings();
+            var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
+            var prSettings = PlexRequestSettings.GetSettings();
+            
+            var dbUsers = PlexUsers.GetAll().ToList();
+            foreach (var user in plexUsers.User)
+            {
+                if (dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id) != null)
+                {
+                    continue;
+                }
+                
+                int permissions = 0;
+                if (prSettings.SearchForMovies)
+                {
+                    permissions = (int) Permissions.RequestMovie;
+                }
+                if (prSettings.SearchForTvShows)
+                {
+                    permissions += (int) Permissions.RequestTvShow;
+                }
+                if (prSettings.SearchForMusic)
+                {
+                    permissions += (int) Permissions.RequestMusic;
+                }
+                if (!prSettings.RequireMovieApproval)
+                {
+                    permissions += (int)Permissions.AutoApproveMovie;
+                }
+                if (!prSettings.RequireTvShowApproval)
+                {
+                    permissions += (int)Permissions.AutoApproveTv;
+                }
+                if (!prSettings.RequireMusicApproval)
+                {
+                    permissions += (int)Permissions.AutoApproveAlbum;
+                }
+
+                var m = new PlexUsers
+                {
+                    PlexUserId = user.Id,
+                    Permissions = permissions,
+                    Features = 0,
+                };
+
+                PlexUsers.Insert(m);
+            }
+
         }
 
         private void ResetLogLevel()

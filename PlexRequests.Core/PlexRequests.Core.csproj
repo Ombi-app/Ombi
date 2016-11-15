@@ -134,6 +134,7 @@
     <Compile Include="SettingModels\PlexRequestSettings.cs" />
     <Compile Include="SettingModels\Settings.cs" />
     <Compile Include="SettingModels\SystemSettings.cs" />
+    <Compile Include="SettingModels\UserManagementSettings.cs" />
     <Compile Include="SettingsServiceV2.cs" />
     <Compile Include="Setup.cs" />
     <Compile Include="StatusChecker\AppveyorArtifactResult.cs" />

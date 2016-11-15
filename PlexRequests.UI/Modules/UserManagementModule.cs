@@ -33,6 +33,7 @@ namespace PlexRequests.UI.Modules
             PlexSettings = plex;
             UserLoginsRepo = userLogins;
             PlexUsersRepository = plexRepo;
+            PlexRequestSettings = pr;
 
             Get["/"] = x => Load();
 
@@ -51,6 +52,7 @@ namespace PlexRequests.UI.Modules
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private IRepository<UserLogins> UserLoginsRepo { get; }
         private IRepository<PlexUsers> PlexUsersRepository { get; }
+        private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
 
         private Negotiator Load()
         {
