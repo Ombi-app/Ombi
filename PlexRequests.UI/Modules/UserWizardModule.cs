@@ -40,6 +40,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
@@ -185,7 +186,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> CreateUser()
         {
             var username = (string)Request.Form.Username;
-            var userId = Mapper.CreateAdmin(username, Request.Form.Password);
+            var userId = Mapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All(), 0);
             Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username, CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
 

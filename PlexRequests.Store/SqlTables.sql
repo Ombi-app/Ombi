@@ -147,4 +147,18 @@ CREATE TABLE IF NOT EXISTS RequestFaultQueue
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
 
+CREATE TABLE IF NOT EXISTS PlexContent
+(
+    Id								INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title							VARCHAR(100) NOT NULL,
+	ReleaseYear						VARCHAR(100) NOT NULL,
+	ProviderId						VARCHAR(100) NOT NULL,
+	Url								VARCHAR(100) NOT NULL,
+	PlexId							VARCHAR(100) NOT NULL,
+	Artist							VARCHAR(100),
+	Seasons							BLOB,
+	Type							INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS PlexContent_Id ON PlexContent (Id);
+
 COMMIT;

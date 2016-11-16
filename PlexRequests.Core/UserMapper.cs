@@ -145,26 +145,6 @@ namespace PlexRequests.Core
             Repo.Delete(user);
         }
 
-        public Guid? CreateAdmin(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, properties);
-        }
-
-        public Guid? CreatePowerUser(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, properties);
-        }
-
-        public Guid? CreateRegularUser(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, properties);
-        }
-
-        public IEnumerable<string> GetAllClaims()
-        {
-            var properties = typeof(UserClaims).GetConstantsValues<string>();
-            return properties;
-        }
 
         public bool UpdatePassword(string username, string oldPassword, string newPassword)
         {
@@ -207,11 +187,8 @@ namespace PlexRequests.Core
 
     public interface ICustomUserMapper
     {
-        Guid? CreateUser(string username, string password, UserProperties props);
-
         Guid? CreateUser(string username, string password, int permissions, int features,
             UserProperties properties = null);
-        IEnumerable<string> GetAllClaims();
         IEnumerable<UsersModel> GetUsers();
         Task<IEnumerable<UsersModel>> GetUsersAsync();
         UsersModel GetUser(Guid userId);
@@ -219,9 +196,6 @@ namespace PlexRequests.Core
         bool DoUsersExist();
         Guid? ValidateUser(string username, string password);
         bool UpdatePassword(string username, string oldPassword, string newPassword);
-        Guid? CreateAdmin(string username, string password, UserProperties properties = null);
-        Guid? CreatePowerUser(string username, string password, UserProperties properties = null);
-        Guid? CreateRegularUser(string username, string password, UserProperties properties = null);
         void DeleteUser(string userId);
     }
 }

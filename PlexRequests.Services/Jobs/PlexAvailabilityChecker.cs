@@ -44,6 +44,7 @@ using PlexRequests.Services.Models;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Models.Plex;
 using PlexRequests.Store.Repository;
 
 using Quartz;
@@ -53,7 +54,7 @@ namespace PlexRequests.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -64,6 +65,7 @@ namespace PlexRequests.Services.Jobs
             UserNotifyRepo = users;
             EpisodeRepo = repo;
             NotificationEngine = e;
+            PlexContent = content;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
@@ -76,7 +78,7 @@ namespace PlexRequests.Services.Jobs
         private IJobRecord Job { get; }
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
         private INotificationEngine NotificationEngine { get; }
-
+        private IRepository<PlexContent> PlexContent { get; }
 
         public void CheckAndUpdateAll()
         {

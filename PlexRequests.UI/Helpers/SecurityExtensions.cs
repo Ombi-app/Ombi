@@ -192,12 +192,17 @@ namespace PlexRequests.UI.Helpers
         {
             return ctx =>
             {
-                Response response = null;
+                Response response = new Response
+                {
+                    StatusCode = HttpStatusCode.OK
+                };
                 if (!test(ctx))
+                {
                     response = new Response
                     {
                         StatusCode = statusCode
                     };
+                }
                 return response;
             };
         }

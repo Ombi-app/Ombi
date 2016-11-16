@@ -108,5 +108,10 @@ namespace PlexRequests.Helpers
 
             throw new ArgumentOutOfRangeException(nameof(name));
         }
+
+        public static int All()
+        {
+            return Enum.GetValues(typeof(T)).Cast<int>().Sum();
+        }
     }
 }

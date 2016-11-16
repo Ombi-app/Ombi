@@ -84,6 +84,7 @@
     <Compile Include="Jobs\IRecentlyAdded.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
+    <Compile Include="Jobs\PlexContentCacher.cs" />
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
     <Compile Include="Jobs\RecentlyAdded.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Permissions.cs
+//    File: PlexContent.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,38 +26,28 @@
 #endregion
 
 using System;
-using System.ComponentModel.DataAnnotations;
+using System.Data.Linq.Mapping;
 
-namespace PlexRequests.Helpers.Permissions
+namespace PlexRequests.Store.Models.Plex
 {
-    [Flags]
-    public enum Permissions
+    [Table(Name = nameof(PlexContent))]
+    public class PlexContent : Entity
     {
-        [Display(Name = "Access Administration Settings")]
-        Administrator = 1,
+        public string Title { get; set; }
+        public string ReleaseYear { get; set; }
+        public string ProviderId { get; set; }
+        public PlexMediaType Type { get; set; }
+        public string Url { get; set; }
+        public string PlexId { get; set; }
 
-        [Display(Name = "Request Movie")]
-        RequestMovie = 2,
+        /// <summary>
+        /// Only used for TV Shows
+        /// </summary>
+        public int[] Seasons { get; set; }
 
-        [Display(Name = "Request TV Show")]
-        RequestTvShow = 4,
-
-        [Display(Name = "Request Music")]
-        RequestMusic = 8,
-
-        [Display(Name = "Report Issue")]
-        ReportIssue = 16,
-
-        [Display(Name = "Read Only User")]
-        ReadOnlyUser = 32,
-
-        [Display(Name = "Auto Approve Movie Requests")]
-        AutoApproveMovie = 64,
-
-        [Display(Name = "Auto Approve TV Show Requests")]
-        AutoApproveTv = 128,
-
-        [Display(Name = "Auto Approve Album Requests")]
-        AutoApproveAlbum = 256
+        /// <summary>
+        /// Only used for Albums
+        /// </summary>
+        public string Artist { get; set; }
     }
 }

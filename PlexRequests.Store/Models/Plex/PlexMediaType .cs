@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Permissions.cs
+//    File: PlexMediaType .cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,40 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using System.ComponentModel.DataAnnotations;
-
-namespace PlexRequests.Helpers.Permissions
+namespace PlexRequests.Store.Models.Plex
 {
-    [Flags]
-    public enum Permissions
+    public enum PlexMediaType
     {
-        [Display(Name = "Access Administration Settings")]
-        Administrator = 1,
-
-        [Display(Name = "Request Movie")]
-        RequestMovie = 2,
-
-        [Display(Name = "Request TV Show")]
-        RequestTvShow = 4,
-
-        [Display(Name = "Request Music")]
-        RequestMusic = 8,
-
-        [Display(Name = "Report Issue")]
-        ReportIssue = 16,
-
-        [Display(Name = "Read Only User")]
-        ReadOnlyUser = 32,
-
-        [Display(Name = "Auto Approve Movie Requests")]
-        AutoApproveMovie = 64,
-
-        [Display(Name = "Auto Approve TV Show Requests")]
-        AutoApproveTv = 128,
-
-        [Display(Name = "Auto Approve Album Requests")]
-        AutoApproveAlbum = 256
+        Movie,
+        Show,
+        Artist
     }
 }
