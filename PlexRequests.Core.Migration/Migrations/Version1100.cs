@@ -136,7 +136,11 @@ namespace PlexRequests.Core.Migration.Migrations
                 {
                     permissions += (int)Permissions.AutoApproveAlbum;
                 }
-
+                
+                // Add report Issues
+                
+                permissions += (int)Permissions.ReportIssue;
+                
                 var m = new PlexUsers
                 {
                     PlexUserId = user.Id,
