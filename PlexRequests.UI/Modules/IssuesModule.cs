@@ -15,6 +15,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
@@ -78,7 +79,8 @@ namespace PlexRequests.UI.Modules
 
             foreach (var i in issuesModels)
             {
-                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), Admin = IsAdmin };
+                var model = new IssuesViewModel { Id = i.Id, RequestId = i.RequestId, Title = i.Title, Type = i.Type.ToString().ToCamelCaseWords(), Admin = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests)
+            };
 
                 // Create a string with all of the current issue states with a "," delimiter in e.g. Wrong Content, Playback Issues
                 var state = i.Issues.Select(x => x.Issue).ToArray();
@@ -366,7 +368,11 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
-                this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+                if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to remove an issue." });
+                }
+
                 var issue = await IssuesService.GetAsync(issueId);
                 var request = await RequestService.GetAsync(issue.RequestId);
                 if (request.Id > 0)
@@ -399,7 +405,11 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
-                this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+                if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+                {
+                    return View["Index"];
+                }
+
 
                 var issue = await IssuesService.GetAsync(issueId);
                 issue.IssueStatus = status;
@@ -417,7 +427,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Negotiator> ClearIssue(int issueId, IssueState state)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+            if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+            {
+                return View["Index"];
+            }
+
             var issue = await IssuesService.GetAsync(issueId);
 
             var toRemove = issue.Issues.FirstOrDefault(x => x.Issue == state);
@@ -430,7 +444,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> AddNote(int requestId, string noteArea, IssueState state)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+            if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to add a note." });
+            }
+
             var issue = await IssuesService.GetAsync(requestId);
             if (issue == null)
             {

@@ -127,7 +127,7 @@ namespace PlexRequests.UI.Helpers
 
         public bool HasPermissions(IUserIdentity user, Permissions perm)
         {
-           if (user == null) return false;
+            if (user == null) return false;
 
             var dbUser = UserRepository.GetUserByUsername(user.UserName);
 
@@ -136,6 +136,27 @@ namespace PlexRequests.UI.Helpers
             var permissions = (Permissions)dbUser.Permissions;
             var result = permissions.HasFlag(perm);
             return result;
+        }
+
+        public bool HasAnyPermissions(IUserIdentity user, params Permissions[] perm)
+        {
+            if (user == null) return false;
+
+            var dbUser = UserRepository.GetUserByUsername(user.UserName);
+
+            if (dbUser == null) return false;
+
+            var permissions = (Permissions)dbUser.Permissions;
+            foreach (var p in perm)
+            {
+                var result = permissions.HasFlag(p);
+                if (result)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public Response HasPermissionsRedirect(Permissions perm, NancyContext context, string routeName, HttpStatusCode code)

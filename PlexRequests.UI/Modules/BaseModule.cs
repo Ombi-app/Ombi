@@ -140,7 +140,6 @@ namespace PlexRequests.UI.Modules
 
                 var permissions = (Permissions) user.Permissions;
                 return permissions.HasFlag(Permissions.Administrator);
-                // TODO: Check admin role
             }
         }
 

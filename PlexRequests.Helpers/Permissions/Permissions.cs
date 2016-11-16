@@ -58,6 +58,9 @@ namespace PlexRequests.Helpers.Permissions
         AutoApproveTv = 128,
 
         [Display(Name = "Auto Approve Album Requests")]
-        AutoApproveAlbum = 256
+        AutoApproveAlbum = 256,
+
+        [Display(Name = "Manage Requests")]
+        ManageRequests = 512
     }
 }

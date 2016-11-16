@@ -40,6 +40,7 @@ using PlexRequests.Core;
 using PlexRequests.Core.Queue;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
@@ -54,6 +55,9 @@ namespace PlexRequests.UI.Modules
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue) : base("approval", pr)
         {
             this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.ManageRequests, ctx);
 
             Service = service;
             CpService = cpService;

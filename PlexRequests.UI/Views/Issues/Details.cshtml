@@ -1,6 +1,7 @@
 ﻿@using System.Linq
 @using PlexRequests.Core.Models
 @using PlexRequests.Helpers
+@using PlexRequests.Helpers.Permissions
 @using PlexRequests.UI.Helpers
 @{
     var baseUrl = Html.GetBaseUrl();
@@ -10,16 +11,8 @@
         formAction = "/" + baseUrl.ToHtmlString();
     }
 
-    var isAdmin = false;
+    var isAdmin = Html.HasAnyPermission((int)Permissions.Administrator) || Html.HasAnyPermission((int)Permissions.ManageRequests);
 
-    if (Context.CurrentUser != null)
-    {
-        var claims = Context.CurrentUser.Claims.ToList();
-        if (claims.Contains("Admin") || claims.Contains("PowerUser"))
-        {
-            isAdmin = true;
-        }
-    }
 }
 <h1>Details</h1>
 

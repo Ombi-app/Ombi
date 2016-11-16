@@ -465,7 +465,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
-            if (Security.DoesNotHavePermissions(Permissions.ReadOnlyUser, User))
+            if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestMovie))
             {
                 return
                     Response.AsJson(new JsonResponseModel
@@ -616,7 +616,7 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
-            if (Security.HasPermissions(User, Permissions.ReadOnlyUser))
+            if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestTvShow))
             {
                 return
                     Response.AsJson(new JsonResponseModel()
@@ -977,14 +977,11 @@ namespace PlexRequests.UI.Modules
             var sendNotification = type.ShouldAutoApprove(prSettings, IsAdmin, Username)
                 ? !prSettings.IgnoreNotifyForAutoApprovedRequests
                 : true;
-            var claims = Context.CurrentUser?.Claims;
-            if (claims != null)
+            
+            if (IsAdmin)
             {
-                var enumerable = claims as string[] ?? claims.ToArray();
-                if (enumerable.Contains(UserClaims.Admin) || enumerable.Contains(UserClaims.PowerUser))
-                {
-                    sendNotification = false; // Don't bother sending a notification if the user is an admin
-                }
+                sendNotification = false; // Don't bother sending a notification if the user is an admin
+
             }
             return sendNotification;
         }
@@ -992,6 +989,16 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> RequestAlbum(string releaseId)
         {
+            if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestMusic))
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Sorry, you do not have the correct permissions to request music!"
+                    });
+            }
+
             var settings = await PrService.GetSettingsAsync();
             if (!await CheckRequestLimit(settings, RequestType.Album))
             {
