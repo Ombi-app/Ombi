@@ -151,7 +151,7 @@ namespace PlexRequests.Core.StatusChecker
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
             var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
-            var localVersion = AssemblyHelper.GetProductVersion();
+            var localVersion = AssemblyHelper.GetFileVersion();
             var localVersionExtended = $"{localVersion.Remove(localVersion.Length - 2, 2)}00";
             
             var model = new StatusModel

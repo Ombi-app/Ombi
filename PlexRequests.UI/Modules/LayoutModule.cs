@@ -68,9 +68,9 @@ namespace PlexRequests.UI.Modules
                 {
                     return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
                 }
-#if DEBUG
-                return Response.AsJson(new JsonUpdateAvailableModel {UpdateAvailable = false});
-#endif
+//#if DEBUG
+                //return Response.AsJson(new JsonUpdateAvailableModel {UpdateAvailable = false});
+//#endif
                 var checker = new StatusChecker(SystemSettings);
                 var release = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async() => await checker.GetStatus(), 30);
 
