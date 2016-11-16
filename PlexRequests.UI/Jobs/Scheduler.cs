@@ -62,6 +62,7 @@ namespace PlexRequests.UI.Jobs
             var jobList = new List<IJobDetail>
             {
                 JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
+                JobBuilder.Create<PlexContentCacher>().WithIdentity("PlexContentCacher", "Plex").Build(),
                 JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Cache").Build(),
                 JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
                 JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
@@ -154,14 +155,24 @@ namespace PlexRequests.UI.Jobs
             {
                 s.FaultQueueHandler = 6;
             }
+            if (s.PlexContentCacher == 0)
+            {
+                s.PlexContentCacher = 60;
+            }
 
             var triggers = new List<ITrigger>();
 
             var plexAvailabilityChecker =
                 TriggerBuilder.Create()
                     .WithIdentity("PlexAvailabilityChecker", "Plex")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexAvailabilityChecker).RepeatForever())
+                    .Build();
+            var plexCacher =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexContentCacher", "Plex")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexContentCacher).RepeatForever())
                     .Build();
 
             var srCacher =
@@ -241,6 +252,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(userRequestLimiter);
             triggers.Add(plexEpCacher);
             triggers.Add(fault);
+            triggers.Add(plexCacher);
 
             return triggers;
         }

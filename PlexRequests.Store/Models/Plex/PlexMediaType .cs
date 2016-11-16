@@ -28,8 +28,8 @@ namespace PlexRequests.Store.Models.Plex
 {
     public enum PlexMediaType
     {
-        Movie,
-        Show,
-        Artist
+        Movie = 0,
+        Show = 1,
+        Artist = 2
     }
 }

@@ -154,7 +154,6 @@ CREATE TABLE IF NOT EXISTS PlexContent
 	ReleaseYear						VARCHAR(100) NOT NULL,
 	ProviderId						VARCHAR(100) NOT NULL,
 	Url								VARCHAR(100) NOT NULL,
-	PlexId							VARCHAR(100) NOT NULL,
 	Artist							VARCHAR(100),
 	Seasons							BLOB,
 	Type							INTEGER NOT NULL

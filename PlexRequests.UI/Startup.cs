@@ -32,7 +32,11 @@ using Ninject.Planning.Bindings.Resolvers;
 using NLog;
 
 using Owin;
+using PlexRequests.Core;
 using PlexRequests.Core.Migration;
+using PlexRequests.Services.Jobs;
+using PlexRequests.Store.Models;
+using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Jobs;
 using PlexRequests.UI.NinjectModules;
@@ -74,10 +78,18 @@ namespace PlexRequests.UI
 
                 Debug.WriteLine("Settings up Scheduler");
                 var scheduler = new Scheduler();
-                scheduler.StartScheduler();
 
-                //var c = kernel.Get<IRecentlyAdded>();
-                //c.Test();
+
+                // Reset any jobs running 
+                var jobSettings = kernel.Get<IRepository<ScheduledJobs>>();
+                var all = jobSettings.GetAll();
+                foreach (var scheduledJobse in all)
+                {
+                    scheduledJobse.Running = false;
+                    jobSettings.Update(scheduledJobse);
+                }
+                scheduler.StartScheduler();
+                
 
 
 

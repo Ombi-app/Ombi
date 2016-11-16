@@ -147,10 +147,6 @@
             });
         }
 
-        function getBaseUrl() {
-            return $('#baseUrl').val();
-        }
-
         $scope.formatDate = function (utcDate) {
             return moment.utc(utcDate).local().format('lll');
         }

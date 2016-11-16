@@ -30,7 +30,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Dapper;
-
+using Newtonsoft.Json;
 using NLog;
 
 using PlexRequests.Api.Interfaces;
@@ -89,17 +89,17 @@ namespace PlexRequests.Services.Jobs
                 Log.Debug("Validation of the plex settings failed.");
                 return;
             }
-            var libraries = CachedLibraries(plexSettings, true); //force setting the cache (10 min intervals via scheduler)
+            //var libraries = CachedLibraries(plexSettings, true); //force setting the cache (10 min intervals via scheduler)
 
-            if (libraries == null || !libraries.Any())
-            {
-                Log.Debug("Did not find any libraries in Plex.");
-                return;
-            }
-
-            var movies = GetPlexMovies().ToArray();
-            var shows = GetPlexTvShows().ToArray();
-            var albums = GetPlexAlbums().ToArray();
+            //if (libraries == null || !libraries.Any())
+            //{
+            //    Log.Debug("Did not find any libraries in Plex.");
+            //    return;
+            //}
+            var content = PlexContent.GetAll().ToList();
+            var movies = GetPlexMovies(content).ToArray();
+            var shows = GetPlexTvShows(content).ToArray();
+            var albums = GetPlexAlbums(content).ToArray();
 
             var requests = RequestService.GetAll();
             var requestedModels = requests as RequestedModel[] ?? requests.Where(x => !x.Available).ToArray();
@@ -159,7 +159,7 @@ namespace PlexRequests.Services.Jobs
             }
         }
 
-        public List<PlexMovie> GetPlexMovies()
+        public List<PlexMovie> GetPlexMoviesOld()
         {
             var settings = Plex.GetSettings();
             var movies = new List<PlexMovie>();
@@ -186,13 +186,18 @@ namespace PlexRequests.Services.Jobs
             return movies;
         }
 
-        public bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null)
+        public IEnumerable<PlexContent> GetPlexMovies(IEnumerable<PlexContent> content)
+        {
+            return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Movie);
+        }
+
+        public bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null)
         {
             var movie = GetMovie(plexMovies, title, year, providerId);
             return movie != null;
         }
 
-        public PlexMovie GetMovie(PlexMovie[] plexMovies, string title, string year, string providerId = null)
+        public PlexContent GetMovie(PlexContent[] plexMovies, string title, string year, string providerId = null)
         {
             if (plexMovies.Length == 0)
             {
@@ -223,45 +228,19 @@ namespace PlexRequests.Services.Jobs
             return null;
         }
 
-        public List<PlexTvShow> GetPlexTvShows()
+        public IEnumerable<PlexContent> GetPlexTvShows(IEnumerable<PlexContent> content)
         {
-            var settings = Plex.GetSettings();
-            var shows = new List<PlexTvShow>();
-            var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
-            if (libs != null)
-            {
-                var withDir = libs.Where(x => x.Directory != null);
-                var tvLibs = withDir.Where(x =>
-                        x.Directory.Any(y =>
-                            y.Type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)
-                        )
-                    ).ToArray();
-
-                foreach (var lib in tvLibs)
-                {
-
-                    shows.AddRange(lib.Directory.Select(x => new PlexTvShow // shows are in the directory list
-                    {
-                        Title = x.Title,
-                        ReleaseYear = x.Year,
-                        ProviderId = x.ProviderId,
-                        Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray(),
-                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey)
-
-                    }));
-                }
-            }
-            return shows;
+            return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Show);
         }
 
-        public bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
+        public bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
         {
             var show = GetTvShow(plexShows, title, year, providerId, seasons);
             return show != null;
         }
 
 
-        public PlexTvShow GetTvShow(PlexTvShow[] plexShows, string title, string year, string providerId = null,
+        public PlexContent GetTvShow(PlexContent[] plexShows, string title, string year, string providerId = null,
             int[] seasons = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
@@ -271,7 +250,8 @@ namespace PlexRequests.Services.Jobs
                 {
                     if (show.ProviderId == providerId && seasons != null)
                     {
-                        if (seasons.Any(season => show.Seasons.Contains(season)))
+                        var showSeasons = ByteConverterHelper.ReturnObject<int[]>(show.Seasons);
+                        if (seasons.Any(season => showSeasons.Contains(season)))
                         {
                             return show;
                         }
@@ -357,41 +337,19 @@ namespace PlexRequests.Services.Jobs
             return plexEpisodeses;
         }
 
-        public List<PlexAlbum> GetPlexAlbums()
+        public IEnumerable<PlexContent> GetPlexAlbums(IEnumerable<PlexContent> content)
         {
-            var settings = Plex.GetSettings();
-            var albums = new List<PlexAlbum>();
-            var libs = Cache.Get<List<PlexSearch>>(CacheKeys.PlexLibaries);
-            if (libs != null)
-            {
-                var albumLibs = libs.Where(x =>
-                        x.Directory.Any(y =>
-                            y.Type.Equals(PlexMediaType.Artist.ToString(), StringComparison.CurrentCultureIgnoreCase)
-                        )
-                    ).ToArray();
-
-                foreach (var lib in albumLibs)
-                {
-                    albums.AddRange(lib.Directory.Select(x => new PlexAlbum()
-                    {
-                        Title = x.Title,
-                        ReleaseYear = x.Year,
-                        Artist = x.ParentTitle,
-                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey)
-                    }));
-                }
-            }
-            return albums;
+            return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Artist);
         }
 
-        public bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist)
+        public bool IsAlbumAvailable(PlexContent[] plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.Any(x =>
                 x.Title.Contains(title) &&
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public PlexAlbum GetAlbum(PlexAlbum[] plexAlbums, string title, string year, string artist)
+        public PlexContent GetAlbum(PlexContent[] plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.FirstOrDefault(x =>
                 x.Title.Contains(title) &&

@@ -61,6 +61,7 @@ using PlexRequests.Core.Queue;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Models.Plex;
 using PlexRequests.Store.Repository;
 
 using TMDbLib.Objects.General;
@@ -81,7 +82,7 @@ namespace PlexRequests.UI.Modules
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue)
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content)
             : base("search", prSettings)
         {
             Auth = auth;
@@ -112,6 +113,7 @@ namespace PlexRequests.UI.Modules
             RequestLimitRepo = rl;
             FaultQueue = tfQueue;
             TvApi = new TvMazeApi();
+            PlexContentRepository = content;
 
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
@@ -137,6 +139,7 @@ namespace PlexRequests.UI.Modules
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
 
+        private IRepository<PlexContent> PlexContentRepository { get; } 
         private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
@@ -243,7 +246,8 @@ namespace PlexRequests.UI.Modules
 
 
             var cpCached = CpCacher.QueuedIds();
-            var plexMovies = Checker.GetPlexMovies();
+            var content = PlexContentRepository.GetAll();
+            var plexMovies = Checker.GetPlexMovies(content);
             var settings = await PrService.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
@@ -342,7 +346,8 @@ namespace PlexRequests.UI.Modules
 
             var sonarrCached = SonarrCacher.QueuedIds();
             var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
-            var plexTvShows = Checker.GetPlexTvShows();
+            var content = PlexContentRepository.GetAll();
+            var plexTvShows = Checker.GetPlexTvShows(content);
 
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
@@ -423,7 +428,8 @@ namespace PlexRequests.UI.Modules
 
             var dbAlbum = allResults.ToDictionary(x => x.MusicBrainzId);
 
-            var plexAlbums = Checker.GetPlexAlbums();
+            var content = PlexContentRepository.GetAll();
+            var plexAlbums = Checker.GetPlexAlbums(content);
 
             var viewAlbum = new List<SearchMusicViewModel>();
             foreach (var a in apiAlbums)
@@ -514,7 +520,9 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                var movies = Checker.GetPlexMovies();
+
+                var content = PlexContentRepository.GetAll();
+                var movies = Checker.GetPlexMovies(content);
                 if (Checker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
                 {
                     return
@@ -784,7 +792,9 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                var shows = Checker.GetPlexTvShows();
+
+                var content = PlexContentRepository.GetAll();
+                var shows = Checker.GetPlexTvShows(content);
                 var providerId = string.Empty;
                 var plexSettings = await PlexService.GetSettingsAsync();
                 if (plexSettings.AdvancedSearch)
@@ -1046,7 +1056,9 @@ namespace PlexRequests.UI.Modules
                     });
             }
 
-            var albums = Checker.GetPlexAlbums();
+
+            var content = PlexContentRepository.GetAll();
+            var albums = Checker.GetPlexAlbums(content);
             var alreadyInPlex = Checker.IsAlbumAvailable(albums.ToArray(), albumInfo.title, release.ToString("yyyy"),
                 artist.name);
 

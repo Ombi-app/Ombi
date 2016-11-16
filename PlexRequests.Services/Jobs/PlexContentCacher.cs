@@ -30,7 +30,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Dapper;
-
+using Newtonsoft.Json;
 using NLog;
 using Org.BouncyCastle.Crypto.Modes.Gcm;
 using PlexRequests.Api.Interfaces;
@@ -51,7 +51,7 @@ using Quartz;
 
 namespace PlexRequests.Services.Jobs
 {
-    public class PlexContentCacher : IJob
+    public class PlexContentCacher : IJob, IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
             INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
@@ -115,7 +115,6 @@ namespace PlexRequests.Services.Jobs
                 {
                     movies.AddRange(lib.Video.Select(video => new PlexMovie
                     {
-                        Id = video.Guid,
                         ReleaseYear = video.Year,
                         Title = video.Title,
                         ProviderId = video.ProviderId,
@@ -149,7 +148,6 @@ namespace PlexRequests.Services.Jobs
                         ProviderId = x.ProviderId,
                         Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray(),
                         Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey),
-                        Id = x.Guid
 
                     }));
                 }
@@ -177,7 +175,6 @@ namespace PlexRequests.Services.Jobs
                     albums.AddRange(lib.Directory.Select(x => new PlexAlbum()
                     {
                         Title = x.Title,
-                        Id = x.Guid,
                         ProviderId = x.ProviderId,
                         ReleaseYear = x.Year,
                         Artist = x.ParentTitle,
@@ -240,47 +237,66 @@ namespace PlexRequests.Services.Jobs
                 }
                 if (results != null)
                 {
+
                     var movies = GetPlexMovies(results);
+
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 0 });
+                        return new List<PlexContent>();
+                    });
 
                     foreach (var m in movies)
                     {
                         PlexContent.Insert(new PlexContent
                         {
                             ProviderId = m.ProviderId,
-                            ReleaseYear = m.ReleaseYear,
+                            ReleaseYear = m.ReleaseYear ?? string.Empty,
                             Title = m.Title,
                             Type = Store.Models.Plex.PlexMediaType.Movie,
-                            Url = m.Url,
-                            PlexId = m.Id
+                            Url = m.Url
                         });
                     }
                     var tv = GetPlexTvShows(results);
-
+                    // Time to destroy the plex tv from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 1 });
+                        return new List<PlexContent>();
+                    });
                     foreach (var t in tv)
                     {
                         PlexContent.Insert(new PlexContent
                         {
                             ProviderId = t.ProviderId,
-                            ReleaseYear = t.ReleaseYear,
+                            ReleaseYear = t.ReleaseYear ?? string.Empty,
                             Title = t.Title,
                             Type = Store.Models.Plex.PlexMediaType.Show,
                             Url = t.Url,
-                            Seasons = t.Seasons,
-                            PlexId = t.Id
+                            Seasons = ByteConverterHelper.ReturnBytes(t.Seasons)
                         });
                     }
 
                     var albums = GetPlexAlbums(results);
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 2 });
+                        return new List<PlexContent>();
+                    });
                     foreach (var a in albums)
                     {
                         PlexContent.Insert(new PlexContent
                         {
                             ProviderId = a.ProviderId,
-                            ReleaseYear = a.ReleaseYear,
+                            ReleaseYear = a.ReleaseYear ?? string.Empty,
                             Title = a.Title,
                             Type = Store.Models.Plex.PlexMediaType.Artist,
-                            Url = a.Url,
-                            PlexId = a.Id
+                            Url = a.Url
                         });
                     }
                 }

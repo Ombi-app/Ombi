@@ -38,12 +38,11 @@ namespace PlexRequests.Store.Models.Plex
         public string ProviderId { get; set; }
         public PlexMediaType Type { get; set; }
         public string Url { get; set; }
-        public string PlexId { get; set; }
 
         /// <summary>
         /// Only used for TV Shows
         /// </summary>
-        public int[] Seasons { get; set; }
+        public byte[] Seasons { get; set; }
 
         /// <summary>
         /// Only used for Albums

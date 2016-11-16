@@ -36,6 +36,10 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -81,6 +85,7 @@
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Interfaces\INotificationEngine.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
+    <Compile Include="Jobs\IPlexContentCacher.cs" />
     <Compile Include="Jobs\IRecentlyAdded.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />

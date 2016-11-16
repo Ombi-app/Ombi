@@ -43,5 +43,6 @@ namespace PlexRequests.Core.SettingModels
         public int RecentlyAdded { get; set; }
         public string RecentlyAddedCron { get; set; }
         public int FaultQueueHandler { get; set; }
+        public int PlexContentCacher { get; set; }
     }
 }
