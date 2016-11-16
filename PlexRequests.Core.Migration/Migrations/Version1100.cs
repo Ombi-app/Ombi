@@ -96,6 +96,10 @@ namespace PlexRequests.Core.Migration.Migrations
         private void UpdatePlexUsers()
         {
             var settings = PlexSettings.GetSettings();
+            if (string.IsNullOrEmpty(settings.PlexAuthToken))
+            {
+                return;
+            }
             var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
             var prSettings = PlexRequestSettings.GetSettings();
             
@@ -138,6 +142,7 @@ namespace PlexRequests.Core.Migration.Migrations
                     PlexUserId = user.Id,
                     Permissions = permissions,
                     Features = 0,
+                    UserAlias = string.Empty,
                 };
 
                 PlexUsers.Insert(m);
