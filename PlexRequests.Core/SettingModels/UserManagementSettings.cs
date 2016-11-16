@@ -26,7 +26,7 @@
 #endregion
 namespace PlexRequests.Core.SettingModels
 {
-    public class UserManagementSettings
+    public class UserManagementSettings : Settings
     {
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
