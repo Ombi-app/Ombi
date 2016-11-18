@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using Dapper.Contrib.Extensions;
 
 namespace PlexRequests.Store.Models
@@ -36,5 +37,8 @@ namespace PlexRequests.Store.Models
         public string UserAlias { get; set; }
         public int Permissions { get; set; }
         public int Features { get; set; }
+        public string Username { get; set; }
+        public string EmailAddress { get; set; }
+        public string LoginId { get; set; }
     }
 }

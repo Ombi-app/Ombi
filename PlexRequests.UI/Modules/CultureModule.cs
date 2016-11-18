@@ -41,7 +41,7 @@ namespace PlexRequests.UI.Modules
 {
     public class CultureModule : BaseModule
     {
-        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a) : base("culture",pr)
+        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a, ISecurityExtensions security) : base("culture",pr, security)
         {
             Analytics = a;
 

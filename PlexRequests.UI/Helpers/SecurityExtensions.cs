@@ -26,32 +26,30 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using Nancy;
-using Nancy.Extensions;
 using Nancy.Linker;
 using Nancy.Responses;
 using Nancy.Security;
-using Ninject;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Helpers
 {
-    public class SecurityExtensions
+    public class SecurityExtensions : ISecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, NancyModule context, IResourceLinker linker)
+        public SecurityExtensions(IUserRepository userRepository, NancyModule context, IResourceLinker linker, IPlexUserRepository plexUsers)
         {
             UserRepository = userRepository;
             Module = context;
             Linker = linker;
+            PlexUsers = plexUsers;
         }
         
         private IUserRepository UserRepository { get; }
         private NancyModule Module { get; }
         private IResourceLinker Linker { get; }
+        private IPlexUserRepository PlexUsers { get; }
 
         public bool IsLoggedIn(NancyContext context)
         {
@@ -99,11 +97,7 @@ namespace PlexRequests.UI.Helpers
         { 
             return ForbiddenIfNot(ctx =>
             {
-                var dbUser = UserRepository.GetUserByUsername(ctx.CurrentUser.UserName);
-
-                if (dbUser == null) return false;
-
-                var permissions = (Permissions)dbUser.Permissions;
+                var permissions = GetPermissions(ctx.CurrentUser);
                 var result = permissions.HasFlag((Permissions)perm);
                 return !result;
             });
@@ -116,37 +110,21 @@ namespace PlexRequests.UI.Helpers
 
         public bool DoesNotHavePermissions(Permissions perm, IUserIdentity currentUser)
         {
-            var dbUser = UserRepository.GetUserByUsername(currentUser.UserName);
-
-            if (dbUser == null) return false;
-
-            var permissions = (Permissions)dbUser.Permissions;
+            var permissions = GetPermissions(currentUser);
             var result = permissions.HasFlag(perm);
             return !result;
         }
 
         public bool HasPermissions(IUserIdentity user, Permissions perm)
         {
-            if (user == null) return false;
-
-            var dbUser = UserRepository.GetUserByUsername(user.UserName);
-
-            if (dbUser == null) return false;
-
-            var permissions = (Permissions)dbUser.Permissions;
-            var result = permissions.HasFlag(perm);
-            return result;
+            var permissions = GetPermissions(user);
+            return permissions.HasFlag(perm);
         }
 
         public bool HasAnyPermissions(IUserIdentity user, params Permissions[] perm)
         {
-            if (user == null) return false;
+            var permissions = GetPermissions(user);
 
-            var dbUser = UserRepository.GetUserByUsername(user.UserName);
-
-            if (dbUser == null) return false;
-
-            var permissions = (Permissions)dbUser.Permissions;
             foreach (var p in perm)
             {
                 var result = permissions.HasFlag(p);
@@ -165,13 +143,7 @@ namespace PlexRequests.UI.Helpers
 
             var response = ForbiddenIfNot(ctx =>
             {
-                if (ctx.CurrentUser == null) return false;
-
-                var dbUser = UserRepository.GetUserByUsername(ctx.CurrentUser.UserName);
-
-                if (dbUser == null) return false;
-
-                var permissions = (Permissions) dbUser.Permissions;
+                var permissions = GetPermissions(ctx.CurrentUser);
                 var result = permissions.HasFlag(perm);
                 return result;
             });
@@ -228,5 +200,26 @@ namespace PlexRequests.UI.Helpers
             };
         }
 
+        private Permissions GetPermissions(IUserIdentity user)
+        {
+            if (user == null) return 0;
+
+            var dbUser = UserRepository.GetUserByUsername(user.UserName);
+
+            if (dbUser != null)
+            {
+                var permissions = (Permissions)dbUser.Permissions;
+                return permissions;
+            }
+
+            var plexUser = PlexUsers.GetUserByUsername(user.UserName);
+            if (plexUser != null)
+            {
+                var permissions = (Permissions)plexUser.Permissions;
+                return permissions;
+            }
+
+            return 0;
+        }
     }
 }

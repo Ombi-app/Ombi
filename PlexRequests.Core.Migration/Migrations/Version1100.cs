@@ -43,8 +43,8 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService, IRepository<PlexUsers> plexusers,
-            ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings)
+        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService, IPlexUserRepository plexusers,
+            ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings, ISettingsService<ScheduledJobsSettings> sjs)
         {
             UserRepo = userRepo;
             RequestService = requestService;
@@ -54,6 +54,7 @@ namespace PlexRequests.Core.Migration.Migrations
             PlexUsers = plexusers;
             PlexRequestSettings = prSettings;
             UserManagementSettings = umSettings;
+            ScheduledJobSettings = sjs;
         }
         public int Version => 11000;
         private IUserRepository UserRepo { get; }
@@ -61,9 +62,10 @@ namespace PlexRequests.Core.Migration.Migrations
         private ISettingsService<LogSettings> Log { get; }
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
-        private IRepository<PlexUsers> PlexUsers { get; }
+        private IPlexUserRepository PlexUsers { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
+        private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
 
         public void Start(IDbConnection con)
         {
@@ -74,8 +76,19 @@ namespace PlexRequests.Core.Migration.Migrations
             ResetLogLevel();
             UpdatePlexUsers();
             PopulateDefaultUserManagementSettings();
+            UpdateScheduledJobs();
 
             UpdateSchema(con, Version);
+        }
+
+        private void UpdateScheduledJobs()
+        {
+            var settings = ScheduledJobSettings.GetSettings();
+
+            settings.PlexUserChecker = 24;
+            settings.PlexContentCacher = 60;
+
+            ScheduledJobSettings.SaveSettings(settings);
         }
 
         private void PopulateDefaultUserManagementSettings()
@@ -147,6 +160,9 @@ namespace PlexRequests.Core.Migration.Migrations
                     Permissions = permissions,
                     Features = 0,
                     UserAlias = string.Empty,
+                    EmailAddress = user.Email,
+                    Username = user.Username,
+                    LoginId = Guid.NewGuid().ToString()
                 };
 
                 PlexUsers.Insert(m);
@@ -171,6 +187,8 @@ namespace PlexRequests.Core.Migration.Migrations
 
             con.AlterTable("PlexUsers", "ADD", "Permissions", true, "INTEGER");
             con.AlterTable("PlexUsers", "ADD", "Features", true, "INTEGER");
+            con.AlterTable("PlexUsers", "ADD", "Username", true, "VARCHAR(100)");
+            con.AlterTable("PlexUsers", "ADD", "EmailAddress", true, "VARCHAR(100)");
 
             //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
 

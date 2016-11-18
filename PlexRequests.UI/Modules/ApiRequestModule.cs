@@ -37,13 +37,14 @@ using Newtonsoft.Json;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class ApiRequestModule : BaseApiModule
     {
-        public ApiRequestModule(IRequestService service, ISettingsService<PlexRequestSettings> pr) : base("api", pr)
+        public ApiRequestModule(IRequestService service, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("api", pr, security)
         {
             Get["GetRequests","/requests"] = x => GetRequests();
             Get["GetRequest","/requests/{id}"] = x => GetSingleRequests(x);

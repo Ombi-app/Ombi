@@ -39,5 +39,7 @@ namespace PlexRequests.Services.Jobs
         public const string EpisodeCacher = "Plex Episode Cacher";
         public const string RecentlyAddedEmail = "Recently Added Email Notification";
         public const string FaultQueueHandler = "Request Fault Queue Handler";
+        public const string PlexUserChecker = "Plex User Checker";
+
     }
 }

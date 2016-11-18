@@ -33,6 +33,7 @@ using Nancy.Linker;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
@@ -40,7 +41,7 @@ namespace PlexRequests.UI.Modules
     public class LandingPageModule : BaseModule
     {
         public LandingPageModule(ISettingsService<PlexRequestSettings> settingsService, ISettingsService<LandingPageSettings> landing,
-            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker) : base("landing", settingsService)
+            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker, ISecurityExtensions security) : base("landing", settingsService, security)
         {
             LandingSettings = landing;
             PlexSettings = ps;

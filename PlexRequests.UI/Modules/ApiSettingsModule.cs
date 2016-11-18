@@ -37,6 +37,7 @@ using Newtonsoft.Json;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
@@ -44,7 +45,7 @@ namespace PlexRequests.UI.Modules
     {
         public ApiSettingsModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<AuthenticationSettings> auth,
             ISettingsService<PlexSettings> plexSettings, ISettingsService<CouchPotatoSettings> cp,
-            ISettingsService<SonarrSettings> sonarr, ISettingsService<SickRageSettings> sr, ISettingsService<HeadphonesSettings> hp) : base("api", pr)
+            ISettingsService<SonarrSettings> sonarr, ISettingsService<SickRageSettings> sr, ISettingsService<HeadphonesSettings> hp, ISecurityExtensions security) : base("api", pr, security)
         {
             Get["GetVersion", "/version"] = x => GetVersion();
 

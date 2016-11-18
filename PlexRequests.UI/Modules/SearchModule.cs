@@ -82,8 +82,8 @@ namespace PlexRequests.UI.Modules
             ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content)
-            : base("search", prSettings)
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content, ISecurityExtensions security)
+            : base("search", prSettings, security)
         {
             Auth = auth;
             PlexService = plexService;

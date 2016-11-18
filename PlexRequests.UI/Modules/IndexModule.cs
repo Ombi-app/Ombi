@@ -33,12 +33,13 @@ using Nancy.Responses;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class IndexModule : BaseAuthModule
     {
-        public IndexModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> l, IResourceLinker rl) : base(pr)
+        public IndexModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> l, IResourceLinker rl, ISecurityExtensions security) : base(pr, security)
         {
             LandingPage = l;
             Linker = rl;

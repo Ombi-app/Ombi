@@ -49,7 +49,7 @@ namespace PlexRequests.UI.Modules
         protected string BaseUrl { get; set; }
 
 
-        protected BaseModule(ISettingsService<PlexRequestSettings> settingsService)
+        protected BaseModule(ISettingsService<PlexRequestSettings> settingsService, ISecurityExtensions security)
         {
 
             var settings = settingsService.GetSettings();
@@ -59,11 +59,12 @@ namespace PlexRequests.UI.Modules
             var modulePath = string.IsNullOrEmpty(baseUrl) ? string.Empty : baseUrl;
 
             ModulePath = modulePath;
+            Security = security;
 
             Before += (ctx) => SetCookie();
         }
 
-        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService)
+        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService, ISecurityExtensions security)
         {
 
             var settings = settingsService.GetSettings();
@@ -73,6 +74,7 @@ namespace PlexRequests.UI.Modules
             var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
     
             ModulePath = settingModulePath;
+            Security = security;
 
             Before += (ctx) =>
             {
@@ -100,8 +102,9 @@ namespace PlexRequests.UI.Modules
                 return _dateTimeOffset;
             }
         }
-        private string _username;
 
+
+        private string _username;
         protected string Username
         {
             get
@@ -110,7 +113,7 @@ namespace PlexRequests.UI.Modules
                 {
                     try
                     {
-                        _username = Session[SessionKeys.UsernameKey].ToString();
+                        _username = User == null ? Session[SessionKeys.UsernameKey].ToString() : User.UserName;
                     }
                     catch (Exception)
                     {
@@ -131,33 +134,14 @@ namespace PlexRequests.UI.Modules
                 {
                     return false;
                 }
-
-                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-
-                var user = userRepo.GetUserByUsername(Context?.CurrentUser?.UserName);
-
-                if (user == null) return false;
-
-                var permissions = (Permissions) user.Permissions;
-                return permissions.HasFlag(Permissions.Administrator);
+                
+                return Security.HasPermissions(Context?.CurrentUser, Permissions.Administrator);
             }
         }
 
         protected IUserIdentity User => Context?.CurrentUser;
 
-        protected SecurityExtensions Security
-        {
-
-            get
-            {
-                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-                var linker = ServiceLocator.Instance.Resolve<IResourceLinker>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, this, linker));
-            }
-        }
-
-        private SecurityExtensions _security;
-
+        protected ISecurityExtensions Security { get; set; }
         
         protected bool LoggedIn => Context?.CurrentUser != null;
 

@@ -52,7 +52,8 @@ namespace PlexRequests.UI.Modules
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue) : base("approval", pr)
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue
+            , ISecurityExtensions security) : base("approval", pr, security)
         {
             this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
 
@@ -68,6 +69,7 @@ namespace PlexRequests.UI.Modules
             SickRageSettings = srSettings;
             HeadphonesSettings = hpSettings;
             HeadphoneApi = hpApi;
+            FaultQueue = faultQueue;
 
             Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);

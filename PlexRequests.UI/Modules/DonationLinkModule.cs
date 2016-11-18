@@ -7,12 +7,13 @@ using NLog;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public class DonationLinkModule : BaseAuthModule
     {
-        public DonationLinkModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr) : base("customDonation", pr)
+        public DonationLinkModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("customDonation", pr, security)
         {
             Cache = provider;
 

@@ -31,18 +31,19 @@ using Nancy.Extensions;
 using PlexRequests.UI.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.Modules
 {
     public abstract class BaseAuthModule : BaseModule
     {
-        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
+        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base(pr,security)
         {
             PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
+        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base(modulePath, pr, security)
         {
             PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();

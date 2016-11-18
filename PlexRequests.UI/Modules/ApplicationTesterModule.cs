@@ -47,7 +47,7 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("test", pr)
+             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("test", pr, security)
         {
             this.RequiresAuthentication();
             

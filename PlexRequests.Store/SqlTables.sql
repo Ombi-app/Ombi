@@ -116,8 +116,11 @@ CREATE TABLE IF NOT EXISTS PlexUsers
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     PlexUserId							varchar(100) NOT NULL,
 	UserAlias							varchar(100) NOT NULL,
-		Permissions							INTEGER,
-	Features							INTEGER
+	Permissions							INTEGER,
+	Features							INTEGER,
+	Username							VARCHAR(100),
+	EmailAddress						VARCHAR(100),
+	LoginId								VARCHAR(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
 

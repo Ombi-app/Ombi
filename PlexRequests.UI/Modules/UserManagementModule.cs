@@ -17,13 +17,15 @@ using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IRepository<PlexUsers> plexRepo) : base("usermanagement", pr)
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IPlexUserRepository plexRepo
+            , ISecurityExtensions security) : base("usermanagement", pr, security)
         {
 #if !DEBUG
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
@@ -51,7 +53,7 @@ namespace PlexRequests.UI.Modules
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private IRepository<UserLogins> UserLoginsRepo { get; }
-        private IRepository<PlexUsers> PlexUsersRepository { get; }
+        private IPlexUserRepository PlexUsersRepository { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
 
         private Negotiator Load()
@@ -112,8 +114,18 @@ namespace PlexRequests.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel
                 {
-                    Result = true,
+                    Result = false,
                     Message = "Please enter in a valid Username and Password"
+                });
+            }
+
+            var users = UserMapper.GetUsers();
+            if (users.Any(x => x.UserName.Equals(model.Username, StringComparison.CurrentCultureIgnoreCase)))
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = $"A user with the username '{model.Username}' already exists"
                 });
             }
 
@@ -213,7 +225,10 @@ namespace PlexRequests.UI.Modules
                     Permissions = permissionsValue,
                     Features = featuresValue,
                     UserAlias = model.Alias,
-                    PlexUserId = plexUser.Id
+                    PlexUserId = plexUser.Id,
+                    EmailAddress = plexUser.Email,
+                    Username = plexUser.Username,
+                    LoginId = Guid.NewGuid().ToString()
                 };
 
                 await PlexUsersRepository.InsertAsync(user);

@@ -35,13 +35,14 @@ using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules.Admin
 {
     public class FaultQueueModule : BaseModule
     {
-        public FaultQueueModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, IRepository<RequestQueue> requestQueue) : base("admin", settingsService)
+        public FaultQueueModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, IRepository<RequestQueue> requestQueue, ISecurityExtensions security) : base("admin", settingsService, security)
         {
             Cache = cache;
             RequestQueue = requestQueue;

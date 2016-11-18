@@ -44,17 +44,19 @@ using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Authentication;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ModuleExtensions = Nancy.Authentication.Forms.ModuleExtensions;
 
-
-using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
-            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins) : base("userlogin", pr)
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IPlexUserRepository plexUsers, ICustomUserMapper custom, ISecurityExtensions security)
+            : base("userlogin", pr, security)
         {
             AuthService = auth;
             LandingPageSettings = lp;
@@ -63,6 +65,8 @@ namespace PlexRequests.UI.Modules
             PlexSettings = plexSettings;
             Linker = linker;
             UserLogins = userLogins;
+            PlexUserRepository = plexUsers;
+            CustomUserMapper = custom;
 
             Get["UserLoginIndex", "/", true] = async (x, ct) =>
             {
@@ -86,12 +90,15 @@ namespace PlexRequests.UI.Modules
         private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
         private IRepository<UserLogins> UserLogins { get; }
+        private IPlexUserRepository PlexUserRepository { get; }
+        private ICustomUserMapper CustomUserMapper { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Response> LoginUser()
         {
             var userId = string.Empty;
+            var loginGuid = Guid.Empty;
             var dateTimeOffset = Request.Form.DateTimeOffset;
             var username = Request.Form.username.Value;
             Log.Debug("Username \"{0}\" attempting to login", username);
@@ -121,6 +128,9 @@ namespace PlexRequests.UI.Modules
                 Log.Debug("Using password");
                 password = Request.Form.password.Value;
             }
+
+            var localUsers = await CustomUserMapper.GetUsersAsync();
+            var plexLocalUsers = await PlexUserRepository.GetAllAsync();
 
 
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
@@ -172,6 +182,18 @@ namespace PlexRequests.UI.Modules
                 // Add to the session (Used in the BaseModules)
                 Session[SessionKeys.UsernameKey] = (string)username;
                 Session[SessionKeys.ClientDateTimeOffsetKey] = (int)dateTimeOffset;
+
+                var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);
+                if (plexLocal != null)
+                {
+                    loginGuid = Guid.Parse(plexLocal.LoginId);
+                }
+
+                var dbUser = localUsers.FirstOrDefault(x => x.UserName == username);
+                if (dbUser != null)
+                {
+                    loginGuid = Guid.Parse(dbUser.UserGuid);
+                }
             }
 
             if (!authenticated)
@@ -188,10 +210,20 @@ namespace PlexRequests.UI.Modules
                 if (!landingSettings.BeforeLogin)
                 {
                     var uri = Linker.BuildRelativeUri(Context, "LandingPageIndex");
+                    if (loginGuid != Guid.Empty)
+                    {
+                        return CustomModuleExtensions.LoginAndRedirect(this, loginGuid, null, uri.ToString());
+                    }
                     return Response.AsRedirect(uri.ToString());
                 }
             }
+
+
             var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
+            if (loginGuid != Guid.Empty)
+            {
+                return CustomModuleExtensions.LoginAndRedirect(this, loginGuid, null, retVal.ToString());
+            }
             return Response.AsRedirect(retVal.ToString()); 
         }
 

@@ -93,6 +93,7 @@
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
     <Compile Include="Jobs\RecentlyAdded.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
+    <Compile Include="Jobs\PlexUserChecker.cs" />
     <Compile Include="Jobs\StoreCleanup.cs" />
     <Compile Include="Jobs\CouchPotatoCacher.cs" />
     <Compile Include="Jobs\PlexAvailabilityChecker.cs" />

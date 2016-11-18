@@ -203,6 +203,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\CustomAuthenticationConfiguration.cs" />
+    <Compile Include="Authentication\CustomAuthenticationProvider.cs" />
+    <Compile Include="Authentication\CustomModuleExtensions.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
     <Compile Include="Helpers\ContravariantBindingResolver.cs" />
@@ -212,6 +215,7 @@
     <Compile Include="Helpers\EmptyViewBase.cs" />
     <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\HtmlSecurityHelper.cs" />
+    <Compile Include="Helpers\ISecurityExtensions.cs" />
     <Compile Include="Helpers\SecurityExtensions.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\Themes.cs" />
@@ -257,7 +261,6 @@
     <Compile Include="Modules\DonationLinkModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
-    <Compile Include="Modules\RequestsBetaModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />

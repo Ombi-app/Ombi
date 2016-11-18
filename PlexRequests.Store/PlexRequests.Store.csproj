@@ -88,6 +88,7 @@
     <Compile Include="Repository\SettingsJsonRepository.cs" />
     <Compile Include="Repository\RequestJsonRepository.cs" />
     <Compile Include="Repository\GenericRepository.cs" />
+    <Compile Include="Repository\PlexUserRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />

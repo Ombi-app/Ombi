@@ -124,7 +124,8 @@ namespace PlexRequests.UI.Modules
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded) : base("admin", prService)
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded
+             , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
             CpService = cpService;

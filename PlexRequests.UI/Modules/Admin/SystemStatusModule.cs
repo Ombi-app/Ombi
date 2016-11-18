@@ -38,13 +38,14 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Core.StatusChecker;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules.Admin
 {
     public class SystemStatusModule : BaseModule
     {
-        public SystemStatusModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, ISettingsService<SystemSettings> ss) : base("admin", settingsService)
+        public SystemStatusModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, ISettingsService<SystemSettings> ss, ISecurityExtensions security) : base("admin", settingsService, security)
         {
             Cache = cache;
             SystemSettings = ss;

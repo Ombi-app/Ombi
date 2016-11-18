@@ -48,6 +48,7 @@ using NLog;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
 using Action = PlexRequests.Helpers.Analytics.Action;
 
 namespace PlexRequests.UI.Modules
@@ -67,7 +68,8 @@ namespace PlexRequests.UI.Modules
             ISickRageApi sickRageApi,
             ICacheProvider cache,
             IAnalytics an,
-            INotificationEngine engine) : base("requests", prSettings)
+            INotificationEngine engine,
+            ISecurityExtensions security) : base("requests", prSettings, security)
         {
             Service = service;
             PrSettings = prSettings;

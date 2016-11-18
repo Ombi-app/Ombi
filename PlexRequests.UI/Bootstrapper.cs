@@ -52,6 +52,7 @@ using PlexRequests.UI.Helpers;
 using Nancy.Json;
 
 using Ninject;
+using PlexRequests.UI.Authentication;
 
 namespace PlexRequests.UI
 {
@@ -92,13 +93,14 @@ namespace PlexRequests.UI
             var redirect = string.IsNullOrEmpty(baseUrl) ? "~/login" : $"~/{baseUrl}/login";
 
             // Enable forms auth
-            var formsAuthConfiguration = new FormsAuthenticationConfiguration
+            var config = new CustomAuthenticationConfiguration
             {
                 RedirectUrl = redirect,
-                UserMapper = container.Get<IUserMapper>()
+                PlexUserRepository = container.Get<IPlexUserRepository>(),
+                LocalUserRepository = container.Get<IUserRepository>()
             };
 
-            FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
+            CustomAuthenticationProvider.Enable(pipelines, config);
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             ServicePointManager.ServerCertificateValidationCallback +=

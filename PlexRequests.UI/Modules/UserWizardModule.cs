@@ -41,6 +41,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Authentication;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
@@ -51,7 +52,7 @@ namespace PlexRequests.UI.Modules
     public class UserWizardModule : BaseModule
     {
         public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a) : base("wizard", pr)
+            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a, ISecurityExtensions security) : base("wizard", pr, security)
         {
             PlexSettings = plex;
             PlexApi = plexApi;
@@ -200,7 +201,7 @@ namespace PlexRequests.UI.Modules
 
             var baseUrl = string.IsNullOrEmpty(settings.BaseUrl) ? string.Empty : $"/{settings.BaseUrl}";
 
-            return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
+            return CustomModuleExtensions.LoginAndRedirect(this,(Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
         }
     }
 }

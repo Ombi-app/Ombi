@@ -38,6 +38,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
 
 namespace PlexRequests.UI.NinjectModules
 {
@@ -59,6 +60,8 @@ namespace PlexRequests.UI.NinjectModules
             Bind<INotificationEngine>().To<NotificationEngine>();
 
             Bind<IStatusChecker>().To<StatusChecker>();
+
+            Bind<ISecurityExtensions>().To<SecurityExtensions>();
         }
     }
 }

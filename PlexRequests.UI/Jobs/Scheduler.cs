@@ -63,7 +63,8 @@ namespace PlexRequests.UI.Jobs
             {
                 JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
                 JobBuilder.Create<PlexContentCacher>().WithIdentity("PlexContentCacher", "Plex").Build(),
-                JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Cache").Build(),
+                JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Plex").Build(),
+                JobBuilder.Create<PlexUserChecker>().WithIdentity("PlexUserChecker", "Plex").Build(),
                 JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
                 JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
                 JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
@@ -159,6 +160,10 @@ namespace PlexRequests.UI.Jobs
             {
                 s.PlexContentCacher = 60;
             }
+            if (s.PlexUserChecker == 0)
+            {
+                s.PlexUserChecker = 24;
+            }
 
             var triggers = new List<ITrigger>();
 
@@ -173,6 +178,13 @@ namespace PlexRequests.UI.Jobs
                     .WithIdentity("PlexContentCacher", "Plex")
                     .StartNow()
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexContentCacher).RepeatForever())
+                    .Build();
+
+            var plexUserChecker =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexUserChecker", "Plex")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexUserChecker).RepeatForever())
                     .Build();
 
             var srCacher =
@@ -253,6 +265,7 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(plexEpCacher);
             triggers.Add(fault);
             triggers.Add(plexCacher);
+            triggers.Add(plexUserChecker);
 
             return triggers;
         }

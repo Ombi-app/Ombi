@@ -26,7 +26,7 @@ namespace PlexRequests.UI.Modules
 {
     public class IssuesModule : BaseAuthModule
     {
-        public IssuesModule(ISettingsService<PlexRequestSettings> pr, IIssueService issueService, IRequestService request, INotificationService n) : base("issues", pr)
+        public IssuesModule(ISettingsService<PlexRequestSettings> pr, IIssueService issueService, IRequestService request, INotificationService n, ISecurityExtensions security) : base("issues", pr, security)
         {
             IssuesService = issueService;
             RequestService = request;

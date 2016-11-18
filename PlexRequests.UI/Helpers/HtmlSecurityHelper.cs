@@ -44,7 +44,8 @@ namespace PlexRequests.UI.Helpers
             {
                 var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
                 var linker = ServiceLocator.Instance.Resolve<IResourceLinker>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, null, linker));
+                var plex = ServiceLocator.Instance.Resolve<IPlexUserRepository>();
+                return _security ?? (_security = new SecurityExtensions(userRepo, null, linker, plex));
             }
         }
 

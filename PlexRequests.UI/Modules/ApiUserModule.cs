@@ -33,13 +33,14 @@ using Nancy.ModelBinding;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class ApiUserModule : BaseApiModule
     {
-        public ApiUserModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m) : base("api", pr)
+        public ApiUserModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, ISecurityExtensions security) : base("api", pr, security)
         {
 
             Put["PutCredentials", "/credentials/{username}"] = x => ChangePassword(x);

@@ -38,13 +38,14 @@ using PlexRequests.Core.StatusChecker;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 
 namespace PlexRequests.UI.Modules
 {
     public class LayoutModule : BaseAuthModule
     {
-        public LayoutModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings, IJobRecord rec) : base("layout", pr)
+        public LayoutModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings, IJobRecord rec, ISecurityExtensions security) : base("layout", pr, security)
         {
             Cache = provider;
             SystemSettings = settings;
