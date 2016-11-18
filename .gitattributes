@@ -66,6 +66,3 @@
 PlexRequests.UI/Content/* linguist-vendored
 PlexRequests.UI/Content/* linguist-vendored
 base.scss linguist-vendored=false
-requests-1.7.js linguist-vendored=false
-search-1.7.js linguist-vendored=false
-site-1.7.js linguist-vendored=false

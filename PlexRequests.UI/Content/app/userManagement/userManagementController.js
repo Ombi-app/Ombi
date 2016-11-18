@@ -136,15 +136,15 @@
         $scope.deleteUser = function () {
             var u = $scope.selectedUser;
             userManagementService.deleteUser(u.id)
-            .then(function sucess(data) {
-                if (data.data.result) {
-                    removeUser(u.id, true);
-                    closeSidebar();
-                    return successCallback("Deleted User", "success");
-                }
-            }, function errorCallback(response) {
-                successCallback(response, "danger");
-            });
+                .then(function sucess(data) {
+                    if (data.data.result) {
+                        removeUser(u.id, true);
+                        closeSidebar();
+                        return successCallback("Deleted User", "success");
+                    }
+                }, function errorCallback(response) {
+                    successCallback(response, "danger");
+                });
         }
 
         $scope.formatDate = function (utcDate) {
@@ -157,6 +157,10 @@
             $scope.getUsers();
             $scope.getFeaturesPermissions();
             return;
+        }
+
+        $scope.closeSidebarClick = function() {
+            return closeSidebar();
         }
 
         function removeUser(id, current) {
@@ -182,4 +186,4 @@
 
 
     angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", "moment", controller]);
-}());
+} ());
