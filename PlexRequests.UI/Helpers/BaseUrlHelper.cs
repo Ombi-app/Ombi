@@ -80,7 +80,7 @@ namespace PlexRequests.UI.Helpers
             {
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/bootstrap.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/font-awesome.css\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
+                //$"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css?v={Assembly}\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}?v={Assembly}\" type=\"text/css\"/>",
@@ -224,7 +224,9 @@ namespace PlexRequests.UI.Helpers
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
-
+            sb.Append($"<script src=\"{content}/Content/spin.min.js\"></script>");    
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-spinner.min.js\"></script>");   
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-loading-spinner.js\"></script>");   
 
             return helper.Raw(sb.ToString());
         }
