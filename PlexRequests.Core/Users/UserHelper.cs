@@ -118,7 +118,7 @@ namespace PlexRequests.Core.Users
             return model;
         }
 
-        public IEnumerable<UserHelperModel> GetUsersWithFeatures(Features features)
+        public IEnumerable<UserHelperModel> GetUsersWithFeature(Features features)
         {
             var model = new List<UserHelperModel>();
 
