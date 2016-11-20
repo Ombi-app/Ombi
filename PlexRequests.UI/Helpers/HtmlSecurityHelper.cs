@@ -37,19 +37,16 @@ namespace PlexRequests.UI.Helpers
 {
     public static class HtmlSecurityHelper
     {
-        private static SecurityExtensions Security
+        private static ISecurityExtensions Security
         {
-
             get
             {
-                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-                var linker = ServiceLocator.Instance.Resolve<IResourceLinker>();
-                var plex = ServiceLocator.Instance.Resolve<IPlexUserRepository>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, null, linker, plex));
+                var security = ServiceLocator.Instance.Resolve<ISecurityExtensions>();
+                return _security ?? (_security = security);
             }
         }
 
-        private static SecurityExtensions _security;
+        private static ISecurityExtensions _security;
 
 
         public static bool HasAnyPermission(this HtmlHelpers helper, int permission, bool authenticated = true)

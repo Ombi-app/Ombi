@@ -38,16 +38,14 @@ namespace PlexRequests.UI.Helpers
 {
     public class SecurityExtensions : ISecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, NancyModule context, IResourceLinker linker, IPlexUserRepository plexUsers)
+        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IPlexUserRepository plexUsers)
         {
             UserRepository = userRepository;
-            Module = context;
             Linker = linker;
             PlexUsers = plexUsers;
         }
         
         private IUserRepository UserRepository { get; }
-        private NancyModule Module { get; }
         private IResourceLinker Linker { get; }
         private IPlexUserRepository PlexUsers { get; }
 
