@@ -56,7 +56,7 @@
                 @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
                 @if (Html.IsAdmin())
                 {
-                    <li><a>@UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</a></li>
+                    <li><a>@UI.Layout_Welcome @Context.CurrentUser.UserName</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Admin <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -72,7 +72,7 @@
                 else if (Html.IsLoggedIn(Context)) // Logged in but not admin
                 {
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey] <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.CurrentUser.UserName <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a href="@url/changepassword"><i class="fa fa-key"></i> @UI.Layout_ChangePassword</a></li>
                             <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>

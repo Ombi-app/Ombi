@@ -189,6 +189,7 @@ namespace PlexRequests.Core.Migration.Migrations
             con.AlterTable("PlexUsers", "ADD", "Features", true, "INTEGER");
             con.AlterTable("PlexUsers", "ADD", "Username", true, "VARCHAR(100)");
             con.AlterTable("PlexUsers", "ADD", "EmailAddress", true, "VARCHAR(100)");
+            con.AlterTable("PlexUsers", "ADD", "LoginId", true, "VARCHAR(100)");
 
             //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
 
