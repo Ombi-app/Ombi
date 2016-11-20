@@ -65,22 +65,15 @@ namespace PlexRequests.UI.Helpers
 
         public bool IsPlexUser(NancyContext context)
         {
-            var userName = context.Request.Session[SessionKeys.UsernameKey];
-            var plexUser = userName != null;
-
-            var isAuth = context.CurrentUser?.IsAuthenticated() ?? false;
-
-            return plexUser && !isAuth;
+            var plexUser = PlexUsers.GetUserByUsername(context.CurrentUser.UserName);
+            return plexUser != null;
         }
 
         public bool IsNormalUser(NancyContext context)
         {
-            var userName = context.Request.Session[SessionKeys.UsernameKey];
-            var plexUser = userName != null;
+            var dbUser = UserRepository.GetUserByUsername(context.CurrentUser.UserName);
 
-            var isAuth = context.CurrentUser?.IsAuthenticated() ?? false;
-
-            return isAuth && !plexUser;
+            return dbUser != null;
         }
 
 
