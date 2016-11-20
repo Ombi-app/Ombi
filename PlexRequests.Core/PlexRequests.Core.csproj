@@ -147,9 +147,12 @@
     <Compile Include="StatusChecker\AppveyorBranchResult.cs" />
     <Compile Include="TvSender.cs" />
     <Compile Include="TvSenderOld.cs" />
+    <Compile Include="Users\IUserHelper.cs" />
+    <Compile Include="Users\UserHelper.cs" />
     <Compile Include="UserIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserMapper.cs" />
+    <Compile Include="Users\UserHelperModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

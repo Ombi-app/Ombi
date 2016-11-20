@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: Features.cs
+//    File: UserHelperModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,18 +25,18 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using System.ComponentModel.DataAnnotations;
+using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 
-namespace PlexRequests.Helpers.Permissions
+namespace PlexRequests.Core.Users
 {
-    [Flags]
-    public enum Features
+    public class UserHelperModel
     {
-        [Display(Name = "Newsletter")]
-        Newsletter = 1,
-        [Display(Name = "Request Added Notification")]
-        RequestAddedNotification = 2,
-
+        public string Username { get; set; }
+        public string UserAlias { get; set; }
+        public Permissions Permissions { get; set; }
+        public Features Features { get; set; }
+        public string EmailAddress { get; set; }
+        public UserType Type { get; set; }
     }
 }

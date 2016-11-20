@@ -34,6 +34,8 @@ using NLog.Fluent;
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core.Models;
+using PlexRequests.Core.Users;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
@@ -43,17 +45,19 @@ namespace PlexRequests.Services.Notification
 {
     public class NotificationEngine : INotificationEngine
     {
-        public NotificationEngine(IPlexApi p, IRepository<UsersToNotify> repo, INotificationService service)
+        public NotificationEngine(IPlexApi p, IRepository<UsersToNotify> repo, INotificationService service, IUserHelper userHelper)
         {
             PlexApi = p;
             UserNotifyRepo = repo;
             Notification = service;
+            UserHelper = userHelper;
         }
 
         private IPlexApi PlexApi { get; }
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private INotificationService Notification { get; }
+        private IUserHelper UserHelper { get; }
 
         public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey, NotificationType type)
         {
@@ -63,8 +67,8 @@ namespace PlexRequests.Services.Notification
                 var userAccount = PlexApi.GetAccount(apiKey);
 
                 var adminUsername = userAccount.Username ?? string.Empty;
-
-                var users = UserNotifyRepo.GetAll().ToList();
+                
+                var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification).ToList();
                 Log.Debug("Notifying Users Count {0}", users.Count);
                 foreach (var model in modelChanged)
                 {
@@ -80,7 +84,7 @@ namespace PlexRequests.Services.Notification
                         }
 
                         var email = plexUser.User.FirstOrDefault(x => x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase));
-                        if (email == null)
+                        if (string.IsNullOrEmpty(email?.Email))
                         {
                             Log.Info("There is no email address for this Plex user, cannot send notification");
                             // We do not have a plex user that requested this!
@@ -107,7 +111,7 @@ namespace PlexRequests.Services.Notification
 
                 var adminUsername = userAccount.Username ?? string.Empty;
 
-                var users = UserNotifyRepo.GetAll().ToList();
+                var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification).ToList();
                 Log.Debug("Notifying Users Count {0}", users.Count);
 
                 var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);

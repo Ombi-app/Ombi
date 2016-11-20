@@ -132,10 +132,7 @@ namespace PlexRequests.UI.Modules
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
             Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
-
-            Post["/notifyuser", true] = async (x, ct) => await NotifyUser((bool)Request.Form.notify);
-            Get["/notifyuser", true] = async (x, ct) => await GetUserNotificationSettings();
-
+            
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
@@ -1146,66 +1143,7 @@ namespace PlexRequests.UI.Modules
 
             return img;
         }
-
-        private async Task<Response> NotifyUser(bool notify)
-        {
-            Analytics.TrackEventAsync(Category.Search, Action.Save, "NotifyUser", Username, CookieHelper.GetAnalyticClientId(Cookies), notify ? 1 : 0);
-            var authSettings = await Auth.GetSettingsAsync();
-            var auth = authSettings.UserAuthentication;
-            var emailSettings = await EmailNotificationSettings.GetSettingsAsync();
-            var email = emailSettings.EnableUserEmailNotifications;
-            if (!auth)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_ErrorPlexAccountOnly });
-            }
-            if (!email)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_ErrorNotEnabled });
-            }
-            var username = Username;
-            var originalList = await UsersToNotifyRepo.GetAllAsync();
-            if (!notify)
-            {
-                if (originalList == null)
-                {
-                    return Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_NotificationError });
-                }
-                var userToRemove = originalList.FirstOrDefault(x => x.Username == username);
-                if (userToRemove != null)
-                {
-                    await UsersToNotifyRepo.DeleteAsync(userToRemove);
-                }
-                return Response.AsJson(new JsonResponseModel { Result = true });
-            }
-
-
-            if (originalList == null)
-            {
-                var userModel = new UsersToNotify { Username = username };
-                var insertResult = await UsersToNotifyRepo.InsertAsync(userModel);
-                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = Resources.UI.Common_CouldNotSave });
-            }
-
-            var existingUser = originalList.FirstOrDefault(x => x.Username == username);
-            if (existingUser != null)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = true }); // It's already enabled
-            }
-            else
-            {
-                var userModel = new UsersToNotify { Username = username };
-                var insertResult = await UsersToNotifyRepo.InsertAsync(userModel);
-                return Response.AsJson(insertResult != -1 ? new JsonResponseModel { Result = true } : new JsonResponseModel { Result = false, Message = Resources.UI.Common_CouldNotSave });
-            }
-
-        }
-        private async Task<Response> GetUserNotificationSettings()
-        {
-            var all = await UsersToNotifyRepo.GetAllAsync();
-            var retVal = all.FirstOrDefault(x => x.Username == Username);
-            return Response.AsJson(retVal != null);
-        }
-
+        
         private Response GetSeasons()
         {
             var seriesId = (int)Request.Query.tvId;

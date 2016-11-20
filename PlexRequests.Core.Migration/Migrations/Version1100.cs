@@ -32,6 +32,7 @@ using NLog;
 using System.Linq;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
@@ -43,8 +44,9 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService, IPlexUserRepository plexusers,
-            ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings, ISettingsService<ScheduledJobsSettings> sjs)
+        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService,
+            IPlexUserRepository plexusers, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
+            ISettingsService<ScheduledJobsSettings> sjs, IRepository<UsersToNotify> usersToNotify)
         {
             UserRepo = userRepo;
             RequestService = requestService;
@@ -55,6 +57,7 @@ namespace PlexRequests.Core.Migration.Migrations
             PlexRequestSettings = prSettings;
             UserManagementSettings = umSettings;
             ScheduledJobSettings = sjs;
+            UserNotifyRepo = usersToNotify;
         }
         public int Version => 11000;
         private IUserRepository UserRepo { get; }
@@ -66,6 +69,7 @@ namespace PlexRequests.Core.Migration.Migrations
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
+        private IRepository<UsersToNotify> UserNotifyRepo { get; }
 
         public void Start(IDbConnection con)
         {
@@ -77,8 +81,34 @@ namespace PlexRequests.Core.Migration.Migrations
             UpdatePlexUsers();
             PopulateDefaultUserManagementSettings();
             UpdateScheduledJobs();
+            MigrateUserNotifications();
 
             UpdateSchema(con, Version);
+        }
+
+        private void MigrateUserNotifications()
+        {
+            var usersToNotify = UserNotifyRepo.GetAll();
+            var plexUsers = PlexUsers.GetAll().ToList();
+            var users = UserRepo.GetAll().ToList();
+            foreach (var u in usersToNotify)
+            {
+                var selectedPlexUser = plexUsers.FirstOrDefault(x => x.Username.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
+                if (selectedPlexUser != null)
+                {
+                    selectedPlexUser.Features += (int)Features.RequestAddedNotification;
+                    PlexUsers.Update(selectedPlexUser);
+                }
+
+                var selectedLocalUser =
+                    users.FirstOrDefault(x => x.UserName.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
+                if (selectedLocalUser != null)
+                {
+                    selectedLocalUser.Features += (int) Features.RequestAddedNotification;
+                    UserRepo.Update(selectedLocalUser);
+                }
+
+            }
         }
 
         private void UpdateScheduledJobs()
