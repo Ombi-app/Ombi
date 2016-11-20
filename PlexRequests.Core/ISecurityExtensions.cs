@@ -3,7 +3,7 @@ using Nancy;
 using Nancy.Security;
 using PlexRequests.Helpers.Permissions;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core
 {
     public interface ISecurityExtensions
     {
@@ -18,5 +18,6 @@ namespace PlexRequests.UI.Helpers
         bool IsLoggedIn(NancyContext context);
         bool IsNormalUser(NancyContext context);
         bool IsPlexUser(NancyContext context);
+        bool HasPermissions(string userName, Permissions perm);
     }
 }

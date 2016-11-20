@@ -46,6 +46,10 @@
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
     </Reference>
+    <Reference Include="Nancy.Linker, Version=0.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.Linker.0.3.1\lib\net40-Client\Nancy.Linker.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
@@ -92,6 +96,7 @@
     <Compile Include="CacheKeys.cs" />
     <Compile Include="HeadphonesSender.cs" />
     <Compile Include="IPlexReadOnlyDatabase.cs" />
+    <Compile Include="ISecurityExtensions.cs" />
     <Compile Include="IStatusChecker.cs" />
     <Compile Include="Notification\NotificationMessage.cs" />
     <Compile Include="Notification\NotificationMessageContent.cs" />
@@ -112,7 +117,7 @@
     <Compile Include="PlexReadOnlyDatabase.cs" />
     <Compile Include="Queue\ITransientFaultQueue.cs" />
     <Compile Include="Queue\TransientFaultQueue.cs" />
-    <Compile Include="RequestHelper.cs" />
+    <Compile Include="SecurityExtensions.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />

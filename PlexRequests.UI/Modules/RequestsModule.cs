@@ -50,6 +50,7 @@ using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Helpers;
 using Action = PlexRequests.Helpers.Analytics.Action;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {

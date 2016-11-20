@@ -43,9 +43,8 @@ using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Authentication;
-using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
-using ModuleExtensions = Nancy.Authentication.Forms.ModuleExtensions;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {

@@ -215,8 +215,6 @@
     <Compile Include="Helpers\EmptyViewBase.cs" />
     <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\HtmlSecurityHelper.cs" />
-    <Compile Include="Helpers\ISecurityExtensions.cs" />
-    <Compile Include="Helpers\SecurityExtensions.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\Themes.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
@@ -326,7 +324,6 @@
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
     <Compile Include="Models\SearchTvShowViewModel.cs" />
-    <Compile Include="Models\SessionKeys.cs" />
     <Compile Include="Modules\Admin\AdminModule.cs" />
     <Compile Include="Modules\ApplicationTesterModule.cs" />
     <Compile Include="Modules\BaseAuthModule.cs" />

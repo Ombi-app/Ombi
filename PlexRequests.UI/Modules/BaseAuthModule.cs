@@ -28,10 +28,10 @@
 
 using Nancy;
 using Nancy.Extensions;
-using PlexRequests.UI.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.UI.Helpers;
+using PlexRequests.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {

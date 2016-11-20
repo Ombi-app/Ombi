@@ -54,7 +54,8 @@ namespace PlexRequests.Services.Jobs
         public FaultQueueHandler(IJobRecord record, IRepository<RequestQueue> repo, ISonarrApi sonarrApi,
             ISickRageApi srApi, ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings,
             ICouchPotatoApi cpApi, ISettingsService<CouchPotatoSettings> cpsettings, IRequestService requestService,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi, ISettingsService<PlexRequestSettings> prSettings)
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi, ISettingsService<PlexRequestSettings> prSettings,
+            ISecurityExtensions security)
         {
             Record = record;
             Repo = repo;
@@ -69,6 +70,7 @@ namespace PlexRequests.Services.Jobs
             SonarrSettings = sonarrSettings;
             CpSettings = cpsettings;
             HeadphoneSettings = hpSettings;
+            Security = security;
             PrSettings = prSettings.GetSettings();
         }
 
@@ -84,6 +86,7 @@ namespace PlexRequests.Services.Jobs
         private ISettingsService<SickRageSettings> SickrageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
         private ISettingsService<HeadphonesSettings> HeadphoneSettings { get; }
+        private ISecurityExtensions Security { get; }
 
         public void Execute(IJobExecutionContext context)
         {
@@ -235,7 +238,7 @@ namespace PlexRequests.Services.Jobs
                     if (result)
                     {
 
-                        if (model.Type.ShouldAutoApprove(PrSettings, false, model.RequestedUsers))
+                        if (ShouldAutoApprove(model.Type, PrSettings, model.RequestedUsers))
                             // Approve it now
                             model.Approved = true;
                         RequestService.UpdateRequest(model);
@@ -295,6 +298,38 @@ namespace PlexRequests.Services.Jobs
                     Repo.Delete(request);
                 }
             }
+        }
+
+        public bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings, List<string> username)
+        {
+            if (prSettings.ApprovalWhiteList.Intersect(username).Any())
+            {
+                return true;
+            }
+
+            foreach (var user in username)
+            {
+                var admin = Security.HasPermissions(user, Permissions.Administrator);
+                // if the user is an admin or they are whitelisted, they go ahead and allow auto-approval
+                if (admin) return true;
+
+                // check by request type if the category requires approval or not
+                switch (requestType)
+                {
+                    case RequestType.Movie:
+                        return Security.HasPermissions(user, Permissions.AutoApproveMovie) ||
+                               !prSettings.RequireMovieApproval;
+                    case RequestType.TvShow:
+                        return Security.HasPermissions(user, Permissions.AutoApproveTv) ||
+                            !prSettings.RequireTvShowApproval;
+                    case RequestType.Album:
+                        return Security.HasPermissions(user, Permissions.AutoApproveAlbum) ||
+                            !prSettings.RequireMusicApproval;
+                    default:
+                        return false;
+                }
+            }
+            return false;
         }
     }
 }

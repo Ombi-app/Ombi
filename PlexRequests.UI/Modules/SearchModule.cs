@@ -68,6 +68,7 @@ using TMDbLib.Objects.General;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
 using EpisodesModel = PlexRequests.Store.EpisodesModel;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -139,7 +140,7 @@ namespace PlexRequests.UI.Modules
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
 
-        private IRepository<PlexContent> PlexContentRepository { get; } 
+        private IRepository<PlexContent> PlexContentRepository { get; }
         private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
@@ -563,7 +564,7 @@ namespace PlexRequests.UI.Modules
             };
             try
             {
-                if (RequestType.Movie.ShouldAutoApprove(settings, IsAdmin, Username))
+                if (ShouldAutoApprove(RequestType.Movie, settings, Username))
                 {
                     var cpSettings = await CpService.GetSettingsAsync();
                     model.Approved = true;
@@ -888,7 +889,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (RequestType.TvShow.ShouldAutoApprove(settings, IsAdmin, Username))
+                if (ShouldAutoApprove(RequestType.TvShow, settings, Username))
                 {
                     model.Approved = true;
                     var s = await sonarrSettings;
@@ -984,10 +985,10 @@ namespace PlexRequests.UI.Modules
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
         {
-            var sendNotification = type.ShouldAutoApprove(prSettings, IsAdmin, Username)
+            var sendNotification = ShouldAutoApprove(type, prSettings, Username)
                 ? !prSettings.IgnoreNotifyForAutoApprovedRequests
                 : true;
-            
+
             if (IsAdmin)
             {
                 sendNotification = false; // Don't bother sending a notification if the user is an admin
@@ -1092,7 +1093,7 @@ namespace PlexRequests.UI.Modules
 
             try
             {
-                if (RequestType.Album.ShouldAutoApprove(settings, IsAdmin, Username))
+                if (ShouldAutoApprove(RequestType.Album, settings, Username))
                 {
                     model.Approved = true;
                     var hpSettings = HeadphonesService.GetSettings();
@@ -1423,6 +1424,29 @@ namespace PlexRequests.UI.Modules
 
             var diff = model.Episodes.Except(available);
             return diff;
+        }
+
+        public bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings, string username)
+        {
+            var admin = Security.HasPermissions(Context.CurrentUser, Permissions.Administrator);
+            // if the user is an admin or they are whitelisted, they go ahead and allow auto-approval
+            if (admin || prSettings.ApprovalWhiteList.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase))) return true;
+
+            // check by request type if the category requires approval or not
+            switch (requestType)
+            {
+                case RequestType.Movie:
+                    return Security.HasPermissions(User, Permissions.AutoApproveMovie) ||
+                           !prSettings.RequireMovieApproval;
+                case RequestType.TvShow:
+                    return Security.HasPermissions(User, Permissions.AutoApproveTv) ||
+                        !prSettings.RequireTvShowApproval;
+                case RequestType.Album:
+                    return Security.HasPermissions(User, Permissions.AutoApproveAlbum) ||
+                        !prSettings.RequireMusicApproval;
+                default:
+                    return false;
+            }
         }
     }
 }

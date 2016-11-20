@@ -29,10 +29,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
-using Nancy.Responses.Negotiation;
 using Nancy.Validation;
 using NLog;
 using PlexRequests.Api.Interfaces;
@@ -44,6 +42,7 @@ using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Authentication;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
 

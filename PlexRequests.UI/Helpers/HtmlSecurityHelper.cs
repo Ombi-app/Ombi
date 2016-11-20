@@ -32,6 +32,7 @@ using Nancy.ViewEngines.Razor;
 using Ninject;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Repository;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Helpers
 {

@@ -67,6 +67,7 @@ using PlexRequests.UI.Models;
 using Quartz;
 using Action = PlexRequests.Helpers.Analytics.Action;
 using HttpStatusCode = Nancy.HttpStatusCode;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {

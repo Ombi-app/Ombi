@@ -25,8 +25,6 @@
 //  ************************************************************************/
 #endregion
 using Mono.Data.Sqlite;
-
-using Nancy;
 using Nancy.Authentication.Forms;
 
 using Ninject.Modules;
@@ -38,7 +36,8 @@ using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
-using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using SecurityExtensions = PlexRequests.Core.SecurityExtensions;
 
 namespace PlexRequests.UI.NinjectModules
 {

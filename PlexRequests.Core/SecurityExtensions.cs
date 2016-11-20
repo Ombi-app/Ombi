@@ -30,11 +30,12 @@ using Nancy;
 using Nancy.Linker;
 using Nancy.Responses;
 using Nancy.Security;
+using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Repository;
-using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core
 {
     public class SecurityExtensions : ISecurityExtensions
     {
@@ -109,6 +110,11 @@ namespace PlexRequests.UI.Helpers
         public bool HasPermissions(IUserIdentity user, Permissions perm)
         {
             var permissions = GetPermissions(user);
+            return permissions.HasFlag(perm);
+        }
+        public bool HasPermissions(string userName, Permissions perm)
+        {
+            var permissions = GetPermissions(userName);
             return permissions.HasFlag(perm);
         }
 
@@ -193,9 +199,14 @@ namespace PlexRequests.UI.Helpers
 
         private Permissions GetPermissions(IUserIdentity user)
         {
-            if (user == null) return 0;
+            return GetPermissions(user.UserName);
+        }
 
-            var dbUser = UserRepository.GetUserByUsername(user.UserName);
+        private Permissions GetPermissions(string userName)
+        {
+            if (string.IsNullOrEmpty(userName)) return 0;
+
+            var dbUser = UserRepository.GetUserByUsername(userName);
 
             if (dbUser != null)
             {
@@ -203,7 +214,7 @@ namespace PlexRequests.UI.Helpers
                 return permissions;
             }
 
-            var plexUser = PlexUsers.GetUserByUsername(user.UserName);
+            var plexUser = PlexUsers.GetUserByUsername(userName);
             if (plexUser != null)
             {
                 var permissions = (Permissions)plexUser.Permissions;
