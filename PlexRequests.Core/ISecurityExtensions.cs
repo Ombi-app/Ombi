@@ -19,5 +19,12 @@ namespace PlexRequests.Core
         bool IsNormalUser(NancyContext context);
         bool IsPlexUser(NancyContext context);
         bool HasPermissions(string userName, Permissions perm);
+
+        /// <summary>
+        /// Gets the username this could be the alias! We should always use this method when getting the username
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns><c>null</c> if we cannot find a user</returns>
+        string GetUsername(string username);
     }
 }

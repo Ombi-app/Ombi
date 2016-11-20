@@ -109,7 +109,12 @@ namespace PlexRequests.UI.Modules
                 {
                     try
                     {
-                        _username = User == null ? Session[SessionKeys.UsernameKey].ToString() : User.UserName;
+                        var username = Security.GetUsername(User.UserName);
+                        if (string.IsNullOrEmpty(username))
+                        {
+                            return Session[SessionKeys.UsernameKey].ToString();
+                        }
+                        _username = username;
                     }
                     catch (Exception)
                     {

@@ -30,6 +30,7 @@ using Nancy;
 using Nancy.Linker;
 using Nancy.Responses;
 using Nancy.Security;
+using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Repository;
@@ -75,6 +76,42 @@ namespace PlexRequests.Core
             var dbUser = UserRepository.GetUserByUsername(context.CurrentUser.UserName);
 
             return dbUser != null;
+        }
+
+        /// <summary>
+        /// Gets the username this could be the alias! We should always use this method when getting the username
+        /// </summary>
+        /// <param name="username">The username.</param>
+        /// <returns><c>null</c> if we cannot find a user</returns>
+        public string GetUsername(string username)
+        {
+            var plexUser = PlexUsers.GetUserByUsername(username);
+            if (plexUser != null)
+            {
+                if (!string.IsNullOrEmpty(plexUser.UserAlias))
+                {
+                    return plexUser.UserAlias;
+                }
+                else
+                {
+                    return plexUser.Username;
+                }
+            }
+
+            var dbUser = UserRepository.GetUserByUsername(username);
+            if (dbUser != null)
+            {
+                var userProps = ByteConverterHelper.ReturnObject<UserProperties>(dbUser.UserProperties);
+                if (!string.IsNullOrEmpty(userProps.UserAlias))
+                {
+                    return userProps.UserAlias;
+                }
+                else
+                {
+                    return dbUser.UserName;
+                }
+            }
+            return null;
         }
 
 
