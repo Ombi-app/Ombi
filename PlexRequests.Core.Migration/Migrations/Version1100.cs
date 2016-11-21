@@ -76,10 +76,11 @@ namespace PlexRequests.Core.Migration.Migrations
             UpdateDb(con);
 
             // Update the current admin permissions set
+
+            PopulateDefaultUserManagementSettings();
             UpdateAdmin();
             ResetLogLevel();
             UpdatePlexUsers();
-            PopulateDefaultUserManagementSettings();
             UpdateScheduledJobs();
             MigrateUserNotifications();
 
@@ -104,7 +105,7 @@ namespace PlexRequests.Core.Migration.Migrations
                     users.FirstOrDefault(x => x.UserName.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
                 if (selectedLocalUser != null)
                 {
-                    selectedLocalUser.Features += (int) Features.RequestAddedNotification;
+                    selectedLocalUser.Features += (int)Features.RequestAddedNotification;
                     UserRepo.Update(selectedLocalUser);
                 }
 
@@ -128,9 +129,9 @@ namespace PlexRequests.Core.Migration.Migrations
             UserManagementSettings.SaveSettings(new UserManagementSettings
             {
                 AutoApproveMovies = !plexRequestSettings.RequireMovieApproval,
-                SearchForTvShows = plexRequestSettings.SearchForTvShows,
-                SearchForMusic = plexRequestSettings.SearchForMusic,
-                SearchForMovies = plexRequestSettings.SearchForMovies,
+                RequestTvShows = plexRequestSettings.SearchForTvShows,
+                RequestMusic = plexRequestSettings.SearchForMusic,
+                RequestMovies = plexRequestSettings.SearchForMovies,
                 AutoApproveMusic = !plexRequestSettings.RequireMusicApproval,
                 AutoApproveTvShows = !plexRequestSettings.RequireTvShowApproval
             });
@@ -145,7 +146,7 @@ namespace PlexRequests.Core.Migration.Migrations
             }
             var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
             var prSettings = PlexRequestSettings.GetSettings();
-            
+
             var dbUsers = PlexUsers.GetAll().ToList();
             foreach (var user in plexUsers.User)
             {
@@ -153,19 +154,19 @@ namespace PlexRequests.Core.Migration.Migrations
                 {
                     continue;
                 }
-                
+
                 int permissions = 0;
                 if (prSettings.SearchForMovies)
                 {
-                    permissions = (int) Permissions.RequestMovie;
+                    permissions = (int)Permissions.RequestMovie;
                 }
                 if (prSettings.SearchForTvShows)
                 {
-                    permissions += (int) Permissions.RequestTvShow;
+                    permissions += (int)Permissions.RequestTvShow;
                 }
                 if (prSettings.SearchForMusic)
                 {
-                    permissions += (int) Permissions.RequestMusic;
+                    permissions += (int)Permissions.RequestMusic;
                 }
                 if (!prSettings.RequireMovieApproval)
                 {
@@ -179,11 +180,11 @@ namespace PlexRequests.Core.Migration.Migrations
                 {
                     permissions += (int)Permissions.AutoApproveAlbum;
                 }
-                
+
                 // Add report Issues
-                
+
                 permissions += (int)Permissions.ReportIssue;
-                
+
                 var m = new PlexUsers
                 {
                     PlexUserId = user.Id,
@@ -249,7 +250,10 @@ namespace PlexRequests.Core.Migration.Migrations
                     | Permissions.ReportIssue
                     | Permissions.RequestMusic
                     | Permissions.RequestTvShow
-                    | Permissions.RequestMovie);
+                    | Permissions.RequestMovie
+                    | Permissions.AutoApproveAlbum
+                    | Permissions.AutoApproveMovie
+                    | Permissions.AutoApproveTv);
             }
 
             UserRepo.UpdateAll(users);

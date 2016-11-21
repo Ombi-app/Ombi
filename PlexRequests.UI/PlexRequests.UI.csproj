@@ -244,6 +244,7 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\UserManagementSettingsModule.cs" />
     <Compile Include="Modules\Admin\FaultQueueModule.cs" />
     <Compile Include="Modules\Admin\SystemStatusModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
@@ -727,6 +728,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Content Include="Views\Admin\RequestFaultQueue.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\UserManagementSettings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

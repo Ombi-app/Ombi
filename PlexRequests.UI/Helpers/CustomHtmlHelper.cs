@@ -24,10 +24,9 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Reflection;
 
+using System.Text;
 using Nancy.ViewEngines.Razor;
-
 using PlexRequests.Helpers;
 
 namespace PlexRequests.UI.Helpers
@@ -40,6 +39,18 @@ namespace PlexRequests.UI.Helpers
             var htmlString = $"<!--\r\n##################################################################\r\nVersion: {fileVersion}\r\n##################################################################\r\n--> ";
 
             return helper.Raw(htmlString);
+        }
+
+        public static IHtmlString Checkbox(this HtmlHelpers helper, bool check, string name, string display)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("<div class=\"form-group\">");
+            sb.AppendLine("<div class=\"checkbox\">");
+            sb.AppendFormat("<input type=\"checkbox\" id=\"{0}\" name=\"{0}\" {2}><label for=\"{0}\">{1}</label>", name, display, check ? "checked=\"checked\"" : string.Empty);
+            sb.AppendLine("</div>");
+            sb.AppendLine("</div>");
+            return helper.Raw(sb.ToString());
         }
     }
 }

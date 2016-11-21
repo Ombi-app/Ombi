@@ -153,6 +153,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserMapper.cs" />
     <Compile Include="Users\UserHelperModel.cs" />
+    <Compile Include="Users\UserManagementHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -38,11 +38,15 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
+using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Authentication;
+using PlexRequests.UI.Helpers;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 
@@ -51,7 +55,8 @@ namespace PlexRequests.UI.Modules
     public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
-            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IPlexUserRepository plexUsers, ICustomUserMapper custom, ISecurityExtensions security)
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IPlexUserRepository plexUsers, ICustomUserMapper custom,
+             ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings)
             : base("userlogin", pr, security)
         {
             AuthService = auth;
@@ -63,6 +68,7 @@ namespace PlexRequests.UI.Modules
             UserLogins = userLogins;
             PlexUserRepository = plexUsers;
             CustomUserMapper = custom;
+            UserManagementSettings = userManagementSettings;
 
             Get["UserLoginIndex", "/", true] = async (x, ct) =>
             {
@@ -88,6 +94,7 @@ namespace PlexRequests.UI.Modules
         private IRepository<UserLogins> UserLogins { get; }
         private IPlexUserRepository PlexUserRepository { get; }
         private ICustomUserMapper CustomUserMapper { get; }
+        private ISettingsService<UserManagementSettings> UserManagementSettings {get;}
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -189,6 +196,23 @@ namespace PlexRequests.UI.Modules
                 if (dbUser != null)
                 {
                     loginGuid = Guid.Parse(dbUser.UserGuid);
+                }
+
+                if(loginGuid == Guid.Empty && settings.UserAuthentication)
+                {
+                    var defaultSettings = UserManagementSettings.GetSettings();
+                    loginGuid = Guid.NewGuid();
+                    // Looks like we still don't have an entry, so this user does not exist
+                    await PlexUserRepository.InsertAsync(new PlexUsers
+                    {
+                        PlexUserId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken) ?? string.Empty,
+                        UserAlias = string.Empty,
+                        Permissions = UserManagementHelper.GetPermissions(defaultSettings),
+                        Features = UserManagementHelper.GetPermissions(defaultSettings),
+                        Username = username,
+                        EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run
+                        LoginId = loginGuid.ToString()
+                    });
                 }
             }
 

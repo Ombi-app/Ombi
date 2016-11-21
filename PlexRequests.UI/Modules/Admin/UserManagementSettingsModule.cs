@@ -25,50 +25,61 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
+using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
+using Nancy.Validation;
+using NLog;
+using NLog.Fluent;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules.Admin
 {
-    public class FaultQueueModule : BaseModule
+    public class UserManagementSettingsModule : BaseModule
     {
-        public FaultQueueModule(ISettingsService<PlexRequestSettings> settingsService, IRepository<RequestQueue> requestQueue, ISecurityExtensions security) : base("admin", settingsService, security)
+        public UserManagementSettingsModule(ISettingsService<PlexRequestSettings> settingsService, ISettingsService<UserManagementSettings> umSettings, ISecurityExtensions security) : base("admin", settingsService, security)
         {
-            RequestQueue = requestQueue;
+            UserManagementSettings = umSettings;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
-            Get["Index", "/faultqueue"] = x => Index();
+            Get["UserManagementSettings","/usermanagementsettings", true] = async(x,ct) => await Index();
+            Post["/usermanagementsettings", true] = async(x,ct) => await Update();
         }
         
-        private IRepository<RequestQueue> RequestQueue { get; }
+        private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        private Negotiator Index()
+        private async Task<Negotiator> Index()
         {
-            var requests = RequestQueue.GetAll();
+            var model = await UserManagementSettings.GetSettingsAsync();
 
-            var model = requests.Select(r => new FaultedRequestsViewModel
+            return View["UserManagementSettings", model];
+        }
+
+
+        private async Task<Response> Update()
+        {
+            var settings = this.Bind<UserManagementSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
             {
-                FaultType = (FaultTypeViewModel)(int)r.FaultType,
-                Type = (RequestTypeViewModel)(int)r.Type,
-                Title = ByteConverterHelper.ReturnObject<RequestedModel>(r.Content).Title,
-                Id = r.Id,
-                PrimaryIdentifier = r.PrimaryIdentifier,
-                LastRetry = r.LastRetry
-            }).ToList();
+                var error = valid.SendJsonError();
+                Log.Info("Error validating User Management settings, message: {0}", error.Message);
+                return Response.AsJson(error);
+            }
 
-            return View["RequestFaultQueue", model];
+            var result = await UserManagementSettings.SaveSettingsAsync(settings);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for User Management!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
     }
 }

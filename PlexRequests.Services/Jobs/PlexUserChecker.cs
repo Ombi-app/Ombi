@@ -33,12 +33,10 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
+using PlexRequests.Core.Users;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
-
 using Quartz;
 
 namespace PlexRequests.Services.Jobs
@@ -47,13 +45,14 @@ namespace PlexRequests.Services.Jobs
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings)
+        public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings)
         {
             Repo = plexUsers;
             JobRecord = rec;
             PlexApi = plexAPi;
             PlexSettings = plexSettings;
             PlexRequestSettings = prSettings;
+            UserManagementSettings = umSettings;
         }
 
         private IJobRecord JobRecord { get; }
@@ -61,6 +60,7 @@ namespace PlexRequests.Services.Jobs
         private IPlexUserRepository Repo { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
 
         public void Execute(IJobExecutionContext context)
@@ -75,7 +75,7 @@ namespace PlexRequests.Services.Jobs
                     return;
                 }
                 var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
-                var prSettings = PlexRequestSettings.GetSettings();
+                var userManagementSettings = UserManagementSettings.GetSettings();
 
                 var dbUsers = Repo.GetAll().ToList();
                 foreach (var user in plexUsers.User)
@@ -105,41 +105,11 @@ namespace PlexRequests.Services.Jobs
                         continue;
                     }
 
-                    int permissions = 0;
-                    if (prSettings.SearchForMovies)
-                    {
-                        permissions = (int)Permissions.RequestMovie;
-                    }
-                    if (prSettings.SearchForTvShows)
-                    {
-                        permissions += (int)Permissions.RequestTvShow;
-                    }
-                    if (prSettings.SearchForMusic)
-                    {
-                        permissions += (int)Permissions.RequestMusic;
-                    }
-                    if (!prSettings.RequireMovieApproval)
-                    {
-                        permissions += (int)Permissions.AutoApproveMovie;
-                    }
-                    if (!prSettings.RequireTvShowApproval)
-                    {
-                        permissions += (int)Permissions.AutoApproveTv;
-                    }
-                    if (!prSettings.RequireMusicApproval)
-                    {
-                        permissions += (int)Permissions.AutoApproveAlbum;
-                    }
-
-                    // Add report Issues
-
-                    permissions += (int)Permissions.ReportIssue;
-
-                    var m = new PlexUsers
+                   var m = new PlexUsers
                     {
                         PlexUserId = user.Id,
-                        Permissions = permissions,
-                        Features = 0,
+                        Permissions = UserManagementHelper.GetPermissions(userManagementSettings),
+                        Features = UserManagementHelper.GetFeatures(userManagementSettings),
                         UserAlias = string.Empty,
                         EmailAddress = user.Email,
                         Username = user.Username,

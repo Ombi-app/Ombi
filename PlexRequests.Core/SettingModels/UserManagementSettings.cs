@@ -28,11 +28,16 @@ namespace PlexRequests.Core.SettingModels
 {
     public class UserManagementSettings : Settings
     {
-        public bool SearchForMovies { get; set; }
-        public bool SearchForTvShows { get; set; }
-        public bool SearchForMusic { get; set; }
+        public bool RequestMovies { get; set; }
+        public bool RequestTvShows { get; set; }
+        public bool RequestMusic { get; set; }
         public bool AutoApproveMovies { get; set; }
         public bool AutoApproveTvShows { get; set; }
         public bool AutoApproveMusic { get; set; }
+        public bool ReportIssues { get; set; }
+
+        // Features
+        public bool RecentlyAddedNotification { get; set; }
+        public bool RecentlyAddedNewsletter { get; set; }
     }
 }
