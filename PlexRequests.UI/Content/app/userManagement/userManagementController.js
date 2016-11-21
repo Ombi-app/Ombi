@@ -25,6 +25,7 @@
             errorMessage: ""
         };
 
+        var ReadOnlyPermission = "Read Only User";
         var open = false;
 
         // Select a user to populate on the right side
@@ -63,19 +64,27 @@
 
         // Create a user, do some validation too    
         $scope.addUser = function () {
-
             if (!$scope.user.username || !$scope.user.password) {
                 $scope.error.error = true;
                 $scope.error.errorMessage = "Please provide a correct username and password";
                 generateNotify($scope.error.errorMessage, 'warning');
                 return;
             }
-
             if ($scope.selectedPermissions.length === 0) {
                 $scope.error.error = true;
                 $scope.error.errorMessage = "Please select a permission";
                 generateNotify($scope.error.errorMessage, 'warning');
                 return;
+            }
+
+            var hasReadOnly = $scope.selectedPermissions.indexOf(ReadOnlyPermission) !== -1;
+            if (hasReadOnly) {
+                if ($scope.selectedPermissions.length > 1) {
+                    $scope.error.error = true;
+                    $scope.error.errorMessage = "Cannot have the " + ReadOnlyPermission + " permission with other permissions.";
+                    generateNotify($scope.error.errorMessage, 'danger');
+                    return;
+                }
             }
 
             userManagementService.addUser($scope.user, $scope.selectedPermissions, $scope.selectedFeatures)
@@ -86,17 +95,8 @@
                     } else {
                         $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};
-                        $scope.selectedPermissions = {}; // Clear the checkboxes
-                        $scope.selectedFeatures = {};
-                        $scope.features.forEach(function (entry) {
-                            entry.selected = false;
-                        });
-                        $scope.permissions.forEach(function (entry) {
-                            entry.selected = false;
-                        });
-
-
-                    }
+                        clearCheckboxes();
+                    };
                 });
         };
 
@@ -159,7 +159,7 @@
             return;
         }
 
-        $scope.closeSidebarClick = function() {
+        $scope.closeSidebarClick = function () {
             return closeSidebar();
         }
 
@@ -177,6 +177,17 @@
                 open = false;
                 $("#wrapper").toggleClass("toggled");
             }
+        }
+
+        function clearCheckboxes() {
+            $scope.selectedPermissions = {}; // Clear the checkboxes
+            $scope.selectedFeatures = {};
+            $scope.features.forEach(function (entry) {
+                entry.selected = false;
+            });
+            $scope.permissions.forEach(function (entry) {
+                entry.selected = false;
+            });
         }
     }
 

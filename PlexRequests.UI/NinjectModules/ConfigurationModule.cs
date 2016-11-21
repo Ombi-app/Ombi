@@ -32,6 +32,7 @@ using Ninject.Modules;
 using PlexRequests.Core;
 using PlexRequests.Core.Migration;
 using PlexRequests.Core.StatusChecker;
+using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
@@ -61,6 +62,7 @@ namespace PlexRequests.UI.NinjectModules
             Bind<IStatusChecker>().To<StatusChecker>();
 
             Bind<ISecurityExtensions>().To<SecurityExtensions>();
+            Bind<IUserHelper>().To<UserHelper>();
         }
     }
 }
