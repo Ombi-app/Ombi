@@ -33,11 +33,11 @@ namespace PlexRequests.UI.Modules
             {
                 if (settings.EnableCustomDonationUrl)
                 {
-                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
+                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage, enabled = true });
                 }
                 else
                 {
-                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
+                    return Response.AsJson(new { enabled = false });
                 }
             }
             catch (Exception e)

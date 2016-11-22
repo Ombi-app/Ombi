@@ -266,7 +266,7 @@ namespace PlexRequests.Core
 
         private Permissions GetPermissions(IUserIdentity user)
         {
-            return GetPermissions(user.UserName);
+            return GetPermissions(user?.UserName);
         }
 
         private Permissions GetPermissions(string userName)
