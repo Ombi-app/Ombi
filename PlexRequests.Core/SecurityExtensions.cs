@@ -184,7 +184,31 @@ namespace PlexRequests.Core
 
             var r = response(context);
             return r.StatusCode == code
-                ? new RedirectResponse(url.ToString()) 
+                ? new RedirectResponse(url.ToString())
+                : null;
+        }
+        public Response HasAnyPermissionsRedirect(NancyContext context, string routeName, HttpStatusCode code, params Permissions[] perm)
+        {
+            var url = Linker.BuildRelativeUri(context, routeName);
+
+            var response = ForbiddenIfNot(ctx =>
+            {
+                var permissions = GetPermissions(ctx.CurrentUser);
+                var hasPermission = false;
+                foreach (var p in perm)
+                {
+                    var result = permissions.HasFlag(p);
+                    if (result)
+                    {
+                        hasPermission = true;
+                    }
+                }
+                return hasPermission;
+            });
+
+            var r = response(context);
+            return r.StatusCode == code
+                ? new RedirectResponse(url.ToString())
                 : null;
         }
 
@@ -194,7 +218,13 @@ namespace PlexRequests.Core
             // This will redirect us to the Login Page if we don't have the correct permission passed in (e.g. Admin with Http 403 status code).
             return HasPermissionsRedirect(perm, context, "LocalLogin", HttpStatusCode.Forbidden);
         }
-        
+
+        public Response AdminLoginRedirect(NancyContext context, params Permissions[] perm)
+        {
+            // This will redirect us to the Login Page if we don't have the correct permission passed in (e.g. Admin with Http 403 status code).
+            return HasAnyPermissionsRedirect(context, "LocalLogin", HttpStatusCode.Forbidden, perm);
+        }
+
         // BELOW IS A COPY FROM THE SecurityHooks CLASS!
 
         /// <summary>

@@ -8,7 +8,11 @@ namespace PlexRequests.Core
     public interface ISecurityExtensions
     {
         Response AdminLoginRedirect(Permissions perm, NancyContext context);
+        Response AdminLoginRedirect(NancyContext context, params Permissions[] perm);
         bool DoesNotHavePermissions(Permissions perm, IUserIdentity currentUser);
+
+        Response HasAnyPermissionsRedirect(NancyContext context, string routeName, HttpStatusCode code,
+            params Permissions[] perm);
         bool DoesNotHavePermissions(int perm, IUserIdentity currentUser);
         Func<NancyContext, Response> ForbiddenIfNot(Func<NancyContext, bool> test);
         bool HasAnyPermissions(IUserIdentity user, params Permissions[] perm);

@@ -45,7 +45,8 @@ namespace PlexRequests.Services.Jobs
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings)
+        public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
+            IRequestService requestService)
         {
             Repo = plexUsers;
             JobRecord = rec;
@@ -53,6 +54,7 @@ namespace PlexRequests.Services.Jobs
             PlexSettings = plexSettings;
             PlexRequestSettings = prSettings;
             UserManagementSettings = umSettings;
+            RequestService = requestService;
         }
 
         private IJobRecord JobRecord { get; }
@@ -61,7 +63,7 @@ namespace PlexRequests.Services.Jobs
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
-
+        private IRequestService RequestService { get; }
 
         public void Execute(IJobExecutionContext context)
         {
@@ -76,6 +78,7 @@ namespace PlexRequests.Services.Jobs
                 }
                 var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
                 var userManagementSettings = UserManagementSettings.GetSettings();
+                var requests = RequestService.GetAll().ToList();
 
                 var dbUsers = Repo.GetAll().ToList();
                 foreach (var user in plexUsers.User)
@@ -84,6 +87,7 @@ namespace PlexRequests.Services.Jobs
                     if (dbUser != null)
                     {
                         var needToUpdate = false;
+                        var usernameChanged = false;
 
                         // Do we need up update any info?
                         if (dbUser.EmailAddress != user.Email)
@@ -95,10 +99,30 @@ namespace PlexRequests.Services.Jobs
                         {
                             dbUser.Username = user.Username;
                             needToUpdate = true;
+                            usernameChanged = true;
                         }
 
                         if (needToUpdate)
                         {
+                            if (usernameChanged)
+                            {
+                                // Since the username has changed, we need to update all requests with that username (unless we are using the alias!)
+                                if (string.IsNullOrEmpty(dbUser.UserAlias))
+                                {
+                                    // Update all requests
+                                    var requestsWithThisUser = requests.Where(x => x.RequestedUsers.Contains(user.Username)).ToList();
+                                    foreach (var r in requestsWithThisUser)
+                                    {
+                                        r.RequestedUsers.Remove(user.Username); // Remove old
+                                        r.RequestedUsers.Add(dbUser.Username); // Add new
+                                    }
+
+                                    if (requestsWithThisUser.Any())
+                                    {
+                                        RequestService.BatchUpdate(requestsWithThisUser);
+                                    }
+                                }
+                            }
                             Repo.Update(dbUser);
                         }
 

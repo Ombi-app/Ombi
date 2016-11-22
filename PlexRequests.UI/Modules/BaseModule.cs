@@ -101,6 +101,9 @@ namespace PlexRequests.UI.Modules
 
 
         private string _username;
+        /// <summary>
+        /// Returns the Username or UserAlias
+        /// </summary>
         protected string Username
         {
             get

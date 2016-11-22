@@ -72,7 +72,21 @@ namespace PlexRequests.Services.Notification
                 Log.Debug("Notifying Users Count {0}", users.Count);
                 foreach (var model in modelChanged)
                 {
-                    var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);
+                    var selectedUsers = new List<string>();
+
+                    foreach (var u in users)
+                    {
+                        var requestUser = model.RequestedUsers.FirstOrDefault(
+                                x => x.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase) || x.Equals(u.UserAlias, StringComparison.CurrentCultureIgnoreCase));
+                        if (string.IsNullOrEmpty(requestUser))
+                        {
+                            continue;
+                        }
+
+                        selectedUsers.Add(requestUser);
+                    }
+
+                    //var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);
                     foreach (var user in selectedUsers)
                     {
                         Log.Info("Notifying user {0}", user);

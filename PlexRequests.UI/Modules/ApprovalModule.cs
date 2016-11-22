@@ -56,10 +56,8 @@ namespace PlexRequests.UI.Modules
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue
             , ISecurityExtensions security) : base("approval", pr, security)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
 
-            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
-            Before += (ctx) => Security.AdminLoginRedirect(Permissions.ManageRequests, ctx);
+            Before += (ctx) => Security.AdminLoginRedirect(ctx, Permissions.Administrator,Permissions.ManageRequests);
 
             Service = service;
             CpService = cpService;
