@@ -8,12 +8,12 @@ ____
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/PlexRequests.net/total.svg)](https://github.com/tidusjar/PlexRequests.Net)
 [![Stories in Progress](https://badge.waffle.io/tidusjar/PlexRequests.Net.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/PlexRequests.Net)
+[![Feature Requests](http://feathub.com/tidusjar/PlexRequests.Net?format=svg)](http://feathub.com/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
 
 # Features
-
 Here some of the features Plex Requests.Net has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
