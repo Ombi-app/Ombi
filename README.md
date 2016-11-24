@@ -8,7 +8,6 @@ ____
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/PlexRequests.net/total.svg)](https://github.com/tidusjar/PlexRequests.Net)
 [![Stories in Progress](https://badge.waffle.io/tidusjar/PlexRequests.Net.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/PlexRequests.Net)
-[![Feature Requests](http://feathub.com/tidusjar/PlexRequests.Net?format=svg)](http://feathub.com/tidusjar/PlexRequests.Net)
 
 This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexrequests-meteor) so big props to that guy!
 I wanted to write a similar application in .Net!
@@ -69,6 +68,10 @@ Please feed free to submit a pull request!
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
+
+## [Feathub](http://feathub.com/tidusjar/PlexRequests.Net)
+[![Feature Requests](http://feathub.com/tidusjar/PlexRequests.Net?format=svg)](http://feathub.com/tidusjar/PlexRequests.Net)
+
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
