@@ -62,12 +62,14 @@ namespace PlexRequests.UI.Modules
             {
                 return Context.GetRedirect(string.IsNullOrEmpty(baseUrl) ? "~/wizard" : $"~/{baseUrl}/wizard");
             }
-
-            var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
-
-            if (Session[SessionKeys.UsernameKey] == null && Context?.CurrentUser == null)
+            if (!Request.IsAjaxRequest())
             {
-                return Context.GetRedirect(redirectPath);
+                var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
+
+                if (Session[SessionKeys.UsernameKey] == null && Context?.CurrentUser == null)
+                {
+                    return Context.GetRedirect(redirectPath);
+                }
             }
 
             return null;

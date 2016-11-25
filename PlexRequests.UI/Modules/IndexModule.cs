@@ -59,7 +59,7 @@ namespace PlexRequests.UI.Modules
             {
                 if (settings.BeforeLogin) // Before login
                 {
-                    if (!string.IsNullOrEmpty(Username))
+                    if (string.IsNullOrEmpty(Username))
                     {
                         // They are not logged in
                         return Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());

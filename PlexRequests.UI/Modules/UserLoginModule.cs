@@ -41,12 +41,10 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Authentication;
-using PlexRequests.UI.Helpers;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 
@@ -72,6 +70,34 @@ namespace PlexRequests.UI.Modules
 
             Get["UserLoginIndex", "/", true] = async (x, ct) =>
             {
+                if (Request.Query["landing"] == null)
+                {
+                    var s = await LandingPageSettings.GetSettingsAsync();
+                    if (s.Enabled)
+                    {
+                        if (s.BeforeLogin) // Before login
+                        {
+                            if (string.IsNullOrEmpty(Username))
+                            {
+                                // They are not logged in
+                                return
+                                    Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
+                            }
+                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
+                        }
+
+                        // After login
+                        if (string.IsNullOrEmpty(Username))
+                        {
+                            // Not logged in yet
+                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString() + "?landing");
+                        }
+                        // Send them to landing
+                        var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
+                        return Context.GetRedirect(landingUrl);
+                    }
+                }
+
                 if (!string.IsNullOrEmpty(Username) || IsAdmin)
                 {
                     var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
