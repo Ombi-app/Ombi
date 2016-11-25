@@ -289,6 +289,8 @@
     <Content Include="Content\angular.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Angular\angular-loading-spinner.js" />
+    <Content Include="Content\Angular\angular-spinner.min.js" />
     <Content Include="Content\app\app.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -339,6 +341,7 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\PlexRequestsValidator.cs" />
     <Compile Include="Modules\UserManagementModule.cs" />
+    <Content Include="Content\clipboard.min.js" />
     <Content Include="Content\datepicker.css">
       <DependentUpon>datepicker.scss</DependentUpon>
     </Content>

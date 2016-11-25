@@ -58,37 +58,31 @@
                 <label for="ApiKey" class="control-label">Api Key</label>
                 <div class="input-group">
                     <input type="text" hidden="hidden" name="ApiKey" value="@Model.ApiKey"/>
-                    <input type="text" disabled="disabled" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="@Model.ApiKey">
+                    <input type="text" readonly="readonly" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="@Model.ApiKey">
 
                     <div class="input-group-addon">
                         <div id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
                     </div>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="select" class="control-label">Theme</label>
-                <div id="themes">
-                    <select class="form-control form-control-custom" id="select">
-                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
-                        <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.SearchForMovies)
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
-                    }
+                    <div class="input-group-addon">
+                        <div class="fa fa-clipboard" data-clipboard-action="copy" data-clipboard-target="#ApiKey"></div>
+                    </div>
 
                 </div>
             </div>
+
+        <div class="form-group">
+            <label for="select" class="control-label">Theme</label>
+            <div id="themes">
+                <select class="form-control form-control-custom" id="select">
+                    <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
+                    <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                </select>
+            </div>
+        </div>
+            
+            @Html.Checkbox(Model.SearchForMovies,"SearchForMovies","Search for Movies");
+
 
             <div class="form-group">
                 <div class="checkbox">
@@ -334,6 +328,11 @@
 
 <script>
     $(function () {
+
+
+        new Clipboard('.fa-clipboard');
+
+
         $('#save').click(function (e) {
             e.preventDefault();
 
