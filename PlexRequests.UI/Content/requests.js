@@ -19,7 +19,7 @@ var albumLoaded = false;
 var mixItUpDefault = {
     animation: { enable: true },
     load: {
-        filter: 'all',
+        filter: '.approved-false',
         sort: 'requestorder:desc'
     },
     layout: {
@@ -263,6 +263,9 @@ $('.filter,.sort', '.dropdown-menu').click(function (e) {
     var $this = $(this);
     $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
     $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');
+    $("#filterText").fadeOut(function () {
+        $(this).text($this.text().trim());
+    }).fadeIn();
 });
 
 

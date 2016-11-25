@@ -59,13 +59,13 @@
                     </div>
                     <div class="btn-group">
                         <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            @UI.Requests_Filter
+                            <span id="filterText">@UI.Requests_Filter_NotApproved</span>
                             <i class="fa fa-filter"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" class="filter" data-filter="all"><i class="fa fa-check-square"></i>  @UI.Requests_Filter_All</a></li>
+                            <li><a href="#" class="filter" data-filter="all"><i class="fa  fa-square-o"></i>  @UI.Requests_Filter_All</a></li>
                             <li><a href="#" class="filter" data-filter=".approved-true"><i class="fa fa-square-o"></i>  @UI.Requests_Filter_Approved</a></li>
-                            <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i>  @UI.Requests_Filter_NotApproved</a></li>
+                            <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-check-square"></i>  @UI.Requests_Filter_NotApproved</a></li>
                             <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i>  @UI.Requests_Filter_Available</a></li>
                             <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> @UI.Requests_Filter_NotAvailable</a></li>
                             <li><a href="#" class="filter" data-filter=".released-true"><i class="fa fa-square-o"></i>  @UI.Requests_Filter_Released</a></li>
