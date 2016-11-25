@@ -74,7 +74,7 @@ namespace PlexRequests.Core.Queue
             RequestQueue.Insert(queue);
         }
 
-        public async Task QueueItemAsync(RequestedModel request, string id, RequestType type, FaultType faultType)
+        public async Task QueueItemAsync(RequestedModel request, string id, RequestType type, FaultType faultType, string description = null)
         {
             //Ensure there is not a duplicate queued item
             var existingItem = await RequestQueue.CustomAsync(async connection =>
@@ -96,7 +96,8 @@ namespace PlexRequests.Core.Queue
                 Type = type,
                 Content = ByteConverterHelper.ReturnBytes(request),
                 PrimaryIdentifier = id,
-                FaultType = faultType
+                FaultType = faultType,
+                Message = description ?? string.Empty
             };
             await RequestQueue.InsertAsync(queue);
         }

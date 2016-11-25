@@ -12,6 +12,6 @@ namespace PlexRequests.Core.Queue
         IEnumerable<RequestQueue> GetQueue();
         Task<IEnumerable<RequestQueue>> GetQueueAsync();
         void QueueItem(RequestedModel request, string id, RequestType type, FaultType faultType);
-        Task QueueItemAsync(RequestedModel request, string id, RequestType type, FaultType faultType);
+        Task QueueItemAsync(RequestedModel request, string id, RequestType type, FaultType faultType, string message = null);
     }
 }

@@ -65,7 +65,8 @@ namespace PlexRequests.UI.Modules.Admin
                 Title = ByteConverterHelper.ReturnObject<RequestedModel>(r.Content).Title,
                 Id = r.Id,
                 PrimaryIdentifier = r.PrimaryIdentifier,
-                LastRetry = r.LastRetry
+                LastRetry = r.LastRetry,
+                Message = r.Message
             }).ToList();
 
             return View["RequestFaultQueue", model];

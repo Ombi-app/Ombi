@@ -595,7 +595,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Fatal(e);
-                await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault, e.Message);
 
                 await NotificationService.Publish(new NotificationModel
                 {
@@ -866,7 +866,7 @@ namespace PlexRequests.UI.Modules
 
             if (showInfo.externals?.thetvdb == null)
             {
-                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.MissingInformation);
+                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.MissingInformation, "We do not have a TheTVDBId from TVMaze");
                 await NotificationService.Publish(new NotificationModel
                 {
                     DateTime = DateTime.Now,
@@ -941,7 +941,7 @@ namespace PlexRequests.UI.Modules
             }
             catch (Exception e)
             {
-                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, showInfo.id.ToString(), RequestType.TvShow, FaultType.RequestFault, e.Message);
                 await NotificationService.Publish(new NotificationModel
                 {
                     DateTime = DateTime.Now,
@@ -1116,7 +1116,7 @@ namespace PlexRequests.UI.Modules
             catch (Exception e)
             {
                 Log.Error(e);
-                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Album, FaultType.RequestFault);
+                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Album, FaultType.RequestFault, e.Message);
 
                 await NotificationService.Publish(new NotificationModel
                 {

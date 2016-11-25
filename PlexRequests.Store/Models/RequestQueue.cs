@@ -41,6 +41,7 @@ namespace PlexRequests.Store.Models
 
         public FaultType FaultType { get; set; }
         public DateTime? LastRetry { get; set; }
+        public string Message { get; set; }
     }
 
     public enum FaultType

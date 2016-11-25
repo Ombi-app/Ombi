@@ -39,6 +39,7 @@ namespace PlexRequests.UI.Models
         public string Title { get; set; }
         public FaultTypeViewModel FaultType { get; set; }
         public DateTime? LastRetry { get; set; }
+        public string Message { get; set; }
     }
 
     public enum RequestTypeViewModel

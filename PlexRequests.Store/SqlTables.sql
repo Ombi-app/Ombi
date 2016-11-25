@@ -146,7 +146,8 @@ CREATE TABLE IF NOT EXISTS RequestFaultQueue
 	Type								INTEGER NOT NULL,
 	FaultType								INTEGER NOT NULL,
     Content								BLOB NOT NULL,
-	LastRetry							VARCHAR(100)
+	LastRetry							VARCHAR(100),
+	Description							VARCHAR(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
 
