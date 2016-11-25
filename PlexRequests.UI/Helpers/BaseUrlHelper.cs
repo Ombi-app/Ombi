@@ -262,6 +262,23 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(asset);
         }
 
+        public static IHtmlString LoadFavIcon(this HtmlHelpers helper)
+        {
+            var settings = GetSettings();
+            if (!settings.CollectAnalyticData)
+            {
+                return helper.Raw(string.Empty);
+            }
+
+            var assetLocation = GetBaseUrl();
+            var content = GetContentUrl(assetLocation);
+
+            var asset = $"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon.ico\" />";
+            asset += $"<link rel=\"icon\" href=\"{content}/Content/favicon.ico\" type=\"image/ico\" />";
+
+            return helper.Raw(asset);
+        }
+
         public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
         {
             var content = GetLinkUrl(GetBaseUrl());
