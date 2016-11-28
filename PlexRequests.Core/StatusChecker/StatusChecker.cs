@@ -116,7 +116,7 @@ namespace PlexRequests.Core.StatusChecker
 
             switch (branch)
             {
-                case Branches.Dev:
+                case Branches.Dev: 
                     eapBranchRequest.Resource = "/projects/tidusjar/requestplex/branch/dev";
                     break;
                 case Branches.EarlyAccessPreview:
