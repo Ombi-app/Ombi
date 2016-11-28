@@ -335,7 +335,7 @@ namespace PlexRequests.UI.Modules
                     myIssues = issuesModels.Where(x => x.IssueStatus != IssueStatus.ResolvedIssue);
                 }
             }
-            else if (settings.UsersCanViewOnlyOwnIssues) // The user is not an Admin, do we have the settings to hide them?
+            else if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnIssues)) // The user is not an Admin, do we have the settings to hide them?
             {
                 if (!showResolved)
                 {

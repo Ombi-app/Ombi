@@ -50,7 +50,7 @@ namespace PlexRequests.Core
             Db = new DbConfiguration(new SqliteFactory());
             var created = Db.CheckDb();
             TableCreation.CreateTables(Db.DbConnection());
-            
+
             if (created)
             {
                 CreateDefaultSettingsPage(urlBase);
@@ -60,26 +60,35 @@ namespace PlexRequests.Core
                 // Shrink DB
                 TableCreation.Vacuum(Db.DbConnection());
             }
-            
+
             // Add the new 'running' item into the scheduled jobs so we can check if the cachers are running
             Db.DbConnection().AlterTable("ScheduledJobs", "ADD", "Running", true, "INTEGER");
-            
+
             return Db.DbConnection().ConnectionString;
         }
 
         private void CreateDefaultSettingsPage(string baseUrl)
         {
+            var defaultUserSettings = new UserManagementSettings
+            {
+                RequestMovies = true,
+                RequestTvShows = true,
+                ReportIssues = true,
+
+            };
             var defaultSettings = new PlexRequestSettings
             {
-                RequireTvShowApproval = true,
-                RequireMovieApproval = true,
                 SearchForMovies = true,
                 SearchForTvShows = true,
                 BaseUrl = baseUrl ?? string.Empty,
                 CollectAnalyticData = true,
             };
-            var s = new SettingsServiceV2<PlexRequestSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider()));
+            var ctor = new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), new MemoryCacheProvider());
+            var s = new SettingsServiceV2<PlexRequestSettings>(ctor);
             s.SaveSettings(defaultSettings);
+
+            var userSettings = new SettingsServiceV2<UserManagementSettings>(ctor);
+            userSettings.SaveSettings(defaultUserSettings);
 
 
             var cron = (Quartz.Impl.Triggers.CronTriggerImpl)CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Friday, 7, 0).Build();

@@ -61,6 +61,12 @@ namespace PlexRequests.Helpers.Permissions
         AutoApproveAlbum = 256,
 
         [Display(Name = "Manage Requests")]
-        ManageRequests = 512
+        ManageRequests = 512,
+
+        [Display(Name = "Users can only view their own requests")]
+        UsersCanViewOnlyOwnRequests = 1024,
+
+        [Display(Name = "Users can only view their own issues")]
+        UsersCanViewOnlyOwnIssues = 2048
     }
 }

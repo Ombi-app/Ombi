@@ -129,7 +129,7 @@ namespace PlexRequests.UI.Modules
 
             var dbMovies = allRequests.ToList();
 
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
             }
@@ -199,7 +199,7 @@ namespace PlexRequests.UI.Modules
 
             var dbTv = requests;
             var settings = await settingsTask;
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
             }
@@ -271,7 +271,7 @@ namespace PlexRequests.UI.Modules
             var settings = PrSettings.GetSettings();
             var dbAlbum = await Service.GetAllAsync();
             dbAlbum = dbAlbum.Where(x => x.Type == RequestType.Album);
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
             }

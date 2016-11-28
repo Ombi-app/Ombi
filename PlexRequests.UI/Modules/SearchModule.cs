@@ -278,7 +278,7 @@ namespace PlexRequests.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
-                var canSee = CanUserSeeThisRequest(viewMovie.Id, settings.UsersCanViewOnlyOwnRequests, dbMovies);
+                var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
                 var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
                     imdbId);
                 if (plexMovie != null)
@@ -510,7 +510,7 @@ namespace PlexRequests.UI.Modules
                     {
                         Result = true,
                         Message =
-                            settings.UsersCanViewOnlyOwnRequests
+                            Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
                                 ? $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}"
                                 : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}"
                     });
@@ -968,7 +968,7 @@ namespace PlexRequests.UI.Modules
             {
                 existingRequest.RequestedUsers.Add(Username);
             }
-            if (settings.UsersCanViewOnlyOwnRequests || episodeReq)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) || episodeReq)
             {
                 return
                     await
@@ -1033,7 +1033,7 @@ namespace PlexRequests.UI.Modules
                     {
                         Result = true,
                         Message =
-                            settings.UsersCanViewOnlyOwnRequests
+                            Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
                                 ? $"{existingRequest.Title} {Resources.UI.Search_SuccessfullyAdded}"
                                 : $"{existingRequest.Title} {Resources.UI.Search_AlreadyRequested}"
                     });
@@ -1374,14 +1374,11 @@ namespace PlexRequests.UI.Modules
             switch (requestType)
             {
                 case RequestType.Movie:
-                    return Security.HasPermissions(User, Permissions.AutoApproveMovie) ||
-                           !prSettings.RequireMovieApproval;
+                    return Security.HasPermissions(User, Permissions.AutoApproveMovie);
                 case RequestType.TvShow:
-                    return Security.HasPermissions(User, Permissions.AutoApproveTv) ||
-                        !prSettings.RequireTvShowApproval;
+                    return Security.HasPermissions(User, Permissions.AutoApproveTv);
                 case RequestType.Album:
-                    return Security.HasPermissions(User, Permissions.AutoApproveAlbum) ||
-                        !prSettings.RequireMusicApproval;
+                    return Security.HasPermissions(User, Permissions.AutoApproveAlbum);
                 default:
                     return false;
             }

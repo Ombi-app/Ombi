@@ -35,6 +35,8 @@ namespace PlexRequests.Core.SettingModels
         public bool AutoApproveTvShows { get; set; }
         public bool AutoApproveMusic { get; set; }
         public bool ReportIssues { get; set; }
+        public bool UsersCanViewOnlyOwnRequests { get; set; }
+        public bool UsersCanViewOnlyOwnIssues { get; set; }
 
         // Features
         public bool RecentlyAddedNotification { get; set; }

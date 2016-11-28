@@ -158,10 +158,7 @@ namespace PlexRequests.UI.Modules
             currentSettings.SearchForMovies = form.SearchForMovies;
             currentSettings.SearchForTvShows = form.SearchForTvShows;
             currentSettings.SearchForMusic = form.SearchForMusic;
-            currentSettings.RequireMovieApproval = form.RequireMovieApproval;
-            currentSettings.RequireTvShowApproval = form.RequireTvShowApproval;
-            currentSettings.RequireMusicApproval = form.RequireMusicApproval;
-
+            
             var result = await PlexRequestSettings.SaveSettingsAsync(currentSettings);
             if (result)
             {

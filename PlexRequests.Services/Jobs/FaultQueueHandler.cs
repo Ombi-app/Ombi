@@ -317,14 +317,11 @@ namespace PlexRequests.Services.Jobs
                 switch (requestType)
                 {
                     case RequestType.Movie:
-                        return Security.HasPermissions(user, Permissions.AutoApproveMovie) ||
-                               !prSettings.RequireMovieApproval;
+                        return Security.HasPermissions(user, Permissions.AutoApproveMovie);
                     case RequestType.TvShow:
-                        return Security.HasPermissions(user, Permissions.AutoApproveTv) ||
-                            !prSettings.RequireTvShowApproval;
+                        return Security.HasPermissions(user, Permissions.AutoApproveTv);
                     case RequestType.Album:
-                        return Security.HasPermissions(user, Permissions.AutoApproveAlbum) ||
-                            !prSettings.RequireMusicApproval;
+                        return Security.HasPermissions(user, Permissions.AutoApproveAlbum);
                     default:
                         return false;
                 }
