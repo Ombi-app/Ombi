@@ -345,7 +345,9 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\PlexRequestsValidator.cs" />
     <Compile Include="Modules\UserManagementModule.cs" />
-    <Content Include="Content\clipboard.min.js" />
+    <Content Include="Content\clipboard.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\datepicker.css">
       <DependentUpon>datepicker.scss</DependentUpon>
     </Content>
