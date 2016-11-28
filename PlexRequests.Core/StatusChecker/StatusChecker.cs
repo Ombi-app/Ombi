@@ -151,8 +151,7 @@ namespace PlexRequests.Core.StatusChecker
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
             var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
-            var localVersion = AssemblyHelper.GetFileVersion();
-            var localVersionExtended = $"{localVersion.Remove(localVersion.Length - 2, 2)}00";
+            var fileversion = AssemblyHelper.GetFileVersion();
             
             var model = new StatusModel
             {
@@ -161,10 +160,10 @@ namespace PlexRequests.Core.StatusChecker
                 ReleaseTitle = $"Plex Requests {branchDisplay}",
                 NewVersion = branchResult.build.version,
                 UpdateUri = downloadLink,
-                CurrentVersion = localVersionExtended
+                CurrentVersion = fileversion
             };
 
-            if (!localVersionExtended.Equals(branchResult.build.version, StringComparison.CurrentCultureIgnoreCase))
+            if (!fileversion.Equals(branchResult.build.version, StringComparison.CurrentCultureIgnoreCase))
             {
                 model.UpdateAvailable = true;
             }
