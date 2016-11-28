@@ -92,6 +92,12 @@ namespace PlexRequests.Core.Migration.Migrations
             var usersToNotify = UserNotifyRepo.GetAll();
             var plexUsers = PlexUsers.GetAll().ToList();
             var users = UserRepo.GetAll().ToList();
+
+            if (usersToNotify == null)
+            {
+                return;
+            }
+
             foreach (var u in usersToNotify)
             {
                 var selectedPlexUser = plexUsers.FirstOrDefault(x => x.Username.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
