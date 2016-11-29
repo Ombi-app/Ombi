@@ -19,6 +19,8 @@
         $scope.sortReverse = false;
         $scope.searchTerm = "";
 
+        $scope.hideColumns = false;
+
 
         $scope.error = {
             error: false,
@@ -35,10 +37,7 @@
             });
             $scope.selectedUser = user[0];
 
-            if (!open) {
-                $("#wrapper").toggleClass("toggled");
-                open = true;
-            }
+            openSidebar();
         }
 
         // Get all users in the system
@@ -163,6 +162,11 @@
             return closeSidebar();
         }
 
+        $scope.redirectToSettings = function() {
+            var url = createBaseUrl(getBaseUrl(), '/admin/usermanagementsettings');
+            window.location.href = url;
+        }
+
         function removeUser(id, current) {
             $scope.users = $scope.users.filter(function (user) {
                 return user.id !== id;
@@ -176,6 +180,15 @@
             if (open) {
                 open = false;
                 $("#wrapper").toggleClass("toggled");
+                $scope.hideColumns = false;
+            }
+        }
+
+        function openSidebar() {
+            if (!open) {
+                $("#wrapper").toggleClass("toggled");
+                open = true;
+                $scope.hideColumns = true;
             }
         }
 
@@ -189,12 +202,17 @@
                 entry.selected = false;
             });
         }
+
+
+        function getBaseUrl() {
+            return $('#baseUrl').text();
+        }
+
     }
 
     function successCallback(message, type) {
         generateNotify(message, type);
     };
 
-
     angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", "moment", controller]);
-} ());
+}());

@@ -38,6 +38,14 @@ namespace PlexRequests.Core.Users
             {
                 permission += (int)Permissions.ReportIssue;
             }
+            if (settings.UsersCanViewOnlyOwnRequests)
+            {
+                permission += (int)Permissions.UsersCanViewOnlyOwnRequests;
+            }
+            if (settings.UsersCanViewOnlyOwnIssues)
+            {
+                permission += (int)Permissions.UsersCanViewOnlyOwnIssues;
+            }
 
 
             return permission;

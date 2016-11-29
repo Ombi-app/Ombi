@@ -31,6 +31,9 @@ using System.ComponentModel.DataAnnotations;
 namespace PlexRequests.Helpers.Permissions
 {
     [Flags]
+    ////
+    //// NOTE if any are added, make sure we change the UserManagementHelper
+    //// 
     public enum Permissions
     {
         [Display(Name = "Access Administration Settings")]
