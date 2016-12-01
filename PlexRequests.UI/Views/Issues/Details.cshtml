@@ -11,7 +11,7 @@
         formAction = "/" + baseUrl.ToHtmlString();
     }
 
-    var isAdmin = Html.HasAnyPermission((int)Permissions.Administrator) || Html.HasAnyPermission((int)Permissions.ManageRequests);
+    var isAdmin = Html.HasAnyPermission(true, Permissions.Administrator) || Html.HasAnyPermission(Permissions.ManageRequests);
 
 }
 <h1>Details</h1>

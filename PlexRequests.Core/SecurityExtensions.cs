@@ -65,15 +65,15 @@ namespace PlexRequests.Core
             return realUser || plexUser;
         }
 
-        public bool IsPlexUser(NancyContext context)
+        public bool IsPlexUser(IUserIdentity user)
         {
-            var plexUser = PlexUsers.GetUserByUsername(context.CurrentUser.UserName);
+            var plexUser = PlexUsers.GetUserByUsername(user.UserName);
             return plexUser != null;
         }
 
-        public bool IsNormalUser(NancyContext context)
+        public bool IsNormalUser(IUserIdentity user)
         {
-            var dbUser = UserRepository.GetUserByUsername(context.CurrentUser.UserName);
+            var dbUser = UserRepository.GetUserByUsername(user.UserName);
 
             return dbUser != null;
         }

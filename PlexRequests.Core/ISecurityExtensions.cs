@@ -20,8 +20,8 @@ namespace PlexRequests.Core
         Response HasPermissionsRedirect(Permissions perm, NancyContext context, string routeName, HttpStatusCode code);
         Func<NancyContext, Response> HttpStatusCodeIfNot(HttpStatusCode statusCode, Func<NancyContext, bool> test);
         bool IsLoggedIn(NancyContext context);
-        bool IsNormalUser(NancyContext context);
-        bool IsPlexUser(NancyContext context);
+        bool IsNormalUser(IUserIdentity user);
+        bool IsPlexUser(IUserIdentity user);
         bool HasPermissions(string userName, Permissions perm);
 
         /// <summary>

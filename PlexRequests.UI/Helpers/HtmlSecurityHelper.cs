@@ -26,12 +26,9 @@
 #endregion
 
 using Nancy;
-using Nancy.Linker;
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
-using Ninject;
 using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store.Repository;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Helpers
@@ -50,14 +47,14 @@ namespace PlexRequests.UI.Helpers
         private static ISecurityExtensions _security;
 
 
-        public static bool HasAnyPermission(this HtmlHelpers helper, int permission, bool authenticated = true)
+        public static bool HasAnyPermission(this HtmlHelpers helper, bool authenticated = true, params Permissions[] permission)
         {
             if (authenticated)
             {
                 return helper.CurrentUser.IsAuthenticated()
-                       && Security.HasPermissions(helper.CurrentUser, (Permissions) permission);
+                       && Security.HasAnyPermissions(helper.CurrentUser, permission);
             }
-            return Security.HasPermissions(helper.CurrentUser, (Permissions)permission);
+            return Security.HasAnyPermissions(helper.CurrentUser, permission);
         }
 
         public static bool DoesNotHavePermission(this HtmlHelpers helper, int permission)
@@ -67,12 +64,21 @@ namespace PlexRequests.UI.Helpers
 
         public static bool IsAdmin(this HtmlHelpers helper, bool isAuthenticated = true)
         {
-            return HasAnyPermission(helper, (int) Permissions.Administrator, isAuthenticated);
+            return HasAnyPermission(helper, isAuthenticated, Permissions.Administrator);
         }
 
         public static bool IsLoggedIn(this HtmlHelpers helper, NancyContext context)
         {
             return Security.IsLoggedIn(context);
+        }
+
+        public static bool IsPlexUser(this HtmlHelpers helper)
+        {
+            return Security.IsPlexUser(helper.CurrentUser);
+        }
+        public static bool IsNormalUser(this HtmlHelpers helper)
+        {
+            return Security.IsNormalUser(helper.CurrentUser);
         }
     }
 }
