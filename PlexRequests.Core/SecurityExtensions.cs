@@ -67,12 +67,20 @@ namespace PlexRequests.Core
 
         public bool IsPlexUser(IUserIdentity user)
         {
+            if (user == null)
+            {
+                return false;
+            }
             var plexUser = PlexUsers.GetUserByUsername(user.UserName);
             return plexUser != null;
         }
 
         public bool IsNormalUser(IUserIdentity user)
         {
+            if (user == null)
+            {
+                return false;
+            }
             var dbUser = UserRepository.GetUserByUsername(user.UserName);
 
             return dbUser != null;

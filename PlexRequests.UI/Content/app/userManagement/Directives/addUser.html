@@ -1,0 +1,37 @@
+﻿<form name="userform" ng-submit="addUser()" novalidate>
+    <div class="form-group">
+        <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom" />
+    </div>
+    <div class="form-group">
+        <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
+    </div>
+    <div class="form-group">
+        <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
+    </div>
+    <div class="row">
+        <h3>Permissions: </h3>
+        <div class="col-md-5">
+            <div class="checkbox" ng-repeat="permission in permissions">
+                <input id="permission_{{$id}}" class="checkbox-custom" name="permission[]"
+                       ng-checked="permission.selected" ng-model="permission.selected" type="checkbox" value="{{permission.value}}" />
+                <label for="permission_{{$id}}">{{permission.name}}</label>
+            </div>
+        </div>
+
+        <h3>Features: </h3>
+        <div class="col-md-5">
+            <div class="checkbox" ng-repeat="f in features">
+                <input id="features_{{$id}}" class="checkbox-custom" name="f[]"
+                       ng-checked="f.selected" ng-model="f.selected" type="checkbox" value="{{f.value}}" />
+                <label for="features_{{$id}}">{{f.name}}</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <input type="submit" class="btn btn-success-outline" value="Add" />
+
+        <button type="button" ng-click="redirectToSettings()" class="btn btn-primary-outline" style="float: right; margin-right: 10px;">Settings</button>
+    </div>
+</form>

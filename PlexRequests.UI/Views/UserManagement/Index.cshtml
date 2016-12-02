@@ -1,64 +1,13 @@
-﻿@using PlexRequests.UI.Helpers
-@inherits PlexRequests.UI.Helpers.AngularViewBase
-
+﻿@inherits PlexRequests.UI.Helpers.AngularViewBase
+@using PlexRequests.UI.Helpers
 @Html.LoadUserManagementAssets()
+
+
 <div id="wrapper" class="toggled" ng-controller="userManagementController" ng-init="init()" ng-cloak>
-    <span us-spinner="{radius:30, width:8, length: 16}"></span>
-    <b>Spinner Active: </b>
-    {{spinnerActive}}
-    <!--Sidebar-->
-    <div id="sidebar-wrapper" class="shadow">
-        <br />
-        <br />
-        <img ng-show="selectedUser.plexInfo.thumb" class="col-md-pull-1 img-circle" style="position: absolute" ng-src="{{selectedUser.plexInfo.thumb}}" />
-        <div hidden="hidden" ng-bind="selectedUser.id"></div>
-        <div>
-            <strong>Username: </strong><span ng-bind="selectedUser.username"></span>
-        </div>
-        <div ng-show="selectedUser.emailAddress">
-            <strong>Email Address: </strong><span ng-bind="selectedUser.emailAddress"></span>
-        </div>
-        <div>
-            <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
-        </div>
-        <br />
-        <br />
-        <div ng-show="selectedUser">
-            <!--Edit-->
-
-            <strong>Modify Permissions:</strong>
-            <!--Load all permissions-->
-
-            <div class="checkbox" ng-repeat="p in selectedUser.permissions">
-                <input id="permissionsCheckbox_{{$id}}" class="checkbox-custom" name="permissions[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
-                <label for="permissionsCheckbox_{{$id}}">{{p.name}}</label>
-            </div>
-
-            <strong>Modify Features:</strong>
-            <!--Load all features-->
-            <div class="checkbox" ng-repeat="p in selectedUser.features">
-                <input id="featuresCheckbox_{{$id}}" class="checkbox-custom" name="features[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
-                <label for="featuresCheckbox_{{$id}}">{{p.name}}</label>
-            </div>
-
-            <strong>Email Address</strong>
-            <div class="form-group">
-                <input id="emailAddress" type="email" ng-model="selectedUser.emailAddress" ng-disabled="selectedUser.type === 0" class="form-control form-control-custom" />
-            </div>
-
-            <strong>Alias</strong>
-            <div class="form-group">
-                <input id="alias" type="text" ng-model="selectedUser.alias" class="form-control form-control-custom" />
-            </div>
+    <span us-spinner="{radius:30, width:8, length: 16, color: '#ffffff' }"></span>
 
 
-            <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
-            <button ng-click="deleteUser()" class="btn btn-danger-outline">Delete</button>
-            <button ng-click="closeSidebarClick()" style="float: right; margin-right: 10px;" class="btn btn-danger-outline">Close</button>
-        </div>
-
-    </div>
-    <!--SideBar End-->
+    <sidebar></sidebar>
 
     <div>
         <div class="container-fluid">
@@ -70,131 +19,14 @@
                     <br>
                     <br>
                     <div ng-show="error.error" ng-bind="error.errorMessage"></div>
-                    <br/>
-                    <br/>
-                    <br/>
-                    <form name="userform" ng-submit="addUser()" novalidate>
-                        <div class="form-group">
-                            <input id="username" type="text" placeholder="user" ng-model="user.username" class="form-control form-control-custom" />
-                        </div>
-                        <div class="form-group">
-                            <input id="password" type="password" placeholder="password" ng-model="user.password" class="form-control form-control-custom" />
-                        </div>
-                        <div class="form-group">
-                            <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
-                        </div>
-                        <div class="row">
-                            <h3>Permissions: </h3>
-                            <div class="col-md-5">
-                                <div class="checkbox" ng-repeat="permission in permissions">
-                                    <input id="permission_{{$id}}" class="checkbox-custom" name="permission[]"
-                                           ng-checked="permission.selected" ng-model="permission.selected" type="checkbox" value="{{permission.value}}" />
-                                    <label for="permission_{{$id}}">{{permission.name}}</label>
-                                </div>
-                            </div>
-
-                            <h3>Features: </h3>
-                            <div class="col-md-5">
-                                <div class="checkbox" ng-repeat="f in features">
-                                    <input id="features_{{$id}}" class="checkbox-custom" name="f[]"
-                                           ng-checked="f.selected" ng-model="f.selected" type="checkbox" value="{{f.value}}" />
-                                    <label for="features_{{$id}}">{{f.name}}</label>
-                                </div>
-                            </div>
-                        </div>
+                    <br />
+                    <br />
+                    <br />
+                    
+                    <add-User></add-User>
 
 
-                        <div class="row">
-                            <input type="submit" class="btn btn-success-outline" value="Add" />
-
-                            <button type="button" ng-click="redirectToSettings()" class="btn btn-primary-outline" style="float: right; margin-right: 10px;">Settings</button>
-                        </div>
-                    </form>
-
-
-                    <form>
-                        <div class="row">
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-search"></i>
-                                    </div>
-
-                                    <input type="text" class="form-control" placeholder="Search" ng-model="searchTerm">
-
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <table class="table table-striped table-hover table-responsive table-condensed">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <a href="#" ng-click="sortType = 'username'; sortReverse = !sortReverse">
-                                        Username
-                                        <span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
-                                        <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>
-                                    </a>
-                                </th>
-                                <th>
-                                    <a href="#" ng-click="sortType = 'alias'; sortReverse = !sortReverse">
-                                        Alias
-                                        <span ng-show="sortType == 'alias' && !sortReverse" class="fa fa-caret-down"></span>
-                                        <span ng-show="sortType == 'alias' && sortReverse" class="fa fa-caret-up"></span>
-                                    </a>
-                                </th>
-                                <th>
-                                    <a href="#" ng-click="sortType = 'emailAddress'; sortReverse = !sortReverse">
-                                        Email
-                                        <span ng-show="sortType == 'emailAddress' && !sortReverse" class="fa fa-caret-down"></span>
-                                        <span ng-show="sortType == 'emailAddress' && sortReverse" class="fa fa-caret-up"></span>
-                                    </a>
-                                </th>
-                                <th>
-                                    Permissions
-                                </th>
-                                <th ng-hide="hideColumns">
-                                    <a href="#" ng-click="sortType = 'type'; sortReverse = !sortReverse">
-                                        User Type
-                                        <span ng-show="sortType == 'type' && !sortReverse" class="fa fa-caret-down"></span>
-                                        <span ng-show="sortType == 'type' && sortReverse" class="fa fa-caret-up"></span>
-                                    </a>
-                                </th>
-
-                                <th ng-hide="hideColumns">
-                                    <a href="#" ng-click="sortType = 'lastLoggedIn'; sortReverse = !sortReverse">
-                                        Last Logged In
-                                        <span ng-show="sortType == 'lastLoggedIn' && !sortReverse" class="fa fa-caret-down"></span>
-                                        <span ng-show="sortType == 'lastLoggedIn' && sortReverse" class="fa fa-caret-up"></span>
-                                    </a>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr ng-repeat="u in users | orderBy:sortType:sortReverse | filter:searchTerm">
-                                <td>
-                                    {{u.username}}
-                                </td>
-                                <td>
-                                    {{u.alias}}
-                                </td>
-                                <td>
-                                    {{u.emailAddress}}
-                                </td>
-                                <td>
-                                    {{u.permissionsFormattedString}}
-                                </td>
-                                <td ng-hide="hideColumns">
-                                    {{u.type === 1 ? 'Local User' : 'Plex User'}}
-                                </td>
-                                <td ng-hide="hideColumns" ng-bind="u.lastLoggedIn === minDate ? 'Never' : formatDate(u.lastLoggedIn)"></td>
-                                <td>
-                                    <a href="#IDontExist" ng-click="selectUser(u.id)" class="btn btn-sm btn-info-outline">Details/Edit</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <table-Component></table-Component>
                 </div>
             </div>
         </div>

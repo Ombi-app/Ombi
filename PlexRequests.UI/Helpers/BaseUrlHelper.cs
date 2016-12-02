@@ -224,6 +224,7 @@ namespace PlexRequests.UI.Helpers
 
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/Directives/userManagementDirective.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
             sb.Append($"<script src=\"{content}/Content/spin.min.js\"></script>");    
             sb.Append($"<script src=\"{content}/Content/Angular/angular-spinner.min.js\"></script>");   
