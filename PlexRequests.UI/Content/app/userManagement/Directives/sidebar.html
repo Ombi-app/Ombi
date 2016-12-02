@@ -18,26 +18,29 @@
         <br />
         <div ng-show="selectedUser">
             <!--Edit-->
+            <div class="row" style="margin-left: 0; margin-right: 0;">
+                <div class="col-md-6">
+                    <strong>Modify Permissions:</strong>
+                    <!--Load all permissions-->
 
-            <strong>Modify Permissions:</strong>
-            <!--Load all permissions-->
-
-            <div class="checkbox" ng-repeat="p in selectedUser.permissions">
-                <input id="permissionsCheckbox_{{$id}}" class="checkbox-custom" name="permissions[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
-                <label for="permissionsCheckbox_{{$id}}">{{p.name}}</label>
+                    <div class="checkbox small-checkbox" ng-repeat="p in selectedUser.permissions">
+                        <input id="permissionsCheckbox_{{$id}}" class="checkbox-custom" name="permissions[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
+                        <label class="small-label" for="permissionsCheckbox_{{$id}}">{{p.name}}</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <strong>Modify Features:</strong>
+                    <!--Load all features-->
+                    <div class="checkbox small-checkbox" ng-repeat="p in selectedUser.features">
+                        <input id="featuresCheckbox_{{$id}}" class="checkbox-custom" name="features[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
+                        <label class="small-label" for="featuresCheckbox_{{$id}}">{{p.name}}</label>
+                    </div>
+                </div>
             </div>
-
-            <strong>Modify Features:</strong>
-            <!--Load all features-->
-            <div class="checkbox" ng-repeat="p in selectedUser.features">
-                <input id="featuresCheckbox_{{$id}}" class="checkbox-custom" name="features[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
-                <label for="featuresCheckbox_{{$id}}">{{p.name}}</label>
-            </div>
-
-            <strong>Email Address</strong>
-            <div class="form-group">
-                <input id="emailAddress" type="email" ng-model="selectedUser.emailAddress" ng-disabled="selectedUser.type === 0" class="form-control form-control-custom" />
-            </div>
+                <strong>Email Address</strong>
+                <div class="form-group">
+                    <input id="emailAddress" type="email" ng-model="selectedUser.emailAddress" ng-disabled="selectedUser.type === 0" class="form-control form-control-custom" />
+                </div>
 
             <strong>Alias</strong>
             <div class="form-group">

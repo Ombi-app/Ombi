@@ -16,6 +16,13 @@
                 return null;
             }
 
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
             var url = createBaseUrl(getBaseUrl(), '/usermanagement/createuser');
 
             return $http({
@@ -37,6 +44,14 @@
         }
 
         var updateUser = function (id, permissions, features, alias, email) {
+
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
 
             var url = createBaseUrl(getBaseUrl(), '/usermanagement/updateUser');
             return $http({
@@ -67,6 +82,10 @@
     }
     function getBaseUrl() {
         return $('#baseUrl').text();
+    }
+
+    function isArray(obj) {
+        return !!obj && Array === obj.constructor;
     }
 
     angular.module('PlexRequests').factory('userManagementService', ["$http", userManagementService]);

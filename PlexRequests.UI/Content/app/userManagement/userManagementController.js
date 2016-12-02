@@ -21,12 +21,6 @@
 
         $scope.hideColumns = false;
 
-
-        $scope.error = {
-            error: false,
-            errorMessage: ""
-        };
-
         var ReadOnlyPermission = "Read Only User";
         var open = false;
 
@@ -64,24 +58,18 @@
         // Create a user, do some validation too    
         $scope.addUser = function () {
             if (!$scope.user.username || !$scope.user.password) {
-                $scope.error.error = true;
-                $scope.error.errorMessage = "Please provide a correct username and password";
-                generateNotify($scope.error.errorMessage, 'warning');
+                generateNotify("Please provide a username and password", 'warning');
                 return;
             }
             if ($scope.selectedPermissions.length === 0) {
-                $scope.error.error = true;
-                $scope.error.errorMessage = "Please select a permission";
-                generateNotify($scope.error.errorMessage, 'warning');
+                generateNotify("Please select a permission", 'warning');
                 return;
             }
 
             var hasReadOnly = $scope.selectedPermissions.indexOf(ReadOnlyPermission) !== -1;
             if (hasReadOnly) {
                 if ($scope.selectedPermissions.length > 1) {
-                    $scope.error.error = true;
-                    $scope.error.errorMessage = "Cannot have the " + ReadOnlyPermission + " permission with other permissions.";
-                    generateNotify($scope.error.errorMessage, 'danger');
+                    generateNotify("Cannot have the " + ReadOnlyPermission + " permission with other permissions.", 'danger');
                     return;
                 }
             }
@@ -89,8 +77,7 @@
             userManagementService.addUser($scope.user, $scope.selectedPermissions, $scope.selectedFeatures)
                 .then(function (data) {
                     if (data.message) {
-                        $scope.error.error = true;
-                        $scope.error.errorMessage = data.message;
+                        generateNotify(data.message, 'warning');
                     } else {
                         $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};

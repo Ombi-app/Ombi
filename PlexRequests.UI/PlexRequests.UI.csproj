@@ -685,7 +685,7 @@
     <Content Include="Views\Admin\EmailNotifications.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\Status.cshtml">
+    <Content Include="Views\SystemStatus\Status.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\PushbulletNotifications.cshtml">
@@ -706,7 +706,7 @@
     <Content Include="Views\Admin\Headphones.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\_Sidebar.cshtml">
+    <Content Include="Views\Shared\Partial\_Sidebar.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\SlackNotifications.cshtml">
@@ -751,10 +751,10 @@
     <None Include="Views\Admin\NewsletterSettings.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Content Include="Views\Admin\RequestFaultQueue.cshtml">
+    <Content Include="Views\FaultQueue\RequestFaultQueue.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\UserManagementSettings.cshtml">
+    <Content Include="Views\UserManagementSettings\UserManagementSettings.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

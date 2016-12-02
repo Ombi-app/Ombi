@@ -9,20 +9,22 @@
         <input id="email" type="email" placeholder="email address" ng-model="user.email" class="form-control form-control-custom" />
     </div>
     <div class="row">
-        <h3>Permissions: </h3>
+        <div>
+            <h3 class="col-md-5">Permissions: </h3>
+            <h3 class="col-md-5">Features: </h3>
+        </div>
         <div class="col-md-5">
             <div class="checkbox" ng-repeat="permission in permissions">
                 <input id="permission_{{$id}}" class="checkbox-custom" name="permission[]"
-                       ng-checked="permission.selected" ng-model="permission.selected" type="checkbox" value="{{permission.value}}" />
+                       ng-checked="permission.selected" ng-model="permission.selected" type="checkbox" value="{{permission.value}}"/>
                 <label for="permission_{{$id}}">{{permission.name}}</label>
             </div>
         </div>
 
-        <h3>Features: </h3>
         <div class="col-md-5">
             <div class="checkbox" ng-repeat="f in features">
                 <input id="features_{{$id}}" class="checkbox-custom" name="f[]"
-                       ng-checked="f.selected" ng-model="f.selected" type="checkbox" value="{{f.value}}" />
+                       ng-checked="f.selected" ng-model="f.selected" type="checkbox" value="{{f.value}}"/>
                 <label for="features_{{$id}}">{{f.name}}</label>
             </div>
         </div>
