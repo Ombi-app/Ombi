@@ -950,7 +950,24 @@ namespace PlexRequests.UI.Modules
         {
             var s = await ScheduledJobSettings.GetSettingsAsync();
             var allJobs = await JobRecorder.GetJobsAsync();
-            var jobsDict = allJobs.ToDictionary(k => k.Name, v => v.LastRun);
+
+            var dict = new Dictionary<string, DateTime>();
+
+
+            foreach (var j in allJobs)
+            {
+                DateTime dt;
+                if (dict.TryGetValue(j.Name, out dt))
+                {
+                    // We already have the key... Somehow, we should have never got this record.
+                }
+                else
+                {
+                    dict.Add(j.Name,j.LastRun);
+                }
+
+            }
+
             var model = new ScheduledJobsViewModel
             {
                 CouchPotatoCacher = s.CouchPotatoCacher,
@@ -959,7 +976,7 @@ namespace PlexRequests.UI.Modules
                 SonarrCacher = s.SonarrCacher,
                 StoreBackup = s.StoreBackup,
                 StoreCleanup = s.StoreCleanup,
-                JobRecorder = jobsDict,
+                JobRecorder = dict,
                 RecentlyAddedCron = s.RecentlyAddedCron
             };
             return View["SchedulerSettings", model];
