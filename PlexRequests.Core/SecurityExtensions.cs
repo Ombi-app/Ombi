@@ -46,7 +46,7 @@ namespace PlexRequests.Core
             Linker = linker;
             PlexUsers = plexUsers;
         }
-        
+
         private IUserRepository UserRepository { get; }
         private IResourceLinker Linker { get; }
         private IPlexUserRepository PlexUsers { get; }
@@ -61,7 +61,7 @@ namespace PlexRequests.Core
             {
                 realUser = true;
             }
-            
+
             return realUser || plexUser;
         }
 
@@ -131,7 +131,7 @@ namespace PlexRequests.Core
         /// <returns>Hook that returns an Unauthorized response if the user is not
         /// authenticated or does have the claims, null otherwise</returns>
         private Func<NancyContext, Response> DoesNotHavePermissions(int perm)
-        { 
+        {
             return ForbiddenIfNot(ctx =>
             {
                 var permissions = GetPermissions(ctx.CurrentUser);
@@ -142,7 +142,7 @@ namespace PlexRequests.Core
 
         public bool DoesNotHavePermissions(int perm, IUserIdentity currentUser)
         {
-            return DoesNotHavePermissions((Permissions) perm, currentUser);
+            return DoesNotHavePermissions((Permissions)perm, currentUser);
         }
 
         public bool DoesNotHavePermissions(Permissions perm, IUserIdentity currentUser)
@@ -192,7 +192,7 @@ namespace PlexRequests.Core
 
             var r = response(context);
             return r.StatusCode == code
-                ? new RedirectResponse(url.ToString())
+                ? new RedirectResponse($"{url.ToString()}?redirect={context.Request.Path}")
                 : null;
         }
         public Response HasAnyPermissionsRedirect(NancyContext context, string routeName, HttpStatusCode code, params Permissions[] perm)

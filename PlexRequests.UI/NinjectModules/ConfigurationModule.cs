@@ -26,7 +26,7 @@
 #endregion
 using Mono.Data.Sqlite;
 using Nancy.Authentication.Forms;
-
+using Nancy.Linker;
 using Ninject.Modules;
 
 using PlexRequests.Core;
