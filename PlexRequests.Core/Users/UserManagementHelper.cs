@@ -61,7 +61,7 @@ namespace PlexRequests.Core.Users
             }
             if (settings.RecentlyAddedNotification)
             {
-                features += (int)Features.Newsletter;
+                features += (int)Features.RequestAddedNotification;
             }
 
             return features;
