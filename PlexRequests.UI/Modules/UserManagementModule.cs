@@ -26,7 +26,7 @@ namespace PlexRequests.UI.Modules
     public class UserManagementModule : BaseModule
     {
         public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IPlexUserRepository plexRepo
-            , ISecurityExtensions security) : base("usermanagement", pr, security)
+            , ISecurityExtensions security, IRequestService req) : base("usermanagement", pr, security)
         {
 #if !DEBUG
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
@@ -37,6 +37,7 @@ namespace PlexRequests.UI.Modules
             UserLoginsRepo = userLogins;
             PlexUsersRepository = plexRepo;
             PlexRequestSettings = pr;
+            RequestService = req;
 
             Get["/"] = x => Load();
 
@@ -56,6 +57,7 @@ namespace PlexRequests.UI.Modules
         private IRepository<UserLogins> UserLoginsRepo { get; }
         private IPlexUserRepository PlexUsersRepository { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private IRequestService RequestService { get; }
 
         private Negotiator Load()
         {
@@ -144,7 +146,7 @@ namespace PlexRequests.UI.Modules
                 var f = (int)EnumHelper<Permissions>.GetValueFromName(permission);
                 permissionsVal += f;
             }
-            
+
             var user = UserMapper.CreateUser(model.Username, model.Password, permissionsVal, featuresVal, new UserProperties { EmailAddress = model.EmailAddress });
             if (user.HasValue)
             {
@@ -172,7 +174,7 @@ namespace PlexRequests.UI.Modules
                     Message = "Couldn't find the user"
                 });
             }
-            
+
             var permissionsValue = model.Permissions.Where(c => c.Selected).Sum(c => c.Value);
             var featuresValue = model.Features.Where(c => c.Selected).Sum(c => c.Value);
 
@@ -186,7 +188,12 @@ namespace PlexRequests.UI.Modules
                 localUser.Permissions = permissionsValue;
                 localUser.Features = featuresValue;
 
+
                 var currentProps = ByteConverterHelper.ReturnObject<UserProperties>(localUser.UserProperties);
+
+                // Let's check if the alias has changed, if so we need to change all the requests associated with this
+                await UpdateRequests(localUser.UserName, currentProps.UserAlias, model.Alias);
+
                 currentProps.UserAlias = model.Alias;
                 currentProps.EmailAddress = model.EmailAddress;
 
@@ -210,10 +217,12 @@ namespace PlexRequests.UI.Modules
                 plexDbUser.Permissions = permissionsValue;
                 plexDbUser.Features = featuresValue;
 
+                await UpdateRequests(plexDbUser.Username, plexDbUser.UserAlias, model.Alias);
+
                 plexDbUser.UserAlias = model.Alias;
 
                 await PlexUsersRepository.UpdateAsync(plexDbUser);
-                
+
                 var retUser = MapPlexUser(plexUser, plexDbUser, userLogin?.LastLoggedIn ?? DateTime.MinValue);
                 return Response.AsJson(retUser);
             }
@@ -240,6 +249,31 @@ namespace PlexRequests.UI.Modules
             return null; // We should never end up here.
         }
 
+        private async Task UpdateRequests(string username, string oldAlias, string newAlias)
+        {
+            // Let's check if the alias has changed, if so we need to change all the requests associated with this
+            if (!oldAlias.Equals(newAlias, StringComparison.CurrentCultureIgnoreCase))
+            {
+                var newUsername = string.IsNullOrEmpty(newAlias) ? username : newAlias; // User the username if we are clearing the alias
+                var olderUsername = string.IsNullOrEmpty(oldAlias) ? username : oldAlias;
+
+                var requests = await RequestService.GetAllAsync();
+                // Update all requests
+                var requestsWithThisUser = requests.Where(x => x.RequestedUsers.Contains(olderUsername)).ToList();
+                foreach (var r in requestsWithThisUser)
+                {
+                    r.RequestedUsers.Remove(olderUsername); // Remove old
+                    r.RequestedUsers.Add(newUsername); // Add new
+                }
+
+                if (requestsWithThisUser.Any())
+                {
+                    RequestService.BatchUpdate(requestsWithThisUser);
+                }
+
+            }
+        }
+
         private Response DeleteUser()
         {
             var body = Request.Body.AsString();
@@ -259,9 +293,9 @@ namespace PlexRequests.UI.Modules
                 });
             }
 
-           UserMapper.DeleteUser(model.Id);
+            UserMapper.DeleteUser(model.Id);
 
-            return Response.AsJson(new JsonResponseModel {Result = true});
+            return Response.AsJson(new JsonResponseModel { Result = true });
         }
 
         private Response LocalDetails(Guid id)
@@ -305,8 +339,8 @@ namespace PlexRequests.UI.Modules
             {
                 var perm = (T)p;
                 var displayValue = EnumHelper<T>.GetDisplayValue(perm);
-                
-                retVal.Add(new CheckBox{ Name = displayValue, Selected = false, Value = (int)p });
+
+                retVal.Add(new CheckBox { Name = displayValue, Selected = false, Value = (int)p });
             }
 
             return Response.AsJson(retVal);

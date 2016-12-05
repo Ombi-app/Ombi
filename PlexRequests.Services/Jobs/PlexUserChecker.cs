@@ -46,7 +46,7 @@ namespace PlexRequests.Services.Jobs
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
         public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
-            IRequestService requestService)
+            IRequestService requestService, IUserRepository localUser)
         {
             Repo = plexUsers;
             JobRecord = rec;
@@ -55,6 +55,7 @@ namespace PlexRequests.Services.Jobs
             PlexRequestSettings = prSettings;
             UserManagementSettings = umSettings;
             RequestService = requestService;
+            LocalUserRepository = localUser;
         }
 
         private IJobRecord JobRecord { get; }
@@ -64,6 +65,7 @@ namespace PlexRequests.Services.Jobs
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
         private IRequestService RequestService { get; }
+        private IUserRepository LocalUserRepository { get; }
 
         public void Execute(IJobExecutionContext context)
         {
@@ -81,23 +83,24 @@ namespace PlexRequests.Services.Jobs
                 var requests = RequestService.GetAll().ToList();
 
                 var dbUsers = Repo.GetAll().ToList();
+                var localUsers = LocalUserRepository.GetAll().ToList();
                 foreach (var user in plexUsers.User)
                 {
                     var dbUser = dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id);
                     if (dbUser != null)
                     {
+                        // We already have the user, let's check if they have updated any of their info.
                         var needToUpdate = false;
                         var usernameChanged = false;
 
                         // Do we need up update any info?
-                        if (dbUser.EmailAddress != user.Email)
+                        if (!dbUser.EmailAddress.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase))
                         {
                             dbUser.EmailAddress = user.Email;
                             needToUpdate = true;
                         }
-                        if (dbUser.Username != user.Username)
+                        if (!dbUser.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase))
                         {
-                            dbUser.Username = user.Username;
                             needToUpdate = true;
                             usernameChanged = true;
                         }
@@ -106,7 +109,20 @@ namespace PlexRequests.Services.Jobs
                         {
                             if (usernameChanged)
                             {
-                                // Since the username has changed, we need to update all requests with that username (unless we are using the alias!)
+                                // The username has changed, let's check if the username matches any local users
+                                var localUser = localUsers.FirstOrDefault(x => x.UserName.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
+                                dbUser.Username = user.Username;
+                                if (localUser != null)
+                                {
+                                    // looks like we have a local user with the same name...
+                                    // We should delete the local user and the Plex user will become the master,
+                                    // I am not going to update the Plex Users permissions as that could end up leading to a security vulnerability
+                                    // Where anyone could change their Plex Username to the PR.Net server admins name and get all the admin permissions.
+
+                                    LocalUserRepository.Delete(localUser);
+                                }
+
+                                // Since the username has changed, we need to update all requests with that username (unless we are using the alias! Since the alias won't change)
                                 if (string.IsNullOrEmpty(dbUser.UserAlias))
                                 {
                                     // Update all requests
@@ -128,7 +144,8 @@ namespace PlexRequests.Services.Jobs
 
                         continue;
                     }
-
+                    
+                    // Looks like it's a new user!
                    var m = new PlexUsers
                     {
                         PlexUserId = user.Id,
