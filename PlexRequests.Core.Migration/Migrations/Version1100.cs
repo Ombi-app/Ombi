@@ -151,6 +151,12 @@ namespace PlexRequests.Core.Migration.Migrations
                 return;
             }
             var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
+
+            if (plexUsers?.User == null)
+            {
+                return;
+            }
+
             var prSettings = PlexRequestSettings.GetSettings();
 
             var dbUsers = PlexUsers.GetAll().ToList();
