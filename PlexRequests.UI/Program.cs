@@ -59,10 +59,14 @@ namespace PlexRequests.UI
             var baseUrl = result.MapResult(
                 o => o.BaseUrl,
                 e => string.Empty);
-            
+
             var port = result.MapResult(
                 x => x.Port,
                 e => -1);
+
+            var listenerPrefix = result.MapResult(
+                x => x.ListenerPrefix,
+                e => string.Empty);
 
             var updated = result.MapResult(x => x.Updated, e => UpdateValue.None);
             CheckUpdate(updated);
@@ -81,7 +85,12 @@ namespace PlexRequests.UI
             if (port == -1 || port == 3579)
                 port = GetStartupPort();
 
-            var options = new StartOptions(Debugger.IsAttached ? $"http://localhost:{port}" : $"http://+:{port}")
+            if (string.IsNullOrEmpty(listenerPrefix))
+            {
+                listenerPrefix = "+";
+            }
+
+            var options = new StartOptions(Debugger.IsAttached ? $"http://localhost:{port}" : $"http://{listenerPrefix}:{port}")
             {
                 ServerFactory = "Microsoft.Owin.Host.HttpListener"
             };

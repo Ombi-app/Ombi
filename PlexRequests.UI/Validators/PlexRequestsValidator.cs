@@ -44,7 +44,7 @@ namespace PlexRequests.UI.Validators
             RuleFor(x => x.BaseUrl).NotEqual("login", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'login' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("test", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'test' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("approval", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'approval' as this is reserved by the application.");
-            RuleFor(x => x.BaseUrl).NotEqual("updatechecker", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'updatechecker' as this is reserved by the application.");
+            RuleFor(x => x.BaseUrl).NotEqual("layout", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'layout' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("usermanagement", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'usermanagement' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("api", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'api' as this is reserved by the application.");
             RuleFor(x => x.BaseUrl).NotEqual("landing", StringComparer.CurrentCultureIgnoreCase).WithMessage("You cannot use 'landing' as this is reserved by the application.");

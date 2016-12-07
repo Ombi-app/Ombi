@@ -39,7 +39,9 @@ using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Jobs.Templates;
 using PlexRequests.Store.Models.Plex;
@@ -52,8 +54,8 @@ namespace PlexRequests.Services.Jobs
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email, IJobRecord rec,
-           	ISettingsService<NewletterSettings> newsletter,
-            IPlexReadOnlyDatabase db)
+               ISettingsService<NewletterSettings> newsletter,
+            IPlexReadOnlyDatabase db, IUserHelper userHelper)
         {
             JobRecord = rec;
             Api = api;
@@ -61,6 +63,7 @@ namespace PlexRequests.Services.Jobs
             EmailSettings = email;
             NewsletterSettings = newsletter;
             PlexDb = db;
+            UserHelper = userHelper;
         }
 
         private IPlexApi Api { get; }
@@ -73,6 +76,7 @@ namespace PlexRequests.Services.Jobs
         private ISettingsService<NewletterSettings> NewsletterSettings { get; }
         private IJobRecord JobRecord { get; }
         private IPlexReadOnlyDatabase PlexDb { get; }
+        private IUserHelper UserHelper { get; }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -85,7 +89,7 @@ namespace PlexRequests.Services.Jobs
                 {
                     return;
                 }
-                
+                JobRecord.SetRunning(true, JobNames.RecentlyAddedEmail);
                 Start(settings);
             }
             catch (Exception e)
@@ -95,6 +99,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 JobRecord.Record(JobNames.RecentlyAddedEmail);
+                JobRecord.SetRunning(false, JobNames.RecentlyAddedEmail);
             }
         }
 
@@ -176,7 +181,7 @@ namespace PlexRequests.Services.Jobs
             }
             sb.Append("</table><br/><br/>");
         }
-        
+
         private void GenerateTvHtml(RecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
         {
             // TV
@@ -254,16 +259,24 @@ namespace PlexRequests.Services.Jobs
 
             if (!testEmail)
             {
-                if (newletterSettings.SendToPlexUsers)
+                //if (newletterSettings.SendToPlexUsers)
+                //{
+
+                var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification);
+                if (users != null)
                 {
-                    var users = Api.GetUsers(plexSettings.PlexAuthToken);
-                    foreach (var user in users.User)
+                    foreach (var user in users)
                     {
-                        message.Bcc.Add(new MailboxAddress(user.Username, user.Email));
+                        if (!string.IsNullOrEmpty(user.EmailAddress))
+                        {
+                            message.Bcc.Add(new MailboxAddress(user.Username, user.EmailAddress));
+                        }
                     }
                 }
+                //}
 
-                if (newletterSettings.CustomUsersEmailAddresses.Any())
+                if (newletterSettings.CustomUsersEmailAddresses != null
+                        && newletterSettings.CustomUsersEmailAddresses.Any())
                 {
                     foreach (var user in newletterSettings.CustomUsersEmailAddresses)
                     {

@@ -16,10 +16,13 @@ var base = $('#baseUrl').text();
 var tvLoaded = false;
 var albumLoaded = false;
 
+var isAdmin = $('#isAdmin').val();
+var defaultFiler = isAdmin == 'True' ? '.approved-fase' : 'all';
+
 var mixItUpDefault = {
     animation: { enable: true },
     load: {
-        filter: 'all',
+        filter: defaultFiler,
         sort: 'requestorder:desc'
     },
     layout: {
@@ -259,7 +262,16 @@ $('#deleteMusic').click(function (e) {
 });
 
 // filtering/sorting
-$('.filter,.sort', '.dropdown-menu').click(function (e) {
+$('.filter', '.dropdown-menu').click(function (e) {
+    var $this = $(this);
+    $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
+    $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');
+    $("#filterText").fadeOut(function () {
+        $(this).text($this.text().trim());
+    }).fadeIn();
+});
+
+$('.sort', '.dropdown-menu').click(function (e) {
     var $this = $(this);
     $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
     $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');

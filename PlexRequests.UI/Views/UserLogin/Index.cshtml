@@ -53,38 +53,9 @@
             {
                 <text>
 
-        generateNotify('@nullableError',"warning");
+        generateNotify('@nullableError', "warning");
 
         </text>
             }
-
-        @*$('#loginBtn').click(function (e) {
-            e.preventDefault();
-            var $form = $("#loginForm");
-            var formData = $form.serialize();
-            var dtOffset = new Date().getTimezoneOffset();
-            formData += ('&DateTimeOffset=' + dtOffset);
-
-            $.ajax({
-                type: $form.prop("method"),
-                url: $form.prop("action"),
-                data: formData,
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.result === true) {
-                        location.replace(response.message);
-
-                    } else {
-                        generateNotify(response.message, "warning");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("@UI.Javascript_SomethingWentWrong", "danger");
-                }
-            });
-        });*@
-
     });
 </script>

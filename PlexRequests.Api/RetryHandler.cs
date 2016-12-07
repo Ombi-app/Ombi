@@ -33,7 +33,7 @@ namespace PlexRequests.Api
 {
     public static class RetryHandler
     {
-        private static readonly TimeSpan[] DefaultRetryTime = { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(10) };
+        private static readonly TimeSpan[] DefaultRetryTime = { TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5) };
 
         public static T Execute<T>(Func<T> action, TimeSpan[] timeSpan = null)
         {

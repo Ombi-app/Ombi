@@ -90,6 +90,7 @@
     <Compile Include="PlexHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializerSettings.cs" />
+    <Compile Include="SessionKeys.cs" />
     <Compile Include="StringCipher.cs" />
     <Compile Include="StringHasher.cs" />
     <Compile Include="StringHelper.cs" />

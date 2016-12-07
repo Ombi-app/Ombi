@@ -4,8 +4,11 @@
 
         $http.defaults.headers.common['Content-Type'] = 'application/json'; // Set default headers
 
+        
+
         var getUsers = function () {
-            return $http.get('/usermanagement/users');
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/users');
+            return $http.get(url);
         };
 
         var addUser = function (user, permissions, features) {
@@ -13,32 +16,56 @@
                 return null;
             }
 
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/createuser');
+
             return $http({
-                url: '/usermanagement/createuser',
+                url: url,
                 method: "POST",
                 data: { username: user.username, password: user.password, permissions: permissions, features : features, email: user.email }
             });
         }
 
         var getFeatures = function () {
-            return $http.get('/usermanagement/features');
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/features');
+            return $http.get(url);
         }
 
         var getPermissions = function () {
-            return $http.get('/usermanagement/permissions');
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/permissions');
+            return $http.get(url);
+
         }
 
-        var updateUser = function (id, permissions, alias, email) {
+        var updateUser = function (id, permissions, features, alias, email) {
+
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/updateUser');
             return $http({
-                url: '/usermanagement/updateUser',
+                url: url,
                 method: "POST",
-                data: { id: id, permissions: permissions, alias: alias, emailAddress: email }
+                data: { id: id, permissions: permissions, features: features, alias: alias, emailAddress: email },
             });
         }
 
         var deleteUser = function (id) {
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/deleteUser');
             return $http({
-                url: '/usermanagement/deleteUser',
+                url: url,
                 method: "POST",
                 data: { id: id }
             });
@@ -52,6 +79,13 @@
             updateUser: updateUser,
             deleteUser: deleteUser
         };
+    }
+    function getBaseUrl() {
+        return $('#baseUrl').text();
+    }
+
+    function isArray(obj) {
+        return !!obj && Array === obj.constructor;
     }
 
     angular.module('PlexRequests').factory('userManagementService', ["$http", userManagementService]);

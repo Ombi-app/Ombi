@@ -56,6 +56,17 @@ label {
   margin-bottom: 0.5rem !important;
   font-size: 16px !important; }
 
+.small-label {
+  display: inline-block !important;
+  margin-bottom: 0.5rem !important;
+  font-size: 11px !important; }
+
+.small-checkbox {
+  min-height: 0 !important; }
+
+.round-checkbox {
+  border-radius: 8px; }
+
 .nav-tabs > li {
   font-size: 13px;
   line-height: 21px; }
@@ -257,6 +268,12 @@ label {
   font-size: 15px;
   padding: 3px 0; }
 
+#cacherRunning {
+  background-color: #4e5d6c;
+  text-align: center;
+  font-size: 15px;
+  padding: 3px 0; }
+
 .checkbox label {
   display: inline-block;
   cursor: pointer;
@@ -287,6 +304,45 @@ label {
   color: #fafafa;
   text-align: center;
   line-height: 13px; }
+
+.small-checkbox label {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  padding-left: 25px;
+  margin-right: 15px;
+  font-size: 13px;
+  margin-bottom: 10px; }
+
+.small-checkbox label:before {
+  content: "";
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  border: 2px solid #eee;
+  border-radius: 8px;
+  min-height: 0px !important; }
+
+.small-checkbox input[type=checkbox] {
+  display: none; }
+
+.small-checkbox input[type=checkbox]:checked + label:before {
+  content: "\2713";
+  font-size: 13px;
+  color: #fafafa;
+  text-align: center;
+  line-height: 13px; }
+
+.small-checkbox label {
+  min-height: 0 !important;
+  padding-left: 20px;
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer; }
 
 .input-group-sm {
   padding-top: 2px;
@@ -363,7 +419,7 @@ label {
   margin-right: -250px;
   overflow-y: auto;
   background: #4e5d6c;
-  padding-left: 15px;
+  padding-left: 0;
   -webkit-transition: all 0.5s ease;
   -moz-transition: all 0.5s ease;
   -o-transition: all 0.5s ease;
@@ -435,4 +491,21 @@ label {
   #wrapper.toggled #page-content-wrapper {
     position: relative;
     margin-right: 0; } }
+
+#lightbox {
+  background-color: grey;
+  filter: alpha(opacity=50);
+  /* IE */
+  opacity: 0.5;
+  /* Safari, Opera */
+  -moz-opacity: 0.50;
+  /* FireFox */
+  top: 0px;
+  left: 0px;
+  z-index: 20;
+  height: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute; }
 

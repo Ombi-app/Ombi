@@ -1,0 +1,57 @@
+﻿    <!--Sidebar-->
+<div id="sidebar-wrapper" class="shadow">
+    <div style="margin-left:15px">
+        <br />
+        <br />
+        <img ng-show="selectedUser.plexInfo.thumb" class="col-md-pull-1 img-circle" style="position: absolute" ng-src="{{selectedUser.plexInfo.thumb}}" />
+        <div hidden="hidden" ng-bind="selectedUser.id"></div>
+        <div>
+            <strong>Username: </strong><span ng-bind="selectedUser.username"></span>
+        </div>
+        <div ng-show="selectedUser.emailAddress">
+            <strong>Email Address: </strong><span ng-bind="selectedUser.emailAddress"></span>
+        </div>
+        <div>
+            <strong>User Type: </strong><span ng-bind="selectedUser.type === 1 ? 'Local User' : 'Plex User'"></span>
+        </div>
+        <br />
+        <br />
+        <div ng-show="selectedUser">
+            <!--Edit-->
+            <div class="row" style="margin-left: 0; margin-right: 0;">
+                <div class="col-md-6">
+                    <strong>Modify Permissions:</strong>
+                    <!--Load all permissions-->
+
+                    <div class="checkbox small-checkbox" ng-repeat="p in selectedUser.permissions">
+                        <input id="permissionsCheckbox_{{$id}}" class="checkbox-custom" name="permissions[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
+                        <label class="small-label" for="permissionsCheckbox_{{$id}}">{{p.name}}</label>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <strong>Modify Features:</strong>
+                    <!--Load all features-->
+                    <div class="checkbox small-checkbox" ng-repeat="p in selectedUser.features">
+                        <input id="featuresCheckbox_{{$id}}" class="checkbox-custom" name="features[]" ng-checked="p.selected" ng-model="p.selected" type="checkbox" value="{{p.value}}" />
+                        <label class="small-label" for="featuresCheckbox_{{$id}}">{{p.name}}</label>
+                    </div>
+                </div>
+            </div>
+                <strong>Email Address</strong>
+                <div class="form-group">
+                    <input id="emailAddress" type="email" ng-model="selectedUser.emailAddress" ng-disabled="selectedUser.type === 0" class="form-control form-control-custom" />
+                </div>
+
+            <strong>Alias</strong>
+            <div class="form-group">
+                <input id="alias" type="text" ng-model="selectedUser.alias" class="form-control form-control-custom" />
+            </div>
+
+
+            <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
+            <button ng-click="deleteUser()" class="btn btn-danger-outline">Delete</button>
+            <button ng-click="closeSidebarClick()" style="float: right; margin-right: 10px;" class="btn btn-danger-outline">Close</button>
+        </div>
+    </div>
+</div>
+<!--SideBar End-->

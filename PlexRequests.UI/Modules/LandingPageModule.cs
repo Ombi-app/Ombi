@@ -33,14 +33,17 @@ using Nancy.Linker;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class LandingPageModule : BaseModule
     {
         public LandingPageModule(ISettingsService<PlexRequestSettings> settingsService, ISettingsService<LandingPageSettings> landing,
-            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker) : base("landing", settingsService)
+            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker, ISecurityExtensions security) : base("landing", settingsService, security)
         {
             LandingSettings = landing;
             PlexSettings = ps;

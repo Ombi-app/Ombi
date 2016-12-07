@@ -31,6 +31,9 @@ using System.ComponentModel.DataAnnotations;
 namespace PlexRequests.Helpers.Permissions
 {
     [Flags]
+    ////
+    //// NOTE if any are added, make sure we change the UserManagementHelper
+    //// 
     public enum Permissions
     {
         [Display(Name = "Access Administration Settings")]
@@ -50,5 +53,23 @@ namespace PlexRequests.Helpers.Permissions
 
         [Display(Name = "Read Only User")]
         ReadOnlyUser = 32,
+
+        [Display(Name = "Auto Approve Movie Requests")]
+        AutoApproveMovie = 64,
+
+        [Display(Name = "Auto Approve TV Show Requests")]
+        AutoApproveTv = 128,
+
+        [Display(Name = "Auto Approve Album Requests")]
+        AutoApproveAlbum = 256,
+
+        [Display(Name = "Manage Requests")]
+        ManageRequests = 512,
+
+        [Display(Name = "Users can only view their own requests")]
+        UsersCanViewOnlyOwnRequests = 1024,
+
+        [Display(Name = "Users can only view their own issues")]
+        UsersCanViewOnlyOwnIssues = 2048
     }
 }

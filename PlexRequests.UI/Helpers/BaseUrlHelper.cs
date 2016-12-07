@@ -80,7 +80,7 @@ namespace PlexRequests.UI.Helpers
             {
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/bootstrap.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/font-awesome.css\" type=\"text/css\"/>",
-                $"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
+                //$"<link rel=\"stylesheet\" href=\"{startUrl}/pace.min.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/awesome-bootstrap-checkbox.css\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/base.css?v={Assembly}\" type=\"text/css\"/>",
                 $"<link rel=\"stylesheet\" href=\"{startUrl}/Themes/{settings.ThemeName}?v={Assembly}\" type=\"text/css\"/>",
@@ -161,6 +161,7 @@ namespace PlexRequests.UI.Helpers
 
             var content = GetContentUrl(assetLocation);
 
+            sb.AppendLine($"<script src=\"{content}/Content/clipboard.min.js\" type=\"text/javascript\"></script>");
             sb.AppendLine($"<script src=\"{content}/Content/bootstrap-switch.min.js\" type=\"text/javascript\"></script>");
             sb.AppendLine($"<link rel=\"stylesheet\" href=\"{content}/Content/bootstrap-switch.min.css\" type=\"text/css\"/>");
 
@@ -223,8 +224,11 @@ namespace PlexRequests.UI.Helpers
 
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementController.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
+            sb.Append($"<script src=\"{content}/Content/app/userManagement/Directives/userManagementDirective.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
-
+            sb.Append($"<script src=\"{content}/Content/spin.min.js\"></script>");    
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-spinner.min.js\"></script>");   
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-loading-spinner.js\"></script>");   
 
             return helper.Raw(sb.ToString());
         }
@@ -255,6 +259,23 @@ namespace PlexRequests.UI.Helpers
             var content = GetContentUrl(assetLocation);
 
             var asset = $"<script src=\"{content}/Content/analytics.js?v={Assembly}\" type=\"text/javascript\"></script>";
+
+            return helper.Raw(asset);
+        }
+
+        public static IHtmlString LoadFavIcon(this HtmlHelpers helper)
+        {
+            var settings = GetSettings();
+            if (!settings.CollectAnalyticData)
+            {
+                return helper.Raw(string.Empty);
+            }
+
+            var assetLocation = GetBaseUrl();
+            var content = GetContentUrl(assetLocation);
+
+            var asset = $"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon.ico\" />";
+            asset += $"<link rel=\"icon\" href=\"{content}/Content/favicon.ico\" type=\"image/ico\" />";
 
             return helper.Raw(asset);
         }

@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.UI.Models.ScheduledJobsViewModel>
-@Html.Partial("_Sidebar")
+@Html.Partial("Shared/Partial/_Sidebar")
 
 <div class="col-sm-8 col-sm-push-1">
 
@@ -30,6 +30,16 @@
             <div class="form-group">
                 <label for="PlexAvailabilityChecker" class="control-label">Plex Availability Checker (min)</label>
                 <input type="text" class="form-control form-control-custom " id="PlexAvailabilityChecker" name="PlexAvailabilityChecker" value="@Model.PlexAvailabilityChecker">
+            </div>
+
+            <div class="form-group">
+                <label for="PlexContentCacher" class="control-label">Plex Content Cacher (min)</label>
+                <input type="text" class="form-control form-control-custom " id="PlexContentCacher" name="PlexContentCacher" value="@Model.PlexContentCacher">
+            </div>
+            
+            <div class="form-group">
+                <label for="PlexUserChecker" class="control-label">Plex User Checker (hours)</label>
+                <input type="text" class="form-control form-control-custom " id="PlexUserChecker" name="PlexUserChecker" value="@Model.PlexUserChecker">
             </div>
 
             <div class="form-group">

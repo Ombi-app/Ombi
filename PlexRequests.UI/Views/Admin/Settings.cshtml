@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexRequestSettings>
-@Html.Partial("_Sidebar")
+@Html.Partial("Shared/Partial/_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -58,37 +58,31 @@
                 <label for="ApiKey" class="control-label">Api Key</label>
                 <div class="input-group">
                     <input type="text" hidden="hidden" name="ApiKey" value="@Model.ApiKey"/>
-                    <input type="text" disabled="disabled" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="@Model.ApiKey">
+                    <input type="text" readonly="readonly" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="@Model.ApiKey">
 
                     <div class="input-group-addon">
                         <div id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
                     </div>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <label for="select" class="control-label">Theme</label>
-                <div id="themes">
-                    <select class="form-control form-control-custom" id="select">
-                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
-                        <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.SearchForMovies)
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
-                    }
+                    <div class="input-group-addon">
+                        <div class="fa fa-clipboard" data-clipboard-action="copy" data-clipboard-target="#ApiKey"></div>
+                    </div>
 
                 </div>
             </div>
+
+        <div class="form-group">
+            <label for="select" class="control-label">Theme</label>
+            <div id="themes">
+                <select class="form-control form-control-custom" id="select">
+                    <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
+                    <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                </select>
+            </div>
+        </div>
+            
+            @Html.Checkbox(Model.SearchForMovies,"SearchForMovies","Search for Movies")
+
 
             <div class="form-group">
                 <div class="checkbox">
@@ -116,81 +110,6 @@
                         <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label for="SearchForMusic">Search for Music</label>
                     }
 
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.RequireMovieApproval)
-                    {
-                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                    }
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.RequireTvShowApproval)
-                    {
-                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                    }
-
-
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.RequireMusicApproval)
-                    {
-                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                    }
-
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.UsersCanViewOnlyOwnRequests)
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked">
-                        <label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                    }
-
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.UsersCanViewOnlyOwnIssues)
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues" checked="checked">
-                        <label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues"><label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
-                    }
                 </div>
             </div>
 
@@ -334,6 +253,11 @@
 
 <script>
     $(function () {
+
+
+        new Clipboard('.fa-clipboard');
+
+
         $('#save').click(function (e) {
             e.preventDefault();
 

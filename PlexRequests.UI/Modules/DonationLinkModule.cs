@@ -2,20 +2,20 @@
 using System.Threading.Tasks;
 
 using Nancy;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
-using PlexRequests.UI.Models;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class DonationLinkModule : BaseAuthModule
     {
-        public DonationLinkModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr) : base("customDonation", pr)
+        public DonationLinkModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("customDonation", pr, security)
         {
             Cache = provider;
 
@@ -33,11 +33,11 @@ namespace PlexRequests.UI.Modules
             {
                 if (settings.EnableCustomDonationUrl)
                 {
-                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
+                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage, enabled = true });
                 }
                 else
                 {
-                    return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage });
+                    return Response.AsJson(new { enabled = false });
                 }
             }
             catch (Exception e)

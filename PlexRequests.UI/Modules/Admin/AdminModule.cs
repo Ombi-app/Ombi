@@ -66,6 +66,8 @@ using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using Quartz;
 using Action = PlexRequests.Helpers.Analytics.Action;
+using HttpStatusCode = Nancy.HttpStatusCode;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -123,7 +125,8 @@ namespace PlexRequests.UI.Modules
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded) : base("admin", prService)
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded
+             , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
             CpService = cpService;
@@ -154,8 +157,8 @@ namespace PlexRequests.UI.Modules
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
 
-            Security.HasPermissionsResponse(Permissions.Administrator);
-
+            Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
+            
             Get["/"] = _ => Admin();
 
             Get["/authentication", true] = async (x, ct) => await Authentication();
@@ -186,7 +189,6 @@ namespace PlexRequests.UI.Modules
             Get["/emailnotification"] = _ => EmailNotifications();
             Post["/emailnotification"] = _ => SaveEmailNotifications();
             Post["/testemailnotification", true] = async (x, ct) => await TestEmailNotifications();
-            Get["/status", true] = async (x, ct) => await Status();
 
             Get["/pushbulletnotification"] = _ => PushbulletNotifications();
             Post["/pushbulletnotification"] = _ => SavePushbulletNotifications();
@@ -209,7 +211,7 @@ namespace PlexRequests.UI.Modules
 
             Post["/createapikey"] = x => CreateApiKey();
 
-            Post["/autoupdate"] = x => AutoUpdate();
+
 
             Post["/testslacknotification", true] = async (x, ct) => await TestSlackNotification();
 
@@ -568,28 +570,6 @@ namespace PlexRequests.UI.Modules
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private async Task<Negotiator> Status()
-        {
-            var checker = new StatusChecker();
-            var status = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async () => await checker.GetStatus(), 30);
-            var md = new Markdown(new MarkdownOptions { AutoNewLines = true, AutoHyperlink = true });
-            status.ReleaseNotes = md.Transform(status.ReleaseNotes);
-            return View["Status", status];
-        }
-
-        private Response AutoUpdate()
-        {
-            var url = Request.Form["url"];
-
-            var startInfo = Type.GetType("Mono.Runtime") != null
-                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url }
-                                             : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
-
-            Process.Start(startInfo);
-
-            Environment.Exit(0);
-            return Nancy.Response.NoBody;
-        }
 
         private Negotiator PushbulletNotifications()
         {
@@ -854,8 +834,6 @@ namespace PlexRequests.UI.Modules
 
         private Response CreateApiKey()
         {
-            Security.HasPermissionsResponse(Permissions.Administrator);
-
             Analytics.TrackEventAsync(Category.Admin, Action.Create, "Created API Key", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var apiKey = Guid.NewGuid().ToString("N");
             var settings = PrService.GetSettings();
@@ -972,7 +950,24 @@ namespace PlexRequests.UI.Modules
         {
             var s = await ScheduledJobSettings.GetSettingsAsync();
             var allJobs = await JobRecorder.GetJobsAsync();
-            var jobsDict = allJobs.ToDictionary(k => k.Name, v => v.LastRun);
+
+            var dict = new Dictionary<string, DateTime>();
+
+
+            foreach (var j in allJobs)
+            {
+                DateTime dt;
+                if (dict.TryGetValue(j.Name, out dt))
+                {
+                    // We already have the key... Somehow, we should have never got this record.
+                }
+                else
+                {
+                    dict.Add(j.Name,j.LastRun);
+                }
+
+            }
+
             var model = new ScheduledJobsViewModel
             {
                 CouchPotatoCacher = s.CouchPotatoCacher,
@@ -981,7 +976,7 @@ namespace PlexRequests.UI.Modules
                 SonarrCacher = s.SonarrCacher,
                 StoreBackup = s.StoreBackup,
                 StoreCleanup = s.StoreCleanup,
-                JobRecorder = jobsDict,
+                JobRecorder = dict,
                 RecentlyAddedCron = s.RecentlyAddedCron
             };
             return View["SchedulerSettings", model];
@@ -1001,11 +996,11 @@ namespace PlexRequests.UI.Modules
                 if (!isValid)
                 {
                     return Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message =
+                    {
+                        Result = false,
+                        Message =
                                 $"CRON {settings.RecentlyAddedCron} is not valid. Please ensure you are using a valid CRON."
-                        });
+                    });
                 }
             }
             var result = await ScheduledJobSettings.SaveSettingsAsync(settings);

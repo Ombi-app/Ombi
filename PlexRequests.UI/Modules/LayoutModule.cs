@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: UpdateCheckerModule.cs
+//    File: LayoutModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
@@ -33,23 +34,34 @@ using NLog;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Core.StatusChecker;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.Services.Interfaces;
+using PlexRequests.Services.Jobs;
+using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
-    public class UpdateCheckerModule : BaseAuthModule
+    public class LayoutModule : BaseAuthModule
     {
-        public UpdateCheckerModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr) : base("updatechecker", pr)
+        public LayoutModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings, IJobRecord rec, ISecurityExtensions security) : base("layout", pr, security)
         {
             Cache = provider;
+            SystemSettings = settings;
+            Job = rec;
 
             Get["/", true] = async (x,ct) => await CheckLatestVersion();
+            Get["/cacher", true] = async (x,ct) => await CacherRunning();
         }
 
         private ICacheProvider Cache { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private ISettingsService<SystemSettings> SystemSettings { get; }
+        private IJobRecord Job { get; }
 
         private async Task<Response> CheckLatestVersion()
         {
@@ -59,10 +71,10 @@ namespace PlexRequests.UI.Modules
                 {
                     return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
                 }
-#if DEBUG
-                return Response.AsJson(new JsonUpdateAvailableModel {UpdateAvailable = false});
-#endif
-                var checker = new StatusChecker();
+//#if DEBUG
+                //return Response.AsJson(new JsonUpdateAvailableModel {UpdateAvailable = false});
+//#endif
+                var checker = new StatusChecker(SystemSettings);
                 var release = await Cache.GetOrSetAsync(CacheKeys.LastestProductVersion, async() => await checker.GetStatus(), 30);
 
                 return Response.AsJson(release.UpdateAvailable 
@@ -74,6 +86,36 @@ namespace PlexRequests.UI.Modules
                 Log.Warn("Exception Thrown when attempting to check the status");
                 Log.Warn(e);
                 return Response.AsJson(new JsonUpdateAvailableModel { UpdateAvailable = false });
+            }
+        }
+
+        private async Task<Response> CacherRunning()
+        {
+            try
+            {
+                var jobs = await Job.GetJobsAsync();
+
+                // Check to see if any are running
+                var runningJobs = jobs.Where(x => x.Running);
+
+                // We only want the cachers
+                var cacherJobs = runningJobs.Where(x =>
+                           x.Name.Equals(JobNames.CpCacher) 
+                        || x.Name.Equals(JobNames.EpisodeCacher) 
+                        || x.Name.Equals(JobNames.PlexChecker) 
+                        || x.Name.Equals(JobNames.SonarrCacher)
+                        || x.Name.Equals(JobNames.SrCacher));
+
+
+                return Response.AsJson(cacherJobs.Any() 
+                    ? new { CurrentlyRunning = true, IsAdmin} 
+                    : new { CurrentlyRunning = false, IsAdmin });
+            }
+            catch (Exception e)
+            {
+                Log.Warn("Exception Thrown when attempting to check the status");
+                Log.Warn(e);
+                return Response.AsJson(new { CurrentlyRunning = false, IsAdmin });
             }
         }
     }

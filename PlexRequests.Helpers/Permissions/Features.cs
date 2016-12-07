@@ -35,8 +35,8 @@ namespace PlexRequests.Helpers.Permissions
     {
         [Display(Name = "Newsletter")]
         Newsletter = 1,
-        [Display(Name = "Recently Added Notification")]
-        RecentlyAddedNotification = 2,
+        [Display(Name = "Request Added Notification")]
+        RequestAddedNotification = 2,
 
     }
 }

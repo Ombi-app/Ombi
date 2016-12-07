@@ -1,4 +1,5 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: Scheduler.cs
@@ -23,18 +24,17 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using NLog;
-
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Services.Jobs;
 using PlexRequests.UI.Helpers;
-
 using Quartz;
 using Quartz.Impl;
 
@@ -61,22 +61,20 @@ namespace PlexRequests.UI.Jobs
 
             var jobList = new List<IJobDetail>
             {
-               JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
-               JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Cache").Build(),
-               JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
-               JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
-               JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
-               JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
-               JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
-               JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
+                JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
+                JobBuilder.Create<PlexContentCacher>().WithIdentity("PlexContentCacher", "Plex").Build(),
+                JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Plex").Build(),
+                JobBuilder.Create<PlexUserChecker>().WithIdentity("PlexUserChecker", "Plex").Build(),
+                JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
+                JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
+                JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
+                JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
+                JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
+                JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
+                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
+                JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
             };
-
-            if (!string.IsNullOrEmpty(s.RecentlyAddedCron))
-            {
-                jobList.Add(JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build());
-            }
-
-
+            
             jobs.AddRange(jobList);
 
             return jobs;
@@ -115,13 +113,78 @@ namespace PlexRequests.UI.Jobs
             var settingsService = Service.Resolve<ISettingsService<ScheduledJobsSettings>>();
             var s = settingsService.GetSettings();
 
+            if (s.CouchPotatoCacher == 0)
+            {
+                s.CouchPotatoCacher = 60;
+            }
+            if (s.PlexAvailabilityChecker == 0)
+            {
+                s.PlexAvailabilityChecker = 60;
+            }
+            if (s.PlexEpisodeCacher == 0)
+            {
+                s.PlexEpisodeCacher = 11;
+            }
+            if (string.IsNullOrEmpty(s.RecentlyAddedCron))
+            {
+                var cron =
+                    (Quartz.Impl.Triggers.CronTriggerImpl)
+                    CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(DayOfWeek.Friday, 7, 0).Build();
+                s.RecentlyAddedCron = cron.CronExpressionString; // Weekly CRON at 7 am on Mondays
+            }
+            if (s.SickRageCacher == 0)
+            {
+                s.SickRageCacher = 60;
+            }
+            if (s.SonarrCacher == 0)
+            {
+                s.SonarrCacher = 60;
+            }
+            if (s.StoreBackup == 0)
+            {
+                s.StoreBackup = 24;
+            }
+            if (s.StoreCleanup == 0)
+            {
+                s.StoreCleanup = 24;
+            }
+            if (s.UserRequestLimitResetter == 0)
+            {
+                s.UserRequestLimitResetter = 12;
+            }
+            if (s.FaultQueueHandler == 0)
+            {
+                s.FaultQueueHandler = 6;
+            }
+            if (s.PlexContentCacher == 0)
+            {
+                s.PlexContentCacher = 60;
+            }
+            if (s.PlexUserChecker == 0)
+            {
+                s.PlexUserChecker = 24;
+            }
+
             var triggers = new List<ITrigger>();
 
             var plexAvailabilityChecker =
                 TriggerBuilder.Create()
                     .WithIdentity("PlexAvailabilityChecker", "Plex")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexAvailabilityChecker).RepeatForever())
+                    .Build();
+            var plexCacher =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexContentCacher", "Plex")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexContentCacher).RepeatForever())
+                    .Build();
+
+            var plexUserChecker =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexUserChecker", "Plex")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexUserChecker).RepeatForever())
                     .Build();
 
             var srCacher =
@@ -175,22 +238,23 @@ namespace PlexRequests.UI.Jobs
                     .Build();
 
 
-            var cronJob = string.IsNullOrEmpty(s.RecentlyAddedCron);
-            if (!cronJob)
-            {
-                var rencentlyAdded =
-                    TriggerBuilder.Create()
-                        .WithIdentity("RecentlyAddedModel", "Email")
-                        .StartNow()
-                        .WithCronSchedule(s.RecentlyAddedCron)
-                        .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
-                        .Build();
+            var rencentlyAdded =
+                TriggerBuilder.Create()
+                    .WithIdentity("RecentlyAddedModel", "Email")
+                    .StartNow()
+                    .WithCronSchedule(s.RecentlyAddedCron)
+                    .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
+                    .Build();
 
-                triggers.Add(rencentlyAdded);
-            }
+            var fault =
+                TriggerBuilder.Create()
+                    .WithIdentity("FaultQueueHandler", "Fault")
+                    //.StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInHours(s.FaultQueueHandler).RepeatForever())
+                    .Build();
 
-
-
+            triggers.Add(rencentlyAdded);
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
             triggers.Add(sonarrCacher);
@@ -199,6 +263,9 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);
             triggers.Add(plexEpCacher);
+            triggers.Add(fault);
+            triggers.Add(plexCacher);
+            triggers.Add(plexUserChecker);
 
             return triggers;
         }

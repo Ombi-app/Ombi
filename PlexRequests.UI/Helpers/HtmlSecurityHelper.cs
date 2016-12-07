@@ -25,38 +25,60 @@
 //  ************************************************************************/
 #endregion
 
+using Nancy;
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
-using Ninject;
 using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store.Repository;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Helpers
 {
     public static class HtmlSecurityHelper
     {
-        private static SecurityExtensions Security
+        private static ISecurityExtensions Security
         {
-
             get
             {
-                var userRepo = ServiceLocator.Instance.Resolve<IUserRepository>();
-                return _security ?? (_security = new SecurityExtensions(userRepo, null));
+                var security = ServiceLocator.Instance.Resolve<ISecurityExtensions>();
+                return _security ?? (_security = security);
             }
         }
 
-        private static SecurityExtensions _security;
+        private static ISecurityExtensions _security;
 
 
-        public static bool HasAnyPermission(this HtmlHelpers helper, int permission)
+        public static bool HasAnyPermission(this HtmlHelpers helper, bool authenticated = true, params Permissions[] permission)
         {
-            return helper.CurrentUser.IsAuthenticated() 
-                && Security.HasPermissions(helper.CurrentUser, (Permissions) permission);
+            if (authenticated)
+            {
+                return helper.CurrentUser.IsAuthenticated()
+                       && Security.HasAnyPermissions(helper.CurrentUser, permission);
+            }
+            return Security.HasAnyPermissions(helper.CurrentUser, permission);
         }
 
         public static bool DoesNotHavePermission(this HtmlHelpers helper, int permission)
         {
             return Security.DoesNotHavePermissions(permission, helper.CurrentUser);
+        }
+
+        public static bool IsAdmin(this HtmlHelpers helper, bool isAuthenticated = true)
+        {
+            return HasAnyPermission(helper, isAuthenticated, Permissions.Administrator);
+        }
+
+        public static bool IsLoggedIn(this HtmlHelpers helper, NancyContext context)
+        {
+            return Security.IsLoggedIn(context);
+        }
+
+        public static bool IsPlexUser(this HtmlHelpers helper)
+        {
+            return Security.IsPlexUser(helper.CurrentUser);
+        }
+        public static bool IsNormalUser(this HtmlHelpers helper)
+        {
+            return Security.IsNormalUser(helper.CurrentUser);
         }
     }
 }

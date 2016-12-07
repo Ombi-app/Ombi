@@ -42,5 +42,8 @@ namespace PlexRequests.Core.SettingModels
         [Obsolete("We use the CRON job now")]
         public int RecentlyAdded { get; set; }
         public string RecentlyAddedCron { get; set; }
+        public int FaultQueueHandler { get; set; }
+        public int PlexContentCacher { get; set; }
+        public int PlexUserChecker { get; set; }
     }
 }

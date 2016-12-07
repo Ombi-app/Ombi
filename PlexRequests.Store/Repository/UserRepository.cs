@@ -105,6 +105,9 @@ namespace PlexRequests.Store.Repository
         IEnumerable<UsersModel> Custom(Func<IDbConnection, IEnumerable<UsersModel>> func);
         long Insert(UsersModel entity);
         void Delete(UsersModel entity);
+        IEnumerable<UsersModel> GetAll();
+        bool UpdateAll(IEnumerable<UsersModel> entity);
+        bool Update(UsersModel entity);
     }
 }
 

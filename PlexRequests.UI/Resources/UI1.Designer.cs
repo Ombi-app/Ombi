@@ -223,6 +223,15 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A background process is currently running, so there might be some unexpected behavior. This shouldn&apos;t take too long..
+        /// </summary>
+        public static string Layout_CacherRunning {
+            get {
+                return ResourceManager.GetString("Layout_CacherRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Change Password.
         /// </summary>
         public static string Layout_ChangePassword {
@@ -390,6 +399,15 @@ namespace PlexRequests.UI.Resources {
         public static string Layout_UpdateAvailablePart2 {
             get {
                 return ResourceManager.GetString("Layout_UpdateAvailablePart2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User Management.
+        /// </summary>
+        public static string Layout_Usermanagement {
+            get {
+                return ResourceManager.GetString("Layout_Usermanagement", resourceCulture);
             }
         }
         

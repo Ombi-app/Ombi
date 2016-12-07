@@ -75,6 +75,8 @@ namespace PlexRequests.UI.Models
         public string Id { get; set; }
         [JsonProperty("permissions")]
         public List<CheckBox> Permissions { get; set; }
+        [JsonProperty("features")]
+        public List<CheckBox> Features { get; set; }
         public string Alias { get; set; }
         public string EmailAddress { get; set; }  
     }

@@ -2,6 +2,7 @@
 @using Nancy.Session
 @using Nancy;
 @using PlexRequests.Core.SettingModels
+@using PlexRequests.Helpers
 @using PlexRequests.UI.Helpers
 @using PlexRequests.UI.Models
 @using PlexRequests.UI.Resources
@@ -35,23 +36,27 @@
                 @Html.GetNavbarUrl(Context, "/search", UI.Layout_Search, "search")
                 @Html.GetNavbarUrl(Context, "/requests", UI.Layout_Requests, "plus-circle")
                 @Html.GetNavbarUrl(Context, "/issues", UI.Layout_Issues, "exclamation", "<span id=\"issueCount\"></span>")
-                @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
+                @if (Html.IsAdmin())
+                {
+                    @Html.GetNavbarUrl(Context, "/usermanagement", UI.Layout_Usermanagement, "users")
+                }
+                @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
+                @if (Html.IsAdmin())
                 {
                     <li><a id="donate" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
                 }
                 <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">@UI.Custom_Donation_Default</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-
-               
-                @if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null) // TODO replace with IsAdmin
+                @*@if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null) // TODO replace with IsAdmin*@
+                @if (!Html.IsLoggedIn(Context))
                 {
-
                     <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
                 }
-                @if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin
+                @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
+                @if (Html.IsAdmin())
                 {
-                    <li><a>@UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey]</a></li>
+                    <li><a>@UI.Layout_Welcome @Context.CurrentUser.UserName</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Admin <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -63,33 +68,44 @@
                         </ul>
                     </li>
                 }
-                @if (Context.Request.Session[SessionKeys.UsernameKey] != null && !Context.CurrentUser.IsAuthenticated())
+                @*@if (Context.Request.Session[SessionKeys.UsernameKey] != null && !Context.CurrentUser.IsAuthenticated())*@
+                else if (Html.IsNormalUser()) // Logged in but not admin
                 {
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey] <span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.CurrentUser.UserName <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
-                            <li class="divider"></li>
-                            <li><a href="@url/userlogin/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
+                            <li><a href="@url/changepassword"><i class="fa fa-key"></i> @UI.Layout_ChangePassword</a></li>
+                            <li><a href="@url/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
                         </ul>
                     </li>
 
                 }
+                else if (Html.IsPlexUser()) // Logged in but not admin
+                {
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.CurrentUser.UserName <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="@url/logout"><i class="fa fa-sign-out"></i> @UI.Layout_Logout</a></li>
+                        </ul>
+                    </li>
+
+                }
+
                 <li class="dropdown">
 
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
-                    <li><a href="@url/culture?l=fr&u=@Context.Request.Path">@UI.Layout_French</a></li>
-                    <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
-                    <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
-                    <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
-                    <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
-                    <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
-                    <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
-                    <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
-                </ul>
-                <li/>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
+                        <li><a href="@url/culture?l=fr&u=@Context.Request.Path">@UI.Layout_French</a></li>
+                        <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
+                        <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
+                        <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
+                        <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
+                        <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
+                        <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
+                        <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
+                    </ul>
+                <li />
             </ul>
         </div>
     </div>
@@ -104,16 +120,17 @@
                     var donateLink = $("#customDonateHref");
                     var donationText = $("#donationText");
                     donateLink.attr("href", result.url);
-                    if(result.message) {
-                        donationText.text(result.message);
+                    if (result.message) {
+                        donationText.text(result.message);  
                     }
                 }
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 console.log("error " + error);
                 $("#customDonate").hide();
             }
         });
     </script>
     <div id="updateAvailable" hidden="hidden"></div>
+    <div id="cacherRunning" hidden="hidden"></div>
 </nav>

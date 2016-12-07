@@ -19,12 +19,9 @@
         $scope.sortReverse = false;
         $scope.searchTerm = "";
 
+        $scope.hideColumns = false;
 
-        $scope.error = {
-            error: false,
-            errorMessage: ""
-        };
-
+        var ReadOnlyPermission = "Read Only User";
         var open = false;
 
         // Select a user to populate on the right side
@@ -34,10 +31,7 @@
             });
             $scope.selectedUser = user[0];
 
-            if (!open) {
-                $("#wrapper").toggleClass("toggled");
-                open = true;
-            }
+            openSidebar();
         }
 
         // Get all users in the system
@@ -63,40 +57,40 @@
 
         // Create a user, do some validation too    
         $scope.addUser = function () {
-
             if (!$scope.user.username || !$scope.user.password) {
-                $scope.error.error = true;
-                $scope.error.errorMessage = "Please provide a correct username and password";
-                generateNotify($scope.error.errorMessage, 'warning');
+                generateNotify("Please provide a username and password", 'warning');
+                return;
+            }
+            if ($scope.selectedPermissions.length === 0) {
+                generateNotify("Please select a permission", 'warning');
                 return;
             }
 
-            if ($scope.selectedPermissions.length === 0) {
-                $scope.error.error = true;
-                $scope.error.errorMessage = "Please select a permission";
-                generateNotify($scope.error.errorMessage, 'warning');
-                return;
+            var hasReadOnly = $scope.selectedPermissions.indexOf(ReadOnlyPermission) !== -1;
+            if (hasReadOnly) {
+                if ($scope.selectedPermissions.length > 1) {
+                    generateNotify("Cannot have the " + ReadOnlyPermission + " permission with other permissions.", 'danger');
+                    return;
+                }
+            }
+
+            var existingUsername = $scope.users.some(function (u) {
+                return u.username === $scope.user.username;
+            });
+
+            if (existingUsername) {
+                return generateNotify("A user with the username " + $scope.user.username + " already exists!", 'danger');
             }
 
             userManagementService.addUser($scope.user, $scope.selectedPermissions, $scope.selectedFeatures)
                 .then(function (data) {
                     if (data.message) {
-                        $scope.error.error = true;
-                        $scope.error.errorMessage = data.message;
+                        generateNotify(data.message, 'warning');
                     } else {
                         $scope.users.push(data.data); // Push the new user into the array to update the DOM
                         $scope.user = {};
-                        $scope.selectedPermissions = {}; // Clear the checkboxes
-                        $scope.selectedFeatures = {};
-                        $scope.features.forEach(function (entry) {
-                            entry.selected = false;
-                        });
-                        $scope.permissions.forEach(function (entry) {
-                            entry.selected = false;
-                        });
-
-
-                    }
+                        clearCheckboxes();
+                    };
                 });
         };
 
@@ -120,34 +114,31 @@
 
         $scope.updateUser = function () {
             var u = $scope.selectedUser;
-            userManagementService.updateUser(u.id, u.permissions, u.alias, u.emailAddress)
-            .then(function (data) {
-                if (data) {
-                    $scope.selectedUser = data;
+            userManagementService.updateUser(u.id, u.permissions, u.features, u.alias, u.emailAddress)
+                .then(function success(data) {
+                    if (data.data) {
+                        $scope.selectedUser = data.data;
 
-                    if (open) {
-                        open = false;
-                        $("#wrapper").toggleClass("toggled");
+                        closeSidebar();
+                        return successCallback("Updated User", "success");
                     }
-                    return successCallback("Updated User", "success");
-                }
-            });
+                }, function errorCallback(response) {
+                    successCallback(response, "danger");
+                });
         }
 
         $scope.deleteUser = function () {
             var u = $scope.selectedUser;
-            var result = userManagementService.deleteUser(u.id);
-
-            result.success(function (data) {
-                if (data.result) {
-                    removeUser(u.id, true);
-                    return successCallback("Deleted User", "success");
-                }
-            });
-        }
-
-        function getBaseUrl() {
-            return $('#baseUrl').val();
+            userManagementService.deleteUser(u.id)
+                .then(function sucess(data) {
+                    if (data.data.result) {
+                        removeUser(u.id, true);
+                        closeSidebar();
+                        return successCallback("Deleted User", "success");
+                    }
+                }, function errorCallback(response) {
+                    successCallback(response, "danger");
+                });
         }
 
         $scope.formatDate = function (utcDate) {
@@ -162,6 +153,15 @@
             return;
         }
 
+        $scope.closeSidebarClick = function () {
+            return closeSidebar();
+        }
+
+        $scope.redirectToSettings = function() {
+            var url = createBaseUrl(getBaseUrl(), '/admin/usermanagementsettings');
+            window.location.href = url;
+        }
+
         function removeUser(id, current) {
             $scope.users = $scope.users.filter(function (user) {
                 return user.id !== id;
@@ -170,12 +170,44 @@
                 $scope.selectedUser = null;
             }
         }
+
+        function closeSidebar() {
+            if (open) {
+                open = false;
+                $("#wrapper").toggleClass("toggled");
+                $scope.hideColumns = false;
+            }
+        }
+
+        function openSidebar() {
+            if (!open) {
+                $("#wrapper").toggleClass("toggled");
+                open = true;
+                $scope.hideColumns = true;
+            }
+        }
+
+        function clearCheckboxes() {
+            $scope.selectedPermissions = {}; // Clear the checkboxes
+            $scope.selectedFeatures = {};
+            $scope.features.forEach(function (entry) {
+                entry.selected = false;
+            });
+            $scope.permissions.forEach(function (entry) {
+                entry.selected = false;
+            });
+        }
+
+
+        function getBaseUrl() {
+            return $('#baseUrl').text();
+        }
+
     }
 
     function successCallback(message, type) {
         generateNotify(message, type);
     };
-
 
     angular.module('PlexRequests').controller('userManagementController', ["$scope", "userManagementService", "moment", controller]);
 }());

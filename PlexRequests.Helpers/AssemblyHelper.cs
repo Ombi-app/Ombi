@@ -45,5 +45,13 @@ namespace PlexRequests.Helpers
             var retVersion = fvi.ProductVersion;
             return retVersion;
         }
+
+        public static string GetFileVersion()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            var retVersion = fvi.FileVersion;
+            return retVersion;
+        }
     }
 }

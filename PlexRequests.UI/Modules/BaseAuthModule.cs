@@ -28,21 +28,22 @@
 
 using Nancy;
 using Nancy.Extensions;
-using PlexRequests.UI.Models;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public abstract class BaseAuthModule : BaseModule
     {
-        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr) : base(pr)
+        protected BaseAuthModule(ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base(pr,security)
         {
             PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
         }
 
-        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr) : base(modulePath, pr)
+        protected BaseAuthModule(string modulePath, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base(modulePath, pr, security)
         {
             PlexRequestSettings = pr;
             Before += (ctx) => CheckAuth();
@@ -61,12 +62,14 @@ namespace PlexRequests.UI.Modules
             {
                 return Context.GetRedirect(string.IsNullOrEmpty(baseUrl) ? "~/wizard" : $"~/{baseUrl}/wizard");
             }
-
-            var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
-
-            if (Session[SessionKeys.UsernameKey] == null && Context?.CurrentUser == null)
+            if (!Request.IsAjaxRequest())
             {
-                return Context.GetRedirect(redirectPath);
+                var redirectPath = string.IsNullOrEmpty(baseUrl) ? "~/userlogin" : $"~/{baseUrl}/userlogin";
+
+                if (Session[SessionKeys.UsernameKey] == null && Context?.CurrentUser == null)
+                {
+                    return Context.GetRedirect(redirectPath);
+                }
             }
 
             return null;

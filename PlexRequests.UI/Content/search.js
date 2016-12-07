@@ -51,21 +51,6 @@ $(function () {
     });
     focusSearch($('li.active a', '#nav-tabs').first().attr('href'));
 
-    // Get the user notification setting
-    var url = createBaseUrl(base, '/search/notifyuser/');
-    $.ajax({
-        type: "get",
-        url: url,
-        dataType: "json",
-        success: function (response) {
-            $('#notifyUser').prop("checked", response);
-        },
-        error: function (e) {
-            console.log(e);
-            generateNotify("Something went wrong!", "danger");
-        }
-    });
-
     // Type in movie search
     $("#movieSearchContent").on("input", function () {
         if (searchTimer) {
@@ -183,32 +168,6 @@ $(function () {
 
         sendRequestAjax(data, type, url, buttonId);
     });
-
-    // Enable/Disable user notifications
-    $('#saveNotificationSettings')
-        .click(function (e) {
-            e.preventDefault();
-            var url = createBaseUrl(base, '/search/notifyuser/');
-            var checked = $('#notifyUser').prop('checked');
-            $.ajax({
-                type: "post",
-                url: url,
-                data: { notify: checked },
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response.result === true) {
-                        generateNotify(response.message || "Success!", "success");
-                    } else {
-                        generateNotify(response.message, "warning");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                }
-            });
-        });
 
     // Report Issue
     $(document).on("click", ".dropdownIssue", function (e) {

@@ -106,31 +106,6 @@
     });
 
     
-    $('#contentBody').on('click', '#SearchForMovies', function () {
-        var checked = this.checked;
-        changeDisabledStatus($('#RequireMovieApproval'), checked, $('#RequireMovieApprovalLabel'));
-    });
-
-    $('#contentBody').on('click', '#SearchForTvShows', function () {
-        var checked = this.checked;
-        changeDisabledStatus($('#RequireTvShowApproval'), checked, $('#RequireTvShowApprovalLabel'));
-    });
-
-    $('#contentBody').on('click', '#SearchForMusic', function () {
-        var checked = this.checked;
-        changeDisabledStatus($('#RequireMusicApproval'), checked, $('#RequireMusicApprovalLabel'));
-    });
-
-    function changeDisabledStatus($element, checked, $label) {
-        if (checked) {
-            $element.removeAttr("disabled");
-            $label.css("color","");
-        } else {
-            $element.attr("disabled","disabled");
-            $label.css("color", "grey");
-        }
-    }
-
     function loadArea(templateId) {
         var $body = $('#contentBody');
 

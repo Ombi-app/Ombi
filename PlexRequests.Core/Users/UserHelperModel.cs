@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SessionKeys.cs
+//    File: UserHelperModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.UI.Models
+
+using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
+
+namespace PlexRequests.Core.Users
 {
-    public class SessionKeys
+    public class UserHelperModel
     {
-        public const string UsernameKey = "Username";
-        public const string ClientDateTimeOffsetKey = "ClientDateTimeOffset";
-        public const string UserWizardPlexAuth = nameof(UserWizardPlexAuth);
-        public const string UserWizardMachineId = nameof(UserWizardMachineId);
+        public string Username { get; set; }
+        public string UserAlias { get; set; }
+        public Permissions Permissions { get; set; }
+        public Features Features { get; set; }
+        public string EmailAddress { get; set; }
+        public UserType Type { get; set; }
     }
 }

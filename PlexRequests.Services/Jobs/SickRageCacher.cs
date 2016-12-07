@@ -63,6 +63,9 @@ namespace PlexRequests.Services.Jobs
             var settings = SrSettings.GetSettings();
             if (settings.Enabled)
             {
+
+                Job.SetRunning(true, JobNames.SrCacher);
+
                 Log.Trace("Getting all shows from SickRage");
                 try
                 {
@@ -79,6 +82,7 @@ namespace PlexRequests.Services.Jobs
                 finally
                 {
                     Job.Record(JobNames.SrCacher);
+                    Job.SetRunning(false, JobNames.SrCacher);
                 }
             }
         }

@@ -25,18 +25,28 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using Dapper.Contrib.Extensions;
 
 namespace PlexRequests.Store.Models
 {
-    [Table("RequestQueue")]
+    [Table("RequestFaultQueue")]
     public class RequestQueue : Entity
     {
-        public int PrimaryIdentifier { get; set; }
+        public string PrimaryIdentifier { get; set; }
 
         public RequestType Type { get; set; }
 
         public byte[] Content { get; set; }
 
+        public FaultType FaultType { get; set; }
+        public DateTime? LastRetry { get; set; }
+        public string Message { get; set; }
+    }
+
+    public enum FaultType
+    {
+        RequestFault,
+        MissingInformation
     }
 }

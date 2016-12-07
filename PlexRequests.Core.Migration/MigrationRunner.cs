@@ -23,41 +23,30 @@ namespace PlexRequests.Core.Migration
         {
             var con = Db.DbConnection();
             var versions = GetMigrations();
-            
-            var dbVersion = con.GetVersionInfo().OrderByDescending(x => x.Version).FirstOrDefault();
-            if (dbVersion == null)
-            {
-                dbVersion = new TableCreation.VersionInfo { Version = 0 };
-            }
+
+            var dbVersion = con.GetVersionInfo().OrderByDescending(x => x.Version).FirstOrDefault() ??
+                            new TableCreation.VersionInfo { Version = 0 };
             foreach (var v in versions)
             {
+#if !DEBUG
                 if (v.Value.Version > dbVersion.Version)
                 {
-                    // Assuming only one constructor
-                    var ctor = v.Key.GetConstructors().FirstOrDefault();
-                    var dependencies = new List<object>();
+#endif
+                // Assuming only one constructor
+                var ctor = v.Key.GetConstructors().FirstOrDefault();
+                var dependencies = ctor.GetParameters().Select(param => Kernel.Get(param.ParameterType)).ToList();
 
-                    foreach (var param in ctor.GetParameters())
-                    {
-                        Console.WriteLine(string.Format(
-                            "Param {0} is named {1} and is of type {2}",
-                            param.Position, param.Name, param.ParameterType));
+                var method = v.Key.GetMethod("Start");
+                if (method != null)
+                {
+                    var classInstance = Activator.CreateInstance(v.Key, dependencies.Any() ? dependencies.ToArray() : null);
+                    var parametersArray = new object[] { Db.DbConnection() };
 
-                        var dep = Kernel.Get(param.ParameterType);
-                        dependencies.Add(dep);
-                    }
-
-                    var method = v.Key.GetMethod("Start");
-                    if (method != null)
-                    {
-                        object result = null;
-                        var classInstance = Activator.CreateInstance(v.Key, dependencies.Any() ? dependencies.ToArray() : null);
-
-                        var parametersArray = new object[] { Db.DbConnection() };
-
-                        method.Invoke(classInstance, parametersArray);
-                    }
+                    method.Invoke(classInstance, parametersArray);
                 }
+#if !DEBUG
+                }
+#endif
             }
         }
 

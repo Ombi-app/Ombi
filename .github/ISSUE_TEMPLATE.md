@@ -3,6 +3,8 @@ If this is a bug report please make sure you have filled the following in:
 
 #### Plex Requests.Net Version:
 
+#### update Branch:
+
 
 #### Operating System:
 

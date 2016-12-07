@@ -48,6 +48,7 @@ namespace PlexRequests.UI.NinjectModules
             Bind<IJobRecord>().To<JobRecord>();
 
             Bind<IUserRepository>().To<UserRepository>();
+            Bind<IPlexUserRepository>().To<PlexUserRepository>();
         }
 
     }

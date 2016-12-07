@@ -35,13 +35,15 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class CultureModule : BaseModule
     {
-        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a) : base("culture",pr)
+        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a, ISecurityExtensions security) : base("culture",pr, security)
         {
             Analytics = a;
 

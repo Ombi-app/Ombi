@@ -44,10 +44,16 @@ namespace PlexRequests.Core.SettingModels
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
         public bool SearchForMusic { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireMovieApproval { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireTvShowApproval { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireMusicApproval { get; set; }
+
+        [Obsolete("Use the user management settings")]
         public bool UsersCanViewOnlyOwnRequests { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool UsersCanViewOnlyOwnIssues { get; set; }
         public int MovieWeeklyRequestLimit { get; set; }
         public int TvWeeklyRequestLimit { get; set; }

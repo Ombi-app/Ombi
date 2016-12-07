@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS ScheduledJobs
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     Name								varchar(100) NOT NULL,
-    LastRun								varchar(100) NOT NULL
+    LastRun								varchar(100) NOT NULL,
+	Running								INTEGER
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ScheduledJobs_Id ON ScheduledJobs (Id);
 
@@ -113,8 +114,13 @@ CREATE UNIQUE INDEX IF NOT EXISTS RequestLimit_Id ON RequestLimit (Id);
 CREATE TABLE IF NOT EXISTS PlexUsers
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    PlexUserId							INTEGER NOT NULL,
-	UserAlias							varchar(100) NOT NULL
+    PlexUserId							varchar(100) NOT NULL,
+	UserAlias							varchar(100) NOT NULL,
+	Permissions							INTEGER,
+	Features							INTEGER,
+	Username							VARCHAR(100),
+	EmailAddress						VARCHAR(100),
+	LoginId								VARCHAR(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
 
@@ -133,13 +139,29 @@ CREATE UNIQUE INDEX IF NOT EXISTS PlexEpisodes_Id ON PlexEpisodes (Id);
 CREATE INDEX IF NOT EXISTS PlexEpisodes_ProviderId ON PlexEpisodes (ProviderId);
 
 
-CREATE TABLE IF NOT EXISTS RequestQueue
+CREATE TABLE IF NOT EXISTS RequestFaultQueue
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-    PrimaryIdentifier					INTEGER NOT NULL,
+    PrimaryIdentifier					VARCHAR(100) NOT NULL,
 	Type								INTEGER NOT NULL,
-    Content								BLOB NOT NULL
+	FaultType								INTEGER NOT NULL,
+    Content								BLOB NOT NULL,
+	LastRetry							VARCHAR(100),
+	Description							VARCHAR(100)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexUsers_Id ON PlexUsers (Id);
+
+CREATE TABLE IF NOT EXISTS PlexContent
+(
+    Id								INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title							VARCHAR(100) NOT NULL,
+	ReleaseYear						VARCHAR(100) NOT NULL,
+	ProviderId						VARCHAR(100) NOT NULL,
+	Url								VARCHAR(100) NOT NULL,
+	Artist							VARCHAR(100),
+	Seasons							BLOB,
+	Type							INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS PlexContent_Id ON PlexContent (Id);
 
 COMMIT;

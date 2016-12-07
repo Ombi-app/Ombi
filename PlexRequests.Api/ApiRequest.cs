@@ -104,8 +104,7 @@ namespace PlexRequests.Api
             }
 
             var result = DeserializeXml<T>(response.Content);
-            return result;
-        }
+            return result;}
 
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
         {

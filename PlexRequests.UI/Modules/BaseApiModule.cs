@@ -32,19 +32,22 @@ using Nancy.Validation;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
+using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public abstract class BaseApiModule : BaseModule
     {
-        protected BaseApiModule(ISettingsService<PlexRequestSettings> s) : base(s)
+        protected BaseApiModule(ISettingsService<PlexRequestSettings> s, ISecurityExtensions security) : base(s,security)
         {
             Settings = s;
             Before += (ctx) => CheckAuth();
         }
 
-        protected BaseApiModule(string modulePath, ISettingsService<PlexRequestSettings> s) : base(modulePath, s)
+        protected BaseApiModule(string modulePath, ISettingsService<PlexRequestSettings> s, ISecurityExtensions security) : base(modulePath, s, security)
         {
             Settings = s;
             Before += (ctx) => CheckAuth();

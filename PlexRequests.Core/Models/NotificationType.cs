@@ -34,6 +34,7 @@ namespace PlexRequests.Core.Models
         RequestApproved,
         AdminNote,
         Test,
-
+        RequestDeclined,
+        ItemAddedToFaultQueue
     }
 }

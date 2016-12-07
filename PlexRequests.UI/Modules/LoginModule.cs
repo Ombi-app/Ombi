@@ -31,7 +31,6 @@ using System;
 using System.Dynamic;
 using System.Security;
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Extensions;
 using Nancy.Linker;
 using Nancy.Responses.Negotiation;
@@ -40,19 +39,22 @@ using Nancy.Security;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
+using PlexRequests.UI.Authentication;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class LoginModule : BaseModule
     {
-        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker, IRepository<UserLogins> userLoginRepo)
-            : base(pr)
+        public LoginModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IResourceLinker linker, IRepository<UserLogins> userLoginRepo, ISecurityExtensions security)
+            : base(pr, security)
         {
             UserMapper = m;
-            Get["/login"] = _ =>
+            Get["LocalLogin","/login"] = _ =>
             {
                 if (LoggedIn)
                 {
@@ -73,7 +75,7 @@ namespace PlexRequests.UI.Modules
                 {
                     Session.Delete(SessionKeys.UsernameKey);
                 }
-                return this.LogoutAndRedirect(!string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
+                return CustomModuleExtensions.LogoutAndRedirect(this, !string.IsNullOrEmpty(BaseUrl) ? $"~/{BaseUrl}/" : "~/");
             };
 
             Post["/login"] = x =>
@@ -111,7 +113,7 @@ namespace PlexRequests.UI.Modules
                     UserId = userId.ToString()
                 });
 
-                return this.LoginAndRedirect(userId.Value, expiry, redirect);
+                return CustomModuleExtensions.LoginAndRedirect(this,userId.Value, expiry, redirect);
             };
 
             Get["/register"] = x =>
@@ -135,9 +137,9 @@ namespace PlexRequests.UI.Modules
                             ? $"~/{BaseUrl}/register?error=true"
                             : "~/register?error=true");
                 }
-                var userId = UserMapper.CreateAdmin(username, Request.Form.Password);
+                var userId = UserMapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All(), 0);
                 Session[SessionKeys.UsernameKey] = username;
-                return this.LoginAndRedirect((Guid)userId);
+                return CustomModuleExtensions.LoginAndRedirect(this, (Guid)userId);
             };
 
             Get["/changepassword"] = _ => ChangePassword();

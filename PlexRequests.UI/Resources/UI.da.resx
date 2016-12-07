@@ -459,4 +459,34 @@
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>Der er ingen oplysninger om udgivelsesdatoen</value>
   </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>Udsigt I Plex</value>
+  </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Doner til Bibliotek vedligeholder</value>
+  </data>
+  <data name="Search_Available_on_plex" xml:space="preserve">
+    <value>Tilgængelig på</value>
+  </data>
+  <data name="Search_Movie_Status" xml:space="preserve">
+    <value>Movie status</value>
+  </data>
+  <data name="Search_Not_Requested_Yet" xml:space="preserve">
+    <value>Ikke anmodet endnu</value>
+  </data>
+  <data name="Search_Pending_approval" xml:space="preserve">
+    <value>Afventer godkendelse</value>
+  </data>
+  <data name="Search_Processing_Request" xml:space="preserve">
+    <value>Behandler forespørgsel</value>
+  </data>
+  <data name="Search_Request_denied" xml:space="preserve">
+    <value>Anmodning afvist!</value>
+  </data>
+  <data name="Search_TV_Show_Status" xml:space="preserve">
+    <value>Tv-show status!</value>
+  </data>
+  <data name="Layout_CacherRunning" xml:space="preserve">
+    <value>En baggrund proces kører i øjeblikket, så der kan være nogle uventede problemer. Dette bør ikke tage for lang tid.</value>
+  </data>
 </root>

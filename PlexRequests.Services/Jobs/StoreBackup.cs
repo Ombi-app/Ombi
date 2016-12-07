@@ -53,6 +53,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+            JobRecord.SetRunning(true, JobNames.CpCacher);
             TakeBackup();
             Cleanup();
         }
@@ -91,6 +92,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 JobRecord.Record(JobNames.StoreBackup);
+                JobRecord.SetRunning(false, JobNames.CpCacher);
             }
 
         }

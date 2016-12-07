@@ -36,7 +36,7 @@ using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core
 {
     public class TvSenderOld
     {
