@@ -132,10 +132,11 @@ namespace PlexRequests.Services.Jobs
 
         private void GenerateMovieHtml(RecentlyAddedModel movies, PlexSettings plexSettings, StringBuilder sb)
         {
+            var orderedMovies = movies?._children?.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<RecentlyAddedChild>();
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var movie in movies._children.OrderByDescending(x => x.addedAt.UnixTimeStampToDateTime()))
+            foreach (var movie in orderedMovies)
             {
                 var plexGUID = string.Empty;
                 try
@@ -259,9 +260,6 @@ namespace PlexRequests.Services.Jobs
 
             if (!testEmail)
             {
-                //if (newletterSettings.SendToPlexUsers)
-                //{
-
                 var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification);
                 if (users != null)
                 {
@@ -273,7 +271,6 @@ namespace PlexRequests.Services.Jobs
                         }
                     }
                 }
-                //}
 
                 if (newletterSettings.CustomUsersEmailAddresses != null
                         && newletterSettings.CustomUsersEmailAddresses.Any())

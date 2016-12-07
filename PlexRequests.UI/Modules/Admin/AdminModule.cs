@@ -977,7 +977,12 @@ namespace PlexRequests.UI.Modules
                 StoreBackup = s.StoreBackup,
                 StoreCleanup = s.StoreCleanup,
                 JobRecorder = dict,
-                RecentlyAddedCron = s.RecentlyAddedCron
+                RecentlyAddedCron = s.RecentlyAddedCron,
+                PlexContentCacher = s.PlexContentCacher,
+                FaultQueueHandler = s.FaultQueueHandler,
+                PlexEpisodeCacher = s.PlexEpisodeCacher,
+                PlexUserChecker = s.PlexUserChecker,
+                UserRequestLimitResetter = s.UserRequestLimitResetter
             };
             return View["SchedulerSettings", model];
         }
