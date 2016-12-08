@@ -47,12 +47,12 @@ namespace PlexRequests.UI.Modules
         {
             Analytics = a;
 
-            Get["/", true] = async(x,c) => await SetCulture();
+            Get["/"] = x => SetCulture();
         }
 
         private IAnalytics Analytics { get; }
 
-        public async Task<RedirectResponse> SetCulture()
+        private RedirectResponse SetCulture()
         {
             var culture = (string)Request.Query["l"];
             var returnUrl = (string)Request.Query["u"];
