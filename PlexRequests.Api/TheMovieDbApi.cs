@@ -47,25 +47,18 @@ namespace PlexRequests.Api
         public async Task<List<SearchMovie>> SearchMovie(string searchTerm)
         {
             var results = await Client.SearchMovie(searchTerm);
-            return results.Results;
-        }
-
-        [Obsolete("Should use TvMaze for TV")]
-        public async Task<List<SearchTv>> SearchTv(string searchTerm)
-        {
-            var results = await Client.SearchTvShow(searchTerm);
-            return results.Results;
+            return results?.Results ?? new List<SearchMovie>();
         }
 
         public async Task<List<MovieResult>> GetCurrentPlayingMovies()
         {
             var movies = await Client.GetMovieList(MovieListType.NowPlaying);
-            return movies.Results;
+            return movies?.Results ?? new List<MovieResult>();
         }
         public async Task<List<MovieResult>> GetUpcomingMovies()
         {
             var movies = await Client.GetMovieList(MovieListType.Upcoming);
-            return movies.Results;
+            return movies?.Results ??  new List<MovieResult>();
         }
 
         public async Task<Movie> GetMovieInformation(int tmdbId)
@@ -77,14 +70,7 @@ namespace PlexRequests.Api
         public async Task<Movie> GetMovieInformation(string imdbId)
         {
             var movies = await Client.GetMovie(imdbId);
-            return movies;
-        }
-
-        [Obsolete("Should use TvMaze for TV")]
-        public async Task<TvShow> GetTvShowInformation(int tmdbId)
-        {
-            var show = await Client.GetTvShow(tmdbId);
-            return show;
+            return movies ?? new Movie();
         }
     }
 }
