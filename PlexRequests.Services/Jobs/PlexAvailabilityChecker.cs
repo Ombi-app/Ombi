@@ -230,7 +230,7 @@ namespace PlexRequests.Services.Jobs
 
         public IEnumerable<PlexContent> GetPlexTvShows(IEnumerable<PlexContent> content)
         {
-            return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Show.to);
+            return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Show);
         }
 
         public bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
