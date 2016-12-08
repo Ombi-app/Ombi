@@ -249,7 +249,7 @@ namespace PlexRequests.Core.Migration.Migrations
           //      }
           //  }
          //   RequestService.BatchUpdate(allRequests);
-      //  }
+       }
 
         private void UpdateAdmin()
         {
