@@ -238,18 +238,18 @@ namespace PlexRequests.Core.Migration.Migrations
 
             // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}
             // Update old invalid posters
-            var allRequests = RequestService.GetAll().ToList();
+         //   var allRequests = RequestService.GetAll().ToList();
 
-            foreach (var req in allRequests)
-            {
-                if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
-                {
-                    var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);
-                    req.PosterPath = newImg;
-                }
-            }
-            RequestService.BatchUpdate(allRequests);
-        }
+        //    foreach (var req in allRequests)
+         //   {
+         //       if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
+          //      {
+          //          var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);
+          //          req.PosterPath = newImg;
+          //      }
+          //  }
+         //   RequestService.BatchUpdate(allRequests);
+      //  }
 
         private void UpdateAdmin()
         {
