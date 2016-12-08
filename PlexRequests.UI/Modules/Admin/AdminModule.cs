@@ -1050,12 +1050,13 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
+                Log.Debug("Clicked TEST");
                 RecentlyAdded.Test();
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
             }
             catch (Exception e)
             {
-
+                Log.Error(e);
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
             }
         }
