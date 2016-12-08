@@ -302,11 +302,6 @@ namespace PlexRequests.Services.Jobs
 
         public bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings, List<string> username)
         {
-            if (prSettings.ApprovalWhiteList.Intersect(username).Any())
-            {
-                return true;
-            }
-
             foreach (var user in username)
             {
                 var admin = Security.HasPermissions(user, Permissions.Administrator);

@@ -38,6 +38,7 @@ namespace PlexRequests.Helpers.Analytics
         Issues,
         UserLogin,
         Services,
-        Navbar
+        Navbar,
+        UserManagement
     }
 }

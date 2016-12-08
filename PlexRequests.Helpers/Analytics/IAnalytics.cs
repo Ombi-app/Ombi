@@ -51,7 +51,7 @@ namespace PlexRequests.Helpers.Analytics
         /// <param name="clientId">The client identifier.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        Task TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null);
+        void TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null);
 
         /// <summary>
         /// Tracks the page view.

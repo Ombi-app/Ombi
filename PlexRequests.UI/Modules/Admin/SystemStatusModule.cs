@@ -37,8 +37,8 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Core.StatusChecker;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
@@ -46,10 +46,11 @@ namespace PlexRequests.UI.Modules.Admin
 {
     public class SystemStatusModule : BaseModule
     {
-        public SystemStatusModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, ISettingsService<SystemSettings> ss, ISecurityExtensions security) : base("admin", settingsService, security)
+        public SystemStatusModule(ISettingsService<PlexRequestSettings> settingsService, ICacheProvider cache, ISettingsService<SystemSettings> ss, ISecurityExtensions security, IAnalytics a) : base("admin", settingsService, security)
         {
             Cache = cache;
             SystemSettings = ss;
+            Analytics = a;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
@@ -61,6 +62,7 @@ namespace PlexRequests.UI.Modules.Admin
 
         private ICacheProvider Cache { get; }
         private ISettingsService<SystemSettings> SystemSettings { get; }
+        private IAnalytics Analytics { get; }
 
         private async Task<Negotiator> Status()
         {
@@ -99,8 +101,10 @@ namespace PlexRequests.UI.Modules.Admin
 
         private async Task<Response> Save()
         {
+
             var settings = this.Bind<SystemSettings>();
 
+            Analytics.TrackEventAsync(Category.Admin, PlexRequests.Helpers.Analytics.Action.Update, $"Updated Branch {EnumHelper<Branches>.GetDisplayValue(settings.Branch)}", Username, CookieHelper.GetAnalyticClientId(Cookies));
             await SystemSettings.SaveSettingsAsync(settings);
 
             // Clear the cache
@@ -111,6 +115,8 @@ namespace PlexRequests.UI.Modules.Admin
 
         private Response AutoUpdate()
         {
+            Analytics.TrackEventAsync(Category.Admin, PlexRequests.Helpers.Analytics.Action.Update, "AutoUpdate", Username, CookieHelper.GetAnalyticClientId(Cookies));
+
             var url = Request.Form["url"];
 
             var startInfo = Type.GetType("Mono.Runtime") != null

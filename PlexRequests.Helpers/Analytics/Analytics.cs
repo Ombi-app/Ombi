@@ -54,7 +54,7 @@ namespace PlexRequests.Helpers.Analytics
             Track(HitType.@event, username, cat, act, label, clientId, value);
         }
 
-        public async Task TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
+        public async void TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
             var cat = category.ToString();
             var act = action.ToString();
@@ -146,7 +146,7 @@ namespace PlexRequests.Helpers.Analytics
             request.Method = RequestMethod;
             // set the Content-Length header to the correct value
             request.ContentLength = Encoding.UTF8.GetByteCount(postDataString);
-
+#if !DEBUG
             // write the request body to the request
             using (var writer = new StreamWriter(request.GetRequestStream()))
             {
@@ -165,6 +165,7 @@ namespace PlexRequests.Helpers.Analytics
             {
                 Log.Error(ex, "Analytics tracking failed");
             }
+#endif
         }
         private async Task SendRequestAsync(string postDataString)
         {
@@ -173,6 +174,7 @@ namespace PlexRequests.Helpers.Analytics
             // set the Content-Length header to the correct value
             request.ContentLength = Encoding.UTF8.GetByteCount(postDataString);
 
+#if !DEBUG
             // write the request body to the request
             using (var writer = new StreamWriter(await request.GetRequestStreamAsync()))
             {
@@ -191,6 +193,7 @@ namespace PlexRequests.Helpers.Analytics
             {
                 Log.Error(ex, "Analytics tracking failed");
             }
+#endif
         }
 
         private Dictionary<string, string> BuildRequestData(HitType type, string username, string category, string action, string clientId, string label,  int? value, string exceptionDescription, int? fatal)
