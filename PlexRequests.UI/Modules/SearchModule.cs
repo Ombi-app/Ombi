@@ -1234,7 +1234,7 @@ namespace PlexRequests.UI.Modules
             if (IsAdmin)
                 return true;
 
-            if (s.ApprovalWhiteList.Contains(Username))
+            if (ShouldAutoApprove(type,s,Username))
                 return true;
 
             var requestLimit = GetRequestLimitForType(type, s);
@@ -1376,8 +1376,8 @@ namespace PlexRequests.UI.Modules
         public bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings, string username)
         {
             var admin = Security.HasPermissions(Context.CurrentUser, Permissions.Administrator);
-            // if the user is an admin or they are whitelisted, they go ahead and allow auto-approval
-            if (admin || prSettings.ApprovalWhiteList.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase))) return true;
+            // if the user is an admin, they go ahead and allow auto-approval
+            if (admin) return true;
 
             // check by request type if the category requires approval or not
             switch (requestType)
