@@ -13,12 +13,13 @@ using PlexRequests.Core;
 using PlexRequests.Core.Models;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Models;
-
+using Action = PlexRequests.Helpers.Analytics.Action;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
@@ -26,7 +27,7 @@ namespace PlexRequests.UI.Modules
     public class UserManagementModule : BaseModule
     {
         public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IPlexUserRepository plexRepo
-            , ISecurityExtensions security, IRequestService req) : base("usermanagement", pr, security)
+            , ISecurityExtensions security, IRequestService req, IAnalytics ana) : base("usermanagement", pr, security)
         {
 #if !DEBUG
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
@@ -38,11 +39,12 @@ namespace PlexRequests.UI.Modules
             PlexUsersRepository = plexRepo;
             PlexRequestSettings = pr;
             RequestService = req;
+            Analytics = ana;
 
             Get["/"] = x => Load();
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
-            Post["/createuser"] = x => CreateUser();
+            Post["/createuser", true] = async (x,ct) => await CreateUser();
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
             Get["/permissions"] = x => GetEnum<Permissions>();
@@ -58,6 +60,7 @@ namespace PlexRequests.UI.Modules
         private IPlexUserRepository PlexUsersRepository { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private IRequestService RequestService { get; }
+        private IAnalytics Analytics { get; }
 
         private Negotiator Load()
         {
@@ -103,8 +106,9 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(model);
         }
 
-        private Response CreateUser()
+        private async Task<Response> CreateUser()
         {
+            Analytics.TrackEventAsync(Category.UserManagement, Action.Create, "Created User", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var body = Request.Body.AsString();
             if (string.IsNullOrEmpty(body))
             {
@@ -122,7 +126,7 @@ namespace PlexRequests.UI.Modules
                 });
             }
 
-            var users = UserMapper.GetUsers();
+            var users = await UserMapper.GetUsersAsync();
             if (users.Any(x => x.UserName.Equals(model.Username, StringComparison.CurrentCultureIgnoreCase)))
             {
                 return Response.AsJson(new JsonResponseModel
@@ -158,6 +162,7 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> UpdateUser()
         {
+            Analytics.TrackEventAsync(Category.UserManagement, Action.Update, "Updated User", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var body = Request.Body.AsString();
             if (string.IsNullOrEmpty(body))
             {
@@ -276,6 +281,7 @@ namespace PlexRequests.UI.Modules
 
         private Response DeleteUser()
         {
+            Analytics.TrackEventAsync(Category.UserManagement, Action.Delete, "Deleted User", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var body = Request.Body.AsString();
             if (string.IsNullOrEmpty(body))
             {
