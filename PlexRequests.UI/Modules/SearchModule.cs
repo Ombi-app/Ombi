@@ -257,7 +257,7 @@ namespace PlexRequests.UI.Modules
                     var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                    imdbId = movieInfoTask.ImdbId;
+                    imdbId = movieInfoTask?.ImdbId;
                     counter++;
                 }
 
@@ -492,6 +492,15 @@ namespace PlexRequests.UI.Modules
             Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username,
                 CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = await MovieApi.GetMovieInformation(movieId);
+            if (movieInfo == null)
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "There was an issue adding this movie!"
+                    });
+            }
             var fullMovieName =
                 $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
 

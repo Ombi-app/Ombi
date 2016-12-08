@@ -147,7 +147,10 @@ namespace PlexRequests.Services.Jobs
 
                     var imdbId = PlexHelper.GetProviderIdFromPlexGuid(plexGUID);
                     var info = _movieApi.GetMovieInformation(imdbId).Result;
-
+                    if (info == null)
+                    {
+                        throw new Exception($"Movie with Imdb id {imdbId} returned null from the MovieApi");
+                    }
                     AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
 
                     sb.Append("<tr>");
