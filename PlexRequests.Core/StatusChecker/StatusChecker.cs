@@ -146,8 +146,17 @@ namespace PlexRequests.Core.StatusChecker
             eapAtrifactRequest.AddHeader("Authorization", $"Bearer {api}");
             eapAtrifactRequest.AddHeader("Content-Type", "application/json");
 
-            var artifactResult = request.ExecuteJson<List<AppveyorArtifactResult>>(eapAtrifactRequest, new Uri(AppveyorApiUrl)).FirstOrDefault();
+            var artifactResults = request.ExecuteJson<List<AppveyorArtifactResult>>(eapAtrifactRequest, new Uri(AppveyorApiUrl));
 
+            var artifactResult = artifactResults.FirstOrDefault();
+
+            if (artifactResult == null)
+            {
+                return new StatusModel
+                {
+                    UpdateAvailable = false
+                };
+            }
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
             var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
