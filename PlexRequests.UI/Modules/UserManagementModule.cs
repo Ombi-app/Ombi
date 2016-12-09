@@ -192,8 +192,7 @@ namespace PlexRequests.UI.Modules
             {
                 localUser.Permissions = permissionsValue;
                 localUser.Features = featuresValue;
-
-
+                
                 var currentProps = ByteConverterHelper.ReturnObject<UserProperties>(localUser.UserProperties);
 
                 // Let's check if the alias has changed, if so we need to change all the requests associated with this
@@ -256,12 +255,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task UpdateRequests(string username, string oldAlias, string newAlias)
         {
+            var newUsername = string.IsNullOrEmpty(newAlias) ? username : newAlias; // User the username if we are clearing the alias
+            var olderUsername = string.IsNullOrEmpty(oldAlias) ? username : oldAlias;
             // Let's check if the alias has changed, if so we need to change all the requests associated with this
-            if (!oldAlias.Equals(newAlias, StringComparison.CurrentCultureIgnoreCase))
+            if (!olderUsername.Equals(newUsername, StringComparison.CurrentCultureIgnoreCase))
             {
-                var newUsername = string.IsNullOrEmpty(newAlias) ? username : newAlias; // User the username if we are clearing the alias
-                var olderUsername = string.IsNullOrEmpty(oldAlias) ? username : oldAlias;
-
                 var requests = await RequestService.GetAllAsync();
                 // Update all requests
                 var requestsWithThisUser = requests.Where(x => x.RequestedUsers.Contains(olderUsername)).ToList();
