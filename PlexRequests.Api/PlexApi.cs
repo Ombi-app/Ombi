@@ -346,7 +346,7 @@ namespace PlexRequests.Api
             return servers;
         }
 
-        public RecentlyAddedModel RecentlyAdded(string authToken, Uri plexFullHost, string sectionId)
+        public RecentlyAddedModelOld RecentlyAddedOld(string authToken, Uri plexFullHost, string sectionId)
         {
             var request = new RestRequest
             {
@@ -360,7 +360,7 @@ namespace PlexRequests.Api
 
             try
             {
-                var lib = RetryHandler.Execute(() => Api.ExecuteJson<RecentlyAddedModel>(request, plexFullHost),
+                var lib = RetryHandler.Execute(() => Api.ExecuteJson<RecentlyAddedModelOld>(request, plexFullHost),
                     (exception, timespan) => Log.Error(exception, "Exception when calling RecentlyAddedModel for Plex, Retrying {0}", timespan), new[] {
                         TimeSpan.FromSeconds (5),
                         TimeSpan.FromSeconds(10),
@@ -372,7 +372,37 @@ namespace PlexRequests.Api
             catch (Exception e)
             {
                 Log.Error(e, "There has been a API Exception when attempting to get the Plex RecentlyAddedModel");
-                return new RecentlyAddedModel();
+                return new RecentlyAddedModelOld();
+            }
+        }
+
+        public PlexRecentlyAddedModel RecentlyAdded(string authToken, Uri plexFullHost, string sectionId)
+        {
+            var request = new RestRequest
+            {
+                Method = Method.GET,
+                Resource = "library/sections/{sectionId}/recentlyAdded"
+            };
+
+            request.AddUrlSegment("sectionId", sectionId);
+            AddHeaders(ref request, authToken, true);
+            AddLimitHeaders(ref request, 0, 25);
+
+            try
+            {
+                var lib = RetryHandler.Execute(() => Api.ExecuteJson<PlexRecentlyAddedModel>(request, plexFullHost),
+                    (exception, timespan) => Log.Error(exception, "Exception when calling PlexRecentlyAddedModel for Plex, Retrying {0}", timespan), new[] {
+                        TimeSpan.FromSeconds (5),
+                        TimeSpan.FromSeconds(10),
+                        TimeSpan.FromSeconds(30)
+                    });
+
+                return lib;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "There has been a API Exception when attempting to get the Plex RecentlyAddedModel");
+                return new PlexRecentlyAddedModel();
             }
         }
 

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RecentlyAddedModel.cs
+//    File: RecentlyAddedModelOld.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -110,7 +110,7 @@ namespace PlexRequests.Api.Models.Plex
         public string tag { get; set; }
     }
 
-    public class RecentlyAddedModel
+    public class RecentlyAddedModelOld
     {
         public string _elementType { get; set; }
         public string allowSync { get; set; }
@@ -129,5 +129,113 @@ namespace PlexRequests.Api.Models.Plex
         public string viewGroup { get; set; }
         public string viewMode { get; set; }
         public List<RecentlyAddedChild> _children { get; set; }
+    }
+
+
+    // 1.3 and forward!
+    public class PartRecentlyAdded
+    {
+        public int id { get; set; }
+        public string key { get; set; }
+        public int duration { get; set; }
+        public string file { get; set; }
+        public double size { get; set; }
+        public string audioProfile { get; set; }
+        public string container { get; set; }
+        public string videoProfile { get; set; }
+        public string deepAnalysisVersion { get; set; }
+        public string requiredBandwidths { get; set; }
+    }
+
+    public class Medium
+    {
+        public string videoResolution { get; set; }
+        public int id { get; set; }
+        public int duration { get; set; }
+        public int bitrate { get; set; }
+        public int width { get; set; }
+        public int height { get; set; }
+        public double aspectRatio { get; set; }
+        public int audioChannels { get; set; }
+        public string audioCodec { get; set; }
+        public string videoCodec { get; set; }
+        public string container { get; set; }
+        public string videoFrameRate { get; set; }
+        public string audioProfile { get; set; }
+        public string videoProfile { get; set; }
+        public List<PartRecentlyAdded> Part { get; set; }
+    }
+
+    public class DirectorRecentlyAdded
+    {
+        public string tag { get; set; }
+    }
+
+    public class WriterRecentlyAdded
+    {
+        public string tag { get; set; }
+    }
+
+    public class Metadata
+    {
+        public string ratingKey { get; set; }
+        public string key { get; set; }
+        public string parentRatingKey { get; set; }
+        public string grandparentRatingKey { get; set; }
+        public string type { get; set; }
+        public string title { get; set; }
+        public string titleSort { get; set; }
+        public string grandparentKey { get; set; }
+        public string parentKey { get; set; }
+        public string grandparentTitle { get; set; }
+        public string contentRating { get; set; }
+        public string summary { get; set; }
+        public int index { get; set; }
+        public int parentIndex { get; set; }
+        public int year { get; set; }
+        public string thumb { get; set; }
+        public string art { get; set; }
+        public string parentThumb { get; set; }
+        public string grandparentThumb { get; set; }
+        public string grandparentArt { get; set; }
+        public string grandparentTheme { get; set; }
+        public int duration { get; set; }
+        public string originallyAvailableAt { get; set; }
+        public int addedAt { get; set; }
+        public int updatedAt { get; set; }
+        public List<Medium> Media { get; set; }
+        public List<DirectorRecentlyAdded> Director { get; set; }
+        public List<WriterRecentlyAdded> Writer { get; set; }
+        public int? viewCount { get; set; }
+        public int? lastViewedAt { get; set; }
+        public double? rating { get; set; }
+    }
+
+    public class MediaContainer
+    {
+        public double size { get; set; }
+        public double totalSize { get; set; }
+        public bool allowSync { get; set; }
+        public string art { get; set; }
+        public string identifier { get; set; }
+        public int librarySectionID { get; set; }
+        public string librarySectionTitle { get; set; }
+        public string librarySectionUUID { get; set; }
+        public string mediaTagPrefix { get; set; }
+        public int mediaTagVersion { get; set; }
+        public bool mixedParents { get; set; }
+        public bool nocache { get; set; }
+        public int offset { get; set; }
+        public string thumb { get; set; }
+        public string title1 { get; set; }
+        public string title2 { get; set; }
+        public string viewGroup { get; set; }
+        public int viewMode { get; set; }
+        public List<Metadata> Metadata { get; set; }
+    }
+
+    public class PlexRecentlyAddedModel
+    {
+        public MediaContainer MediaContainer { get; set; }
     }
 }
