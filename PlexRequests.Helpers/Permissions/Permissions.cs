@@ -70,6 +70,9 @@ namespace PlexRequests.Helpers.Permissions
         UsersCanViewOnlyOwnRequests = 1024,
 
         [Display(Name = "Users can only view their own issues")]
-        UsersCanViewOnlyOwnIssues = 2048
+        UsersCanViewOnlyOwnIssues = 2048,
+
+        [Display(Name = "Bypass the request limit")]
+        BypassRequestLimit = 4096
     }
 }

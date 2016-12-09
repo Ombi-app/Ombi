@@ -41,6 +41,7 @@ using PlexRequests.Core.SettingModels;
 using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
@@ -139,6 +140,7 @@ namespace PlexRequests.UI.Modules
             }
 
             var authenticated = false;
+            var isOwner = false;
 
             var settings = await AuthService.GetSettingsAsync();
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -173,6 +175,7 @@ namespace PlexRequests.UI.Modules
                     {
                         Log.Debug("User is the account owner");
                         authenticated = true;
+                        isOwner = true;
                     }
                     else
                     {
@@ -194,6 +197,7 @@ namespace PlexRequests.UI.Modules
                 {
                     Log.Debug("User is the account owner");
                     authenticated = true;
+                    isOwner = true;
                     userId = GetOwnerId(plexSettings.PlexAuthToken, username);
                 }
                 Log.Debug("Friends list result = {0}", authenticated);
@@ -228,15 +232,26 @@ namespace PlexRequests.UI.Modules
                 {
                     var defaultSettings = UserManagementSettings.GetSettings();
                     loginGuid = Guid.NewGuid();
+
+                    var defaultPermissions = (Permissions)UserManagementHelper.GetPermissions(defaultSettings);
+                    if (isOwner)
+                    {
+                        // If we are the owner, add the admin permission.
+                        if (!defaultPermissions.HasFlag(Permissions.Administrator))
+                        {
+                            defaultPermissions += (int)Permissions.Administrator;
+                        }
+                    }
+
                     // Looks like we still don't have an entry, so this user does not exist
                     await PlexUserRepository.InsertAsync(new PlexUsers
                     {
-                        PlexUserId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken) ?? string.Empty,
+                        PlexUserId = userId,
                         UserAlias = string.Empty,
-                        Permissions = UserManagementHelper.GetPermissions(defaultSettings),
+                        Permissions = (int)defaultPermissions,
                         Features = UserManagementHelper.GetPermissions(defaultSettings),
-                        Username = username,
-                        EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run
+                        Username = username, 
+                        EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run (in 30 mins)
                         LoginId = loginGuid.ToString()
                     });
                 }

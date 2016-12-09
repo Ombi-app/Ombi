@@ -167,6 +167,8 @@ namespace PlexRequests.Helpers.Analytics
             }
 #endif
         }
+
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async Task SendRequestAsync(string postDataString)
         {
             var request = (HttpWebRequest)WebRequest.Create(AnalyticsUri);
@@ -195,6 +197,7 @@ namespace PlexRequests.Helpers.Analytics
             }
 #endif
         }
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
 
         private Dictionary<string, string> BuildRequestData(HitType type, string username, string category, string action, string clientId, string label,  int? value, string exceptionDescription, int? fatal)
         {

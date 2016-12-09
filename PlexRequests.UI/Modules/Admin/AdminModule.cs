@@ -227,7 +227,7 @@ namespace PlexRequests.UI.Modules
             Post["/clearlogs", true] = async (x, ct) => await ClearLogs();
 
             Get["/notificationsettings", true] = async (x, ct) => await NotificationSettings();
-            Post["/notificationsettings", true] = async (x, ct) => await SaveNotificationSettings();
+            Post["/notificationsettings"] = x => SaveNotificationSettings();
 
             Post["/recentlyAddedTest"] = x => RecentlyAddedTest();
         }
@@ -287,7 +287,7 @@ namespace PlexRequests.UI.Modules
             {
                 Analytics.TrackEventAsync(Category.Admin, Action.Save, "CollectAnalyticData turned off", Username, CookieHelper.GetAnalyticClientId(Cookies));
             }
-            var result = PrService.SaveSettings(model);
+            var result = await PrService.SaveSettingsAsync(model);
 
             Analytics.TrackEventAsync(Category.Admin, Action.Save, "PlexRequestSettings", Username, CookieHelper.GetAnalyticClientId(Cookies));
             return Response.AsJson(result
@@ -520,7 +520,7 @@ namespace PlexRequests.UI.Modules
             {
                 NotificationService.Subscribe(new EmailMessageNotification(EmailService));
                 settings.Enabled = true;
-                NotificationService.Publish(notificationModel, settings);
+                await NotificationService.Publish(notificationModel, settings);
                 Log.Info("Sent email notification test");
             }
             catch (Exception)
@@ -620,7 +620,7 @@ namespace PlexRequests.UI.Modules
             {
                 NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
                 settings.Enabled = true;
-                NotificationService.Publish(notificationModel, settings);
+                await NotificationService.Publish(notificationModel, settings);
                 Log.Info("Sent pushbullet notification test");
             }
             catch (Exception)
@@ -686,7 +686,7 @@ namespace PlexRequests.UI.Modules
             {
                 NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
                 settings.Enabled = true;
-                NotificationService.Publish(notificationModel, settings);
+                await NotificationService.Publish(notificationModel, settings);
                 Log.Info("Sent pushover notification test");
             }
             catch (Exception)
@@ -742,7 +742,10 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Logs()
         {
-            return View["Logs"];
+            var model = false;
+            if (Request.Query["developer"] != null)
+                model = true;
+            return View["Logs", model];
         }
 
         private Response LoadLogs()
@@ -1040,7 +1043,7 @@ namespace PlexRequests.UI.Modules
             return View["NotificationSettings", s];
         }
 
-        private async Task<Negotiator> SaveNotificationSettings()
+        private Negotiator SaveNotificationSettings()
         {
             var model = this.Bind<NotificationSettingsV2>();
             return View["NotificationSettings", model];
@@ -1050,12 +1053,13 @@ namespace PlexRequests.UI.Modules
         {
             try
             {
+                Log.Debug("Clicked TEST");
                 RecentlyAdded.Test();
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
             }
             catch (Exception e)
             {
-
+                Log.Error(e);
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
             }
         }

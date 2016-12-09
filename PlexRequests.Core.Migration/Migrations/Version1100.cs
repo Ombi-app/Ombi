@@ -238,9 +238,13 @@ namespace PlexRequests.Core.Migration.Migrations
 
             // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}
             // Update old invalid posters
-            var allRequests = RequestService.GetAll().ToList();
-
-            foreach (var req in allRequests)
+            var allRequests = RequestService.GetAll();
+            if (allRequests == null)
+            {
+                return;
+            }
+            var requestedModels = allRequests as RequestedModel[] ?? allRequests.ToArray();
+            foreach (var req in requestedModels)
             {
                 if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
                 {
@@ -248,7 +252,7 @@ namespace PlexRequests.Core.Migration.Migrations
                     req.PosterPath = newImg;
                 }
             }
-            RequestService.BatchUpdate(allRequests);
+            RequestService.BatchUpdate(requestedModels);
         }
 
         private void UpdateAdmin()

@@ -105,6 +105,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Test()
         {
+            Log.Debug("Starting Test Newsletter");
             var settings = NewsletterSettings.GetSettings();
             Start(settings, true);
         }
@@ -113,19 +114,32 @@ namespace PlexRequests.Services.Jobs
         {
             var sb = new StringBuilder();
             var plexSettings = PlexSettings.GetSettings();
+            Log.Debug("Got Plex Settings");
 
             var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
+            Log.Debug("Getting Plex Library Sections");
+
             var tvSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            Log.Debug("Filtered sections for TV");
             var movieSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase));
-
+            Log.Debug("Filtered sections for Movies");
+            
+            
             var recentlyAddedTv = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection.Key);
+            Log.Debug("Got RecentlyAdded TV Shows");
             var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection.Key);
+            Log.Debug("Got RecentlyAdded Movies");
 
+            Log.Debug("Started Generating Movie HTML");
             GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
+            Log.Debug("Finished Generating Movie HTML");
+            Log.Debug("Started Generating TV HTML");
             GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
+            Log.Debug("Finished Generating TV HTML");
 
             var template = new RecentlyAddedTemplate();
             var html = template.LoadTemplate(sb.ToString());
+            Log.Debug("Loaded the template");
 
             Send(newletterSettings, html, plexSettings, testEmail);
         }
@@ -188,11 +202,17 @@ namespace PlexRequests.Services.Jobs
 
         private void GenerateTvHtml(RecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
         {
+            var orderedTv = tv?._children;
+            if (orderedTv == null)
+            {
+                return;
+            }
+            orderedTv = orderedTv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var t in tv._children.OrderByDescending(x => x.addedAt.UnixTimeStampToDateTime()))
+            foreach (var t in orderedTv)
             {
                 var plexGUID = string.Empty;
                 try
@@ -247,6 +267,7 @@ namespace PlexRequests.Services.Jobs
 
         private void Send(NewletterSettings newletterSettings, string html, PlexSettings plexSettings, bool testEmail = false)
         {
+            Log.Debug("Entering Send");
             var settings = EmailSettings.GetSettings();
 
             if (!settings.Enabled || string.IsNullOrEmpty(settings.EmailHost))
@@ -255,11 +276,13 @@ namespace PlexRequests.Services.Jobs
             }
 
             var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
+
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
                 Subject = "New Content on Plex!",
             };
+            Log.Debug("Created Plain/HTML MIME body");
 
             if (!testEmail)
             {
@@ -284,6 +307,7 @@ namespace PlexRequests.Services.Jobs
                     }
                 }
             }
+
             message.Bcc.Add(new MailboxAddress(settings.EmailUsername, settings.RecipientEmail)); // Include the admin
 
             message.From.Add(new MailboxAddress(settings.EmailUsername, settings.EmailSender));
@@ -302,7 +326,9 @@ namespace PlexRequests.Services.Jobs
                         client.Authenticate(settings.EmailUsername, settings.EmailPassword);
                     }
                     Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
+                    Log.Debug("Sending");
                     client.Send(message);
+                    Log.Debug("Sent");
                     client.Disconnect(true);
                 }
             }

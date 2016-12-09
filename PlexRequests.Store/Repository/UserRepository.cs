@@ -40,11 +40,9 @@ namespace PlexRequests.Store.Repository
         public UserRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config,cache)
         {
             DbConfig = config;
-            Cache = cache;
         }
 
         private ISqliteConfiguration DbConfig { get; }
-        private  ICacheProvider Cache { get; }
         private IDbConnection Db => DbConfig.DbConnection();
 
         public UsersModel GetUser(string userGuid)
@@ -68,7 +66,9 @@ namespace PlexRequests.Store.Repository
             return await Db.QueryFirstOrDefaultAsync<UsersModel>(sql, new {UserGuid = userguid});
         }
 
-        #region abstract implimentation
+        #region abstract implementation
+
+#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         [Obsolete]
         public override UsersModel Get(string id)
         {
@@ -93,6 +93,7 @@ namespace PlexRequests.Store.Repository
             throw new System.NotImplementedException();
         }
 
+#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
         #endregion
     }
 

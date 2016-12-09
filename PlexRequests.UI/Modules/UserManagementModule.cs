@@ -44,7 +44,7 @@ namespace PlexRequests.UI.Modules
             Get["/"] = x => Load();
 
             Get["/users", true] = async (x, ct) => await LoadUsers();
-            Post["/createuser", true] = async (x,ct) => await CreateUser();
+            Post["/createuser", true] = async (x, ct) => await CreateUser();
             Get["/local/{id}"] = x => LocalDetails((Guid)x.id);
             Get["/plex/{id}", true] = async (x, ct) => await PlexDetails(x.id);
             Get["/permissions"] = x => GetEnum<Permissions>();
@@ -91,6 +91,7 @@ namespace PlexRequests.UI.Modules
                 {
                     var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == u.Id);
                     var userDb = userLogins.FirstOrDefault(x => x.UserId == u.Id);
+
                     // We don't have the user in the database yet
                     if (dbUser == null)
                     {
@@ -101,6 +102,15 @@ namespace PlexRequests.UI.Modules
                         // The Plex User is in the database
                         model.Add(MapPlexUser(u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
                     }
+                }
+
+                // Also get the server admin
+                var account = PlexApi.GetAccount(plexSettings.PlexAuthToken);
+                if (account != null)
+                {
+                    var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == account.Id);
+                    var userDb = userLogins.FirstOrDefault(x => x.UserId == account.Id);
+                    model.Add(MapPlexAdmin(account, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
                 }
             }
             return Response.AsJson(model);
@@ -193,7 +203,6 @@ namespace PlexRequests.UI.Modules
                 localUser.Permissions = permissionsValue;
                 localUser.Features = featuresValue;
 
-
                 var currentProps = ByteConverterHelper.ReturnObject<UserProperties>(localUser.UserProperties);
 
                 // Let's check if the alias has changed, if so we need to change all the requests associated with this
@@ -232,6 +241,24 @@ namespace PlexRequests.UI.Modules
                 return Response.AsJson(retUser);
             }
 
+            // So it could actually be the admin
+            var account = PlexApi.GetAccount(plexSettings.PlexAuthToken);
+            if (plexDbUser != null && account != null)
+            {
+                // We have a user in the DB for this Plex Account
+                plexDbUser.Permissions = permissionsValue;
+                plexDbUser.Features = featuresValue;
+
+                await UpdateRequests(plexDbUser.Username, plexDbUser.UserAlias, model.Alias);
+
+                plexDbUser.UserAlias = model.Alias;
+
+                await PlexUsersRepository.UpdateAsync(plexDbUser);
+
+                var retUser = MapPlexAdmin(account, plexDbUser, userLogin?.LastLoggedIn ?? DateTime.MinValue);
+                return Response.AsJson(retUser);
+            }
+
             // We have a Plex Account but he's not in the DB
             if (plexUser != null)
             {
@@ -256,12 +283,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task UpdateRequests(string username, string oldAlias, string newAlias)
         {
+            var newUsername = string.IsNullOrEmpty(newAlias) ? username : newAlias; // User the username if we are clearing the alias
+            var olderUsername = string.IsNullOrEmpty(oldAlias) ? username : oldAlias;
             // Let's check if the alias has changed, if so we need to change all the requests associated with this
-            if (!oldAlias.Equals(newAlias, StringComparison.CurrentCultureIgnoreCase))
+            if (!olderUsername.Equals(newUsername, StringComparison.CurrentCultureIgnoreCase))
             {
-                var newUsername = string.IsNullOrEmpty(newAlias) ? username : newAlias; // User the username if we are clearing the alias
-                var olderUsername = string.IsNullOrEmpty(oldAlias) ? username : oldAlias;
-
                 var requests = await RequestService.GetAllAsync();
                 // Update all requests
                 var requestsWithThisUser = requests.Where(x => x.RequestedUsers.Contains(olderUsername)).ToList();
@@ -371,35 +397,9 @@ namespace PlexRequests.UI.Modules
                 LastLoggedIn = lastLoggedIn,
             };
 
-            // Add permissions
-            foreach (var p in Enum.GetValues(typeof(Permissions)))
-            {
-                var perm = (Permissions)p;
-                var displayValue = EnumHelper<Permissions>.GetDisplayValue(perm);
-                var pm = new CheckBox
-                {
-                    Name = displayValue,
-                    Selected = permissions.HasFlag(perm),
-                    Value = (int)perm
-                };
 
-                m.Permissions.Add(pm);
-            }
-
-            // Add features
-            foreach (var p in Enum.GetValues(typeof(Features)))
-            {
-                var perm = (Features)p;
-                var displayValue = EnumHelper<Features>.GetDisplayValue(perm);
-                var pm = new CheckBox
-                {
-                    Name = displayValue,
-                    Selected = features.HasFlag(perm),
-                    Value = (int)perm
-                };
-
-                m.Features.Add(pm);
-            }
+            m.Permissions.AddRange(GetPermissions(permissions));
+            m.Features.AddRange(GetFeatures(features));
 
             return m;
         }
@@ -429,6 +429,42 @@ namespace PlexRequests.UI.Modules
                 },
             };
 
+            m.Permissions.AddRange(GetPermissions(permissions));
+            m.Features.AddRange(GetFeatures(features));
+
+            return m;
+        }
+
+        private UserManagementUsersViewModel MapPlexAdmin(PlexAccount plexInfo, PlexUsers dbUser, DateTime lastLoggedIn)
+        {
+            if (dbUser == null)
+            {
+                dbUser = new PlexUsers();
+            }
+            var features = (Features)dbUser?.Features;
+            var permissions = (Permissions)dbUser?.Permissions;
+
+            var m = new UserManagementUsersViewModel
+            {
+                Id = plexInfo.Id,
+                PermissionsFormattedString = permissions == 0 ? "None" : permissions.ToString(),
+                FeaturesFormattedString = features.ToString(),
+                Username = plexInfo.Username,
+                Type = UserType.PlexUser,
+                EmailAddress = plexInfo.Email,
+                Alias = dbUser?.UserAlias ?? string.Empty,
+                LastLoggedIn = lastLoggedIn,
+            };
+
+            m.Permissions.AddRange(GetPermissions(permissions));
+            m.Features.AddRange(GetFeatures(features));
+
+            return m;
+        }
+
+        private List<CheckBox> GetPermissions(Permissions permissions)
+        {
+            var retVal = new List<CheckBox>();
             // Add permissions
             foreach (var p in Enum.GetValues(typeof(Permissions)))
             {
@@ -441,9 +477,15 @@ namespace PlexRequests.UI.Modules
                     Value = (int)perm
                 };
 
-                m.Permissions.Add(pm);
+                retVal.Add(pm);
             }
 
+            return retVal;
+        }
+
+        private List<CheckBox> GetFeatures(Features features)
+        {
+            var retVal = new List<CheckBox>();
             // Add features
             foreach (var p in Enum.GetValues(typeof(Features)))
             {
@@ -456,10 +498,9 @@ namespace PlexRequests.UI.Modules
                     Value = (int)perm
                 };
 
-                m.Features.Add(pm);
+                retVal.Add(pm);
             }
-
-            return m;
+            return retVal;
         }
     }
 }
