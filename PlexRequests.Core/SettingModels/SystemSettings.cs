@@ -28,6 +28,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 using PlexRequests.Core.Models;
 
 namespace PlexRequests.Core.SettingModels
@@ -35,9 +36,9 @@ namespace PlexRequests.Core.SettingModels
     public class SystemSettings : Settings
     {
         public Branches Branch { get; set; }
-
+        public string Version { get; set; }
         public StatusModel Status { get; set; }
-
+        [JsonIgnore]
         public List<BranchDropdown> BranchDropdown { get; set; }
     }
 

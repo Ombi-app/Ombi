@@ -183,7 +183,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> CreateUser()
         {
             var username = (string)Request.Form.Username;
-            var userId = Mapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All(), 0);
+            var userId = Mapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All() - (int)Permissions.ReadOnlyUser, 0);
             Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username, CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
 

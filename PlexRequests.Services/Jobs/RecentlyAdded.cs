@@ -119,32 +119,58 @@ namespace PlexRequests.Services.Jobs
             var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
             Log.Debug("Getting Plex Library Sections");
 
-            var tvSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            var tvSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
             Log.Debug("Filtered sections for TV");
-            var movieSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase));
+            var movieSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
             Log.Debug("Filtered sections for Movies");
-            
-            
-            var recentlyAddedTv = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection.Key);
-            Log.Debug("Got RecentlyAdded TV Shows");
-            var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection.Key);
-            Log.Debug("Got RecentlyAdded Movies");
 
-            Log.Debug("Started Generating Movie HTML");
-            GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
-            Log.Debug("Finished Generating Movie HTML");
-            Log.Debug("Started Generating TV HTML");
-            GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
-            Log.Debug("Finished Generating TV HTML");
+            var plexVersion = Api.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri).Version;
 
-            var template = new RecentlyAddedTemplate();
-            var html = template.LoadTemplate(sb.ToString());
-            Log.Debug("Loaded the template");
+            var html = string.Empty;
+            if (plexVersion.StartsWith("1.3"))
+            {
+                var recentlyAddedTv = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                Log.Debug("Got RecentlyAdded TV Shows");
+                var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection?.Key);
+                Log.Debug("Got RecentlyAdded Movies");
+
+                Log.Debug("Started Generating Movie HTML");
+                GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
+                Log.Debug("Finished Generating Movie HTML");
+                Log.Debug("Started Generating TV HTML");
+                GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
+                Log.Debug("Finished Generating TV HTML");
+
+                var template = new RecentlyAddedTemplate();
+                html = template.LoadTemplate(sb.ToString());
+                Log.Debug("Loaded the template");
+            }
+            else
+            {
+                // Old API
+                var recentlyAddedTv = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                Log.Debug("Got RecentlyAdded TV Shows");
+                var recentlyAddedMovies = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection?.Key);
+                Log.Debug("Got RecentlyAdded Movies");
+
+                Log.Debug("Started Generating Movie HTML");
+                GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
+                Log.Debug("Finished Generating Movie HTML");
+                Log.Debug("Started Generating TV HTML");
+                GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
+                Log.Debug("Finished Generating TV HTML");
+
+                var template = new RecentlyAddedTemplate();
+                html = template.LoadTemplate(sb.ToString());
+                Log.Debug("Loaded the template");
+            }
+            
+
 
             Send(newletterSettings, html, plexSettings, testEmail);
         }
 
-        private void GenerateMovieHtml(RecentlyAddedModel movies, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateMovieHtml(RecentlyAddedModelOld movies, PlexSettings plexSettings, StringBuilder sb)
         {
             var orderedMovies = movies?._children?.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<RecentlyAddedChild>();
             sb.Append("<h1>New Movies:</h1><br/><br/>");
@@ -200,9 +226,130 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
-        private void GenerateTvHtml(RecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateMovieHtml(PlexRecentlyAddedModel movies, PlexSettings plexSettings, StringBuilder sb)
+        {
+            var orderedMovies = movies?.MediaContainer?.Metadata?.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<Metadata>();
+            sb.Append("<h1>New Movies:</h1><br/><br/>");
+            sb.Append(
+                "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
+            foreach (var movie in orderedMovies)
+            {
+                var plexGUID = string.Empty;
+                try
+                {
+                    var metaData = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                        movie.ratingKey.ToString());
+
+                    plexGUID = metaData.Video.Guid;
+
+                    var imdbId = PlexHelper.GetProviderIdFromPlexGuid(plexGUID);
+                    var info = _movieApi.GetMovieInformation(imdbId).Result;
+                    if (info == null)
+                    {
+                        throw new Exception($"Movie with Imdb id {imdbId} returned null from the MovieApi");
+                    }
+                    AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
+
+                    sb.Append("<tr>");
+                    sb.Append(
+                        "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
+
+                    Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
+                    Header(sb, 3, $"{info.Title} {info.ReleaseDate?.ToString("yyyy") ?? string.Empty}");
+                    EndTag(sb, "a");
+
+                    if (info.Genres.Any())
+                    {
+                        AddParagraph(sb,
+                            $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+                    }
+
+                    AddParagraph(sb, info.Overview);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
+                    Log.Error(
+                        "Exception when trying to process a Movie, either in getting the metadata from Plex OR getting the information from TheMovieDB, Plex GUID = {0}",
+                        plexGUID);
+                }
+                finally
+                {
+                    EndLoopHtml(sb);
+                }
+
+            }
+            sb.Append("</table><br/><br/>");
+        }
+
+        private void GenerateTvHtml(RecentlyAddedModelOld tv, PlexSettings plexSettings, StringBuilder sb)
         {
             var orderedTv = tv?._children;
+            if (orderedTv == null)
+            {
+                return;
+            }
+            orderedTv = orderedTv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
+            // TV
+            sb.Append("<h1>New Episodes:</h1><br/><br/>");
+            sb.Append(
+                "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
+            foreach (var t in orderedTv)
+            {
+                var plexGUID = string.Empty;
+                try
+                {
+
+                    var parentMetaData = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                        t.parentRatingKey.ToString());
+
+                    plexGUID = parentMetaData.Directory.Guid;
+
+                    var info = TvApi.ShowLookupByTheTvDbId(int.Parse(PlexHelper.GetProviderIdFromPlexGuid(plexGUID)));
+
+                    var banner = info.image?.original;
+                    if (!string.IsNullOrEmpty(banner))
+                    {
+                        banner = banner.Replace("http", "https"); // Always use the Https banners
+                    }
+                    AddImageInsideTable(sb, banner);
+
+                    sb.Append("<tr>");
+                    sb.Append(
+                        "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
+
+                    var title = $"{t.grandparentTitle} - {t.title}  {t.originallyAvailableAt?.Substring(0, 4)}";
+
+                    Href(sb, $"https://www.imdb.com/title/{info.externals.imdb}/");
+                    Header(sb, 3, title);
+                    EndTag(sb, "a");
+
+                    AddParagraph(sb, $"Season: {t.parentIndex}, Episode: {t.index}");
+                    if (info.genres.Any())
+                    {
+                        AddParagraph(sb, $"Genre: {string.Join(", ", info.genres.Select(x => x.ToString()).ToArray())}");
+                    }
+
+                    AddParagraph(sb, string.IsNullOrEmpty(t.summary) ? info.summary : t.summary);
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
+                    Log.Error(
+                        "Exception when trying to process a TV Show, either in getting the metadata from Plex OR getting the information from TVMaze, Plex GUID = {0}",
+                        plexGUID);
+                }
+                finally
+                {
+                    EndLoopHtml(sb);
+                }
+            }
+            sb.Append("</table><br/><br/>");
+        }
+
+        private void GenerateTvHtml(PlexRecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
+        {
+            var orderedTv = tv?.MediaContainer?.Metadata;
             if (orderedTv == null)
             {
                 return;
