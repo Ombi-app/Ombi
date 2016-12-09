@@ -202,11 +202,17 @@ namespace PlexRequests.Services.Jobs
 
         private void GenerateTvHtml(RecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
         {
+            var orderedTv = tv?._children;
+            if (orderedTv == null)
+            {
+                return;
+            }
+            orderedTv = orderedTv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
-            foreach (var t in tv._children.OrderByDescending(x => x.addedAt.UnixTimeStampToDateTime()))
+            foreach (var t in orderedTv)
             {
                 var plexGUID = string.Empty;
                 try
