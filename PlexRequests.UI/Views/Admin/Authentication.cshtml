@@ -4,10 +4,14 @@
 @{
     var baseUrl = Html.GetBaseUrl();
     var formAction = "/admin/authentication";
+
+    var usermanagement = "/usermanagement";
     if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
     {
         formAction = "/" + baseUrl.ToHtmlString() + formAction;
+        usermanagement = "/" + baseUrl.ToHtmlString() + usermanagement;
     }
+
 }
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
@@ -50,7 +54,7 @@
 
 
             <br />
-            <a href="/@Html.GetBaseUrl()/usermanagement/" class="btn btn-info-outline">User Management</a>
+            <a href="@usermanagement" class="btn btn-info-outline">User Management</a>
             <br />
             <br />
             
