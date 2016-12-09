@@ -1234,7 +1234,7 @@ namespace PlexRequests.UI.Modules
             if (IsAdmin)
                 return true;
 
-            if (ShouldAutoApprove(type,s,Username))
+            if (Security.HasPermissions(User, Permissions.BypassRequestLimit))
                 return true;
 
             var requestLimit = GetRequestLimitForType(type, s);
