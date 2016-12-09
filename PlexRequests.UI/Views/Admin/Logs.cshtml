@@ -21,7 +21,10 @@
                 <label for="logLevel" class="control-label">Log Level</label>
                 <div id="logLevel">
                     <select class="form-control" id="selected">
-                        <option id="Trace" value="0">Trace</option>
+                        @if (Model)
+                        {
+                            <option id="Trace" value="0">Trace</option>
+                        }
                         <option id="Debug" value="1">Debug</option>
                         <option id="Info" value="2">Info</option>
                         <option id="Warn" value="3">Warn</option>

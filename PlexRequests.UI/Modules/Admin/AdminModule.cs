@@ -742,7 +742,10 @@ namespace PlexRequests.UI.Modules
 
         private Negotiator Logs()
         {
-            return View["Logs"];
+            var model = false;
+            if (Request.Query["developer"] != null)
+                model = true;
+            return View["Logs", model];
         }
 
         private Response LoadLogs()
