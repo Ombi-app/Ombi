@@ -119,9 +119,9 @@ namespace PlexRequests.Services.Jobs
             var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
             Log.Debug("Getting Plex Library Sections");
 
-            var tvSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
+            var tvSections = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
             Log.Debug("Filtered sections for TV");
-            var movieSection = libs.Directories.FirstOrDefault(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
+            var movieSection = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
             Log.Debug("Filtered sections for Movies");
 
             var plexVersion = Api.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri).Version;
@@ -129,16 +129,33 @@ namespace PlexRequests.Services.Jobs
             var html = string.Empty;
             if (plexVersion.StartsWith("1.3"))
             {
-                var recentlyAddedTv = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                var tvMetadata = new List<Metadata>();
+                var movieMetadata = new List<Metadata>();
+                foreach (var tvSection in tvSections)
+                {
+                    var item = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                        tvSection?.Key);
+                    if (item?.MediaContainer?.Metadata != null)
+                    {
+                        tvMetadata.AddRange(item?.MediaContainer?.Metadata);
+                    }
+                }
                 Log.Debug("Got RecentlyAdded TV Shows");
-                var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection?.Key);
+                foreach (var movie in movieSection)
+                {
+                    var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
+                    if (recentlyAddedMovies?.MediaContainer?.Metadata != null)
+                    {
+                        movieMetadata.AddRange(recentlyAddedMovies?.MediaContainer?.Metadata);
+                    }
+                }
                 Log.Debug("Got RecentlyAdded Movies");
 
                 Log.Debug("Started Generating Movie HTML");
-                GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
+                GenerateMovieHtml(movieMetadata, plexSettings, sb);
                 Log.Debug("Finished Generating Movie HTML");
                 Log.Debug("Started Generating TV HTML");
-                GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
+                GenerateTvHtml(tvMetadata, plexSettings, sb);
                 Log.Debug("Finished Generating TV HTML");
 
                 var template = new RecentlyAddedTemplate();
@@ -148,16 +165,33 @@ namespace PlexRequests.Services.Jobs
             else
             {
                 // Old API
-                var recentlyAddedTv = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                var tvChild = new List<RecentlyAddedChild>();
+                var movieChild = new List<RecentlyAddedChild>();
+                foreach (var tvSection in tvSections)
+                {
+                    var recentlyAddedTv = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                    if (recentlyAddedTv?._children != null)
+                    {
+                        tvChild.AddRange(recentlyAddedTv?._children);
+                    }
+                }
+
                 Log.Debug("Got RecentlyAdded TV Shows");
-                var recentlyAddedMovies = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, movieSection?.Key);
+                foreach (var movie in movieSection)
+                {
+                    var recentlyAddedMovies = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
+                    if (recentlyAddedMovies?._children != null)
+                    {
+                        tvChild.AddRange(recentlyAddedMovies?._children);
+                    }
+                }
                 Log.Debug("Got RecentlyAdded Movies");
 
                 Log.Debug("Started Generating Movie HTML");
-                GenerateMovieHtml(recentlyAddedMovies, plexSettings, sb);
+                GenerateMovieHtml(movieChild, plexSettings, sb);
                 Log.Debug("Finished Generating Movie HTML");
                 Log.Debug("Started Generating TV HTML");
-                GenerateTvHtml(recentlyAddedTv, plexSettings, sb);
+                GenerateTvHtml(tvChild, plexSettings, sb);
                 Log.Debug("Finished Generating TV HTML");
 
                 var template = new RecentlyAddedTemplate();
@@ -170,9 +204,9 @@ namespace PlexRequests.Services.Jobs
             Send(newletterSettings, html, plexSettings, testEmail);
         }
 
-        private void GenerateMovieHtml(RecentlyAddedModelOld movies, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateMovieHtml(List<RecentlyAddedChild> movies, PlexSettings plexSettings, StringBuilder sb)
         {
-            var orderedMovies = movies?._children?.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<RecentlyAddedChild>();
+            var orderedMovies = movies.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<RecentlyAddedChild>();
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
@@ -226,9 +260,9 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
-        private void GenerateMovieHtml(PlexRecentlyAddedModel movies, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateMovieHtml(List<Metadata> movies, PlexSettings plexSettings, StringBuilder sb)
         {
-            var orderedMovies = movies?.MediaContainer?.Metadata?.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<Metadata>();
+            var orderedMovies = movies.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<Metadata>();
             sb.Append("<h1>New Movies:</h1><br/><br/>");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
@@ -282,14 +316,9 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
-        private void GenerateTvHtml(RecentlyAddedModelOld tv, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateTvHtml(List<RecentlyAddedChild> tv, PlexSettings plexSettings, StringBuilder sb)
         {
-            var orderedTv = tv?._children;
-            if (orderedTv == null)
-            {
-                return;
-            }
-            orderedTv = orderedTv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
+           var orderedTv = tv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
@@ -347,14 +376,9 @@ namespace PlexRequests.Services.Jobs
             sb.Append("</table><br/><br/>");
         }
 
-        private void GenerateTvHtml(PlexRecentlyAddedModel tv, PlexSettings plexSettings, StringBuilder sb)
+        private void GenerateTvHtml(List<Metadata> tv, PlexSettings plexSettings, StringBuilder sb)
         {
-            var orderedTv = tv?.MediaContainer?.Metadata;
-            if (orderedTv == null)
-            {
-                return;
-            }
-            orderedTv = orderedTv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
+            var orderedTv = tv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
             sb.Append("<h1>New Episodes:</h1><br/><br/>");
             sb.Append(
