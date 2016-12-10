@@ -36,10 +36,12 @@ using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -47,7 +49,7 @@ namespace PlexRequests.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("test", pr)
+             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("test", pr, security)
         {
             this.RequiresAuthentication();
             

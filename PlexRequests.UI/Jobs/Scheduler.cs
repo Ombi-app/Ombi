@@ -62,18 +62,19 @@ namespace PlexRequests.UI.Jobs
             var jobList = new List<IJobDetail>
             {
                 JobBuilder.Create<PlexAvailabilityChecker>().WithIdentity("PlexAvailabilityChecker", "Plex").Build(),
-                JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Cache").Build(),
+                JobBuilder.Create<PlexContentCacher>().WithIdentity("PlexContentCacher", "PlexCacher").Build(),
+                JobBuilder.Create<PlexEpisodeCacher>().WithIdentity("PlexEpisodeCacher", "Plex").Build(),
+                JobBuilder.Create<PlexUserChecker>().WithIdentity("PlexUserChecker", "Plex").Build(),
                 JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
                 JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
                 JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
                 JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                 JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
-                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build()
+                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
+                JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
             };
-
-
-
+            
             jobs.AddRange(jobList);
 
             return jobs;
@@ -92,8 +93,8 @@ namespace PlexRequests.UI.Jobs
             var jobs = CreateJobs();
             var triggers = CreateTriggers();
 
-            var jobDetails = jobs as IJobDetail[] ?? jobs.ToArray();
-            var triggerDetails = triggers as ITrigger[] ?? triggers.ToArray();
+            var jobDetails = jobs as IJobDetail[] ?? jobs.OrderByDescending(x => x.Key.Name).ToArray();
+            var triggerDetails = triggers as ITrigger[] ?? triggers.OrderByDescending(x => x.Key.Name).ToArray();
 
             if (jobDetails.Length != triggerDetails.Length)
             {
@@ -151,56 +152,80 @@ namespace PlexRequests.UI.Jobs
             {
                 s.UserRequestLimitResetter = 12;
             }
-
+            if (s.FaultQueueHandler == 0)
+            {
+                s.FaultQueueHandler = 6;
+            }
+            if (s.PlexContentCacher == 0)
+            {
+                s.PlexContentCacher = 60;
+            }
+            if (s.PlexUserChecker == 0)
+            {
+                s.PlexUserChecker = 24;
+            }
 
             var triggers = new List<ITrigger>();
 
             var plexAvailabilityChecker =
                 TriggerBuilder.Create()
                     .WithIdentity("PlexAvailabilityChecker", "Plex")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexAvailabilityChecker).RepeatForever())
+                    .Build();
+            var plexCacher =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexContentCacher", "PlexCacher")
+                    .StartNow()
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexContentCacher).RepeatForever())
+                    .Build();
+
+            var plexUserChecker =
+                TriggerBuilder.Create()
+                    .WithIdentity("PlexUserChecker", "Plex")
+                    .StartAt(DateBuilder.FutureDate(30, IntervalUnit.Minute))
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexUserChecker).RepeatForever())
                     .Build();
 
             var srCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("SickRageCacher", "Cache")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(2, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.SickRageCacher).RepeatForever())
                     .Build();
 
             var sonarrCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("SonarrCacher", "Cache")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(3, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.SonarrCacher).RepeatForever())
                     .Build();
 
             var cpCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("CouchPotatoCacher", "Cache")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(4, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.CouchPotatoCacher).RepeatForever())
                     .Build();
 
             var storeBackup =
                 TriggerBuilder.Create()
                     .WithIdentity("StoreBackup", "Database")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(20, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreBackup).RepeatForever())
                     .Build();
 
             var storeCleanup =
                 TriggerBuilder.Create()
                     .WithIdentity("StoreCleanup", "Database")
-                    .StartNow()
+                    .StartAt(DateBuilder.FutureDate(35, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.StoreCleanup).RepeatForever())
                     .Build();
 
             var userRequestLimiter =
                 TriggerBuilder.Create()
                     .WithIdentity("UserRequestLimiter", "Request")
-                    .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(25, IntervalUnit.Minute))
                     // Everything has started on application start, lets wait 5 minutes
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.UserRequestLimitResetter).RepeatForever())
                     .Build();
@@ -208,7 +233,7 @@ namespace PlexRequests.UI.Jobs
             var plexEpCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("PlexEpisodeCacher", "Cache")
-                    .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.PlexEpisodeCacher).RepeatForever())
                     .Build();
 
@@ -218,7 +243,14 @@ namespace PlexRequests.UI.Jobs
                     .WithIdentity("RecentlyAddedModel", "Email")
                     .StartNow()
                     .WithCronSchedule(s.RecentlyAddedCron)
-                    .WithSimpleSchedule(x => x.WithIntervalInHours(2).RepeatForever())
+                    .Build();
+
+            var fault =
+                TriggerBuilder.Create()
+                    .WithIdentity("FaultQueueHandler", "Fault")
+                    //.StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(13, IntervalUnit.Minute))
+                    .WithSimpleSchedule(x => x.WithIntervalInHours(s.FaultQueueHandler).RepeatForever())
                     .Build();
 
             triggers.Add(rencentlyAdded);
@@ -230,6 +262,9 @@ namespace PlexRequests.UI.Jobs
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);
             triggers.Add(plexEpCacher);
+            triggers.Add(fault);
+            triggers.Add(plexCacher);
+            triggers.Add(plexUserChecker);
 
             return triggers;
         }

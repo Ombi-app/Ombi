@@ -35,6 +35,7 @@ using NUnit.Framework;
 
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Sonarr;
+using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
@@ -146,32 +147,6 @@ namespace PlexRequests.UI.Tests
                     true, It.IsAny<bool>()), Times.Once);
         }
 
-        [Test]
-        public async Task RequestEpisodesWithExistingSeriesTest()
-        {
-            var episodesReturned = new List<SonarrEpisodes>
-            {
-                new SonarrEpisodes {episodeNumber = 1, seasonNumber = 2, monitored = false, id=22}
-            };
-            SonarrMock.Setup(x => x.GetEpisodes(It.IsAny<string>(), It.IsAny<string>(),
-                            It.IsAny<Uri>())).Returns(episodesReturned);
-            SonarrMock.Setup(x => x.GetEpisode("22", It.IsAny<string>(), It.IsAny<Uri>())).Returns(new SonarrEpisode {id=22});
-
-
-            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
-
-            var model = new RequestedModel
-            {
-                Episodes = new List<EpisodesModel> { new EpisodesModel { EpisodeNumber = 1, SeasonNumber = 2 } }
-            };
-
-            var series = new Series();
-            await Sender.RequestEpisodesWithExistingSeries(model, series, GetSonarrSettings());
-
-            SonarrMock.Verify(x => x.UpdateEpisode(It.Is<SonarrEpisode>(e => e.monitored), It.IsAny<string>(), It.IsAny<Uri>()));
-            SonarrMock.Verify(x => x.GetEpisode("22", It.IsAny<string>(), It.IsAny<Uri>()),Times.Once);
-            SonarrMock.Verify(x => x.SearchForEpisodes(It.IsAny<int[]>(), It.IsAny<string>(), It.IsAny<Uri>()), Times.Once);
-        }
 
         private SonarrSettings GetSonarrSettings()
         {

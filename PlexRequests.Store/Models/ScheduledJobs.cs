@@ -35,5 +35,6 @@ namespace PlexRequests.Store.Models
     {
         public string Name { get; set; }
         public DateTime LastRun { get; set; }
+        public bool Running { get; set; }
     }
 }

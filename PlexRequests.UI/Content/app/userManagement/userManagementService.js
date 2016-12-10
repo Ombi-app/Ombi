@@ -4,37 +4,68 @@
 
         $http.defaults.headers.common['Content-Type'] = 'application/json'; // Set default headers
 
+        
+
         var getUsers = function () {
-            return $http.get('/usermanagement/users');
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/users');
+            return $http.get(url);
         };
 
-        var addUser = function (user, claims) {
-            if (!user || claims.length === 0) {
+        var addUser = function (user, permissions, features) {
+            if (!user || permissions.length === 0) {
                 return null;
             }
 
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/createuser');
+
             return $http({
-                url: '/usermanagement/createuser',
+                url: url,
                 method: "POST",
-                data: { username: user.username, password: user.password, claims: claims, email: user.email }
+                data: { username: user.username, password: user.password, permissions: permissions, features : features, email: user.email }
             });
         }
 
-        var getClaims = function () {
-            return $http.get('/usermanagement/claims');
+        var getFeatures = function () {
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/features');
+            return $http.get(url);
         }
 
-        var updateUser = function (id, claims, alias, email) {
+        var getPermissions = function () {
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/permissions');
+            return $http.get(url);
+
+        }
+
+        var updateUser = function (id, permissions, features, alias, email) {
+
+            if (!isArray(permissions)) {
+                permissions = [];
+            }
+            if (!isArray(features)) {
+                features = [];
+            }
+
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/updateUser');
             return $http({
-                url: '/usermanagement/updateUser',
+                url: url,
                 method: "POST",
-                data: { id: id, claims: claims, alias: alias, emailAddress: email }
+                data: { id: id, permissions: permissions, features: features, alias: alias, emailAddress: email },
             });
         }
 
         var deleteUser = function (id) {
+
+            var url = createBaseUrl(getBaseUrl(), '/usermanagement/deleteUser');
             return $http({
-                url: '/usermanagement/deleteUser',
+                url: url,
                 method: "POST",
                 data: { id: id }
             });
@@ -43,10 +74,18 @@
         return {
             getUsers: getUsers,
             addUser: addUser,
-            getClaims: getClaims,
+            getFeatures: getFeatures,
+            getPermissions: getPermissions,
             updateUser: updateUser,
             deleteUser: deleteUser
         };
+    }
+    function getBaseUrl() {
+        return $('#baseUrl').text();
+    }
+
+    function isArray(obj) {
+        return !!obj && Array === obj.constructor;
     }
 
     angular.module('PlexRequests').factory('userManagementService', ["$http", userManagementService]);

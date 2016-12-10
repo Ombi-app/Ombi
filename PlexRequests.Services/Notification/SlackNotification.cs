@@ -88,6 +88,11 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.Test:
                     await PushTest(pushSettings);
                     break;
+                case NotificationType.RequestDeclined:
+                    break;
+                case NotificationType.ItemAddedToFaultQueue:
+                    await PushFaultQueue(model, pushSettings);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -108,6 +113,12 @@ namespace PlexRequests.Services.Notification
         private async Task PushTest(SlackNotificationSettings settings)
         {
             var message = $"This is a test from Plex Requests, if you can see this then we have successfully pushed a notification!";
+            await Push(settings, message);
+        }
+
+        private async Task PushFaultQueue(NotificationModel model, SlackNotificationSettings settings)
+        {
+            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
             await Push(settings, message);
         }
 

@@ -25,25 +25,60 @@
 //  ************************************************************************/
 #endregion
 
+using Nancy;
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
+using PlexRequests.Helpers.Permissions;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Helpers
 {
     public static class HtmlSecurityHelper
     {
-        public static bool HasAnyPermission(this HtmlHelpers helper, params string[] claims)
+        private static ISecurityExtensions Security
         {
-            if (!helper.CurrentUser.IsAuthenticated())
+            get
             {
-                return false;
+                var security = ServiceLocator.Instance.Resolve<ISecurityExtensions>();
+                return _security ?? (_security = security);
             }
-            return helper.CurrentUser.HasAnyClaim(claims);
         }
 
-        public static bool DoesNotHaveAnyPermission(this HtmlHelpers helper, params string[] claims)
+        private static ISecurityExtensions _security;
+
+
+        public static bool HasAnyPermission(this HtmlHelpers helper, bool authenticated = true, params Permissions[] permission)
         {
-            return SecurityExtensions.DoesNotHaveClaims(claims, helper.CurrentUser);
+            if (authenticated)
+            {
+                return helper.CurrentUser.IsAuthenticated()
+                       && Security.HasAnyPermissions(helper.CurrentUser, permission);
+            }
+            return Security.HasAnyPermissions(helper.CurrentUser, permission);
+        }
+
+        public static bool DoesNotHavePermission(this HtmlHelpers helper, int permission)
+        {
+            return Security.DoesNotHavePermissions(permission, helper.CurrentUser);
+        }
+
+        public static bool IsAdmin(this HtmlHelpers helper, bool isAuthenticated = true)
+        {
+            return HasAnyPermission(helper, isAuthenticated, Permissions.Administrator);
+        }
+
+        public static bool IsLoggedIn(this HtmlHelpers helper, NancyContext context)
+        {
+            return Security.IsLoggedIn(context);
+        }
+
+        public static bool IsPlexUser(this HtmlHelpers helper)
+        {
+            return Security.IsPlexUser(helper.CurrentUser);
+        }
+        public static bool IsNormalUser(this HtmlHelpers helper)
+        {
+            return Security.IsNormalUser(helper.CurrentUser);
         }
     }
 }

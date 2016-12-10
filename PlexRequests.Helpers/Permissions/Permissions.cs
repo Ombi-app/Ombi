@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SessionKeys.cs
+//    File: Permissions.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,55 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.UI.Models
+
+using System;
+using System.ComponentModel.DataAnnotations;
+
+namespace PlexRequests.Helpers.Permissions
 {
-    public class SessionKeys
+    [Flags]
+    ////
+    //// NOTE if any are added, make sure we change the UserManagementHelper
+    //// 
+    public enum Permissions
     {
-        public const string UsernameKey = "Username";
-        public const string ClientDateTimeOffsetKey = "ClientDateTimeOffset";
-        public const string UserWizardPlexAuth = nameof(UserWizardPlexAuth);
-        public const string UserWizardMachineId = nameof(UserWizardMachineId);
+        [Display(Name = "Access Administration Settings")]
+        Administrator = 1,
+
+        [Display(Name = "Request Movie")]
+        RequestMovie = 2,
+
+        [Display(Name = "Request TV Show")]
+        RequestTvShow = 4,
+
+        [Display(Name = "Request Music")]
+        RequestMusic = 8,
+
+        [Display(Name = "Report Issue")]
+        ReportIssue = 16,
+
+        [Display(Name = "Read Only User")]
+        ReadOnlyUser = 32,
+
+        [Display(Name = "Auto Approve Movie Requests")]
+        AutoApproveMovie = 64,
+
+        [Display(Name = "Auto Approve TV Show Requests")]
+        AutoApproveTv = 128,
+
+        [Display(Name = "Auto Approve Album Requests")]
+        AutoApproveAlbum = 256,
+
+        [Display(Name = "Manage Requests")]
+        ManageRequests = 512,
+
+        [Display(Name = "Users can only view their own requests")]
+        UsersCanViewOnlyOwnRequests = 1024,
+
+        [Display(Name = "Users can only view their own issues")]
+        UsersCanViewOnlyOwnIssues = 2048,
+
+        [Display(Name = "Bypass the request limit")]
+        BypassRequestLimit = 4096
     }
 }

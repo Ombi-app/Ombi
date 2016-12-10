@@ -203,6 +203,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Authentication\CustomAuthenticationConfiguration.cs" />
+    <Compile Include="Authentication\CustomAuthenticationProvider.cs" />
+    <Compile Include="Authentication\CustomModuleExtensions.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Helpers\BaseUrlHelper.cs" />
     <Compile Include="Helpers\ContravariantBindingResolver.cs" />
@@ -210,14 +213,10 @@
     <Compile Include="Helpers\CustomHtmlHelper.cs" />
     <Compile Include="Helpers\DebugRootPathProvider.cs" />
     <Compile Include="Helpers\EmptyViewBase.cs" />
-    <Compile Include="Helpers\HeadphonesSender.cs" />
     <Compile Include="Helpers\AngularViewBase.cs" />
     <Compile Include="Helpers\HtmlSecurityHelper.cs" />
-    <Compile Include="Helpers\SecurityExtensions.cs" />
     <Compile Include="Helpers\ServiceLocator.cs" />
     <Compile Include="Helpers\Themes.cs" />
-    <Compile Include="Helpers\TvSender.cs" />
-    <Compile Include="Helpers\TvSenderOld.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Jobs\CustomJobFactory.cs" />
     <Compile Include="Jobs\Scheduler.cs" />
@@ -232,6 +231,7 @@
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\EpisodeListViewModel.cs" />
     <Compile Include="Models\EpisodeRequestModel.cs" />
+    <Compile Include="Models\FaultedRequestsViewModel.cs" />
     <Compile Include="Models\IssuesDetailsViewModel.cs" />
     <Compile Include="Models\IssuesViewMOdel.cs" />
     <Compile Include="Models\JsonUpdateAvailableModel.cs" />
@@ -244,6 +244,9 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\UserManagementSettingsModule.cs" />
+    <Compile Include="Modules\Admin\FaultQueueModule.cs" />
+    <Compile Include="Modules\Admin\SystemStatusModule.cs" />
     <Compile Include="Modules\ApiDocsModule.cs" />
     <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
     <Compile Include="Modules\ApiUserMetadataModule.cs" />
@@ -257,8 +260,7 @@
     <Compile Include="Modules\DonationLinkModule.cs" />
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
-    <Compile Include="Modules\RequestsBetaModule.cs" />
-    <Compile Include="Modules\UpdateCheckerModule.cs" />
+    <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />
     <Compile Include="NinjectModules\ConfigurationModule.cs" />
@@ -287,6 +289,12 @@
     <Content Include="Content\angular.min.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\Angular\angular-loading-spinner.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\Angular\angular-spinner.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\app\app.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -295,6 +303,18 @@
     </Content>
     <Content Include="Content\app\requests\requestsService.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\userManagement\Directives\sidebar.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\userManagement\Directives\addUser.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\userManagement\Directives\table.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\app\userManagement\Directives\userManagementDirective.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\awesome-bootstrap-checkbox.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -323,8 +343,7 @@
     <Compile Include="Models\PlexAuth.cs" />
     <Compile Include="Models\RequestViewModel.cs" />
     <Compile Include="Models\SearchTvShowViewModel.cs" />
-    <Compile Include="Models\SessionKeys.cs" />
-    <Compile Include="Modules\AdminModule.cs" />
+    <Compile Include="Modules\Admin\AdminModule.cs" />
     <Compile Include="Modules\ApplicationTesterModule.cs" />
     <Compile Include="Modules\BaseAuthModule.cs" />
     <Compile Include="Modules\IndexModule.cs" />
@@ -338,6 +357,9 @@
     <Compile Include="Startup.cs" />
     <Compile Include="Validators\PlexRequestsValidator.cs" />
     <Compile Include="Modules\UserManagementModule.cs" />
+    <Content Include="Content\clipboard.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\datepicker.css">
       <DependentUpon>datepicker.scss</DependentUpon>
     </Content>
@@ -349,6 +371,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\analytics.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\spin.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\wizard.js">
@@ -660,7 +685,7 @@
     <Content Include="Views\Admin\EmailNotifications.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\Status.cshtml">
+    <Content Include="Views\SystemStatus\Status.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\PushbulletNotifications.cshtml">
@@ -681,7 +706,7 @@
     <Content Include="Views\Admin\Headphones.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\_Sidebar.cshtml">
+    <Content Include="Views\Shared\Partial\_Sidebar.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\SlackNotifications.cshtml">
@@ -726,6 +751,12 @@
     <None Include="Views\Admin\NewsletterSettings.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Content Include="Views\FaultQueue\RequestFaultQueue.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\UserManagementSettings\UserManagementSettings.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
@@ -744,6 +775,7 @@
     <EmbeddedResource Include="Resources\UI.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UI1.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Resources\UI.sv.resx" />
   </ItemGroup>

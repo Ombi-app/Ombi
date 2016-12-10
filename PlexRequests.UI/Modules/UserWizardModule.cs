@@ -29,10 +29,8 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
-using Nancy.Responses.Negotiation;
 using Nancy.Validation;
 using NLog;
 using PlexRequests.Api.Interfaces;
@@ -40,8 +38,11 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Authentication;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 using Action = PlexRequests.Helpers.Analytics.Action;
 
@@ -50,7 +51,7 @@ namespace PlexRequests.UI.Modules
     public class UserWizardModule : BaseModule
     {
         public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a) : base("wizard", pr)
+            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a, ISecurityExtensions security) : base("wizard", pr, security)
         {
             PlexSettings = plex;
             PlexApi = plexApi;
@@ -157,10 +158,7 @@ namespace PlexRequests.UI.Modules
             currentSettings.SearchForMovies = form.SearchForMovies;
             currentSettings.SearchForTvShows = form.SearchForTvShows;
             currentSettings.SearchForMusic = form.SearchForMusic;
-            currentSettings.RequireMovieApproval = form.RequireMovieApproval;
-            currentSettings.RequireTvShowApproval = form.RequireTvShowApproval;
-            currentSettings.RequireMusicApproval = form.RequireMusicApproval;
-
+            
             var result = await PlexRequestSettings.SaveSettingsAsync(currentSettings);
             if (result)
             {
@@ -185,7 +183,7 @@ namespace PlexRequests.UI.Modules
         private async Task<Response> CreateUser()
         {
             var username = (string)Request.Form.Username;
-            var userId = Mapper.CreateAdmin(username, Request.Form.Password);
+            var userId = Mapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All() - (int)Permissions.ReadOnlyUser, 0);
             Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username, CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
 
@@ -199,7 +197,7 @@ namespace PlexRequests.UI.Modules
 
             var baseUrl = string.IsNullOrEmpty(settings.BaseUrl) ? string.Empty : $"/{settings.BaseUrl}";
 
-            return this.LoginAndRedirect((Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
+            return CustomModuleExtensions.LoginAndRedirect(this,(Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
         }
     }
 }

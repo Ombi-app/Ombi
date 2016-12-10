@@ -73,7 +73,7 @@
     <Compile Include="Plex\PlexStatus.cs" />
     <Compile Include="Plex\PlexMediaType.cs" />
     <Compile Include="Plex\PlexUserRequest.cs" />
-    <Compile Include="Plex\RecentlyAddedModel.cs" />
+    <Compile Include="Plex\RecentlyAddedModelOld.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SickRage\SickRageBase.cs" />
     <Compile Include="SickRage\SickrageShows.cs" />

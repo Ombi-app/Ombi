@@ -35,22 +35,24 @@ using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class CultureModule : BaseModule
     {
-        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a) : base("culture",pr)
+        public CultureModule(ISettingsService<PlexRequestSettings> pr, IAnalytics a, ISecurityExtensions security) : base("culture",pr, security)
         {
             Analytics = a;
 
-            Get["/", true] = async(x,c) => await SetCulture();
+            Get["/"] = x => SetCulture();
         }
 
         private IAnalytics Analytics { get; }
 
-        public async Task<RedirectResponse> SetCulture()
+        private RedirectResponse SetCulture()
         {
             var culture = (string)Request.Query["l"];
             var returnUrl = (string)Request.Query["u"];

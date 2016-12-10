@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexRequestSettings>
-@Html.Partial("_Sidebar")
+@Html.Partial("Shared/Partial/_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -57,11 +57,17 @@
             <div class="form-group">
                 <label for="ApiKey" class="control-label">Api Key</label>
                 <div class="input-group">
-                    <input type="text" disabled="disabled" class="form-control form-control-custom" id="apiKey" name="ApiKey" value="@Model.ApiKey">
+                    <input type="text" hidden="hidden" name="ApiKey" value="@Model.ApiKey"/>
+                    <input type="text" readonly="readonly" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="@Model.ApiKey">
 
                     <div class="input-group-addon">
                         <div id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
                     </div>
+
+                    <div class="input-group-addon">
+                        <div class="fa fa-clipboard" data-clipboard-action="copy" data-clipboard-target="#ApiKey"></div>
+                    </div>
+
                 </div>
             </div>
 
@@ -74,20 +80,9 @@
                 </select>
             </div>
         </div>
-        <div class="form-group">
-                <div class="checkbox">
+            
+            @Html.Checkbox(Model.SearchForMovies,"SearchForMovies","Search for Movies")
 
-                    @if (Model.SearchForMovies)
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies" checked="checked"><label for="SearchForMovies">Search for Movies</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SearchForMovies" name="SearchForMovies"><label for="SearchForMovies">Search for Movies</label>
-                    }
-
-                </div>
-            </div>
 
             <div class="form-group">
                 <div class="checkbox">
@@ -117,82 +112,7 @@
 
                 </div>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
 
-                    @if (Model.RequireMovieApproval)
-                    {
-                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval" checked="checked"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireMovieApproval" name="RequireMovieApproval"><label for="RequireMovieApproval">Require approval of Movie requests</label>
-                    }
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.RequireTvShowApproval)
-                    {
-                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval" checked="checked"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireTvShowApproval" name="RequireTvShowApproval"><label for="RequireTvShowApproval">Require approval of TV show requests</label>
-                    }
-
-
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.RequireMusicApproval)
-                    {
-                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval" checked="checked"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="RequireMusicApproval" name="RequireMusicApproval"><label for="RequireMusicApproval">Require approval of Music requests</label>
-                    }
-
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.UsersCanViewOnlyOwnRequests)
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests" checked="checked">
-                        <label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnRequests" name="UsersCanViewOnlyOwnRequests"><label for="UsersCanViewOnlyOwnRequests">Users can view their own requests only</label>
-                    }
-
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.UsersCanViewOnlyOwnIssues)
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues" checked="checked">
-                        <label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="UsersCanViewOnlyOwnIssues" name="UsersCanViewOnlyOwnIssues"><label for="UsersCanViewOnlyOwnIssues">Users can view their own issues only</label>
-                    }
-                </div>
-            </div>
-        
             <div class="form-group">
                 <div class="checkbox">
 
@@ -278,38 +198,25 @@
                     <input type="text" class="form-control-custom form-control " id="CustomDonationMessage" name="CustomDonationMessage" placeholder="Donation button message" value="@Model.CustomDonationMessage">
                 </div>
             </div>
- 
 
-
-
-
-        <p class="form-group">A comma separated list of users whose requests do not require approval (These users also do not have a request limit).</p>
+            <p class="form-group">If the request limits are set to 0 then no request limit is applied.</p>
             <div class="form-group">
-                <label for="NoApprovalUsers" class="control-label">Approval White listed Users</label>
+                <label for="MovieWeeklyRequestLimit" class="control-label">Movie Weekly Request Limit</label>
                 <div>
-                    <input type="text" class="form-control-custom form-control " id="NoApprovalUsers" name="NoApprovalUsers" placeholder="e.g. John, Bobby" value="@Model.NoApprovalUsers">
+                    <label>
+                        <input type="number" id="MovieWeeklyRequestLimit" name="MovieWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.MovieWeeklyRequestLimit">
+                    </label>
                 </div>
             </div>
 
-
-            <p class="form-group">If the request limits are set to 0 then no request limit is applied.</p>
-        <div class="form-group">
-            <label for="MovieWeeklyRequestLimit" class="control-label">Movie Weekly Request Limit</label>
-            <div>
-                <label>
-                    <input type="number" id="MovieWeeklyRequestLimit" name="MovieWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.MovieWeeklyRequestLimit">
-                </label>
+            <div class="form-group">
+                <label for="TvWeeklyRequestLimit" class="control-label">TV Show Weekly Request Limit</label>
+                <div>
+                    <label>
+                        <input type="number" id="TvWeeklyRequestLimit" name="TvWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.TvWeeklyRequestLimit">
+                    </label>
+                </div>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label for="TvWeeklyRequestLimit" class="control-label">TV Show Weekly Request Limit</label>
-            <div>
-                <label>
-                    <input type="number" id="TvWeeklyRequestLimit" name="TvWeeklyRequestLimit" class="form-control form-control-custom " value="@Model.TvWeeklyRequestLimit">
-                </label>
-            </div>
-        </div>
 
             <div class="form-group">
                 <label for="AlbumWeeklyRequestLimit" class="control-label">Album Weekly Request Limit</label>
@@ -320,7 +227,7 @@
                 </div>
             </div>
 
-        <div>
+            <div>
             </div>
             <div class="form-group">
                 <div>
@@ -333,6 +240,11 @@
 
 <script>
     $(function () {
+
+
+        new Clipboard('.fa-clipboard');
+
+
         $('#save').click(function (e) {
             e.preventDefault();
 
@@ -373,7 +285,7 @@
                 success: function(response) {
                     if (response) {
                         generateNotify("Success!", "success");
-                        $('#apiKey').val(response);
+                        $('#ApiKey').val(response);
                     }
                 },
                 error: function(e) {

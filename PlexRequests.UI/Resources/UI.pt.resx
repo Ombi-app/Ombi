@@ -459,4 +459,31 @@
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
     <value>Não há informações disponíveis para a data de lançamento</value>
   </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>Ver Em Plex</value>
+  </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Doações para Biblioteca Mantenedor</value>
+  </data>
+  <data name="Search_Available_on_plex" xml:space="preserve">
+    <value>Disponível em Plex</value>
+  </data>
+  <data name="Search_Movie_Status" xml:space="preserve">
+    <value>status de filme</value>
+  </data>
+  <data name="Search_Not_Requested_Yet" xml:space="preserve">
+    <value>Não solicitada ainda</value>
+  </data>
+  <data name="Search_Pending_approval" xml:space="preserve">
+    <value>B – P/ Aprovação</value>
+  </data>
+  <data name="Search_Processing_Request" xml:space="preserve">
+    <value>﻿Processando solicitação...</value>
+  </data>
+  <data name="Search_Request_denied" xml:space="preserve">
+    <value>Solicitação negada.</value>
+  </data>
+  <data name="Search_TV_Show_Status" xml:space="preserve">
+    <value>Programa de TV status</value>
+  </data>
 </root>

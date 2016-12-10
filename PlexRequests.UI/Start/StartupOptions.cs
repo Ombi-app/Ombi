@@ -59,5 +59,15 @@ namespace PlexRequests.UI.Start
         [Option('u', "updated", Required = false, HelpText = "This should only be used by the internal application")]
         public UpdateValue Updated { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this <see cref="StartupOptions"/> is updated.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if updated; otherwise, <c>false</c>.
+        /// </value>
+        [Option('l', "listenerprefix", Required = false, HelpText = "To change the prefix for the listener")]
+        public string ListenerPrefix { get; set; }
+
     }
 }

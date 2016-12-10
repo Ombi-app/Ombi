@@ -1,6 +1,6 @@
 ﻿@using PlexRequests.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.PlexSettings>
-@Html.Partial("_Sidebar")
+@Html.Partial("Shared/Partial/_Sidebar")
 @{
     int port;
     if (Model.Port == 0)
@@ -87,21 +87,6 @@
                     <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>
             </div>
-            
-            @*<div class="form-group">
-                <label for="PlexDatabaseLocationOverride" class="control-label">Plex Database Override</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="PlexDatabaseLocationOverride" name="PlexDatabaseLocationOverride" placeholder="%LOCALAPPDATA%\Plex Media Server\" value="@Model.PlexDatabaseLocationOverride">
-                </div>
-                <small>
-                    This is your Plex data directory location, if we cannot manually find it then you need to specify the location! See <a href="https://support.plex.tv/hc/en-us/articles/202915258-Where-is-the-Plex-Media-Server-data-directory-located-">Here</a>.
-                </small>
-            </div>
-            <div class="form-group">
-                <div class="">
-                    <button id="dbTest" class="btn btn-primary-outline">Test Database Directory <i class="fa fa-database"></i> <div id="dbSpinner"></div></button>
-                </div>
-            </div>*@
 
             <div class="form-group">
                 <label for="authToken" class="control-label">Plex Authorization Token</label>
@@ -110,6 +95,13 @@
                 </div>
             </div>
             
+            <div class="form-group">
+                <label for="MachineIdentifier" class="control-label">Machine Identifier</label>
+                <div class="">
+                    <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier" value="@Model.MachineIdentifier">
+                </div>
+            </div>
+          
 
 
             <div class="form-group">

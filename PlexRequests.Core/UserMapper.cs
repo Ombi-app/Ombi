@@ -36,6 +36,7 @@ using Nancy.Security;
 
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 
@@ -60,7 +61,6 @@ namespace PlexRequests.Core
             return new UserIdentity
             {
                 UserName = user.UserName,
-                Claims = ByteConverterHelper.ReturnObject<string[]>(user.Claims)
             };
         }
 
@@ -99,7 +99,7 @@ namespace PlexRequests.Core
             return users.Any();
         }
 
-        public Guid? CreateUser(string username, string password, string[] claims = default(string[]), UserProperties properties = null)
+        public Guid? CreateUser(string username, string password, UserProperties properties = null)
         {
             var salt = PasswordHasher.GenerateSalt();
 
@@ -109,8 +109,29 @@ namespace PlexRequests.Core
                 UserGuid = Guid.NewGuid().ToString(),
                 Salt = salt,
                 Hash = PasswordHasher.ComputeHash(password, salt),
-                Claims = ByteConverterHelper.ReturnBytes(claims),
+                Claims = new byte[] {0},
                 UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties()),
+            };
+            Repo.Insert(userModel);
+            var userRecord = Repo.Get(userModel.UserGuid);
+
+            return new Guid(userRecord.UserGuid);
+        }
+
+        public Guid? CreateUser(string username, string password, int permissions, int features, UserProperties properties = null)
+        {
+            var salt = PasswordHasher.GenerateSalt();
+
+            var userModel = new UsersModel
+            {
+                UserName = username,
+                UserGuid = Guid.NewGuid().ToString(),
+                Salt = salt,
+                Hash = PasswordHasher.ComputeHash(password, salt),
+                UserProperties = ByteConverterHelper.ReturnBytes(properties ?? new UserProperties()),
+                Permissions = permissions,
+                Features = features,
+                Claims = new byte[] {0}
             };
             Repo.Insert(userModel);
             var userRecord = Repo.Get(userModel.UserGuid);
@@ -124,26 +145,6 @@ namespace PlexRequests.Core
             Repo.Delete(user);
         }
 
-        public Guid? CreateAdmin(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser, UserClaims.Admin }, properties);
-        }
-
-        public Guid? CreatePowerUser(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, new[] { UserClaims.RegularUser, UserClaims.PowerUser }, properties);
-        }
-
-        public Guid? CreateRegularUser(string username, string password, UserProperties properties = null)
-        {
-            return CreateUser(username, password, new[] { UserClaims.RegularUser }, properties);
-        }
-
-        public IEnumerable<string> GetAllClaims()
-        {
-            var properties = typeof(UserClaims).GetConstantsValues<string>();
-            return properties;
-        }
 
         public bool UpdatePassword(string username, string oldPassword, string newPassword)
         {
@@ -186,8 +187,8 @@ namespace PlexRequests.Core
 
     public interface ICustomUserMapper
     {
-        Guid? CreateUser(string username, string password, string[] claims, UserProperties props);
-        IEnumerable<string> GetAllClaims();
+        Guid? CreateUser(string username, string password, int permissions, int features,
+            UserProperties properties = null);
         IEnumerable<UsersModel> GetUsers();
         Task<IEnumerable<UsersModel>> GetUsersAsync();
         UsersModel GetUser(Guid userId);
@@ -195,9 +196,6 @@ namespace PlexRequests.Core
         bool DoUsersExist();
         Guid? ValidateUser(string username, string password);
         bool UpdatePassword(string username, string oldPassword, string newPassword);
-        Guid? CreateAdmin(string username, string password, UserProperties properties = null);
-        Guid? CreatePowerUser(string username, string password, UserProperties properties = null);
-        Guid? CreateRegularUser(string username, string password, UserProperties properties = null);
         void DeleteUser(string userId);
     }
 }

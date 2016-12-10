@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: AuthenticationSettingsTests.cs
+//    File: Features.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,21 +26,17 @@
 #endregion
 
 using System;
-using NUnit.Framework;
+using System.ComponentModel.DataAnnotations;
 
-namespace PlexRequests.Core.Tests
+namespace PlexRequests.Helpers.Permissions
 {
-    [TestFixture]
-    public class StatusCheckerTests
+    [Flags]
+    public enum Features
     {
-        [Test]
-        [Ignore("API Limit")]
-        public void CheckStatusTest()
-        {
-            var checker = new StatusChecker();
-            var status = checker.GetStatus();
+        [Display(Name = "Newsletter")]
+        Newsletter = 1,
+        [Display(Name = "Request Added Notification")]
+        RequestAddedNotification = 2,
 
-            Assert.That(status, Is.Not.Null);
-        }
     }
 }

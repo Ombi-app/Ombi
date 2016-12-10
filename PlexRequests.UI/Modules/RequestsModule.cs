@@ -39,7 +39,6 @@ using PlexRequests.Services.Notification;
 using PlexRequests.Store;
 using PlexRequests.UI.Models;
 using PlexRequests.Helpers;
-using PlexRequests.UI.Helpers;
 using System.Collections.Generic;
 using PlexRequests.Api.Interfaces;
 using System.Threading.Tasks;
@@ -48,8 +47,10 @@ using NLog;
 
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers.Analytics;
-
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
 using Action = PlexRequests.Helpers.Analytics.Action;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -68,7 +69,8 @@ namespace PlexRequests.UI.Modules
             ISickRageApi sickRageApi,
             ICacheProvider cache,
             IAnalytics an,
-            INotificationEngine engine) : base("requests", prSettings)
+            INotificationEngine engine,
+            ISecurityExtensions security) : base("requests", prSettings, security)
         {
             Service = service;
             PrSettings = prSettings;
@@ -127,7 +129,7 @@ namespace PlexRequests.UI.Modules
 
             var dbMovies = allRequests.ToList();
 
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbMovies = dbMovies.Where(x => x.UserHasRequested(Username)).ToList();
             }
@@ -157,6 +159,8 @@ namespace PlexRequests.UI.Modules
                 }
             }
 
+
+            var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
                 ProviderId = movie.ProviderId,
@@ -173,10 +177,10 @@ namespace PlexRequests.UI.Modules
                 Approved = movie.Available || movie.Approved,
                 Title = movie.Title,
                 Overview = movie.Overview,
-                RequestedUsers = IsAdmin ? movie.AllUsers.ToArray() : new string[] { },
+                RequestedUsers = canManageRequest ? movie.AllUsers.ToArray() : new string[] { },
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
-                Admin = IsAdmin,
+                Admin = canManageRequest,
                 IssueId = movie.IssueId,
                 Denied = movie.Denied,
                 DeniedReason = movie.DeniedReason,
@@ -195,7 +199,7 @@ namespace PlexRequests.UI.Modules
 
             var dbTv = requests;
             var settings = await settingsTask;
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
             }
@@ -230,6 +234,7 @@ namespace PlexRequests.UI.Modules
 
             }
 
+            var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
                 ProviderId = tv.ProviderId,
@@ -246,10 +251,10 @@ namespace PlexRequests.UI.Modules
                 Approved = tv.Available || tv.Approved,
                 Title = tv.Title,
                 Overview = tv.Overview,
-                RequestedUsers = IsAdmin ? tv.AllUsers.ToArray() : new string[] { },
+                RequestedUsers = canManageRequest ? tv.AllUsers.ToArray() : new string[] { },
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
                 Available = tv.Available,
-                Admin = IsAdmin,
+                Admin = canManageRequest,
                 IssueId = tv.IssueId,
                 Denied = tv.Denied,
                 DeniedReason = tv.DeniedReason,
@@ -266,11 +271,11 @@ namespace PlexRequests.UI.Modules
             var settings = PrSettings.GetSettings();
             var dbAlbum = await Service.GetAllAsync();
             dbAlbum = dbAlbum.Where(x => x.Type == RequestType.Album);
-            if (settings.UsersCanViewOnlyOwnRequests && !IsAdmin)
+            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbAlbum = dbAlbum.Where(x => x.UserHasRequested(Username));
             }
-
+            var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbAlbum.Select(album =>
             {
                 return new RequestViewModel
@@ -289,10 +294,10 @@ namespace PlexRequests.UI.Modules
                     Approved = album.Available || album.Approved,
                     Title = album.Title,
                     Overview = album.Overview,
-                    RequestedUsers = IsAdmin ? album.AllUsers.ToArray() : new string[] { },
+                    RequestedUsers = canManageRequest ? album.AllUsers.ToArray() : new string[] { },
                     ReleaseYear = album.ReleaseDate.Year.ToString(),
                     Available = album.Available,
-                    Admin = IsAdmin,
+                    Admin = canManageRequest,
                     IssueId = album.IssueId,
                     Denied = album.Denied,
                     DeniedReason = album.DeniedReason,
@@ -308,7 +313,12 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> DeleteRequest(int requestid)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+            if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = true });
+            }
+
+           
             Analytics.TrackEventAsync(Category.Requests, Action.Delete, "Delete Request", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var currentEntity = await Service.GetAsync(requestid);
@@ -326,6 +336,10 @@ namespace PlexRequests.UI.Modules
         /// <returns></returns>
         private async Task<Response> ReportIssue(int requestId, IssueState issue, string comment)
         {
+            if (!Security.HasPermissions(User, Permissions.ReportIssue))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to report an issue." });
+            }
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
             {
@@ -356,7 +370,10 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ClearIssue(int requestId)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+            if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to clear an issue." });
+            }
 
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
@@ -374,7 +391,11 @@ namespace PlexRequests.UI.Modules
 
         private async Task<Response> ChangeRequestAvailability(int requestId, bool available)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+            if (!Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests))
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to change a request." });
+            }
+            
             Analytics.TrackEventAsync(Category.Requests, Action.Update, available ? "Make request available" : "Make request unavailable", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
@@ -386,7 +407,7 @@ namespace PlexRequests.UI.Modules
 
             var result = await Service.UpdateRequestAsync(originalRequest);
             var plexService = await PlexSettings.GetSettingsAsync();
-            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken);
+            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken, available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });

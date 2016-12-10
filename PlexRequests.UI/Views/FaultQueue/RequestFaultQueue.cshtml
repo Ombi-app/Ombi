@@ -1,0 +1,109 @@
+﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<IEnumerable<PlexRequests.UI.Models.FaultedRequestsViewModel>>
+@Html.Partial("Shared/Partial/_Sidebar")
+<div class="col-sm-8 col-sm-push-1">
+    <fieldset>
+        <legend>Release Fault Queue</legend>
+
+        <table class="table table-striped table-hover table-responsive table-condensed">
+            <thead>
+                <tr>
+                    <th>
+                        Request Title
+                    </th>
+                    <th>
+                        Type
+                    </th>
+                    <th>
+                        Fault Type
+                    </th>
+                    <th>
+                        LastRetry
+                    </th>
+                    <th>
+                        Error Description
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var m in Model)
+                {
+                    <tr>
+                        <td>
+                            @m.Title
+                        </td>
+                        <td>
+                            @m.Type
+                        </td>
+                        <td>
+                            @m.FaultType
+                        </td>
+                        <td>
+                            @m.LastRetry
+                        </td>
+                        <td>
+                            @m.Message
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </fieldset>
+</div>
+
+@*<script>
+
+        var base = '@Html.GetBaseUrl()';
+        $('#autoUpdate')
+            .click(function (e) {
+                e.preventDefault();
+                $('body').append("<i class=\"fa fa-spinner fa-spin fa-5x fa-fw\" style=\"position: absolute; top: 20%; left: 50%;\"></i>");
+                $('#autoUpdate').prop("disabled", "disabled");
+                document.getElementById("lightbox").style.display = "";
+                var count = 0;
+                setInterval(function () {
+                    count++;
+                    var dots = new Array(count % 10).join('.');
+                    document.getElementById('autoUpdate').innerHTML = "Updating" + dots;
+                }, 1000);
+
+                $.ajax({
+                    type: "Post",
+                    url: "autoupdate",
+                    data: { url: "@Model.Status.DownloadUri" },
+                    dataType: "json",
+                    error: function () {
+                        setTimeout(
+                             function () {
+                                 location.reload();
+                             }, 30000);
+                    }
+                });
+            });
+
+        $('#saveSettings').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+
+            var branches = $("#branches option:selected").val();
+
+            var data = $form.serialize();
+            data = data + "&branch=" + branches;
+            $.ajax({
+                type: $form.prop("method"),
+                url: $form.prop("action"),
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                }
+            });
+        });
+    </script>*@

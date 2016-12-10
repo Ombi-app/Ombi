@@ -30,12 +30,13 @@ using System.Linq;
 using System.Threading;
 
 using Nancy;
-
+using Nancy.Security;
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -44,7 +45,7 @@ namespace PlexRequests.UI.Modules
         protected string BaseUrl { get; set; }
 
 
-        protected BaseModule(ISettingsService<PlexRequestSettings> settingsService)
+        protected BaseModule(ISettingsService<PlexRequestSettings> settingsService, ISecurityExtensions security)
         {
 
             var settings = settingsService.GetSettings();
@@ -54,11 +55,12 @@ namespace PlexRequests.UI.Modules
             var modulePath = string.IsNullOrEmpty(baseUrl) ? string.Empty : baseUrl;
 
             ModulePath = modulePath;
+            Security = security;
 
             Before += (ctx) => SetCookie();
         }
 
-        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService)
+        protected BaseModule(string modulePath, ISettingsService<PlexRequestSettings> settingsService, ISecurityExtensions security)
         {
 
             var settings = settingsService.GetSettings();
@@ -68,6 +70,7 @@ namespace PlexRequests.UI.Modules
             var settingModulePath = string.IsNullOrEmpty(baseUrl) ? modulePath : $"{baseUrl}/{modulePath}";
     
             ModulePath = settingModulePath;
+            Security = security;
 
             Before += (ctx) =>
             {
@@ -95,8 +98,12 @@ namespace PlexRequests.UI.Modules
                 return _dateTimeOffset;
             }
         }
-        private string _username;
 
+
+        private string _username;
+        /// <summary>
+        /// Returns the Username or UserAlias
+        /// </summary>
         protected string Username
         {
             get
@@ -105,7 +112,12 @@ namespace PlexRequests.UI.Modules
                 {
                     try
                     {
-                        _username = Session[SessionKeys.UsernameKey].ToString();
+                        var username = Security.GetUsername(User.UserName);
+                        if (string.IsNullOrEmpty(username))
+                        {
+                            return Session[SessionKeys.UsernameKey].ToString();
+                        }
+                        _username = username;
                     }
                     catch (Exception)
                     {
@@ -126,11 +138,15 @@ namespace PlexRequests.UI.Modules
                 {
                     return false;
                 }
-                var claims = Context?.CurrentUser.Claims.ToList();
-                return claims.Contains(UserClaims.Admin) || claims.Contains(UserClaims.PowerUser);
+                
+                return Security.HasPermissions(Context?.CurrentUser, Permissions.Administrator);
             }
         }
 
+        protected IUserIdentity User => Context?.CurrentUser;
+
+        protected ISecurityExtensions Security { get; set; }
+        
         protected bool LoggedIn => Context?.CurrentUser != null;
 
         protected string Culture { get; set; }

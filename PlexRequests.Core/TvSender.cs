@@ -24,18 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using NLog;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.SickRage;
 using PlexRequests.Api.Models.Sonarr;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Store;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace PlexRequests.UI.Helpers
+namespace PlexRequests.Core
 {
     public class TvSender
     {

@@ -33,12 +33,15 @@ using Nancy.Responses;
 
 using PlexRequests.Core;
 using PlexRequests.Core.SettingModels;
+using PlexRequests.Helpers.Permissions;
+using PlexRequests.UI.Helpers;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
     public class IndexModule : BaseAuthModule
     {
-        public IndexModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> l, IResourceLinker rl) : base(pr)
+        public IndexModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<LandingPageSettings> l, IResourceLinker rl, ISecurityExtensions security) : base(pr, security)
         {
             LandingPage = l;
             Linker = rl;
@@ -56,7 +59,7 @@ namespace PlexRequests.UI.Modules
             {
                 if (settings.BeforeLogin) // Before login
                 {
-                    if (!string.IsNullOrEmpty(Username))
+                    if (string.IsNullOrEmpty(Username))
                     {
                         // They are not logged in
                         return Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());

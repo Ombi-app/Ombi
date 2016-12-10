@@ -98,6 +98,7 @@ namespace PlexRequests.Services.Jobs
 
         public void Execute(IJobExecutionContext context)
         {
+            Record.SetRunning(true, JobNames.CpCacher);
             try
             {
                 var settings = Settings.GetSettings();
@@ -115,6 +116,7 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 Record.Record(JobNames.RequestLimitReset);
+                Record.SetRunning(false, JobNames.CpCacher);
             }
         }
     }

@@ -37,11 +37,14 @@ using NLog;
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
+using PlexRequests.Core.Queue;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
 using PlexRequests.UI.Helpers;
 using PlexRequests.UI.Models;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 namespace PlexRequests.UI.Modules
 {
@@ -50,9 +53,11 @@ namespace PlexRequests.UI.Modules
 
         public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
-            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr) : base("approval", pr)
+            ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue
+            , ISecurityExtensions security) : base("approval", pr, security)
         {
-            this.RequiresAnyClaim(UserClaims.Admin, UserClaims.PowerUser);
+
+            Before += (ctx) => Security.AdminLoginRedirect(ctx, Permissions.Administrator,Permissions.ManageRequests);
 
             Service = service;
             CpService = cpService;
@@ -63,6 +68,7 @@ namespace PlexRequests.UI.Modules
             SickRageSettings = srSettings;
             HeadphonesSettings = hpSettings;
             HeadphoneApi = hpApi;
+            FaultQueue = faultQueue;
 
             Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
@@ -85,6 +91,7 @@ namespace PlexRequests.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HeadphoneApi { get; }
+        private ITransientFaultQueue FaultQueue { get; }
 
         /// <summary>
         /// Approves the specified request identifier.

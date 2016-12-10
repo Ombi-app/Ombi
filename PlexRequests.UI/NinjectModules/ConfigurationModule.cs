@@ -25,18 +25,20 @@
 //  ************************************************************************/
 #endregion
 using Mono.Data.Sqlite;
-
-using Nancy;
 using Nancy.Authentication.Forms;
-
+using Nancy.Linker;
 using Ninject.Modules;
 
 using PlexRequests.Core;
 using PlexRequests.Core.Migration;
+using PlexRequests.Core.StatusChecker;
+using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
+using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using SecurityExtensions = PlexRequests.Core.SecurityExtensions;
 
 namespace PlexRequests.UI.NinjectModules
 {
@@ -56,6 +58,11 @@ namespace PlexRequests.UI.NinjectModules
 
             Bind<INotificationService>().To<NotificationService>().InSingletonScope();
             Bind<INotificationEngine>().To<NotificationEngine>();
+
+            Bind<IStatusChecker>().To<StatusChecker>();
+
+            Bind<ISecurityExtensions>().To<SecurityExtensions>();
+            Bind<IUserHelper>().To<UserHelper>();
         }
     }
 }

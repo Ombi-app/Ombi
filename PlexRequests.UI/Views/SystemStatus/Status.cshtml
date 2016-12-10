@@ -1,0 +1,129 @@
+﻿@using PlexRequests.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<PlexRequests.Core.SettingModels.SystemSettings>
+@Html.Partial("Shared/Partial/_Sidebar")
+<div id="lightbox" style="display:none"></div>
+<div class="col-sm-8 col-sm-push-1">
+    <fieldset>
+        <legend>Status</legend>
+
+
+        <div class="form-group">
+            <label class="control-label">Current Version: </label>
+            <label class="control-label">@Model.Status.CurrentVersion</label>
+        </div>
+        
+        @if (Model.Status.UpdateAvailable)
+        {
+            <div class="form-group">
+                <label class="control-label">New Version: </label>
+                <label class="control-label">@Model.Status.NewVersion</label>
+            </div>
+        }
+
+        <form id="mainForm" method="post" action="save">
+
+            <div class="form-group">
+                <label for="select" class="control-label">Code Branch</label>
+                <div id="branches">
+                    <select class="form-control form-control-custom" id="select">
+                        @foreach (var b in Model.BranchDropdown)
+                        {
+                            if (b.Selected)
+                            {
+                                <option selected='selected' value='@b.Value'>@b.Name</option>
+                            }
+                            else
+                            {
+                                <option value='@b.Value'>@b.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <button id="saveSettings" class="btn btn-success-outline">Save</button>
+        </form>
+
+
+        <div class="form-group">
+            <label class="control-label">Update Available: </label>
+            @if (Model.Status.UpdateAvailable)
+            {
+                <label class="control-label"><a href="@Model.Status.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
+                <br />
+                <button id="autoUpdate" class="btn btn-success-outline">Automatic Update (beta) <i class="fa fa-download"></i></button>
+            }
+            else
+            {
+                <label class="control-label"><i class="fa fa-times"></i></label>
+            }
+
+        </div>
+
+        @if (Model.Status.UpdateAvailable)
+        {
+            <h2>
+                <a href="@Model.Status.DownloadUri">@Model.Status.ReleaseTitle</a>
+            </h2>
+            <hr />
+            <label>Release Notes:</label>
+            @Html.Raw(Model.Status.ReleaseNotes)
+        }
+
+
+    </fieldset>
+</div>
+
+<script>
+
+    var base = '@Html.GetBaseUrl()';
+    $('#autoUpdate')
+        .click(function (e) {
+            e.preventDefault();
+            $('body').append("<i class=\"fa fa-spinner fa-spin fa-5x fa-fw\" style=\"position: absolute; top: 20%; left: 50%;\"></i>");
+            $('#autoUpdate').prop("disabled", "disabled");
+            document.getElementById("lightbox").style.display = "";
+            var count = 0;
+            setInterval(function () {
+                count++;
+                var dots = new Array(count % 10).join('.');
+                document.getElementById('autoUpdate').innerHTML = "Updating" + dots;
+            }, 1000);
+
+            $.ajax({
+                type: "Post",
+                url: "autoupdate",
+                data: { url: "@Model.Status.DownloadUri" },
+                dataType: "json",
+                error: function () {
+                    setTimeout(
+                         function () {
+                             location.reload();
+                         }, 30000);
+                }
+            });
+        });
+
+    $('#saveSettings').click(function (e) {
+        e.preventDefault();
+        var $form = $("#mainForm");
+
+        var branches = $("#branches option:selected").val();
+
+        var data = $form.serialize();
+        data = data + "&branch=" + branches;
+        $.ajax({
+            type: $form.prop("method"),
+            url: $form.prop("action"),
+            data: data,
+            dataType: "json",
+            success: function (response) {
+                if (response.result === true) {
+                    generateNotify(response.message, "success");
+
+                } else {
+                    generateNotify(response.message, "warning");
+                }
+            }
+        });
+    });
+</script>

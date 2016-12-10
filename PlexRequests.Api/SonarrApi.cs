@@ -117,8 +117,7 @@ namespace PlexRequests.Api
             try
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
-                    TimeSpan.FromSeconds (1),
-                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds (2)
                 });
 
                 result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
@@ -186,8 +185,7 @@ namespace PlexRequests.Api
             try
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
-                    TimeSpan.FromSeconds (1),
-                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds (2)
                 });
 
                 result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
@@ -228,8 +226,8 @@ namespace PlexRequests.Api
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
                     TimeSpan.FromSeconds (5),
-                    TimeSpan.FromSeconds(10),
-                    TimeSpan.FromSeconds(30)
+                    TimeSpan.FromSeconds(5),
+                    TimeSpan.FromSeconds(5)
                 });
 
                 return policy.Execute(() => Api.ExecuteJson<List<Series>>(request, baseUrl));

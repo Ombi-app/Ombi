@@ -81,6 +81,11 @@ namespace PlexRequests.Services.Notification
                 case NotificationType.Test:
                     await PushTestAsync(pushSettings);
                     break;
+                case NotificationType.RequestDeclined:
+                    break;
+                case NotificationType.ItemAddedToFaultQueue:
+                    await PushFaultQueue(model, pushSettings);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -122,6 +127,13 @@ namespace PlexRequests.Services.Notification
         {
             var message = "This is just a test! Success!";
             var pushTitle = "Plex Requests: Test Message!";
+            await Push(settings, message, pushTitle);
+        }
+
+        private async Task PushFaultQueue(NotificationModel model, PushbulletNotificationSettings settings)
+        {
+            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var pushTitle = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested but could not be added!";
             await Push(settings, message, pushTitle);
         }
 

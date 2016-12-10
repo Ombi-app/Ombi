@@ -29,22 +29,23 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using PlexRequests.Store.Models;
+using PlexRequests.Store.Models.Plex;
 
 namespace PlexRequests.Services.Interfaces
 {
     public interface IAvailabilityChecker
     {
         void CheckAndUpdateAll();
-        List<PlexMovie> GetPlexMovies();
-        bool IsMovieAvailable(PlexMovie[] plexMovies, string title, string year, string providerId = null);
-        List<PlexTvShow> GetPlexTvShows();
-        bool IsTvShowAvailable(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
-        List<PlexAlbum> GetPlexAlbums();
-        bool IsAlbumAvailable(PlexAlbum[] plexAlbums, string title, string year, string artist);
+        IEnumerable<PlexContent> GetPlexMovies(IEnumerable<PlexContent> content);
+        bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null);
+        IEnumerable<PlexContent> GetPlexTvShows(IEnumerable<PlexContent> content);
+        bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
+        IEnumerable<PlexContent> GetPlexAlbums(IEnumerable<PlexContent> content);
+        bool IsAlbumAvailable(PlexContent[] plexAlbums, string title, string year, string artist);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
-        PlexAlbum GetAlbum(PlexAlbum[] plexAlbums, string title, string year, string artist);
-        PlexMovie GetMovie(PlexMovie[] plexMovies, string title, string year, string providerId = null);
-        PlexTvShow GetTvShow(PlexTvShow[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
+        PlexContent GetAlbum(PlexContent[] plexAlbums, string title, string year, string artist);
+        PlexContent GetMovie(PlexContent[] plexMovies, string title, string year, string providerId = null);
+        PlexContent GetTvShow(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
         /// <summary>
         /// Gets the episode's stored in the cache.
         /// </summary>

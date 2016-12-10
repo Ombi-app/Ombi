@@ -44,15 +44,20 @@ namespace PlexRequests.Core.SettingModels
         public bool SearchForMovies { get; set; }
         public bool SearchForTvShows { get; set; }
         public bool SearchForMusic { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireMovieApproval { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireTvShowApproval { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool RequireMusicApproval { get; set; }
+
+        [Obsolete("Use the user management settings")]
         public bool UsersCanViewOnlyOwnRequests { get; set; }
+        [Obsolete("Use the user management settings")]
         public bool UsersCanViewOnlyOwnIssues { get; set; }
         public int MovieWeeklyRequestLimit { get; set; }
         public int TvWeeklyRequestLimit { get; set; }
         public int AlbumWeeklyRequestLimit { get; set; }
-        public string NoApprovalUsers { get; set; }
         public bool CollectAnalyticData { get; set; }
         public bool IgnoreNotifyForAutoApprovedRequests { get; set; }
         public bool Wizard { get; set; }
@@ -69,26 +74,5 @@ namespace PlexRequests.Core.SettingModels
         public string ThemeName { get; set; }
 
         public string ApiKey { get; set; }
-
-        [JsonIgnore]
-        public List<string> ApprovalWhiteList
-        {
-            get
-            {
-                var users = new List<string>();
-                if (string.IsNullOrEmpty(NoApprovalUsers))
-                {
-                    return users;
-                }
-
-                var splitUsers = NoApprovalUsers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (var user in splitUsers)
-                {
-                    if (!string.IsNullOrWhiteSpace(user))
-                        users.Add(user.Trim());
-                }
-                return users;
-            }
-        }
     }
 }

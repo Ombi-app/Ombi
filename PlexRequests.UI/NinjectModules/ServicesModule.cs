@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 using Ninject.Modules;
-
+using PlexRequests.Core.Queue;
 using PlexRequests.Helpers.Analytics;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Jobs;
@@ -46,11 +46,14 @@ namespace PlexRequests.UI.NinjectModules
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
             Bind<IRecentlyAdded>().To<RecentlyAdded>();
+            Bind<IPlexContentCacher>().To<PlexContentCacher>();
             Bind<IJobFactory>().To<CustomJobFactory>();
      
             Bind<IAnalytics>().To<Analytics>();
             Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
             Bind<IJobScheduler>().To<Scheduler>();
+
+            Bind<ITransientFaultQueue>().To<TransientFaultQueue>();
         }
     }
 }

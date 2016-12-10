@@ -182,3 +182,9 @@ button.list-group-item:focus {
 #sidebar-wrapper {
   background: #252424; }
 
+#cacherRunning {
+  background-color: #333333;
+  text-align: center;
+  font-size: 15px;
+  padding: 3px 0; }
+

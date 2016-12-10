@@ -27,13 +27,14 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using PlexRequests.Core.Models;
 using PlexRequests.Store;
 
 namespace PlexRequests.Services.Interfaces
 {
     public interface INotificationEngine
     {
-        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey);
-        Task NotifyUsers(RequestedModel modelChanged, string apiKey);
+        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey, NotificationType type);
+        Task NotifyUsers(RequestedModel modelChanged, string apiKey, NotificationType type);
     }
 }

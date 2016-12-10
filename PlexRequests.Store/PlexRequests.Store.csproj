@@ -69,6 +69,9 @@
     <Compile Include="Models\PlexEpisodes.cs" />
     <Compile Include="Models\PlexUsers.cs" />
     <Compile Include="Models\Plex\MetadataItems.cs" />
+    <Compile Include="Models\Plex\PlexContent.cs" />
+    <Compile Include="Models\Plex\PlexMediaType .cs" />
+    <Compile Include="Models\RequestQueue.cs" />
     <Compile Include="Models\ScheduledJobs.cs" />
     <Compile Include="Models\RequestLimit.cs" />
     <Compile Include="Models\UsersToNotify.cs" />
@@ -85,6 +88,8 @@
     <Compile Include="Repository\SettingsJsonRepository.cs" />
     <Compile Include="Repository\RequestJsonRepository.cs" />
     <Compile Include="Repository\GenericRepository.cs" />
+    <Compile Include="Repository\PlexUserRepository.cs" />
+    <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />
     <Compile Include="UserLogins.cs" />

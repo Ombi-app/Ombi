@@ -78,12 +78,14 @@ namespace PlexRequests.Services.Jobs
             finally
             {
                 JobRecord.Record(JobNames.StoreCleanup);
+                JobRecord.SetRunning(false, JobNames.CpCacher);
             }
 
         }
 
         public void Execute(IJobExecutionContext context)
         {
+            JobRecord.SetRunning(true, JobNames.CpCacher);
             Cleanup();
         }
     }

@@ -65,9 +65,7 @@ namespace PlexRequests.Api
 
             var obj = RetryHandler.Execute(() => Api.ExecuteJson<JObject>(request, baseUrl),
                 (exception, timespan) => Log.Error(exception, "Exception when calling AddMovie for CP, Retrying {0}", timespan), new[] {
-                    TimeSpan.FromSeconds (2),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)});
+                    TimeSpan.FromSeconds (2)});
             
 
             if (obj.Count > 0)

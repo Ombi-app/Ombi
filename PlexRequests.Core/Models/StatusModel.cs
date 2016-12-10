@@ -28,7 +28,8 @@ namespace PlexRequests.Core.Models
 {
     public class StatusModel
     {
-        public string Version { get; set; }
+        public string CurrentVersion { get; set; }
+        public string NewVersion { get; set; }
         public bool UpdateAvailable { get; set; }
         public string UpdateUri { get; set; }
         public string DownloadUri { get; set; }

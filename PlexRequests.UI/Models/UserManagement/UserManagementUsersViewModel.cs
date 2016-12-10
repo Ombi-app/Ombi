@@ -10,17 +10,20 @@ namespace PlexRequests.UI.Models
         public UserManagementUsersViewModel()
         {
             PlexInfo = new UserManagementPlexInformation();
+            Permissions = new List<CheckBox>();
+            Features = new List<CheckBox>();
         }
         public string Username { get; set; }
-        public string Claims { get; set; }
+        public string FeaturesFormattedString { get; set; }
+        public string PermissionsFormattedString { get; set; }
         public string Id { get; set; }
         public string Alias { get; set; }
         public UserType Type { get; set; }
         public string EmailAddress { get; set; }
         public UserManagementPlexInformation PlexInfo { get; set; }
-        public string[] ClaimsArray { get; set; }
-        public List<UserManagementUpdateModel.ClaimsModel> ClaimsItem { get; set; }
         public DateTime LastLoggedIn { get; set; }
+        public List<CheckBox> Permissions { get; set; }
+        public List<CheckBox> Features { get; set; }
     }
 
     public class UserManagementPlexInformation
@@ -31,6 +34,13 @@ namespace PlexRequests.UI.Models
         }
         public string Thumb { get; set; }
         public List<UserManagementPlexServers> Servers { get; set; }
+    }
+
+    public class CheckBox
+    {
+        public string Name { get; set; }
+        public int Value { get; set; }
+        public bool Selected { get; set; }
     }
 
     public class UserManagementPlexServers
@@ -50,8 +60,10 @@ namespace PlexRequests.UI.Models
         public string Username { get; set; }
         [JsonProperty("password")]
         public string Password { get; set; }
-        [JsonProperty("claims")]
-        public string[] Claims { get; set; }
+        [JsonProperty("permissions")]
+        public List<string> Permissions { get; set; }
+        [JsonProperty("features")]
+        public List<string> Features { get; set; }
 
         [JsonProperty("email")]
         public string EmailAddress { get; set; }
@@ -61,20 +73,12 @@ namespace PlexRequests.UI.Models
     {
         [JsonProperty("id")]
         public string Id { get; set; }
-        [JsonProperty("claims")]
-        public List<ClaimsModel> Claims { get; set; }
-
+        [JsonProperty("permissions")]
+        public List<CheckBox> Permissions { get; set; }
+        [JsonProperty("features")]
+        public List<CheckBox> Features { get; set; }
         public string Alias { get; set; }
-        public string EmailAddress { get; set; }
-
-        public class ClaimsModel
-        {
-            [JsonProperty("name")]
-            public string Name { get; set; }
-            [JsonProperty("selected")]
-            public bool Selected { get; set; }
-        }
-        
+        public string EmailAddress { get; set; }  
     }
 }
 
