@@ -49,41 +49,89 @@ namespace PlexRequests.Helpers.Analytics
 
         public void TrackEvent(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
-            var cat = category.ToString();
-            var act = action.ToString();
-            Track(HitType.@event, username, cat, act, label, clientId, value);
+			try
+			{
+
+			var cat = category.ToString();
+				var act = action.ToString();
+				Track(HitType.@event, username, cat, act, label, clientId, value);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
 
         public async void TrackEventAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
-            var cat = category.ToString();
-            var act = action.ToString();
-            await TrackAsync(HitType.@event, username, cat, act, clientId, label, value);
+			try
+			{
+				var cat = category.ToString();
+				var act = action.ToString();
+				await TrackAsync(HitType.@event, username, cat, act, clientId, label, value);
+
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
 
         public void TrackPageview(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
-            var cat = category.ToString();
-            var act = action.ToString();
-            Track(HitType.@pageview, username, cat, act, clientId, label, value);
+			try
+			{
+				var cat = category.ToString();
+				var act = action.ToString();
+				Track(HitType.@pageview, username, cat, act, clientId, label, value);
+
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
         public async Task TrackPageviewAsync(Category category, Action action, string label, string username, string clientId, int? value = null)
         {
-            var cat = category.ToString();
-            var act = action.ToString();
-            await TrackAsync(HitType.@pageview, username, cat, act, clientId, label, value);
+			try
+			{
+				var cat = category.ToString();
+				var act = action.ToString();
+				await TrackAsync(HitType.@pageview, username, cat, act, clientId, label, value);
+
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
 
         public void TrackException(string message, string username, string clientId, bool fatal)
         {
-            var fatalInt = fatal ? 1 : 0;
-            Track(HitType.exception, message, fatalInt, username, clientId);
+			try
+			{
+
+			var fatalInt = fatal ? 1 : 0;
+				Track(HitType.exception, message, fatalInt, username, clientId);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
 
         public async Task TrackExceptionAsync(string message, string username, string clientId, bool fatal)
         {
-            var fatalInt = fatal ? 1 : 0;
-            await TrackAsync(HitType.exception, message, fatalInt, username, clientId);
+			try
+			{
+
+			var fatalInt = fatal ? 1 : 0;
+				await TrackAsync(HitType.exception, message, fatalInt, username, clientId);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex);
+			}
         }
 
         private void Track(HitType type, string username, string category, string action, string clientId, string label, int? value = null)
