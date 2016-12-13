@@ -13,7 +13,6 @@ This is based off [Plex Requests by lokenx](https://github.com/lokenx/plexreques
 I wanted to write a similar application in .Net!
 
 # Features
-
 Here some of the features Plex Requests.Net has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
@@ -69,6 +68,10 @@ Please feed free to submit a pull request!
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
+
+## [Feathub](http://feathub.com/tidusjar/PlexRequests.Net)
+[![Feature Requests](http://feathub.com/tidusjar/PlexRequests.Net?format=svg)](http://feathub.com/tidusjar/PlexRequests.Net)
+
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
