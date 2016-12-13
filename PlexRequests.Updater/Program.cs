@@ -8,7 +8,14 @@ namespace PlexRequests.Updater
 		{
 			Console.WriteLine ("Starting PlexRequests .Net updater");
             var s = new Updater();
-            s.Start(args[0]);
+		    if (args.Length >= 2)
+		    {
+		        s.Start(args[0], args[1]);
+		    }
+		    else
+		    {
+		        s.Start(args[0], string.Empty);
+		    }
 		}
 	}
 }

@@ -243,7 +243,7 @@ namespace PlexRequests.Core.Migration.Migrations
             {
                 return;
             }
-            var requestedModels = allRequests as RequestedModel[] ?? allRequests.ToArray();
+            var requestedModels = allRequests.ToList();
             foreach (var req in requestedModels)
             {
                 if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))

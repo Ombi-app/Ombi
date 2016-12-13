@@ -128,7 +128,7 @@ namespace PlexRequests.UI
 
         private static void WriteOutVersion()
         {
-            var assemblyVer = AssemblyHelper.GetProductVersion();
+            var assemblyVer = AssemblyHelper.GetFileVersion();
             Log.Info($"Version: {assemblyVer}");
             Console.WriteLine($"Version: {assemblyVer}");
         }
