@@ -246,6 +246,10 @@ namespace PlexRequests.Core.Migration.Migrations
             var requestedModels = allRequests.ToList();
             foreach (var req in requestedModels)
             {
+                if (string.IsNullOrEmpty(req.PosterPath))
+                {
+                    continue;
+                }
                 if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
                 {
                     var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);

@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using Ninject;
+using NLog;
 using PlexRequests.Store;
 
 namespace PlexRequests.Core.Migration
@@ -18,6 +19,7 @@ namespace PlexRequests.Core.Migration
 
         private IKernel Kernel { get; }
         private ISqliteConfiguration Db { get; }
+        private static Logger _log = LogManager.GetCurrentClassLogger();
 
         public void MigrateToLatest()
         {
@@ -25,25 +27,34 @@ namespace PlexRequests.Core.Migration
             var versions = GetMigrations();
 
             var dbVersion = con.GetVersionInfo().OrderByDescending(x => x.Version).FirstOrDefault() ??
-                            new TableCreation.VersionInfo { Version = 0 };
+                            new TableCreation.VersionInfo {Version = 0};
             foreach (var v in versions)
             {
 #if !DEBUG
                 if (v.Value.Version > dbVersion.Version)
                 {
 #endif
-                // Assuming only one constructor
-                var ctor = v.Key.GetConstructors().FirstOrDefault();
-                var dependencies = ctor.GetParameters().Select(param => Kernel.Get(param.ParameterType)).ToList();
-
-                var method = v.Key.GetMethod("Start");
-                if (method != null)
+                try
                 {
-                    var classInstance = Activator.CreateInstance(v.Key, dependencies.Any() ? dependencies.ToArray() : null);
-                    var parametersArray = new object[] { Db.DbConnection() };
+                    // Assuming only one constructor
+                    var ctor = v.Key.GetConstructors().FirstOrDefault();
+                    var dependencies = ctor.GetParameters().Select(param => Kernel.Get(param.ParameterType)).ToList();
 
-                    method.Invoke(classInstance, parametersArray);
+                    var method = v.Key.GetMethod("Start");
+                    if (method != null)
+                    {
+                        var classInstance = Activator.CreateInstance(v.Key, dependencies.Any() ? dependencies.ToArray() : null);
+                        var parametersArray = new object[] { Db.DbConnection() };
+
+                        method.Invoke(classInstance, parametersArray);
+                    }
                 }
+                catch (Exception e)
+                {
+                    _log.Fatal("Error when migrating");
+                    _log.Fatal(e);
+                }
+
 #if !DEBUG
                 }
 #endif
