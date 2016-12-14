@@ -51,7 +51,7 @@ namespace PlexRequests.Core.Migration
                 }
                 catch (Exception e)
                 {
-                    _log.Fatal("Error when migrating");
+                    _log.Fatal("Error when migrating version : {0}", v.Value.Version);
                     _log.Fatal(e);
                 }
 
