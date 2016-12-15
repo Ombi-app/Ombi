@@ -28,6 +28,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Threading.Tasks;
 using MarkdownSharp;
 using Nancy;
@@ -118,10 +120,23 @@ namespace PlexRequests.UI.Modules.Admin
             Analytics.TrackEventAsync(Category.Admin, PlexRequests.Helpers.Analytics.Action.Update, "AutoUpdate", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var url = Request.Form["url"];
+            var args = (string)Request.Form["args"].ToString();
+            var lowered = args.ToLower();
+            var appPath = Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(SystemStatusModule)).Location ?? string.Empty) ?? string.Empty, "PlexRequests.Updater.exe");
+
+            if (!string.IsNullOrEmpty(lowered))
+            {
+                if (lowered.Contains("plexrequests.exe"))
+                {
+                    lowered = lowered.Replace("plexrequests.exe", "");
+                }
+            }
+
+            var startArgs = string.IsNullOrEmpty(lowered) ? appPath : $"{lowered} Plexrequests.Updater.exe";
 
             var startInfo = Type.GetType("Mono.Runtime") != null
-                                             ? new ProcessStartInfo("mono PlexRequests.Updater.exe") { Arguments = url }
-                                             : new ProcessStartInfo("PlexRequests.Updater.exe") { Arguments = url };
+                                             ? new ProcessStartInfo(startArgs) { Arguments = $"{url} {lowered}", }
+                                             : new ProcessStartInfo(startArgs) { Arguments = $"{url} {lowered}" };
 
             Process.Start(startInfo);
 

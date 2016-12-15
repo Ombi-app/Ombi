@@ -1,4 +1,5 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: Version1100.cs
@@ -23,16 +24,15 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using NLog;
 using System.Linq;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.Users;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store;
@@ -44,8 +44,10 @@ namespace PlexRequests.Core.Migration.Migrations
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration
     {
-        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log, IPlexApi plexApi, ISettingsService<PlexSettings> plexService,
-            IPlexUserRepository plexusers, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
+        public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log,
+            IPlexApi plexApi, ISettingsService<PlexSettings> plexService,
+            IPlexUserRepository plexusers, ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<UserManagementSettings> umSettings,
             ISettingsService<ScheduledJobsSettings> sjs, IRepository<UsersToNotify> usersToNotify)
         {
             UserRepo = userRepo;
@@ -59,7 +61,9 @@ namespace PlexRequests.Core.Migration.Migrations
             ScheduledJobSettings = sjs;
             UserNotifyRepo = usersToNotify;
         }
+
         public int Version => 11000;
+
         private IUserRepository UserRepo { get; }
         private IRequestService RequestService { get; }
         private ISettingsService<LogSettings> Log { get; }
@@ -70,6 +74,9 @@ namespace PlexRequests.Core.Migration.Migrations
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
         private IRepository<UsersToNotify> UserNotifyRepo { get; }
+
+
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Start(IDbConnection con)
         {
@@ -89,190 +96,250 @@ namespace PlexRequests.Core.Migration.Migrations
 
         private void MigrateUserNotifications()
         {
-            var usersToNotify = UserNotifyRepo.GetAll();
-            var plexUsers = PlexUsers.GetAll().ToList();
-            var users = UserRepo.GetAll().ToList();
-
-            if (usersToNotify == null)
+            try
             {
-                return;
+                var usersToNotify = UserNotifyRepo.GetAll();
+                var plexUsers = PlexUsers.GetAll().ToList();
+                var users = UserRepo.GetAll().ToList();
+
+                if (usersToNotify == null)
+                {
+                    return;
+                }
+
+                foreach (var u in usersToNotify)
+                {
+                    var selectedPlexUser =
+                        plexUsers.FirstOrDefault(
+                            x => x.Username.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
+                    if (selectedPlexUser != null)
+                    {
+                        selectedPlexUser.Features += (int)Features.RequestAddedNotification;
+                        PlexUsers.Update(selectedPlexUser);
+                    }
+
+                    var selectedLocalUser =
+                        users.FirstOrDefault(x => x.UserName.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
+                    if (selectedLocalUser != null)
+                    {
+                        selectedLocalUser.Features += (int)Features.RequestAddedNotification;
+                        UserRepo.Update(selectedLocalUser);
+                    }
+                }
             }
-
-            foreach (var u in usersToNotify)
+            catch (Exception e)
             {
-                var selectedPlexUser = plexUsers.FirstOrDefault(x => x.Username.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
-                if (selectedPlexUser != null)
-                {
-                    selectedPlexUser.Features += (int)Features.RequestAddedNotification;
-                    PlexUsers.Update(selectedPlexUser);
-                }
-
-                var selectedLocalUser =
-                    users.FirstOrDefault(x => x.UserName.Equals(u.Username, StringComparison.CurrentCultureIgnoreCase));
-                if (selectedLocalUser != null)
-                {
-                    selectedLocalUser.Features += (int)Features.RequestAddedNotification;
-                    UserRepo.Update(selectedLocalUser);
-                }
-
+                Logger.Fatal("Exception when migrating Version 1.10.0 (UpdateScheduledJobs)");
+                Logger.Fatal(e);
             }
         }
 
         private void UpdateScheduledJobs()
         {
-            var settings = ScheduledJobSettings.GetSettings();
+            try
+            {
+                var settings = ScheduledJobSettings.GetSettings();
 
-            settings.PlexUserChecker = 24;
-            settings.PlexContentCacher = 60;
+                settings.PlexUserChecker = 24;
+                settings.PlexContentCacher = 60;
 
-            ScheduledJobSettings.SaveSettings(settings);
+                ScheduledJobSettings.SaveSettings(settings);
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal("Exception when migrating Version 1.10.0 (UpdateScheduledJobs)");
+                Logger.Fatal(e);
+            }
         }
 
         private void PopulateDefaultUserManagementSettings()
         {
-            var plexRequestSettings = PlexRequestSettings.GetSettings();
-
-            UserManagementSettings.SaveSettings(new UserManagementSettings
+            try
             {
-                AutoApproveMovies = !plexRequestSettings.RequireMovieApproval,
-                RequestTvShows = plexRequestSettings.SearchForTvShows,
-                RequestMusic = plexRequestSettings.SearchForMusic,
-                RequestMovies = plexRequestSettings.SearchForMovies,
-                AutoApproveMusic = !plexRequestSettings.RequireMusicApproval,
-                AutoApproveTvShows = !plexRequestSettings.RequireTvShowApproval
-            });
+                var plexRequestSettings = PlexRequestSettings.GetSettings();
+
+                UserManagementSettings.SaveSettings(new UserManagementSettings
+                {
+                    AutoApproveMovies = !plexRequestSettings.RequireMovieApproval,
+                    RequestTvShows = plexRequestSettings.SearchForTvShows,
+                    RequestMusic = plexRequestSettings.SearchForMusic,
+                    RequestMovies = plexRequestSettings.SearchForMovies,
+                    AutoApproveMusic = !plexRequestSettings.RequireMusicApproval,
+                    AutoApproveTvShows = !plexRequestSettings.RequireTvShowApproval
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal("Exception when migrating Version 1.10.0 (PopulateDefaultUserMngmentSettings)");
+                Logger.Fatal(e);
+            }
         }
 
         private void UpdatePlexUsers()
         {
-            var settings = PlexSettings.GetSettings();
-            if (string.IsNullOrEmpty(settings.PlexAuthToken))
+            try
             {
-                return;
-            }
-            var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
+                var settings = PlexSettings.GetSettings();
+                if (string.IsNullOrEmpty(settings.PlexAuthToken))
+                {
+                    return;
+                }
+                var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
 
-            if (plexUsers?.User == null)
+                if (plexUsers?.User == null)
+                {
+                    return;
+                }
+
+                var prSettings = PlexRequestSettings.GetSettings();
+
+                var dbUsers = PlexUsers.GetAll().ToList();
+                foreach (var user in plexUsers.User)
+                {
+                    if (dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id) != null)
+                    {
+                        continue;
+                    }
+
+                    int permissions = 0;
+                    if (prSettings.SearchForMovies)
+                    {
+                        permissions = (int)Permissions.RequestMovie;
+                    }
+                    if (prSettings.SearchForTvShows)
+                    {
+                        permissions += (int)Permissions.RequestTvShow;
+                    }
+                    if (prSettings.SearchForMusic)
+                    {
+                        permissions += (int)Permissions.RequestMusic;
+                    }
+                    if (!prSettings.RequireMovieApproval)
+                    {
+                        permissions += (int)Permissions.AutoApproveMovie;
+                    }
+                    if (!prSettings.RequireTvShowApproval)
+                    {
+                        permissions += (int)Permissions.AutoApproveTv;
+                    }
+                    if (!prSettings.RequireMusicApproval)
+                    {
+                        permissions += (int)Permissions.AutoApproveAlbum;
+                    }
+
+                    // Add report Issues
+
+                    permissions += (int)Permissions.ReportIssue;
+
+                    var m = new PlexUsers
+                    {
+                        PlexUserId = user.Id,
+                        Permissions = permissions,
+                        Features = 0,
+                        UserAlias = string.Empty,
+                        EmailAddress = user.Email,
+                        Username = user.Username,
+                        LoginId = Guid.NewGuid().ToString()
+                    };
+
+                    PlexUsers.Insert(m);
+                }
+            }
+            catch (Exception e)
             {
-                return;
+                Logger.Fatal("Exception when migrating Version 1.10.0 (UpdatePlexUsers)");
+                Logger.Fatal(e);
             }
-
-            var prSettings = PlexRequestSettings.GetSettings();
-
-            var dbUsers = PlexUsers.GetAll().ToList();
-            foreach (var user in plexUsers.User)
-            {
-                if (dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id) != null)
-                {
-                    continue;
-                }
-
-                int permissions = 0;
-                if (prSettings.SearchForMovies)
-                {
-                    permissions = (int)Permissions.RequestMovie;
-                }
-                if (prSettings.SearchForTvShows)
-                {
-                    permissions += (int)Permissions.RequestTvShow;
-                }
-                if (prSettings.SearchForMusic)
-                {
-                    permissions += (int)Permissions.RequestMusic;
-                }
-                if (!prSettings.RequireMovieApproval)
-                {
-                    permissions += (int)Permissions.AutoApproveMovie;
-                }
-                if (!prSettings.RequireTvShowApproval)
-                {
-                    permissions += (int)Permissions.AutoApproveTv;
-                }
-                if (!prSettings.RequireMusicApproval)
-                {
-                    permissions += (int)Permissions.AutoApproveAlbum;
-                }
-
-                // Add report Issues
-
-                permissions += (int)Permissions.ReportIssue;
-
-                var m = new PlexUsers
-                {
-                    PlexUserId = user.Id,
-                    Permissions = permissions,
-                    Features = 0,
-                    UserAlias = string.Empty,
-                    EmailAddress = user.Email,
-                    Username = user.Username,
-                    LoginId = Guid.NewGuid().ToString()
-                };
-
-                PlexUsers.Insert(m);
-            }
-
         }
 
         private void ResetLogLevel()
         {
-            var logSettings = Log.GetSettings();
-            logSettings.Level = LogLevel.Error.Ordinal;
-            Log.SaveSettings(logSettings);
+            try
+            {
+                var logSettings = Log.GetSettings();
+                logSettings.Level = LogLevel.Error.Ordinal;
+                Log.SaveSettings(logSettings);
 
-            LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
+                LoggingHelper.ReconfigureLogLevel(LogLevel.FromOrdinal(logSettings.Level));
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal("Exception when migrating Version 1.10.0 (ResetLogLvl)");
+                Logger.Fatal(e);
+            }
         }
 
         private void UpdateDb(IDbConnection con)
         {
-            // Create the two new columns
-            con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
-            con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
-
-            con.AlterTable("PlexUsers", "ADD", "Permissions", true, "INTEGER");
-            con.AlterTable("PlexUsers", "ADD", "Features", true, "INTEGER");
-            con.AlterTable("PlexUsers", "ADD", "Username", true, "VARCHAR(100)");
-            con.AlterTable("PlexUsers", "ADD", "EmailAddress", true, "VARCHAR(100)");
-            con.AlterTable("PlexUsers", "ADD", "LoginId", true, "VARCHAR(100)");
-
-            //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
-
-            // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}
-            // Update old invalid posters
-            var allRequests = RequestService.GetAll();
-            if (allRequests == null)
+            try
             {
-                return;
-            }
-            var requestedModels = allRequests as RequestedModel[] ?? allRequests.ToArray();
-            foreach (var req in requestedModels)
-            {
-                if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
+                // Create the two new columns
+                con.AlterTable("Users", "ADD", "Permissions", true, "INTEGER");
+                con.AlterTable("Users", "ADD", "Features", true, "INTEGER");
+
+                con.AlterTable("PlexUsers", "ADD", "Permissions", true, "INTEGER");
+                con.AlterTable("PlexUsers", "ADD", "Features", true, "INTEGER");
+                con.AlterTable("PlexUsers", "ADD", "Username", true, "VARCHAR(100)");
+                con.AlterTable("PlexUsers", "ADD", "EmailAddress", true, "VARCHAR(100)");
+                con.AlterTable("PlexUsers", "ADD", "LoginId", true, "VARCHAR(100)");
+
+                //https://image.tmdb.org/t/p/w150/https://image.tmdb.org/t/p/w150//aqhAqttDq7zgsTaBHtCD8wmTk6k.jpg 
+
+                // UI = https://image.tmdb.org/t/p/w150/{{posterPath}}
+                // Update old invalid posters
+                var allRequests = RequestService.GetAll();
+                if (allRequests == null)
                 {
-                    var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);
-                    req.PosterPath = newImg;
+                    return;
                 }
+                var requestedModels = allRequests.ToList();
+                foreach (var req in requestedModels)
+                {
+                    if (string.IsNullOrEmpty(req.PosterPath))
+                    {
+                        continue;
+                    }
+                    if (req.PosterPath.Contains("https://image.tmdb.org/t/p/w150/"))
+                    {
+                        var newImg = req.PosterPath.Replace("https://image.tmdb.org/t/p/w150/", string.Empty);
+                        req.PosterPath = newImg;
+                    }
+                }
+                RequestService.BatchUpdate(requestedModels);
             }
-            RequestService.BatchUpdate(requestedModels);
+            catch (Exception e)
+            {
+                Logger.Fatal("Exception when migrating Version 1.10.0 (UpdateDb)");
+                Logger.Fatal(e);
+            }
         }
 
         private void UpdateAdmin()
         {
-            var users = UserRepo.GetAll().ToList();
-
-            foreach (var user in users)
+            try
             {
-                user.Permissions = (int)
-                    (Permissions.Administrator
-                    | Permissions.ReportIssue
-                    | Permissions.RequestMusic
-                    | Permissions.RequestTvShow
-                    | Permissions.RequestMovie
-                    | Permissions.AutoApproveAlbum
-                    | Permissions.AutoApproveMovie
-                    | Permissions.AutoApproveTv);
-            }
+                var users = UserRepo.GetAll().ToList();
 
-            UserRepo.UpdateAll(users);
+                foreach (var user in users)
+                {
+                    user.Permissions = (int)
+                        (Permissions.Administrator
+                        | Permissions.ReportIssue
+                        | Permissions.RequestMusic
+                        | Permissions.RequestTvShow
+                        | Permissions.RequestMovie
+                        | Permissions.AutoApproveAlbum
+                        | Permissions.AutoApproveMovie
+                        | Permissions.AutoApproveTv);
+                }
+
+                UserRepo.UpdateAll(users);
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal("Exception when migrating Version 1.10.0 (UpdateAdmin)");
+                Logger.Fatal(e);
+            }
         }
     }
 }

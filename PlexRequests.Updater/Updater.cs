@@ -29,6 +29,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Reflection;
 using System.Windows.Forms;
 
 namespace PlexRequests.Updater
@@ -67,7 +68,7 @@ namespace PlexRequests.Updater
             }
         }
 
-        public void Start(string downloadPath)
+        public void Start(string downloadPath, string launchOptions)
         {
             try
             {
@@ -79,6 +80,10 @@ namespace PlexRequests.Updater
                 Console.WriteLine("Downloading new version");
                 using (var client = new WebClient())
                 {
+                    client.DownloadProgressChanged += (s, e) =>
+                    {
+                        Console.WriteLine($"{e.ProgressPercentage}%");
+                    };
                     client.DownloadFile(downloadPath, TempPath);
                 }
                 Console.WriteLine("Downloaded!");
@@ -130,7 +135,7 @@ namespace PlexRequests.Updater
                     RestoreBackup();
                 }
 
-                FinishUpdate();
+                FinishUpdate(launchOptions);
             }
         }
 
@@ -139,8 +144,9 @@ namespace PlexRequests.Updater
             Console.WriteLine("Backing up the current version");
             try
             {
-                var dir = Directory.CreateDirectory("BackupSystem");
-                var applicationPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath));
+                var applicationPath = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Updater)).Location ?? string.Empty) ?? string.Empty;
+
+                var dir = Directory.CreateDirectory(Path.Combine(applicationPath, "BackupSystem"));
 
                 var allfiles = Directory.GetFiles(applicationPath, "*.*", SearchOption.AllDirectories);
                 BackupPath = Path.Combine(dir.FullName, "PlexRequestsBackup.zip");
@@ -179,7 +185,9 @@ namespace PlexRequests.Updater
         {
             try
             {
-                return Directory.CreateDirectory("UpdateTemp");
+                var location = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Updater)).Location ?? string.Empty);
+                var path = Path.Combine(location, "UpdateTemp");
+                return Directory.CreateDirectory(path);
             }
             catch (Exception e)
             {
@@ -190,15 +198,13 @@ namespace PlexRequests.Updater
             }
         }
 
-        private void FinishUpdate()
+        private void FinishUpdate(string launchOptions)
         {
-            ProcessStartInfo startInfo;
-            startInfo = Type.GetType("Mono.Runtime") != null 
-                ? new ProcessStartInfo("mono PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" } 
-                : new ProcessStartInfo("PlexRequests.exe") { Arguments = Error ? "-u 2" : "-u 1" };
+            var args = Error ? "-u 2" : "-u 1";
+            var startInfo = new ProcessStartInfo($"{launchOptions}PlexRequests.exe") { Arguments = args, UseShellExecute = true };
 
             Process.Start(startInfo);
-            
+
             Environment.Exit(0);
         }
     }
