@@ -511,7 +511,7 @@ namespace PlexRequests.Services.Jobs
 
         private void EndLoopHtml(StringBuilder sb)
         {
-            sb.Append("<td");
+            sb.Append("</td>");
             sb.Append("<hr>");
             sb.Append("<br>");
             sb.Append("<br>");
