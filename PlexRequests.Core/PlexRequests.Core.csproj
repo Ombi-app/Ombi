@@ -122,6 +122,7 @@
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />
     <Compile Include="SettingModels\LandingPageSettings.cs" />
+    <Compile Include="SettingModels\CustomizationSettings.cs" />
     <Compile Include="SettingModels\NewsletterSettings.cs" />
     <Compile Include="SettingModels\NotificationSettings.cs" />
     <Compile Include="SettingModels\NotificationSettingsV2.cs" />
