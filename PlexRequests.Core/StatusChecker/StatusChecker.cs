@@ -179,5 +179,16 @@ namespace PlexRequests.Core.StatusChecker
 
             return model;
         }
+
+        public async Task<Issue> ReportBug(string title, string body)
+        {
+            var issue = new NewIssue(title)
+            {
+                Body = body
+            };
+            var result = await Git.Issue.Create(Owner, RepoName, issue);
+
+            return result;
+        }
     }
 }

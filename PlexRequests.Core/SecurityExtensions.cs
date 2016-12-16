@@ -30,6 +30,7 @@ using Nancy;
 using Nancy.Linker;
 using Nancy.Responses;
 using Nancy.Security;
+using Nancy.Session;
 using PlexRequests.Core.Models;
 using PlexRequests.Helpers;
 using PlexRequests.Helpers.Permissions;
@@ -91,7 +92,7 @@ namespace PlexRequests.Core
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns><c>null</c> if we cannot find a user</returns>
-        public string GetUsername(string username)
+        public string GetUsername(string username, ISession session)
         {
             var plexUser = PlexUsers.GetUserByUsername(username);
             if (plexUser != null)
@@ -119,7 +120,11 @@ namespace PlexRequests.Core
                     return dbUser.UserName;
                 }
             }
-            return null;
+
+            // could be a local user
+            var localName = session[SessionKeys.UsernameKey];
+
+            return localName as string;
         }
 
 

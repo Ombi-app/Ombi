@@ -83,6 +83,7 @@
     <Compile Include="LoggingHelper.cs" />
     <Compile Include="MemoryCacheProvider.cs" />
     <Compile Include="ObjectCopier.cs" />
+    <Compile Include="OperatingSystemHelper.cs" />
     <Compile Include="PasswordHasher.cs" />
     <Compile Include="EnumExtensions.cs" />
     <Compile Include="Permissions\Features.cs" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using Nancy;
 using Nancy.Security;
+using Nancy.Session;
 using PlexRequests.Helpers.Permissions;
 
 namespace PlexRequests.Core
@@ -29,6 +30,6 @@ namespace PlexRequests.Core
         /// </summary>
         /// <param name="username">The username.</param>
         /// <returns><c>null</c> if we cannot find a user</returns>
-        string GetUsername(string username);
+        string GetUsername(string username, ISession session);
     }
 }

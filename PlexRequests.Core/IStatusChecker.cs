@@ -7,5 +7,6 @@ namespace PlexRequests.Core
     public interface IStatusChecker
     {
         Task<StatusModel> GetStatus();
+        Task<Issue> ReportBug(string title, string body);
     }
 }
