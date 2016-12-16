@@ -232,12 +232,25 @@ namespace PlexRequests.UI.Modules
                 {
                     if (!settings.UserAuthentication)// Do not need to auth make admin use login screen for now TODO remove this
                     {
-                        var perms = (Permissions)dbUser.Permissions;
-                        if (perms.HasFlag(Permissions.Administrator))
+                        if (dbUser != null)
                         {
-                            var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-                            Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
-                            return Response.AsRedirect(uri.ToString());
+                            var perms = (Permissions) dbUser.Permissions;
+                            if (perms.HasFlag(Permissions.Administrator))
+                            {
+                                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+                                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+                                return Response.AsRedirect(uri.ToString());
+                            }
+                        }
+                        if (plexLocal != null)
+                        {
+                            var perms = (Permissions)plexLocal.Permissions;
+                            if (perms.HasFlag(Permissions.Administrator))
+                            {
+                                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+                                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+                                return Response.AsRedirect(uri.ToString());
+                            }
                         }
                     }
                 }
