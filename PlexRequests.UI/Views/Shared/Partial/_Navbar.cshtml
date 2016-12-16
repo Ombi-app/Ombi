@@ -40,7 +40,6 @@
                 {
                     @Html.GetNavbarUrl(Context, "/usermanagement", UI.Layout_Usermanagement, "users")
                 }
-                @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
                 @if (Html.IsAdmin())
                 {
                     <li><a id="donate" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: red"></i> @UI.Layout_Donate</a></li>
@@ -48,12 +47,10 @@
                 <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">@UI.Custom_Donation_Default</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                @*@if (!Context.CurrentUser.IsAuthenticated() && Context.Request.Session[SessionKeys.UsernameKey] == null) // TODO replace with IsAdmin*@
                 @if (!Html.IsLoggedIn(Context))
                 {
                     <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
                 }
-                @*@if (Context.CurrentUser.IsAuthenticated()) // TODO replace with IsAdmin*@
                 @if (Html.IsAdmin())
                 {
                     <li><a>@UI.Layout_Welcome @Context.CurrentUser.UserName</a></li>
@@ -68,7 +65,6 @@
                         </ul>
                     </li>
                 }
-                @*@if (Context.Request.Session[SessionKeys.UsernameKey] != null && !Context.CurrentUser.IsAuthenticated())*@
                 else if (Html.IsNormalUser()) // Logged in but not admin
                 {
                     <li class="dropdown">

@@ -18,7 +18,6 @@ namespace PlexRequests.UI.Modules
         public DonationLinkModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("customDonation", pr, security)
         {
             Cache = provider;
-
             Get["/", true] = async (x, ct) => await GetCustomDonationUrl(pr);
         }
 
@@ -31,14 +30,12 @@ namespace PlexRequests.UI.Modules
             PlexRequestSettings settings = await pr.GetSettingsAsync();
             try
             {
-                if (settings.EnableCustomDonationUrl)
+                if (settings.EnableCustomDonationUrl && Security.IsLoggedIn(Context))
                 {
                     return Response.AsJson(new { url = settings.CustomDonationUrl, message = settings.CustomDonationMessage, enabled = true });
                 }
-                else
-                {
-                    return Response.AsJson(new { enabled = false });
-                }
+
+                return Response.AsJson(new { enabled = false });
             }
             catch (Exception e)
             {
