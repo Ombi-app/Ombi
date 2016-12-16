@@ -26,6 +26,7 @@
 #endregion
 using System.Collections.Generic;
 using System.Text;
+using System.Web.UI.WebControls;
 using Nancy;
 using Nancy.ViewEngines.Razor;
 
@@ -233,6 +234,16 @@ namespace PlexRequests.UI.Helpers
             return helper.Raw(sb.ToString());
         }
 
+        public static IHtmlString LoadAsset(this HtmlHelpers helper, string contentPath, bool javascript)
+        {
+            var assetLocation = GetBaseUrl();
+            var content = GetContentUrl(assetLocation);
+            if (javascript)
+            {
+                return helper.Raw($"<script src=\"{content}{contentPath}?v={Assembly}\" type=\"text/javascript\"></script>");
+            }
+            return helper.Raw($"<link rel=\"stylesheet\" type=\"text/css\" href=\"{content}{contentPath}?v={Assembly}\" />");
+        }
 
         public static IHtmlString LoadTableAssets(this HtmlHelpers helper)
         {
