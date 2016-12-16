@@ -51,6 +51,7 @@ using Nancy.Json;
 
 using Ninject;
 using PlexRequests.UI.Authentication;
+using Nancy.Hosting.Self;
 
 namespace PlexRequests.UI
 {
