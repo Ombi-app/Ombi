@@ -473,4 +473,7 @@
   <data name="Layout_Usermanagement" xml:space="preserve">
     <value>User Management</value>
   </data>
+  <data name="UserLogin_AdminUsePassword" xml:space="preserve">
+    <value>If you are an administrator, please use the other login page</value>
+  </data>
 </root>

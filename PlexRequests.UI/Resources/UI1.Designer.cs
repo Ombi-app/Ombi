@@ -223,7 +223,7 @@ namespace PlexRequests.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A background process is currently running, so there might be some unexpected behavior. This shouldn&apos;t take too long..
+        ///   Looks up a localized string similar to Currently we are indexing all of the available tv shows and movies on the Plex server, so there might be some unexpected behavior. This shouldn&apos;t take too long..
         /// </summary>
         public static string Layout_CacherRunning {
             get {
@@ -1110,6 +1110,15 @@ namespace PlexRequests.UI.Resources {
         public static string Search_WeeklyRequestLimitTVShow {
             get {
                 return ResourceManager.GetString("Search_WeeklyRequestLimitTVShow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you are an administrator, please use the other login page.
+        /// </summary>
+        public static string UserLogin_AdminUsePassword {
+            get {
+                return ResourceManager.GetString("UserLogin_AdminUsePassword", resourceCulture);
             }
         }
         
