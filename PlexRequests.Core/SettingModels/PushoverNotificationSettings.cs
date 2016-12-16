@@ -29,7 +29,6 @@ namespace PlexRequests.Core.SettingModels
     public sealed class PushoverNotificationSettings : NotificationSettings
     {
         public string AccessToken { get; set; }
-        public bool Enabled { get; set; }
         public string UserToken { get; set; }
     }
 }

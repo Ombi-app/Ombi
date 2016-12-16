@@ -31,13 +31,11 @@ using System.Net;
 using Mono.Data.Sqlite;
 
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
 using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
-using Nancy.Hosting.Self;
 using Nancy.Session;
 
 using PlexRequests.Api.Interfaces;
@@ -105,9 +103,6 @@ namespace PlexRequests.UI
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             ServicePointManager.ServerCertificateValidationCallback +=
                  (sender, certificate, chain, sslPolicyErrors) => true;
-
-            SubscribeAllObservers(container);
-
         }
 
 #if DEBUG
@@ -141,39 +136,6 @@ namespace PlexRequests.UI
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration => new DiagnosticsConfiguration { Password = @"password" };
-
-        private void SubscribeAllObservers(IKernel container)
-        {
-            var notificationService = container.Get<INotificationService>();
-
-            var emailSettingsService = container.Get<ISettingsService<EmailNotificationSettings>>();
-            var emailSettings = emailSettingsService.GetSettings();
-            if (emailSettings.Enabled)
-            {
-                notificationService.Subscribe(new EmailMessageNotification(emailSettingsService));
-            }
-
-            var pushbulletService = container.Get<ISettingsService<PushbulletNotificationSettings>>();
-            var pushbulletSettings = pushbulletService.GetSettings();
-            if (pushbulletSettings.Enabled)
-            {
-                notificationService.Subscribe(new PushbulletNotification(container.Get<IPushbulletApi>(), pushbulletService));
-            }
-
-            var pushoverService = container.Get<ISettingsService<PushoverNotificationSettings>>();
-            var pushoverSettings = pushoverService.GetSettings();
-            if (pushoverSettings.Enabled)
-            {
-                notificationService.Subscribe(new PushoverNotification(container.Get<IPushoverApi>(), pushoverService));
-            }
-
-            var slackService = container.Get<ISettingsService<SlackNotificationSettings>>();
-            var slackSettings = slackService.GetSettings();
-            if (slackSettings.Enabled)
-            {
-                notificationService.Subscribe(new SlackNotification(container.Get<ISlackApi>(), slackService));
-            }
-        }
 
         protected override void RequestStartup(IKernel container, IPipelines pipelines, NancyContext context)
         {
