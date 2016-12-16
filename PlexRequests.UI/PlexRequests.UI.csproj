@@ -244,6 +244,7 @@
     <Compile Include="Models\SearchMovieViewModel.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\CustomizationModule.cs" />
     <Compile Include="Modules\Admin\UserManagementSettingsModule.cs" />
     <Compile Include="Modules\Admin\FaultQueueModule.cs" />
     <Compile Include="Modules\Admin\SystemStatusModule.cs" />
@@ -755,6 +756,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\UserManagementSettings\UserManagementSettings.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Customization\Customization.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
