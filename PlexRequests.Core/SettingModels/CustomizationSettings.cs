@@ -1,8 +1,8 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: PushoverNotificationSettings.cs
-//    Created By: Jamie Rees
+//    File: NewsletterSettings.cs
+//    Created By: Jim MacKenzie
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -24,11 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 namespace PlexRequests.Core.SettingModels
 {
-    public sealed class PushoverNotificationSettings : NotificationSettings
+    public class CustomizationSettings : Settings
     {
-        public string AccessToken { get; set; }
-        public string UserToken { get; set; }
+        public string ApplicationName { get; set; }        
+        
+        /// <summary>
+        /// The CSS name of the theme we want
+        /// </summary>
+        public string ThemeName { get; set; }
     }
 }

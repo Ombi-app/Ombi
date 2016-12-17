@@ -28,13 +28,17 @@ using System;
 using System.Diagnostics;
 using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
-
+using Ninject.Syntax;
 using NLog;
 
 using Owin;
+using PlexRequests.Api.Interfaces;
 using PlexRequests.Core;
 using PlexRequests.Core.Migration;
+using PlexRequests.Core.SettingModels;
+using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Jobs;
+using PlexRequests.Services.Notification;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Helpers;
@@ -89,16 +93,46 @@ namespace PlexRequests.UI
                     jobSettings.Update(scheduledJobse);
                 }
                 scheduler.StartScheduler();
-                
 
-
-
+                SubscribeAllObservers(kernel);
 
             }
             catch (Exception exception)
             {
                 Log.Fatal(exception);
                 throw;
+            }
+        }
+
+        private void SubscribeAllObservers(IResolutionRoot container)
+        {
+            var notificationService = container.Get<INotificationService>();
+
+            var emailSettingsService = container.Get<ISettingsService<EmailNotificationSettings>>();
+            var emailSettings = emailSettingsService.GetSettings();
+            SubScribeOvserver(emailSettings, notificationService ,new EmailMessageNotification(emailSettingsService));
+            
+
+            var pushbulletService = container.Get<ISettingsService<PushbulletNotificationSettings>>();
+            var pushbulletSettings = pushbulletService.GetSettings();
+            SubScribeOvserver(pushbulletSettings, notificationService, new PushbulletNotification(container.Get<IPushbulletApi>(), pushbulletService));
+
+
+            var pushoverService = container.Get<ISettingsService<PushoverNotificationSettings>>();
+            var pushoverSettings = pushoverService.GetSettings();
+            SubScribeOvserver(pushoverSettings, notificationService, new PushoverNotification(container.Get<IPushoverApi>(), pushoverService));
+
+            var slackService = container.Get<ISettingsService<SlackNotificationSettings>>();
+            var slackSettings = slackService.GetSettings();
+            SubScribeOvserver(slackSettings, notificationService, new SlackNotification(container.Get<ISlackApi>(), slackService));
+        }
+
+        private void SubScribeOvserver<T>(T settings, INotificationService notificationService, INotification notification)
+            where T : NotificationSettings
+        {
+            if (settings.Enabled)
+            {
+                notificationService.Subscribe(notification);
             }
         }
     }

@@ -228,6 +228,33 @@ namespace PlexRequests.UI.Modules
                     loginGuid = Guid.Parse(dbUser.UserGuid);
                 }
 
+                if (loginGuid != Guid.Empty)
+                {
+                    if (!settings.UserAuthentication)// Do not need to auth make admin use login screen for now TODO remove this
+                    {
+                        if (dbUser != null)
+                        {
+                            var perms = (Permissions) dbUser.Permissions;
+                            if (perms.HasFlag(Permissions.Administrator))
+                            {
+                                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+                                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+                                return Response.AsRedirect(uri.ToString());
+                            }
+                        }
+                        if (plexLocal != null)
+                        {
+                            var perms = (Permissions)plexLocal.Permissions;
+                            if (perms.HasFlag(Permissions.Administrator))
+                            {
+                                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+                                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+                                return Response.AsRedirect(uri.ToString());
+                            }
+                        }
+                    }
+                }
+
                 if(loginGuid == Guid.Empty && settings.UserAuthentication)
                 {
                     var defaultSettings = UserManagementSettings.GetSettings();

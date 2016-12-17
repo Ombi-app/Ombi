@@ -45,6 +45,9 @@ namespace PlexRequests.Core.SettingModels
             };
         }
 
+
+        public bool Enabled { get; set; }
+
         public List<NotificationMessage> Message { get; set; }
     }
 

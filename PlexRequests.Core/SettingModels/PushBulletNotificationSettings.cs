@@ -30,6 +30,5 @@ namespace PlexRequests.Core.SettingModels
     {
         public string AccessToken { get; set; }
         public string DeviceIdentifier { get; set; }
-        public bool Enabled { get; set; }
     }
 }

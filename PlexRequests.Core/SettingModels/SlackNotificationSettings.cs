@@ -6,7 +6,6 @@ namespace PlexRequests.Core.SettingModels
 {
     public sealed class SlackNotificationSettings : NotificationSettings
     {
-        public bool Enabled { get; set; }
         public string WebhookUrl { get; set; }
         public string Channel { get; set; }
         public string Username { get; set; }

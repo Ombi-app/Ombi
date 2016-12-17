@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: PushoverNotificationSettings.cs
+//    File: AboutAdminViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,11 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.SettingModels
+namespace PlexRequests.UI.Models
 {
-    public sealed class PushoverNotificationSettings : NotificationSettings
+    public class AboutAdminViewModel
     {
-        public string AccessToken { get; set; }
-        public string UserToken { get; set; }
+        public string Os { get; set; } // Windows/Mono
+        public string SystemVersion { get; set; } // Windows 10/ mono 4.2.5
+        public string ApplicationVersion { get; set; } // File Version
+        public string Branch { get; set; }
+        public string LogLevel { get; set; }
     }
 }
