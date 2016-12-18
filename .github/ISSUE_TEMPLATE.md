@@ -1,9 +1,10 @@
-!!Pleas use the template, otherway we will close the github issue!!
+!! Pleas use the template, otherway we will close the github issue !!
 
 If this is a bug report or support request please make sure you have filled the following in:
-(If it's not a bug/support request and a feature request pleas submit your feature request over here: http://feathub.com/tidusjar/PlexRequests.Net)
+(If this is afeature request pleas submit your feature request over here: http://feathub.com/tidusjar/PlexRequests.Net)
 
 #### Plex Requests.Net Version:
+
 
 #### update Branch:
 
