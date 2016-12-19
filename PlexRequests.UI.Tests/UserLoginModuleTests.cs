@@ -37,7 +37,7 @@ using Nancy.Testing;
 using Newtonsoft.Json;
 
 using NUnit.Framework;
-
+using Ombi.UI.Modules;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;

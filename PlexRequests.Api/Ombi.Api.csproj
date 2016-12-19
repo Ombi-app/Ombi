@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8406EE57-D533-47C0-9302-C6B5F8C31E55}</ProjectGuid>
+    <ProjectGuid>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlexRequests.Core.Migration</RootNamespace>
-    <AssemblyName>PlexRequests.Core.Migration</AssemblyName>
+    <RootNamespace>Ombi.Api</RootNamespace>
+    <AssemblyName>Ombi.Api</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -31,26 +31,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net45\Dapper.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
-    </Reference>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\packages\Ninject.3.2.0.0\lib\net45-full\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.3.11\lib\net45\NLog.dll</HintPath>
+      <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
-      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+    <Reference Include="Polly, Version=4.3.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Polly-Signed.4.3.0\lib\net45\Polly.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -61,46 +59,51 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+    </Reference>
+    <Reference Include="TMDbLib, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IMigration.cs" />
-    <Compile Include="IMigrationRunner.cs" />
-    <Compile Include="Migrate.cs" />
-    <Compile Include="MigrationAttribute.cs" />
-    <Compile Include="MigrationRunner.cs" />
-    <Compile Include="Migrations\BaseMigration.cs" />
-    <Compile Include="Migrations\Version1100.cs" />
-    <Compile Include="Migrations\Version195.cs" />
+    <Compile Include="ApiRequest.cs" />
+    <Compile Include="MusicBrainzApi.cs" />
+    <Compile Include="SlackApi.cs" />
+    <Compile Include="PushoverApi.cs" />
+    <Compile Include="PushbulletApi.cs" />
+    <Compile Include="SickrageApi.cs" />
+    <Compile Include="HeadphonesApi.cs" />
+    <Compile Include="SonarrApi.cs" />
+    <Compile Include="CouchPotatoApi.cs" />
+    <Compile Include="MovieBase.cs" />
+    <Compile Include="PlexApi.cs" />
+    <Compile Include="TheMovieDbApi.cs" />
+    <Compile Include="TvBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj">
-      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
-      <Name>PlexRequests.Api.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
-      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
-      <Name>PlexRequests.Api.Models</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Core\PlexRequests.Core.csproj">
-      <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
-      <Name>PlexRequests.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
-      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
-      <Name>PlexRequests.Helpers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Store\PlexRequests.Store.csproj">
-      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
-      <Name>PlexRequests.Store</Name>
-    </ProjectReference>
+    <Compile Include="TheTvDbApi.cs" />
+    <Compile Include="TvMazeApi.cs" />
+    <Compile Include="TvMazeBase.cs" />
+    <Compile Include="RetryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="job_scheduling_data_2_0.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlexRequests.Api.Interfaces\Ombi.Api.Interfaces.csproj">
+      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
+      <Name>Ombi.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Api.Models\Ombi.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>Ombi.Api.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlexRequests.Helpers\Ombi.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>Ombi.Helpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

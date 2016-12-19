@@ -5,8 +5,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{EBE6FC1C-7B4B-47E9-AF54-0EE0604A2BE5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>PlexRequests.Updater</RootNamespace>
-    <AssemblyName>PlexRequests.Updater</AssemblyName>
+    <RootNamespace>Ombi.Updater</RootNamespace>
+    <AssemblyName>Ombi.Updater</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -44,13 +44,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\PlexRequests.Core\PlexRequests.Core.csproj">
+    <ProjectReference Include="..\PlexRequests.Core\Ombi.Core.csproj">
       <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
-      <Name>PlexRequests.Core</Name>
+      <Name>Ombi.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
+    <ProjectReference Include="..\PlexRequests.Helpers\Ombi.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
-      <Name>PlexRequests.Helpers</Name>
+      <Name>Ombi.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

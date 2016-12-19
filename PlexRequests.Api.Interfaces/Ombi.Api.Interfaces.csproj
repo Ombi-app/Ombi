@@ -7,8 +7,8 @@
     <ProjectGuid>{95834072-A675-415D-AA8F-877C91623810}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlexRequests.Api.Interfaces</RootNamespace>
-    <AssemblyName>PlexRequests.Api.Interfaces</AssemblyName>
+    <RootNamespace>Ombi.Api.Interfaces</RootNamespace>
+    <AssemblyName>Ombi.Api.Interfaces</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -58,9 +58,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PlexRequests.Api.Models\PlexRequests.Api.Models.csproj">
+    <ProjectReference Include="..\PlexRequests.Api.Models\Ombi.Api.Models.csproj">
       <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
-      <Name>PlexRequests.Api.Models</Name>
+      <Name>Ombi.Api.Models</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

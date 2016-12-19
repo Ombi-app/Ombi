@@ -31,6 +31,7 @@ using System;
 using System.Data;
 using NLog;
 using System.Linq;
+using Ombi.Store;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;

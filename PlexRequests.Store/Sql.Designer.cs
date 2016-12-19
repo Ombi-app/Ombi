@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PlexRequests.Store {
+namespace Ombi.Store {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace PlexRequests.Store {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("PlexRequests.Store.Sql", typeof(Sql).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ombi.Store.Sql", typeof(Sql).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,24 +63,23 @@ namespace PlexRequests.Store {
         /// <summary>
         ///   Looks up a localized string similar to --Any DB changes need to be made in this file.
         ///
-        ///CREATE TABLE IF NOT EXISTS User
+        ///CREATE TABLE IF NOT EXISTS Users
         ///(
         ///	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    User								varchar(50) NOT NULL ,
+        ///    UserGuid							varchar(50) NOT NULL ,
         ///    UserName							varchar(50) NOT NULL,
-        ///    Password							varchar(100) NOT NULL
+        ///    Salt								BLOB NOT NULL,
+        ///    Hash								BLOB NOT NULL,
+        ///	UserProperties						BLOB,
+        ///	Permissions							INTEGER,
+        ///	Features							INTEGER,
+        ///	Claims								BLOB
         ///);
         ///
-        ///CREATE TABLE IF NOT EXISTS Settings
+        ///CREATE TABLE IF NOT EXISTS UserLogins
         ///(
         ///	Id									INTEGER PRIMARY KEY AUTOINCREMENT,
-        ///    Port								INTEGER NOT NULL,
-        ///	UserAuthentication					INTEGER NOT NULL,
-        ///	PlexAuthToken						varchar(50)				
-        ///);
-        ///
-        ///CREATE TABLE IF NOT EXISTS Requested
-        ///( [rest of string was truncated]&quot;;.
+        ///    UserId								varchar(50 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string SqlTables {
             get {

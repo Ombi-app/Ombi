@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Ninject;
 using NLog;
+using Ombi.Store;
 using PlexRequests.Store;
 
 namespace PlexRequests.Core.Migration

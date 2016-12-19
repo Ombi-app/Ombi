@@ -37,6 +37,7 @@ using PlexRequests.Helpers;
 using PlexRequests.Store;
 using PlexRequests.Store.Repository;
 using System.Threading.Tasks;
+using Ombi.Store;
 using Quartz;
 
 namespace PlexRequests.Core

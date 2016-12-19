@@ -420,8 +420,8 @@ namespace PlexRequests.Api
 
         private void AddHeaders(ref RestRequest request, bool json)
         {
-            request.AddHeader("X-Plex-Client-Identifier", $"PlexRequests.Net{Version}");
-            request.AddHeader("X-Plex-Product", "Plex Requests .Net");
+            request.AddHeader("X-Plex-Client-Identifier", $"Ombi{Version}");
+            request.AddHeader("X-Plex-Product", "Ombi");
             request.AddHeader("X-Plex-Version", Version);
             request.AddHeader("Content-Type", json ? "application/json" : "application/xml");
             request.AddHeader("Accept", json ? "application/json" : "application/xml");

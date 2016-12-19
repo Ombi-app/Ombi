@@ -1,0 +1,27 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderText/@EntryValue">/************************************************************************&#xD;
+   Copyright (c) $CURRENT_YEAR$ Jamie Rees&#xD;
+   File: $FILENAME$&#xD;
+   Created By: $USER_NAME$&#xD;
+  &#xD;
+   Permission is hereby granted, free of charge, to any person obtaining&#xD;
+   a copy of this software and associated documentation files (the&#xD;
+   "Software"), to deal in the Software without restriction, including&#xD;
+   without limitation the rights to use, copy, modify, merge, publish,&#xD;
+   distribute, sublicense, and/or sell copies of the Software, and to&#xD;
+   permit persons to whom the Software is furnished to do so, subject to&#xD;
+   the following conditions:&#xD;
+  &#xD;
+   The above copyright notice and this permission notice shall be&#xD;
+   included in all copies or substantial portions of the Software.&#xD;
+  &#xD;
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,&#xD;
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF&#xD;
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND&#xD;
+   NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE&#xD;
+   LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION&#xD;
+   OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION&#xD;
+   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.&#xD;
+ ************************************************************************/&#xD;
+</s:String>
+	<s:String x:Key="/Default/CodeStyle/FileHeader/FileHeaderRegionName/@EntryValue">Copyright</s:String></wpf:ResourceDictionary>

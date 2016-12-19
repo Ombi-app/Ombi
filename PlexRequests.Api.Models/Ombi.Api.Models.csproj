@@ -7,8 +7,8 @@
     <ProjectGuid>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlexRequests.Api.Models</RootNamespace>
-    <AssemblyName>PlexRequests.Api.Models</AssemblyName>
+    <RootNamespace>Ombi.Api.Models</RootNamespace>
+    <AssemblyName>Ombi.Api.Models</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -110,9 +110,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PlexRequests.Helpers\PlexRequests.Helpers.csproj">
+    <ProjectReference Include="..\PlexRequests.Helpers\Ombi.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
-      <Name>PlexRequests.Helpers</Name>
+      <Name>Ombi.Helpers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

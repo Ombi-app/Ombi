@@ -7,8 +7,8 @@
     <ProjectGuid>{1252336D-42A3-482A-804C-836E60173DFA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PlexRequests.Helpers</RootNamespace>
-    <AssemblyName>PlexRequests.Helpers</AssemblyName>
+    <RootNamespace>Ombi.Helpers</RootNamespace>
+    <AssemblyName>Ombi.Helpers</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

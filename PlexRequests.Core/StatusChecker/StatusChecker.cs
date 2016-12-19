@@ -43,14 +43,14 @@ namespace PlexRequests.Core.StatusChecker
         public StatusChecker(ISettingsService<SystemSettings> ss)
         {
             SystemSettings = ss;
-            Git = new GitHubClient(new ProductHeaderValue("PlexRequests-StatusChecker"));
+            Git = new GitHubClient(new ProductHeaderValue("Ombi-StatusChecker"));
         }
 
         private ISettingsService<SystemSettings> SystemSettings { get; }
 
         private IGitHubClient Git { get; }
         private const string Owner = "tidusjar";
-        private const string RepoName = "PlexRequests.Net";
+        private const string RepoName = "Ombi";
         private const string AppveyorApiUrl = "https://ci.appveyor.com/api";
 
         private const string Api =

@@ -31,46 +31,39 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Nancy;
+using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
-
+using Newtonsoft.Json;
 using NLog;
-
 using PlexRequests.Api;
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Music;
+using PlexRequests.Api.Models.Sonarr;
+using PlexRequests.Api.Models.Tv;
 using PlexRequests.Core;
+using PlexRequests.Core.Models;
+using PlexRequests.Core.Queue;
 using PlexRequests.Core.SettingModels;
 using PlexRequests.Helpers;
+using PlexRequests.Helpers.Analytics;
+using PlexRequests.Helpers.Permissions;
 using PlexRequests.Services.Interfaces;
 using PlexRequests.Services.Notification;
 using PlexRequests.Store;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using System.Threading.Tasks;
-
-using Nancy.Extensions;
-
-using Newtonsoft.Json;
-
-using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Api.Models.Tv;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Queue;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Models.Plex;
 using PlexRequests.Store.Repository;
-
+using PlexRequests.UI.Helpers;
+using PlexRequests.UI.Models;
+using PlexRequests.UI.Modules;
 using TMDbLib.Objects.General;
-
 using Action = PlexRequests.Helpers.Analytics.Action;
 using EpisodesModel = PlexRequests.Store.EpisodesModel;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class SearchModule : BaseAuthModule
     {
@@ -520,7 +513,7 @@ namespace PlexRequests.UI.Modules
                         Result = true,
                         Message =
                             Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
-                                ? $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}"
+                                ? $"{fullMovieName} {Ombi.UI.Resources.UI.Search_SuccessfullyAdded}"
                                 : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}"
                     });
             }
@@ -722,7 +715,7 @@ namespace PlexRequests.UI.Modules
                 case "episode":
                     model.Episodes = new List<EpisodesModel>();
 
-                    foreach (var ep in episodeModel?.Episodes ?? new Models.EpisodesModel[0])
+                    foreach (var ep in episodeModel?.Episodes ?? new PlexRequests.UI.Models.EpisodesModel[0])
                     {
                         model.Episodes.Add(new EpisodesModel
                         {
@@ -1350,7 +1343,7 @@ namespace PlexRequests.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
-        private IEnumerable<Store.EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
+        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<PlexRequests.UI.Models.EpisodesModel> request)
         {
             var newRequest = request
                 .Select(r =>

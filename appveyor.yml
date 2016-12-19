@@ -14,11 +14,11 @@ after_build:
 - cmd: >-
     7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
 
-    appveyor PushArtifact PlexRequests.zip
+    appveyor PushArtifact Ombi.zip
     
 deploy:
 - provider: GitHub
-  release: PlexRequests v$(appveyor_build_version)
+  release: Ombi v$(appveyor_build_version)
   auth_token:
     secure: jDpp1/WUQl3uN41fNI3VeZoRZbDiDfs3GPQ1v+C5ZNE3cWdnUvuJfCCfUbYUV1Rp
   draft: true

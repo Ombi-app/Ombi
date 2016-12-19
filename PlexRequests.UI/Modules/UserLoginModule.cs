@@ -28,12 +28,10 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Nancy;
 using Nancy.Extensions;
 using Nancy.Linker;
 using NLog;
-
 using PlexRequests.Api.Interfaces;
 using PlexRequests.Api.Models.Plex;
 using PlexRequests.Core;
@@ -46,10 +44,11 @@ using PlexRequests.Store;
 using PlexRequests.Store.Models;
 using PlexRequests.Store.Repository;
 using PlexRequests.UI.Authentication;
+using PlexRequests.UI.Modules;
 using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
 
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class UserLoginModule : BaseModule
     {

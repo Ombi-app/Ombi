@@ -1,17 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI", "PlexRequests.UI\PlexRequests.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.UI", "PlexRequests.UI\Ombi.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api", "PlexRequests.Api\PlexRequests.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "PlexRequests.Api\Ombi.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api.Interfaces", "PlexRequests.Api.Interfaces\PlexRequests.Api.Interfaces.csproj", "{95834072-A675-415D-AA8F-877C91623810}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Interfaces", "PlexRequests.Api.Interfaces\Ombi.Api.Interfaces.csproj", "{95834072-A675-415D-AA8F-877C91623810}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core", "PlexRequests.Core\PlexRequests.Core.csproj", "{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core", "PlexRequests.Core\Ombi.Core.csproj", "{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Store", "PlexRequests.Store\PlexRequests.Store.csproj", "{92433867-2B7B-477B-A566-96C382427525}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Store", "PlexRequests.Store\Ombi.Store.csproj", "{92433867-2B7B-477B-A566-96C382427525}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F4BC839C-B8FF-48BE-B22E-536A0A0A81A5}"
 	ProjectSection(SolutionItems) = preProject
@@ -21,23 +21,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers", "PlexRequests.Helpers\PlexRequests.Helpers.csproj", "{1252336D-42A3-482A-804C-836E60173DFA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Helpers", "PlexRequests.Helpers\Ombi.Helpers.csproj", "{1252336D-42A3-482A-804C-836E60173DFA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.UI.Tests", "PlexRequests.UI.Tests\PlexRequests.UI.Tests.csproj", "{A930E2CF-79E2-45F9-B06A-9A719A254CE4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.UI.Tests", "PlexRequests.UI.Tests\Ombi.UI.Tests.csproj", "{A930E2CF-79E2-45F9-B06A-9A719A254CE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core.Tests", "PlexRequests.Core.Tests\PlexRequests.Core.Tests.csproj", "{FCFECD5D-47F6-454D-8692-E27A921BE655}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core.Tests", "PlexRequests.Core.Tests\Ombi.Core.Tests.csproj", "{FCFECD5D-47F6-454D-8692-E27A921BE655}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Services", "PlexRequests.Services\PlexRequests.Services.csproj", "{566EFA49-68F8-4716-9693-A6B3F2624DEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Services", "PlexRequests.Services\Ombi.Services.csproj", "{566EFA49-68F8-4716-9693-A6B3F2624DEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Api.Models", "PlexRequests.Api.Models\PlexRequests.Api.Models.csproj", "{CB37A5F8-6DFC-4554-99D3-A42B502E4591}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Models", "PlexRequests.Api.Models\Ombi.Api.Models.csproj", "{CB37A5F8-6DFC-4554-99D3-A42B502E4591}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Services.Tests", "PlexRequests.Services.Tests\PlexRequests.Services.Tests.csproj", "{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Services.Tests", "PlexRequests.Services.Tests\Ombi.Services.Tests.csproj", "{EAADB4AC-064F-4D3A-AFF9-64A33131A9A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Updater", "PlexRequests.Updater\PlexRequests.Updater.csproj", "{EBE6FC1C-7B4B-47E9-AF54-0EE0604A2BE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Updater", "PlexRequests.Updater\Ombi.Updater.csproj", "{EBE6FC1C-7B4B-47E9-AF54-0EE0604A2BE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Helpers.Tests", "PlexRequests.Helpers.Tests\PlexRequests.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Helpers.Tests", "PlexRequests.Helpers.Tests\Ombi.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlexRequests.Core.Migration", "PlexRequests.Core.Migration\PlexRequests.Core.Migration.csproj", "{8406EE57-D533-47C0-9302-C6B5F8C31E55}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core.Migration", "PlexRequests.Core.Migration\Ombi.Core.Migration.csproj", "{8406EE57-D533-47C0-9302-C6B5F8C31E55}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
