@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
+using Ombi.Core.Models;
+using Ombi.Core.Notification;
 
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Notification;
-
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class NotificationSettings : Settings
     {

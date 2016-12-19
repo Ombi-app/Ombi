@@ -28,7 +28,7 @@
 using System;
 using NLog;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public class PlexHelper
     {

@@ -24,19 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using Newtonsoft.Json;
+using Ombi.Helpers;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 
-using PlexRequests.Helpers;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class JsonRequestModelRequestService : IRequestService
     {

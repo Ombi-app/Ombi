@@ -24,21 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Collections.Generic;
 
 using Nancy;
 using Nancy.ModelBinding;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.UI.Models;
+using Ombi.UI.Models.UserManagement;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApiUserModule : BaseApiModule
     {

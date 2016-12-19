@@ -27,13 +27,12 @@
 
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class SettingsServiceV2<T> : ISettingsService<T>
         where T : Settings, new()

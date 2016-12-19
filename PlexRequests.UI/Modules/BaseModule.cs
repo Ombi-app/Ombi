@@ -24,21 +24,21 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-
 using Nancy;
 using Nancy.Security;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.UI.Helpers;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public abstract class BaseModule : NancyModule
     {

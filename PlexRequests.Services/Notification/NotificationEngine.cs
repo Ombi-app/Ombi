@@ -30,18 +30,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NLog;
-using NLog.Fluent;
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Users;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using Ombi.Api.Interfaces;
+using Ombi.Core.Models;
+using Ombi.Core.Users;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.Services.Notification
+namespace Ombi.Services.Notification
 {
     public class NotificationEngine : INotificationEngine
     {

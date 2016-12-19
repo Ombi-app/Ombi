@@ -25,12 +25,10 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
-
 using NUnit.Framework;
 
-namespace PlexRequests.Helpers.Tests
+namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class PlexHelperTests

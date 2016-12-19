@@ -27,19 +27,16 @@
 
 using System;
 using System.Linq;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Movie;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Movie;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class CouchPotatoCacher : IJob, ICouchPotatoCacher
     {

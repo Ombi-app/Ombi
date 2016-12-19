@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.IO;
 using System.Reflection;
-
 using Nancy;
 
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public class DebugRootPathProvider : IRootPathProvider
     {

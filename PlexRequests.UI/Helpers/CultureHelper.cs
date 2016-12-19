@@ -24,12 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public class CultureHelper
     {

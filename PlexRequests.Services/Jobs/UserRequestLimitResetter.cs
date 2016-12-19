@@ -24,22 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using NLog;
-
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class UserRequestLimitResetter : IJob
     {

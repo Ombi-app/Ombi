@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Ninject.Modules;
+using Ombi.Api;
+using Ombi.Api.Interfaces;
 
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-
-namespace PlexRequests.UI.NinjectModules
+namespace Ombi.UI.NinjectModules
 {
     public class ApiModule : NinjectModule
     {

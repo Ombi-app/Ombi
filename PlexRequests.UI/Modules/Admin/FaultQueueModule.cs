@@ -25,21 +25,19 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
 using System.Linq;
 using Nancy.Responses.Negotiation;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules.Admin
+namespace Ombi.UI.Modules.Admin
 {
     public class FaultQueueModule : BaseModule
     {

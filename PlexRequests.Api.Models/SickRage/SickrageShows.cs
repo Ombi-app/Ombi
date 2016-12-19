@@ -25,10 +25,9 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 
-namespace PlexRequests.Api.Models.SickRage
+namespace Ombi.Api.Models.SickRage
 {
     public class SickrageShows : SickRageBase<Dictionary<int, Item>>
     {

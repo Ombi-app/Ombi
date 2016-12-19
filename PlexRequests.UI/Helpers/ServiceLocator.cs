@@ -24,13 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
-
-using Nancy.TinyIoc;
-
 using Ninject;
 
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public class ServiceLocator : IServiceLocator
     {

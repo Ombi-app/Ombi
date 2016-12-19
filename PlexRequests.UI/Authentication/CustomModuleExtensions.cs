@@ -27,10 +27,9 @@
 
 using System;
 using Nancy;
-using Nancy.Authentication.Forms;
 using Nancy.Extensions;
 
-namespace PlexRequests.UI.Authentication
+namespace Ombi.UI.Authentication
 {
     public static class CustomModuleExtensions
     {

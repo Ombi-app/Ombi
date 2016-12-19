@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Linq;
 using System.Reflection;
 using Ninject;
 using NLog;
 using Ombi.Store;
-using PlexRequests.Store;
 
-namespace PlexRequests.Core.Migration
+namespace Ombi.Core.Migration
 {
     public class MigrationRunner : IMigrationRunner
     {

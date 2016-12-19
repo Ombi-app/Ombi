@@ -376,7 +376,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plex Requests.
+        ///   Looks up a localized string similar to Ombi.
         /// </summary>
         public static string Layout_Title {
             get {

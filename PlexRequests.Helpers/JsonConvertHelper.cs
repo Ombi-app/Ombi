@@ -27,7 +27,7 @@
 
 using Newtonsoft.Json;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class JsonConvertHelper
     {

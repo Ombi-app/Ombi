@@ -24,16 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Nancy;
+
 using Nancy.Responses.Negotiation;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApiDocsModule : BaseModule
     {

@@ -29,11 +29,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NLog;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
+using Ombi.Api.Interfaces;
+using Ombi.Core.SettingModels;
+using Ombi.Store;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class HeadphonesSender
     {

@@ -27,7 +27,7 @@
 
 using System;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class ScheduledJobsSettings : Settings
     {

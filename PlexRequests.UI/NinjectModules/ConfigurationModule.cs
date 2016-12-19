@@ -24,23 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Mono.Data.Sqlite;
 using Nancy.Authentication.Forms;
-using Nancy.Linker;
 using Ninject.Modules;
+using Ombi.Core;
+using Ombi.Core.Migration;
+using Ombi.Core.StatusChecker;
+using Ombi.Core.Users;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Notification;
+using Ombi.Store;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
+using SecurityExtensions = Ombi.Core.SecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Core.StatusChecker;
-using PlexRequests.Core.Users;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-using SecurityExtensions = PlexRequests.Core.SecurityExtensions;
-
-namespace PlexRequests.UI.NinjectModules
+namespace Ombi.UI.NinjectModules
 {
     public class ConfigurationModule : NinjectModule
     {

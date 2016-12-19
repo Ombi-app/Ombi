@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-namespace PlexRequests.Api.Models.Sonarr
+namespace Ombi.Api.Models.Sonarr
 {
 
     public class Revision

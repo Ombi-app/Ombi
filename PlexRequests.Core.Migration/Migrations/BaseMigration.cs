@@ -29,9 +29,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using Ombi.Store;
-using PlexRequests.Store;
 
-namespace PlexRequests.Core.Migration.Migrations
+namespace Ombi.Core.Migration.Migrations
 {
     public abstract class BaseMigration
     {

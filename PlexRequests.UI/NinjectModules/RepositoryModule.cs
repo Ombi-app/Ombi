@@ -24,15 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Ninject.Modules;
+using Ombi.Core;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
+using Ombi.Store;
+using Ombi.Store.Repository;
 
-using PlexRequests.Core;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
-
-namespace PlexRequests.UI.NinjectModules
+namespace Ombi.UI.NinjectModules
 {
     public class RepositoryModule : NinjectModule
     {

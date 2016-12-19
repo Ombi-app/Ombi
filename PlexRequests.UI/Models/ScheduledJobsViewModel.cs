@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
+using Ombi.Core.SettingModels;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models
 {
     public class ScheduledJobsViewModel : ScheduledJobsSettings
     {

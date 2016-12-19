@@ -30,16 +30,16 @@
 using System;
 using System.Linq;
 using NLog;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.Users;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Core.Users;
+using Ombi.Services.Interfaces;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class PlexUserChecker : IJob
     {

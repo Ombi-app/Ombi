@@ -26,21 +26,17 @@
 #endregion
 
 using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-
+using System.Threading.Tasks;
 using Mono.Data.Sqlite;
 using NLog;
-using PlexRequests.Api;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
-using System.Threading.Tasks;
+using Ombi.Api;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
+using Ombi.Store.Repository;
 using Quartz;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class Setup
     {

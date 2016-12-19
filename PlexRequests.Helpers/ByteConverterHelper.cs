@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Text;
 
+using System.Text;
 using Newtonsoft.Json;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public class ByteConverterHelper
     {

@@ -30,10 +30,9 @@
 using System;
 using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
+using Ombi.Helpers;
 
-using PlexRequests.Helpers;
-
-namespace PlexRequests.Store.Repository
+namespace Ombi.Store.Repository
 {
     public class GenericRepository<T> : BaseGenericRepository<T>, IRepository<T> where T : Entity
     {

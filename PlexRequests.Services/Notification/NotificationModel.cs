@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
+
 using System;
+using Ombi.Core.Models;
+using Ombi.Store;
 
-using PlexRequests.Core.Models;
-
-namespace PlexRequests.Services.Notification
+namespace Ombi.Services.Notification
 {
     public class NotificationModel
     {

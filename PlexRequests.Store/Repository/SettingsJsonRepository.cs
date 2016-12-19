@@ -24,15 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
+using Ombi.Helpers;
+using Ombi.Store.Models;
 
-using PlexRequests.Helpers;
-using PlexRequests.Store.Models;
-
-namespace PlexRequests.Store.Repository
+namespace Ombi.Store.Repository
 {
     public class SettingsJsonRepository : ISettingsRepository
     {

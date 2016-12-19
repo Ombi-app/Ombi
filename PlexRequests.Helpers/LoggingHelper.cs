@@ -24,18 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
-
 using Newtonsoft.Json;
-
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class LoggingHelper
     {

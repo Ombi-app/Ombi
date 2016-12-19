@@ -23,20 +23,18 @@
 //  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ***********************************************************************
-using System.Globalization;
 
 
 #endregion
+
 using System;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
-
 using Mono.Data.Sqlite;
-
 using NLog;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     public class DbConfiguration : ISqliteConfiguration
     {

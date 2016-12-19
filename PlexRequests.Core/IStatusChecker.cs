@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Octokit;
-using PlexRequests.Core.Models;
+using Ombi.Core.Models;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public interface IStatusChecker
     {

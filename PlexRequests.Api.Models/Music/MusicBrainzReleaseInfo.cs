@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace PlexRequests.Api.Models.Music
+namespace Ombi.Api.Models.Music
 {
     public class CoverArtArchive
     {

@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
+using Ombi.Api.Models.Sonarr;
 
-using PlexRequests.Api.Models.Sonarr;
-
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface ISonarrApi
     {

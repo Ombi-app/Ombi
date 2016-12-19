@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Api.Models.SickRage
+namespace Ombi.Api.Models.SickRage
 {
     public class SickRagePingData
     {

@@ -27,9 +27,9 @@
 
 using System;
 using System.Threading.Tasks;
-using PlexRequests.Api.Models.SickRage;
+using Ombi.Api.Models.SickRage;
 
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface ISickRageApi
     {

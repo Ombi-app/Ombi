@@ -1,4 +1,4 @@
-﻿namespace PlexRequests.Core.Migration
+﻿namespace Ombi.Core.Migration
 {
     public interface IMigrationRunner
     {

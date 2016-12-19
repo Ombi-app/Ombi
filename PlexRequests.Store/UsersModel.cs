@@ -28,7 +28,7 @@
 using System;
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     [Table("Users")]
     public class UsersModel : UserEntity

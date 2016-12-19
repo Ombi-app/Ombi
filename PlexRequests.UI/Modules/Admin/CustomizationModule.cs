@@ -29,13 +29,13 @@ using System.Threading.Tasks;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers.Permissions;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules.Admin
+namespace Ombi.UI.Modules.Admin
 {
     public class CustomizationModule : BaseModule
     {

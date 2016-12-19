@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public sealed class SickRageSettings : ExternalSettings
     {

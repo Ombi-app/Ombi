@@ -35,10 +35,9 @@ using Nancy.Cryptography;
 using Nancy.Extensions;
 using Nancy.Helpers;
 using Nancy.Security;
-using PlexRequests.Core;
-using PlexRequests.Helpers;
+using Ombi.Core;
 
-namespace PlexRequests.UI.Authentication
+namespace Ombi.UI.Authentication
 {
     public class CustomAuthenticationProvider
     {

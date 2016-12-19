@@ -31,7 +31,7 @@ using System.Text;
 using System.Windows.Forms;
 using NLog;
 
-namespace PlexRequests.Services.Jobs.Templates
+namespace Ombi.Services.Jobs.Templates
 {
     public class RecentlyAddedTemplate
     { 

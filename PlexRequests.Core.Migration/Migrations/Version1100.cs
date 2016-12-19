@@ -29,18 +29,17 @@
 
 using System;
 using System.Data;
-using NLog;
 using System.Linq;
+using NLog;
+using Ombi.Api.Interfaces;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
 using Ombi.Store;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.Core.Migration.Migrations
+namespace Ombi.Core.Migration.Migrations
 {
     [Migration(11000, "v1.10.0.0")]
     public class Version1100 : BaseMigration, IMigration

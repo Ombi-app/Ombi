@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PlexRequests.Updater
+namespace Ombi.Updater
 {
 	class MainClass
 	{

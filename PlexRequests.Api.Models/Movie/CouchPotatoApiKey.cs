@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Newtonsoft.Json;
 
-namespace PlexRequests.Api.Models.Movie
+namespace Ombi.Api.Models.Movie
 {
     public class CouchPotatoApiKey
     {

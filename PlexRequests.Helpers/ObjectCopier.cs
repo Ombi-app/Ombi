@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Newtonsoft.Json;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     /// <summary>
     /// Provides a method for performing a deep copy of an object.

@@ -26,9 +26,9 @@
 #endregion
 
 using Nancy.Cryptography;
-using PlexRequests.Store.Repository;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.UI.Authentication
+namespace Ombi.UI.Authentication
 {
     public class CustomAuthenticationConfiguration
     {

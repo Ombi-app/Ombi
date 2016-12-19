@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class CustomizationSettings : Settings
     {

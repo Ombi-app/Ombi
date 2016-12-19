@@ -26,10 +26,9 @@
 #endregion
 
 using System;
-using Dapper;
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store.Models.Plex
+namespace Ombi.Store.Models.Plex
 {
     [Table("metadata_items")]
     public class MetadataItems

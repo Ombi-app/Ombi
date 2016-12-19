@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models.UserManagement
 {
     public class UserManagementUsersViewModel
     {

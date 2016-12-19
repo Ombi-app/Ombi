@@ -25,9 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models
 {
     public class IssuesViewModel
     {

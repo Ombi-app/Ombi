@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Helpers;
 
-namespace PlexRequests.Services.Models
+using Ombi.Helpers;
+
+namespace Ombi.Services.Models
 {
     public class PlexEpisodeModel
     {

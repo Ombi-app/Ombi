@@ -26,11 +26,9 @@
 #endregion
 
 using System.Collections.Generic;
-
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
-namespace PlexRequests.Api.Models.Movie
+namespace Ombi.Api.Models.Movie
 {
     public class ProfileList
     {

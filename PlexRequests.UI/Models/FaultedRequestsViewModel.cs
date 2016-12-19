@@ -26,10 +26,8 @@
 #endregion
 
 using System;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
 
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models
 {
     public class FaultedRequestsViewModel
     {

@@ -26,10 +26,9 @@
 #endregion
 
 using System;
+using Ombi.Api.Models.Movie;
 
-using PlexRequests.Api.Models.Movie;
-
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface ICouchPotatoApi
     {

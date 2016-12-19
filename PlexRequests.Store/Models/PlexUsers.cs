@@ -25,10 +25,9 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store.Models
+namespace Ombi.Store.Models
 {
     [Table(nameof(PlexUsers))]
     public class PlexUsers : Entity

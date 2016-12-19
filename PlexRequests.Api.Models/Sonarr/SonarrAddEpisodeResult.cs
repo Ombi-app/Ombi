@@ -27,7 +27,7 @@
 
 using System.Collections.Generic;
 
-namespace PlexRequests.Api.Models.Sonarr
+namespace Ombi.Api.Models.Sonarr
 {
     public class Body
     {

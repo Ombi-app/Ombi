@@ -24,11 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
 
-namespace PlexRequests.Core.SettingModels
+using System;
+
+namespace Ombi.Core.SettingModels
 {
     public sealed class PlexRequestSettings : Settings
     {

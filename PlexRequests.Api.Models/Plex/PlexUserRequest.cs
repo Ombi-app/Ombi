@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-namespace PlexRequests.Api.Models.Plex
+namespace Ombi.Api.Models.Plex
 {
     public class PlexUserRequest
     {

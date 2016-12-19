@@ -30,7 +30,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class StringHelper
     {

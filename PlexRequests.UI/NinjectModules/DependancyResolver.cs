@@ -24,13 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Linq;
 using System.Reflection;
-
 using Ninject.Modules;
 
-namespace PlexRequests.UI.NinjectModules
+namespace Ombi.UI.NinjectModules
 {
     public class DependancyResolver
     {

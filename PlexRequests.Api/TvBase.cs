@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
+using Ombi.Helpers;
 
-using PlexRequests.Helpers;
-
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public abstract class TvBase
     {

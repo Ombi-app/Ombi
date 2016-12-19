@@ -1,4 +1,4 @@
-﻿namespace PlexRequests.Services.Interfaces
+﻿namespace Ombi.Services.Interfaces
 {
     public interface ICouchPotatoCacher
     {

@@ -24,15 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Threading.Tasks;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Notifications;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Notifications;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class PushoverApi : IPushoverApi
     {

@@ -27,7 +27,7 @@
 
 using System.Xml.Serialization;
 
-namespace PlexRequests.Api.Models.Plex
+namespace Ombi.Api.Models.Plex
 {
     [XmlRoot(ElementName = "Server")]
     public class Server

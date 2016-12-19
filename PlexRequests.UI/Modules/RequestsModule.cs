@@ -26,33 +26,27 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 using Nancy;
 using Nancy.Responses.Negotiation;
-using Nancy.Security;
-
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-using PlexRequests.UI.Models;
-using PlexRequests.Helpers;
-using System.Collections.Generic;
-using PlexRequests.Api.Interfaces;
-using System.Threading.Tasks;
-
 using NLog;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Notification;
+using Ombi.Store;
+using Ombi.UI.Models;
+using Action = Ombi.Helpers.Analytics.Action;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core.Models;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
-using Action = PlexRequests.Helpers.Analytics.Action;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class RequestsModule : BaseAuthModule
     {

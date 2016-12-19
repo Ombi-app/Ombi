@@ -2,9 +2,9 @@
 using Nancy;
 using Nancy.Security;
 using Nancy.Session;
-using PlexRequests.Helpers.Permissions;
+using Ombi.Helpers.Permissions;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public interface ISecurityExtensions
     {

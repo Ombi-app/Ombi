@@ -27,7 +27,7 @@
 
 using System;
 
-namespace PlexRequests.Core.Migration
+namespace Ombi.Core.Migration
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class Migration : Attribute

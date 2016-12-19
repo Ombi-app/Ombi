@@ -24,29 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Nancy;
 using Nancy.Extensions;
 using Nancy.ModelBinding;
 using Nancy.Validation;
 using NLog;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Authentication;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Permissions;
+using Ombi.UI.Authentication;
+using Ombi.UI.Helpers;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using Action = PlexRequests.Helpers.Analytics.Action;
+using Action = Ombi.Helpers.Analytics.Action;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class UserWizardModule : BaseModule
     {

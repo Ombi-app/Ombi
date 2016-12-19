@@ -27,9 +27,9 @@
 
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class NewletterSettings : Settings
     {

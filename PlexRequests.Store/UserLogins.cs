@@ -27,9 +27,9 @@
 
 using System;
 using Dapper.Contrib.Extensions;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     [Table("UserLogins")]
     public class UserLogins : Entity

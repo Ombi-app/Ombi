@@ -24,20 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Threading.Tasks;
 using MimeKit;
 using NLog;
-
-using PlexRequests.Core;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Notification.Templates;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.Notification.Templates;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
+using Ombi.Store;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
-using PlexRequests.Store;
 
-namespace PlexRequests.Services.Notification
+namespace Ombi.Services.Notification
 {
     public class EmailMessageNotification : INotification
     {

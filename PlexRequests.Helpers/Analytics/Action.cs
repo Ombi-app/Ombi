@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Helpers.Analytics
+namespace Ombi.Helpers.Analytics
 {
     public enum Action
     {

@@ -24,24 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Web.UI.WebControls;
 
+using System;
 using Nancy;
 using Nancy.Extensions;
-using Nancy.ModelBinding;
 using Nancy.Validation;
-
 using Newtonsoft.Json;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApiSettingsModule : BaseApiModule
     {

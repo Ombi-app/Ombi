@@ -24,19 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Threading.Tasks;
-
 using NLog;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
+using Ombi.Store;
 
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
-
-namespace PlexRequests.Services.Notification
+namespace Ombi.Services.Notification
 {
     public class PushbulletNotification : INotification
     {

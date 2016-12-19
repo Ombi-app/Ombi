@@ -24,26 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Nancy;
-
 using NLog;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Core.StatusChecker;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.StatusChecker;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class LayoutModule : BaseAuthModule
     {

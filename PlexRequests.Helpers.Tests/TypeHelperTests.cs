@@ -24,14 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Ombi.Store;
 
-using PlexRequests.Store;
-
-namespace PlexRequests.Helpers.Tests
+namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class TypeHelperTests

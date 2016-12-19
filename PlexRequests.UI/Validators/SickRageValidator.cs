@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using FluentValidation;
+using Ombi.Core.SettingModels;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.UI.Validators
+namespace Ombi.UI.Validators
 {
     public class SickRageValidator : AbstractValidator<SickRageSettings>
     {

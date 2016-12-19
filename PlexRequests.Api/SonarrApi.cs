@@ -24,20 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using Newtonsoft.Json;
-
 using NLog;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Helpers;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Sonarr;
+using Ombi.Helpers;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class SonarrApi : ISonarrApi
     {

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PlexRequests.Helpers
+﻿namespace Ombi.Helpers
 {
 	public class UserClaims
 	{

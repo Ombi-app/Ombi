@@ -31,13 +31,12 @@ using Nancy.Linker;
 using Nancy.Responses;
 using Nancy.Security;
 using Nancy.Session;
-using PlexRequests.Core.Models;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store.Repository;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core.Models;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class SecurityExtensions : ISecurityExtensions
     {

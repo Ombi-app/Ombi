@@ -24,18 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using Ninject.Modules;
-using PlexRequests.Core.Queue;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.UI.Jobs;
 
+using Ninject.Modules;
+using Ombi.Core.Queue;
+using Ombi.Helpers.Analytics;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
+using Ombi.UI.Jobs;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 
-namespace PlexRequests.UI.NinjectModules
+namespace Ombi.UI.NinjectModules
 {
     public class ServicesModule : NinjectModule
     {

@@ -28,10 +28,10 @@
 using Nancy;
 using Nancy.Security;
 using Nancy.ViewEngines.Razor;
-using PlexRequests.Helpers.Permissions;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Helpers.Permissions;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public static class HtmlSecurityHelper
     {

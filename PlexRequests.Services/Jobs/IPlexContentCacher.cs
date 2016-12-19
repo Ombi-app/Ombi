@@ -1,6 +1,6 @@
 ﻿using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public interface IPlexContentCacher
     {

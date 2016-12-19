@@ -30,13 +30,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Octokit;
-using PlexRequests.Api;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
+using Ombi.Api;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using RestSharp;
 
-namespace PlexRequests.Core.StatusChecker
+namespace Ombi.Core.StatusChecker
 {
     public class StatusChecker : IStatusChecker
     {

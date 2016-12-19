@@ -29,11 +29,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nancy.Validation;
+using Ombi.UI.Models;
 
-
-using PlexRequests.UI.Models;
-
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public static class ValidationHelper
     {

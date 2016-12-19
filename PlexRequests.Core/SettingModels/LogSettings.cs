@@ -26,7 +26,7 @@
 #endregion
 
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public sealed class LogSettings : Settings
     {

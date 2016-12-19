@@ -24,29 +24,25 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
-
 using Nancy;
-using Nancy.Security;
-
 using NLog;
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.Queue;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Queue;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.Store;
+using Ombi.UI.Helpers;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApprovalModule : BaseAuthModule
     {

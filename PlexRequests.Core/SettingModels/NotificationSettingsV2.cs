@@ -26,10 +26,10 @@
 #endregion
 
 using System.Collections.Generic;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Notification;
+using Ombi.Core.Models;
+using Ombi.Core.Notification;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class NotificationSettingsV2 : Settings
     {

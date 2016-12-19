@@ -25,10 +25,10 @@
 //  ************************************************************************/
 #endregion
 
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
 
-namespace PlexRequests.Core.Users
+namespace Ombi.Core.Users
 {
     public class UserHelperModel
     {

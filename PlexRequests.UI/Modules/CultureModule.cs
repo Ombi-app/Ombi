@@ -24,22 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
-using System.Threading.Tasks;
 
+using System;
 using Nancy;
 using Nancy.Extensions;
 using Nancy.Responses;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.UI.Helpers;
+using Action = Ombi.Helpers.Analytics.Action;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Helpers;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class CultureModule : BaseModule
     {
@@ -73,7 +71,7 @@ namespace PlexRequests.UI.Modules
             var response = Context.GetRedirect(returnUrl);
 
             response.WithCookie(CultureCookieName, cookie ?? culture, DateTime.Now.AddYears(1));
-            Analytics.TrackEventAsync(Category.Navbar, PlexRequests.Helpers.Analytics.Action.Language, culture, Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Navbar, Action.Language, culture, Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             return response;
         }

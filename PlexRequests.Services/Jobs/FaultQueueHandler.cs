@@ -30,22 +30,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using NLog;
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
+using Ombi.Api;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class FaultQueueHandler : IJob
     {

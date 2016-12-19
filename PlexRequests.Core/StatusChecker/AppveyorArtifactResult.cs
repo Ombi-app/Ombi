@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Core.StatusChecker
+namespace Ombi.Core.StatusChecker
 {
     public class AppveyorArtifactResult
     {

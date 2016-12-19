@@ -24,15 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper.Contrib.Extensions;
-using PlexRequests.Helpers;
-using PlexRequests.Store.Repository;
+using Ombi.Helpers;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     public class UserRepository<T> : BaseGenericRepository<T>, IRepository<T> where T : UserEntity
     {

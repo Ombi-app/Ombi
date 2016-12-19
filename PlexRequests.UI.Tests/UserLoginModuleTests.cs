@@ -24,30 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Moq;
-
 using Nancy;
 using Nancy.Linker;
 using Nancy.Testing;
-
-using Newtonsoft.Json;
-
 using NUnit.Framework;
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
 using Ombi.UI.Modules;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.UI.Models;
-using PlexRequests.UI.Modules;
 
-namespace PlexRequests.UI.Tests
+namespace Ombi.UI.Tests
 {
     [TestFixture]
     public class UserLoginModuleTests

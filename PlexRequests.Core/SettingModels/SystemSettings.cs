@@ -26,12 +26,11 @@
 #endregion
 
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
-using PlexRequests.Core.Models;
+using Ombi.Core.Models;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public class SystemSettings : Settings
     {

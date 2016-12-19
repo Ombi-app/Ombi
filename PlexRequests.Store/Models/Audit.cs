@@ -1,7 +1,7 @@
 ﻿using System;
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store
+namespace Ombi.Store.Models
 {
 	[Table("Audit")]
 	public class Audit : Entity

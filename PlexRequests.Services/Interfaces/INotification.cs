@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Threading.Tasks;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Notification;
 
-using PlexRequests.Services.Notification;
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface INotification
     {

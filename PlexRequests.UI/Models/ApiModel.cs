@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace PlexRequests.UI
+﻿namespace Ombi.UI.Models
 {
 	public class ApiModel<T>
 	{

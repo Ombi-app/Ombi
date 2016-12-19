@@ -37,31 +37,30 @@ using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 using Newtonsoft.Json;
 using NLog;
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Music;
-using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Api.Models.Tv;
-using PlexRequests.Core;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.Queue;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Models.Plex;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using PlexRequests.UI.Modules;
+using Ombi.Api;
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Music;
+using Ombi.Api.Models.Sonarr;
+using Ombi.Api.Models.Tv;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.Queue;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Notification;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
+using Ombi.Store.Repository;
+using Ombi.UI.Helpers;
+using Ombi.UI.Models;
 using TMDbLib.Objects.General;
-using Action = PlexRequests.Helpers.Analytics.Action;
-using EpisodesModel = PlexRequests.Store.EpisodesModel;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Action = Ombi.Helpers.Analytics.Action;
+using EpisodesModel = Ombi.Store.EpisodesModel;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
 namespace Ombi.UI.Modules
 {
@@ -715,7 +714,7 @@ namespace Ombi.UI.Modules
                 case "episode":
                     model.Episodes = new List<EpisodesModel>();
 
-                    foreach (var ep in episodeModel?.Episodes ?? new PlexRequests.UI.Models.EpisodesModel[0])
+                    foreach (var ep in episodeModel?.Episodes ?? new Models.EpisodesModel[0])
                     {
                         model.Episodes.Add(new EpisodesModel
                         {
@@ -1343,7 +1342,7 @@ namespace Ombi.UI.Modules
             return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
         }
 
-        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<PlexRequests.UI.Models.EpisodesModel> request)
+        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
         {
             var newRequest = request
                 .Select(r =>

@@ -27,33 +27,25 @@
 
 using System.Diagnostics;
 using System.Net;
-
 using Mono.Data.Sqlite;
-
 using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Ninject;
 using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
-using Nancy.Session;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
 using Nancy.Json;
-
+using Nancy.Session;
 using Ninject;
-using PlexRequests.UI.Authentication;
-using Nancy.Hosting.Self;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Store;
+using Ombi.Store.Repository;
+using Ombi.UI.Authentication;
+using Ombi.UI.Helpers;
 
-namespace PlexRequests.UI
+namespace Ombi.UI
 {
     public class Bootstrapper : NinjectNancyBootstrapper
     {

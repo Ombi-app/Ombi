@@ -1,8 +1,7 @@
 ﻿using System;
+using Ombi.Helpers.Exceptions;
 
-using PlexRequests.Helpers.Exceptions;
-
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class UriHelper
     {

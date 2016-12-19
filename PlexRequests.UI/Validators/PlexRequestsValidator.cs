@@ -27,10 +27,9 @@
 
 using System;
 using FluentValidation;
+using Ombi.Core.SettingModels;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.UI.Validators
+namespace Ombi.UI.Validators
 {
     public class PlexRequestsValidator : AbstractValidator<PlexRequestSettings>
     {

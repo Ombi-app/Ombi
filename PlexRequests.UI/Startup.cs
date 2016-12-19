@@ -24,28 +24,27 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Diagnostics;
 using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
 using Ninject.Syntax;
 using NLog;
-
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Migration;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Notification;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
+using Ombi.UI.Helpers;
+using Ombi.UI.Jobs;
+using Ombi.UI.NinjectModules;
 using Owin;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.Migration;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Jobs;
-using PlexRequests.UI.NinjectModules;
 
-namespace PlexRequests.UI
+namespace Ombi.UI
 {
     public class Startup
     {

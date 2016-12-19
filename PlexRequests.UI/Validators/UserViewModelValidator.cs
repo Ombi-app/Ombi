@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using FluentValidation;
+using Ombi.UI.Models.UserManagement;
 
-using PlexRequests.UI.Models;
-
-namespace PlexRequests.UI.Validators
+namespace Ombi.UI.Validators
 {
     public class UserViewModelValidator : AbstractValidator<UserUpdateViewModel>
     {

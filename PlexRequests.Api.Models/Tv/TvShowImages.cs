@@ -27,7 +27,7 @@
 
 using System.Collections.Generic;
 
-namespace PlexRequests.Api.Models.Tv
+namespace Ombi.Api.Models.Tv
 {
     public class RatingsInfo
     {

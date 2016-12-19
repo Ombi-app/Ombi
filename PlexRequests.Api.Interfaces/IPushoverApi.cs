@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Threading.Tasks;
+using Ombi.Api.Models.Notifications;
 
-using PlexRequests.Api.Models.Notifications;
-
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface IPushoverApi
     {

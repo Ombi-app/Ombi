@@ -27,7 +27,7 @@
 
 using System.Collections.Generic;
 
-namespace PlexRequests.Services.Models
+namespace Ombi.Services.Models
 {
     public class SonarrCachedResult
     {

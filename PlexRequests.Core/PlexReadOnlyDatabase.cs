@@ -29,11 +29,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
-using PlexRequests.Store.Models.Plex;
+using Ombi.Core.SettingModels;
+using Ombi.Store;
+using Ombi.Store.Models.Plex;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class PlexReadOnlyDatabase : IPlexReadOnlyDatabase
     {

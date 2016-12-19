@@ -24,12 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Nancy.Metadata.Modules;
 using Nancy.Swagger;
+using Ombi.Core.SettingModels;
+using Ombi.UI.Models;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApiSettingsMetadataModule: MetadataModule<SwaggerRouteData>
     {

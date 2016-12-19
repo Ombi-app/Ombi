@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Runtime.Serialization.Formatters;
 
+using System.Runtime.Serialization.Formatters;
 using Newtonsoft.Json;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class SerializerSettings
     {

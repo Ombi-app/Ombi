@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Data;
 using System.Threading.Tasks;
-using PlexRequests.Store.Models.Plex;
+using Ombi.Store.Models.Plex;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     public interface IPlexDatabase
     {

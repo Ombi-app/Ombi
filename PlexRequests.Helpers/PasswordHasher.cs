@@ -24,9 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Security.Cryptography;
-namespace PlexRequests.Helpers
+
+namespace Ombi.Helpers
 {
 
     public static class PasswordHasher

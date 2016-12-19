@@ -24,7 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Api.Models.Music
+namespace Ombi.Api.Models.Music
 {
     public class HeadphonesAlbumSearchResult
     {

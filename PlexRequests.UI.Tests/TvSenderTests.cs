@@ -24,25 +24,21 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Moq;
-
 using NUnit.Framework;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Sonarr;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
-using PlexRequests.UI.Helpers;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Sonarr;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Store;
 using Ploeh.AutoFixture;
 
-namespace PlexRequests.UI.Tests
+namespace Ombi.UI.Tests
 {
     [TestFixture]
     public class TvSenderTests

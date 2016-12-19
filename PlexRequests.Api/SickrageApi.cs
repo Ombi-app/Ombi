@@ -24,23 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Linq;
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.SickRage;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Exceptions;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.SickRage;
+using Ombi.Helpers;
+using Ombi.Helpers.Exceptions;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class SickrageApi : ISickRageApi
     {

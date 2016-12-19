@@ -24,32 +24,29 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Dapper;
-using Newtonsoft.Json;
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Core;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Models;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Models.Plex;
-using PlexRequests.Store.Repository;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Models;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
+using Ombi.Store.Repository;
 using Quartz;
+using PlexMediaType = Ombi.Api.Models.Plex.PlexMediaType;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {

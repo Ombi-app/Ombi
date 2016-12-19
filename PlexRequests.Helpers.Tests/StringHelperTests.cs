@@ -24,13 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
-
 using NUnit.Framework;
+using Ombi.Core.Models;
 
-using PlexRequests.Core.Models;
-
-namespace PlexRequests.Helpers.Tests
+namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class StringHelperTests

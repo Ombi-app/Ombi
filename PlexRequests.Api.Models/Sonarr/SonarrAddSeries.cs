@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
-using System;
 
-namespace PlexRequests.Api.Models.Sonarr
+namespace Ombi.Api.Models.Sonarr
 {
     public class Season
     {

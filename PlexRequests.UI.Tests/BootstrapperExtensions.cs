@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
 
+using System.Collections.Generic;
 using Nancy.Bootstrapper;
 using Nancy.Session;
 
-namespace PlexRequests.UI.Tests
+namespace Ombi.UI.Tests
 {
     public static class BootstrapperExtensions
     {

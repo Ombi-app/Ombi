@@ -24,10 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Threading.Tasks;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public interface ICacheProvider
     {

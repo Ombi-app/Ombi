@@ -28,7 +28,7 @@
 using System;
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store.Models
+namespace Ombi.Store.Models
 {
     [Table("RequestFaultQueue")]
     public class RequestQueue : Entity

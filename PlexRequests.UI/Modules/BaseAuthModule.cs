@@ -28,12 +28,12 @@
 
 using Nancy;
 using Nancy.Extensions;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public abstract class BaseAuthModule : BaseModule
     {

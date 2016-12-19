@@ -24,11 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlexRequests.Store.Models;
+using Ombi.Store.Models;
 
-namespace PlexRequests.Store.Repository
+namespace Ombi.Store.Repository
 {
     public interface ISettingsRepository
     {

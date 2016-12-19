@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
+using System;
 using RestSharp;
 
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface IApiRequest
     {

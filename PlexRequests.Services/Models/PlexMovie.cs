@@ -1,4 +1,4 @@
-﻿namespace PlexRequests.Services.Models
+﻿namespace Ombi.Services.Models
 {
     public class PlexMovie
     {

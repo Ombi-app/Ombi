@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Nancy.Swagger;
 using Nancy.Swagger.Services;
+using Ombi.Store;
 
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.ModelDataProviders
+namespace Ombi.UI.ModelDataProviders
 {
     public class RequestedModelDataProvider : ISwaggerModelDataProvider
     {

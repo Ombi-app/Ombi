@@ -24,13 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.IO;
 using System.Linq;
-
 using Nancy;
 
-namespace PlexRequests.UI.Tests
+namespace Ombi.UI.Tests
 {
     public class TestRootPathProvider : IRootPathProvider
     {

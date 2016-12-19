@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Nancy;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class BetaModule : NancyModule
     {

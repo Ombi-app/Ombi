@@ -25,11 +25,9 @@
 //  ************************************************************************/
 #endregion
 
-using System.IO;
 using System.Text;
-using System.Web.UI;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public abstract class HtmlTemplateGenerator
     {

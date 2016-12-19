@@ -25,10 +25,9 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Data.Linq.Mapping;
 
-namespace PlexRequests.Store.Models.Plex
+namespace Ombi.Store.Models.Plex
 {
     [Table(Name = nameof(PlexContent))]
     public class PlexContent : Entity

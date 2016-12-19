@@ -25,10 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
-namespace PlexRequests.Api.Models.Sonarr
+namespace Ombi.Api.Models.Sonarr
 {
     public class SonarrError
     {

@@ -24,23 +24,21 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security;
 using System.Threading.Tasks;
-
 using Nancy;
 using Nancy.Authentication.Forms;
 using Nancy.Security;
+using Ombi.Core.Models;
+using Ombi.Helpers;
+using Ombi.Store;
+using Ombi.Store.Repository;
 
-using PlexRequests.Core.Models;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
-
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public class UserMapper : IUserMapper, ICustomUserMapper
     {

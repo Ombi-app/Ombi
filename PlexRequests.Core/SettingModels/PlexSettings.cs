@@ -25,9 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using Newtonsoft.Json;
-
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public sealed class PlexSettings : ExternalSettings
     {

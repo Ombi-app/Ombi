@@ -24,16 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-
-using PlexRequests.Api.Models.Tv;
-
+using Ombi.Api.Models.Tv;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class TvMazeApi : TvMazeBase
     {

@@ -34,21 +34,19 @@ using System.Text;
 using MailKit.Net.Smtp;
 using MimeKit;
 using NLog;
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.Users;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs.Templates;
-using PlexRequests.Store.Models.Plex;
+using Ombi.Api;
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Core.Users;
+using Ombi.Helpers;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs.Templates;
 using Quartz;
 
-
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded
     {

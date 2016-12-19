@@ -1,7 +1,7 @@
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Permissions;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers.Permissions;
 
-namespace PlexRequests.Core.Users
+namespace Ombi.Core.Users
 {
     public static class UserManagementHelper
     {

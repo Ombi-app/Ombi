@@ -24,20 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Linq;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.SickRage;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.SickRage;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class SickRageCacher : IJob, ISickRageCacher
     {

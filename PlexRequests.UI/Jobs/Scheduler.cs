@@ -31,14 +31,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NLog;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Jobs;
-using PlexRequests.UI.Helpers;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Jobs;
+using Ombi.UI.Helpers;
 using Quartz;
 using Quartz.Impl;
 
-namespace PlexRequests.UI.Jobs
+namespace Ombi.UI.Jobs
 {
     internal sealed class Scheduler : IJobScheduler
     {

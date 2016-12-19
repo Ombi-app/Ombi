@@ -27,10 +27,10 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlexRequests.Core.Models;
-using PlexRequests.Store;
+using Ombi.Core.Models;
+using Ombi.Store;
 
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface INotificationEngine
     {

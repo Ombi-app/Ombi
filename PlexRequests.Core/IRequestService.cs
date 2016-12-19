@@ -27,10 +27,9 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Store;
 
-using PlexRequests.Store;
-
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public interface IRequestService
     {

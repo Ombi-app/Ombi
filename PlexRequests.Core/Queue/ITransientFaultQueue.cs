@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
+using Ombi.Store;
+using Ombi.Store.Models;
 
-namespace PlexRequests.Core.Queue
+namespace Ombi.Core.Queue
 {
     public interface ITransientFaultQueue
     {

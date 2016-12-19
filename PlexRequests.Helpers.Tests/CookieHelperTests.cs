@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System.Collections.Generic;
 
+using System.Collections.Generic;
 using NUnit.Framework;
 
-namespace PlexRequests.Helpers.Tests
+namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class CookieHelperTests

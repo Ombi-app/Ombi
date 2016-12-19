@@ -24,20 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.IO;
 using System.Xml.Serialization;
-
 using Newtonsoft.Json;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Helpers.Exceptions;
-
+using Ombi.Api.Interfaces;
+using Ombi.Helpers.Exceptions;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class ApiRequest : IApiRequest
     {

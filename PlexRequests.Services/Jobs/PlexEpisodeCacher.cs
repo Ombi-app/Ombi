@@ -24,27 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Models;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Services.Interfaces;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 using Quartz;
 
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class PlexEpisodeCacher : IJob
     {

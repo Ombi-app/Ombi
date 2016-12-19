@@ -27,7 +27,7 @@
 
 using NUnit.Framework;
 
-namespace PlexRequests.Helpers.Tests
+namespace Ombi.Helpers.Tests
 {
     [TestFixture]
     public class PasswordHasherTests

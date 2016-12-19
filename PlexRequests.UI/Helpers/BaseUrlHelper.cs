@@ -24,17 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Text;
-using System.Web.UI.WebControls;
 using Nancy;
 using Nancy.ViewEngines.Razor;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public static class BaseUrlHelper
     {

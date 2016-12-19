@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
+using System;
 using Polly;
 using Polly.Retry;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public static class RetryHandler
     {

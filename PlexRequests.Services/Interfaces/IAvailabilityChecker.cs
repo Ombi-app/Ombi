@@ -24,14 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Services.Models;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
 
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Models.Plex;
-
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface IAvailabilityChecker
     {

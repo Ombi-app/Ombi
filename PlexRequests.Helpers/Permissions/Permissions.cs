@@ -28,7 +28,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace PlexRequests.Helpers.Permissions
+namespace Ombi.Helpers.Permissions
 {
     [Flags]
     ////

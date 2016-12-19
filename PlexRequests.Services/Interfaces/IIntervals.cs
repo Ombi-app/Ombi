@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface IIntervals
     {

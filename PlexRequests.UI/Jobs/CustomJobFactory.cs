@@ -24,16 +24,14 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
-
 using NLog;
-
-using PlexRequests.UI.Helpers;
-
+using Ombi.UI.Helpers;
 using Quartz;
 using Quartz.Spi;
 
-namespace PlexRequests.UI.Jobs
+namespace Ombi.UI.Jobs
 {
     /// <summary>
     /// The custom job factory we are using so we are able to use our IoC container with DI in our JobNames.

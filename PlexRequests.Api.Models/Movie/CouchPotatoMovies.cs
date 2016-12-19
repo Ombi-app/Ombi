@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PlexRequests.Api.Models.Movie
+namespace Ombi.Api.Models.Movie
 {
     public class CouchPotatoMovies
     {

@@ -24,19 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.IO;
 using System.Linq;
-
 using NLog;
-
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Store;
-
+using Ombi.Services.Interfaces;
+using Ombi.Store;
 using Quartz;
 
-
-namespace PlexRequests.Services.Jobs
+namespace Ombi.Services.Jobs
 {
     public class StoreBackup : IJob
     {

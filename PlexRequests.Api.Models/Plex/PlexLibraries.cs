@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace PlexRequests.Api.Models.Plex
+namespace Ombi.Api.Models.Plex
 {
     [XmlRoot(ElementName = "MediaContainer")]
     public class PlexLibraries

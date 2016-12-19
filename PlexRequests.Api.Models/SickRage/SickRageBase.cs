@@ -1,4 +1,4 @@
-﻿namespace PlexRequests.Api.Models.SickRage
+﻿namespace Ombi.Api.Models.SickRage
 {
     public abstract class SickRageBase<T>
     {

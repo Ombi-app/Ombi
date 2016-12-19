@@ -27,9 +27,9 @@
 
 using System.Text;
 using Nancy.ViewEngines.Razor;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.UI.Helpers
+namespace Ombi.UI.Helpers
 {
     public static class CustomHtmlHelper
     {

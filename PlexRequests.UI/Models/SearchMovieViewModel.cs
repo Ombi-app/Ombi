@@ -28,7 +28,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models
 {
     public class SearchMovieViewModel : SearchViewModel
     {

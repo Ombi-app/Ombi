@@ -30,11 +30,10 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
-using Dapper.Contrib.Extensions;
-using PlexRequests.Helpers;
-using PlexRequests.Store.Models;
+using Ombi.Helpers;
+using Ombi.Store.Models;
 
-namespace PlexRequests.Store.Repository
+namespace Ombi.Store.Repository
 {
     public class PlexUserRepository : BaseGenericRepository<PlexUsers>, IPlexUserRepository
     {

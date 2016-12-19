@@ -25,9 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using System.Xml.Linq;
-
-namespace PlexRequests.Api.Models.Sonarr
+namespace Ombi.Api.Models.Sonarr
 {
     public class SonarrSearchCommand
     {

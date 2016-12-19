@@ -1,10 +1,10 @@
 ﻿using System;
-using Dapper.Contrib.Extensions;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper.Contrib.Extensions;
 using Newtonsoft.Json;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     [Table("Requested")]
     public class RequestedModel : Entity

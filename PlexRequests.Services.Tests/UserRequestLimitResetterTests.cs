@@ -24,26 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
-
 using Moq;
-
 using NUnit.Framework;
-
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 using Ploeh.AutoFixture;
-
 using Quartz;
 
-namespace PlexRequests.Services.Tests
+namespace Ombi.Services.Tests
 {
     [TestFixture]
     public class UserRequestLimitResetterTests

@@ -24,30 +24,26 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
-
-using Microsoft.Owin.Hosting;
-
-using Mono.Data.Sqlite;
-using Mono.Unix;
-using Mono.Unix.Native;
-
-using NLog;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
 using CommandLine;
+using Microsoft.Owin.Hosting;
+using Mono.Data.Sqlite;
+using Mono.Unix;
+using Mono.Unix.Native;
+using NLog;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Store;
+using Ombi.Store.Repository;
+using Ombi.UI.Start;
 
-using PlexRequests.UI.Start;
-
-namespace PlexRequests.UI
+namespace Ombi.UI
 {
     class Program
     {

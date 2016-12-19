@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Helpers;
 
-namespace PlexRequests.Api
+using Ombi.Helpers;
+
+namespace Ombi.Api
 {
     public abstract class MovieBase
     {

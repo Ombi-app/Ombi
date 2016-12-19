@@ -27,11 +27,10 @@
 
 using System;
 using System.Data;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Store;
+using Ombi.Core.SettingModels;
 using Quartz;
 
-namespace PlexRequests.Core.Migration.Migrations
+namespace Ombi.Core.Migration.Migrations
 {
     [Migration(1950, "v1.9.5.0")]
     public class Version195 : BaseMigration, IMigration

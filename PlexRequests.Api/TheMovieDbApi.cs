@@ -24,17 +24,15 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
-using TMDbLib.Objects.TvShows;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class TheMovieDbApi : MovieBase
     {

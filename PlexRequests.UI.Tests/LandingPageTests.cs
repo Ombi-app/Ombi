@@ -24,14 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
-
 using NUnit.Framework;
+using Ombi.UI.Models;
 
-using PlexRequests.UI.Models;
-
-namespace PlexRequests.UI.Tests
+namespace Ombi.UI.Tests
 {
     [TestFixture]
     public class LandingPageTests

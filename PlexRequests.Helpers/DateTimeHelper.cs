@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class DateTimeHelper
     {

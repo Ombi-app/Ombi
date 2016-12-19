@@ -24,11 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace PlexRequests.Api.Models.Plex
-{
-    using System.Xml.Serialization;
-    using System.Collections.Generic;
 
+using System.Collections.Generic;
+using System.Xml.Serialization;
+
+namespace Ombi.Api.Models.Plex
+{
     [XmlRoot(ElementName = "MediaContainer")]
     public class PlexEpisodeMetadata
     {

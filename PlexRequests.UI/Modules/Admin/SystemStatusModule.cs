@@ -35,16 +35,17 @@ using MarkdownSharp;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.StatusChecker;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Core.StatusChecker;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Permissions;
+using Ombi.UI.Models;
+using Action = Ombi.Helpers.Analytics.Action;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules.Admin
+namespace Ombi.UI.Modules.Admin
 {
     public class SystemStatusModule : BaseModule
     {
@@ -106,7 +107,7 @@ namespace PlexRequests.UI.Modules.Admin
 
             var settings = this.Bind<SystemSettings>();
 
-            Analytics.TrackEventAsync(Category.Admin, PlexRequests.Helpers.Analytics.Action.Update, $"Updated Branch {EnumHelper<Branches>.GetDisplayValue(settings.Branch)}", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, $"Updated Branch {EnumHelper<Branches>.GetDisplayValue(settings.Branch)}", Username, CookieHelper.GetAnalyticClientId(Cookies));
             await SystemSettings.SaveSettingsAsync(settings);
 
             // Clear the cache
@@ -117,7 +118,7 @@ namespace PlexRequests.UI.Modules.Admin
 
         private Response AutoUpdate()
         {
-            Analytics.TrackEventAsync(Category.Admin, PlexRequests.Helpers.Analytics.Action.Update, "AutoUpdate", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, "AutoUpdate", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var url = Request.Form["url"];
             var args = (string)Request.Form["args"].ToString();

@@ -25,17 +25,15 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Threading.Tasks;
 using Dapper;
 using Dapper.Contrib.Extensions;
 using Mono.Data.Sqlite;
-using PlexRequests.Store.Models.Plex;
+using Ombi.Store.Models.Plex;
 
-namespace PlexRequests.Store
+namespace Ombi.Store
 {
     /// <summary>
     /// We should only ever READ, NEVER WRITE!

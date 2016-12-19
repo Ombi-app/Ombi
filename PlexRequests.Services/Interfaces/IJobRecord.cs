@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Store.Models;
 
-using PlexRequests.Store.Models;
-
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface IJobRecord
     {

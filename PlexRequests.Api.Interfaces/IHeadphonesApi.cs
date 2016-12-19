@@ -24,13 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Api.Models.Music;
 
-using PlexRequests.Api.Models.Music;
-
-namespace PlexRequests.Api.Interfaces
+namespace Ombi.Api.Interfaces
 {
     public interface IHeadphonesApi
     {

@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using Dapper.Contrib.Extensions;
 
-namespace PlexRequests.Store.Models
+namespace Ombi.Store.Models
 {
     [Table("RequestBlobs")]
     public class RequestBlobs : Entity

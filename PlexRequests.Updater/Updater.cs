@@ -24,6 +24,7 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -32,7 +33,7 @@ using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace PlexRequests.Updater
+namespace Ombi.Updater
 {
     public class Updater
     {

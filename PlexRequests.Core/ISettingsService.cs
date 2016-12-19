@@ -27,7 +27,7 @@
 
 using System.Threading.Tasks;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public interface ISettingsService<T>
     {

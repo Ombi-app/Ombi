@@ -26,17 +26,12 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using NLog;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
 
-namespace PlexRequests.Core.Notification.Templates
+namespace Ombi.Core.Notification.Templates
 {
     public class EmailBasicTemplate : IEmailBasicTemplate
     { 

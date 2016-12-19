@@ -31,7 +31,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
 
-namespace PlexRequests.Helpers
+namespace Ombi.Helpers
 {
     public static class EnumHelper<T>
     {

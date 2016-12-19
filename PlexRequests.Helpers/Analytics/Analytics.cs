@@ -24,20 +24,17 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-
 using NLog;
-
 using HttpUtility = Nancy.Helpers.HttpUtility;
 
-namespace PlexRequests.Helpers.Analytics
+namespace Ombi.Helpers.Analytics
 {
     public class Analytics : IAnalytics
     {

@@ -24,21 +24,18 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
 using Newtonsoft.Json;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Music;
-using PlexRequests.Helpers;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Music;
+using Ombi.Helpers;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class HeadphonesApi : IHeadphonesApi
     {

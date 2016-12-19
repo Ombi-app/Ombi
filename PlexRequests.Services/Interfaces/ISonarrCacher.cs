@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using PlexRequests.Services.Models;
+using Ombi.Services.Models;
 
-namespace PlexRequests.Services.Interfaces
+namespace Ombi.Services.Interfaces
 {
     public interface ISonarrCacher
     {

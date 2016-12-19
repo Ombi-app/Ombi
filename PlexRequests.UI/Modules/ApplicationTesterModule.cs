@@ -24,26 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.IO;
-using Mono.Data.Sqlite;
 using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Security;
 using Nancy.Validation;
 using NLog;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.UI.Helpers;
+using Ombi.UI.Models;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
-
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules
 {
     public class ApplicationTesterModule : BaseAuthModule
     {

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using PlexRequests.Store.Models.Plex;
+using Ombi.Store.Models.Plex;
 
-namespace PlexRequests.Core
+namespace Ombi.Core
 {
     public interface IPlexReadOnlyDatabase
     {

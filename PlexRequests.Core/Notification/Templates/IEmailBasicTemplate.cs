@@ -25,9 +25,7 @@
 //  ************************************************************************/
 #endregion
 
-using System.Threading.Tasks;
-
-namespace PlexRequests.Core.Notification.Templates
+namespace Ombi.Core.Notification.Templates
 {
     public interface IEmailBasicTemplate
     {

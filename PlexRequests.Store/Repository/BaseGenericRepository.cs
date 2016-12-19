@@ -24,21 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Dapper.Contrib.Extensions;
 using Dapper;
-
+using Dapper.Contrib.Extensions;
 using Mono.Data.Sqlite;
-
 using NLog;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.Store.Repository
+namespace Ombi.Store.Repository
 {
     public abstract class BaseGenericRepository<T> where T : class
     {

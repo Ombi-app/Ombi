@@ -23,21 +23,18 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
-using Polly;
 
 
 #endregion
+
 using System;
-
 using NLog;
-
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Helpers;
-
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Helpers;
 using RestSharp;
 
-namespace PlexRequests.Api
+namespace Ombi.Api
 {
     public class PlexApi : IPlexApi
     {

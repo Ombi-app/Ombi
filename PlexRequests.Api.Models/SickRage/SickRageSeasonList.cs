@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using PlexRequests.Helpers;
+using Ombi.Helpers;
 
-namespace PlexRequests.Api.Models.SickRage
+namespace Ombi.Api.Models.SickRage
 {
     public class SickRageSeasonList : SickRageBase<object>
     {

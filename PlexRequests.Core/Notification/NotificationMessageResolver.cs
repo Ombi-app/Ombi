@@ -28,11 +28,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
 
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.Core.Notification
+namespace Ombi.Core.Notification
 {
     public class NotificationMessageResolver
     {

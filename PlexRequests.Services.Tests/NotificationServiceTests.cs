@@ -24,17 +24,15 @@
    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  ************************************************************************/
 #endregion
+
 using System;
 using System.Threading.Tasks;
-
 using Moq;
-
 using NUnit.Framework;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Notification;
 
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Notification;
-
-namespace PlexRequests.Services.Tests
+namespace Ombi.Services.Tests
 {
     [TestFixture]
     public class NotificationServiceTests

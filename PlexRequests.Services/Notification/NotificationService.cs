@@ -24,17 +24,16 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
-
 using NLog;
+using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
 
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.Services.Notification
+namespace Ombi.Services.Notification
 {
     public class NotificationService : INotificationService
     {

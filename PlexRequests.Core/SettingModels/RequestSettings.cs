@@ -25,10 +25,9 @@
 //  ************************************************************************/
 #endregion
 
-using System;
 using System.Collections.Generic;
 
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public sealed class RequestSettings : Settings
     {

@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Threading.Tasks;
 
-namespace PlexRequests.Helpers.Analytics
+namespace Ombi.Helpers.Analytics
 {
     public interface IAnalytics
     {

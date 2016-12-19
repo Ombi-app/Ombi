@@ -27,7 +27,7 @@
 
 using CommandLine;
 
-namespace PlexRequests.UI.Start
+namespace Ombi.UI.Start
 {
     public class StartupOptions
     {

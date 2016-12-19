@@ -25,7 +25,7 @@
 //  ************************************************************************/
 #endregion
 // ReSharper disable InconsistentNaming
-namespace PlexRequests.Helpers.Analytics
+namespace Ombi.Helpers.Analytics
 {
     internal enum HitType
     {

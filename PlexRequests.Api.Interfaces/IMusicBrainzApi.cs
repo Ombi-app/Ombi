@@ -24,9 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Api.Models.Music;
 
-namespace PlexRequests.Api.Interfaces
+using Ombi.Api.Models.Music;
+
+namespace Ombi.Api.Interfaces
 {
     public interface IMusicBrainzApi
     {

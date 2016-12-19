@@ -27,7 +27,7 @@
 
 using System.Collections.Generic;
 
-namespace PlexRequests.Core.StatusChecker
+namespace Ombi.Core.StatusChecker
 {
     public class NuGetFeed
     {

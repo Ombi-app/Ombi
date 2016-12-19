@@ -24,10 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace PlexRequests.Api.Models.Plex
+namespace Ombi.Api.Models.Plex
 {
     [XmlRoot(ElementName = "Server")]
     public class ServerInfo

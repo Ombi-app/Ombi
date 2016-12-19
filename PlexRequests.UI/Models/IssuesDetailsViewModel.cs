@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System.Collections.Generic;
+using Ombi.Core.Models;
+using Ombi.Store;
 
-using PlexRequests.Core.Models;
-using PlexRequests.Store;
-
-namespace PlexRequests.UI.Models
+namespace Ombi.UI.Models
 {
     public class IssuesDetailsViewModel
     {

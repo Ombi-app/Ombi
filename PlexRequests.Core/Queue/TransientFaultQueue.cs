@@ -29,12 +29,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using PlexRequests.Helpers;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
+using Ombi.Helpers;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
 
-namespace PlexRequests.Core.Queue
+namespace Ombi.Core.Queue
 {
     public class TransientFaultQueue : ITransientFaultQueue
     {

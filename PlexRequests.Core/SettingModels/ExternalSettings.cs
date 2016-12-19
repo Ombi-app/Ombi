@@ -24,13 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using System;
-
 using Newtonsoft.Json;
+using Ombi.Helpers;
 
-using PlexRequests.Helpers;
-
-namespace PlexRequests.Core.SettingModels
+namespace Ombi.Core.SettingModels
 {
     public abstract class ExternalSettings : Settings
     {

@@ -24,10 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using PlexRequests.Store;
-using System;
 
-namespace PlexRequests.UI.Models
+using System;
+using Ombi.Store;
+
+namespace Ombi.UI.Models
 {
     public class RequestViewModel
     {

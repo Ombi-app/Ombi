@@ -29,47 +29,38 @@
 #endregion
 
 using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-
+using System.Threading.Tasks;
 using Nancy;
 using Nancy.Extensions;
+using Nancy.Json;
 using Nancy.ModelBinding;
 using Nancy.Responses.Negotiation;
 using Nancy.Validation;
-using Nancy.Json;
-using Nancy.Security;
 using NLog;
-
-using MarkdownSharp;
-
-using Nancy.Responses;
-
-using PlexRequests.Api;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Core;
-using PlexRequests.Core.Models;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Exceptions;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Services.Interfaces;
-using PlexRequests.Services.Jobs;
-using PlexRequests.Services.Notification;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Helpers;
-using PlexRequests.UI.Models;
+using Ombi.Api;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Exceptions;
+using Ombi.Helpers.Permissions;
+using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
+using Ombi.Services.Notification;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
+using Ombi.UI.Helpers;
+using Ombi.UI.Models;
 using Quartz;
-using Action = PlexRequests.Helpers.Analytics.Action;
-using HttpStatusCode = Nancy.HttpStatusCode;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Action = Ombi.Helpers.Analytics.Action;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
-namespace PlexRequests.UI.Modules
+namespace Ombi.UI.Modules.Admin
 {
     public class AdminModule : BaseModule
     {

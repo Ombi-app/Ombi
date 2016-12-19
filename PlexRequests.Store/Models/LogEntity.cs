@@ -24,12 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-using System;
 
+using System;
 using Dapper.Contrib.Extensions;
 using Newtonsoft.Json;
 
-namespace PlexRequests.Store.Models
+namespace Ombi.Store.Models
 {
     [Table("Logs")]
     public class LogEntity : Entity

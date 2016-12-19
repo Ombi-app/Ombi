@@ -32,20 +32,19 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.Linker;
 using NLog;
-using PlexRequests.Api.Interfaces;
-using PlexRequests.Api.Models.Plex;
-using PlexRequests.Core;
-using PlexRequests.Core.SettingModels;
-using PlexRequests.Core.Users;
-using PlexRequests.Helpers;
-using PlexRequests.Helpers.Analytics;
-using PlexRequests.Helpers.Permissions;
-using PlexRequests.Store;
-using PlexRequests.Store.Models;
-using PlexRequests.Store.Repository;
-using PlexRequests.UI.Authentication;
-using PlexRequests.UI.Modules;
-using ISecurityExtensions = PlexRequests.Core.ISecurityExtensions;
+using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
+using Ombi.Core.Users;
+using Ombi.Helpers;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers.Permissions;
+using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Repository;
+using Ombi.UI.Authentication;
+using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
 
 namespace Ombi.UI.Modules

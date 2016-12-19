@@ -24,11 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
 using NUnit.Framework;
+using Ombi.Core.SettingModels;
 
-using PlexRequests.Core.SettingModels;
-
-namespace PlexRequests.Core.Tests
+namespace Ombi.Core.Tests
 {
     [TestFixture]
     public class AuthenticationSettingsTests
