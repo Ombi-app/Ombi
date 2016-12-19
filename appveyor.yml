@@ -12,7 +12,7 @@ build:
   verbosity: minimal
 after_build:
 - cmd: >-
-    7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
+    7z a Ombi.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
 
     appveyor PushArtifact Ombi.zip
     
