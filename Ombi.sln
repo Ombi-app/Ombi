@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.UI", "PlexRequests.UI\Ombi.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "PlexRequests.Api\Ombi.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "Ombi.Api\Ombi.Api.csproj", "{8CB8D235-2674-442D-9C6A-35FCAEEB160D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Interfaces", "PlexRequests.Api.Interfaces\Ombi.Api.Interfaces.csproj", "{95834072-A675-415D-AA8F-877C91623810}"
 EndProject
