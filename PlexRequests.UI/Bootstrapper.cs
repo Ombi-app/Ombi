@@ -34,6 +34,7 @@ using Nancy.Bootstrappers.Ninject;
 using Nancy.Conventions;
 using Nancy.Cryptography;
 using Nancy.Diagnostics;
+using Nancy.Hosting.Self;
 using Nancy.Json;
 using Nancy.Session;
 using Ninject;
