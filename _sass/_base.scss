@@ -156,11 +156,11 @@ header {
   width: 100%;
   min-height: auto;
   overflow-y: hidden;
-  background: url("../img/bg-pattern.png"), $head-primary;
+  background: url("..img/bg-pattern.png"), $head-primary;
   /* fallback for old browsers */
-  background: url("../img/bg-pattern.png"), -webkit-linear-gradient(to left, $head-primary, $head-secondary);
+  background: url("..img/bg-pattern.png"), -webkit-linear-gradient(to left, $head-primary, $head-secondary);
   /* Chrome 10-25, Safari 5.1-6 */
-  background: url("../img/bg-pattern.png"), linear-gradient(to left, $head-primary, $head-secondary);
+  background: url("..img/bg-pattern.png"), linear-gradient(to left, $head-primary, $head-secondary);
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   color: white;
   .header-content {
@@ -298,7 +298,7 @@ section {
     background-size: cover;
     -o-background-size: cover;
     background-position: center;
-    background-image: url('../img/bg-cta.jpg');
+    background-image: url('..img/bg-cta.jpg');
     padding: 250px 0;
     .cta-content {
       position: relative;
@@ -327,7 +327,7 @@ section {
     background-size: cover;
     -o-background-size: cover;
     background-position: center;
-    background-image: url('../img/donate.jpg');
+    background-image: url('..img/donate.jpg');
     padding: 250px 0;
     .cta-content-donate {
       position: relative;
