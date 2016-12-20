@@ -1,0 +1,118 @@
+---
+layout: default
+---
+
+<!-- Post Header -->
+<header id="header" class="intro-header bg-primary text-center" style="background-image: url('{{ site.baseurl }}/{% if page.header-img %}{{ page.header-img }}{% else %}{{ site.header-img }}{% endif %}')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+              <div class="post-heading">
+                <h1>{{ page.title }}</h1>
+                {% if page.subtitle %}
+                <h2 class="subheading">{{ page.subtitle }}</h2>
+                {% endif %}
+                <p class="meta">Posted by {% if page.author %}{{ page.author }}{% else %}{{ site.title }}{% endif %} on {{ page.date | date: "%B %-d, %Y" }}</p>
+                <a href="#post" class="page-scroll"><i class="fa fa-fw fa-2x fa-arrow-down"></i></a>
+              </div>
+            </div>
+        </div>
+    </div>
+</header>
+<hr>
+<!-- Post Content -->
+<article>
+    <div id="post" class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+		{% if site.data-ad-client %}  
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- jekynewage google ads -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-9204963049240271"
+                    data-ad-slot="2973388149"
+                    data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+		{% endif %}
+		<hr>
+
+				{{ content }}
+
+                <hr>
+		    
+		<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- jekynewage google ads -->
+                <ins class="adsbygoogle"
+                    style="display:block"
+                    data-ad-client="ca-pub-9204963049240271"
+                    data-ad-slot="2973388149"
+                    data-ad-format="auto"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+
+                <ul class="pager">
+                    {% if page.previous.url %}
+                    <li class="previous">
+                        <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.previous.title}}">&larr; Previous Post</a>
+                    </li>
+                    {% endif %}
+                    {% if page.next.url %}
+                    <li class="next">
+                        <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}" data-toggle="tooltip" data-placement="top" title="{{page.next.title}}">Next Post &rarr;</a>
+                    </li>
+                    {% endif %}
+                </ul>
+
+            </div>
+        </div>
+    </div>
+</article>
+
+<hr>
+
+{% if site.disqus_account %}
+<article>
+  <div id="disqus" class="container">
+    <div class="row">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+
+      <h2 class="section-heading">Leave a comment! We <i style="color:red"class="fa fa-heart"></i> it!</h2>
+
+      <script id="dsq-count-scr" src="//{{ site.disqus_account }}.disqus.com/count.js" async></script>
+
+
+      <div id="disqus_thread"></div>
+      <script>
+
+      /**
+      *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+      *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+      /*
+      var disqus_config = function () {
+      this.page.url = {{ post.url | prepend: site.baseurl }};  // Replace PAGE_URL with your page's canonical URL variable
+      this.page.identifier = {{ post.title | prepend: site.baseurl }};; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+    };
+    */
+
+      (function() { // DON'T EDIT BELOW THIS LINE
+      var d = document, s = d.createElement('script');
+      s.src = '//{{ site.disqus_account }}.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </div>
+  </div>
+</div>
+</article>
+
+<hr>
+
+
+{% endif %}

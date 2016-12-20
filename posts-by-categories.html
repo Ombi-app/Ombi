@@ -1,0 +1,45 @@
+---
+layout: post
+title: "Posts by category"
+description: "A Clean Blog Theme by Start Bootstrap"
+header-img: "img/post-bg-01.jpg"
+---
+
+<div class="container-fluid index">
+  <div class="row index all-posts">
+
+    <h1 class="header author-header">{{ site.author_name }}</h1>
+    <h2 class="header" itemprop="headline">All posts</h2>
+    <h2 class="header categories" itemprop="headline"><small>grouped by
+
+      <div class="dropdown btn-group">
+        <button class="btn btn-categories dropdown-toggle btn-xs" type="button" data-toggle="dropdown">Categories
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="{{ site.baseurl }}/blog/">Years</a></li>
+        </ul>
+      </div>
+
+    </small></h2>     
+      
+      {% for category in site.categories %}
+      <div class="col-md-12 content-panel articles">
+        <h2 id="{{ category | first }}-ref">{{ category | first }}</h2>
+        <ul style="list-style: none;">
+          {% for posts in category %}
+            {% for post in posts %}
+              <li>
+                <hr>
+                <!-- problem of for cycle can't use images <img src="/{{ post.header-img | prepend: site.baseurl }}" class="img-responsive" alt="{{ post.title }}"> -->
+                <h3><a href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a></h3>
+                <small class="hidden-xs">{{ post.date | date: "%B %-d, %Y" }}</small>
+              </li>
+            {% endfor %}
+          {% endfor %}
+
+        </ul>
+      </div>
+      {% endfor %}
+  </div>
+</div>
