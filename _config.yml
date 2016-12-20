@@ -1,10 +1,10 @@
 # Site settings
-title: Antonio Trento, theme Jeky New Age, the start Bootstrap themplate build for jekyll
-email:
-description: A jekyll template for landing pages, portfolio and blogging
+title: Ombi
+email: tidusjar@gmail.com
+description: Ombi the request system
 
 baseurl: "" # the subpath of your site, e.g. /blog/ (If you use organization leave empty)
-url: "https://jekynewage.github.io" # the base hostname & protocol for your site
+url: "http://www.ombi.io" # the base hostname & protocol for your site
 
 #Google Ad Words Data from scripts code (using Google responsive options) and ad client
 data-ad-slot: 2973388149
