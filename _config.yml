@@ -1,0 +1,37 @@
+# Site settings
+title: Antonio Trento, theme Jeky New Age, the start Bootstrap themplate build for jekyll
+email:
+description: A jekyll template for landing pages, portfolio and blogging
+
+baseurl: "" # the subpath of your site, e.g. /blog/ (If you use organization leave empty)
+url: "https://jekynewage.github.io" # the base hostname & protocol for your site
+
+#Google Ad Words Data from scripts code (using Google responsive options) and ad client
+data-ad-slot: 2973388149
+data-ad-client: ca-pub-9204963049240271
+google_ad_client: ca-pub-9204963049240271
+
+google_analytics: "UA-86331249-1"
+addthis_id: ra-5644da281510c62f
+disqus_account: jeky-new-age
+
+# Social networks usernames (many more available: flickr, dribbble, pinterest, instagram, tumblr, linkedin, etc.) see all icon at fontawesome.io
+social:
+  - title: twitter
+    url: https://twitter.com/lantoniotrento
+  - title: facebook
+    url: https://facebook.com/lantoniotrento
+  - title: google-plus
+    url: https://plus.google.com/+AntoniotrentoIt
+  #- title: github
+  #  url: http://github.com/jekyll
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+permalink: pretty
+paginate: 5
+exclude: ["less","node_modules","Gruntfile.js","package.json","README.md"]
+
+gems: [jekyll-paginate, jekyll-feed]
+# Build settings
