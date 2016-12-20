@@ -46,8 +46,7 @@ Supported notifications:
 Feature requests are handled on FeatHub.
 
 Search the existing requests to see if your suggestion has already been submitted.
-If a similar request exists, give it a thumbs up (+1), or add additional comments to the request.
-If no similar requests exist, you can create a new one. Make sure to provide a clear title to easily identify the feature request.
+(If a similar request exists, give it a thumbs up (+1), or add additional comments to the request)
 
 #### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](http://feathub.com/tidusjar/Ombi)
 
