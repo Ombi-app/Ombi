@@ -16,9 +16,9 @@
 
     <div class="media">
         <div id="contentBody" class="media-body">
-            <h4 class="media-heading landing-title" id="statusTitle">Welcome to Plex Requests</h4>
+            <h4 class="media-heading landing-title" id="statusTitle">Welcome to Ombi</h4>
             <div class="form-group">
-                <small>we are just going to run though the initial Plex Requests setup!</small>
+                <small>we are just going to run though the initial Ombi setup!</small>
 
                 <div style="text-align: center; margin-top: 20px">
                     <a href="#" id="firstNext" class="btn btn-primary-outline">Next</a>
@@ -44,7 +44,7 @@
                 <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
             </div>
         </div>
-        <small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Plex Requests to view your media and friends</small>
+        <small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and friends</small>
         <div class="form-group">
             <div style="text-align: center; margin-top: 20px">
                 <button href="#" id="requestToken" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
@@ -115,7 +115,7 @@
 <script id="authArea" type="text/html">
     <form method="post" action="@formAction/wizard/auth" id="authForm">
         <div class="form-group">
-            <div class="checkbox userAuthTooltip" title="This will only allow the users that are your friends on Plex to log into Plex Requests. Note: They only need to enter their username, unless the below option is selected.">
+            <div class="checkbox userAuthTooltip" title="This will only allow the users that are your friends on Plex to log into Ombi. Note: They only need to enter their username, unless the below option is selected.">
                 <input type="checkbox" id="userAuth" name="UserAuthentication">
                 <label for="userAuth">Enable User Authentication</label>
             </div>

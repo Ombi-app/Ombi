@@ -37,6 +37,7 @@ namespace Ombi.Core.SettingModels
         public bool ReportIssues { get; set; }
         public bool UsersCanViewOnlyOwnRequests { get; set; }
         public bool UsersCanViewOnlyOwnIssues { get; set; }
+        public bool BypassRequestLimit { get; set; }
 
         // Features
         public bool RecentlyAddedNotification { get; set; }

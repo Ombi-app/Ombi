@@ -166,7 +166,7 @@ namespace Ombi.Core.StatusChecker
             {
                 DownloadUri = downloadLink,
                 ReleaseNotes = $"{branchDisplay} (See recent commits for details)",
-                ReleaseTitle = $"Plex Requests {branchDisplay}",
+                ReleaseTitle = $"Ombi {branchDisplay}",
                 NewVersion = branchResult.build.version,
                 UpdateUri = downloadLink,
                 CurrentVersion = fileversion

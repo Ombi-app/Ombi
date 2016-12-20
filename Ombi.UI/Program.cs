@@ -94,9 +94,9 @@ namespace Ombi.UI
             {
                 using (WebApp.Start<Startup>(options))
                 {
-                    Console.WriteLine($"Plex Requests is running on the following: http://+:{port}/{baseUrl}");
+                    Console.WriteLine($"Ombi is running on the following: http://+:{port}/{baseUrl}");
 
-                    PrintToConsole("All setup, Plex Requests is now ready!", ConsoleColor.Yellow);
+                    PrintToConsole("All setup, Ombi is now ready!", ConsoleColor.Yellow);
                     if (Type.GetType("Mono.Runtime") != null)
                     {
                         Log.Info("We are on Mono!");

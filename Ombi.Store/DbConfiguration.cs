@@ -45,22 +45,44 @@ namespace Ombi.Store
         }
 
         private SqliteFactory Factory { get; }
-        public string CurrentPath =>Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, DbFile);
+
+        private string _currentPath;
+        public string CurrentPath
+        {
+            get
+            {
+                if (File.Exists(OldPath))
+                {
+                    _currentPath = OldPath;
+                }
+
+                if (File.Exists(NewCurrentPath))
+                {
+                    _currentPath = NewCurrentPath;
+                }
+
+                return _currentPath;
+            }
+        }
+
+        public string NewCurrentPath => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, DbFile);
+        public string OldPath => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, OldDbFile);
 
         public virtual bool CheckDb()
         {
             Log.Trace("Checking DB");
             Console.WriteLine("Location of the database: {0}",CurrentPath);
-            if (!File.Exists(CurrentPath))
+            if (File.Exists(CurrentPath))
             {
-                Log.Trace("DB doesn't exist, creating a new one");
-                CreateDatabase();
-                return true;
+                return false;
             }
-            return false;
+            Log.Trace("DB doesn't exist, creating a new one");
+            CreateDatabase();
+            return true;
         }
 
-        public const string DbFile = "PlexRequests.sqlite";
+        public const string OldDbFile = "PlexRequests.sqlite";
+        public const string DbFile = "Ombi.sqlite";
 
         /// <summary>
         /// Gets the database connection.

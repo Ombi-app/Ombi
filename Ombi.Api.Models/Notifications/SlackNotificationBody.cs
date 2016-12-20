@@ -34,7 +34,7 @@ namespace Ombi.Api.Models.Notifications
         [JsonConstructor]
         public SlackNotificationBody()
         {
-            username = "Plex Requests";
+            username = "Ombi";
         }
 
         [JsonIgnore]

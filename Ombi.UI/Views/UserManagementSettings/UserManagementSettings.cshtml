@@ -20,13 +20,14 @@
             @Html.Checkbox(Model.ReportIssues, "ReportIssues", "Report Issues")
             @Html.Checkbox(Model.UsersCanViewOnlyOwnIssues, "UsersCanViewOnlyOwnIssues", "Users can only view their own issues")
             @Html.Checkbox(Model.UsersCanViewOnlyOwnRequests, "UsersCanViewOnlyOwnRequests", "Users can only view their own requests")
+            @Html.Checkbox(Model.BypassRequestLimit, "BypassRequestLimit", "Bypass the request limit")
 
 
 
             <h3>Features</h3>
             @Html.Checkbox(Model.RecentlyAddedNewsletter, "RecentlyAddedNewsletter", "Recently Added Newsletter")
             @Html.Checkbox(Model.RecentlyAddedNotification, "RecentlyAddedNotification", "Recently Added Notifications")
-            
+
             <div>
             </div>
             <div class="form-group">

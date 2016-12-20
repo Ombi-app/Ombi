@@ -32,6 +32,8 @@ using Nancy.Responses;
 using Nancy.Security;
 using Nancy.Session;
 using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
+using Ombi.Core.Users;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
 using Ombi.Store.Repository;
@@ -40,16 +42,18 @@ namespace Ombi.Core
 {
     public class SecurityExtensions : ISecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IPlexUserRepository plexUsers)
+        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IPlexUserRepository plexUsers, ISettingsService<UserManagementSettings> umSettings)
         {
             UserRepository = userRepository;
             Linker = linker;
             PlexUsers = plexUsers;
+            UserManagementSettings = umSettings;
         }
 
         private IUserRepository UserRepository { get; }
         private IResourceLinker Linker { get; }
         private IPlexUserRepository PlexUsers { get; }
+        private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
         public bool IsLoggedIn(NancyContext context)
         {
@@ -283,7 +287,12 @@ namespace Ombi.Core
 
         private Permissions GetPermissions(string userName)
         {
-            if (string.IsNullOrEmpty(userName)) return 0;
+            if (string.IsNullOrEmpty(userName))
+            {
+                // Username without auth
+                var s = UserManagementSettings.GetSettings();
+                return (Permissions)UserManagementHelper.GetPermissions(s);
+            }
 
             var dbUser = UserRepository.GetUserByUsername(userName);
 

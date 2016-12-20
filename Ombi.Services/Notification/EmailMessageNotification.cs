@@ -134,7 +134,7 @@ namespace Ombi.Services.Notification
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
+                $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
                 $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" };
@@ -142,7 +142,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!"
+                Subject = $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
@@ -155,7 +155,7 @@ namespace Ombi.Services.Notification
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                $"Plex Requests: New issue for {model.Title}!",
+                $"Ombi: New issue for {model.Title}!",
                 $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!"};
@@ -163,7 +163,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: New issue for {model.Title}!"
+                Subject = $"Ombi: New issue for {model.Title}!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
@@ -176,7 +176,7 @@ namespace Ombi.Services.Notification
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                "Plex Requests: A request could not be added.",
+                "Ombi: A request could not be added.",
                 $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying" };
@@ -184,7 +184,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: A request could not be added"
+                Subject = $"Ombi: A request could not be added"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
@@ -197,7 +197,7 @@ namespace Ombi.Services.Notification
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                "Plex Requests: Your request has been declined",
+                "Ombi: Your request has been declined",
                 $"Hello! Your request for {model.Title} has been declined, Sorry!",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been declined, Sorry!", };
@@ -205,7 +205,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: Your request has been declined"
+                Subject = $"Ombi: Your request has been declined"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
@@ -218,7 +218,7 @@ namespace Ombi.Services.Notification
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                "Plex Requests: Your request has been approved!",
+                "Ombi: Your request has been approved!",
                 $"Hello! Your request for {model.Title} has been approved!",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been approved!", };
@@ -226,7 +226,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: Your request has been approved!"
+                Subject = $"Ombi: Your request has been approved!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
@@ -243,7 +243,7 @@ namespace Ombi.Services.Notification
             }
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
-                $"Plex Requests: {model.Title} is now available!",
+                $"Ombi: {model.Title} is now available!",
                 $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
                 model.ImgSrc);
             var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)" };
@@ -251,7 +251,7 @@ namespace Ombi.Services.Notification
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = $"Plex Requests: {model.Title} is now available!"
+                Subject = $"Ombi: {model.Title} is now available!"
             };
             message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
             message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));

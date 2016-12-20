@@ -111,7 +111,7 @@ namespace Ombi.Services.Notification
 
         private async Task PushTest(SlackNotificationSettings settings)
         {
-            var message = $"This is a test from Plex Requests, if you can see this then we have successfully pushed a notification!";
+            var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
             await Push(settings, message);
         }
 

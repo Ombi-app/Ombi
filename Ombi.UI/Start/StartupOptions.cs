@@ -37,7 +37,7 @@ namespace Ombi.UI.Start
         /// <value>
         /// The base URL.
         /// </value>
-        [Option('b',"base", Required = false, HelpText = "Provide a base url for Plex Requests")]
+        [Option('b',"base", Required = false, HelpText = "Provide a base url for Ombi")]
         public string BaseUrl { get; set; }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace Ombi.UI.Start
         /// <value>
         /// The port.
         /// </value>
-        [Option('p', "port", Required = false, HelpText = "Provide a port for Plex Requests to run on. You can also change this in the settings page in the UI", Default = 3579)]
+        [Option('p', "port", Required = false, HelpText = "Provide a port for Ombi to run on. You can also change this in the settings page in the UI", Default = 3579)]
         public int Port { get; set; }
 
 

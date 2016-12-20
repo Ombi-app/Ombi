@@ -46,6 +46,10 @@ namespace Ombi.Core.Users
             {
                 permission += (int)Permissions.UsersCanViewOnlyOwnIssues;
             }
+            if (settings.BypassRequestLimit)
+            {
+                permission += (int) Permissions.BypassRequestLimit;
+            }
 
 
             return permission;

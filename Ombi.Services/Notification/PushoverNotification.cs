@@ -110,19 +110,19 @@ namespace Ombi.Services.Notification
 
         private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
-            var message = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
+            var message = $"Ombi: The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
             await Push(settings, message);
         }
 
         private async Task PushIssueAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
-            var message = $"Plex Requests: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
+            var message = $"Ombi: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             await Push(settings, message);
         }
 
         private async Task PushTestAsync(NotificationModel model, PushoverNotificationSettings settings)
         {
-            var message = $"Plex Requests: Test Message!";
+            var message = $"Ombi: Test Message!";
             await Push(settings, message);
         }
 

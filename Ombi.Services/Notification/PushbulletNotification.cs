@@ -111,28 +111,28 @@ namespace Ombi.Services.Notification
         private async Task PushNewRequestAsync(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
-            var pushTitle = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested!";
+            var pushTitle = $"Ombi: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested!";
             await Push(settings, message, pushTitle);
         }
 
         private async Task PushIssueAsync(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
-            var pushTitle = $"Plex Requests: A new issue has been reported for {model.Title}";
+            var pushTitle = $"Ombi: A new issue has been reported for {model.Title}";
             await Push(settings, message, pushTitle);
         }
 
         private async Task PushTestAsync(PushbulletNotificationSettings settings)
         {
             var message = "This is just a test! Success!";
-            var pushTitle = "Plex Requests: Test Message!";
+            var pushTitle = "Ombi: Test Message!";
             await Push(settings, message, pushTitle);
         }
 
         private async Task PushFaultQueue(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            var pushTitle = $"Plex Requests: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested but could not be added!";
+            var pushTitle = $"Ombi: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested but could not be added!";
             await Push(settings, message, pushTitle);
         }
 

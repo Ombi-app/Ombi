@@ -92,7 +92,7 @@ namespace Ombi.UI.Modules
             Describe["GetApiKey"] = description => description.AsSwagger(with =>
             {
                 with.ResourcePath("/apikey");
-                with.Summary("Gets the Api Key for Plex Requests");
+                with.Summary("Gets the Api Key for Ombi");
                 with.Model<ApiModel<string>>();
                 with.QueryParam<string>("username", required:true );
                 with.QueryParam<string>("password", required: true );
