@@ -51,15 +51,19 @@ namespace Ombi.Store
         {
             get
             {
+
+                if (!string.IsNullOrEmpty(_currentPath))
+                {
+                    return _currentPath;
+                }
+
                 if (File.Exists(OldPath))
                 {
                     _currentPath = OldPath;
+                    return _currentPath;
                 }
 
-                if (File.Exists(NewCurrentPath))
-                {
-                    _currentPath = NewCurrentPath;
-                }
+                _currentPath = NewCurrentPath;
 
                 return _currentPath;
             }
