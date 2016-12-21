@@ -26,7 +26,9 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Nancy;
 using Nancy.Extensions;
@@ -108,6 +110,48 @@ namespace Ombi.UI.Modules
 
             Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
+
+            Get["UserLoginUsernameIndex", "/login", true] = async (x, ct) =>
+            {
+                if (Request.Query["landing"] == null)
+                {
+                    var s = await LandingPageSettings.GetSettingsAsync();
+                    if (s.Enabled)
+                    {
+                        if (s.BeforeLogin) // Before login
+                        {
+                            if (string.IsNullOrEmpty(Username))
+                            {
+                                // They are not logged in
+                                return
+                                    Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
+                            }
+                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
+                        }
+
+                        // After login
+                        if (string.IsNullOrEmpty(Username))
+                        {
+                            // Not logged in yet
+                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginUsernameIndex").ToString() + "?landing");
+                        }
+                        // Send them to landing
+                        var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
+                        return Context.GetRedirect(landingUrl);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(Username) || IsAdmin)
+                {
+                    var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
+                    return Response.AsRedirect(url);
+                }
+                var settings = await AuthService.GetSettingsAsync();
+                return View["Username", settings];
+            };
+
+            Post["/login", true] = async (x, ct) => await UsernameLogin();
+            Post["/password", true] = async (x, ct) => await PasswordLogin();
         }
 
         private ISettingsService<AuthenticationSettings> AuthService { get; }
@@ -119,9 +163,169 @@ namespace Ombi.UI.Modules
         private IRepository<UserLogins> UserLogins { get; }
         private IPlexUserRepository PlexUserRepository { get; }
         private ICustomUserMapper CustomUserMapper { get; }
-        private ISettingsService<UserManagementSettings> UserManagementSettings {get;}
+        private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        private async Task<Response> UsernameLogin()
+        {
+            var username = Request.Form.username.Value;
+            var dateTimeOffset = Request.Form.DateTimeOffset;
+            var loginGuid = Guid.Empty;
+            var settings = await AuthService.GetSettingsAsync();
+
+            if (string.IsNullOrWhiteSpace(username) || IsUserInDeniedList(username, settings))
+            {
+                return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
+            }
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+
+            var authenticated = false;
+            var isOwner = false;
+            var userId = string.Empty;
+
+            if (settings.UserAuthentication) // Check against the users in Plex
+            {
+                Log.Debug("Need to auth");
+                authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                if (authenticated)
+                {
+                    userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                }
+                if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
+                {
+                    Log.Debug("User is the account owner");
+                    authenticated = true;
+                    isOwner = true;
+                    userId = GetOwnerId(plexSettings.PlexAuthToken, username);
+                }
+                UsersModel dbUser = await IsDbuser(username);
+                if (dbUser != null) // in the db?
+                {
+                    var perms = (Permissions)dbUser.Permissions;
+                    authenticated = true;
+                    isOwner = perms.HasFlag(Permissions.Administrator);
+                    userId = dbUser.UserGuid;
+                }
+                Log.Debug("Friends list result = {0}", authenticated);
+            }
+            else if (!settings.UserAuthentication) // No auth, let them pass!
+            {
+                authenticated = true;
+            }
+
+            if (settings.UsePassword || isOwner)
+            {
+                Session[SessionKeys.UserLoginName] = username;
+
+                var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Views", "UserLogin");
+                var file = System.IO.Directory.GetFiles(path).FirstOrDefault(x => x.Contains("Password.cshtml"));
+                var html = File.ReadAllText(file);
+
+                return Response.AsJson(new { result = true, usePassword = true, html });
+            }
+
+            if (!authenticated)
+            {
+                return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
+            }
+            var result = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
+
+
+            var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
+            if (result.LoginGuid != Guid.Empty)
+            {
+                return CustomModuleExtensions.LoginAndRedirect(this, result.LoginGuid, null, retVal.ToString());
+            }
+            return Response.AsJson(new { result = true, url = retVal.ToString() });
+
+        }
+
+        private async Task<PlexUsers> IsPlexUser(string username)
+        {
+            var plexLocalUsers = await PlexUserRepository.GetAllAsync();
+
+            var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);
+            return plexLocal;
+        }
+
+        private async Task<UsersModel> IsDbuser(string username)
+        {
+            var localUsers = await CustomUserMapper.GetUsersAsync();
+
+            var dbUser = localUsers.FirstOrDefault(x => x.UserName == username);
+            return dbUser;
+        }
+
+        private async Task<Response> PasswordLogin()
+        {
+            var password = Request.Form.password.Value;
+
+            if (string.IsNullOrEmpty(password))
+            {
+
+                return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
+            }
+
+            var dateTimeOffset = Request.Form.DateTimeOffset;
+            var loginGuid = Guid.Empty;
+            var settings = await AuthService.GetSettingsAsync();
+            var username = Session[SessionKeys.UserLoginName].ToString();
+            var authenticated = false;
+            var isOwner = false;
+            var userId = string.Empty;
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+
+            if (settings.UserAuthentication) // Authenticate with Plex
+            {
+                Log.Debug("Need to auth and also provide pass");
+                var signedIn = (PlexAuthentication)Api.SignIn(username, password);
+                if (signedIn.user?.authentication_token != null)
+                {
+                    Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
+                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, signedIn.user?.username))
+                    {
+                        Log.Debug("User is the account owner");
+                        authenticated = true;
+                        isOwner = true;
+                    }
+                    else
+                    {
+                        authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                        Log.Debug("Friends list result = {0}", authenticated);
+                    }
+                    userId = signedIn.user.uuid;
+                }
+            }
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                // Local user?
+                userId = CustomUserMapper.ValidateUser(username, password)?.ToString();
+                if (userId != null)
+                {
+                    authenticated = true;
+                }
+            }
+
+            if (!authenticated)
+            {
+                return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
+            }
+
+
+            var m = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
+
+            var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
+            if (m.LoginGuid != Guid.Empty)
+            {
+                return CustomModuleExtensions.LoginAndRedirect(this, m.LoginGuid, null, retVal.ToString());
+            }
+            return Response.AsJson(new { result = true, url = retVal.ToString() });
+
+        }
 
         private async Task<Response> LoginUser()
         {
@@ -148,7 +352,7 @@ namespace Ombi.UI.Modules
                 Log.Debug("User is in denied list, not allowing them to authenticate");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-                return Response.AsRedirect(uri.ToString()); 
+                return Response.AsRedirect(uri.ToString());
             }
 
             var password = string.Empty;
@@ -232,7 +436,7 @@ namespace Ombi.UI.Modules
                     {
                         if (dbUser != null)
                         {
-                            var perms = (Permissions) dbUser.Permissions;
+                            var perms = (Permissions)dbUser.Permissions;
                             if (perms.HasFlag(Permissions.Administrator))
                             {
                                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
@@ -253,7 +457,7 @@ namespace Ombi.UI.Modules
                     }
                 }
 
-                if(loginGuid == Guid.Empty && settings.UserAuthentication)
+                if (loginGuid == Guid.Empty && settings.UserAuthentication)
                 {
                     var defaultSettings = UserManagementSettings.GetSettings();
                     loginGuid = Guid.NewGuid();
@@ -275,7 +479,7 @@ namespace Ombi.UI.Modules
                         UserAlias = string.Empty,
                         Permissions = (int)defaultPermissions,
                         Features = UserManagementHelper.GetPermissions(defaultSettings),
-                        Username = username, 
+                        Username = username,
                         EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run (in 30 mins)
                         LoginId = loginGuid.ToString()
                     });
@@ -286,7 +490,7 @@ namespace Ombi.UI.Modules
             {
                 var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
                 Session["TempMessage"] = Resources.UI.UserLogin_IncorrectUserPass;
-                return Response.AsRedirect(uri.ToString()); 
+                return Response.AsRedirect(uri.ToString());
             }
 
             var landingSettings = await LandingPageSettings.GetSettingsAsync();
@@ -310,10 +514,99 @@ namespace Ombi.UI.Modules
             {
                 return CustomModuleExtensions.LoginAndRedirect(this, loginGuid, null, retVal.ToString());
             }
-            return Response.AsRedirect(retVal.ToString()); 
+            return Response.AsRedirect(retVal.ToString());
         }
 
+        private class LoginModel
+        {
+            public Guid LoginGuid { get; set; }
+            public string UserId { get; set; }
+        }
 
+        private async Task<LoginModel> AuthenticationSetup(string userId, string username, int dateTimeOffset, Guid loginGuid, bool isOwner)
+        {
+            var m = new LoginModel();
+            var settings = await AuthService.GetSettingsAsync();
+
+            var localUsers = await CustomUserMapper.GetUsersAsync();
+            var plexLocalUsers = await PlexUserRepository.GetAllAsync();
+
+            UserLogins.Insert(new UserLogins { UserId = userId, Type = UserType.PlexUser, LastLoggedIn = DateTime.UtcNow });
+            Log.Debug("We are authenticated! Setting session.");
+            // Add to the session (Used in the BaseModules)
+            Session[SessionKeys.UsernameKey] = (string)username;
+            Session[SessionKeys.ClientDateTimeOffsetKey] = dateTimeOffset;
+
+            var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);
+            if (plexLocal != null)
+            {
+                loginGuid = Guid.Parse(plexLocal.LoginId);
+            }
+
+            var dbUser = localUsers.FirstOrDefault(x => x.UserName == username);
+            if (dbUser != null)
+            {
+                loginGuid = Guid.Parse(dbUser.UserGuid);
+            }
+
+            //if (loginGuid != Guid.Empty)
+            //{
+            //    if (!settings.UserAuthentication)// Do not need to auth make admin use login screen for now TODO remove this
+            //    {
+            //        if (dbUser != null)
+            //        {
+            //            var perms = (Permissions)dbUser.Permissions;
+            //            if (perms.HasFlag(Permissions.Administrator))
+            //            {
+            //                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+            //                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+            //                //return Response.AsRedirect(uri.ToString());
+            //            }
+            //        }
+            //        if (plexLocal != null)
+            //        {
+            //            var perms = (Permissions)plexLocal.Permissions;
+            //            if (perms.HasFlag(Permissions.Administrator))
+            //            {
+            //                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
+            //                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
+            //                //return Response.AsRedirect(uri.ToString());
+            //            }
+            //        }
+            //    }
+            //}
+
+            if (loginGuid == Guid.Empty && settings.UserAuthentication)
+            {
+                var defaultSettings = UserManagementSettings.GetSettings();
+                loginGuid = Guid.NewGuid();
+
+                var defaultPermissions = (Permissions)UserManagementHelper.GetPermissions(defaultSettings);
+                if (isOwner)
+                {
+                    // If we are the owner, add the admin permission.
+                    if (!defaultPermissions.HasFlag(Permissions.Administrator))
+                    {
+                        defaultPermissions += (int)Permissions.Administrator;
+                    }
+                }
+
+                // Looks like we still don't have an entry, so this user does not exist
+                await PlexUserRepository.InsertAsync(new PlexUsers
+                {
+                    PlexUserId = userId,
+                    UserAlias = string.Empty,
+                    Permissions = (int)defaultPermissions,
+                    Features = UserManagementHelper.GetPermissions(defaultSettings),
+                    Username = username,
+                    EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run (in 30 mins)
+                    LoginId = loginGuid.ToString()
+                });
+            }
+            m.LoginGuid = loginGuid;
+            m.UserId = userId;
+            return m;
+        }
 
         private Response Logout()
         {

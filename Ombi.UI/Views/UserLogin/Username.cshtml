@@ -1,0 +1,113 @@
+﻿@using Ombi.UI.Resources
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.AuthenticationSettings>
+
+<div class="home">
+    <h1>@UI.UserLogin_Title</h1>
+    <div>
+        <p>
+            @UI.UserLogin_Paragraph <span title="@UI.UserLogin_Paragraph_SpanHover"><i class="fa fa-question-circle"></i></span>
+        </p>
+    </div>
+    <div id="contentBody">
+        <form method="POST" id="usernameForm">
+            <input id="dateTimeOffset" name="DateTimeOffset" hidden="hidden" />
+            <div>
+                <div>
+                    <label>@UI.UserLogin_Username</label>
+                </div>
+                <div>
+                    <input id="username" class="form-control form-control-custom" type="text" name="Username" placeholder="@UI.UserLogin_Username_Placeholder" />
+                </div>
+            </div>
+            <br />
+
+            <button id="loginBtn" class="btn btn-success-outline" type="submit"><i class="fa fa-user fa-fw"></i> @UI.UserLogin_SignIn</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        var base = $('#baseUrl').val();
+
+        $('#contentBody').on('click', '#loginBtn', function (e) {
+            e.preventDefault();
+
+            var url = createBaseUrl(base, '/userlogin/login');
+            var $form = $('#usernameForm');
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+
+                        if (response.usePassword) {
+                            loadArea(response.html);
+
+                            return $('#dateTimeOffset').val(new Date().getTimezoneOffset());
+                        } else {
+                            return window.location.replace(response.url);
+                        }
+                    } else if (response.responseText) {
+                       return  $('#htmlId').html(response.responseText);
+                    }
+                    else {
+                        return generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    // This is for the CustomModuleExtensions.LoginAndRedirect
+                    // Since it's not a valid JSON return but we are logged in.
+                    // It's a bit hacky, but i've now documented it, so that's okay right?
+                    if (e.status === 200) {
+                        return window.location.reload();
+                    }
+                    console.log(e);
+                }
+            });
+        });
+
+
+        $('#contentBody').on('click', '#passwordBtn', function (e) {
+            e.preventDefault();
+
+            var url = createBaseUrl(base, '/userlogin/password');
+            var $form = $('#passwordForm');
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        window.location.replace(response.url);
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    // This is for the CustomModuleExtensions.LoginAndRedirect
+                    // Since it's not a valid JSON return but we are logged in.
+                    // It's a bit hacky, but i've now documented it, so that's okay right?
+                    if (e.status === 200) {
+                        return window.location.reload();
+                    }
+                    console.log(e);
+                }
+            });
+        });
+
+
+        function loadArea(html) {
+            var $body = $('#contentBody');
+            // Do some sliding?
+            $body.html(html);
+        }
+
+
+        $('#dateTimeOffset').val(new Date().getTimezoneOffset());
+    });
+</script>

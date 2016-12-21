@@ -32,5 +32,6 @@ namespace Ombi.Helpers
         public const string ClientDateTimeOffsetKey = "ClientDateTimeOffset";
         public const string UserWizardPlexAuth = nameof(UserWizardPlexAuth);
         public const string UserWizardMachineId = nameof(UserWizardMachineId);
+        public const string UserLoginName = nameof(UserLoginName);
     }
 }

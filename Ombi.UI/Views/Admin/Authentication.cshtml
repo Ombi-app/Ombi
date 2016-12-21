@@ -41,12 +41,12 @@
                         @if (Model.UsePassword)
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword" checked="checked">
-                            <label for="UsePassword">Require users to login with their passwords</label>
+                            <label id="passLabel" for="UsePassword">Require users to login with their passwords</label>
                         }
                         else
                         {
                             <input type="checkbox" id="UsePassword" name="UsePassword">
-                            <label for="UsePassword">Require users to login with their passwords</label>
+                            <label id="passLabel" for="UsePassword">Require users to login with their passwords</label>
                         }
             
                 </div>
@@ -84,6 +84,9 @@
 
         var base = '@Html.GetBaseUrl()';
 
+
+
+        changeDisabledStatus($('#UsePassword'), @Model.UserAuthentication.ToString().ToLower(), $('#passLabel'));
         if ($('#PlexAuthToken')) {
             loadUserList();
         }
@@ -94,7 +97,21 @@
         });
 
        
+        $('#mainForm').on('click', '#userAuth', function () {
+            var checked = this.checked;
+            changeDisabledStatus($('#UsePassword'), checked, $('#passLabel'));
+        });
 
+        function changeDisabledStatus($element, checked, $label) {
+            if (checked) {
+                $element.removeAttr("disabled");
+                $label.css("color", "");
+            } else {
+                $('#UsePassword').prop('checked', false);
+                $element.attr("disabled", "disabled");
+                $label.css("color", "grey");
+            }
+        }
 
 
         function loadUserList() {
