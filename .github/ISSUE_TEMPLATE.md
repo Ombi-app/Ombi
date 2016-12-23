@@ -25,7 +25,8 @@ Stable/Early Access Preview/development
 #### Applicable Logs (from `/logs/` directory or the Admin page):
 
 ```
-Logs go here (Please make sure you remove any personal information from the logs)
+
+(Logs go here, don't remove the ``` tags! ,Please make sure you remove any personal information from the logs)
 
 ```
 
