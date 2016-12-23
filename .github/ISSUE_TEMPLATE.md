@@ -26,7 +26,7 @@ Stable/Early Access Preview/development
 
 ```
 
-(Logs go here. Don't remove the ``` tags it's for showing your logs correctly. Please make sure you remove any personal information from the logs)
+(Logs go here. Don't remove the ``` tags for showing your logs correctly. Please make sure you remove any personal information from the logs)
 
 ```
 
