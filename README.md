@@ -60,7 +60,7 @@ Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has cr
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
 
-Please feed free to submit a pull request!
+Please feel free to submit a pull request!
 
 # Donation
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
