@@ -24,6 +24,7 @@
             <button id="loginBtn" class="btn btn-success-outline" type="submit"><i class="fa fa-user fa-fw"></i> @UI.UserLogin_SignIn</button>
         </form>
     </div>
+    <div id="contentBody2"></div>
 </div>
 
 <script>
@@ -49,7 +50,7 @@
 
                             return $('#dateTimeOffset').val(new Date().getTimezoneOffset());
                         } else {
-                            return window.location.replace(response.url);
+                            return window.location.replace(response.url); // This is probably not uses, it probably goes into the error callback
                         }
                     } else if (response.responseText) {
                        return  $('#htmlId').html(response.responseText);
@@ -71,7 +72,7 @@
         });
 
 
-        $('#contentBody').on('click', '#passwordBtn', function (e) {
+        $('#contentBody, #contentBody2').on('click', '#passwordBtn', function (e) {
             e.preventDefault();
 
             var url = createBaseUrl(base, '/userlogin/password');
@@ -103,8 +104,13 @@
 
         function loadArea(html) {
             var $body = $('#contentBody');
+            var $body2 = $('#contentBody2');
+            $body2.slideUp();
             // Do some sliding?
-            $body.html(html);
+            $body.fadeOut();
+            $body2.html(html);
+            $body2.fadeIn();
+            $body.html("");
         }
 
 

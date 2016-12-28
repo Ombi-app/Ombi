@@ -69,6 +69,48 @@ namespace Ombi.UI.Modules
             CustomUserMapper = custom;
             UserManagementSettings = userManagementSettings;
 
+            //Get["UserLoginIndex", "/", true] = async (x, ct) =>
+            //{
+            //    if (Request.Query["landing"] == null)
+            //    {
+            //        var s = await LandingPageSettings.GetSettingsAsync();
+            //        if (s.Enabled)
+            //        {
+            //            if (s.BeforeLogin) // Before login
+            //            {
+            //                if (string.IsNullOrEmpty(Username))
+            //                {
+            //                    // They are not logged in
+            //                    return
+            //                        Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
+            //                }
+            //                return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
+            //            }
+
+            //            // After login
+            //            if (string.IsNullOrEmpty(Username))
+            //            {
+            //                // Not logged in yet
+            //                return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString() + "?landing");
+            //            }
+            //            // Send them to landing
+            //            var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
+            //            return Context.GetRedirect(landingUrl);
+            //        }
+            //    }
+
+            //    if (!string.IsNullOrEmpty(Username) || IsAdmin)
+            //    {
+            //        var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
+            //        return Response.AsRedirect(url);
+            //    }
+            //    var settings = await AuthService.GetSettingsAsync();
+            //    return View["Index", settings];
+            //};
+
+            Post["/", true] = async (x, ct) => await LoginUser();
+            Get["/logout"] = x => Logout();
+
             Get["UserLoginIndex", "/", true] = async (x, ct) =>
             {
                 if (Request.Query["landing"] == null)
@@ -92,48 +134,6 @@ namespace Ombi.UI.Modules
                         {
                             // Not logged in yet
                             return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString() + "?landing");
-                        }
-                        // Send them to landing
-                        var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
-                        return Context.GetRedirect(landingUrl);
-                    }
-                }
-
-                if (!string.IsNullOrEmpty(Username) || IsAdmin)
-                {
-                    var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
-                    return Response.AsRedirect(url);
-                }
-                var settings = await AuthService.GetSettingsAsync();
-                return View["Index", settings];
-            };
-
-            Post["/", true] = async (x, ct) => await LoginUser();
-            Get["/logout"] = x => Logout();
-
-            Get["UserLoginUsernameIndex", "/login", true] = async (x, ct) =>
-            {
-                if (Request.Query["landing"] == null)
-                {
-                    var s = await LandingPageSettings.GetSettingsAsync();
-                    if (s.Enabled)
-                    {
-                        if (s.BeforeLogin) // Before login
-                        {
-                            if (string.IsNullOrEmpty(Username))
-                            {
-                                // They are not logged in
-                                return
-                                    Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
-                            }
-                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
-                        }
-
-                        // After login
-                        if (string.IsNullOrEmpty(Username))
-                        {
-                            // Not logged in yet
-                            return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginUsernameIndex").ToString() + "?landing");
                         }
                         // Send them to landing
                         var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
@@ -215,7 +215,7 @@ namespace Ombi.UI.Modules
                 authenticated = true;
             }
 
-            if (settings.UsePassword || isOwner)
+            if (settings.UsePassword || isOwner || Security.HasPermissions(username, Permissions.Administrator))
             {
                 Session[SessionKeys.UserLoginName] = username;
 
