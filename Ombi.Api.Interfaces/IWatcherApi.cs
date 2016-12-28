@@ -31,7 +31,6 @@ using Ombi.Api.Models.Watcher;
 
 namespace Ombi.Api.Interfaces
 {
-{
     public interface IWatcherApi
     {
         WatcherAddMovieResult AddMovie(string imdbId, string apiKey, Uri baseUrl);

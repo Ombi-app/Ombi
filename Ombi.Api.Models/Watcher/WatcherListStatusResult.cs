@@ -51,7 +51,8 @@ namespace Ombi.Api.Models.Watcher
 
     public class Quality
     {
-        public Quality2 Quality { get; set; }
+        [DeserializeAs(Name = "Quality")]
+        public Quality2 quality { get; set; }
         public Filters Filters { get; set; }
     }
 
