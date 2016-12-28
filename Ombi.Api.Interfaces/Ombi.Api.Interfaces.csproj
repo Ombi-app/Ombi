@@ -55,6 +55,7 @@
     <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
     <Compile Include="ISonarrApi.cs" />
+    <Compile Include="IWatcherApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

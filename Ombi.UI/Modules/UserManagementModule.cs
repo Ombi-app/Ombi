@@ -406,8 +406,10 @@ namespace Ombi.UI.Modules
 
         private UserManagementUsersViewModel MapPlexUser(UserFriends plexInfo, PlexUsers dbUser, DateTime lastLoggedIn)
         {
+            var newUser = false;
             if (dbUser == null)
             {
+                newUser = true;
                 dbUser = new PlexUsers();
             }
             var features = (Features)dbUser?.Features;
@@ -416,8 +418,8 @@ namespace Ombi.UI.Modules
             var m = new UserManagementUsersViewModel
             {
                 Id = plexInfo.Id,
-                PermissionsFormattedString = permissions == 0 ? "None" : permissions.ToString(),
-                FeaturesFormattedString = features.ToString(),
+                PermissionsFormattedString = newUser ? "Processing..." :( permissions == 0 ? "None" : permissions.ToString()),
+                FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
                 Username = plexInfo.Username,
                 Type = UserType.PlexUser,
                 EmailAddress = plexInfo.Email,
@@ -437,8 +439,10 @@ namespace Ombi.UI.Modules
 
         private UserManagementUsersViewModel MapPlexAdmin(PlexAccount plexInfo, PlexUsers dbUser, DateTime lastLoggedIn)
         {
+            var newUser = false;
             if (dbUser == null)
             {
+                newUser = true;
                 dbUser = new PlexUsers();
             }
             var features = (Features)dbUser?.Features;
@@ -447,8 +451,8 @@ namespace Ombi.UI.Modules
             var m = new UserManagementUsersViewModel
             {
                 Id = plexInfo.Id,
-                PermissionsFormattedString = permissions == 0 ? "None" : permissions.ToString(),
-                FeaturesFormattedString = features.ToString(),
+                PermissionsFormattedString = newUser ? "Processing..." : (permissions == 0 ? "None" : permissions.ToString()),
+                FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
                 Username = plexInfo.Username,
                 Type = UserType.PlexUser,
                 EmailAddress = plexInfo.Email,

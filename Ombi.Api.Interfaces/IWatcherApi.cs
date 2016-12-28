@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    File: IWatcherApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,27 +25,17 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using System;
+using System.Collections.Generic;
+using Ombi.Api.Models.Watcher;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Interfaces
 {
-    public class ApiModule : NinjectModule
+{
+    public interface IWatcherApi
     {
-        public override void Load()
-        {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-        }
+        WatcherAddMovieResult AddMovie(string imdbId, string apiKey, Uri baseUrl);
+        List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl);
+        List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl, string imdbId);
     }
 }
