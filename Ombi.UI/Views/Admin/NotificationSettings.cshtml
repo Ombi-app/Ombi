@@ -1,0 +1,83 @@
+﻿@using System.Linq
+@using Ombi.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.NotificationSettingsV2>
+@Html.Partial("Shared/Partial/_Sidebar")
+
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Notification Settings</legend>
+            
+             <!--Accordion Item-->
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="0headingOne">
+                            <h4 class="panel-title">
+                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#0collapseOne" aria-controls="0collapseOne">
+                                    New Request
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="0collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="0headingOne">
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="EmailNotification[0].Subject" class="control-label">Subject</label>
+                                    <div>
+                                        <input type="text" class="form-control form-control-custom " id="EmailNotification[0].Subject" name="EmailNotification0.Subject" value="@(Model.EmailNotification[0].Subject)">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="EmailNotification[0].Body" class="control-label">Body</label>
+                                    <div>
+                                        <input type="text" class="form-control form-control-custom " id="EmailNotification[0].Body" name="EmailNotification0.Body" value="@(Model.EmailNotification[0].Body)">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+
+    </form>
+</div>
+
+<script>
+    $(function () {
+
+     
+        var base = '@Html.GetBaseUrl()';
+        $('#save').click(function (e) {
+            e.preventDefault();
+
+            var $form = $("#mainForm");
+            var data = $form.serialize();
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+       
+    });
+</script>

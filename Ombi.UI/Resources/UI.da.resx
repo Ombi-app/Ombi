@@ -1,0 +1,492 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="UserLogin_Title" xml:space="preserve">
+    <value>Log ind</value>
+  </data>
+  <data name="UserLogin_Paragraph" xml:space="preserve">
+    <value>Ønsker du at se en film eller tv-show, men det er i øjeblikket ikke på Plex? Log nedenfor med dit Plex.tv brugernavn og password !!</value>
+  </data>
+  <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
+    <value>Dine login-oplysninger bruges kun til at godkende din Plex konto.</value>
+  </data>
+  <data name="UserLogin_Username" xml:space="preserve">
+    <value>Plex.tv Brugernavn</value>
+  </data>
+  <data name="UserLogin_Username_Placeholder" xml:space="preserve">
+    <value>Brugernavn</value>
+  </data>
+  <data name="UserLogin_Password" xml:space="preserve">
+    <value>Adgangskode</value>
+  </data>
+  <data name="UserLogin_SignIn" xml:space="preserve">
+    <value>log på</value>
+  </data>
+  <data name="Javascript_SomethingWentWrong" xml:space="preserve">
+    <value>Noget gik galt</value>
+  </data>
+  <data name="Javascript_Success" xml:space="preserve">
+    <value>Fuldført</value>
+  </data>
+  <data name="Layout_Title" xml:space="preserve">
+    <value>Ombi</value>
+  </data>
+  <data name="Layout_Search" xml:space="preserve">
+    <value>Søg</value>
+  </data>
+  <data name="Layout_Requests" xml:space="preserve">
+    <value>Anmodninger</value>
+  </data>
+  <data name="Layout_Issues" xml:space="preserve">
+    <value>Issues</value>
+  </data>
+  <data name="Layout_Donate" xml:space="preserve">
+    <value>STØT</value>
+  </data>
+  <data name="Layout_Admin" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="Layout_Settings" xml:space="preserve">
+    <value>Indstillinger</value>
+  </data>
+  <data name="Layout_ChangePassword" xml:space="preserve">
+    <value>Skift adgangskode</value>
+  </data>
+  <data name="Layout_Logout" xml:space="preserve">
+    <value>Log ud</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
+    <value>Der er en ny opdatering tilgængelig! Klik</value>
+  </data>
+  <data name="Layout_English" xml:space="preserve">
+    <value>Dansk</value>
+  </data>
+  <data name="Layout_Spanish" xml:space="preserve">
+    <value>Spansk</value>
+  </data>
+  <data name="Layout_German" xml:space="preserve">
+    <value>Tysk</value>
+  </data>
+  <data name="Layout_Danish" xml:space="preserve">
+    <value>Dansk</value>
+  </data>
+  <data name="Layout_Portuguese" xml:space="preserve">
+    <value>Portugisisk</value>
+  </data>
+  <data name="Layout_Swedish" xml:space="preserve">
+    <value>Swedish</value>
+  </data>
+  <data name="Layout_Italian" xml:space="preserve">
+    <value>Italiensk</value>
+  </data>
+  <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
+    <value>her</value>
+  </data>
+  <data name="Layout_Dutch" xml:space="preserve">
+    <value>Hollandsk</value>
+  </data>
+  <data name="Search_Movies" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Search_TvShows" xml:space="preserve">
+    <value>TV-shows</value>
+  </data>
+  <data name="Search_Albums" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Search_Paragraph" xml:space="preserve">
+    <value>Ønsker at se noget, der ikke i øjeblikket på Plex ?! Intet problem! Bare søge efter det nedenfor og anmode den !</value>
+  </data>
+  <data name="Search_Title" xml:space="preserve">
+    <value>Søg</value>
+  </data>
+  <data name="Search_Suggestions" xml:space="preserve">
+    <value>Forslag</value>
+  </data>
+  <data name="Search_ComingSoon" xml:space="preserve">
+    <value>Kommer snart</value>
+  </data>
+  <data name="Search_InTheaters" xml:space="preserve">
+    <value>Teatre</value>
+  </data>
+  <data name="Search_SendNotificationText" xml:space="preserve">
+    <value>Send mig en meddelelse, når emner, jeg har anmodet er blevet tilføjet</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>Gem</value>
+  </data>
+  <data name="Search_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Search_Requested" xml:space="preserve">
+    <value>Forespørgsel sendt</value>
+  </data>
+  <data name="Search_Request" xml:space="preserve">
+    <value>Forespørgsel</value>
+  </data>
+  <data name="Search_AllSeasons" xml:space="preserve">
+    <value>Alle sæsoner</value>
+  </data>
+  <data name="Search_FirstSeason" xml:space="preserve">
+    <value>Første sæson</value>
+  </data>
+  <data name="Search_LatestSeason" xml:space="preserve">
+    <value>Sidste sæson</value>
+  </data>
+  <data name="Search_SelectSeason" xml:space="preserve">
+    <value>Vælg</value>
+  </data>
+  <data name="Search_ReportIssue" xml:space="preserve">
+    <value>Rapport Issue</value>
+  </data>
+  <data name="Issues_WrongAudio" xml:space="preserve">
+    <value>Forkert lyd</value>
+  </data>
+  <data name="Issues_NoSubs" xml:space="preserve">
+    <value>Undertekster</value>
+  </data>
+  <data name="Issues_WrongContent" xml:space="preserve">
+    <value>Forkert indhold</value>
+  </data>
+  <data name="Issues_Playback" xml:space="preserve">
+    <value>Playback Issues</value>
+  </data>
+  <data name="Issues_Other" xml:space="preserve">
+    <value>Andet</value>
+  </data>
+  <data name="Search_TrackCount" xml:space="preserve">
+    <value>Track Count</value>
+  </data>
+  <data name="Search_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Search_Modal_SeasonsTitle" xml:space="preserve">
+    <value>Årstid</value>
+  </data>
+  <data name="Common_Close" xml:space="preserve">
+    <value>Luk</value>
+  </data>
+  <data name="Issues_Modal_Title" xml:space="preserve">
+    <value>Tilføj et problem!</value>
+  </data>
+  <data name="Issues_Modal_Save" xml:space="preserve">
+    <value>Gem ændringer</value>
+  </data>
+  <data name="Search_Season" xml:space="preserve">
+    <value>Sæson</value>
+  </data>
+  <data name="Layout_Welcome" xml:space="preserve">
+    <value>Velkommen</value>
+  </data>
+  <data name="Requests_Title" xml:space="preserve">
+    <value>Anmodninger</value>
+  </data>
+  <data name="Requests_Paragraph" xml:space="preserve">
+    <value>Nedenfor kan du se dine og alle andre anmodninger, samt deres download og godkendelse status.</value>
+  </data>
+  <data name="Requests_MoviesTabTitle" xml:space="preserve">
+    <value>Film</value>
+  </data>
+  <data name="Requests_TvShowTabTitle" xml:space="preserve">
+    <value>TV-shows</value>
+  </data>
+  <data name="Requests_AlbumsTabTitle" xml:space="preserve">
+    <value>Album</value>
+  </data>
+  <data name="Requests_DeleteMovies" xml:space="preserve">
+    <value>Slet Film</value>
+  </data>
+  <data name="Requests_ApproveMovies" xml:space="preserve">
+    <value>Godkend film</value>
+  </data>
+  <data name="Requests_DeleteTVShows" xml:space="preserve">
+    <value>Slet tv-udsendelser</value>
+  </data>
+  <data name="Requests_ApproveTvShows" xml:space="preserve">
+    <value>Godkend tv-udsendelser</value>
+  </data>
+  <data name="Requests_DeleteMusic" xml:space="preserve">
+    <value>Slet Music</value>
+  </data>
+  <data name="Requests_ApproveMusic" xml:space="preserve">
+    <value>Godkend Music</value>
+  </data>
+  <data name="Requests_Filter_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="Requests_Filter_Approved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Filter_NotApproved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Filter_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Requests_Filter_NotAvailable" xml:space="preserve">
+    <value>Ikke tilgængelig</value>
+  </data>
+  <data name="Requests_Filter_Released" xml:space="preserve">
+    <value>Udgivet</value>
+  </data>
+  <data name="Requests_Filter_NotReleased" xml:space="preserve">
+    <value>Udgivet:</value>
+  </data>
+  <data name="Requests_Order" xml:space="preserve">
+    <value>Ordrer</value>
+  </data>
+  <data name="Requests_Filter" xml:space="preserve">
+    <value>Filter</value>
+  </data>
+  <data name="Requests_Order_LatestRequests" xml:space="preserve">
+    <value>Seneste anmodninger</value>
+  </data>
+  <data name="Requests_Order_OldestRequests" xml:space="preserve">
+    <value>Ældste anmodninger</value>
+  </data>
+  <data name="Requests_Order_LatestReleases" xml:space="preserve">
+    <value>Nyeste udgivelser</value>
+  </data>
+  <data name="Requests_Order_OldestReleases" xml:space="preserve">
+    <value>Ældste udgivelser</value>
+  </data>
+  <data name="Requests_ReleaseDate" xml:space="preserve">
+    <value>Frigivelsesdato</value>
+  </data>
+  <data name="Requests_SeasonsRequested" xml:space="preserve">
+    <value>Seasons Anmodet</value>
+  </data>
+  <data name="Requests_RequestedBy" xml:space="preserve">
+    <value>Anmodet Af</value>
+  </data>
+  <data name="Requests_RequestedDate" xml:space="preserve">
+    <value>Ønskede dato</value>
+  </data>
+  <data name="Requests_ToggleDropdown" xml:space="preserve">
+    <value>Toggle Dropdown</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>Godkend</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>Fjern</value>
+  </data>
+  <data name="Requests_MarkUnavailable" xml:space="preserve">
+    <value>ikke tilgængelig</value>
+  </data>
+  <data name="Requests_MarkAvailable" xml:space="preserve">
+    <value>Mark tilgængelig</value>
+  </data>
+  <data name="Common_Approved" xml:space="preserve">
+    <value>Godkendt</value>
+  </data>
+  <data name="Requests_Available" xml:space="preserve">
+    <value>Tilgængelig</value>
+  </data>
+  <data name="Issues_Issue" xml:space="preserve">
+    <value>Aktieemission</value>
+  </data>
+  <data name="Search_SuccessfullyAdded" xml:space="preserve">
+    <value>blev føjet !!</value>
+  </data>
+  <data name="Search_AlreadyRequested" xml:space="preserve">
+    <value>allerede er blevet anmodet !!</value>
+  </data>
+  <data name="Search_CouldNotCheckPlex" xml:space="preserve">
+    <value>Vi kunne ikke kontrollere, om {0} er i Plex, er du sikker på det er korrekt setup ?!</value>
+  </data>
+  <data name="Search_CouchPotatoError" xml:space="preserve">
+    <value>Noget gik galt tilføjer filmen til CouchPotato! Tjek venligst din opsætning.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
+    <value>Du har nået din ugentlige anmodning grænse for film! Kontakt din administrator.!</value>
+  </data>
+  <data name="Search_AlreadyInPlex" xml:space="preserve">
+    <value>er allerede i Plex !!</value>
+  </data>
+  <data name="Search_SickrageError" xml:space="preserve">
+    <value>Noget gik galt tilføjer filmen til SickRage! Tjek venligst din opsætning.!</value>
+  </data>
+  <data name="Search_TvNotSetUp" xml:space="preserve">
+    <value>Anmodningen fra tv-shows er ikke indstillet korrekt. Kontakt din administrator.!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
+    <value>Du har nået din ugentlige anmodning grænse for Albums! Kontakt din administrator.!</value>
+  </data>
+  <data name="Search_MusicBrainzError" xml:space="preserve">
+    <value>Vi kunne ikke finde kunstneren på MusicBrainz. Prøv venligst igen senere, eller kontakt din administrator!</value>
+  </data>
+  <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
+    <value>Du har nået din ugentlige anmodning grænse for tv-shows! Kontakt din administrator.!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Beklager, men denne funktionalitet er i øjeblikket kun for brugere med Plex konti!</value>
+  </data>
+  <data name="Search_ErrorNotEnabled" xml:space="preserve">
+    <value>Beklager, men din administrator har endnu ikke gjort det muligt denne funktionalitet.!</value>
+  </data>
+  <data name="Search_NotificationError" xml:space="preserve">
+    <value>Vi kunne ikke fjerne denne meddelelse, fordi du aldrig har haft det !!</value>
+  </data>
+  <data name="Common_CouldNotSave" xml:space="preserve">
+    <value>Kunne ikke gemme, prøv igen!</value>
+  </data>
+  <data name="Layout_French" xml:space="preserve">
+    <value>Fransk</value>
+  </data>
+  <data name="Search_SelectEpisode" xml:space="preserve">
+    <value>Vælg Episode</value>
+  </data>
+  <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
+    <value>Forkert bruger eller adgangskode</value>
+  </data>
+  <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
+    <value>Der er ingen oplysninger om udgivelsesdatoen</value>
+  </data>
+  <data name="Search_ViewInPlex" xml:space="preserve">
+    <value>Udsigt I Plex</value>
+  </data>
+  <data name="Custom_Donation_Default" xml:space="preserve">
+    <value>Doner til Bibliotek vedligeholder</value>
+  </data>
+  <data name="Search_Available_on_plex" xml:space="preserve">
+    <value>Tilgængelig på</value>
+  </data>
+  <data name="Search_Movie_Status" xml:space="preserve">
+    <value>Movie status</value>
+  </data>
+  <data name="Search_Not_Requested_Yet" xml:space="preserve">
+    <value>Ikke anmodet endnu</value>
+  </data>
+  <data name="Search_Pending_approval" xml:space="preserve">
+    <value>Afventer godkendelse</value>
+  </data>
+  <data name="Search_Processing_Request" xml:space="preserve">
+    <value>Behandler forespørgsel</value>
+  </data>
+  <data name="Search_Request_denied" xml:space="preserve">
+    <value>Anmodning afvist!</value>
+  </data>
+  <data name="Search_TV_Show_Status" xml:space="preserve">
+    <value>Tv-show status!</value>
+  </data>
+  <data name="Layout_CacherRunning" xml:space="preserve">
+    <value>En baggrund proces kører i øjeblikket, så der kan være nogle uventede problemer. Dette bør ikke tage for lang tid.</value>
+  </data>
+</root>

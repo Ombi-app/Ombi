@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{566EFA49-68F8-4716-9693-A6B3F2624DEA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ombi.Services</RootNamespace>
+    <AssemblyName>Ombi.Services</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.1.50.0-beta8\lib\net45\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Nancy, Version=1.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Nancy.1.4.3\lib\net40\Nancy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="BouncyCastle, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>..\packages\MimeKit.1.2.22\lib\net45\BouncyCastle.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>..\packages\Common.Logging.3.0.0\lib\net40\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Common.Logging.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e">
+      <HintPath>..\packages\Common.Logging.Core.3.0.0\lib\net40\Common.Logging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="MailKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=4e064fe7c44a8f1b">
+      <HintPath>..\packages\MailKit.1.2.21\lib\net451\MailKit.dll</HintPath>
+    </Reference>
+    <Reference Include="MimeKit, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bede1c8a46c66814">
+      <HintPath>..\packages\MimeKit.1.2.22\lib\net45\MimeKit.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite">
+      <HintPath>..\Assemblies\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+    <Reference Include="Quartz, Version=2.3.3.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4">
+      <HintPath>..\packages\Quartz.2.3.3\lib\net40\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="TMDbLib, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Interfaces\IJobRecord.cs" />
+    <Compile Include="Interfaces\INotificationEngine.cs" />
+    <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
+    <Compile Include="Jobs\IPlexContentCacher.cs" />
+    <Compile Include="Jobs\IRecentlyAdded.cs" />
+    <Compile Include="Jobs\JobRecord.cs" />
+    <Compile Include="Jobs\JobNames.cs" />
+    <Compile Include="Jobs\PlexContentCacher.cs" />
+    <Compile Include="Jobs\PlexEpisodeCacher.cs" />
+    <Compile Include="Jobs\RecentlyAdded.cs" />
+    <Compile Include="Jobs\StoreBackup.cs" />
+    <Compile Include="Jobs\PlexUserChecker.cs" />
+    <Compile Include="Jobs\StoreCleanup.cs" />
+    <Compile Include="Jobs\CouchPotatoCacher.cs" />
+    <Compile Include="Jobs\PlexAvailabilityChecker.cs" />
+    <Compile Include="Jobs\SickRageCacher.cs" />
+    <Compile Include="Jobs\SonarrCacher.cs" />
+    <Compile Include="Jobs\Templates\RecentlyAddedTemplate.cs" />
+    <Compile Include="Jobs\FaultQueueHandler.cs" />
+    <Compile Include="Jobs\UserRequestLimitResetter.cs" />
+    <Compile Include="Models\PlexAlbum.cs" />
+    <Compile Include="Models\PlexEpisodeModel.cs" />
+    <Compile Include="Models\PlexMovie.cs" />
+    <Compile Include="Models\PlexTvShow.cs" />
+    <Compile Include="Interfaces\ISickRageCacher.cs" />
+    <Compile Include="Interfaces\ISonarrCacher.cs" />
+    <Compile Include="Interfaces\ICouchPotatoCacher.cs" />
+    <Compile Include="Interfaces\IAvailabilityChecker.cs" />
+    <Compile Include="Interfaces\IIntervals.cs" />
+    <Compile Include="Interfaces\INotification.cs" />
+    <Compile Include="Interfaces\INotificationService.cs" />
+    <Compile Include="Models\SonarrCachedResult.cs" />
+    <Compile Include="Notification\EmailMessageNotification.cs" />
+    <Compile Include="Notification\NotificationEngine.cs" />
+    <Compile Include="Notification\NotificationModel.cs" />
+    <Compile Include="Notification\NotificationService.cs" />
+    <Compile Include="Notification\PushoverNotification.cs" />
+    <Compile Include="Notification\PushbulletNotification.cs" />
+    <Compile Include="Notification\SlackNotification.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Interfaces\Ombi.Api.Interfaces.csproj">
+      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
+      <Name>Ombi.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Api.Models\Ombi.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>Ombi.Api.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj">
+      <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
+      <Name>Ombi.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj">
+      <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
+      <Name>Ombi.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj">
+      <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
+      <Name>Ombi.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj">
+      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
+      <Name>Ombi.Store</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Jobs\Templates\RecentlyAddedTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

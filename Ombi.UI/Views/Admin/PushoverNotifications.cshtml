@@ -1,0 +1,110 @@
+﻿@using Ombi.UI.Helpers
+@Html.Partial("Shared/Partial/_Sidebar")
+
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Pushover Notifications</legend>
+
+            <div class="form-group">
+                <div class="checkbox">
+             
+                        @if (Model.Enabled)
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
+                        }
+                   
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="AccessToken" class="control-label">API Key</label>
+                <small class="control-label">Enter your API Key from Pushover.</small>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="AccessToken" name="AccessToken"  value="@Model.AccessToken">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="UserToken" class="control-label">User Token</label>
+                <small class="control-label">Your user or group key from Pushover.</small>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="UserToken" name="UserToken" value="@Model.UserToken">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button id="testPushover" type="submit" class="btn btn-primary-outline">Test <div id="spinner"></div></button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script>
+    $(function () {
+
+        var base = '@Html.GetBaseUrl()';
+        $('#save').click(function (e) {
+            e.preventDefault();
+
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+        				$('#spinner').attr("class", "fa fa-check");
+                    } else {
+                        generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+        				$('#spinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+
+        $('#testPushover').click(function (e) {
+            e.preventDefault();
+
+            var url = createBaseUrl(base, '/admin/testpushovernotification');
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: url,
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+    });
+</script>
