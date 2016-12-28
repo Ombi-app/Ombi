@@ -472,7 +472,10 @@ namespace Ombi.Services.Jobs
                 {
                     foreach (var user in newletterSettings.CustomUsersEmailAddresses)
                     {
-                        message.Bcc.Add(new MailboxAddress(user, user));
+                        if (!string.IsNullOrEmpty(user))
+                        {
+                            message.Bcc.Add(new MailboxAddress(user, user));
+                        }
                     }
                 }
             }

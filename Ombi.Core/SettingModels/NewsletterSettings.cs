@@ -36,10 +36,21 @@ namespace Ombi.Core.SettingModels
         public bool SendRecentlyAddedEmail { get; set; }
         public bool SendToPlexUsers { get; set; }
         public string CustomUsers { get; set; }
-        
+
 
 
         [JsonIgnore]
-        public IEnumerable<string> CustomUsersEmailAddresses => CustomUsers.SplitEmailsByDelimiter(';');
+        public IEnumerable<string> CustomUsersEmailAddresses
+        {
+            get
+            {
+                var retVal = (IEnumerable<string>)new List<string>();
+                if (!string.IsNullOrEmpty(CustomUsers))
+                {
+                    retVal = CustomUsers.SplitEmailsByDelimiter(';');
+                }
+                return retVal;
+            }
+        } 
     }
 }

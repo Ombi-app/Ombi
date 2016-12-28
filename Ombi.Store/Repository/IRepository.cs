@@ -87,5 +87,8 @@ namespace Ombi.Store.Repository
         Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func);
         void DeleteAll(string tableName);
         Task DeleteAllAsync(string tableName);
+
+        T Custom(Func<IDbConnection, T> func);
+        Task<T> CustomAsync(Func<IDbConnection, Task<T>> func);
     }
 }

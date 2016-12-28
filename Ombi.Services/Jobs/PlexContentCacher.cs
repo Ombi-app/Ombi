@@ -234,64 +234,124 @@ namespace Ombi.Services.Jobs
 
                     var movies = GetPlexMovies(results);
 
-                    // Time to destroy the plex movies from the DB
-                    PlexContent.Custom(connection =>
-                    {
-                        connection.Open();
-                        connection.Query("delete from PlexContent where type = @type", new { type = 0 });
-                        return new List<PlexContent>();
-                    });
+                    //// Time to destroy the plex movies from the DB
+                    //PlexContent.Custom(connection =>
+                    //{
+                    //    connection.Open();
+                    //    connection.Query("delete from PlexContent where type = @type", new { type = 0 });
+                    //    return new List<PlexContent>();
+                    //});
 
                     foreach (var m in movies)
                     {
-                        PlexContent.Insert(new PlexContent
+                        if (string.IsNullOrEmpty(m.ProviderId))
                         {
-                            ProviderId = m.ProviderId,
-                            ReleaseYear = m.ReleaseYear ?? string.Empty,
-                            Title = m.Title,
-                            Type = Store.Models.Plex.PlexMediaType.Movie,
-                            Url = m.Url
+                            Log.Error("Provider Id on movie {0} is null",m.Title);
+                            continue;
+                        }
+
+                        // Check if it exists
+                        var item = PlexContent.Custom(connection =>
+                        {
+                            connection.Open();
+                            var media =  connection.QueryFirstOrDefault<PlexContent>("select * from PlexContent where ProviderId = @ProviderId and type = @type", new { m.ProviderId, type = 0 });
+                            connection.Dispose();
+                            return media;
                         });
+
+                        if (item == null)
+                        { 
+                            // Doesn't exist, insert it
+                            PlexContent.Insert(new PlexContent
+                            {
+                                ProviderId = m.ProviderId,
+                                ReleaseYear = m.ReleaseYear ?? string.Empty,
+                                Title = m.Title,
+                                Type = Store.Models.Plex.PlexMediaType.Movie,
+                                Url = m.Url
+                            });
+                        }
                     }
+
                     var tv = GetPlexTvShows(results);
-                    // Time to destroy the plex tv from the DB
-                    PlexContent.Custom(connection =>
-                    {
-                        connection.Open();
-                        connection.Query("delete from PlexContent where type = @type", new { type = 1 });
-                        return new List<PlexContent>();
-                    });
+                    //// Time to destroy the plex tv from the DB
+                    //PlexContent.Custom(connection =>
+                    //{
+                    //    connection.Open();
+                    //    connection.Query("delete from PlexContent where type = @type", new { type = 1 });
+                    //    return new List<PlexContent>();
+                    //});
                     foreach (var t in tv)
                     {
-                        PlexContent.Insert(new PlexContent
+                        if (string.IsNullOrEmpty(t.ProviderId))
                         {
-                            ProviderId = t.ProviderId,
-                            ReleaseYear = t.ReleaseYear ?? string.Empty,
-                            Title = t.Title,
-                            Type = Store.Models.Plex.PlexMediaType.Show,
-                            Url = t.Url,
-                            Seasons = ByteConverterHelper.ReturnBytes(t.Seasons)
+                            Log.Error("Provider Id on tv {0} is null", t.Title);
+                            continue;
+                        }
+
+
+                        // Check if it exists
+                        var item = PlexContent.Custom(connection =>
+                        {
+                            connection.Open();
+                            var media = connection.QueryFirstOrDefault<PlexContent>("select * from PlexContent where ProviderId = @ProviderId and type = @type", new { t.ProviderId, type = 1 });
+                            connection.Dispose();
+                            return media;
                         });
+
+                        if (item == null)
+                        {
+                            PlexContent.Insert(new PlexContent
+                            {
+                                ProviderId = t.ProviderId,
+                                ReleaseYear = t.ReleaseYear ?? string.Empty,
+                                Title = t.Title,
+                                Type = Store.Models.Plex.PlexMediaType.Show,
+                                Url = t.Url,
+                                Seasons = ByteConverterHelper.ReturnBytes(t.Seasons)
+                            });
+                        }
                     }
 
                     var albums = GetPlexAlbums(results);
-                    // Time to destroy the plex movies from the DB
-                    PlexContent.Custom(connection =>
-                    {
-                        connection.Open();
-                        connection.Query("delete from PlexContent where type = @type", new { type = 2 });
-                        return new List<PlexContent>();
-                    });
+                    //// Time to destroy the plex movies from the DB
+                    //PlexContent.Custom(connection =>
+                    //{
+                    //    connection.Open();
+                    //    connection.Query("delete from PlexContent where type = @type", new { type = 2 });
+                    //    return new List<PlexContent>();
+                    //});
+
                     foreach (var a in albums)
                     {
-                        PlexContent.Insert(new PlexContent
+                        if (string.IsNullOrEmpty(a.ProviderId))
                         {
-                            ProviderId = a.ProviderId,
-                            ReleaseYear = a.ReleaseYear ?? string.Empty,
-                            Title = a.Title,
-                            Type = Store.Models.Plex.PlexMediaType.Artist,
-                            Url = a.Url
+                            Log.Error("Provider Id on album {0} is null", a.Title);
+                            continue;
+                        }
+
+
+                        // Check if it exists
+                        var item = PlexContent.Custom(connection =>
+                        {
+                            connection.Open();
+                            var media = connection.QueryFirstOrDefault<PlexContent>("select * from PlexContent where ProviderId = @ProviderId and type = @type", new { a.ProviderId, type = 2 });
+                            connection.Dispose();
+                            return media;
                         });
+
+                        if (item == null)
+                        {
+
+                            PlexContent.Insert(new PlexContent
+                            {
+                                ProviderId = a.ProviderId,
+                                ReleaseYear = a.ReleaseYear ?? string.Empty,
+                                Title = a.Title,
+                                Type = Store.Models.Plex.PlexMediaType.Artist,
+                                Url = a.Url
+                            });
+                        }
                     }
                 }
             }

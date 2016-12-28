@@ -65,7 +65,22 @@ namespace Ombi.Store.Repository
             }
         }
 
+        public T Custom(Func<IDbConnection, T> func)
+        {
+            using (var cnn = Connection)
+            {
+                return func(cnn);
+            }
+        }
+
         public async Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func)
+        {
+            using (var cnn = Connection)
+            {
+                return await func(cnn);
+            }
+        }
+        public async Task<T> CustomAsync(Func<IDbConnection, Task<T>> func)
         {
             using (var cnn = Connection)
             {

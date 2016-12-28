@@ -81,7 +81,11 @@ namespace Ombi.Services.Notification
                             continue;
                         }
 
-                        selectedUsers.Add(requestUser);
+                        // Make sure we do not already have the user
+                        if (!selectedUsers.Contains(requestUser))
+                        {
+                            selectedUsers.Add(requestUser);
+                        }
                     }
 
                     //var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);

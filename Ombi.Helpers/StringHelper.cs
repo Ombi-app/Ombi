@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -78,22 +79,25 @@ namespace Ombi.Helpers
 
             while (delimiterIndex >= 0)
             {
-                delimiterIndex = input.IndexOf(delimiter, startIndex);
-                string substring = input;
-                if (delimiterIndex > 0)
+                if (input != null)
                 {
-                    substring = input.Substring(0, delimiterIndex).Trim();
-                }
+                    delimiterIndex = input.IndexOf(delimiter, startIndex);
+                    var substring = input;
+                    if (delimiterIndex > 0)
+                    {
+                        substring = input.Substring(0, delimiterIndex).Trim();
+                    }
 
-                if (!substring.Contains("\"") || substring.IndexOf("\"") != substring.LastIndexOf("\""))
-                {
-                    yield return substring;
-                    input = input.Substring(delimiterIndex + 1).Trim();
-                    startIndex = 0;
-                }
-                else
-                {
-                    startIndex = delimiterIndex + 1;
+                    if (!substring.Contains("\"") || substring.IndexOf("\"", StringComparison.Ordinal) != substring.LastIndexOf("\"", StringComparison.Ordinal))
+                    {
+                        yield return substring;
+                        input = input.Substring(delimiterIndex + 1).Trim();
+                        startIndex = 0;
+                    }
+                    else
+                    {
+                        startIndex = delimiterIndex + 1;
+                    }
                 }
             }
         }
