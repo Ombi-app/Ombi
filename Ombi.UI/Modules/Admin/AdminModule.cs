@@ -672,7 +672,7 @@ namespace Ombi.UI.Modules.Admin
                 NotificationType = NotificationType.Test,
                 DateTime = DateTime.Now
             };
-            var currentSettings = await PushbulletService.GetSettingsAsync();
+            var currentSettings = await PushoverService.GetSettingsAsync();
             try
             {
                 NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));

@@ -167,6 +167,9 @@ namespace Ombi.Services.Jobs
                 // Main Plex user
                 var dbMainAcc = dbUsers.FirstOrDefault(x => x.Username.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
                 var localMainAcc = localUsers.FirstOrDefault(x => x.UserName.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
+                
+                // TODO if admin acc does exist, check if we need to update it
+
 
                 // Create the local admin account if it doesn't already exist
                 if (dbMainAcc == null && localMainAcc == null)

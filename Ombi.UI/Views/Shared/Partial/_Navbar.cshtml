@@ -52,10 +52,6 @@
                 <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">@UI.Custom_Donation_Default</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                @if (!Html.IsLoggedIn(Context))
-                {
-                    <li><a href="@url/login?redirect=@Context.Request.Path"><i class="fa fa-user"></i> @UI.Layout_Admin</a></li>
-                }
                 @if (Html.IsAdmin())
                 {
                     <li><a>@UI.Layout_Welcome @Context.CurrentUser.UserName</a></li>
@@ -91,7 +87,7 @@
                     </li>
 
                 }
-                else if (Html.IsLoggedIn(Context)) // Logged in but not admin
+                else if (Html.IsLoggedIn(Context)) // Logged in but not admin but not a real user
                 {
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.Request.Session[SessionKeys.UsernameKey] <span class="caret"></span></a>
