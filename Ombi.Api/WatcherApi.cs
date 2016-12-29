@@ -1,7 +1,8 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: CouchPotatoApi.cs
+//    File: WatcherApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -23,16 +24,14 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
 
 using System;
-using System.Collections.Generic;
-using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 using NLog;
 using Ombi.Api.Interfaces;
-using Ombi.Api.Models.Movie;
 using Ombi.Api.Models.Watcher;
-using Ombi.Helpers;
 using RestSharp;
 
 namespace Ombi.Api
@@ -49,21 +48,68 @@ namespace Ombi.Api
 
         public WatcherAddMovieResult AddMovie(string imdbId, string apiKey, Uri baseUrl)
         {
-            return Send<WatcherAddMovieResult>("addmovie", apiKey, baseUrl, imdbId);
+            var response =  Send("addmovie", apiKey, baseUrl, imdbId);
+            try
+            {
+                return JsonConvert.DeserializeObject<WatcherAddMovieResult>(response.Content);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new WatcherAddMovieResult
+                {
+                    Error = true,
+                    ErrorMessage = e.Message
+                };
+            }
         }
 
-        public List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl)
+        public WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl)
         {
-            return Send<List<WatcherListStatusResult>>("liststatus", apiKey, baseUrl);
+            var response = Send("liststatus", apiKey, baseUrl);
+            try
+            {
+                if (response.Content.Contains("No movies found"))
+                {
+                    return new WatcherListStatusResultContainer();
+                }
+                return JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new WatcherListStatusResultContainer
+                {
+                    Error = true,
+                    ErrorMessage = e.Message
+                };
+            }
         }
 
-        public List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl, string imdbId)
+        public WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl, string imdbId)
         {
-            return Send<List<WatcherListStatusResult>>("liststatus", apiKey, baseUrl, imdbId);
+            var response = Send("liststatus", apiKey, baseUrl, imdbId);
+            try
+            {
+                if (response.Content.Contains("No movies found"))
+                {
+                    return new WatcherListStatusResultContainer();
+                }
+                return JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new WatcherListStatusResultContainer
+                {
+                    Error = true,
+                    ErrorMessage = e.Message
+                };
+            }
         }
 
 
-        private T Send<T>(string mode, string apiKey, Uri baseUrl, string imdbid = "") where T : new()
+        private IRestResponse Send(string mode, string apiKey, Uri baseUrl, string imdbid = "")
         {
             RestRequest request;
             request = new RestRequest
@@ -72,11 +118,13 @@ namespace Ombi.Api
             };
 
             request.AddUrlSegment("apikey", apiKey);
-            if(!string.IsNullOrEmpty(imdbid))
-            { request.AddUrlSegment("imdbid", imdbid);}
+            if (!string.IsNullOrEmpty(imdbid))
+            {
+                request.AddUrlSegment("imdbid", imdbid);
+            }
             request.AddUrlSegment("mode", mode);
 
-            return Api.Execute<T>(request, baseUrl);
+            return Api.Execute(request, baseUrl);
         }
     }
 

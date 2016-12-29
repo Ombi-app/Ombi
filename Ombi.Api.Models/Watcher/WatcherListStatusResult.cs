@@ -33,11 +33,11 @@ namespace Ombi.Api.Models.Watcher
 {
     public class Quality2
     {
-        [DeserializeAs(Name = "720P")]
+        [JsonProperty("720P")]
         public List<string> Q720P { get; set; }
-        [DeserializeAs(Name = "1080P")]
+        [JsonProperty("1080P")]
         public List<string> Q1080P { get; set; }
-        [DeserializeAs( Name = "4K")]
+        [JsonProperty("4K")]
         public List<string> Q4K { get; set; }
         public List<string> SD { get; set; }
     }
@@ -51,7 +51,7 @@ namespace Ombi.Api.Models.Watcher
 
     public class Quality
     {
-        [DeserializeAs(Name = "Quality")]
+        [JsonProperty("Quality")]
         public Quality2 quality { get; set; }
         public Filters Filters { get; set; }
     }
@@ -73,5 +73,15 @@ namespace Ombi.Api.Models.Watcher
         public string tomatorating { get; set; }
         public string imdbid { get; set; }
         public Quality quality { get; set; }
+
+    }
+
+    public class WatcherListStatusResultContainer
+    {
+        public List<WatcherListStatusResult> Results { get; set; }
+        [JsonIgnore]
+        public string ErrorMessage { get; set; }
+        [JsonIgnore]
+        public bool Error { get; set; }
     }
 }

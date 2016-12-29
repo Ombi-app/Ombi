@@ -33,6 +33,7 @@ using System.Linq;
 using NLog;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
+using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
 using Ombi.UI.Helpers;
 using Quartz;
@@ -68,6 +69,7 @@ namespace Ombi.UI.Jobs
                 JobBuilder.Create<SickRageCacher>().WithIdentity("SickRageCacher", "Cache").Build(),
                 JobBuilder.Create<SonarrCacher>().WithIdentity("SonarrCacher", "Cache").Build(),
                 JobBuilder.Create<CouchPotatoCacher>().WithIdentity("CouchPotatoCacher", "Cache").Build(),
+                JobBuilder.Create<WatcherCacher>().WithIdentity("WatcherCacher", "Cache").Build(),
                 JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                 JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
@@ -116,6 +118,10 @@ namespace Ombi.UI.Jobs
             if (s.CouchPotatoCacher == 0)
             {
                 s.CouchPotatoCacher = 60;
+            }
+            if (s.WatcherCacher == 0)
+            {
+                s.WatcherCacher = 60;
             }
             if (s.PlexAvailabilityChecker == 0)
             {
@@ -208,6 +214,13 @@ namespace Ombi.UI.Jobs
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.CouchPotatoCacher).RepeatForever())
                     .Build();
 
+            var watcherCacher =
+                TriggerBuilder.Create()
+                    .WithIdentity("WatcherCacher", "Cache")
+                    .StartAt(DateBuilder.FutureDate(4, IntervalUnit.Minute))
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.WatcherCacher).RepeatForever())
+                    .Build();
+
             var storeBackup =
                 TriggerBuilder.Create()
                     .WithIdentity("StoreBackup", "Database")
@@ -258,6 +271,7 @@ namespace Ombi.UI.Jobs
             triggers.Add(srCacher);
             triggers.Add(sonarrCacher);
             triggers.Add(cpCacher);
+            triggers.Add(watcherCacher);
             triggers.Add(storeBackup);
             triggers.Add(storeCleanup);
             triggers.Add(userRequestLimiter);

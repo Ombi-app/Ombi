@@ -251,6 +251,7 @@
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
     <Compile Include="Modules\Admin\AboutModule.cs" />
     <Compile Include="Modules\Admin\CustomizationModule.cs" />
+    <Compile Include="Modules\Admin\IntegrationModule.cs" />
     <Compile Include="Modules\Admin\UserManagementSettingsModule.cs" />
     <Compile Include="Modules\Admin\FaultQueueModule.cs" />
     <Compile Include="Modules\Admin\SystemStatusModule.cs" />
@@ -282,6 +283,7 @@
     </Compile>
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\WatcherValidator.cs" />
     <Compile Include="Validators\SlackSettingsValidator.cs" />
     <Compile Include="Validators\UserViewModelValidator.cs" />
     <Compile Include="Validators\HeadphonesValidator.cs" />
@@ -759,6 +761,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\About\About.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Integration\Watcher.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Views\Admin\NewsletterSettings.cshtml">

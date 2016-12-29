@@ -45,7 +45,8 @@ namespace Ombi.UI.Modules
     {
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
-             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security) : base("test", pr, security)
+             ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security,
+             IWatcherApi watcherApi) : base("test", pr, security)
         {
             this.RequiresAuthentication();
             
@@ -54,6 +55,7 @@ namespace Ombi.UI.Modules
             PlexApi = plexApi;
             SickRageApi = srApi;
             HeadphonesApi = hpApi;
+            WatcherApi = watcherApi;
 
             Post["/cp"] = _ => CouchPotatoTest();
             Post["/sonarr"] = _ => SonarrTest();
@@ -61,6 +63,7 @@ namespace Ombi.UI.Modules
             Post["/sickrage"] = _ => SickRageTest();
             Post["/headphones"] = _ => HeadphonesTest();
             Post["/plexdb"] = _ => TestPlexDb();
+            Post["/watcher"] = _ => WatcherTest();
         }
         
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -69,6 +72,7 @@ namespace Ombi.UI.Modules
         private IPlexApi PlexApi { get; }
         private ISickRageApi SickRageApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
+        private IWatcherApi WatcherApi { get; }
 
         private Response CouchPotatoTest()
         {
@@ -86,7 +90,7 @@ namespace Ombi.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to CouchPotato, please check your settings." });
 
             }
-			catch (Exception e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+            catch (Exception e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get CP's status: ");
                 Log.Warn(e);
@@ -94,6 +98,35 @@ namespace Ombi.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to CouchPotato, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+
+        private Response WatcherTest()
+        {
+            var settings = this.Bind<WatcherSettings>();
+            var valid = this.Validate(settings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            try
+            {
+                var status = WatcherApi.ListMovies(settings.ApiKey, settings.FullUri);
+                return !status.Error
+               ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Watcher successfully!" })
+               : Response.AsJson(new JsonResponseModel { Result = false, Message = $"Could not connect to Watcher, Error: {status.ErrorMessage}" });
+
+            }
+            catch (Exception e) // Exceptions are expected if we cannot connect so we will just log and swallow them.
+            {
+                Log.Warn("Exception thrown when attempting to test Watcher ");
+                Log.Warn(e);
+                var message = $"Could not connect to Watcher, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to Watcher, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }
