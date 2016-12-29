@@ -28,8 +28,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
+using Nancy.Session;
 using Octokit;
+using Octokit.Internal;
 using Ombi.Api;
 using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
@@ -43,7 +46,7 @@ namespace Ombi.Core.StatusChecker
         public StatusChecker(ISettingsService<SystemSettings> ss)
         {
             SystemSettings = ss;
-            Git = new GitHubClient(new ProductHeaderValue("Ombi-StatusChecker"));
+            Git = new GitHubClient(new ProductHeaderValue("Ombi"));
         }
 
         private ISettingsService<SystemSettings> SystemSettings { get; }
@@ -180,15 +183,48 @@ namespace Ombi.Core.StatusChecker
             return model;
         }
 
-        public async Task<Issue> ReportBug(string title, string body)
+        public async Task<Issue> ReportBug(string title, string body, string oauthToken)
         {
+            Git.Connection.Credentials = new Credentials(oauthToken);
             var issue = new NewIssue(title)
             {
                 Body = body
             };
+            
             var result = await Git.Issue.Create(Owner, RepoName, issue);
 
             return result;
+        }
+
+
+        string clientId = "f407108cdb1e660f68c5";
+        string clientSecret = "84b56e22002da2929c34fc773d89f3402a19098a";
+
+        public async Task<Uri> OAuth(string url, ISession session)
+        {
+
+            var csrf = StringCipher.Encrypt(Guid.NewGuid().ToString("N"), "CSRF");
+            session[SessionKeys.CSRF] = csrf;
+
+            var request = new OauthLoginRequest(clientId)
+            {
+                Scopes = { "public_repo", "user" },
+                State = csrf,
+                RedirectUri = new Uri(url)
+            };
+
+            // NOTE: user must be navigated to this URL
+            var oauthLoginUrl = Git.Oauth.GetGitHubLoginUrl(request);
+
+            return oauthLoginUrl;
+        }
+
+        public async Task<OauthToken> OAuthAccessToken(string code)
+        {
+            var request = new OauthTokenRequest(clientId, clientSecret, code);
+            var token = await Git.Oauth.CreateAccessToken(request);
+
+            return token;
         }
     }
 }

@@ -33,5 +33,7 @@ namespace Ombi.Helpers
         public const string UserWizardPlexAuth = nameof(UserWizardPlexAuth);
         public const string UserWizardMachineId = nameof(UserWizardMachineId);
         public const string UserLoginName = nameof(UserLoginName);
+        public const string OAuthToken = nameof(OAuthToken);
+        public const string CSRF = "CSRF:State";
     }
 }

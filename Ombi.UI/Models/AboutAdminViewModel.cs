@@ -33,5 +33,6 @@ namespace Ombi.UI.Models
         public string ApplicationVersion { get; set; } // File Version
         public string Branch { get; set; }
         public string LogLevel { get; set; }
+        public bool OAuthEnabled { get; set; }
     }
 }
