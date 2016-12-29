@@ -40,6 +40,7 @@ using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
+using Ombi.Store;
 using Ombi.UI.Models;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
@@ -49,13 +50,14 @@ namespace Ombi.UI.Modules.Admin
     {
         public AboutModule(ISettingsService<PlexRequestSettings> settingsService,
             ISettingsService<SystemSettings> systemService, ISecurityExtensions security,
-            IStatusChecker statusChecker, IResourceLinker linker) : base("admin", settingsService, security)
+            IStatusChecker statusChecker, IResourceLinker linker, ISqliteConfiguration config) : base("admin", settingsService, security)
         {
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
             SettingsService = systemService;
             StatusChecker = statusChecker;
             Linker = linker;
+            SqlConfig = config;
             
             Get["AboutPage","/about", true] = async (x,ct) => await Index();
             Post["/about", true] = async (x,ct) => await ReportIssue();
@@ -67,6 +69,7 @@ namespace Ombi.UI.Modules.Admin
         private ISettingsService<SystemSettings> SettingsService { get; }
         private IStatusChecker StatusChecker { get; }
         private IResourceLinker Linker { get; }
+        private ISqliteConfiguration SqlConfig { get; }
         
         
         private async Task<Negotiator> Index()
@@ -104,6 +107,9 @@ namespace Ombi.UI.Modules.Admin
                 vm.Os = OperatingSystemHelper.GetOs();
                 vm.SystemVersion = Environment.Version.ToString();
             }
+
+            vm.RunningDir = Environment.CurrentDirectory;
+            vm.DbLocation = SqlConfig.CurrentPath;
 
             vm.ApplicationVersion = AssemblyHelper.GetFileVersion();
             vm.Branch = EnumHelper<Branches>.GetDisplayValue(systemSettings.Branch);
@@ -173,6 +179,8 @@ namespace Ombi.UI.Modules.Admin
             sb.AppendLine(model.Branch);
             sb.AppendLine("#### Operating System:");
             sb.AppendLine(model.Os);
+            sb.AppendLine("#### Log Level:");
+            sb.AppendLine(model.LogLevel);
             sb.AppendLine(body);
 
             return sb.ToString();

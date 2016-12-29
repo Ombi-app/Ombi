@@ -34,5 +34,7 @@ namespace Ombi.UI.Models
         public string Branch { get; set; }
         public string LogLevel { get; set; }
         public bool OAuthEnabled { get; set; }
+        public string DbLocation { get; set; }
+        public string RunningDir { get; set; }
     }
 }
