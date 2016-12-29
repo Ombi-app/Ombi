@@ -101,7 +101,8 @@ namespace Ombi.UI.Modules
                         || x.Name.Equals(JobNames.PlexChecker) 
                         || x.Name.Equals(JobNames.SonarrCacher)
                         || x.Name.Equals(JobNames.SrCacher)
-                        || x.Name.Equals(JobNames.PlexCacher));
+                        || x.Name.Equals(JobNames.PlexCacher)
+                        || x.Name.Equals(JobNames.WatcherCacher));
 
 
                 return Response.AsJson(cacherJobs.Any() 

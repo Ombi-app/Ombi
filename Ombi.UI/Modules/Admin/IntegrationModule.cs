@@ -57,6 +57,7 @@ namespace Ombi.UI.Modules.Admin
            
             WatcherSettings = watcher;
             Analytics = a;
+            CpSettings = cp;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
