@@ -36,8 +36,8 @@ namespace Ombi.Helpers
         public static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             Formatting = Formatting.None,
-            TypeNameHandling = TypeNameHandling.Objects,
-            TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
+            //TypeNameHandling = TypeNameHandling.Objects,
+            //TypeNameAssemblyFormat = FormatterAssemblyStyle.Simple,
             NullValueHandling = NullValueHandling.Ignore
         };
 

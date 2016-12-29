@@ -183,7 +183,7 @@ namespace Ombi.UI.Jobs
             var plexUserChecker =
                 TriggerBuilder.Create()
                     .WithIdentity("PlexUserChecker", "Plex")
-                    .StartAt(DateBuilder.FutureDate(30, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.PlexUserChecker).RepeatForever())
                     .Build();
 

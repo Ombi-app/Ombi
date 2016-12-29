@@ -34,6 +34,7 @@ using Ombi.Api.Interfaces;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Core.Users;
+using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
 using Ombi.Store.Models;
 using Ombi.Store.Repository;
@@ -80,10 +81,13 @@ namespace Ombi.Services.Jobs
                 }
                 var plexUsers = PlexApi.GetUsers(settings.PlexAuthToken);
                 var userManagementSettings = UserManagementSettings.GetSettings();
+                var mainPlexAccount = PlexApi.GetAccount(settings.PlexAuthToken);
                 var requests = RequestService.GetAll().ToList();
 
                 var dbUsers = Repo.GetAll().ToList();
                 var localUsers = LocalUserRepository.GetAll().ToList();
+
+                // Regular users
                 foreach (var user in plexUsers.User)
                 {
                     var dbUser = dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id);
@@ -144,7 +148,7 @@ namespace Ombi.Services.Jobs
 
                         continue;
                     }
-                    
+
                     // Looks like it's a new user!
                    var m = new PlexUsers
                     {
@@ -159,6 +163,33 @@ namespace Ombi.Services.Jobs
 
                     Repo.Insert(m);
                 }
+
+                // Main Plex user
+                var dbMainAcc = dbUsers.FirstOrDefault(x => x.Username.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
+                var localMainAcc = localUsers.FirstOrDefault(x => x.UserName.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
+                
+                // TODO if admin acc does exist, check if we need to update it
+
+
+                // Create the local admin account if it doesn't already exist
+                if (dbMainAcc == null && localMainAcc == null)
+                {
+                    var a = new PlexUsers
+                    {
+                        PlexUserId = mainPlexAccount.Id,
+                        Permissions = UserManagementHelper.GetPermissions(userManagementSettings),
+                        Features = UserManagementHelper.GetFeatures(userManagementSettings),
+                        UserAlias = string.Empty,
+                        EmailAddress = mainPlexAccount.Email,
+                        Username = mainPlexAccount.Username,
+                        LoginId = Guid.NewGuid().ToString()
+                    };
+
+                    a.Permissions += (int) Permissions.Administrator; // Make admin
+
+                    Repo.Insert(a);
+                }
+
 
             }
             catch (Exception e)
