@@ -44,7 +44,7 @@ namespace Ombi.UI.NinjectModules
         {
             Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
             Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
-            Bind<IWatcherCacher>().To<IWatcherCacher>();
+            Bind<IWatcherCacher>().To<WatcherCacher>();
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
             Bind<IRecentlyAdded>().To<RecentlyAdded>();
