@@ -35,6 +35,7 @@ namespace Ombi.Core.SettingModels
         public int SickRageCacher { get; set; }
         public int SonarrCacher { get; set; }
         public int CouchPotatoCacher { get; set; }
+        public int WatcherCacher { get; set; }
         public int StoreBackup { get; set; }
         public int StoreCleanup { get; set; }
         public int UserRequestLimitResetter { get; set; }

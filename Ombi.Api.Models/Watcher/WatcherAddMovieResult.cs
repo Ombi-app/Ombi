@@ -24,11 +24,19 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
+
+using Newtonsoft.Json;
+
 namespace Ombi.Api.Models.Watcher
 {
     public class WatcherAddMovieResult
     {
         public string status { get; set; }
         public string message { get; set; }
+
+        [JsonIgnore]
+        public string ErrorMessage { get; set; }
+        [JsonIgnore]
+        public bool Error { get; set; }
     }
 }

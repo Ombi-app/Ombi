@@ -34,7 +34,7 @@ namespace Ombi.Api.Interfaces
     public interface IWatcherApi
     {
         WatcherAddMovieResult AddMovie(string imdbId, string apiKey, Uri baseUrl);
-        List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl);
-        List<WatcherListStatusResult> ListMovies(string apiKey, Uri baseUrl, string imdbId);
+        WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl);
+        WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl, string imdbId);
     }
 }

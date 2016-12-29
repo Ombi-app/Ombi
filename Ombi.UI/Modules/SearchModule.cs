@@ -66,22 +66,22 @@ namespace Ombi.UI.Modules
 {
     public class SearchModule : BaseAuthModule
     {
-        public SearchModule(ICacheProvider cache, ISettingsService<CouchPotatoSettings> cpSettings,
+        public SearchModule(ICacheProvider cache, 
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ICouchPotatoApi cpApi, ISickRageApi srApi,
+            ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi,
             ISettingsService<HeadphonesSettings> hpService,
-            ICouchPotatoCacher cpCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
+            ICouchPotatoCacher cpCacher, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content, ISecurityExtensions security)
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
+            ISecurityExtensions security, IMovieSender movieSender)
             : base("search", prSettings, security)
         {
             Auth = auth;
             PlexService = plexService;
             PlexApi = plexApi;
-            CpService = cpSettings;
             PrService = prSettings;
             MovieApi = new TheMovieDbApi();
             Cache = cache;
@@ -92,7 +92,6 @@ namespace Ombi.UI.Modules
             RequestService = request;
             SonarrApi = sonarrApi;
             SonarrService = sonarrSettings;
-            CouchPotatoApi = cpApi;
             SickRageService = sickRageService;
             SickrageApi = srApi;
             NotificationService = notify;
@@ -107,7 +106,8 @@ namespace Ombi.UI.Modules
             FaultQueue = tfQueue;
             TvApi = new TvMazeApi();
             PlexContentRepository = content;
-
+            MovieSender = movieSender;
+            WatcherCacher = watcherCacher;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -128,20 +128,19 @@ namespace Ombi.UI.Modules
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
-
+        private IWatcherCacher WatcherCacher { get; }
+        private IMovieSender MovieSender { get; }
         private IRepository<PlexContent> PlexContentRepository { get; }
         private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
-        private ICouchPotatoApi CouchPotatoApi { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickrageApi { get; }
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private ISettingsService<PlexSettings> PlexService { get; }
-        private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
@@ -236,9 +235,9 @@ namespace Ombi.UI.Modules
 
 
             var cpCached = CpCacher.QueuedIds();
+            var watcherCached = WatcherCacher.QueuedIds();
             var content = PlexContentRepository.GetAll();
             var plexMovies = Checker.GetPlexMovies(content);
-            var settings = await PrService.GetSettingsAsync();
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
             foreach (var movie in apiMovies)
@@ -287,6 +286,10 @@ namespace Ombi.UI.Modules
                     viewMovie.Available = dbm.Available;
                 }
                 else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
+                {
+                    viewMovie.Requested = true;
+                }
+                else if(watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
                 {
                     viewMovie.Requested = true;
                 }
@@ -564,30 +567,25 @@ namespace Ombi.UI.Modules
             {
                 if (ShouldAutoApprove(RequestType.Movie, settings, Username))
                 {
-                    var cpSettings = await CpService.GetSettingsAsync();
-                    model.Approved = true;
-                    if (cpSettings.Enabled)
-                    {
-                        Log.Info("Adding movie to CP (No approval required)");
-                        var result = CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title,
-                            cpSettings.FullUri, cpSettings.ProfileId);
-                        Log.Debug("Adding movie to CP result {0}", result);
-                        if (result)
-                        {
-                            return
-                                await
-                                    AddRequest(model, settings,
-                                        $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-                        }
 
-                        return Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message = Resources.UI.Search_CouchPotatoError
-                        });
+                    var result = await MovieSender.Send(model);
+                    if (result.Result)
+                    {
+                        return await AddRequest(model, settings,
+                                    $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
-                    model.Approved = true;
-                    return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
+                    if (!result.MovieSendingEnabled)
+                    {
+
+                        model.Approved = true;
+                        return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
+                    }
+
+                    return Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = Resources.UI.Search_CouchPotatoError
+                    });
                 }
 
 

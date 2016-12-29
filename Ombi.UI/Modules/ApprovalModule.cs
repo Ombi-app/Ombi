@@ -47,17 +47,15 @@ namespace Ombi.UI.Modules
     public class ApprovalModule : BaseAuthModule
     {
 
-        public ApprovalModule(IRequestService service, ISettingsService<CouchPotatoSettings> cpService, ICouchPotatoApi cpApi, ISonarrApi sonarrApi,
+        public ApprovalModule(IRequestService service,  ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue
-            , ISecurityExtensions security) : base("approval", pr, security)
+            , ISecurityExtensions security, IMovieSender movieSender) : base("approval", pr, security)
         {
 
             Before += (ctx) => Security.AdminLoginRedirect(ctx, Permissions.Administrator,Permissions.ManageRequests);
 
             Service = service;
-            CpService = cpService;
-            CpApi = cpApi;
             SonarrApi = sonarrApi;
             SonarrSettings = sonarrSettings;
             SickRageApi = srApi;
@@ -65,6 +63,7 @@ namespace Ombi.UI.Modules
             HeadphonesSettings = hpSettings;
             HeadphoneApi = hpApi;
             FaultQueue = faultQueue;
+            MovieSender = movieSender;
 
             Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
@@ -77,15 +76,14 @@ namespace Ombi.UI.Modules
         }
 
         private IRequestService Service { get; }
+        private IMovieSender MovieSender { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
-        private ISettingsService<CouchPotatoSettings> CpService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesSettings { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickRageApi { get; }
-        private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HeadphoneApi { get; }
         private ITransientFaultQueue FaultQueue { get; }
 
@@ -186,19 +184,19 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> RequestMovieAndUpdateStatus(RequestedModel request, string qualityId)
         {
-            var cpSettings = await CpService.GetSettingsAsync();
 
-            Log.Info("Adding movie to CouchPotato : {0}", request.Title);
-            if (!cpSettings.Enabled)
+            var result = await MovieSender.Send(request, qualityId);
+
+            if (!result.MovieSendingEnabled)
             {
                 // Approve it
                 request.Approved = true;
-                Log.Warn("We approved movie: {0} but could not add it to CouchPotato because it has not been setup", request.Title);
+                Log.Warn("We approved movie: {0} but could not add it to CouchPotato/Watcher because it has not been setup", request.Title);
 
                 // Update the record
                 var inserted = await Service.UpdateRequestAsync(request);
                 return Response.AsJson(inserted
-                    ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to CouchPotato because it has not been configured." }
+                    ? new JsonResponseModel { Result = true, Message = "This has been approved, but It has not been sent to CouchPotato/Watcher because it has not been configured." }
                     : new JsonResponseModel
                     {
                         Result = false,
@@ -206,9 +204,7 @@ namespace Ombi.UI.Modules
                     });
             }
 
-            var result = CpApi.AddMovie(request.ImdbId, cpSettings.ApiKey, request.Title, cpSettings.FullUri, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
-            Log.Trace("Adding movie to CP result {0}", result);
-            if (result)
+            if (result.Result)
             {
                 // Approve it
                 request.Approved = true;
@@ -230,7 +226,7 @@ namespace Ombi.UI.Modules
                     {
                         Result = false,
                         Message =
-                            "Something went wrong adding the movie to CouchPotato! Please check your settings."
+                            "Something went wrong adding the movie! Please check your settings."
                     });
         }
 
@@ -415,26 +411,23 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> UpdateRequestsAsync(RequestedModel[] requestedModels)
         {
-            var cpSettings = await CpService.GetSettingsAsync();
             var updatedRequests = new List<RequestedModel>();
             foreach (var r in requestedModels)
             {
                 if (r.Type == RequestType.Movie)
                 {
-                    if (cpSettings.Enabled)
+                    var movieResult = await MovieSender.Send(r);
+                    if (movieResult.Result)
                     {
-                        var res = SendMovie(cpSettings, r, CpApi);
-                        if (res)
-                        {
-                            r.Approved = true;
-                            updatedRequests.Add(r);
-                        }
-                        else
-                        {
-                            Log.Error("Could not approve and send the movie {0} to couch potato!", r.Title);
-                        }
+                        r.Approved = true;
+                        updatedRequests.Add(r);
+
                     }
                     else
+                    {
+                        Log.Error("Could not approve and send the movie {0} to couch potato!", r.Title);
+                    }
+                    if(!movieResult.MovieSendingEnabled)
                     {
                         r.Approved = true;
                         updatedRequests.Add(r);
@@ -511,14 +504,6 @@ namespace Ombi.UI.Modules
                 ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Request has been denied" })
                 : Response.AsJson(new JsonResponseModel { Result = false, Message = "An error happened, could not update the DB" });
 
-        }
-
-        private bool SendMovie(CouchPotatoSettings settings, RequestedModel r, ICouchPotatoApi cp)
-        {
-            Log.Info("Adding movie to CP : {0}", r.Title);
-            var result = cp.AddMovie(r.ImdbId, settings.ApiKey, r.Title, settings.FullUri, settings.ProfileId);
-            Log.Trace("Adding movie to CP result {0}", result);
-            return result;
         }
     }
 }

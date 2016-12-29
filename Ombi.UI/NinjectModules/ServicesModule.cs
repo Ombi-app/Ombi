@@ -26,6 +26,7 @@
 #endregion
 
 using Ninject.Modules;
+using Ombi.Core;
 using Ombi.Core.Queue;
 using Ombi.Helpers.Analytics;
 using Ombi.Services.Interfaces;
@@ -43,11 +44,13 @@ namespace Ombi.UI.NinjectModules
         {
             Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
             Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
+            Bind<IWatcherCacher>().To<WatcherCacher>();
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
             Bind<IRecentlyAdded>().To<RecentlyAdded>();
             Bind<IPlexContentCacher>().To<PlexContentCacher>();
             Bind<IJobFactory>().To<CustomJobFactory>();
+            Bind<IMovieSender>().To<MovieSender>();
      
             Bind<IAnalytics>().To<Analytics>();
             Bind<ISchedulerFactory>().To<StdSchedulerFactory>();

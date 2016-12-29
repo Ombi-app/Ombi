@@ -42,6 +42,7 @@ namespace Ombi.Core
         public const string SickRageQueued = nameof(SickRageQueued);
         public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);
         public const string CouchPotatoQueued = nameof(CouchPotatoQueued);
+        public const string WatcherQueued = nameof(WatcherQueued);
         public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
         public const string LastestProductVersion = nameof(LastestProductVersion);
     }

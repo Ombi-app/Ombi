@@ -75,6 +75,7 @@ namespace Ombi.UI.Modules.Admin
         private ISettingsService<PushoverNotificationSettings> PushoverService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private ISettingsService<NewletterSettings> NewsLetterService { get; }
+        private ISettingsService<WatcherSettings> WatcherSettings { get; }
         private ISettingsService<LogSettings> LogService { get; }
         private IPlexApi PlexApi { get; }
         private ISonarrApi SonarrApi { get; }
@@ -116,7 +117,8 @@ namespace Ombi.UI.Modules.Admin
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
+             ISettingsService<WatcherSettings> watcherSettings 
              , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
@@ -147,6 +149,7 @@ namespace Ombi.UI.Modules.Admin
             Analytics = analytics;
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
+            WatcherSettings = watcherSettings;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
             
@@ -372,6 +375,18 @@ namespace Ombi.UI.Modules.Admin
             if (!valid.IsValid)
             {
                 return Response.AsJson(valid.SendJsonError());
+            }
+
+            var watcherSettings = WatcherSettings.GetSettings();
+
+            if (watcherSettings.Enabled)
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Cannot have Watcher and CouchPotato both enabled."
+                    });
             }
 
             couchPotatoSettings.ApiKey = couchPotatoSettings.ApiKey.Trim();
