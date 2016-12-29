@@ -47,7 +47,7 @@ namespace Ombi.Services.Jobs
             IWatcherApi watcherApi, ICacheProvider cache, IJobRecord rec)
         {
             WatcherSettings = watcher;
-            WatcherApi = WatcherApi;
+            WatcherApi = watcherApi;
             Cache = cache;
             Job = rec;
         }
@@ -80,7 +80,7 @@ namespace Ombi.Services.Jobs
                         movies?.Results?.Where(x => x.status.Equals("Wanted", StringComparison.CurrentCultureIgnoreCase));
                     if (wantedMovies != null && wantedMovies.Any())
                     {
-                        Cache.Set(CacheKeys.WatcherQueued, movies.Results.Select(x => x.imdbid), CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                        Cache.Set(CacheKeys.WatcherQueued, movies.Results.Select(x => x.imdbid).ToArray(), CacheKeys.TimeFrameMinutes.SchedulerCaching);
                     }
 
                 }

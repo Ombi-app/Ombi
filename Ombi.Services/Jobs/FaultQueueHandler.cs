@@ -53,7 +53,7 @@ namespace Ombi.Services.Jobs
             ISickRageApi srApi, ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings,
             ICouchPotatoApi cpApi, ISettingsService<CouchPotatoSettings> cpsettings, IRequestService requestService,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi, ISettingsService<PlexRequestSettings> prSettings,
-            ISecurityExtensions security)
+            ISecurityExtensions security, IMovieSender movieSender)
         {
             Record = record;
             Repo = repo;
@@ -70,8 +70,10 @@ namespace Ombi.Services.Jobs
             HeadphoneSettings = hpSettings;
             Security = security;
             PrSettings = prSettings.GetSettings();
+            MovieSender = movieSender;
         }
 
+        private IMovieSender MovieSender { get; }
         private IRepository<RequestQueue> Repo { get; }
         private IJobRecord Record { get; }
         private ISonarrApi SonarrApi { get; }
@@ -197,24 +199,19 @@ namespace Ombi.Services.Jobs
             }
         }
 
-        private bool ProcessMovies(RequestedModel model, CouchPotatoSettings cp)
+        private bool ProcessMovies(RequestedModel model)
         {
             try
             {
-                if (cp.Enabled)
+                var result = MovieSender.Send(model).Result;
+                if (result.Result)
                 {
-                    var result = CpApi.AddMovie(model.ImdbId, cp.ApiKey, model.Title,
-                        cp.FullUri, cp.ProfileId);
-
-                    if (result)
-                    {
-                        // Approve it now
-                        model.Approved = true;
-                        RequestService.UpdateRequest(model);
-                    };
-
-                    return result;
-                }
+                    // Approve it now
+                    model.Approved = true;
+                    RequestService.UpdateRequest(model);
+                    return true;
+                };
+                
                 return false;
             }
             catch (Exception e)
@@ -272,7 +269,7 @@ namespace Ombi.Services.Jobs
                 switch (request.Type)
                 {
                     case RequestType.Movie:
-                        result = ProcessMovies(model, cpSettings);
+                        result = ProcessMovies(model);
                         break;
                     case RequestType.TvShow:
                         result = ProcessTvShow(model, sonarrSettings, sickrageSettings);

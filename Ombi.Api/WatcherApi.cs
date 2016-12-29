@@ -28,6 +28,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using NLog;
 using Ombi.Api.Interfaces;
@@ -73,7 +74,9 @@ namespace Ombi.Api
                 {
                     return new WatcherListStatusResultContainer();
                 }
-                return JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
+                var items = JsonConvert.DeserializeObject<List<WatcherListStatusResult>>(response.Content);
+
+                return new WatcherListStatusResultContainer {Results = items};
             }
             catch (Exception e)
             {
@@ -95,7 +98,9 @@ namespace Ombi.Api
                 {
                     return new WatcherListStatusResultContainer();
                 }
-                return JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
+                var items = JsonConvert.DeserializeObject<List<WatcherListStatusResult>>(response.Content);
+
+                return new WatcherListStatusResultContainer { Results = items };
             }
             catch (Exception e)
             {
@@ -114,9 +119,10 @@ namespace Ombi.Api
             RestRequest request;
             request = new RestRequest
             {
-                Resource = "/api"
+                Resource = string.IsNullOrEmpty(imdbid) ? "/api?apikey={apikey}&mode={mode}" : "/api?apikey={apikey}&mode={mode}&imdbid={imdbid}"
             };
 
+            
             request.AddUrlSegment("apikey", apiKey);
             if (!string.IsNullOrEmpty(imdbid))
             {

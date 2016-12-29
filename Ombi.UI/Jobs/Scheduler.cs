@@ -217,7 +217,8 @@ namespace Ombi.UI.Jobs
             var watcherCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("WatcherCacher", "Cache")
-                    .StartAt(DateBuilder.FutureDate(4, IntervalUnit.Minute))
+                    //.StartNow()
+                    .StartAt(DateBuilder.FutureDate(3, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.WatcherCacher).RepeatForever())
                     .Build();
 
