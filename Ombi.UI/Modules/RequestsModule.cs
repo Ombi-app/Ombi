@@ -116,8 +116,6 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> GetMovies()
         {
-            var settings = PrSettings.GetSettings();
-
             var allRequests = await Service.GetAllAsync();
             allRequests = allRequests.Where(x => x.Type == RequestType.Movie);
 

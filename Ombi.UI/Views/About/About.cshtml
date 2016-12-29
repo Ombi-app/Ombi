@@ -6,38 +6,130 @@
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
         <legend>About</legend>
+        <hr />
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    Application Version:
+                </td>
+                <td>
+                    @Model.ApplicationVersion
+                </td>
+            </tr>
 
+            <tr>
+                <td>
+                    OS:
+                </td>
+                <td>
+                    @Model.Os
+                </td>
+            </tr>
 
-        <div class="form-group">
-            <label>Application Version: </label>
-            <label>@Model.ApplicationVersion</label>
-        </div>
+            <tr>
+                <td>
+                    System Version:
+                </td>
+                <td>
+                    @Model.SystemVersion
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Branch:
+                </td>
+                <td>
+                    @Model.Branch
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Log Level:
+                </td>
+                <td>
+                    @Model.LogLevel
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Database Location:
+                </td>
+                <td>
+                    @Model.DbLocation
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Running Directory:
+                </td>
+                <td>
+                    @Model.RunningDir
+                </td>
+            </tr>
 
-        <div class="form-group">
-            <label class="control-label">OS: </label>
-            <label class="control-label">@Model.Os</label>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label">System Version: </label>
-            <label class="control-label">@Model.SystemVersion</label>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label">Branch: </label>
-            <label class="control-label">@Model.Branch</label>
-        </div>
-        <div class="form-group">
-            <label class="control-label">Log Level: </label>
-            <label class="control-label">@Model.LogLevel</label>
-        </div>
-
-        <div class="form-group">
-            <div>
-                <button id="save" type="submit" class="btn btn-danger-outline">Report a bug</button>
+        </table>
+        <hr />
+        <table class="table table-condensed">
+            <tr>
+                <td>
+                    Github
+                </td>
+                <td>
+                    <a href="https://github.com/tidusjar/Ombi" target="_blank">https://github.com/tidusjar/Ombi</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Wiki
+                </td>
+                <td>
+                    <a href="https://github.com/tidusjar/Ombi/wiki" target="_blank">https://github.com/tidusjar/Ombi/wiki</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Issues
+                </td>
+                <td>
+                    <a href="https://github.com/tidusjar/Ombi/issues" target="_blank">https://github.com/tidusjar/Ombi/issues</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Chat
+                </td>
+                <td>
+                    <a href="https://gitter.im/tidusjar/Ombi" target="_blank">https://gitter.im/tidusjar/Ombi</a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Feature Requests
+                </td>
+                <td>
+                    <a href="https://feathub.com/tidusjar/Ombi" target="_blank">https://feathub.com/tidusjar/Ombi</a>
+                </td>
+            </tr>
+        </table>
+        <hr />
+        @if (Model.OAuthEnabled)
+            {
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-danger-outline">Report a bug</button>
+                </div>
             </div>
-        </div>
 
+        }
+        else
+        {
+            <div class="form-group">
+                <div>
+                    <button id="oAuth" type="submit" class="btn btn-primary-outline">Log in via Github to Report an Issue</button>
+                </div>
+            </div>
+        }
+   
 
     </fieldset>
 </div>
@@ -52,16 +144,32 @@
         startBug();
     });
 
+    $('#oAuth').click(function () {
+        var url = "/admin/oauth";
+        url = createBaseUrl(baseUrl, url);
+        $.ajax({
+            type: "get",
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                window.location.href = response.uri;
+            },
+            error: function (e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+    });
 
     function startBug() {
-                bootbox.prompt({
-        size: "small",
-        title: "What is the title of the issue?",
-        inputType: 'textarea',
-        callback: mainContent
-    });
+        bootbox.prompt({
+            size: "small",
+            title: "What is the title of the issue?",
+            inputType: 'textarea',
+            callback: mainContent
+        });
     }
-    
+
 
     function mainContent(userTitle) {
         if (!userTitle) {
@@ -91,7 +199,7 @@
         $.ajax({
             type: "post",
             url: url,
-            data: {title : issueTitle, body : additionalInfo},
+            data: { title: issueTitle, body: additionalInfo },
             dataType: "json",
             success: function (response) {
                 if (response && response.result) {
