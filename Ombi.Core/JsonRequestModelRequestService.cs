@@ -73,29 +73,51 @@ namespace Ombi.Core
         public RequestedModel CheckRequest(int providerId)
         {
             var blobs = Repo.GetAll();
-            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
-            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId); if (blob == null)
+            {
+                return null;
+            }
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id;
+            return model;
         }
 
         public async Task<RequestedModel> CheckRequestAsync(int providerId)
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
-            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId);
-            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId); if (blob == null)
+            {
+                return null;
+            }
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id;
+            return model;
         }
 
         public RequestedModel CheckRequest(string musicId)
         {
             var blobs = Repo.GetAll();
-            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
-            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId); if (blob == null)
+            {
+                return null;
+            }
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id;
+            return model;
         }
 
         public async Task<RequestedModel> CheckRequestAsync(string musicId)
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
             var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
-            return blob != null ? ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content) : null;
+
+            if (blob == null)
+            {
+                return null;
+            }
+            var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id;
+            return model;
         }
 
         public void DeleteRequest(RequestedModel request)
@@ -130,6 +152,7 @@ namespace Ombi.Core
                 return new RequestedModel();
             }
             var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id; // They should always be the same, but for somereason a user didn't have it in the db https://github.com/tidusjar/Ombi/issues/862#issuecomment-269743847
             return model;
         }
 
@@ -141,23 +164,44 @@ namespace Ombi.Core
                 return new RequestedModel();
             }
             var model = ByteConverterHelper.ReturnObject<RequestedModel>(blob.Content);
+            model.Id = blob.Id;
             return model;
         }
 
         public IEnumerable<RequestedModel> GetAll()
         {
-            var blobs = Repo.GetAll();
-            return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
-                .Select(JsonConvert.DeserializeObject<RequestedModel>)
-                .ToList();
+            var blobs = Repo.GetAll().ToList();
+            var retVal = new List<RequestedModel>();
+
+            foreach (var b in blobs)
+            {
+                if (b == null)
+                {
+                    continue;
+                }
+                var model = ByteConverterHelper.ReturnObject<RequestedModel>(b.Content);
+                model.Id = b.Id;
+                retVal.Add(model);
+            }
+            return retVal;
         }
 
         public async Task<IEnumerable<RequestedModel>> GetAllAsync()
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
-            return blobs.Select(b => Encoding.UTF8.GetString(b.Content))
-                .Select(JsonConvert.DeserializeObject<RequestedModel>)
-                .ToList();
+            var retVal = new List<RequestedModel>();
+
+            foreach (var b in blobs)
+            {
+                if (b == null)
+                {
+                    continue;
+                }
+                var model = ByteConverterHelper.ReturnObject<RequestedModel>(b.Content);
+                model.Id = b.Id;
+                retVal.Add(model);
+            }
+            return retVal;
         }
 
         public bool BatchUpdate(IEnumerable<RequestedModel> model)
