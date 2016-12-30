@@ -68,7 +68,7 @@ namespace Ombi.Core
 
             foreach (var u in users)
             {
-                if (username == u.UserName)
+                if (username.Equals(u.UserName, StringComparison.CurrentCultureIgnoreCase))
                 {
                     var passwordMatch = PasswordHasher.VerifyPassword(password, u.Salt, u.Hash);
                     if (passwordMatch)
