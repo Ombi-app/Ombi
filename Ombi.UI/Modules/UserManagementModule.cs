@@ -86,23 +86,20 @@ namespace Ombi.UI.Modules
             {
                 //Get Plex Users
                 var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
+				if (plexUsers != null && plexUsers.User != null) {
+					foreach (var u in plexUsers.User) {
+						var dbUser = plexDbUsers.FirstOrDefault (x => x.PlexUserId == u.Id);
+						var userDb = userLogins.FirstOrDefault (x => x.UserId == u.Id);
 
-                foreach (var u in plexUsers.User)
-                {
-                    var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == u.Id);
-                    var userDb = userLogins.FirstOrDefault(x => x.UserId == u.Id);
-
-                    // We don't have the user in the database yet
-                    if (dbUser == null)
-                    {
-                        model.Add(MapPlexUser(u, null, userDb?.LastLoggedIn ?? DateTime.MinValue));
-                    }
-                    else
-                    {
-                        // The Plex User is in the database
-                        model.Add(MapPlexUser(u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
-                    }
-                }
+						// We don't have the user in the database yet
+						if (dbUser == null) {
+							model.Add (MapPlexUser (u, null, userDb?.LastLoggedIn ?? DateTime.MinValue));
+						} else {
+							// The Plex User is in the database
+							model.Add (MapPlexUser (u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
+						}
+					}
+				}
 
                 // Also get the server admin
                 var account = PlexApi.GetAccount(plexSettings.PlexAuthToken);
