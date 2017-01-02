@@ -74,6 +74,8 @@
                 }
             }
 
+            if(Array.isArray($scope.users)){
+           
             var existingUsername = $scope.users.some(function (u) {
                 return u.username === $scope.user.username;
             });
@@ -81,6 +83,7 @@
             if (existingUsername) {
                 return generateNotify("A user with the username " + $scope.user.username + " already exists!", 'danger');
             }
+             }
 
             userManagementService.addUser($scope.user, $scope.selectedPermissions, $scope.selectedFeatures)
                 .then(function (data) {
@@ -92,6 +95,8 @@
                         clearCheckboxes();
                     };
                 });
+
+               
         };
 
         // Watch the checkboxes for updates (Creating a user)
