@@ -64,6 +64,23 @@ namespace Ombi.Api
                 };
             }
         }
+        public WatcherVersion Version(string apiKey, Uri baseUri)
+        {
+            var response = Send("version", apiKey, baseUri);
+            try
+            {
+                return JsonConvert.DeserializeObject<WatcherVersion>(response.Content);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return new WatcherVersion
+                {
+                    response = false,
+                    ErrorMessage = e.Message
+                };
+            }
+        }
 
         public WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl)
         {

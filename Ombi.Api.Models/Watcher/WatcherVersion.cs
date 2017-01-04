@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: IWatcherApi.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: WatcherVersion.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,18 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using System.Collections.Generic;
-using Ombi.Api.Models.Watcher;
-
-namespace Ombi.Api.Interfaces
+namespace Ombi.Api.Models.Watcher
 {
-    public interface IWatcherApi
+    public class WatcherVersion
     {
-        WatcherAddMovieResult AddMovie(string imdbId, string apiKey, Uri baseUrl);
-        WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl);
-        WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl, string imdbId);
-        WatcherVersion Version(string apiKey, Uri baseUri);
+        public string version { get; set; }
+        public bool response { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }
