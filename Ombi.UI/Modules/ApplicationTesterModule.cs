@@ -113,8 +113,8 @@ namespace Ombi.UI.Modules
             }
             try
             {
-                var status = WatcherApi.ListMovies(settings.ApiKey, settings.FullUri);
-                return !status.Error
+                var status = WatcherApi.Version(settings.ApiKey, settings.FullUri);
+                return !status.response
                ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Watcher successfully!" })
                : Response.AsJson(new JsonResponseModel { Result = false, Message = $"Could not connect to Watcher, Error: {status.ErrorMessage}" });
 

@@ -108,6 +108,7 @@
     <Compile Include="Tv\TvShowImages.cs" />
     <Compile Include="Watcher\WatcherAddMovieResult.cs" />
     <Compile Include="Watcher\WatcherListStatusResult.cs" />
+    <Compile Include="Watcher\WatcherVersion.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
