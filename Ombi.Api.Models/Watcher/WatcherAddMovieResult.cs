@@ -31,7 +31,7 @@ namespace Ombi.Api.Models.Watcher
 {
     public class WatcherAddMovieResult
     {
-        public string status { get; set; }
+        public bool response { get; set; }
         public string message { get; set; }
 
         [JsonIgnore]

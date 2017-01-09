@@ -77,10 +77,10 @@ namespace Ombi.Services.Jobs
                         Log.Error(movies.ErrorMessage);
                     }
                     var wantedMovies =
-                        movies?.Results?.Where(x => x.status.Equals("Wanted", StringComparison.CurrentCultureIgnoreCase));
+                        movies?.Movies?.Where(x => x.status.Equals("Wanted", StringComparison.CurrentCultureIgnoreCase));
                     if (wantedMovies != null && wantedMovies.Any())
                     {
-                        Cache.Set(CacheKeys.WatcherQueued, movies.Results.Select(x => x.imdbid).ToArray(), CacheKeys.TimeFrameMinutes.SchedulerCaching);
+                        Cache.Set(CacheKeys.WatcherQueued, movies.Movies.Select(x => x.imdbid).ToArray(), CacheKeys.TimeFrameMinutes.SchedulerCaching);
                     }
 
                 }

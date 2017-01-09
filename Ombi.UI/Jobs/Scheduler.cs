@@ -210,7 +210,7 @@ namespace Ombi.UI.Jobs
             var cpCacher =
                 TriggerBuilder.Create()
                     .WithIdentity("CouchPotatoCacher", "Cache")
-                    .StartAt(DateBuilder.FutureDate(4, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(2, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.CouchPotatoCacher).RepeatForever())
                     .Build();
 
@@ -218,7 +218,7 @@ namespace Ombi.UI.Jobs
                 TriggerBuilder.Create()
                     .WithIdentity("WatcherCacher", "Cache")
                     //.StartNow()
-                    .StartAt(DateBuilder.FutureDate(3, IntervalUnit.Minute))
+                    .StartAt(DateBuilder.FutureDate(2, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.WatcherCacher).RepeatForever())
                     .Build();
 

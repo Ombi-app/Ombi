@@ -78,7 +78,10 @@ namespace Ombi.Api.Models.Watcher
 
     public class WatcherListStatusResultContainer
     {
-        public List<WatcherListStatusResult> Results { get; set; }
+        [JsonProperty("movies")]
+        public List<WatcherListStatusResult> Movies { get; set; }
+        [JsonProperty("response")]
+        public bool Response { get; set; }
         [JsonIgnore]
         public string ErrorMessage { get; set; }
         [JsonIgnore]
