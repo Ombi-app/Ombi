@@ -56,7 +56,7 @@ namespace Ombi.Updater
                     }
                     else
                     {
-                        if (entry.Name.Contains("PlexRequests.Updater"))
+                        if (entry.Name.Contains("Ombi.Updater"))
                         {
                             entry.ExtractToFile(fullPath + "_Updated", true);
                             continue;
@@ -75,7 +75,7 @@ namespace Ombi.Updater
             {
                 BackupCurrentVersion();
                 var dir = CreateTempPath();
-                TempPath = Path.Combine(dir.FullName, "PlexRequestsUpdate.zip");
+                TempPath = Path.Combine(dir.FullName, "OmbiUpdate.zip");
 
                 CheckAndDelete(TempPath);
                 Console.WriteLine("Downloading new version");
@@ -109,7 +109,7 @@ namespace Ombi.Updater
                         }
                         else
                         {
-                            if (entry.Name.Contains("PlexRequests.Updater"))
+                            if (entry.Name.Contains("Ombi.Updater"))
                             {
                                 entry.ExtractToFile(fullPath + "_Updated", true);
                                 continue;
@@ -150,7 +150,7 @@ namespace Ombi.Updater
                 var dir = Directory.CreateDirectory(Path.Combine(applicationPath, "BackupSystem"));
 
                 var allfiles = Directory.GetFiles(applicationPath, "*.*", SearchOption.AllDirectories);
-                BackupPath = Path.Combine(dir.FullName, "PlexRequestsBackup.zip");
+                BackupPath = Path.Combine(dir.FullName, "OmbiBackup.zip");
 
                 CheckAndDelete(BackupPath);
                 using (var fileStream = new FileStream(BackupPath, FileMode.CreateNew))
@@ -202,7 +202,7 @@ namespace Ombi.Updater
         private void FinishUpdate(string launchOptions)
         {
             var args = Error ? "-u 2" : "-u 1";
-            var startInfo = new ProcessStartInfo($"{launchOptions}PlexRequests.exe") { Arguments = args, UseShellExecute = true };
+            var startInfo = new ProcessStartInfo($"{launchOptions}Ombi.exe") { Arguments = args, UseShellExecute = true };
 
             Process.Start(startInfo);
 
