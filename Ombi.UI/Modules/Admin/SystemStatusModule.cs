@@ -123,17 +123,17 @@ namespace Ombi.UI.Modules.Admin
             var url = Request.Form["url"];
             var args = (string)Request.Form["args"].ToString();
             var lowered = args.ToLower();
-            var appPath = Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(SystemStatusModule)).Location ?? string.Empty) ?? string.Empty, "PlexRequests.Updater.exe");
+            var appPath = Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(SystemStatusModule)).Location ?? string.Empty) ?? string.Empty, "Ombi.Updater.exe");
 
             if (!string.IsNullOrEmpty(lowered))
             {
-                if (lowered.Contains("plexrequests.exe"))
+                if (lowered.Contains("ombi.exe"))
                 {
-                    lowered = lowered.Replace("plexrequests.exe", "");
+                    lowered = lowered.Replace("ombi.exe", "");
                 }
             }
 
-            var startArgs = string.IsNullOrEmpty(lowered) ? appPath : $"{lowered} Plexrequests.Updater.exe";
+            var startArgs = string.IsNullOrEmpty(lowered) ? appPath : $"{lowered} Ombi.Updater.exe";
 
             var startInfo = Type.GetType("Mono.Runtime") != null
                                              ? new ProcessStartInfo(startArgs) { Arguments = $"{url} {lowered}", }

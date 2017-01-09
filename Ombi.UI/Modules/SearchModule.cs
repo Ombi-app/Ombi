@@ -567,6 +567,7 @@ namespace Ombi.UI.Modules
             {
                 if (ShouldAutoApprove(RequestType.Movie, settings, Username))
                 {
+                    model.Approved = true;
 
                     var result = await MovieSender.Send(model);
                     if (result.Result)
@@ -576,8 +577,7 @@ namespace Ombi.UI.Modules
                     }
                     if (!result.MovieSendingEnabled)
                     {
-
-                        model.Approved = true;
+                        
                         return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
 

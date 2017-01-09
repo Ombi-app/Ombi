@@ -78,7 +78,7 @@ namespace Ombi.Core
                 Log.Error(result.ErrorMessage);
                 return new MovieSenderResult { Result = false };
             }
-            if (result.status.Equals("success", StringComparison.CurrentCultureIgnoreCase))
+            if (result.response)
             {
                 return new MovieSenderResult { Result = true, MovieSendingEnabled = true };
             }

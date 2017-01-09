@@ -84,16 +84,15 @@ namespace Ombi.Api
 
         public WatcherListStatusResultContainer ListMovies(string apiKey, Uri baseUrl)
         {
-            var response = Send("liststatus", apiKey, baseUrl);
+           var response = Send("liststatus", apiKey, baseUrl);
             try
             {
                 if (response.Content.Contains("No movies found"))
                 {
                     return new WatcherListStatusResultContainer();
                 }
-                var items = JsonConvert.DeserializeObject<List<WatcherListStatusResult>>(response.Content);
-
-                return new WatcherListStatusResultContainer {Results = items};
+                var items = JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
+                return items;
             }
             catch (Exception e)
             {
@@ -115,9 +114,7 @@ namespace Ombi.Api
                 {
                     return new WatcherListStatusResultContainer();
                 }
-                var items = JsonConvert.DeserializeObject<List<WatcherListStatusResult>>(response.Content);
-
-                return new WatcherListStatusResultContainer { Results = items };
+                return JsonConvert.DeserializeObject<WatcherListStatusResultContainer>(response.Content);
             }
             catch (Exception e)
             {
