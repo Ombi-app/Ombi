@@ -159,9 +159,9 @@ namespace Ombi.UI
 
         private static void PrintToConsole(string message, ConsoleColor colour = ConsoleColor.Gray)
         {
-            Console.ForegroundColor = colour;
+            //    Console.ForegroundColor = colour;
             Console.WriteLine(message);
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         private static void CheckUpdate(UpdateValue val)
