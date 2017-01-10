@@ -231,6 +231,7 @@ namespace Ombi.UI.Modules
                 await UpdateRequests(plexDbUser.Username, plexDbUser.UserAlias, model.Alias);
 
                 plexDbUser.UserAlias = model.Alias;
+                plexDbUser.EmailAddress = model.EmailAddress;
 
                 await PlexUsersRepository.UpdateAsync(plexDbUser);
 
@@ -266,7 +267,7 @@ namespace Ombi.UI.Modules
                     UserAlias = model.Alias,
                     PlexUserId = plexUser.Id,
                     EmailAddress = plexUser.Email,
-                    Username = plexUser.Username,
+                    Username = plexUser.Title,
                     LoginId = Guid.NewGuid().ToString()
                 };
 
@@ -417,7 +418,7 @@ namespace Ombi.UI.Modules
                 Id = plexInfo.Id,
                 PermissionsFormattedString = newUser ? "Processing..." :( permissions == 0 ? "None" : permissions.ToString()),
                 FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
-                Username = plexInfo.Username,
+                Username = plexInfo.Title,
                 Type = UserType.PlexUser,
                 EmailAddress = plexInfo.Email,
                 Alias = dbUser?.UserAlias ?? string.Empty,
@@ -426,6 +427,7 @@ namespace Ombi.UI.Modules
                 {
                     Thumb = plexInfo.Thumb
                 },
+                ManagedUser = string.IsNullOrEmpty(plexInfo.Username)
             };
 
             m.Permissions.AddRange(GetPermissions(permissions));
