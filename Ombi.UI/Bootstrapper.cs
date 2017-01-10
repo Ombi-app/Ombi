@@ -97,6 +97,8 @@ namespace Ombi.UI
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
             ServicePointManager.ServerCertificateValidationCallback +=
                  (sender, certificate, chain, sslPolicyErrors) => true;
+
+            ServicePointManager.Expect100Continue = false;
         }
 
 #if DEBUG

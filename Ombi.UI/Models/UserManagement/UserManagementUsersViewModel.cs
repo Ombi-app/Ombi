@@ -24,6 +24,7 @@ namespace Ombi.UI.Models.UserManagement
         public DateTime LastLoggedIn { get; set; }
         public List<CheckBox> Permissions { get; set; }
         public List<CheckBox> Features { get; set; }
+        public bool ManagedUser { get; set; }
     }
 
     public class UserManagementPlexInformation

@@ -97,13 +97,16 @@ namespace Ombi.Services.Jobs
                         var needToUpdate = false;
                         var usernameChanged = false;
 
-                        // Do we need up update any info?
-                        if (!dbUser.EmailAddress.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase))
+                        if (!string.IsNullOrEmpty(user.Username)) // If true then this is a managed user, we do not want to update the email since Managed Users do not have email addresses
                         {
-                            dbUser.EmailAddress = user.Email;
-                            needToUpdate = true;
+                            // Do we need up update any info?
+                            if (!dbUser.EmailAddress.Equals(user.Email, StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                dbUser.EmailAddress = user.Email;
+                                needToUpdate = true;
+                            }
                         }
-                        if (!dbUser.Username.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase))
+                        if (!dbUser.Username.Equals(user.Title, StringComparison.CurrentCultureIgnoreCase))
                         {
                             needToUpdate = true;
                             usernameChanged = true;
@@ -114,8 +117,8 @@ namespace Ombi.Services.Jobs
                             if (usernameChanged)
                             {
                                 // The username has changed, let's check if the username matches any local users
-                                var localUser = localUsers.FirstOrDefault(x => x.UserName.Equals(user.Username, StringComparison.CurrentCultureIgnoreCase));
-                                dbUser.Username = user.Username;
+                                var localUser = localUsers.FirstOrDefault(x => x.UserName.Equals(user.Title, StringComparison.CurrentCultureIgnoreCase));
+                                dbUser.Username = user.Title;
                                 if (localUser != null)
                                 {
                                     // looks like we have a local user with the same name...
@@ -133,7 +136,7 @@ namespace Ombi.Services.Jobs
                                     var requestsWithThisUser = requests.Where(x => x.RequestedUsers.Contains(user.Username)).ToList();
                                     foreach (var r in requestsWithThisUser)
                                     {
-                                        r.RequestedUsers.Remove(user.Username); // Remove old
+                                        r.RequestedUsers.Remove(user.Title); // Remove old
                                         r.RequestedUsers.Add(dbUser.Username); // Add new
                                     }
 
@@ -157,7 +160,7 @@ namespace Ombi.Services.Jobs
                         Features = UserManagementHelper.GetFeatures(userManagementSettings),
                         UserAlias = string.Empty,
                         EmailAddress = user.Email,
-                        Username = user.Username,
+                        Username = user.Title,
                         LoginId = Guid.NewGuid().ToString()
                     };
 

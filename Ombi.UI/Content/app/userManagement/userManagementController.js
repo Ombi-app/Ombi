@@ -31,6 +31,7 @@
             });
             $scope.selectedUser = user[0];
 
+            $scope.selectedUser.emailDisabled = $scope.selectedUser.type === 0 && $scope.selectedUser.managedUser == '';
             openSidebar();
         }
 

@@ -47,21 +47,24 @@ namespace Ombi.Store.Repository
         public UsersModel GetUser(string userGuid)
         {
             var sql = @"SELECT * FROM Users
-            WHERE Userguid = @UserGuid";
+            WHERE Userguid = @UserGuid
+             COLLATE NOCASE";
             return Db.QueryFirstOrDefault<UsersModel>(sql, new {UserGuid = userGuid});
         }
 
         public UsersModel GetUserByUsername(string username)
         {
             var sql = @"SELECT * FROM Users
-            WHERE UserName = @UserName";
+            WHERE UserName = @UserName
+             COLLATE NOCASE";
             return Db.QueryFirstOrDefault<UsersModel>(sql, new {UserName = username});
         }
 
         public async Task<UsersModel> GetUserAsync(string userguid)
         {
             var sql = @"SELECT * FROM Users
-            WHERE UserGuid = @UserGuid";
+            WHERE UserGuid = @UserGuid
+             COLLATE NOCASE";
             return await Db.QueryFirstOrDefaultAsync<UsersModel>(sql, new {UserGuid = userguid});
         }
 

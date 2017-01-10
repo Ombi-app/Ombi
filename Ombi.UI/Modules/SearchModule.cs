@@ -565,7 +565,7 @@ namespace Ombi.UI.Modules
             };
             try
             {
-                if (ShouldAutoApprove(RequestType.Movie, settings, Username))
+                if (ShouldAutoApprove(RequestType.Movie))
                 {
                     model.Approved = true;
 
@@ -885,7 +885,7 @@ namespace Ombi.UI.Modules
 
             try
             {
-                if (ShouldAutoApprove(RequestType.TvShow, settings, Username))
+                if (ShouldAutoApprove(RequestType.TvShow))
                 {
                     model.Approved = true;
                     var s = await sonarrSettings;
@@ -981,7 +981,7 @@ namespace Ombi.UI.Modules
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
         {
-            var sendNotification = ShouldAutoApprove(type, prSettings, Username)
+            var sendNotification = ShouldAutoApprove(type)
                 ? !prSettings.IgnoreNotifyForAutoApprovedRequests
                 : true;
 
@@ -1089,7 +1089,7 @@ namespace Ombi.UI.Modules
 
             try
             {
-                if (ShouldAutoApprove(RequestType.Album, settings, Username))
+                if (ShouldAutoApprove(RequestType.Album))
                 {
                     model.Approved = true;
                     var hpSettings = HeadphonesService.GetSettings();
@@ -1363,7 +1363,7 @@ namespace Ombi.UI.Modules
             return diff;
         }
 
-        public bool ShouldAutoApprove(RequestType requestType, PlexRequestSettings prSettings, string username)
+        public bool ShouldAutoApprove(RequestType requestType)
         {
             var admin = Security.HasPermissions(Context.CurrentUser, Permissions.Administrator);
             // if the user is an admin, they go ahead and allow auto-approval
