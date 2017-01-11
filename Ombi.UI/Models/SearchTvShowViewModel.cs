@@ -57,5 +57,6 @@ namespace Ombi.UI.Models
         public bool TvFullyAvailable { get; set; }
         public bool DisableTvRequestsByEpisode { get; set; }
         public bool DisableTvRequestsBySeason { get; set; }
+        public bool EnableTvRequestsForOnlySeries { get; set; }
     }
 }
