@@ -48,21 +48,24 @@ namespace Ombi.Store.Repository
         public PlexUsers GetUser(string userGuid)
         {
             var sql = @"SELECT * FROM PlexUsers
-            WHERE PlexUserId = @UserGuid";
+            WHERE PlexUserId = @UserGuid
+             COLLATE NOCASE";
             return Db.QueryFirstOrDefault<PlexUsers>(sql, new {UserGuid = userGuid});
         }
 
         public PlexUsers GetUserByUsername(string username)
         {
             var sql = @"SELECT * FROM PlexUsers
-            WHERE Username = @UserName";
+            WHERE Username = @UserName
+             COLLATE NOCASE";
             return Db.QueryFirstOrDefault<PlexUsers>(sql, new {UserName = username});
         }
 
         public async Task<PlexUsers> GetUserAsync(string userguid)
         {
             var sql = @"SELECT * FROM PlexUsers
-            WHERE PlexUserId = @UserGuid";
+            WHERE PlexUserId = @UserGuid
+             COLLATE NOCASE";
             return await Db.QueryFirstOrDefaultAsync<PlexUsers>(sql, new {UserGuid = userguid});
         }
 

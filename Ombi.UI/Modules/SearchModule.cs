@@ -366,7 +366,8 @@ namespace Ombi.UI.Modules
                     SeriesName = t.show.name,
                     Status = t.show.status,
                     DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
-                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason
+                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                    EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason)
                 };
 
 
@@ -1276,7 +1277,8 @@ namespace Ombi.UI.Modules
                     User = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type
+                    RequestType = model.Type,
+                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
                 };
                 await NotificationService.Publish(notificationModel);
             }
@@ -1314,7 +1316,8 @@ namespace Ombi.UI.Modules
                     User = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type
+                    RequestType = model.Type,
+                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
                 };
                 await NotificationService.Publish(notificationModel);
             }

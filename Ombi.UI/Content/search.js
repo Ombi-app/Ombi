@@ -83,7 +83,7 @@ $(function () {
     });
 
     // Click TV dropdown option
-    $(document).on("click", ".dropdownTv", function (e) {
+    $(document).on("click", ".requestTv", function (e) {
         e.preventDefault();
         var buttonId = e.target.id;
         if ($("#" + buttonId).attr('disabled')) {
@@ -429,7 +429,8 @@ $(function () {
             url: result.plexUrl,
             tvPartialAvailable: result.tvPartialAvailable,
             disableTvRequestsByEpisode: result.disableTvRequestsByEpisode,
-            disableTvRequestsBySeason: result.disableTvRequestsBySeason
+            disableTvRequestsBySeason: result.disableTvRequestsBySeason,
+            enableTvRequestsForOnlySeries: result.enableTvRequestsForOnlySeries
         };
 
         return context;

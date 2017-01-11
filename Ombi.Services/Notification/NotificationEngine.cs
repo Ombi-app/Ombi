@@ -95,7 +95,7 @@ namespace Ombi.Services.Notification
                         if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Log.Info("This user is the Plex server owner");
-                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type);
+                            await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type, model.Type);
                             return;
                         }
 
@@ -108,7 +108,7 @@ namespace Ombi.Services.Notification
                         }
 
                         Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type);
+                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type, model.Type);
                     }
                 }
             }
@@ -137,7 +137,7 @@ namespace Ombi.Services.Notification
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Log.Info("This user is the Plex server owner");
-                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type);
+                        await PublishUserNotification(userAccount.Username, userAccount.Email, model.Title, model.PosterPath, type, model.Type);
                         return;
                     }
 
@@ -150,7 +150,7 @@ namespace Ombi.Services.Notification
                     }
 
                     Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                    await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type);
+                    await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type, model.Type);
                 }
             }
             catch (Exception e)
@@ -159,7 +159,7 @@ namespace Ombi.Services.Notification
             }
         }
 
-        private async Task PublishUserNotification(string username, string email, string title, string img, NotificationType type)
+        private async Task PublishUserNotification(string username, string email, string title, string img, NotificationType type, RequestType requestType)
         {
             var notificationModel = new NotificationModel
             {
@@ -167,7 +167,7 @@ namespace Ombi.Services.Notification
                 UserEmail = email,
                 NotificationType = type,
                 Title = title,
-                ImgSrc = img
+                ImgSrc = requestType == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{img}" : img
             };
 
             // Send the notification to the user.
