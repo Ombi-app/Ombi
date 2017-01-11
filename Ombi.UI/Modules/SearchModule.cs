@@ -366,7 +366,8 @@ namespace Ombi.UI.Modules
                     SeriesName = t.show.name,
                     Status = t.show.status,
                     DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
-                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason
+                    DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                    EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason)
                 };
 
 
