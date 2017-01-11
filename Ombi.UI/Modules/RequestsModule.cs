@@ -351,7 +351,8 @@ namespace Ombi.UI.Modules
                 NotificationType = NotificationType.Issue,
                 Title = originalRequest.Title,
                 DateTime = DateTime.Now,
-                Body = issue == IssueState.Other ? comment : issue.ToString().ToCamelCaseWords()
+                Body = issue == IssueState.Other ? comment : issue.ToString().ToCamelCaseWords(),
+                ImgSrc = originalRequest.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{originalRequest.PosterPath}" : originalRequest.PosterPath
             };
             await NotificationService.Publish(model);
 

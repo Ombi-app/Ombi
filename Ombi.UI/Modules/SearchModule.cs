@@ -1277,7 +1277,8 @@ namespace Ombi.UI.Modules
                     User = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type
+                    RequestType = model.Type,
+                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
                 };
                 await NotificationService.Publish(notificationModel);
             }
@@ -1315,7 +1316,8 @@ namespace Ombi.UI.Modules
                     User = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type
+                    RequestType = model.Type,
+                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
                 };
                 await NotificationService.Publish(notificationModel);
             }
