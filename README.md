@@ -29,6 +29,7 @@ We integrate with the following applications:
 * Sonarr
 * SickRage
 * CouchPotato
+* Watcher
 * Headphones
 
 ### Notifications
