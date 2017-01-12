@@ -91,6 +91,8 @@ namespace Ombi.UI.Modules
             Post["/clearissues", true] = async (x, ct) => await ClearIssue((int)Request.Form.Id);
 
             Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
+
+            Post["/UpdateFilters", true] = async (x, ct) => await UpdateFilters();
         }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -388,7 +390,7 @@ namespace Ombi.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "Sorry, you do not have the correct permissions to change a request." });
             }
-            
+
             Analytics.TrackEventAsync(Category.Requests, Action.Update, available ? "Make request available" : "Make request unavailable", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var originalRequest = await Service.GetAsync(requestId);
             if (originalRequest == null)
@@ -406,6 +408,11 @@ namespace Ombi.UI.Modules
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
         }
 
-        
+        private async Task<Response> UpdateFilters()
+        {
+
+
+            return Response.AsJson("");
+        }
     }
 }
