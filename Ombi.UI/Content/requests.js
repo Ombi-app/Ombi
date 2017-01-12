@@ -16,7 +16,7 @@ var base = $('#baseUrl').text();
 var tvLoaded = false;
 var albumLoaded = false;
 
-var isAdmin = $('#isAdmin').val();
+var isAdmin = $('#isAdmin').text();
 var defaultFiler = isAdmin == 'True' ? '.approved-fase' : 'all';
 
 var mixItUpDefault = {
