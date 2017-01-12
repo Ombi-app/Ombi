@@ -87,8 +87,7 @@ namespace Ombi.Services.Notification
                             selectedUsers.Add(requestUser);
                         }
                     }
-
-                    //var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);
+                    
                     foreach (var user in selectedUsers)
                     {
                         Log.Info("Notifying user {0}", user);
@@ -99,16 +98,39 @@ namespace Ombi.Services.Notification
                             return;
                         }
 
-                        var email = plexUser.User.FirstOrDefault(x => x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase));
-                        if (string.IsNullOrEmpty(email?.Email))
-                        {
-                            Log.Info("There is no email address for this Plex user, cannot send notification");
-                            // We do not have a plex user that requested this!
-                            continue;
-                        }
+                        var localUser =
+                            users.FirstOrDefault( x =>
+                                    x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
+                                    x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
 
-                        Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
-                        await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type, model.Type);
+                        // So if the request was from an alias, then we need to use the local user (since that contains the alias).
+                        // If we do not have a local user, then we should be using the Plex user if that user exists.
+                        // This will execute most of the time since Plex and Local users will most always be in the database.
+                        if (localUser != null)
+                        {
+                            if (string.IsNullOrEmpty(localUser?.EmailAddress))
+                            {
+                                Log.Info("There is no email address for this Local user ({0}), cannot send notification", localUser.Username);
+                                continue;
+                            }
+
+                            Log.Info("Sending notification to: {0} at: {1}, for : {2}", localUser, localUser.EmailAddress, model.Title);
+                            await PublishUserNotification(localUser.Username, localUser.EmailAddress, model.Title, model.PosterPath, type, model.Type);
+
+                        }
+                        else
+                        {
+                            var email = plexUser.User.FirstOrDefault(x => x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+                            if (string.IsNullOrEmpty(email?.Email))
+                            {
+                                Log.Info("There is no email address for this Plex user ({0}), cannot send notification", email?.Username);
+                                // We do not have a plex user that requested this!
+                                continue;
+                            }
+
+                            Log.Info("Sending notification to: {0} at: {1}, for : {2}", email.Username, email.Email, model.Title);
+                            await PublishUserNotification(email.Username, email.Email, model.Title, model.PosterPath, type, model.Type);
+                        }
                     }
                 }
             }
