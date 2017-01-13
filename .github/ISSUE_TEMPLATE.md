@@ -1,30 +1,38 @@
-!!Pleas use the template, otherway we will close the github issue!!
+<!--- 
 
-If this is a bug report or support request please make sure you have filled the following in:
-(If it's not a bug/support request and a feature request pleas submit your feature request over here: http://feathub.com/tidusjar/PlexRequests.Net)
+!! Please use the Support / bug report template, otherwise we will close the Github issue !!
 
-#### Plex Requests.Net Version:
+(Pleas submit a feature request over here: http://feathub.com/tidusjar/Ombi) 
 
-#### update Branch:
+--->
+
+#### Ombi Version:
+
+V 1.XX.XX
+
+#### Update Branch:
 
 Stable/Early Access Preview/development
 
 #### Operating System:
 
+(Place text here)
 
 #### Mono Version (only if your not on windows)
 
+(Place text here)
 
 #### Applicable Logs (from `/logs/` directory or the Admin page):
 
 ```
-Logs go here (Please make sure you remove any personal information from the logs)
+
+(Logs go here. Don't remove the ``` tags for showing your logs correctly. Please make sure you remove any personal information from the logs)
 
 ```
 
 #### Problem Description:
 
-
+(Place text here)
 
 #### Reproduction Steps:
 
