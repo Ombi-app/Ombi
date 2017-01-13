@@ -1,14 +1,14 @@
 ﻿@using Ombi.UI.Helpers
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.CustomizationSettings>
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.UI.Models.Admin.CustomizationViewModel>
 @Html.Partial("Shared/Partial/_Sidebar")
 @{
     var plexTheme = string.Empty;
     var originalTheme = string.Empty;
 
-    if (!string.IsNullOrEmpty(Model.ThemeName))
+    if (!string.IsNullOrEmpty(Model.Settings.ThemeName))
     {
-        plexTheme = Model.ThemeName.Equals(Themes.PlexTheme) ? "selected=\"selected\"" : string.Empty;
-        originalTheme = Model.ThemeName.Equals(Themes.OriginalTheme) ? "selected=\"selected\"" : string.Empty;
+        plexTheme = Model.Settings.ThemeName.Equals(Themes.PlexTheme) ? "selected=\"selected\"" : string.Empty;
+        originalTheme = Model.Settings.ThemeName.Equals(Themes.OriginalTheme) ? "selected=\"selected\"" : string.Empty;
     }
     else
     {
@@ -26,7 +26,7 @@
                 <label for="ApplicationName" class="control-label">Application Name</label>
 
                 <div>
-                    <input type="text" class="form-control form-control-custom " id="ApplicationName" name="ApplicationName" placeholder="Application Name" value="@Model.ApplicationName">
+                    <input type="text" class="form-control form-control-custom " id="ApplicationName" name="ApplicationName" placeholder="Application Name" value="@Model.Settings.ApplicationName">
                 </div>
             </div>
 
@@ -36,6 +36,69 @@
                     <select class="form-control form-control-custom" id="select">
                         <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
                         <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lang" class="control-label">Default Language</label>
+                <div id="langSelect">
+                    <select class="form-control form-control-custom" id="lang">
+                        @foreach (var l in Model.LanguageDropdown)
+                        {
+                            var enumVal = (int)l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sort" class="control-label">Default Admin Sort Order</label>
+                <div id="sortSelect">
+                    <select class="form-control form-control-custom" id="sort">
+                        @foreach (var l in Model.SortOptions)
+                        {
+                            var enumVal = (int) l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="filter" class="control-label">Default Admin Filter</label>
+                <div id="filterSelect">
+                    <select class="form-control form-control-custom" id="filter">
+                        @foreach (var l in Model.FilterOptions)
+                        {
+                            var enumVal = (int)l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
                     </select>
                 </div>
             </div>
@@ -60,10 +123,17 @@
             e.preventDefault();
 
             var theme = $("#themes option:selected").val();
+            var lang = $('#langSelect option:selected').val();
+            var sort = $('#sortSelect option:selected').val();
+            var filter = $('#filterSelect option:selected').val();
             var $form = $("#mainForm");
 
             var data = $form.serialize();
-            data = data + "&themeName=" + theme;
+            data = data +
+                "&themeName=" + theme +
+                "&DefaultLang=" + lang +
+                "&DefaultSort=" + sort +
+                "&DefaultFilter=" + filter;
 
             $.ajax({
                 type: $form.prop("method"),

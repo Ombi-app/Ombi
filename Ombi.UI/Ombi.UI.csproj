@@ -118,6 +118,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -233,6 +234,7 @@
     <Compile Include="ModelDataProviders\UserUpdateViewModelDataProvider.cs" />
     <Compile Include="ModelDataProviders\RequestedModelDataProvider.cs" />
     <Compile Include="Models\AboutAdminViewModel.cs" />
+    <Compile Include="Models\Admin\CustomizationViewModel.cs" />
     <Compile Include="Models\DatatablesModel.cs" />
     <Compile Include="Models\EpisodeListViewModel.cs" />
     <Compile Include="Models\EpisodeRequestModel.cs" />
@@ -247,6 +249,7 @@
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />
+    <Compile Include="Models\UI\Dropdown.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
     <Compile Include="Modules\Admin\AboutModule.cs" />

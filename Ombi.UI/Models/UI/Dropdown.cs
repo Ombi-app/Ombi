@@ -1,8 +1,8 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: NewsletterSettings.cs
-//    Created By: Jim MacKenzie
+//    Copyright (c) 2017 Jamie Rees
+//    File: Dropdown.cs
+//    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -24,34 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-namespace Ombi.Core.SettingModels
+namespace Ombi.UI.Models.UI
 {
-    public class CustomizationSettings : Settings
+    public class Dropdown<T>
     {
-        public string ApplicationName { get; set; }        
-        
-        /// <summary>
-        /// The CSS name of the theme we want
-        /// </summary>
-        public string ThemeName { get; set; }
-
-        /// <summary>
-        /// Admin Only.
-        /// </summary>
-        /// <value>
-        /// The default filter.
-        /// </value>
-        public int DefaultFilter { get; set; }
-        /// <summary>
-        /// Admin only.
-        /// </summary>
-        /// <value>
-        /// The default sort.
-        /// </value>
-        public int DefaultSort { get; set; }
-
-        public int DefaultLang { get; set; }
-
+        public bool Selected { get; set; }
+        public string Name { get; set; }
+        public T Value { get; set; }
     }
 }

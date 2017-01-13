@@ -17,7 +17,25 @@ var tvLoaded = false;
 var albumLoaded = false;
 
 var isAdmin = $('#isAdmin').text();
+
+
 var defaultFiler = isAdmin == 'True' ? '.approved-fase' : 'all';
+
+var url = createBaseUrl(base, '/requests/UpdateFilters');
+$.ajax({
+    type: 'GET',
+    url: url,
+    dataType: "json",
+    success: function (response) {
+
+        mixItUpDefault.load.filter = response.defaultFilter;
+        mixItUpDefault.load.sort = response.defaultSort;
+    },
+    error: function (e) {
+        console.log(e);
+        generateNotify("Something went wrong saving your filter!", "danger");
+    }
+});
 
 var mixItUpDefault = {
     animation: { enable: true },
@@ -30,26 +48,6 @@ var mixItUpDefault = {
     },
     callbacks: {
         onMixStart: function (state, futureState) {
-            //futureState.activeSort // sort
-            //futureState.activeFilter // next filter
-
-            // The below is TODO for saving the users filter and sort order
-            //var url = createBaseUrl(base, '/requests/UpdateFilters');
-            //$.ajax({
-            //    type: 'post',
-            //    url: url,
-            //    data: {sort:futureState.activeSort, filter:futureState.activeFilte},
-            //    dataType: "json",
-            //    success: function (response) {
-            //        console.log("saved filter and sort order");
-            //    },
-            //    error: function (e) {
-            //        console.log(e);
-            //        generateNotify("Something went wrong saving your filter!", "danger");
-            //    }
-            //});
-
-
             $('.mix', this).removeAttr('data-bound').removeData('bound'); // fix for animation issues in other tabs
         }
     }

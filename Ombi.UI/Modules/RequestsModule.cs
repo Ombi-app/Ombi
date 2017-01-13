@@ -43,6 +43,7 @@ using Ombi.Services.Interfaces;
 using Ombi.Services.Notification;
 using Ombi.Store;
 using Ombi.UI.Models;
+using Ombi.UI.Models.Admin;
 using Action = Ombi.Helpers.Analytics.Action;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
@@ -64,7 +65,8 @@ namespace Ombi.UI.Modules
             ICacheProvider cache,
             IAnalytics an,
             INotificationEngine engine,
-            ISecurityExtensions security) : base("requests", prSettings, security)
+            ISecurityExtensions security,
+            ISettingsService<CustomizationSettings> customSettings) : base("requests", prSettings, security)
         {
             Service = service;
             PrSettings = prSettings;
@@ -79,6 +81,7 @@ namespace Ombi.UI.Modules
             Cache = cache;
             Analytics = an;
             NotificationEngine = engine;
+            CustomizationSettings = customSettings;
 
             Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
@@ -92,7 +95,7 @@ namespace Ombi.UI.Modules
 
             Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
 
-            Post["/UpdateFilters", true] = async (x, ct) => await UpdateFilters();
+            Get["/UpdateFilters", true] = async (x, ct) => await GetFilterAndSortSettings();
         }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -104,6 +107,7 @@ namespace Ombi.UI.Modules
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
@@ -408,11 +412,20 @@ namespace Ombi.UI.Modules
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });
         }
 
-        private async Task<Response> UpdateFilters()
+        private async Task<Response> GetFilterAndSortSettings()
         {
+            var s = await CustomizationSettings.GetSettingsAsync();
 
+            var sortVal = EnumHelper<SortOptions>.GetDisplayValue((SortOptions)s.DefaultSort);
+            var filterVal = EnumHelper<FilterOptions>.GetDisplayValue((FilterOptions)s.DefaultFilter);
 
-            return Response.AsJson("");
+            var vm = new
+            {
+                DefaultSort = sortVal,
+                DefaultFilter = filterVal
+            };
+
+            return Response.AsJson(vm);
         }
     }
 }
