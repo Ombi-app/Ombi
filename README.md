@@ -13,9 +13,11 @@ ____
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
+
 * User mangement system (supports plex.tv accounts and local accounts) [NEW]
 * Sending newsletters [NEW]
 * Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
+
 * Allow your users to report issues and manage them seperatly
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
@@ -70,16 +72,13 @@ Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has cr
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
 
-Please feel free to submit a pull request!
+Please feed free to submit a pull request!
 
 # Donation
 If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their help!
 
-
-## [Feathub](http://feathub.com/tidusjar/Ombi)
-[![Feature Requests](http://feathub.com/tidusjar/Ombi?format=svg)](http://feathub.com/tidusjar/Ombi)
-
 ## Stats
-[![Throughput Graph](https://graphs.waffle.io/tidusjar/Ombi/throughput.svg)](https://waffle.io/tidusjar/Ombi/metrics/throughput)
+[![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
+
