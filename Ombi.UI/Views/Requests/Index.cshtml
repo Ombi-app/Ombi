@@ -1,8 +1,12 @@
 ﻿@using Nancy.Security
 @using Nancy.Security
+@using Ombi.Helpers
 @using Ombi.Helpers.Permissions
 @using Ombi.UI.Helpers
+@using Ombi.UI.Models.Admin
 @using Ombi.UI.Resources
+
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.UI.Models.Requests.RequestsIndexViewModel>
 @{
     var baseUrl = Html.GetBaseUrl();
     var formAction = string.Empty;
@@ -11,29 +15,42 @@
     {
         formAction = "/" + baseUrl.ToHtmlString();
     }
+
+    var sortText = EnumHelper<SortOptions>.GetDisplayDescription((SortOptions) Model.CustomizationSettings.DefaultSort);
+    var filterText = EnumHelper<FilterOptions>.GetDisplayDescription((FilterOptions) Model.CustomizationSettings.DefaultFilter);
+    var defaultFilter = EnumHelper<FilterOptions>.GetDisplayValue((FilterOptions) Model.CustomizationSettings.DefaultFilter);
+    var defaultSort = EnumHelper<SortOptions>.GetDisplayValue((SortOptions) Model.CustomizationSettings.DefaultSort);
+
 }
 <div>
-    <div hidden="hidden" id="isAdmin" >@isAdmin</div>
+    <div hidden="hidden" id="isAdmin">@isAdmin</div>
+    <div hidden="hidden" id="adminFilter">@defaultFilter</div>
+    <div hidden="hidden" id="adminFilterText">@filterText</div>
+    <div hidden="hidden" id="adminSort">@defaultSort</div>
+    <div hidden="hidden" id="adminSortText">@sortText</div>
+    <div hidden="hidden" id="defaultSortText">@UI.Requests_Order_LatestRequests</div>
+    <div hidden="hidden" id="defaultFilterText">@UI.Requests_Filter_All</div>
+
     <h1>@UI.Requests_Title</h1>
     <h4>@UI.Requests_Paragraph</h4>
-    <br/>
+    <br />
 
     <!-- Nav tabs -->
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
-        @if (Model.SearchForMovies)
+        @if (Model.PlexRequestSettings.SearchForMovies)
         {
             <li role="presentation" class="active"><a href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Requests_MoviesTabTitle</a></li>
         }
-        @if (Model.SearchForTvShows)
+        @if (Model.PlexRequestSettings.SearchForTvShows)
         {
             <li role="presentation"><a href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i>@UI.Requests_TvShowTabTitle</a></li>
         }
-        @if (Model.SearchForMusic)
+        @if (Model.PlexRequestSettings.SearchForMusic)
         {
             <li role="presentation"><a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-music"></i> @UI.Requests_AlbumsTabTitle</a></li>
         }
     </ul>
-    <br/>
+    <br />
 
     <!-- Tab panes -->
     <div class="tab-content contentList">
@@ -43,53 +60,33 @@
                     <div class="btn-group btn-group-separated">
                         @if (isAdmin)
                         {
-                            @if (Model.SearchForMovies)
-                             {
-                                 <button id="deleteMovies" class="btn btn-warning-outline delete-category" type="submit"><i class="fa fa-trash"></i> @UI.Requests_DeleteMovies</button>
-                                 <button id="approveMovies" class="btn btn-success-outline approve-category" type="submit"><i class="fa fa-plus"></i> @UI.Requests_ApproveMovies</button>
-                             }
-                            @if (Model.SearchForTvShows)
-                             {
-                                 <button id="deleteTVShows" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> @UI.Requests_DeleteTVShows</button>
-                                 <button id="approveTVShows" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> @UI.Requests_ApproveTvShows</button>
-                             }
-                            @if (Model.SearchForMusic)
-                             {
-                                 <button id="deleteMusic" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> @UI.Requests_DeleteMusic</button>
-                                 <button id="approveMusic" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> @UI.Requests_ApproveMusic</button>
-                             }
+                            @if (Model.PlexRequestSettings.SearchForMovies)
+                            {
+                                <button id="deleteMovies" class="btn btn-warning-outline delete-category" type="submit"><i class="fa fa-trash"></i> @UI.Requests_DeleteMovies</button>
+                                <button id="approveMovies" class="btn btn-success-outline approve-category" type="submit"><i class="fa fa-plus"></i> @UI.Requests_ApproveMovies</button>
+                            }
+                            @if (Model.PlexRequestSettings.SearchForTvShows)
+                            {
+                                <button id="deleteTVShows" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> @UI.Requests_DeleteTVShows</button>
+                                <button id="approveTVShows" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> @UI.Requests_ApproveTvShows</button>
+                            }
+                            @if (Model.PlexRequestSettings.SearchForMusic)
+                            {
+                                <button id="deleteMusic" class="btn btn-warning-outline delete-category" type="submit" style="display: none;"><i class="fa fa-trash"></i> @UI.Requests_DeleteMusic</button>
+                                <button id="approveMusic" class="btn btn-success-outline approve-category" type="submit" style="display: none;"><i class="fa fa-plus"></i> @UI.Requests_ApproveMusic</button>
+                            }
                         }
                     </div>
                     <div class="btn-group">
                         <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            @if (isAdmin)
-                            {
-                                <span id="filterText">@UI.Requests_Filter_NotApproved</span>
-                            }
-                            else
-                            {
-                                <span id="filterText">@UI.Requests_Filter_All</span>
-                            }
+                            <span id="filterText">@UI.Requests_Filter_All</span>
                             <i class="fa fa-filter"></i>
                         </a>
                         <ul class="dropdown-menu">
-                           @if (!isAdmin)
-                           {
-                               <li><a href="#" class="filter" data-filter="all"><i class="fa fa-check-square"></i> @UI.Requests_Filter_All</a></li>
-                           }
-                           else
-                           {
-                            <li><a href="#" class="filter" data-filter="all"><i class="fa fa-square-o"></i> @UI.Requests_Filter_All</a></li>
-                           }
+
+                            <li><a href="#" class="filter" data-filter="all"><i class="fa fa-check-square"></i> @UI.Requests_Filter_All</a></li>
                             <li><a href="#" class="filter" data-filter=".approved-true"><i class="fa fa-square-o"></i> @UI.Requests_Filter_Approved</a></li>
-                            @if (isAdmin)
-                            {
-                                <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-check-square"></i> @UI.Requests_Filter_NotApproved</a></li>
-                            }
-                            else
-                            {
-                                <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i> @UI.Requests_Filter_NotApproved</a></li>
-                            }
+                            <li><a href="#" class="filter" data-filter=".approved-false"><i class="fa fa-square-o"></i> @UI.Requests_Filter_NotApproved</a></li>
                             <li><a href="#" class="filter" data-filter=".available-true"><i class="fa fa-square-o"></i> @UI.Requests_Filter_Available</a></li>
                             <li><a href="#" class="filter" data-filter=".available-false"><i class="fa fa-square-o"></i> @UI.Requests_Filter_NotAvailable</a></li>
                             <li><a href="#" class="filter" data-filter=".released-true"><i class="fa fa-square-o"></i> @UI.Requests_Filter_Released</a></li>
@@ -98,7 +95,7 @@
                     </div>
                     <div class="btn-group">
                         <a href="#" class="btn btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                            @UI.Requests_Order
+                            <span id="sortText">@UI.Requests_Order</span>
                             <i class="fa fa-sort"></i>
                         </a>
                         <ul class="dropdown-menu">
@@ -111,40 +108,40 @@
                 </div>
             </div>
         </div>
-        @if (Model.SearchForMovies)
+        @if (Model.PlexRequestSettings.SearchForMovies)
         {
 
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
 
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <!-- Movie content -->
                 <div id="movieList">
                 </div>
             </div>
         }
 
-        @if (Model.SearchForTvShows)
+        @if (Model.PlexRequestSettings.SearchForTvShows)
         {
             <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
 
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <!-- TV content -->
                 <div id="tvList">
                 </div>
             </div>
         }
 
-        @if (Model.SearchForMusic)
+        @if (Model.PlexRequestSettings.SearchForMusic)
         {
             <!-- Music tab -->
             <div role="tabpanel" class="tab-pane" id="MusicTab">
 
-                <br/>
-                <br/>
+                <br />
+                <br />
                 <!-- TV content -->
                 <div id="musicList">
                 </div>
@@ -202,12 +199,12 @@
                 <span class="label label-success">{{status}}</span>
                 {{#if denied}}
                 <div>
-                    Denied: <i  style="color:red;" class="fa fa-check"></i>
+                    Denied: <i style="color:red;" class="fa fa-check"></i>
                     {{#if deniedReason}}
                     <span class="customTooltip" title="{{deniedReason}}"><i class="fa fa-info-circle"></i></span>
                     {{/if}}
                 </div>
-                      
+
                 {{/if}}
                 {{#if_eq releaseDate "01/01/0001 00:00:00"}} <!--TheTVDB didn't provide any premier info-->
                 <div>@UI.Requests_ReleaseDate: {{releaseDate}}</div>
@@ -234,7 +231,7 @@
                     <i id="availableIcon{{requestId}}" class="fa fa-check"></i>
                     {{/if_eq}}
                 </div>
-              
+
                 {{#if_eq type "tv"}}
                 {{#if episodes}}
                 Episodes: <span class="customTooltip" data-tooltip-content="#{{requestId}}toolTipContent"><i class="fa fa-info-circle"></i></span>
@@ -284,7 +281,7 @@
                     <input name="reason" type="text" hidden="hidden" />
                     <div class="btn-group btn-split">
                         <button type="button" class="btn btn-sm btn-danger-outline deny" id="{{requestId}}deny" custom-button="{{requestId}}"><i class="fa fa-times"></i> Deny</button>
-                        <button type="button" class="btn btn-danger-outline dropdown-toggle"  id="{{requestId}}denyToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class="btn btn-danger-outline dropdown-toggle" id="{{requestId}}denyToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">@UI.Requests_ToggleDropdown</span>
                         </button>

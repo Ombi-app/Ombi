@@ -44,6 +44,7 @@ using Ombi.Services.Notification;
 using Ombi.Store;
 using Ombi.UI.Models;
 using Ombi.UI.Models.Admin;
+using Ombi.UI.Models.Requests;
 using Action = Ombi.Helpers.Analytics.Action;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
@@ -117,7 +118,9 @@ namespace Ombi.UI.Modules
         private async Task<Negotiator> LoadRequests()
         {
             var settings = await PrSettings.GetSettingsAsync();
-            return View["Index", settings];
+            var custom = await CustomizationSettings.GetSettingsAsync();
+
+            return View["Index", new RequestsIndexViewModel { CustomizationSettings = custom, PlexRequestSettings = settings }];
         }
 
         private async Task<Response> GetMovies()
@@ -227,7 +230,7 @@ namespace Ombi.UI.Modules
                 }
                 catch (Exception e)
                 {
-                   Log.Info(e);
+                    Log.Info(e);
                 }
 
             }
@@ -316,7 +319,7 @@ namespace Ombi.UI.Modules
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
 
-           
+
             Analytics.TrackEventAsync(Category.Requests, Action.Delete, "Delete Request", Username, CookieHelper.GetAnalyticClientId(Cookies));
 
             var currentEntity = await Service.GetAsync(requestid);

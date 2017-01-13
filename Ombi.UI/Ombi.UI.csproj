@@ -245,6 +245,7 @@
     <Compile Include="Models\LandingPageViewModel.cs" />
     <Compile Include="Models\MovieSearchType.cs" />
     <Compile Include="Models\QualityModel.cs" />
+    <Compile Include="Models\Requests\RequestsIndexViewModel.cs" />
     <Compile Include="Models\ScheduledJobsViewModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />

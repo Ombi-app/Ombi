@@ -16,32 +16,44 @@ var base = $('#baseUrl').text();
 var tvLoaded = false;
 var albumLoaded = false;
 
-var isAdmin = $('#isAdmin').text();
+var isAdmin = $('#isAdmin').text() === "True";
+
+var adminFilter = $('#adminFilter').text();
+var adminFilterText = $('#adminFilterText').text();
+var adminSort = $('#adminSort').text();
+var adminSortText = $('#adminSortText').text();
+
+var defaultFilterText = $('#defaultFilterText').text();
+var defaultSortText = $('#defaultSortText').text();
 
 
-var defaultFiler = isAdmin == 'True' ? '.approved-fase' : 'all';
+$("#filterText").text(isAdmin ? adminFilterText : defaultFilterText);
+$("#sortText").text(isAdmin ? adminSortText : defaultSortText);
 
-var url = createBaseUrl(base, '/requests/UpdateFilters');
-$.ajax({
-    type: 'GET',
-    url: url,
-    dataType: "json",
-    success: function (response) {
+// Loop through all the filters to set the correct one to checked
+selectCheckboxes('.filter', isAdmin ? adminFilterText : defaultFilterText);
+selectCheckboxes('.sort', isAdmin ? adminSortText : defaultSortText);
 
-        mixItUpDefault.load.filter = response.defaultFilter;
-        mixItUpDefault.load.sort = response.defaultSort;
-    },
-    error: function (e) {
-        console.log(e);
-        generateNotify("Something went wrong saving your filter!", "danger");
-    }
-});
+
+function selectCheckboxes(className, text) {
+    $(className).each(function (i, obj) {
+
+        var $element = $(obj.children[0]);
+        if (obj.text === " " + text) {
+            $element.removeClass('fa-square-o').addClass('fa-check-square');
+        } else {
+            if ($element.hasClass('fa-check-square')) {
+                $element.removeClass('fa-check-square').addClass('fa-square-o');
+            }
+        }
+    });
+}
 
 var mixItUpDefault = {
     animation: { enable: true },
     load: {
-        filter: defaultFiler,
-        sort: 'requestorder:desc'
+        filter: isAdmin ? adminFilter : 'all',
+        sort: isAdmin ? adminSort : 'requestorder:desc'
     },
     layout: {
         display: 'block'
@@ -293,6 +305,9 @@ $('.sort', '.dropdown-menu').click(function (e) {
     var $this = $(this);
     $('.fa-check-square', $this.parents('.dropdown-menu:first')).removeClass('fa-check-square').addClass('fa-square-o');
     $this.children('.fa').first().removeClass('fa-square-o').addClass('fa-check-square');
+    $("#sortText").fadeOut(function () {
+        $(this).text($this.text().trim());
+    }).fadeIn();
 });
 
 

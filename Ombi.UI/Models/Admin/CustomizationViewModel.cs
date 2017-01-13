@@ -37,13 +37,19 @@ namespace Ombi.UI.Models.Admin
     public class CustomizationViewModel
     {
         public CustomizationSettings Settings { get; set; }
-        public List<Dropdown<Languages>> LanguageDropdown { get; set; } = new List<Dropdown<Languages>>();
-        public List<Dropdown<FilterOptions>> FilterOptions { get; set; } =  new List<Dropdown<FilterOptions>>();
+        public List<Dropdown<Languages>> LanguageDropdown { get; } = new List<Dropdown<Languages>>();
+        public List<Dropdown<FilterOptions>> FilterOptions { get; } =  new List<Dropdown<FilterOptions>>();
         public List<Dropdown<SortOptions>> SortOptions { get; set; } = new List<Dropdown<SortOptions>>();
     }
 
     public enum FilterOptions
     {
+        [Display(Name = "all", Description = "All")]
+        All,
+        [Display(Name = ".approved-true", Description = "Approved")]
+        Approved,
+        [Display(Name = ".approved-false", Description = "Not Approved")]
+        NotApproved,
         [Display(Name = ".available-true", Description = "Available")]
         Available,
         [Display(Name = ".available-false", Description = "Not Available")]
