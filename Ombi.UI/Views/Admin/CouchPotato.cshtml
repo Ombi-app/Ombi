@@ -1,0 +1,272 @@
+﻿@using Ombi.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.CouchPotatoSettings>
+@Html.Partial("Shared/Partial/_Sidebar")
+@{
+    int port;
+    if (Model.Port == 0)
+    {
+        port = 5050;
+    }
+    else
+    {
+        port = Model.Port;
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>CouchPotato Settings</legend>
+            <div class="form-group">
+                <div class="checkbox">
+                   
+                        @if (Model.Enabled)
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled" checked="checked"><label for="Enabled">Enabled</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Enabled" name="Enabled"><label for="Enabled">Enabled</label>
+                        }
+                 
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Ip" class="control-label">CouchPotato Hostname or IP</label>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" value="@Model.Ip">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="portNumber" class="control-label">Port</label>
+
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ApiKey" class="control-label">CouchPotato API Key</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" value="@Model.ApiKey">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="username" class="control-label">Username and Password</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom" id="username" name="Username" placeholder="username">
+                </div>
+                <br />
+                <div>
+                    <input type="password" class="form-control form-control-custom" id="password" name="Password" placeholder="Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="">
+                    <button id="requestToken" class="btn btn-primary-outline">Request Api Key <i class="fa fa-key"></i></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+      
+                        @if (Model.Ssl)
+                        {
+                            <input type="checkbox" id="Ssl" name="Ssl" checked="checked"><label for="Ssl">SSL</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
+                        }
+        
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="SubDir" class="control-label">CouchPotato Base Url</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select" class="control-label">Quality Profiles</label>
+                <div id="profiles">
+                    <select class="form-control form-control-custom" id="select"></select>
+                </div>
+            </div>
+            <br/>
+
+            <div class="form-group">
+                <div>
+                    <button id="testCp" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"> </div></button>
+                </div>
+            </div>
+
+
+
+
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+
+<script>
+    $(function() {
+
+        var baseUrl = '@Html.GetBaseUrl()';
+
+        @if (!string.IsNullOrEmpty(Model.ProfileId))
+         {
+             <text>
+        var qualitySelected = '@Model.ProfileId';
+        var $form = $("#mainForm");
+        var url = '/admin/cpprofiles';
+        url = createBaseUrl(baseUrl, url);
+        $.ajax({
+            type: $form.prop("method"),
+            data: $form.serialize(),
+            url: url,
+            dataType: "json",
+            success: function(response) {
+                response.list.forEach(function(result) {
+                    if (result._id == qualitySelected) {
+
+                        $("#select").append("<option selected='selected' value='" + result._id + "'>" + result.label + "</option>");
+                    } else {
+                        $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
+                    }
+                });
+            },
+            error: function(e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+        </text>
+         }
+
+        $('#requestToken').click(function (e) {
+            e.preventDefault();
+            debugger;
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                url: "cpapikey",
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    if (response.apiKey) {
+                        generateNotify("Success!", "success");
+                        $('#ApiKey').val(response.apiKey);
+                    } else {
+                        generateNotify("Could not automatically get the API key", "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#getProfiles').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            var url = createBaseUrl(baseUrl, "/admin/cpprofiles");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: url,
+                dataType: "json",
+                success: function (response) {
+                    if (response.message) {
+                        generateNotify(response.message, "warning");
+                        return;
+                    }
+                    response.list.forEach(function (result) {
+                        $("#select").append("<option value='" + result._id + "'>" + result.label + "</option>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#testCp').click(function (e) {
+            e.preventDefault();
+            var $form = $("#mainForm");
+            var url = createBaseUrl(baseUrl,"/test/cp");
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+           
+            $.ajax({
+                type: $form.prop("method"),
+                url: url,
+                data: $form.serialize(),
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                   		$('#spinner').attr("class", "fa fa-check");
+                        generateNotify(response.message, "success");
+                        $('#authToken').val(response.authToken);
+                    } else {
+                        generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+	                    generateNotify("Something went wrong!", "danger");
+	        				$('#spinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+
+        $('#save').click(function (e) {
+            e.preventDefault();
+            var port = $('#portNumber').val();
+            if (isNaN(port)) {
+                generateNotify("You must specify a Port.", "warning");
+                return;
+            }
+            var $form = $("#mainForm");
+            var qualityProfile = $("#profiles option:selected").val();
+            var data = $form.serialize();
+            data = data + "&profileId=" + qualityProfile;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+    });
+</script>

@@ -1,0 +1,152 @@
+﻿@using Ombi.UI.Helpers
+@Html.Partial("Shared/Partial/_Sidebar")
+
+@{
+    var baseUrl = Html.GetBaseUrl();
+    var formAction = "/admin/authentication";
+
+    var usermanagement = "/usermanagement";
+    if (!string.IsNullOrEmpty(baseUrl.ToHtmlString()))
+    {
+        formAction = "/" + baseUrl.ToHtmlString() + formAction;
+        usermanagement = "/" + baseUrl.ToHtmlString() + usermanagement;
+    }
+
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" action="@formAction" id="mainForm">
+        <fieldset>
+            <legend>Authentication Settings</legend>
+
+            <div class="form-group">
+                <div class="checkbox">
+             
+                        @if (Model.UserAuthentication)
+                        {
+                            <input type="checkbox" id="userAuth" name="UserAuthentication" checked="checked">
+                            <label for="userAuth">Enable User Authentication</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="userAuth" name="UserAuthentication">
+                            <label for="userAuth">Enable User Authentication</label>
+                        }
+          
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+       
+                        @if (Model.UsePassword)
+                        {
+                            <input type="checkbox" id="UsePassword" name="UsePassword" checked="checked">
+                            <label id="passLabel" for="UsePassword">Require users to login with their passwords</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="UsePassword" name="UsePassword">
+                            <label id="passLabel" for="UsePassword">Require users to login with their passwords</label>
+                        }
+            
+                </div>
+            </div>
+
+
+            <br />
+            <a href="@usermanagement" class="btn btn-info-outline">User Management</a>
+            <br />
+            <br />
+            
+
+            <p class="form-group">A comma separated list of users that you do not want to login.</p>
+            <div class="form-group">
+                <label for="DeniedUsers" class="control-label">Denied Users</label>
+                <div >
+                    <input type="text" class="form-control-custom form-control " id="DeniedUsers" name="DeniedUsers" placeholder="e.g. John, Bobby" value="@Model.DeniedUsers">
+                </div>
+            </div>
+            <br/>
+            <div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button type="submit" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+<script>
+    $(function () {
+
+        var base = '@Html.GetBaseUrl()';
+
+
+
+        changeDisabledStatus($('#UsePassword'), @Model.UserAuthentication.ToString().ToLower(), $('#passLabel'));
+        if ($('#PlexAuthToken')) {
+            loadUserList();
+        }
+
+        $('#refreshUsers').click(function (e) {
+            e.preventDefault();
+            loadUserList();
+        });
+
+       
+        $('#mainForm').on('click', '#userAuth', function () {
+            var checked = this.checked;
+            changeDisabledStatus($('#UsePassword'), checked, $('#passLabel'));
+        });
+
+        function changeDisabledStatus($element, checked, $label) {
+            if (checked) {
+                $element.removeAttr("disabled");
+                $label.css("color", "");
+            } else {
+                $('#UsePassword').prop('checked', false);
+                $element.attr("disabled", "disabled");
+                $label.css("color", "grey");
+            }
+        }
+
+
+        function loadUserList() {
+            $('#users').html("");
+            var url = "getusers";
+            $.ajax({
+                type: "Get",
+                url: url,
+                dataType: "json",
+                success: function (response) {
+
+                $('#users').html("");
+                if(!response.result){
+                	generateNotify(response.message,"danger");
+                    $('#users').append("<option>Error!</option>");
+                	return;
+                }
+                    if (response.users.length > 0) {
+                        $(response.users).each(function () {
+                            $('#users').append("<option>" + this + "</option>");
+                        });
+                    } else {
+                        $('#users').append("<option>No Users, Please refresh!</option>");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                    $('#users').html("");
+                    $('#users').append("<option>Error!</option>");
+                }
+            });
+
+        }
+
+
+    });
+</script>

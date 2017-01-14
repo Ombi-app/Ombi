@@ -1,24 +1,24 @@
-version: 1.10.{build}
+version: 2.0.{build}
 configuration: Release
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '1.10.1'
+  assembly_version: '2.0.0'
   assembly_file_version: '{version}'
-  assembly_informational_version: '1.10.1'
+  assembly_informational_version: '2.0.0'
 before_build:
 - cmd: appveyor-retry nuget restore
 build:
   verbosity: minimal
 after_build:
 - cmd: >-
-    7z a PlexRequests.zip %APPVEYOR_BUILD_FOLDER%\PlexRequests.UI\bin\Release\
+    7z a Ombi.zip %APPVEYOR_BUILD_FOLDER%\Ombi.UI\bin\Release\
 
-    appveyor PushArtifact PlexRequests.zip
+    appveyor PushArtifact Ombi.zip
     
 deploy:
 - provider: GitHub
-  release: PlexRequests v$(appveyor_build_version)
+  release: Ombi v$(appveyor_build_version)
   auth_token:
     secure: jDpp1/WUQl3uN41fNI3VeZoRZbDiDfs3GPQ1v+C5ZNE3cWdnUvuJfCCfUbYUV1Rp
   draft: true

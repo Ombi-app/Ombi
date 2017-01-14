@@ -1,21 +1,23 @@
 # Ombi
 
 ____
-[![Gitter](https://badges.gitter.im/tidusjar/PlexRequest.NET.svg)](https://gitter.im/tidusjar/PlexRequests.Net?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
-[![Linux Status](https://travis-ci.org/tidusjar/PlexRequests.Net.svg)](https://travis-ci.org/tidusjar/PlexRequests.Net)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/plexrequests.net.svg)](http://isitmaintained.com/project/tidusjar/plexrequests.net "Percentage of issues still open")
-[![Github All Releases](https://img.shields.io/github/downloads/tidusjar/PlexRequests.net/total.svg)](https://github.com/tidusjar/PlexRequests.Net)
-[![Stories in Progress](https://badge.waffle.io/tidusjar/PlexRequests.Net.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/PlexRequests.Net)
+[![Linux Status](https://travis-ci.org/tidusjar/Ombi.svg)](https://travis-ci.org/tidusjar/Ombi)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Average time to resolve an issue")
+[![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Percentage of issues still open")
+[![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
+[![Stories in Progress](https://badge.waffle.io/tidusjar/Ombi.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/Ombi)
 
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
+
 * User mangement system (supports plex.tv accounts and local accounts) [NEW]
 * Sending newsletters [NEW]
 * Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
+
 * Allow your users to report issues and manage them seperatly
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
@@ -79,3 +81,4 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
+

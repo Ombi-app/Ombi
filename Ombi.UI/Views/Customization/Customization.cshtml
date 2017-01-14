@@ -1,0 +1,159 @@
+﻿@using Ombi.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.UI.Models.Admin.CustomizationViewModel>
+@Html.Partial("Shared/Partial/_Sidebar")
+@{
+    var plexTheme = string.Empty;
+    var originalTheme = string.Empty;
+
+    if (!string.IsNullOrEmpty(Model.Settings.ThemeName))
+    {
+        plexTheme = Model.Settings.ThemeName.Equals(Themes.PlexTheme) ? "selected=\"selected\"" : string.Empty;
+        originalTheme = Model.Settings.ThemeName.Equals(Themes.OriginalTheme) ? "selected=\"selected\"" : string.Empty;
+    }
+    else
+    {
+        plexTheme = "selected=\"selected\"";
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Customization Settings</legend>
+
+
+
+            <div class="form-group">
+                <label for="ApplicationName" class="control-label">Application Name</label>
+
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="ApplicationName" name="ApplicationName" placeholder="Application Name" value="@Model.Settings.ApplicationName">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="select" class="control-label">Theme</label>
+                <div id="themes">
+                    <select class="form-control form-control-custom" id="select">
+                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
+                        <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="lang" class="control-label">Default Language</label>
+                <div id="langSelect">
+                    <select class="form-control form-control-custom" id="lang">
+                        @foreach (var l in Model.LanguageDropdown)
+                        {
+                            var enumVal = (int)l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="sort" class="control-label">Default Admin Sort Order</label>
+                <div id="sortSelect">
+                    <select class="form-control form-control-custom" id="sort">
+                        @foreach (var l in Model.SortOptions)
+                        {
+                            var enumVal = (int) l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="filter" class="control-label">Default Admin Filter</label>
+                <div id="filterSelect">
+                    <select class="form-control form-control-custom" id="filter">
+                        @foreach (var l in Model.FilterOptions)
+                        {
+                            var enumVal = (int)l.Value;
+                            if (l.Selected)
+                            {
+
+                                <option selected="selected" class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                            else
+                            {
+                                <option class="form-control form-control-custom" value="@enumVal">@l.Name</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+
+        </fieldset>
+    </form>
+</div>
+
+
+
+<script>
+
+    $(function() {
+        
+        $('#save').click(function (e) {
+            e.preventDefault();
+
+            var theme = $("#themes option:selected").val();
+            var lang = $('#langSelect option:selected').val();
+            var sort = $('#sortSelect option:selected').val();
+            var filter = $('#filterSelect option:selected').val();
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data +
+                "&themeName=" + theme +
+                "&DefaultLang=" + lang +
+                "&DefaultSort=" + sort +
+                "&DefaultFilter=" + filter;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+
+    });
+</script>
