@@ -1,5 +1,5 @@
+# Ombi
 
-![](http://i.imgur.com/s4nswSA.png?1)
 ____
 [![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
@@ -9,22 +9,15 @@ ____
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 [![Stories in Progress](https://badge.waffle.io/tidusjar/Ombi.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/Ombi)
 
-
-# Feature Requests
-Feature requests are handled on FeatHub.
-
-Search the existing requests to see if your suggestion has already been submitted.
-(If a similar request exists, give it a thumbs up (+1), or add additional comments to the request)
-
-#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](http://feathub.com/tidusjar/Ombi)
-
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
-* User mangement system (supports plex.tv accounts and local accounts)
-* Sending newsletters
-* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline)
+
+* User mangement system (supports plex.tv accounts and local accounts) [NEW]
+* Sending newsletters [NEW]
+* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
+
 * Allow your users to report issues and manage them seperatly
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
@@ -51,6 +44,13 @@ Supported notifications:
 * Slack
 * Weekly Recently Added email notification to all of your Plex Users!
 
+# Feature Requests
+Feature requests are handled on FeatHub.
+
+Search the existing requests to see if your suggestion has already been submitted.
+(If a similar request exists, give it a thumbs up (+1), or add additional comments to the request)
+
+#### [![Feature Requests](https://cloud.githubusercontent.com/assets/390379/10127973/045b3a96-6560-11e5-9b20-31a2032956b2.png)](http://feathub.com/tidusjar/Ombi)
 
 # Preview
 
