@@ -107,7 +107,7 @@
         }
 
 <!-- Movie and TV Results template -->
-<script id="search-template" type="text/x-handlebars-template">
+    <script id="search-template" type="text/x-handlebars-template">
     <div class="row">
         <div class="col-sm-2">
 
@@ -134,7 +134,6 @@
                     <h4>{{title}} ({{year}})</h4>
                 </a>
                 {{/if_eq}}
-                {{#if_eq type "tv"}}
                 {{#if available}}
                 <span class="label label-success">@UI.Search_Available_on_plex</span>
                 {{else}}
@@ -146,9 +145,11 @@
                 <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
                 {{/if}}
                 {{/if}}
+
+                <span id="{{id}}netflixTab"></span>
+
                 <br />
                 <br />
-                {{/if_eq}}
             </div>
             <p>{{overview}}</p>
         </div>

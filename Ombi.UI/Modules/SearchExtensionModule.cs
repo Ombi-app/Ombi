@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: INetflixApi.cs
+//    File: SearchExtensionModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,12 +25,38 @@
 //  ************************************************************************/
 #endregion
 
-using Ombi.Api.Models.Netflix;
+using System.Threading.Tasks;
+using Nancy;
+using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
 
-namespace Ombi.Api.Interfaces
+namespace Ombi.UI.Modules
 {
-    public interface INetflixApi
+    public class SearchExtensionModule : BaseAuthModule
     {
-        NetflixMovieResult CheckNetflix(string title, string year = null);
+        public SearchExtensionModule(ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security, INetflixApi netflix) : base("searchextension",pr, security)
+        {
+            NetflixApi = netflix;
+
+            Get["/netflix/{searchTerm}", true] = async (x, ctx) => await Netflix(x.searchTerm);
+        }
+
+        private INetflixApi NetflixApi { get; }
+
+
+        public async Task<Response> Netflix(string title)
+        {
+            var result = NetflixApi.CheckNetflix(title);
+
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                return Response.AsJson(new { Result = false });
+            }
+
+            return Response.AsJson(new { Result = true });
+        }
+
+
     }
 }
