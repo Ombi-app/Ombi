@@ -49,6 +49,7 @@
     <Compile Include="ICouchPotatoApi.cs" />
     <Compile Include="IHeadphonesApi.cs" />
     <Compile Include="IMusicBrainzApi.cs" />
+    <Compile Include="INetflixApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="IPushbulletApi.cs" />
     <Compile Include="ISlackApi.cs" />
