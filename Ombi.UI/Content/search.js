@@ -83,7 +83,7 @@ $(function () {
     });
 
     // Click TV dropdown option
-    $(document).on("click", ".requestTv", function (e) {
+    $(document).on("click", ".dropdownTv", function (e) {
         e.preventDefault();
         var buttonId = e.target.id;
         if ($("#" + buttonId).attr('disabled')) {

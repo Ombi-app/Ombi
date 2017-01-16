@@ -61,6 +61,7 @@
     <Compile Include="Music\MusicBrainzCoverArt.cs" />
     <Compile Include="Music\MusicBrainzReleaseInfo.cs" />
     <Compile Include="Music\MusicBrainzSearchResults.cs" />
+    <Compile Include="Netflix\NetflixMovieResult.cs" />
     <Compile Include="Notifications\PushbulletPush.cs" />
     <Compile Include="Notifications\PushbulletResponse.cs" />
     <Compile Include="Notifications\PushoverResponse.cs" />
