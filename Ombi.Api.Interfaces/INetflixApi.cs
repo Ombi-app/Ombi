@@ -31,6 +31,6 @@ namespace Ombi.Api.Interfaces
 {
     public interface INetflixApi
     {
-        NetflixMovieResult GetMovies(string movieName, string year = null)
+        NetflixMovieResult GetMovies(string movieName, string year = null);
     }
 }
