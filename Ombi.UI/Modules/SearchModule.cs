@@ -246,6 +246,7 @@ namespace Ombi.UI.Modules
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
+                    
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                     imdbId = movieInfoTask?.ImdbId;
@@ -345,6 +346,10 @@ namespace Ombi.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                if (!(t.show.externals?.thetvdb.HasValue) ?? false)
+                {
+                    continue;
+                }
                 var banner = t.show.image?.medium;
                 if (!string.IsNullOrEmpty(banner))
                 {

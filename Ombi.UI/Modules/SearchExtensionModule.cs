@@ -54,7 +54,7 @@ namespace Ombi.UI.Modules
                 return Response.AsJson(new { Result = false });
             }
 
-            return Response.AsJson(new { Result = true });
+            return Response.AsJson(new { Result = true, NetflixId = result.ShowId });
         }
 
 

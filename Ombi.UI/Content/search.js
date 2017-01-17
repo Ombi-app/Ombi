@@ -355,7 +355,7 @@ $(function () {
                 if (results.result) {
                     // It's on Netflix
                     $('#' + id + 'netflixTab')
-                        .html("<span class='label label-success'>Avaialble on Netflix</span>");
+                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Avaialble on Netflix</span></a>");
                 }
             
         });
