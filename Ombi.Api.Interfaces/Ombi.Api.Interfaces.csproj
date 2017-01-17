@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="IApiRequest.cs" />
     <Compile Include="ICouchPotatoApi.cs" />
+    <Compile Include="IDiscordApi.cs" />
     <Compile Include="IHeadphonesApi.cs" />
     <Compile Include="IMusicBrainzApi.cs" />
     <Compile Include="INetflixApi.cs" />

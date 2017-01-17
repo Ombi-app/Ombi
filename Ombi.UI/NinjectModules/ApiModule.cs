@@ -46,6 +46,8 @@ namespace Ombi.UI.NinjectModules
             Bind<ISlackApi>().To<SlackApi>();
             Bind<IApiRequest>().To<ApiRequest>();
             Bind<IWatcherApi>().To<WatcherApi>();
+            Bind<INetflixApi>().To<NetflixRouletteApi>();
+            Bind<IDiscordApi>().To<DiscordApi>();
         }
     }
 }

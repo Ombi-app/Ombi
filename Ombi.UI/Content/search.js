@@ -304,6 +304,8 @@ $(function () {
 
                     var html = searchTemplate(context);
                     $("#movieList").append(html);
+
+                    checkNetflix(context.title, context.id);
                 });
             }
             else {
@@ -334,6 +336,9 @@ $(function () {
                     var context = buildTvShowContext(result);
                     var html = searchTemplate(context);
                     $("#tvList").append(html);
+
+                    checkNetflix(context.title, context.id);
+
                 });
             }
             else {
@@ -342,6 +347,19 @@ $(function () {
             $('#tvSearchButton').attr("class", "fa fa-search");
         });
     };
+
+    function checkNetflix(title, id) {
+        var url = createBaseUrl(base, '/searchextension/netflix/' + title);
+        $.ajax(url).success(function (results) {
+            
+                if (results.result) {
+                    // It's on Netflix
+                    $('#' + id + 'netflixTab')
+                        .html("<span class='label label-success'>Avaialble on Netflix</span>");
+                }
+            
+        });
+    }
 
     function resetTvShows() {
         $("#tvList").html("");

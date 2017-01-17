@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: INetflixApi.cs
+//    File: DiscordWebhookRequest.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,11 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Ombi.Api.Models.Netflix;
-
-namespace Ombi.Api.Interfaces
+namespace Ombi.Api.Models.Notifications
 {
-    public interface INetflixApi
+    public class DiscordWebhookRequest
     {
-        NetflixMovieResult CheckNetflix(string title, string year = null);
+        public string content { get; set; }
+        public string username { get; set; }
     }
 }
