@@ -29,7 +29,10 @@ namespace Ombi.Core
         /// Gets the username this could be the alias! We should always use this method when getting the username
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <returns><c>null</c> if we cannot find a user</returns>
+        /// <param name="session">The session.</param>
+        /// <returns>
+        ///   <c>null</c> if we cannot find a user
+        /// </returns>
         string GetUsername(string username, ISession session);
     }
 }
