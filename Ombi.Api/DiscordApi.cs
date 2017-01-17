@@ -50,7 +50,8 @@ namespace Ombi.Api
         {
             var request = new RestRequest
             {
-                Resource = "webhooks/{webhookId}/{webhookToken}"
+                Resource = "webhooks/{webhookId}/{webhookToken}",
+                Method = Method.POST
             };
 
             request.AddUrlSegment("webhookId", webhookId);
@@ -72,7 +73,8 @@ namespace Ombi.Api
         {
             var request = new RestRequest
             {
-                Resource = "webhooks/{webhookId}/{webhookToken}"
+                Resource = "webhooks/{webhookId}/{webhookToken}",
+                Method = Method.POST
             };
 
             request.AddUrlSegment("webhookId", webhookId);
