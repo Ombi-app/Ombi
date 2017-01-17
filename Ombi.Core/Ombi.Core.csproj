@@ -123,6 +123,7 @@
     <Compile Include="SecurityExtensions.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\DiscordNotificationSettings.cs" />
+    <Compile Include="SettingModels\RadarrSettings.cs" />
     <Compile Include="SettingModels\WatcherSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
     <Compile Include="SettingModels\HeadphonesSettings.cs" />

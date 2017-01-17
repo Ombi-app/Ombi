@@ -71,6 +71,7 @@
     <Compile Include="ApiRequest.cs" />
     <Compile Include="DiscordApi.cs" />
     <Compile Include="NetflixRouletteApi.cs" />
+    <Compile Include="RadarrApi.cs" />
     <Compile Include="WatcherApi.cs" />
     <Compile Include="MusicBrainzApi.cs" />
     <Compile Include="SlackApi.cs" />

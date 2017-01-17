@@ -53,6 +53,7 @@
     <Compile Include="INetflixApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="IPushbulletApi.cs" />
+    <Compile Include="IRadarrApi.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
