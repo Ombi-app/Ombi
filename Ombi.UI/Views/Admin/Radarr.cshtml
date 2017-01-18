@@ -67,26 +67,10 @@
                 <label for="RootPath" class="control-label">Root save directory for TV shows</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " placeholder="C:\Media\Tv" id="RootPath" name="RootPath" value="@Model.RootPath">
-                    <label>Enter the root folder where tv shows are saved. For example <strong>C:\Media\TV</strong>.</label>
+                    <label>Enter the root folder where movies are saved. For example <strong>C:\Media\TV</strong>.</label>
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-
-                        @if (Model.SeasonFolders)
-                        {
-                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders" checked="checked">
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SeasonFolders" name="SeasonFolders">
-                        }
-                        <label for="SeasonFolders">Enable season folders</label>
-
-                </div>
-                <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
-            </div>
             <div class="form-group">
                 <div>
                     <button id="testSonarr" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner"/></button>
@@ -124,7 +108,7 @@
             $.ajax({
                 type: $form.prop("method"),
                 data: $form.serialize(),
-                url: "sonarrprofiles",
+                url: "radarrprofiles",
                 dataType: "json",
                 success: function(response) {
                     response.forEach(function(result) {
@@ -202,7 +186,7 @@
             $.ajax({
                 type: $form.prop("method"),
                 data: $form.serialize(),
-                url: "sonarrprofiles",
+                url: "radarrprofiles",
                 dataType: "json",
                 success: function (response) {
                     response.forEach(function (result) {
@@ -219,7 +203,7 @@
         });
 
         var base = '@Html.GetBaseUrl()';
-        $('#testSonarr').click(function (e) {
+        $('#testRadarr').click(function (e) {
 
             $('#spinner').attr("class", "fa fa-spinner fa-spin");
             e.preventDefault();
@@ -230,7 +214,7 @@
             var data = $form.serialize();
             data = data + "&qualityProfile=" + qualityProfile;
             
-            var url = createBaseUrl(base, '/test/sonarr');
+            var url = createBaseUrl(base, '/test/radarr');
             $.ajax({
                 type: $form.prop("method"),
                 url: url,

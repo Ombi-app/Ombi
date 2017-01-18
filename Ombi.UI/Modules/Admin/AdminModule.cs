@@ -95,6 +95,8 @@ namespace Ombi.UI.Modules.Admin
         private ISettingsService<NotificationSettingsV2> NotifySettings { get; }
         private ISettingsService<DiscordNotificationSettings> DiscordSettings { get; }
         private IDiscordApi DiscordApi { get; }
+        private ISettingsService<RadarrSettings> RadarrSettings { get; }
+        private IRadarrApi RadarrApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -122,7 +124,7 @@ namespace Ombi.UI.Modules.Admin
              ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
              ISettingsService<WatcherSettings> watcherSettings ,
              ISettingsService<DiscordNotificationSettings> discord,
-             IDiscordApi discordapi 
+             IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi
              , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
@@ -156,6 +158,8 @@ namespace Ombi.UI.Modules.Admin
             WatcherSettings = watcherSettings;
             DiscordSettings = discord;
             DiscordApi = discordapi;
+            RadarrSettings = settings;
+            RadarrApi = radarrApi;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
             
@@ -178,11 +182,15 @@ namespace Ombi.UI.Modules.Admin
 
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
+            Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+
+            Get["/radarr", true] = async (x, ct) => await Radarr();
+            Post["/radarr"] = _ => SaveRadarr();
+            Post["/radarrprofiles"] = _ => GetRadarrQualityProfiles();
 
             Get["/sickrage"] = _ => Sickrage();
             Post["/sickrage"] = _ => SaveSickrage();
 
-            Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
             Post["/cpprofiles", true] = async (x, ct) => await GetCpProfiles();
             Post["/cpapikey"] = x => GetCpApiKey();
 
@@ -463,6 +471,49 @@ namespace Ombi.UI.Modules.Admin
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Negotiator> Radarr()
+        {
+            var settings = await RadarrSettings.GetSettingsAsync();
+
+            return View["Radarr", settings];
+        }
+
+        private Response SaveRadarr()
+        {
+            var sonarrSettings = this.Bind<SonarrSettings>();
+
+            var valid = this.Validate(sonarrSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            var sickRageEnabled = SickRageService.GetSettings().Enabled;
+            if (sickRageEnabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
+            }
+            sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
+            var result = SonarrService.SaveSettings(sonarrSettings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response GetRadarrQualityProfiles()
+        {
+            var settings = this.Bind<RadarrSettings>();
+            var profiles = RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+
+            // set the cache
+            if (profiles != null)
+            {
+                Cache.Set(CacheKeys.RadarrQualityProfiles, profiles);
+            }
+
+            return Response.AsJson(profiles);
         }
 
         private Negotiator Sickrage()
