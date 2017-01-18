@@ -175,7 +175,7 @@ namespace Ombi.UI.Modules.Admin
             Get["/getusers"] = _ => GetUsers();
 
             Get["/couchpotato"] = _ => CouchPotato();
-            Post["/couchpotato"] = _ => SaveCouchPotato();
+            Post["/couchpotato", true] = async (x, ct) => await SaveCouchPotato();
 
             Get["/plex"] = _ => Plex();
             Post["/plex", true] = async (x, ct) => await SavePlex();
@@ -185,7 +185,7 @@ namespace Ombi.UI.Modules.Admin
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
 
             Get["/radarr", true] = async (x, ct) => await Radarr();
-            Post["/radarr"] = _ => SaveRadarr();
+            Post["/radarr", true] = async (x, ct) => await SaveRadarr();
             Post["/radarrprofiles"] = _ => GetRadarrQualityProfiles();
 
             Get["/sickrage"] = _ => Sickrage();
@@ -385,7 +385,7 @@ namespace Ombi.UI.Modules.Admin
             return View["CouchPotato", settings];
         }
 
-        private Response SaveCouchPotato()
+        private async Task<Response> SaveCouchPotato()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
             var valid = this.Validate(couchPotatoSettings);
@@ -394,7 +394,7 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(valid.SendJsonError());
             }
 
-            var watcherSettings = WatcherSettings.GetSettings();
+            var watcherSettings = await WatcherSettings.GetSettingsAsync();
 
             if (watcherSettings.Enabled)
             {
@@ -406,8 +406,20 @@ namespace Ombi.UI.Modules.Admin
                     });
             }
 
+            var radarrSettings = await RadarrSettings.GetSettingsAsync();
+
+            if (radarrSettings.Enabled)
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Cannot have Radarr and CouchPotato both enabled."
+                    });
+            }
+
             couchPotatoSettings.ApiKey = couchPotatoSettings.ApiKey.Trim();
-            var result = CpService.SaveSettings(couchPotatoSettings);
+            var result = await CpService.SaveSettingsAsync(couchPotatoSettings);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
@@ -465,6 +477,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
             }
+
             sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
             var result = SonarrService.SaveSettings(sonarrSettings);
 
@@ -480,25 +493,34 @@ namespace Ombi.UI.Modules.Admin
             return View["Radarr", settings];
         }
 
-        private Response SaveRadarr()
+        private async Task<Response> SaveRadarr()
         {
-            var sonarrSettings = this.Bind<SonarrSettings>();
+            var radarrSettings = this.Bind<RadarrSettings>();
 
-            var valid = this.Validate(sonarrSettings);
+            //Check Watcher and CP make sure they are not enabled
+            var watcher = await WatcherSettings.GetSettingsAsync();
+            if (watcher.Enabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Watcher is enabled, we cannot enable Watcher and Radarr" });
+            }
+
+            var cp = await CpService.GetSettingsAsync();
+            if (cp.Enabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is enabled, we cannot enable Watcher and CouchPotato" });
+            }
+
+            var valid = this.Validate(radarrSettings);
             if (!valid.IsValid)
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            var sickRageEnabled = SickRageService.GetSettings().Enabled;
-            if (sickRageEnabled)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
-            }
-            sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
-            var result = SonarrService.SaveSettings(sonarrSettings);
+
+            radarrSettings.ApiKey = radarrSettings.ApiKey.Trim();
+            var result = await RadarrSettings.SaveSettingsAsync(radarrSettings);
 
             return Response.AsJson(result
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Radarr!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 

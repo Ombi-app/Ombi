@@ -34,6 +34,10 @@ namespace Ombi.Api.Models.Radarr
     public class RadarrAddMovie
     {
 
+        public RadarrAddMovie()
+        {
+            images = new List<string>();
+        }
         public RadarrError Error { get; set; }
         public RadarrAddOptions addOptions { get; set; }
         public string title { get; set; }
@@ -41,6 +45,7 @@ namespace Ombi.Api.Models.Radarr
         public int qualityProfileId { get; set; }
         public bool monitored { get; set; }
         public int tmdbId { get; set; }
+        public List<string> images { get; set; }
         public string cleanTitle { get; set; }
         public string imdbId { get; set; }
         public string titleSlug { get; set; }

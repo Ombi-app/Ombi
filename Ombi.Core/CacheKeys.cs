@@ -39,6 +39,7 @@ namespace Ombi.Core
         public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
         public const string RadarrQualityProfiles = nameof(RadarrQualityProfiles);
         public const string SonarrQueued = nameof(SonarrQueued);
+        public const string RadarrMovies = nameof(RadarrMovies);
         public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
         public const string SickRageQueued = nameof(SickRageQueued);
         public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);

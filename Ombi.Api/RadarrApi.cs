@@ -77,8 +77,8 @@ namespace Ombi.Api
                 tmdbId = tmdbId,
                 qualityProfileId = qualityId,
                 rootFolderPath = rootPath,
-                titleSlug = title
-
+                titleSlug = title,
+                monitored = true
             };
 
             if (searchNow)

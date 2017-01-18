@@ -86,9 +86,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Interfaces\INotificationEngine.cs" />
+    <Compile Include="Jobs\RadarrCacher.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
     <Compile Include="Jobs\IPlexContentCacher.cs" />
