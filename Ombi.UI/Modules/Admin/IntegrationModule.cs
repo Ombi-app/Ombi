@@ -97,6 +97,18 @@ namespace Ombi.UI.Modules.Admin
                     });
             }
 
+            var watcherSettings = await WatcherSettings.GetSettingsAsync();
+
+            if (watcherSettings.Enabled)
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Cannot have Watcher and CouchPotato both enabled."
+                    });
+            }
+
             settings.ApiKey = settings.ApiKey.Trim();
             var result = await WatcherSettings.SaveSettingsAsync(settings);
             return Response.AsJson(result

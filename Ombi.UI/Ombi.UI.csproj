@@ -288,6 +288,7 @@
     </Compile>
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\RadarrValidator.cs" />
     <Compile Include="Validators\WatcherValidator.cs" />
     <Compile Include="Validators\SlackSettingsValidator.cs" />
     <Compile Include="Validators\UserViewModelValidator.cs" />
@@ -790,6 +791,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Admin\DiscordNotification.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\Radarr.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

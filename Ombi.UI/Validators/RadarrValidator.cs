@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ServicesModule.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,39 +25,19 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Core;
-using Ombi.Core.Queue;
-using Ombi.Helpers.Analytics;
-using Ombi.Services.Interfaces;
-using Ombi.Services.Jobs;
-using Ombi.UI.Jobs;
-using Quartz;
-using Quartz.Impl;
-using Quartz.Spi;
+using FluentValidation;
+using Ombi.Core.SettingModels;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.UI.Validators
 {
-    public class ServicesModule : NinjectModule
+    public class RadarrValidator : AbstractValidator<RadarrSettings>
     {
-        public override void Load()
+        public RadarrValidator()
         {
-            Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
-            Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
-            Bind<IWatcherCacher>().To<WatcherCacher>();
-            Bind<ISonarrCacher>().To<SonarrCacher>();
-            Bind<ISickRageCacher>().To<SickRageCacher>();
-            Bind<IRecentlyAdded>().To<RecentlyAdded>();
-            Bind<IRadarrCacher>().To<RadarrCacher>();
-            Bind<IPlexContentCacher>().To<PlexContentCacher>();
-            Bind<IJobFactory>().To<CustomJobFactory>();
-            Bind<IMovieSender>().To<MovieSender>();
-     
-            Bind<IAnalytics>().To<Analytics>();
-            Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
-            Bind<IJobScheduler>().To<Scheduler>();
-
-            Bind<ITransientFaultQueue>().To<TransientFaultQueue>();
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
         }
     }
 }

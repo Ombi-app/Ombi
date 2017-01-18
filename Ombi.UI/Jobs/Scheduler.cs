@@ -75,6 +75,7 @@ namespace Ombi.UI.Jobs
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
                 JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
                 JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
+                JobBuilder.Create<RadarrCacher>().WithIdentity("RadarrCacher", "Cache").Build(),
             };
             
             jobs.AddRange(jobList);
@@ -170,6 +171,10 @@ namespace Ombi.UI.Jobs
             {
                 s.PlexUserChecker = 24;
             }
+            if (s.RadarrCacher == 0)
+            {
+                s.RadarrCacher = 60;
+            }
 
             var triggers = new List<ITrigger>();
 
@@ -221,6 +226,14 @@ namespace Ombi.UI.Jobs
                     .StartAt(DateBuilder.FutureDate(2, IntervalUnit.Minute))
                     .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.WatcherCacher).RepeatForever())
                     .Build();
+
+            var radarrCacher =
+    TriggerBuilder.Create()
+        .WithIdentity("RadarrCacher", "Cache")
+        .StartNow()
+        //.StartAt(DateBuilder.FutureDate(2, IntervalUnit.Minute))
+        .WithSimpleSchedule(x => x.WithIntervalInMinutes(s.RadarrCacher).RepeatForever())
+        .Build();
 
             var storeBackup =
                 TriggerBuilder.Create()
@@ -280,6 +293,7 @@ namespace Ombi.UI.Jobs
             triggers.Add(fault);
             triggers.Add(plexCacher);
             triggers.Add(plexUserChecker);
+            triggers.Add(radarrCacher);
 
             return triggers;
         }

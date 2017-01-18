@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: ServicesModule.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RadarrAddOptions.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,40 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Ninject.Modules;
-using Ombi.Core;
-using Ombi.Core.Queue;
-using Ombi.Helpers.Analytics;
-using Ombi.Services.Interfaces;
-using Ombi.Services.Jobs;
-using Ombi.UI.Jobs;
-using Quartz;
-using Quartz.Impl;
-using Quartz.Spi;
-
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Radarr
 {
-    public class ServicesModule : NinjectModule
+    public class RadarrAddOptions
     {
-        public override void Load()
-        {
-            Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
-            Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
-            Bind<IWatcherCacher>().To<WatcherCacher>();
-            Bind<ISonarrCacher>().To<SonarrCacher>();
-            Bind<ISickRageCacher>().To<SickRageCacher>();
-            Bind<IRecentlyAdded>().To<RecentlyAdded>();
-            Bind<IRadarrCacher>().To<RadarrCacher>();
-            Bind<IPlexContentCacher>().To<PlexContentCacher>();
-            Bind<IJobFactory>().To<CustomJobFactory>();
-            Bind<IMovieSender>().To<MovieSender>();
-     
-            Bind<IAnalytics>().To<Analytics>();
-            Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
-            Bind<IJobScheduler>().To<Scheduler>();
-
-            Bind<ITransientFaultQueue>().To<TransientFaultQueue>();
-        }
+        public bool ignoreEpisodesWithFiles { get; set; }
+        public bool ignoreEpisodesWithoutFiles { get; set; }
+        public bool searchForMovie { get; set; }
     }
 }

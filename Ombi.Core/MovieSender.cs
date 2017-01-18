@@ -37,16 +37,20 @@ namespace Ombi.Core
     public class MovieSender : IMovieSender
     {
         public MovieSender(ISettingsService<CouchPotatoSettings> cp, ISettingsService<WatcherSettings> watcher,
-            ICouchPotatoApi cpApi, IWatcherApi watcherApi)
+            ICouchPotatoApi cpApi, IWatcherApi watcherApi, IRadarrApi radarrApi, ISettingsService<RadarrSettings> radarrSettings)
         {
             CouchPotatoSettings = cp;
             WatcherSettings = watcher;
             CpApi = cpApi;
             WatcherApi = watcherApi;
+            RadarrSettings = radarrSettings;
+            RadarrApi = radarrApi;
         }
 
         private ISettingsService<CouchPotatoSettings> CouchPotatoSettings { get; }
         private ISettingsService<WatcherSettings> WatcherSettings { get; }
+        private ISettingsService<RadarrSettings> RadarrSettings { get; } 
+        private IRadarrApi RadarrApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IWatcherApi WatcherApi { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
@@ -55,6 +59,7 @@ namespace Ombi.Core
         {
             var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
             var watcherSettings = await WatcherSettings.GetSettingsAsync();
+            var radarrSettings = await RadarrSettings.GetSettingsAsync();
 
             if (cpSettings.Enabled)
             {
@@ -64,6 +69,11 @@ namespace Ombi.Core
             if (watcherSettings.Enabled)
             {
                 return SendToWatcher(model, watcherSettings);
+            }
+
+            if (radarrSettings.Enabled)
+            {
+                return SendToRadarr(model, radarrSettings);
             }
 
             return new MovieSenderResult { Result = false, MovieSendingEnabled = false };
@@ -90,6 +100,24 @@ namespace Ombi.Core
         {
             var result = CpApi.AddMovie(model.ImdbId, settings.ApiKey, model.Title, settings.FullUri, qualityId);
             return new MovieSenderResult { Result = result, MovieSendingEnabled = true };
+        }
+
+        private MovieSenderResult SendToRadarr(RequestedModel model, RadarrSettings settings)
+        {
+            var qualityProfile = 0;
+            int.TryParse(settings.QualityProfile, out qualityProfile);
+            var result = RadarrApi.AddMovie(model.ProviderId, model.Title, qualityProfile, settings.RootPath, settings.ApiKey, settings.FullUri, true);
+
+            if (!string.IsNullOrEmpty(result.Error?.message))
+            {
+                Log.Error(result.Error.message);
+                return new MovieSenderResult { Result = false };
+            }
+            if (!string.IsNullOrEmpty(result.title))
+            {
+                return new MovieSenderResult { Result = true, MovieSendingEnabled = true };
+            }
+            return new MovieSenderResult { Result = false, MovieSendingEnabled = true };
         }
     }
 }

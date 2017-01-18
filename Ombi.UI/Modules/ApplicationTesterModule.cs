@@ -46,7 +46,7 @@ namespace Ombi.UI.Modules
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
              ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security,
-             IWatcherApi watcherApi) : base("test", pr, security)
+             IWatcherApi watcherApi, IRadarrApi radarrApi) : base("test", pr, security)
         {
             this.RequiresAuthentication();
             
@@ -56,9 +56,11 @@ namespace Ombi.UI.Modules
             SickRageApi = srApi;
             HeadphonesApi = hpApi;
             WatcherApi = watcherApi;
+            RadarrApi = radarrApi;
 
             Post["/cp"] = _ => CouchPotatoTest();
             Post["/sonarr"] = _ => SonarrTest();
+            Post["/radarr"] = _ => RadarrTest();
             Post["/plex"] = _ => PlexTest();
             Post["/sickrage"] = _ => SickRageTest();
             Post["/headphones"] = _ => HeadphonesTest();
@@ -73,6 +75,7 @@ namespace Ombi.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private IWatcherApi WatcherApi { get; }
+        private IRadarrApi RadarrApi { get; }
 
         private Response CouchPotatoTest()
         {
@@ -148,7 +151,7 @@ namespace Ombi.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Sonarr, please check your settings." });
 
             }
-			catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+            catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Sonarr's status: ");
                 Log.Warn(e);
@@ -156,6 +159,35 @@ namespace Ombi.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to Sonarr, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+
+        private Response RadarrTest()
+        {
+            var radarrSettings = this.Bind<RadarrSettings>();
+            var valid = this.Validate(radarrSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+            try
+            {
+                var status = RadarrApi.SystemStatus(radarrSettings.ApiKey, radarrSettings.FullUri);
+                return status?.version != null
+               ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Radarr successfully!" })
+               : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Radarr, please check your settings." });
+
+            }
+            catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+            {
+                Log.Warn("Exception thrown when attempting to get Radarr's status: ");
+                Log.Warn(e);
+                var message = $"Could not connect to Radarr, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to Radarr, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }

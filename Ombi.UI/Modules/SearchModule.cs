@@ -76,7 +76,7 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender)
+            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher)
             : base("search", prSettings, security)
         {
             Auth = auth;
@@ -108,6 +108,7 @@ namespace Ombi.UI.Modules
             PlexContentRepository = content;
             MovieSender = movieSender;
             WatcherCacher = watcherCacher;
+            RadarrCacher = radarrCacher;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -157,6 +158,7 @@ namespace Ombi.UI.Modules
         private IAnalytics Analytics { get; }
         private ITransientFaultQueue FaultQueue { get; }
         private IRepository<RequestLimit> RequestLimitRepo { get; }
+        private IRadarrCacher RadarrCacher { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
@@ -236,6 +238,7 @@ namespace Ombi.UI.Modules
 
             var cpCached = CpCacher.QueuedIds();
             var watcherCached = WatcherCacher.QueuedIds();
+            var radarrCached = RadarrCacher.QueuedIds();
             var content = PlexContentRepository.GetAll();
             var plexMovies = Checker.GetPlexMovies(content);
             var viewMovies = new List<SearchMovieViewModel>();
@@ -246,6 +249,7 @@ namespace Ombi.UI.Modules
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
+                    
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                     imdbId = movieInfoTask?.ImdbId;
@@ -287,13 +291,19 @@ namespace Ombi.UI.Modules
                 }
                 else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
                 {
+                    viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
                 else if(watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
                 {
+                    viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-
+                else if (radarrCached.Contains(movie.Id) && canSee)
+                {
+                    viewMovie.Approved = true;
+                    viewMovie.Requested = true;
+                }
                 viewMovies.Add(viewMovie);
             }
 
@@ -345,6 +355,10 @@ namespace Ombi.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                if (!(t.show.externals?.thetvdb.HasValue) ?? false)
+                {
+                    continue;
+                }
                 var banner = t.show.image?.medium;
                 if (!string.IsNullOrEmpty(banner))
                 {

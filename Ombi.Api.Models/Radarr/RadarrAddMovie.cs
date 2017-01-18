@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: ServicesModule.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RadarrAddMovie.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,39 +25,31 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Core;
-using Ombi.Core.Queue;
-using Ombi.Helpers.Analytics;
-using Ombi.Services.Interfaces;
-using Ombi.Services.Jobs;
-using Ombi.UI.Jobs;
-using Quartz;
-using Quartz.Impl;
-using Quartz.Spi;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Ombi.Api.Models.Sonarr;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Radarr
 {
-    public class ServicesModule : NinjectModule
+    public class RadarrAddMovie
     {
-        public override void Load()
-        {
-            Bind<IAvailabilityChecker>().To<PlexAvailabilityChecker>();
-            Bind<ICouchPotatoCacher>().To<CouchPotatoCacher>();
-            Bind<IWatcherCacher>().To<WatcherCacher>();
-            Bind<ISonarrCacher>().To<SonarrCacher>();
-            Bind<ISickRageCacher>().To<SickRageCacher>();
-            Bind<IRecentlyAdded>().To<RecentlyAdded>();
-            Bind<IRadarrCacher>().To<RadarrCacher>();
-            Bind<IPlexContentCacher>().To<PlexContentCacher>();
-            Bind<IJobFactory>().To<CustomJobFactory>();
-            Bind<IMovieSender>().To<MovieSender>();
-     
-            Bind<IAnalytics>().To<Analytics>();
-            Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
-            Bind<IJobScheduler>().To<Scheduler>();
 
-            Bind<ITransientFaultQueue>().To<TransientFaultQueue>();
+        public RadarrAddMovie()
+        {
+            images = new List<string>();
         }
+        public RadarrError Error { get; set; }
+        public RadarrAddOptions addOptions { get; set; }
+        public string title { get; set; }
+        public string rootFolderPath { get; set; }
+        public int qualityProfileId { get; set; }
+        public bool monitored { get; set; }
+        public int tmdbId { get; set; }
+        public List<string> images { get; set; }
+        public string cleanTitle { get; set; }
+        public string imdbId { get; set; }
+        public string titleSlug { get; set; }
+        public int id { get; set; }
+
     }
 }
