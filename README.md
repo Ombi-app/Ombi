@@ -12,7 +12,7 @@ ____
 | Service  | Master                      | Early Access                 | Dev                          |
 |----------|:---------------------------:|:----------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)
-| Travis   | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/master.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/tidusjar/Ombi/Radarr/eap.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/tidusjar/Ombi/Radarr/dev.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi)
+| Travis   | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/master.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/eap.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/dev.svg?maxAge=60&style=flat-square)](https://travis-ci.org/tidusjar/Ombi)
 
 # Features
 Here some of the features Ombi has:
@@ -87,3 +87,6 @@ If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
 
+### Sponsors ###
+- [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools
+    - [ReSharper](http://www.jetbrains.com/resharper/)
