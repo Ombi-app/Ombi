@@ -235,6 +235,8 @@ namespace Ombi.UI.Modules
 
             }
 
+            
+
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
@@ -243,6 +245,7 @@ namespace Ombi.UI.Modules
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
                 Id = tv.Id,
+                //PosterPath = tv.PosterPath.Contains("http:") ? tv.PosterPath.Replace("http:", "https:") : tv.PosterPath,
                 PosterPath = tv.PosterPath,
                 ReleaseDate = tv.ReleaseDate,
                 ReleaseDateTicks = tv.ReleaseDate.Ticks,

@@ -693,11 +693,13 @@ namespace Ombi.UI.Modules
             DateTime.TryParse(showInfo.premiered, out firstAir);
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
 
+            // For some reason the poster path is always http
+            var posterPath = showInfo.image?.medium.Replace("http:", "https:");
             var model = new RequestedModel
             {
                 Type = RequestType.TvShow,
                 Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = showInfo.image?.medium,
+                PosterPath = posterPath,
                 Title = showInfo.name,
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
