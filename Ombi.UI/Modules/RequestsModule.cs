@@ -245,8 +245,7 @@ namespace Ombi.UI.Modules
                 Status = tv.Status,
                 ImdbId = tv.ImdbId,
                 Id = tv.Id,
-                //PosterPath = tv.PosterPath.Contains("http:") ? tv.PosterPath.Replace("http:", "https:") : tv.PosterPath,
-                PosterPath = tv.PosterPath,
+                PosterPath = tv.PosterPath.Contains("http:") ? tv.PosterPath.Replace("http:", "https:") : tv.PosterPath, // We make the poster path https on request, but this is just incase
                 ReleaseDate = tv.ReleaseDate,
                 ReleaseDateTicks = tv.ReleaseDate.Ticks,
                 RequestedDate = tv.RequestedDate,
