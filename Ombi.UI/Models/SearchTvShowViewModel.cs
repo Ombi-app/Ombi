@@ -58,5 +58,20 @@ namespace Ombi.UI.Models
         public bool DisableTvRequestsByEpisode { get; set; }
         public bool DisableTvRequestsBySeason { get; set; }
         public bool EnableTvRequestsForOnlySeries { get; set; }
+
+        /// <summary>
+        /// This is used from the Trakt API
+        /// </summary>
+        /// <value>
+        /// The trailer.
+        /// </value>
+        public string Trailer { get; set; }
+        /// <summary>
+        /// This is used from the Trakt API
+        /// </summary>
+        /// <value>
+        /// The trailer.
+        /// </value>
+        public string Homepage { get; set; }
     }
 }

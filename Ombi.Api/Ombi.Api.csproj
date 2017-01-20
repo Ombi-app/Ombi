@@ -66,12 +66,17 @@
       <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TraktApiSharp, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TraktApiSharp.0.8.0\lib\portable-net45+netcore45+wpa81\TraktApiSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
     <Compile Include="DiscordApi.cs" />
     <Compile Include="NetflixRouletteApi.cs" />
     <Compile Include="RadarrApi.cs" />
+    <Compile Include="TraktApi.cs" />
     <Compile Include="WatcherApi.cs" />
     <Compile Include="MusicBrainzApi.cs" />
     <Compile Include="SlackApi.cs" />
