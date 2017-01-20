@@ -118,7 +118,7 @@
         }
 
         <!-- Movie and TV Results template -->
-    <script id="search-template" type="text/x-handlebars-template">
+        <script id="search-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -129,7 +129,7 @@
                     {{/if_eq}}
                     {{#if_eq type "tv"}}
                     {{#if posterPath}}
-                    <img  class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
+                    <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
                     {{/if}}
                     {{/if_eq}}
 
@@ -153,6 +153,9 @@
                         {{/if}}
                         {{#if trailer}}
                         <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                        {{/if}}
+                        {{#if firstAired}}
+                        <span class="label label-info" target="_blank">First Aired: {{firstAired}}</span>
                         {{/if}}
                         {{#if available}}
                         <span class="label label-success">@UI.Search_Available_on_plex</span>

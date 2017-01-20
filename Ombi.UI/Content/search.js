@@ -480,7 +480,7 @@ $(function () {
         var date = new Date(result.firstAired);
         var year = date.getFullYear();
         var context = {
-            status : result.status,
+            status: result.status,
             posterPath: result.banner,
             id: result.id,
             title: result.seriesName,
@@ -499,8 +499,9 @@ $(function () {
             disableTvRequestsBySeason: result.disableTvRequestsBySeason,
             enableTvRequestsForOnlySeries: result.enableTvRequestsForOnlySeries,
             trailer: result.trailer,
-            homepage: result.homepage
-        };
+            homepage: result.homepage,
+            firstAired: Humanize(result.firstAired)
+    };
 
         return context;
     }
