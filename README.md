@@ -18,7 +18,7 @@ Here some of the features Ombi has:
 * Sending newsletters [NEW]
 * Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
 
-* Allow your users to report issues and manage them seperatly
+* Allow your users to report issues and manage them separately
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
 * Secure authentication so you don't have to worry about those script kiddies
