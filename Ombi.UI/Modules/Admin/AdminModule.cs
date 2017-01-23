@@ -184,9 +184,6 @@ namespace Ombi.UI.Modules.Admin
             Post["/sonarr"] = _ => SaveSonarr();
             Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
 
-            Get["/radarr", true] = async (x, ct) => await Radarr();
-            Post["/radarr", true] = async (x, ct) => await SaveRadarr();
-            Post["/radarrprofiles"] = _ => GetRadarrQualityProfiles();
 
             Get["/sickrage"] = _ => Sickrage();
             Post["/sickrage"] = _ => SaveSickrage();
@@ -486,57 +483,9 @@ namespace Ombi.UI.Modules.Admin
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private async Task<Negotiator> Radarr()
-        {
-            var settings = await RadarrSettings.GetSettingsAsync();
+       
 
-            return View["Radarr", settings];
-        }
-
-        private async Task<Response> SaveRadarr()
-        {
-            var radarrSettings = this.Bind<RadarrSettings>();
-
-            //Check Watcher and CP make sure they are not enabled
-            var watcher = await WatcherSettings.GetSettingsAsync();
-            if (watcher.Enabled)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Watcher is enabled, we cannot enable Watcher and Radarr" });
-            }
-
-            var cp = await CpService.GetSettingsAsync();
-            if (cp.Enabled)
-            {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is enabled, we cannot enable Watcher and CouchPotato" });
-            }
-
-            var valid = this.Validate(radarrSettings);
-            if (!valid.IsValid)
-            {
-                return Response.AsJson(valid.SendJsonError());
-            }
-
-            radarrSettings.ApiKey = radarrSettings.ApiKey.Trim();
-            var result = await RadarrSettings.SaveSettingsAsync(radarrSettings);
-
-            return Response.AsJson(result
-                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Radarr!" }
-                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
-        }
-
-        private Response GetRadarrQualityProfiles()
-        {
-            var settings = this.Bind<RadarrSettings>();
-            var profiles = RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
-
-            // set the cache
-            if (profiles != null)
-            {
-                Cache.Set(CacheKeys.RadarrQualityProfiles, profiles);
-            }
-
-            return Response.AsJson(profiles);
-        }
+      
 
         private Negotiator Sickrage()
         {
