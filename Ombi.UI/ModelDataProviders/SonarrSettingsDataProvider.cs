@@ -53,6 +53,7 @@ namespace Ombi.UI.ModelDataProviders
 
                     with.Property(x => x.SeasonFolders).Description("Sonarr's season folders").Required(false);
 
+                    with.Property(x => x.RootFolder).Description("Sonarr's root folder").Required(true);
                     with.Property(x => x.RootPath).Description("Sonarr's root path").Required(false);
                 });
         }

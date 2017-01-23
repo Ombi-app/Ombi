@@ -51,7 +51,7 @@ namespace Ombi.Core
 
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            return await SendToSonarr(sonarrSettings, model, string.Empty);
+            return await SendToSonarr(sonarrSettings, model, string.Empty, string.Empty);
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Ombi.Core
         /// <param name="model"></param>
         /// <param name="qualityId"></param>
         /// <returns></returns>
-        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId, string rootFolderId)
         {
             var qualityProfile = 0;
             var episodeRequest = model.Episodes.Any();
@@ -82,6 +82,17 @@ namespace Ombi.Core
             var latest = model.SeasonsRequested?.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
             var specificSeasonRequest = model.SeasonList?.Any();
 
+            var rootFolder = 0;
+            if (!string.IsNullOrEmpty(rootFolderId))
+            {
+                int.TryParse(qualityId, out rootFolder);
+            }
+
+            if (rootFolder <= 0)
+            {
+                int.TryParse(sonarrSettings.RootFolder, out rootFolder);
+            }
+
             if (episodeRequest)
             {
                 // Does series exist?
@@ -96,7 +107,7 @@ namespace Ombi.Core
 
                 // Series doesn't exist, need to add it as unmonitored.
                 var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, rootFolder, new int[0], sonarrSettings.ApiKey,
                     sonarrSettings.FullUri, false));
 
 
@@ -125,7 +136,7 @@ namespace Ombi.Core
             {
                 // Set the series as monitored with a season count as 0 so it doesn't search for anything
                 SonarrApi.AddSeriesNew(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, rootFolder, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
 
                 await Task.Delay(TimeSpan.FromSeconds(1));

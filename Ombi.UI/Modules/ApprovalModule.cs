@@ -65,7 +65,7 @@ namespace Ombi.UI.Modules
             FaultQueue = faultQueue;
             MovieSender = movieSender;
 
-            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
+            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId, (string)Request.Form.rootFolderId ?? null);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
             Post["/approveall", true] = async (x, ct) => await ApproveAll();
             Post["/approveallmovies", true] = async (x, ct) => await ApproveAllMovies();
@@ -92,7 +92,7 @@ namespace Ombi.UI.Modules
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        private async Task<Response> Approve(int requestId, string qualityId)
+        private async Task<Response> Approve(int requestId, string qualityId, string rootFolderId  = null)
         {
             Log.Info("approving request {0}", requestId);
 
@@ -110,7 +110,7 @@ namespace Ombi.UI.Modules
                 case RequestType.Movie:
                     return await RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
-                    return await RequestTvAndUpdateStatus(request, qualityId);
+                    return await RequestTvAndUpdateStatus(request, qualityId, rootFolderId);
                 case RequestType.Album:
                     return await RequestAlbumAndUpdateStatus(request);
                 default:
@@ -118,7 +118,7 @@ namespace Ombi.UI.Modules
             }
         }
 
-        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
+        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId, string rootFolderId)
         {
             var sender = new TvSenderOld(SonarrApi, SickRageApi); // TODO put back
 

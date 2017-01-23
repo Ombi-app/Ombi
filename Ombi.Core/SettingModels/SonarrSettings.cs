@@ -33,6 +33,7 @@ namespace Ombi.Core.SettingModels
         public string QualityProfile { get; set; }
         public bool SeasonFolders { get; set; }
         public string RootPath { get; set; }
-       
+        public string RootFolder { get; set; }
+
     }
 }

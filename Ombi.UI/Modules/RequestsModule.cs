@@ -160,6 +160,37 @@ namespace Ombi.UI.Modules
                 }
             }
 
+            IEnumerable<RootFolderModel> rootFolders = new List<RootFolderModel>();
+            if (IsAdmin)
+            {
+                try
+                {
+                    var sonarrSettings = await SonarrSettings.GetSettingsAsync();
+                    if (sonarrSettings.Enabled)
+                    {
+                        var result = Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+                        {
+                            return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+                        });
+                        rootFolders = result.Result.Select(x => new RootFolderModel { Id = x.id.ToString(), Path = x.path }).ToList();
+                    }
+                    // @TODO Sick Rage Root Folders
+                    //else
+                    //{
+                    //    var sickRageSettings = await SickRageSettings.GetSettingsAsync();
+                    //    if (sickRageSettings.Enabled)
+                    //    {
+                    //        qualities = sickRageSettings.Qualities.Select(x => new QualityModel { Id = x.Key, Name = x.Value }).ToList();
+                    //    }
+                    //}
+                }
+                catch (Exception e)
+                {
+                    Log.Info(e);
+                }
+
+            }
+
 
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbMovies.Select(movie => new RequestViewModel
@@ -185,7 +216,8 @@ namespace Ombi.UI.Modules
                 IssueId = movie.IssueId,
                 Denied = movie.Denied,
                 DeniedReason = movie.DeniedReason,
-                Qualities = qualities.ToArray()
+                Qualities = qualities.ToArray(),
+                RootFolders = rootFolders.ToArray(),
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -235,7 +267,7 @@ namespace Ombi.UI.Modules
 
             }
 
-            
+
 
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbTv.Select(tv => new RequestViewModel

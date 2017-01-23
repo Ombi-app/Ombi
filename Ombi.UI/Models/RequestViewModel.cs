@@ -58,5 +58,6 @@ namespace Ombi.UI.Models
         public Store.EpisodesModel[] Episodes { get; set; }
         public bool Denied { get; set; }
         public string DeniedReason { get; set; }
+        public RootFolderModel[] RootFolders { get; set; }
     }
 }
