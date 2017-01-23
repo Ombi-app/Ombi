@@ -36,12 +36,11 @@ namespace Ombi.Api.Interfaces
         List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl);
 
         SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
-            int rootFolderId,
             int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true,
             bool searchForMissingEpisodes = false);
 
         SonarrAddSeries AddSeriesNew(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath,
-            int rootFolderId, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true,
+             int[] seasons, string apiKey, Uri baseUrl, bool monitor = true,
     bool searchForMissingEpisodes = false);
 
         SystemStatus SystemStatus(string apiKey, Uri baseUrl);

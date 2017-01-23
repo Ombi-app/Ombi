@@ -78,7 +78,7 @@ namespace Ombi.Api
             return obj;
         }
 
-        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int rootFolderId, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
+        public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
         {
             Log.Debug("Adding series {0}", title);
             Log.Debug("Seasons = {0}, out of {1} seasons", seasons.DumpJson(), seasonCount);
@@ -148,7 +148,7 @@ namespace Ombi.Api
             return result;
         }
 
-        public SonarrAddSeries AddSeriesNew(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int rootFolderId, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
+        public SonarrAddSeries AddSeriesNew(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
         {
             var request = new RestRequest
             {

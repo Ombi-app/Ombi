@@ -1107,7 +1107,7 @@ namespace Ombi.UI.Modules
                 {
                     model.Approved = true;
                     var s = await sonarrSettings;
-                    var sender = new TvSenderOld(SonarrApi, SickrageApi); // TODO put back
+                    var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
                     if (s.Enabled)
                     {
                         var result = await sender.SendToSonarr(s, model);

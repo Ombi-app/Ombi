@@ -35,6 +35,7 @@ using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Sonarr;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 using Ploeh.AutoFixture;
 
@@ -49,6 +50,7 @@ namespace Ombi.UI.Tests
 
         private TvSender Sender { get; set; }
         private Fixture F { get; set; }
+        private Mock<ICacheProvider> Cache { get; set; }
 
         [SetUp]
         public void Setup()
@@ -56,7 +58,8 @@ namespace Ombi.UI.Tests
             F = new Fixture();
             SonarrMock = new Mock<ISonarrApi>();
             SickrageMock = new Mock<ISickRageApi>();
-            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
+            Cache = new Mock<ICacheProvider>();
+            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object, Cache.Object);
         }
 
         [Test]
@@ -66,7 +69,7 @@ namespace Ombi.UI.Tests
             var seriesResult = new SonarrAddSeries() { title = "ABC"};
             SonarrMock.Setup(x => x.GetSeries(It.IsAny<string>(), It.IsAny<Uri>())).Returns(F.Build<Series>().With(x => x.tvdbId, 1).With(x => x.title, "ABC").CreateMany().ToList());
 
-            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
+            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object, Cache.Object);
 
             var request = new RequestedModel {SeasonsRequested = "All", ProviderId = 1, Title = "ABC"};
 
@@ -78,7 +81,6 @@ namespace Ombi.UI.Tests
                     It.IsAny<int>(),
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
-                    It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
@@ -100,7 +102,6 @@ namespace Ombi.UI.Tests
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
                     It.IsAny<int>(),
-                    It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
@@ -118,7 +119,7 @@ namespace Ombi.UI.Tests
             SonarrMock.Setup(x => x.GetEpisodes(It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<Uri>())).Returns(F.CreateMany<SonarrEpisodes>());
 
-            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object);
+            Sender = new TvSender(SonarrMock.Object, SickrageMock.Object, Cache.Object);
             var episodes = new List<EpisodesModel>
             {
                 new EpisodesModel
@@ -130,7 +131,7 @@ namespace Ombi.UI.Tests
             var model = F.Build<RequestedModel>().With(x => x.ProviderId, 1)
                 .With(x => x.Episodes, episodes).Create();
 
-            var result = await Sender.SendToSonarr(GetSonarrSettings(), model, "2", string.Empty);
+            var result = await Sender.SendToSonarr(GetSonarrSettings(), model, "2");
 
             Assert.That(result, Is.EqualTo(seriesResult));
             SonarrMock.Verify(x => x.AddSeries(It.IsAny<int>(),
@@ -138,7 +139,6 @@ namespace Ombi.UI.Tests
                     It.IsAny<int>(),
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
-                    It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),

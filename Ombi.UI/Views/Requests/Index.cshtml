@@ -244,6 +244,11 @@
                 <div>@UI.Requests_RequestedBy: {{requestedUsers}}</div>
                 {{/if}}
                 <div>@UI.Requests_RequestedDate: {{requestedDate}}</div>
+                {{#if admin}}
+                {{#if currentRootPath}}
+                <div>Root Path: {{currentRootPath}}</div>
+                {{/if}}
+                {{/if}}
                 <div>
                     {{#if_eq issueId 0}}
                     @*Nothing*@
@@ -275,6 +280,28 @@
                     <button id="{{requestId}}" custom-button="{{requestId}}" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> @UI.Common_Approve</button>
                     {{/if_eq}}
                 </form>
+                
+                
+                <form method="POST" action="@formAction/requests/changeRootFolder" id="changeFolder{{requestId}}">
+                    <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
+                    {{#if_eq hasRootFolders true}}
+                    <div class="btn-group btn-split">
+                        <button type="button" class="btn btn-sm btn-success-outline approve" id="{{requestId}}" custom-button="{{requestId}}">@*<i class="fa fa-plus"></i>*@ Change Root Folder</button>
+                        <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">@UI.Requests_ToggleDropdown</span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{#each rootFolders}}
+                            <li><a href="#" class="change-root-folder" id="{{id}}">{{path}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if_eq}}
+                </form>
+
+                
+
                 {{#unless denied}}
                 <form method="POST" action="@formAction/approval/deny" id="deny{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />

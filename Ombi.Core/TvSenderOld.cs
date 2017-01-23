@@ -34,27 +34,30 @@ using Ombi.Api.Interfaces;
 using Ombi.Api.Models.SickRage;
 using Ombi.Api.Models.Sonarr;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 
 namespace Ombi.Core
 {
     public class TvSenderOld
     {
-        public TvSenderOld(ISonarrApi sonarrApi, ISickRageApi srApi)
+        public TvSenderOld(ISonarrApi sonarrApi, ISickRageApi srApi, ICacheProvider cache)
         {
             SonarrApi = sonarrApi;
             SickrageApi = srApi;
+            Cache = cache;
         }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickrageApi { get; }
+        private ICacheProvider Cache { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
-        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string rootFolderId = null)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            return await SendToSonarr(sonarrSettings, model, string.Empty, rootFolderId);
+            return await SendToSonarr(sonarrSettings, model, string.Empty);
         }
 
-        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId, string rootFolderId)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
             var qualityProfile = 0;
             var episodeRequest = model.Episodes.Any();
@@ -67,16 +70,7 @@ namespace Ombi.Core
             {
                 int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
             }
-            var rootFolder = 0;
-            if (!string.IsNullOrEmpty(rootFolderId))
-            {
-                int.TryParse(qualityId, out rootFolder);
-            }
-
-            if (rootFolder <= 0)
-            {
-                int.TryParse(sonarrSettings.RootFolder, out rootFolder);
-            }
+            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.RootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
 
 
             var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
@@ -95,7 +89,7 @@ namespace Ombi.Core
 
                 // Series doesn't exist, need to add it as unmonitored.
                 var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, rootFolder, 0, new int[0], sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, rootFolderPath, 0, new int[0], sonarrSettings.ApiKey,
                     sonarrSettings.FullUri, false));
 
 
@@ -167,7 +161,7 @@ namespace Ombi.Core
 
 
             var result = SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                sonarrSettings.SeasonFolders, sonarrSettings.RootPath, rootFolder, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
+                sonarrSettings.SeasonFolders, rootFolderPath, model.SeasonCount, model.SeasonList, sonarrSettings.ApiKey,
                 sonarrSettings.FullUri, true, true);
 
             return result;
@@ -308,6 +302,21 @@ namespace Ombi.Core
             var selectedSeries = task.FirstOrDefault(series => series.tvdbId == showId);
 
             return selectedSeries;
+        }
+
+
+        private async Task<string> GetRootPath(int pathId, SonarrSettings sonarrSettings)
+        {
+            var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+            {
+                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+            });
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+            return string.Empty;
         }
     }
 }

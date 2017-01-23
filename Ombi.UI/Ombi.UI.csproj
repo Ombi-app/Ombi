@@ -798,7 +798,7 @@
     <Content Include="Views\Admin\DiscordNotification.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Admin\Radarr.cshtml">
+    <Content Include="Views\Integration\Radarr.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

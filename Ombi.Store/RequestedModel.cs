@@ -46,6 +46,13 @@ namespace Ombi.Store
         public List<EpisodesModel> Episodes { get; set; }
         public bool Denied { get; set; }
         public string DeniedReason { get; set; }
+        /// <summary>
+        /// For TV Shows with a custom root folder
+        /// </summary>
+        /// <value>
+        /// The root folder selected.
+        /// </value>
+        public int RootFolderSelected { get; set; }
 
         [JsonIgnore]
         public List<string> AllUsers

@@ -79,6 +79,7 @@ namespace Ombi.Services.Jobs
 
         public void CheckAndUpdateAll()
         {
+
             var plexSettings = Plex.GetSettings();
 
             if (!ValidateSettings(plexSettings))

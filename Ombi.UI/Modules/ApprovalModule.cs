@@ -50,7 +50,7 @@ namespace Ombi.UI.Modules
         public ApprovalModule(IRequestService service,  ISonarrApi sonarrApi,
             ISettingsService<SonarrSettings> sonarrSettings, ISickRageApi srApi, ISettingsService<SickRageSettings> srSettings,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ITransientFaultQueue faultQueue
-            , ISecurityExtensions security, IMovieSender movieSender) : base("approval", pr, security)
+            , ISecurityExtensions security, IMovieSender movieSender, ICacheProvider cache) : base("approval", pr, security)
         {
 
             Before += (ctx) => Security.AdminLoginRedirect(ctx, Permissions.Administrator,Permissions.ManageRequests);
@@ -64,8 +64,9 @@ namespace Ombi.UI.Modules
             HeadphoneApi = hpApi;
             FaultQueue = faultQueue;
             MovieSender = movieSender;
+            Cache = cache;
 
-            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId, (string)Request.Form.rootFolderId ?? null);
+            Post["/approve", true] = async (x, ct) => await Approve((int)Request.Form.requestid, (string)Request.Form.qualityId);
             Post["/deny", true] = async (x, ct) => await DenyRequest((int)Request.Form.requestid, (string)Request.Form.reason);
             Post["/approveall", true] = async (x, ct) => await ApproveAll();
             Post["/approveallmovies", true] = async (x, ct) => await ApproveAllMovies();
@@ -86,13 +87,14 @@ namespace Ombi.UI.Modules
         private ISickRageApi SickRageApi { get; }
         private IHeadphonesApi HeadphoneApi { get; }
         private ITransientFaultQueue FaultQueue { get; }
+        private ICacheProvider Cache { get; }
 
         /// <summary>
         /// Approves the specified request identifier.
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
         /// <returns></returns>
-        private async Task<Response> Approve(int requestId, string qualityId, string rootFolderId  = null)
+        private async Task<Response> Approve(int requestId, string qualityId)
         {
             Log.Info("approving request {0}", requestId);
 
@@ -110,7 +112,7 @@ namespace Ombi.UI.Modules
                 case RequestType.Movie:
                     return await RequestMovieAndUpdateStatus(request, qualityId);
                 case RequestType.TvShow:
-                    return await RequestTvAndUpdateStatus(request, qualityId, rootFolderId);
+                    return await RequestTvAndUpdateStatus(request, qualityId);
                 case RequestType.Album:
                     return await RequestAlbumAndUpdateStatus(request);
                 default:
@@ -118,9 +120,9 @@ namespace Ombi.UI.Modules
             }
         }
 
-        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId, string rootFolderId)
+        private async Task<Response> RequestTvAndUpdateStatus(RequestedModel request, string qualityId)
         {
-            var sender = new TvSenderOld(SonarrApi, SickRageApi); // TODO put back
+            var sender = new TvSenderOld(SonarrApi, SickRageApi, Cache); // TODO put back
 
             var sonarrSettings = await SonarrSettings.GetSettingsAsync();
             if (sonarrSettings.Enabled)
@@ -435,7 +437,7 @@ namespace Ombi.UI.Modules
                 }
                 if (r.Type == RequestType.TvShow)
                 {
-                    var sender = new TvSenderOld(SonarrApi, SickRageApi); // TODO put back
+                    var sender = new TvSenderOld(SonarrApi, SickRageApi, Cache); // TODO put back
                     var sr = await SickRageSettings.GetSettingsAsync();
                     var sonarr = await SonarrSettings.GetSettingsAsync();
                     if (sr.Enabled)

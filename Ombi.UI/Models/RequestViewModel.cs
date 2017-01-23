@@ -59,5 +59,7 @@ namespace Ombi.UI.Models
         public bool Denied { get; set; }
         public string DeniedReason { get; set; }
         public RootFolderModel[] RootFolders { get; set; }
+        public bool HasRootFolders { get; set; }
+        public string CurrentRootPath { get; set; }
     }
 }

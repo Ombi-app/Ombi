@@ -34,24 +34,27 @@ using Ombi.Api.Interfaces;
 using Ombi.Api.Models.SickRage;
 using Ombi.Api.Models.Sonarr;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 
 namespace Ombi.Core
 {
     public class TvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ISickRageApi srApi)
+        public TvSender(ISonarrApi sonarrApi, ISickRageApi srApi, ICacheProvider cache)
         {
             SonarrApi = sonarrApi;
             SickrageApi = srApi;
+            Cache = cache;
         }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickrageApi { get; }
+        private ICacheProvider Cache { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
         {
-            return await SendToSonarr(sonarrSettings, model, string.Empty, string.Empty);
+            return await SendToSonarr(sonarrSettings, model, string.Empty);
         }
 
         /// <summary>
@@ -61,7 +64,7 @@ namespace Ombi.Core
         /// <param name="model"></param>
         /// <param name="qualityId"></param>
         /// <returns></returns>
-        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId, string rootFolderId)
+        public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model, string qualityId)
         {
             var qualityProfile = 0;
             var episodeRequest = model.Episodes.Any();
@@ -82,16 +85,7 @@ namespace Ombi.Core
             var latest = model.SeasonsRequested?.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
             var specificSeasonRequest = model.SeasonList?.Any();
 
-            var rootFolder = 0;
-            if (!string.IsNullOrEmpty(rootFolderId))
-            {
-                int.TryParse(qualityId, out rootFolder);
-            }
-
-            if (rootFolder <= 0)
-            {
-                int.TryParse(sonarrSettings.RootFolder, out rootFolder);
-            }
+            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.RootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
 
             if (episodeRequest)
             {
@@ -107,7 +101,7 @@ namespace Ombi.Core
 
                 // Series doesn't exist, need to add it as unmonitored.
                 var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, rootFolder, new int[0], sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, rootFolderPath, 0, new int[0], sonarrSettings.ApiKey,
                     sonarrSettings.FullUri, false));
 
 
@@ -136,7 +130,7 @@ namespace Ombi.Core
             {
                 // Set the series as monitored with a season count as 0 so it doesn't search for anything
                 SonarrApi.AddSeriesNew(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, rootFolder, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, rootFolderPath, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
 
                 await Task.Delay(TimeSpan.FromSeconds(1));
@@ -383,5 +377,20 @@ namespace Ombi.Core
 
             return selectedSeries;
         }
+
+        private async Task<string> GetRootPath(int pathId, SonarrSettings sonarrSettings)
+        {
+            var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+            {
+                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+            });
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+            return string.Empty;
+        }
+
     }
 }
