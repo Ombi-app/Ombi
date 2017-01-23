@@ -79,6 +79,7 @@ namespace Ombi.UI.Tests
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
                     It.IsAny<int>(),
+                    It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
                     It.IsAny<Uri>(),
@@ -98,6 +99,7 @@ namespace Ombi.UI.Tests
                     It.IsAny<int>(),
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
+                    It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
@@ -128,7 +130,7 @@ namespace Ombi.UI.Tests
             var model = F.Build<RequestedModel>().With(x => x.ProviderId, 1)
                 .With(x => x.Episodes, episodes).Create();
 
-            var result = await Sender.SendToSonarr(GetSonarrSettings(), model, "2");
+            var result = await Sender.SendToSonarr(GetSonarrSettings(), model, "2", string.Empty);
 
             Assert.That(result, Is.EqualTo(seriesResult));
             SonarrMock.Verify(x => x.AddSeries(It.IsAny<int>(),
@@ -136,6 +138,7 @@ namespace Ombi.UI.Tests
                     It.IsAny<int>(),
                     It.IsAny<bool>(),
                     It.IsAny<string>(),
+                    It.IsAny<int>(),
                     It.IsAny<int>(),
                     It.IsAny<int[]>(),
                     It.IsAny<string>(),
