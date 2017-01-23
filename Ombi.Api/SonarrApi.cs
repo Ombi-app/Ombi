@@ -62,6 +62,22 @@ namespace Ombi.Api
             return obj;
         }
 
+        public List<SonarrRootFolder> GetRootFolders(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/rootfolder", Method = Method.GET };
+
+            request.AddHeader("X-Api-Key", apiKey);
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetRootFolders for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
+                  TimeSpan.FromSeconds (2),
+                  TimeSpan.FromSeconds(5),
+                  TimeSpan.FromSeconds(10)
+              });
+
+            var obj = policy.Execute(() => Api.ExecuteJson<List<SonarrRootFolder>>(request, baseUrl));
+
+            return obj;
+        }
+
         public SonarrAddSeries AddSeries(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int seasonCount, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
         {
             Log.Debug("Adding series {0}", title);

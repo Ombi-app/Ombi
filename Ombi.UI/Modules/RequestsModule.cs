@@ -96,6 +96,8 @@ namespace Ombi.UI.Modules
 
             Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
 
+            Post["/changeRootFolder", true] = async (x, ct) => await ChangeRootFolder((int) Request.Form.requestId, (int) Request.Form.rootFolderId);
+
             Get["/UpdateFilters", true] = async (x, ct) => await GetFilterAndSortSettings();
         }
 
@@ -160,7 +162,7 @@ namespace Ombi.UI.Modules
                 }
             }
 
-
+           
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
@@ -185,7 +187,7 @@ namespace Ombi.UI.Modules
                 IssueId = movie.IssueId,
                 Denied = movie.Denied,
                 DeniedReason = movie.DeniedReason,
-                Qualities = qualities.ToArray()
+                Qualities = qualities.ToArray(),
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -193,32 +195,39 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> GetTvShows()
         {
-            var settingsTask = PrSettings.GetSettingsAsync();
-
             var requests = await Service.GetAllAsync();
             requests = requests.Where(x => x.Type == RequestType.TvShow);
 
             var dbTv = requests;
-            var settings = await settingsTask;
             if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
             {
                 dbTv = dbTv.Where(x => x.UserHasRequested(Username)).ToList();
             }
 
             IEnumerable<QualityModel> qualities = new List<QualityModel>();
+            IEnumerable<RootFolderModel> rootFolders = new List<RootFolderModel>();
+
+            var sonarrSettings = await SonarrSettings.GetSettingsAsync();
             if (IsAdmin)
             {
                 try
                 {
-                    var sonarrSettings = await SonarrSettings.GetSettingsAsync();
                     if (sonarrSettings.Enabled)
                     {
-                        var result = Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
+                        var result = await Cache.GetOrSetAsync(CacheKeys.SonarrQualityProfiles, async () =>
                         {
                             return await Task.Run(() => SonarrApi.GetProfiles(sonarrSettings.ApiKey, sonarrSettings.FullUri));
                         });
-                        qualities = result.Result.Select(x => new QualityModel { Id = x.id.ToString(), Name = x.name }).ToList();
-                    }
+                        qualities = result.Select(x => new QualityModel { Id = x.id.ToString(), Name = x.name }).ToList();
+
+                        
+                            var rootFoldersResult =await  Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+                            {
+                                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+                            });
+                        
+                        rootFolders = rootFoldersResult.Select(x => new RootFolderModel { Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace}).ToList();
+                        }
                     else
                     {
                         var sickRageSettings = await SickRageSettings.GetSettingsAsync();
@@ -235,7 +244,7 @@ namespace Ombi.UI.Modules
 
             }
 
-            
+
 
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbTv.Select(tv => new RequestViewModel
@@ -264,9 +273,26 @@ namespace Ombi.UI.Modules
                 TvSeriesRequestType = tv.SeasonsRequested,
                 Qualities = qualities.ToArray(),
                 Episodes = tv.Episodes.ToArray(),
+                RootFolders =  rootFolders.ToArray(),
+                HasRootFolders = rootFolders.Any(),
+                CurrentRootPath = GetRootPath(tv.RootFolderSelected, sonarrSettings).Result
             }).ToList();
 
             return Response.AsJson(viewModel);
+        }
+
+        private async Task<string> GetRootPath(int pathId, SonarrSettings sonarrSettings)
+        {
+            var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+            {
+                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+            });
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+            return string.Empty;
         }
 
         private async Task<Response> GetAlbumRequests()
@@ -432,5 +458,34 @@ namespace Ombi.UI.Modules
 
             return Response.AsJson(vm);
         }
-    }
+
+        private async Task<Response> ChangeRootFolder(int id, int rootFolderId)
+        {
+            // Get all root folders
+            var settings = await SonarrSettings.GetSettingsAsync();
+            var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+
+            // Get Request
+            var allRequests = await Service.GetAllAsync();
+            var request = allRequests.FirstOrDefault(x => x.Id == id);
+
+            if (request == null)
+            {
+                return Response.AsJson(new JsonResponseModel {Result = false});
+            }
+
+            foreach (var folder in rootFolders)
+            {
+                if (folder.id.Equals(rootFolderId))
+                {
+                    request.RootFolderSelected = folder.id;
+                    break;
+                }
+            }
+
+            await Service.UpdateRequestAsync(request);
+
+            return Response.AsJson(new JsonResponseModel {Result =  true});
+        } 
+     }
 }

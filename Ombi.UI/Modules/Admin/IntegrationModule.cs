@@ -54,7 +54,7 @@ namespace Ombi.UI.Modules.Admin
     {
         public IntegrationModule(ISettingsService<PlexRequestSettings> settingsService,  ISettingsService<WatcherSettings> watcher,
             ISettingsService<CouchPotatoSettings> cp,ISecurityExtensions security, IAnalytics a, ISettingsService<RadarrSettings> radarrSettings,
-            ICacheProvider cache, IRadarrApi radarrApi) : base("admin", settingsService, security)
+            ICacheProvider cache, IRadarrApi radarrApi, ISonarrApi sonarrApi) : base("admin", settingsService, security)
         {
            
             WatcherSettings = watcher;
@@ -63,8 +63,12 @@ namespace Ombi.UI.Modules.Admin
             Cache = cache;
             RadarrApi = radarrApi;
             RadarrSettings = radarrSettings;
+            SonarrApi = sonarrApi;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
+
+
+            Post["/sonarrrootfolders"] = _ => GetSonarrRootFolders();
 
             Get["/watcher", true] = async (x, ct) => await Watcher();
             Post["/watcher", true] = async (x, ct) => await SaveWatcher();
@@ -82,6 +86,7 @@ namespace Ombi.UI.Modules.Admin
         private IRadarrApi RadarrApi { get; }
         private ICacheProvider Cache { get; }
         private IAnalytics Analytics { get; }
+        private ISonarrApi SonarrApi { get; }
 
         private async Task<Negotiator> Watcher()
         {
@@ -180,6 +185,21 @@ namespace Ombi.UI.Modules.Admin
             }
 
             return Response.AsJson(profiles);
+        }
+
+        private Response GetSonarrRootFolders()
+        {
+            var settings = this.Bind<SonarrSettings>();
+
+              var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+
+            // set the cache
+            if (rootFolders != null)
+            {
+                Cache.Set(CacheKeys.SonarrRootFolders, rootFolders);
+            }
+
+            return Response.AsJson(rootFolders);
         }
 
     }

@@ -559,6 +559,25 @@ $(document).on("click", ".approve-with-quality", function (e) {
 
 });
 
+// Change root folder
+$(document).on("click", ".change-root-folder", function (e) {
+    e.preventDefault();
+    var $this = $(this);
+    var $button = $this.parents('.btn-split').children('.change').first();
+    var rootFolderId = e.target.id
+    var $form = $this.parents('form').first();
+
+    if ($button.text() === " Loading...") {
+        return;
+    }
+
+    loadingButton($button.attr('id'), "success");
+
+    changeRootFolder($form, rootFolderId, function () {
+    });
+
+});
+
 
 // Change Availability
 $(document).on("click", ".change", function (e) {
@@ -624,6 +643,37 @@ function approveRequest($form, qualityId, successCallback) {
                     generateNotify(response.message, "success");
                 } else {
                     generateNotify("Success! Request Approved.", "success");
+                }
+
+                if (successCallback) {
+                    successCallback();
+                }
+            }
+        },
+        error: function (e) {
+            console.log(e);
+            generateNotify("Something went wrong!", "danger");
+        }
+    });
+}
+
+function changeRootFolder($form, rootFolderId, successCallback) {
+
+    var formData = $form.serialize();
+    if (rootFolderId) formData += ("&rootFolderId=" + rootFolderId);
+
+    $.ajax({
+        type: $form.prop('method'),
+        url: $form.prop('action'),
+        data: formData,
+        dataType: "json",
+        success: function (response) {
+
+            if (checkJsonResponse(response)) {
+                if (response.message) {
+                    generateNotify(response.message, "success");
+                } else {
+                    generateNotify("Success! Changed Root Path.", "success");
                 }
 
                 if (successCallback) {
@@ -808,6 +858,9 @@ function buildRequestContext(result, type) {
         musicBrainzId: result.musicBrainzId,
         denied: result.denied,
         deniedReason: result.deniedReason,
+        hasRootFolders: result.hasRootFolders,
+        rootFolders: result.rootFolders,
+        currentRootPath : result.currentRootPath
     };
 
     return context;
