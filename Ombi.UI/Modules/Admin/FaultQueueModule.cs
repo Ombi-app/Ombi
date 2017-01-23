@@ -64,7 +64,7 @@ namespace Ombi.UI.Modules.Admin
                 Id = r.Id,
                 PrimaryIdentifier = r.PrimaryIdentifier,
                 LastRetry = r.LastRetry,
-                Message = r.Message
+                Message = r.Description
             }).ToList();
 
             return View["RequestFaultQueue", model];
