@@ -42,7 +42,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class PlexUserChecker : IJob
+    public class PlexUserChecker : IJob, IPlexUserChecker
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -68,7 +68,7 @@ namespace Ombi.Services.Jobs
         private IRequestService RequestService { get; }
         private IUserRepository LocalUserRepository { get; }
 
-        public void Execute(IJobExecutionContext context)
+        public void Start()
         {
             JobRecord.SetRunning(true, JobNames.PlexUserChecker);
 
@@ -153,7 +153,7 @@ namespace Ombi.Services.Jobs
                     }
 
                     // Looks like it's a new user!
-                   var m = new PlexUsers
+                    var m = new PlexUsers
                     {
                         PlexUserId = user.Id,
                         Permissions = UserManagementHelper.GetPermissions(userManagementSettings),
@@ -170,7 +170,7 @@ namespace Ombi.Services.Jobs
                 // Main Plex user
                 var dbMainAcc = dbUsers.FirstOrDefault(x => x.Username.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
                 var localMainAcc = localUsers.FirstOrDefault(x => x.UserName.Equals(mainPlexAccount.Username, StringComparison.CurrentCulture));
-                
+
                 // TODO if admin acc does exist, check if we need to update it
 
 
@@ -188,7 +188,7 @@ namespace Ombi.Services.Jobs
                         LoginId = Guid.NewGuid().ToString()
                     };
 
-                    a.Permissions += (int) Permissions.Administrator; // Make admin
+                    a.Permissions += (int)Permissions.Administrator; // Make admin
 
                     Repo.Insert(a);
                 }
@@ -204,6 +204,10 @@ namespace Ombi.Services.Jobs
                 JobRecord.SetRunning(false, JobNames.PlexUserChecker);
                 JobRecord.Record(JobNames.PlexUserChecker);
             }
+        }
+        public void Execute(IJobExecutionContext context)
+        {
+            Start();
         }
     }
 }

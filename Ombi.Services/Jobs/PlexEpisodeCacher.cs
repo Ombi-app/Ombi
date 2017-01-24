@@ -43,7 +43,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class PlexEpisodeCacher : IJob
+    public class PlexEpisodeCacher : IJob, IPlexEpisodeCacher
     {
         public PlexEpisodeCacher(ISettingsService<PlexSettings> plexSettings, IPlexApi plex, ICacheProvider cache,
             IJobRecord rec, IRepository<PlexEpisodes> repo, ISettingsService<ScheduledJobsSettings> jobs)
@@ -140,6 +140,38 @@ namespace Ombi.Services.Jobs
             }
         }
 
+        public void Start()
+        {
+            try
+            {
+                var s = Plex.GetSettings();
+                if (!s.EnableTvEpisodeSearching)
+                {
+                    return;
+                }
+
+                var jobs = Job.GetJobs();
+                var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
+                if (job != null)
+                {
+                    if (job.LastRun > DateTime.Now.AddHours(-11)) // If it's been run in the last 11 hours
+                    {
+                        return;
+                    }
+                }
+                Job.SetRunning(true, JobNames.EpisodeCacher);
+                CacheEpisodes(s);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                Job.Record(JobNames.EpisodeCacher);
+                Job.SetRunning(false, JobNames.EpisodeCacher);
+            }
+        }
         public void Execute(IJobExecutionContext context)
         {
 

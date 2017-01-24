@@ -258,6 +258,7 @@
     <Compile Include="Models\UI\Dropdown.cs" />
     <Compile Include="Models\UserManagement\DeleteUserViewModel.cs" />
     <Compile Include="Models\UserManagement\UserUpdateViewModel.cs" />
+    <Compile Include="Modules\Admin\ScheduledJobsRunnerModule.cs" />
     <Compile Include="Modules\Admin\AboutModule.cs" />
     <Compile Include="Modules\Admin\CustomizationModule.cs" />
     <Compile Include="Modules\Admin\IntegrationModule.cs" />

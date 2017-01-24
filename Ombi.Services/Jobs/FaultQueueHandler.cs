@@ -45,7 +45,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class FaultQueueHandler : IJob
+    public class FaultQueueHandler : IJob, IFaultQueueHandler
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -91,9 +91,8 @@ namespace Ombi.Services.Jobs
         private ISettingsService<HeadphonesSettings> HeadphoneSettings { get; }
         private ISecurityExtensions Security { get; }
 
-        public void Execute(IJobExecutionContext context)
+        public void Start()
         {
-
             Record.SetRunning(true, JobNames.CpCacher);
             try
             {
@@ -115,6 +114,11 @@ namespace Ombi.Services.Jobs
                 Record.Record(JobNames.FaultQueueHandler);
                 Record.SetRunning(false, JobNames.CpCacher);
             }
+        }
+        public void Execute(IJobExecutionContext context)
+        {
+
+            Start();
         }
 
 
