@@ -36,7 +36,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class StoreCleanup : IJob
+    public class StoreCleanup : IJob, IStoreCleanup
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -81,6 +81,11 @@ namespace Ombi.Services.Jobs
 
         }
 
+        public void Start()
+        {
+            JobRecord.SetRunning(true, JobNames.CpCacher);
+            Cleanup();
+        }
         public void Execute(IJobExecutionContext context)
         {
             JobRecord.SetRunning(true, JobNames.CpCacher);

@@ -8,7 +8,7 @@
     return s;
 }
 
-$(function() {
+$(function () {
     $('[data-toggle="tooltip"]').tooltip();
 });
 
@@ -83,6 +83,19 @@ function finishLoading(elementId, originalCss, html) {
 }
 
 function createBaseUrl(base, url) {
+    if (base) {
+        if (url.charAt(0) === "/") {
+            url = "/" + base + url;
+        } else {
+            url = "/" + base + "/" + url;
+        }
+    }
+    return url;
+}
+
+
+function createBaseUrl(url) {
+    var base = $('#baseUrl').text();
     if (base) {
         if (url.charAt(0) === "/") {
             url = "/" + base + url;

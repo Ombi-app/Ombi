@@ -473,5 +473,23 @@ namespace Ombi.Services.Jobs
                 Job.SetRunning(false, JobNames.PlexChecker);
             }
         }
+
+        public void Start()
+        {
+            Job.SetRunning(true, JobNames.PlexChecker);
+            try
+            {
+                CheckAndUpdateAll();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                Job.Record(JobNames.PlexChecker);
+                Job.SetRunning(false, JobNames.PlexChecker);
+            }
+        }
     }
 }

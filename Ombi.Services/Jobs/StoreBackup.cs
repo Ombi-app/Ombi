@@ -35,7 +35,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class StoreBackup : IJob
+    public class StoreBackup : IJob, IStoreBackup
     {
         public StoreBackup(ISqliteConfiguration sql, IJobRecord rec)
         {
@@ -47,6 +47,13 @@ namespace Ombi.Services.Jobs
         private IJobRecord JobRecord { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        public void Start()
+        {
+            JobRecord.SetRunning(true, JobNames.CpCacher);
+            TakeBackup();
+            Cleanup();
+        }
 
         public void Execute(IJobExecutionContext context)
         {

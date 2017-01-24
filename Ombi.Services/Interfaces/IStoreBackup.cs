@@ -2,9 +2,9 @@
 
 namespace Ombi.Services.Jobs
 {
-    public interface IRecentlyAdded
+    public interface IStoreBackup
     {
+        void Start();
         void Execute(IJobExecutionContext context);
-        void Test();
     }
 }
