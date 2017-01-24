@@ -632,3 +632,13 @@ $border-radius: 10px;
     background-position:center;
     position:absolute;
 }
+
+
+.list-group-item-dropdown {
+      position: relative;
+  display: block;
+  padding: 10px 15px;
+  margin-bottom: -1px;
+  background-color: #3e3e3e;
+  border: 1px solid transparent;
+}

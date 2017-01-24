@@ -94,7 +94,7 @@ function createBaseUrl(base, url) {
 }
 
 
-function createBaseUrl(url) {
+function createLocalUrl(url) {
     var base = $('#baseUrl').text();
     if (base) {
         if (url.charAt(0) === "/") {

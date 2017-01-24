@@ -16,11 +16,17 @@
         @Html.GetSidebarUrl(Context, "/admin/sickrage", "SickRage")
         @Html.GetSidebarUrl(Context, "/admin/headphones", "Headphones (beta)")
         @Html.GetSidebarUrl(Context, "/admin/newsletter", "Newsletter Settings")
-        @Html.GetSidebarUrl(Context, "/admin/emailnotification", "Email Notifications")
-        @Html.GetSidebarUrl(Context, "/admin/pushbulletnotification", "Pushbullet Notifications")
-        @Html.GetSidebarUrl(Context, "/admin/pushovernotification", "Pushover Notifications")
-        @Html.GetSidebarUrl(Context, "/admin/slacknotification", "Slack Notifications")
-        @Html.GetSidebarUrl(Context, "/admin/discordnotification", "Discord Notifications")
+
+        <div class="dropdown">
+            <a href="#" class="dropdown-toggle list-group-item " data-toggle="dropdown">Notifications <span class="caret"></span><span style="font-size:16px;" class="pull-right hidden-xs showopacity glyphicon glyphicon-envelope"></span></a>
+            <ul class="dropdown-menu" role="menu">
+                @Html.GetSidebarUrl(Context, "/admin/emailnotification", "Email Notifications")
+                @Html.GetSidebarUrl(Context, "/admin/pushbulletnotification", "Pushbullet Notifications")
+                @Html.GetSidebarUrl(Context, "/admin/pushovernotification", "Pushover Notifications")
+                @Html.GetSidebarUrl(Context, "/admin/slacknotification", "Slack Notifications")
+                @Html.GetSidebarUrl(Context, "/admin/discordnotification", "Discord Notifications")
+            </ul>
+        </div>
         @Html.GetSidebarUrl(Context, "/admin/logs", "Logs")
         @Html.GetSidebarUrl(Context, "/admin/status", "Status")
         @Html.GetSidebarUrl(Context, "/admin/scheduledjobs", "Scheduled Jobs")

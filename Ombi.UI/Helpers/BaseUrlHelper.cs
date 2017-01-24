@@ -290,16 +290,17 @@ namespace Ombi.UI.Helpers
             return helper.Raw(asset);
         }
 
-        public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
+        public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, bool dropdown = false)
         {
             var content = GetLinkUrl(GetBaseUrl());
             if (!string.IsNullOrEmpty(content))
             {
                 url = $"/{content}{url}";
             }
+            var dropdownClass = dropdown ? "list-group-item-dropdown" : string.Empty;
             var returnString = context.Request.Path == url 
-                                      ? $"<a class=\"list-group-item active\" href=\"{url}\">{title}</a>" 
-                                      : $"<a class=\"list-group-item\" href=\"{url}\">{title}</a>";
+                                      ? $"<a class=\"list-group-item {dropdownClass} active\" href=\"{url}\">{title}</a>" 
+                                      : $"<a class=\"list-group-item {dropdownClass}\" href=\"{url}\">{title}</a>";
 
             return helper.Raw(returnString);
         }
