@@ -31,12 +31,11 @@
 <script>
     $(function () {
 
-        var base = '@Html.GetBaseUrl()';
 
         $('#contentBody').on('click', '#loginBtn', function (e) {
             e.preventDefault();
 
-            var url = createBaseUrl(base, '/userlogin/login');
+            var url = createLocalUrl('/userlogin/login');
             var $form = $('#usernameForm');
             $.ajax({
                 type: 'POST',

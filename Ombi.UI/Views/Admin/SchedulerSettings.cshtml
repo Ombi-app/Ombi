@@ -139,7 +139,7 @@
             var ev = $(e.currentTarget.children[0]);
             ev.addClass("fa-spin");
 
-            var url = createBaseUrl("/admin/schedulerun");
+            var url = createLocalUrl("/admin/schedulerun");
             $.ajax({
                 type: 'POST',
                 data: {key:id},
