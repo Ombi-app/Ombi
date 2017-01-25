@@ -121,7 +121,7 @@ namespace Ombi.UI.Modules
                     }
                     catch (Exception)
                     {
-                        return string.Empty;
+                        return "Unknown User Error";
                     }
                 }
                 return _username;
@@ -149,9 +149,10 @@ namespace Ombi.UI.Modules
         
         protected bool LoggedIn => Context?.CurrentUser != null;
 
-        protected string Culture { get; set; }
+        private string Culture { get; set; }
         protected const string CultureCookieName = "_culture";
-        protected Response SetCookie()
+
+        private Response SetCookie()
         {
             try
             {

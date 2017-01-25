@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using Newtonsoft.Json;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
 
@@ -38,5 +39,8 @@ namespace Ombi.Core.Users
         public Features Features { get; set; }
         public string EmailAddress { get; set; }
         public UserType Type { get; set; }
+
+        [JsonIgnore]
+        public string UsernameOrAlias => string.IsNullOrEmpty(UserAlias) ? Username : UserAlias;
     }
 }

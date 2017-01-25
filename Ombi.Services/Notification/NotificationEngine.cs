@@ -152,8 +152,18 @@ namespace Ombi.Services.Notification
                 var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification).ToList();
                 Log.Debug("Notifying Users Count {0}", users.Count);
 
-                var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);
-                foreach (var user in selectedUsers)
+                // Get the usernames or alias depending if they have an alias
+                var userNamesWithFeature = users.Select(x => x.UsernameOrAlias).ToList();
+                
+                var usersToNotify = userNamesWithFeature.Intersect(model.AllUsers, StringComparer.CurrentCultureIgnoreCase).ToList();
+
+                if (!usersToNotify.Any())
+                {
+                    Log.Debug("Could not find any users after the .Intersect()");
+                }
+
+                Log.Debug("Users being notified for this request count {0}", users.Count);
+                foreach (var user in usersToNotify)
                 {
                     Log.Info("Notifying user {0}", user);
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))

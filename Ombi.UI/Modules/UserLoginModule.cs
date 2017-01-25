@@ -564,7 +564,7 @@ namespace Ombi.UI.Modules
             UserLogins.Insert(new UserLogins { UserId = userId, Type = UserType.PlexUser, LastLoggedIn = DateTime.UtcNow });
             Log.Debug("We are authenticated! Setting session.");
             // Add to the session (Used in the BaseModules)
-            Session[SessionKeys.UsernameKey] = (string)username;
+            Session[SessionKeys.UsernameKey] = username;
             Session[SessionKeys.ClientDateTimeOffsetKey] = dateTimeOffset;
 
             var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);

@@ -65,7 +65,7 @@ namespace Ombi.Store
                     u.Add(RequestedBy);
                 }
 
-                if (RequestedUsers.Any())
+                if (RequestedUsers != null && RequestedUsers.Any())
                 {
                     u.AddRange(RequestedUsers.Where(requestedUser => requestedUser != RequestedBy));
                 }
