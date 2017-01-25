@@ -275,7 +275,7 @@ namespace Ombi.UI.Modules
                 Episodes = tv.Episodes.ToArray(),
                 RootFolders =  rootFolders.ToArray(),
                 HasRootFolders = rootFolders.Any(),
-                CurrentRootPath = GetRootPath(tv.RootFolderSelected, sonarrSettings).Result
+                CurrentRootPath = sonarrSettings.Enabled ? GetRootPath(tv.RootFolderSelected, sonarrSettings).Result : null
             }).ToList();
 
             return Response.AsJson(viewModel);
