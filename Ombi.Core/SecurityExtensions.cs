@@ -114,9 +114,13 @@ namespace Ombi.Core
             }
 
             // could be a local user
-            var localName = session[SessionKeys.UsernameKey];
+            var hasSessionKey = session[SessionKeys.UsernameKey] != null;
+            if (hasSessionKey)
+            {
+               return (string)session[SessionKeys.UsernameKey];
+            }
 
-            return localName as string;
+            return string.Empty;
         }
 
 

@@ -26,6 +26,7 @@
 #endregion
 
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
 
 namespace Ombi.Store.Models
 {
