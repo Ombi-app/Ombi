@@ -121,7 +121,7 @@ namespace Ombi.UI.Modules
                     }
                     catch (Exception)
                     {
-                        return string.Empty;
+                        return "Unknown User Error";
                     }
                 }
                 return _username;
