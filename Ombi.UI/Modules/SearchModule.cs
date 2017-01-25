@@ -789,7 +789,17 @@ namespace Ombi.UI.Modules
                     if (result.Result)
                     {
                         return await AddRequest(model, settings,
-                                    $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
+                            $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
+                    }
+                    if (result.Error)
+
+                    {
+                        return
+                            Response.AsJson(new JsonResponseModel
+                            {
+                                Message = "Could not add movie, please contract your administrator",
+                                Result = false
+                            });
                     }
                     if (!result.MovieSendingEnabled)
                     {
