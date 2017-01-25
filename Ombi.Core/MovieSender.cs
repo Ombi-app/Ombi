@@ -106,7 +106,7 @@ namespace Ombi.Core
         {
             var qualityProfile = 0;
             int.TryParse(settings.QualityProfile, out qualityProfile);
-            var result = RadarrApi.AddMovie(model.ProviderId, model.Title, qualityProfile, settings.RootPath, settings.ApiKey, settings.FullUri, true);
+            var result = RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, settings.RootPath, settings.ApiKey, settings.FullUri, true);
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {

@@ -50,6 +50,7 @@ namespace Ombi.Api.Models.Radarr
         public string imdbId { get; set; }
         public string titleSlug { get; set; }
         public int id { get; set; }
+        public int year { get; set; }
 
     }
 }

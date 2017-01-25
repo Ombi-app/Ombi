@@ -63,7 +63,7 @@ namespace Ombi.Api
             return obj;
         }
 
-        public RadarrAddMovie AddMovie(int tmdbId, string title, int qualityId, string rootPath, string apiKey, Uri baseUrl, bool searchNow = false)
+        public RadarrAddMovie AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, Uri baseUrl, bool searchNow = false)
         {
             var request = new RestRequest
             {
@@ -78,7 +78,8 @@ namespace Ombi.Api
                 qualityProfileId = qualityId,
                 rootFolderPath = rootPath,
                 titleSlug = title,
-                monitored = true
+                monitored = true,
+                year = year
             };
 
             if (searchNow)
