@@ -54,6 +54,7 @@
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
     <Compile Include="Movie\CouchPotatoStatus.cs" />
     <Compile Include="Movie\CouchPotatoApiKey.cs" />
+    <Compile Include="Movie\TmdbMovieDetails.cs" />
     <Compile Include="Music\HeadphonesAlbumSearchResult.cs" />
     <Compile Include="Music\HeadphonesArtistSearchResult.cs" />
     <Compile Include="Music\HeadphonesGetIndex.cs" />

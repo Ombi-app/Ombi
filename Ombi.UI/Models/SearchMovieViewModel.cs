@@ -47,5 +47,8 @@ namespace Ombi.UI.Models
         public double VoteAverage { get; set; }
         public int VoteCount { get; set; }
         public bool AlreadyInCp { get; set; }
+        public string Trailer { get; set; }
+        public string Homepage { get; set; }
+        public string ImdbId { get; set; }
     }
 }

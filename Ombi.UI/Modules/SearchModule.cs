@@ -266,17 +266,6 @@ namespace Ombi.UI.Modules
             var counter = 0;
             foreach (var movie in apiMovies)
             {
-                var imdbId = string.Empty;
-                if (counter <= 5) // Let's only do it for the first 5 items
-                {
-                    var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
-                    
-                    // TODO needs to be careful about this, it's adding extra time to search...
-                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                    imdbId = movieInfoTask?.ImdbId;
-                    counter++;
-                }
-
                 var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
@@ -294,6 +283,28 @@ namespace Ombi.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
+
+                var imdbId = string.Empty;
+                if (counter <= 5) // Let's only do it for the first 5 items
+                {
+                    var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
+                    
+                    // TODO needs to be careful about this, it's adding extra time to search...
+                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                    viewMovie.ImdbId = movieInfo?.imdb_id;
+                    viewMovie.Homepage = movieInfo?.homepage;
+                    var videoId = movieInfo?.video ?? false
+                        ? movieInfo?.videos?.results?.FirstOrDefault()?.key
+                        : string.Empty;
+
+                    viewMovie.Trailer = string.IsNullOrEmpty(videoId)
+                        ? string.Empty
+                        : $"https://www.youtube.com/watch?v={videoId}";
+
+                    counter++;
+                }
+
+                
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
                 var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
                     imdbId);
