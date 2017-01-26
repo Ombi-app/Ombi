@@ -275,7 +275,7 @@ namespace Ombi.UI.Modules
                 Episodes = tv.Episodes.ToArray(),
                 RootFolders =  rootFolders.ToArray(),
                 HasRootFolders = rootFolders.Any(),
-                CurrentRootPath = GetRootPath(tv.RootFolderSelected, sonarrSettings).Result
+                CurrentRootPath = sonarrSettings.Enabled ? GetRootPath(tv.RootFolderSelected, sonarrSettings).Result : null
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -292,7 +292,9 @@ namespace Ombi.UI.Modules
             {
                 return r.path;
             }
-            return string.Empty;
+
+            // Return default path
+            return rootFoldersResult.FirstOrDefault(x => x.id.Equals(int.Parse(sonarrSettings.RootPath)))?.path ?? string.Empty;
         }
 
         private async Task<Response> GetAlbumRequests()

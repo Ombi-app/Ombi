@@ -111,7 +111,7 @@ namespace Ombi.Core
             if (!string.IsNullOrEmpty(result.Error?.message))
             {
                 Log.Error(result.Error.message);
-                return new MovieSenderResult { Result = false };
+                return new MovieSenderResult { Result = false, Error = true};
             }
             if (!string.IsNullOrEmpty(result.title))
             {

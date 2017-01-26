@@ -36,5 +36,7 @@ namespace Ombi.Core
         ///   <c>true</c> if [movie sending enabled]; otherwise, <c>false</c>.
         /// </value>
         public bool MovieSendingEnabled { get; set; }
+
+        public bool Error { get; set; }     
     }
 }

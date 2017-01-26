@@ -107,6 +107,11 @@ namespace Ombi.Api
                     var error = JsonConvert.DeserializeObject < RadarrError>(response.Content);
                     return new RadarrAddMovie {Error =  error};
                 }
+                if (response.Content.Contains("\"errorMessage\":"))
+                {
+                    var error = JsonConvert.DeserializeObject<List<SonarrError>>(response.Content).FirstOrDefault();
+                    return new RadarrAddMovie {Error = new RadarrError {message = error?.errorMessage}};
+                }
                 return JsonConvert.DeserializeObject < RadarrAddMovie>(response.Content);
             }
             catch (JsonSerializationException jse)
