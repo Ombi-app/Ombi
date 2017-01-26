@@ -27,9 +27,6 @@ namespace Ombi.Store
         public string Status { get; set; }
         public bool Approved { get; set; }
 
-        [Obsolete("Use RequestedUsers")] //TODO remove this obsolete property
-        public string RequestedBy { get; set; }
-
         public DateTime RequestedDate { get; set; }
         public bool Available { get; set; }
         public IssueState Issues { get; set; }
@@ -60,14 +57,9 @@ namespace Ombi.Store
             get
             {
                 var u = new List<string>();
-                if (!string.IsNullOrEmpty(RequestedBy))
-                {
-                    u.Add(RequestedBy);
-                }
-
                 if (RequestedUsers != null && RequestedUsers.Any())
                 {
-                    u.AddRange(RequestedUsers.Where(requestedUser => requestedUser != RequestedBy));
+                    u.AddRange(RequestedUsers);
                 }
                 return u;
             }

@@ -154,7 +154,25 @@ namespace Ombi.Services.Notification
 
                 // Get the usernames or alias depending if they have an alias
                 var userNamesWithFeature = users.Select(x => x.UsernameOrAlias).ToList();
+                Log.Debug("Users with the feature count {0}", userNamesWithFeature.Count);
+                Log.Debug("Usernames: ");
+                foreach (var u in userNamesWithFeature)
+                {
+                    Log.Debug(u);
+                }
                 
+                Log.Debug("Users in the requested model count: {0}", model.AllUsers.Count);
+                Log.Debug("usernames from model: ");
+                foreach (var modelAllUser in model.AllUsers)
+                {
+                    Log.Debug(modelAllUser);
+                }
+
+                if (model.AllUsers == null || !model.AllUsers.Any())
+                {
+                    Log.Debug("There are no users in the model.AllUsers, no users to notify");
+                    return;
+                }
                 var usersToNotify = userNamesWithFeature.Intersect(model.AllUsers, StringComparer.CurrentCultureIgnoreCase).ToList();
 
                 if (!usersToNotify.Any())
