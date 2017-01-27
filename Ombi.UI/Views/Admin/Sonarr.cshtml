@@ -15,6 +15,8 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Sonarr Settings</legend>
+            
+            <input hidden="hidden" name="FullRootPath" id="fullRootPath" value="@Model.FullRootPath"/>
             <div class="form-group">
                 <div class="checkbox">
                     @if (Model.Enabled)
@@ -220,6 +222,8 @@
             }
             var qualityProfile = $("#profiles option:selected").val();
             var rootFolder = $("#rootFolders option:selected").val();
+            var rootFolderPath = $('#rootFolders option:selected').text();
+            $('#fullRootPath').val(rootFolderPath);
 
             var $form = $("#mainForm");
 

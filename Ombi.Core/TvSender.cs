@@ -85,7 +85,7 @@ namespace Ombi.Core
             var latest = model.SeasonsRequested?.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
             var specificSeasonRequest = model.SeasonList?.Any();
 
-            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.RootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
+            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.FullRootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
 
             if (episodeRequest)
             {
