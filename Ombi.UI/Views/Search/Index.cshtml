@@ -283,7 +283,7 @@
         </script>
 
         <!-- Movie and TV Results template -->
-        <script id="search-template" type="text/x-handlebars-template">
+    <script id="search-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -299,28 +299,30 @@
                     {{/if_eq}}
 
                 </div>
-                <div class="col-sm-5 ">
+                <div class="col-sm-8">
                     <div>
                         {{#if_eq type "movie"}}
                         <a href="https://www.themoviedb.org/movie/{{id}}/" target="_blank">
                             <h4>{{title}} ({{year}})</h4>
                         </a>
                         {{else}}
-                        <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
-                            <h4>{{title}} ({{year}})</h4>
-                        </a>
+                        <h4>
+                            <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
+                                {{title}} ({{year}})
+                                
+                            </a>{{#if status}}<span class="label label-primary" style="font-size:60%" target="_blank">{{status}}</span>{{/if}}
+                        </h4>
                         {{/if_eq}}
                         {{#if status}}
                         <span class="label label-info" target="_blank">{{status}}</span>
                         {{/if}}
-                        {{#if homepage}}
-                        <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
-                        {{/if}}
-                        {{#if trailer}}
-                        <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
-                        {{/if}}
+
                         {{#if firstAired}}
-                        <span class="label label-info" target="_blank">First Aired: {{firstAired}}</span>
+                        <span class="label label-info" target="_blank">Air Date: {{firstAired}}</span>
+                        {{/if}}
+
+                        {{#if releaseDate}}
+                        <span class="label label-info" target="_blank">Release Date: {{releaseDate}}</span>
                         {{/if}}
                         {{#if available}}
                         <span class="label label-success">@UI.Search_Available_on_plex</span>
@@ -334,14 +336,22 @@
                         {{/if}}
                         {{/if}}
 
+
                         <span id="{{id}}netflixTab"></span>
+                        
+                        {{#if homepage}}
+                        <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
+                        {{/if}}
+                        {{#if trailer}}
+                        <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                        {{/if}}
 
                         <br />
                         <br />
                     </div>
-                    <p>{{overview}}</p>
+                    <p style="font-size:0.9rem !important">{{overview}}</p>
                 </div>
-                <div class="col-sm-2 col-sm-push-3">
+                <div class="col-sm-2">
                     <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                         <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                         {{#if_eq type "movie"}}

@@ -472,9 +472,10 @@ $(function () {
             approved: result.approved,
             available: result.available,
             url: result.plexUrl,
-                        trailer: result.trailer,
+            trailer: result.trailer,
             homepage: result.homepage,
-            releaseDate: Humanize(result.releaseDate)
+            releaseDate: Humanize(result.releaseDate),
+            status: result.status
         };
 
         return context;
