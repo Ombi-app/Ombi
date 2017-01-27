@@ -1009,6 +1009,11 @@ namespace Ombi.UI.Modules
                         existingRequest.Episodes.AddRange(newEpisodes ?? Enumerable.Empty<EpisodesModel>());
 
                         // It's technically a new request now, so set the status to not approved.
+                        var autoApprove = ShouldAutoApprove(RequestType.TvShow);
+                        if (autoApprove)
+                        {
+                            return await SendTv(model, sonarrSettings, existingRequest, fullShowName, settings);
+                        }
                         existingRequest.Approved = false;
 
                         return await AddUserToRequest(existingRequest, settings, fullShowName, true);
@@ -1135,54 +1140,7 @@ namespace Ombi.UI.Modules
             {
                 if (ShouldAutoApprove(RequestType.TvShow))
                 {
-                    model.Approved = true;
-                    var s = await sonarrSettings;
-                    var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
-                    if (s.Enabled)
-                    {
-                        var result = await sender.SendToSonarr(s, model);
-                        if (!string.IsNullOrEmpty(result?.title))
-                        {
-                            if (existingRequest != null)
-                            {
-                                return await UpdateRequest(model, settings,
-                                    $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                            }
-                            return
-                                await
-                                    AddRequest(model, settings,
-                                        $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                        }
-                        Log.Debug("Error with sending to sonarr.");
-                        return
-                            Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages ?? new List<string>()));
-                    }
-
-                    var srSettings = SickRageService.GetSettings();
-                    if (srSettings.Enabled)
-                    {
-                        var result = sender.SendToSickRage(srSettings, model);
-                        if (result?.result == "success")
-                        {
-                            return await AddRequest(model, settings,
-                                        $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                        }
-                        return
-                            Response.AsJson(new JsonResponseModel
-                            {
-                                Result = false,
-                                Message = result?.message ?? Resources.UI.Search_SickrageError
-                            });
-                    }
-
-                    if (!srSettings.Enabled && !s.Enabled)
-                    {
-                        return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                    }
-
-                    return
-                        Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
-
+                    return await SendTv(model, sonarrSettings, existingRequest, fullShowName, settings);
                 }
                 return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
             }
@@ -1639,6 +1597,57 @@ namespace Ombi.UI.Modules
             Anticipated,
             MostWatched,
             Trending
+        }
+
+        private async Task<Response> SendTv(RequestedModel model, Task<SonarrSettings> sonarrSettings, RequestedModel existingRequest, string fullShowName, PlexRequestSettings settings)
+        {
+            model.Approved = true;
+            var s = await sonarrSettings;
+            var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
+            if (s.Enabled)
+            {
+                var result = await sender.SendToSonarr(s, model);
+                if (!string.IsNullOrEmpty(result?.title))
+                {
+                    if (existingRequest != null)
+                    {
+                        return await UpdateRequest(model, settings,
+                            $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                    }
+                    return
+                        await
+                            AddRequest(model, settings,
+                                $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                }
+                Log.Debug("Error with sending to sonarr.");
+                return
+                    Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages ?? new List<string>()));
+            }
+
+            var srSettings = SickRageService.GetSettings();
+            if (srSettings.Enabled)
+            {
+                var result = sender.SendToSickRage(srSettings, model);
+                if (result?.result == "success")
+                {
+                    return await AddRequest(model, settings,
+                                $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                }
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = result?.message ?? Resources.UI.Search_SickrageError
+                    });
+            }
+
+            if (!srSettings.Enabled && !s.Enabled)
+            {
+                return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+            }
+
+            return
+                Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
         }
     }
 }
