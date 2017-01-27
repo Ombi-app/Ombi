@@ -62,7 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-
-PlexRequests.UI/Content/* linguist-vendored
-PlexRequests.UI/Content/* linguist-vendored
+Ombi.UI/Content/* linguist-vendored
 base.scss linguist-vendored=false
