@@ -252,6 +252,7 @@
     <Compile Include="Models\Requests\RequestsIndexViewModel.cs" />
     <Compile Include="Models\RootFolderModel.cs" />
     <Compile Include="Models\ScheduledJobsViewModel.cs" />
+    <Compile Include="Models\SearchLoadViewModel.cs" />
     <Compile Include="Models\SearchViewModel.cs" />
     <Compile Include="Models\SearchMusicViewModel.cs" />
     <Compile Include="Models\SearchMovieViewModel.cs" />

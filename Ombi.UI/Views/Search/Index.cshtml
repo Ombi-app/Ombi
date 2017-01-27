@@ -1,5 +1,6 @@
 ﻿@using Ombi.UI.Helpers
 @using Ombi.UI.Resources
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.UI.Models.SearchLoadViewModel>
 @{
     var baseUrl = Html.GetBaseUrl();
     var url = string.Empty;
@@ -9,6 +10,8 @@
     }
 }
 <div>
+
+    <div hidden="hidden" id="useNewSearch">@Model.CustomizationSettings.NewSearch</div>
     <h1 id="searchTitle">@UI.Search_Title</h1>
     <h4>@UI.Search_Paragraph</h4>
     <br />
@@ -16,21 +19,21 @@
 
 
     <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
-        @if (Model.SearchForMovies)
+        @if (Model.Settings.SearchForMovies)
         {
             <li role="presentation" class="active">
                 <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
 
             </li>
         }
-        @if (Model.SearchForTvShows)
+        @if (Model.Settings.SearchForTvShows)
         {
             <li role="presentation">
                 <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> @UI.Search_TvShows</a>
 
             </li>
         }
-        @if (Model.SearchForMusic)
+        @if (Model.Settings.SearchForMusic)
         {
             <li role="presentation">
                 <a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-music"></i>@UI.Search_Albums</a>
@@ -41,7 +44,7 @@
 
     <!-- Tab panes -->
     <div class="tab-content">
-        @if (Model.SearchForMovies)
+        @if (Model.Settings.SearchForMovies)
         {
             <!-- Movie tab -->
             <div role="tabpanel" class="tab-pane active" id="MoviesTab">
@@ -70,7 +73,7 @@
         }
 
 
-        @if (Model.SearchForTvShows)
+        @if (Model.Settings.SearchForTvShows)
         {
     <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
@@ -99,7 +102,7 @@
             </div>
         }
 
-        @if (Model.SearchForMusic)
+        @if (Model.Settings.SearchForMusic)
         {
             <!-- Music tab -->
             <div role="tabpanel" class="tab-pane" id="MusicTab">
@@ -118,7 +121,7 @@
         }
 
 
-        <script id="search-template" type="text/x-handlebars-template">
+    <script id="search-templateNew" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -153,40 +156,49 @@
 
 
 
+                        <div class="row">
+
+                            <div class="col-md-7 col-xs-7">
+
+                                {{#if available}}
+                                <span class="label label-success">@UI.Search_Available_on_plex</span>
+                                {{else}}
+                                {{#if approved}}
+                                <span class="label label-info">@UI.Search_Processing_Request</span>
+                                {{else if requested}}
+                                <span class="label label-warning">@UI.Search_Pending_approval</span>
+                                {{else}}
+                                <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
+                                {{/if}}
+                                {{/if}}
+                                {{#if firstAired}}
+                                <span class="label label-info" target="_blank">Air Date: {{firstAired}}</span>
+                                {{/if}}
+
+                                {{#if releaseDate}}
+                                <span class="label label-info" target="_blank">Release Date: {{releaseDate}}</span>
+                                {{/if}}
 
 
-                        <div class="col-md-7 col-xs-7">
-
-                            {{#if available}}
-                            <span class="label label-success">@UI.Search_Available_on_plex</span>
-                            {{else}}
-                            {{#if approved}}
-                            <span class="label label-info">@UI.Search_Processing_Request</span>
-                            {{else if requested}}
-                            <span class="label label-warning">@UI.Search_Pending_approval</span>
-                            {{else}}
-                            <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
-                            {{/if}}
-                            {{/if}}
-                            {{#if firstAired}}
-                            <span class="label label-info" target="_blank">Air Date: {{firstAired}}</span>
-                            {{/if}}
-
-                            <span id="{{id}}netflixTab"></span>
+                                <span id="{{id}}netflixTab"></span>
+                            </div>
+                            <!--Info Labels-->
+                            <div class="col-md-5 col-xs-5" style="text-align:right;">
+                                {{#if homepage}}
+                                <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
+                                {{/if}}
+                                {{#if trailer}}
+                                <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                                {{/if}}
+                            </div>
                         </div>
-                        <!--Info Labels-->
-                        <div class="col-md-5 col-xs-5" style="text-align:right;">
-                            {{#if homepage}}
-                            <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
-                            {{/if}}
-                            {{#if trailer}}
-                            <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
-                            {{/if}}
+
+                        <div class="row">
+                            <!-- Description -->
+                            <p style="font-size:0.9rem !important">{{overview}}</p>
+                            <br />
+                            <br />
                         </div>
-                        <!-- Description -->
-                        <p style="font-size:0.9rem !important">{{overview}}</p>
-                        <br />
-                        <br />
 
                         <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
                             <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
@@ -271,7 +283,7 @@
         </script>
 
         <!-- Movie and TV Results template -->
-        <script id="search-template2" type="text/x-handlebars-template">
+        <script id="search-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 

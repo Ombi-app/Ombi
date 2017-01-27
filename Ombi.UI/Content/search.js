@@ -24,7 +24,8 @@ Function.prototype.bind = function (parent) {
 
 $(function () {
 
-    var searchSource = $("#search-template").html();
+    var useNewSearch = $('#useNewSearch').text() == 'True';
+    var searchSource = useNewSearch ? $("#search-templateNew").html() : $("#search-template").html();
     var seasonsSource = $("#seasons-template").html();
     var musicSource = $("#music-template").html();
     var seasonsNumberSource = $("#seasonNumber-template").html();
@@ -470,7 +471,10 @@ $(function () {
             requested: result.requested,
             approved: result.approved,
             available: result.available,
-            url: result.plexUrl
+            url: result.plexUrl,
+                        trailer: result.trailer,
+            homepage: result.homepage,
+            releaseDate: Humanize(result.releaseDate)
         };
 
         return context;

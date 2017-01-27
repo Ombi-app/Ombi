@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NLog;
 using NLog.Fluent;
 using Ombi.Api.Models.Movie;
 using RestSharp;
@@ -50,6 +51,7 @@ namespace Ombi.Api
         private ApiRequest Api { get; }
         public TMDbClient Client { get; set; }
         private const string BaseUrl = "https://api.themoviedb.org/3/";
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public async Task<List<SearchMovie>> SearchMovie(string searchTerm)
         {
             var results = await Client.SearchMovie(searchTerm);

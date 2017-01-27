@@ -1,8 +1,9 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NewsletterSettings.cs
-//    Created By: Jim MacKenzie
+//    File: Version1100.cs
+//    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -23,37 +24,41 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
 
-namespace Ombi.Core.SettingModels
+using System.Data;
+using NLog;
+using Ombi.Core.SettingModels;
+
+namespace Ombi.Core.Migration.Migrations
 {
-    public class CustomizationSettings : Settings
+    [Migration(22000, "v2.20.0.0")]
+    public class Version2200 : BaseMigration, IMigration
     {
-        public string ApplicationName { get; set; }        
-        
-        /// <summary>
-        /// The CSS name of the theme we want
-        /// </summary>
-        public string ThemeName { get; set; }
+        public Version2200(ISettingsService<CustomizationSettings> custom)
+        {
+            Customization = custom;
+        }
 
-        /// <summary>
-        /// Admin Only.
-        /// </summary>
-        /// <value>
-        /// The default filter.
-        /// </value>
-        public int DefaultFilter { get; set; }
-        /// <summary>
-        /// Admin only.
-        /// </summary>
-        /// <value>
-        /// The default sort.
-        /// </value>
-        public int DefaultSort { get; set; }
+        public int Version => 22000;
+        private ISettingsService<CustomizationSettings> Customization { get; set; }
 
-        public int DefaultLang { get; set; }
 
-        public bool NewSearch { get; set; }
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
 
+        public void Start(IDbConnection con)
+        {
+            UpdateCustomSettings();
+            UpdateSchema(con, Version);
+        }
+
+        private void UpdateCustomSettings()
+        {
+            var settings = Customization.GetSettings();
+            settings.NewSearch = true; // Use the new search
+
+            Customization.SaveSettings(settings);
+        }
     }
 }

@@ -77,7 +77,7 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi)
+            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus)
             : base("search", prSettings, security)
         {
             Auth = auth;
@@ -111,6 +111,7 @@ namespace Ombi.UI.Modules
             WatcherCacher = watcherCacher;
             RadarrCacher = radarrCacher;
             TraktApi = traktApi;
+            CustomizationSettings = cus;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -169,14 +170,22 @@ namespace Ombi.UI.Modules
         private ITransientFaultQueue FaultQueue { get; }
         private IRepository<RequestLimit> RequestLimitRepo { get; }
         private IRadarrCacher RadarrCacher { get; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
         {
 
             var settings = await PrService.GetSettingsAsync();
+            var custom = await CustomizationSettings.GetSettingsAsync();
+            var searchViewModel = new SearchLoadViewModel
+            {
+                Settings = settings,
+                CustomizationSettings = custom
+            };
 
-            return View["Search/Index", settings];
+
+            return View["Search/Index", searchViewModel];
         }
 
         private async Task<Response> UpcomingMovies()
