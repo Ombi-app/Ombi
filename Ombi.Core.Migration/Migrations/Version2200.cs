@@ -49,8 +49,8 @@ namespace Ombi.Core.Migration.Migrations
 
         public void Start(IDbConnection con)
         {
-            UpdateCustomSettings();
-            UpdateSchema(con, Version);
+            //UpdateCustomSettings(); Turned off the migration for now until the search has been improved on.
+            //UpdateSchema(con, Version);
         }
 
         private void UpdateCustomSettings()
