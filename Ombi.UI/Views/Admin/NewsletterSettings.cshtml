@@ -16,35 +16,20 @@
                     <br />
                     @if (Model.SendRecentlyAddedEmail)
                     {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable the newsletter of recently added content</label>
+                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
                     }
                     else
                     {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable the newsletter of recently added content</label>
+                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable newslette</label>
                     }
 
-
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div class="checkbox">
-                    @if (Model.SendToPlexUsers)
-                    {
-                        <input type="checkbox" id="SendToPlexUsers" name="SendToPlexUsers" checked="checked"><label for="SendToPlexUsers">Send to all of your Plex 'Friends'</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SendToPlexUsers" name="SendToPlexUsers"><label for="SendToPlexUsers">Send to all of your Plex 'Friends'</label>
-                    }
 
                 </div>
             </div>
             <div class="form-group">
 
               <br>
-              <br>
-                <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your Plex Friends)</label>
+                <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
               <small>You can add multiple email address by using the ; delimiter</small>
 <div>
                     <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">

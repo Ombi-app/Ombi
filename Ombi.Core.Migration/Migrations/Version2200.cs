@@ -1,7 +1,8 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: SearchTvShowViewModel.cs
+//    File: Version1100.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -23,32 +24,41 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
 
-using System;
-using System.Collections.Generic;
+using System.Data;
+using NLog;
+using Ombi.Core.SettingModels;
 
-namespace Ombi.UI.Models
+namespace Ombi.Core.Migration.Migrations
 {
-    public class SearchMovieViewModel : SearchViewModel
+    [Migration(22000, "v2.20.0.0")]
+    public class Version2200 : BaseMigration, IMigration
     {
-        public bool Adult { get; set; }
-        public string BackdropPath { get; set; }
-        public List<int> GenreIds { get; set; }
-        public int Id { get; set; }
-        public string OriginalLanguage { get; set; }
-        public string OriginalTitle { get; set; }
-        public string Overview { get; set; }
-        public double Popularity { get; set; }
-        public string PosterPath { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public string Title { get; set; }
-        public bool Video { get; set; }
-        public double VoteAverage { get; set; }
-        public int VoteCount { get; set; }
-        public bool AlreadyInCp { get; set; }
-        public string Trailer { get; set; }
-        public string Homepage { get; set; }
-        public string ImdbId { get; set; }
+        public Version2200(ISettingsService<CustomizationSettings> custom)
+        {
+            Customization = custom;
+        }
+
+        public int Version => 22000;
+        private ISettingsService<CustomizationSettings> Customization { get; set; }
+
+
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
+
+        public void Start(IDbConnection con)
+        {
+            //UpdateCustomSettings(); Turned off the migration for now until the search has been improved on.
+            //UpdateSchema(con, Version);
+        }
+
+        private void UpdateCustomSettings()
+        {
+            var settings = Customization.GetSettings();
+            settings.NewSearch = true; // Use the new search
+
+            Customization.SaveSettings(settings);
+        }
     }
 }

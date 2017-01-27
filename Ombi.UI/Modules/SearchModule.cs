@@ -77,7 +77,7 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi)
+            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus)
             : base("search", prSettings, security)
         {
             Auth = auth;
@@ -111,6 +111,7 @@ namespace Ombi.UI.Modules
             WatcherCacher = watcherCacher;
             RadarrCacher = radarrCacher;
             TraktApi = traktApi;
+            CustomizationSettings = cus;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -169,14 +170,22 @@ namespace Ombi.UI.Modules
         private ITransientFaultQueue FaultQueue { get; }
         private IRepository<RequestLimit> RequestLimitRepo { get; }
         private IRadarrCacher RadarrCacher { get; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
         {
 
             var settings = await PrService.GetSettingsAsync();
+            var custom = await CustomizationSettings.GetSettingsAsync();
+            var searchViewModel = new SearchLoadViewModel
+            {
+                Settings = settings,
+                CustomizationSettings = custom
+            };
 
-            return View["Search/Index", settings];
+
+            return View["Search/Index", searchViewModel];
         }
 
         private async Task<Response> UpcomingMovies()
@@ -266,17 +275,6 @@ namespace Ombi.UI.Modules
             var counter = 0;
             foreach (var movie in apiMovies)
             {
-                var imdbId = string.Empty;
-                if (counter <= 5) // Let's only do it for the first 5 items
-                {
-                    var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
-                    
-                    // TODO needs to be careful about this, it's adding extra time to search...
-                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                    imdbId = movieInfoTask?.ImdbId;
-                    counter++;
-                }
-
                 var viewMovie = new SearchMovieViewModel
                 {
                     Adult = movie.Adult,
@@ -294,6 +292,28 @@ namespace Ombi.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
+
+                var imdbId = string.Empty;
+                if (counter <= 5) // Let's only do it for the first 5 items
+                {
+                    var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
+                    
+                    // TODO needs to be careful about this, it's adding extra time to search...
+                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                    viewMovie.ImdbId = movieInfo?.imdb_id;
+                    viewMovie.Homepage = movieInfo?.homepage;
+                    var videoId = movieInfo?.video ?? false
+                        ? movieInfo?.videos?.results?.FirstOrDefault()?.key
+                        : string.Empty;
+
+                    viewMovie.Trailer = string.IsNullOrEmpty(videoId)
+                        ? string.Empty
+                        : $"https://www.youtube.com/watch?v={videoId}";
+
+                    counter++;
+                }
+
+                
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
                 var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
                     imdbId);
@@ -989,6 +1009,11 @@ namespace Ombi.UI.Modules
                         existingRequest.Episodes.AddRange(newEpisodes ?? Enumerable.Empty<EpisodesModel>());
 
                         // It's technically a new request now, so set the status to not approved.
+                        var autoApprove = ShouldAutoApprove(RequestType.TvShow);
+                        if (autoApprove)
+                        {
+                            return await SendTv(model, sonarrSettings, existingRequest, fullShowName, settings);
+                        }
                         existingRequest.Approved = false;
 
                         return await AddUserToRequest(existingRequest, settings, fullShowName, true);
@@ -1115,54 +1140,7 @@ namespace Ombi.UI.Modules
             {
                 if (ShouldAutoApprove(RequestType.TvShow))
                 {
-                    model.Approved = true;
-                    var s = await sonarrSettings;
-                    var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
-                    if (s.Enabled)
-                    {
-                        var result = await sender.SendToSonarr(s, model);
-                        if (!string.IsNullOrEmpty(result?.title))
-                        {
-                            if (existingRequest != null)
-                            {
-                                return await UpdateRequest(model, settings,
-                                    $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                            }
-                            return
-                                await
-                                    AddRequest(model, settings,
-                                        $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                        }
-                        Log.Debug("Error with sending to sonarr.");
-                        return
-                            Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages ?? new List<string>()));
-                    }
-
-                    var srSettings = SickRageService.GetSettings();
-                    if (srSettings.Enabled)
-                    {
-                        var result = sender.SendToSickRage(srSettings, model);
-                        if (result?.result == "success")
-                        {
-                            return await AddRequest(model, settings,
-                                        $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                        }
-                        return
-                            Response.AsJson(new JsonResponseModel
-                            {
-                                Result = false,
-                                Message = result?.message ?? Resources.UI.Search_SickrageError
-                            });
-                    }
-
-                    if (!srSettings.Enabled && !s.Enabled)
-                    {
-                        return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-                    }
-
-                    return
-                        Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
-
+                    return await SendTv(model, sonarrSettings, existingRequest, fullShowName, settings);
                 }
                 return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
             }
@@ -1619,6 +1597,57 @@ namespace Ombi.UI.Modules
             Anticipated,
             MostWatched,
             Trending
+        }
+
+        private async Task<Response> SendTv(RequestedModel model, Task<SonarrSettings> sonarrSettings, RequestedModel existingRequest, string fullShowName, PlexRequestSettings settings)
+        {
+            model.Approved = true;
+            var s = await sonarrSettings;
+            var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
+            if (s.Enabled)
+            {
+                var result = await sender.SendToSonarr(s, model);
+                if (!string.IsNullOrEmpty(result?.title))
+                {
+                    if (existingRequest != null)
+                    {
+                        return await UpdateRequest(model, settings,
+                            $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                    }
+                    return
+                        await
+                            AddRequest(model, settings,
+                                $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                }
+                Log.Debug("Error with sending to sonarr.");
+                return
+                    Response.AsJson(ValidationHelper.SendSonarrError(result?.ErrorMessages ?? new List<string>()));
+            }
+
+            var srSettings = SickRageService.GetSettings();
+            if (srSettings.Enabled)
+            {
+                var result = sender.SendToSickRage(srSettings, model);
+                if (result?.result == "success")
+                {
+                    return await AddRequest(model, settings,
+                                $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+                }
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = result?.message ?? Resources.UI.Search_SickrageError
+                    });
+            }
+
+            if (!srSettings.Enabled && !s.Enabled)
+            {
+                return await AddRequest(model, settings, $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
+            }
+
+            return
+                Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
         }
     }
 }

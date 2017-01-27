@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: SearchTvShowViewModel.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: SearchLoadViewModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,30 +25,13 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using System.Collections.Generic;
+using Ombi.Core.SettingModels;
 
 namespace Ombi.UI.Models
 {
-    public class SearchMovieViewModel : SearchViewModel
+    public class SearchLoadViewModel
     {
-        public bool Adult { get; set; }
-        public string BackdropPath { get; set; }
-        public List<int> GenreIds { get; set; }
-        public int Id { get; set; }
-        public string OriginalLanguage { get; set; }
-        public string OriginalTitle { get; set; }
-        public string Overview { get; set; }
-        public double Popularity { get; set; }
-        public string PosterPath { get; set; }
-        public DateTime? ReleaseDate { get; set; }
-        public string Title { get; set; }
-        public bool Video { get; set; }
-        public double VoteAverage { get; set; }
-        public int VoteCount { get; set; }
-        public bool AlreadyInCp { get; set; }
-        public string Trailer { get; set; }
-        public string Homepage { get; set; }
-        public string ImdbId { get; set; }
+        public PlexRequestSettings Settings { get; set; }
+        public CustomizationSettings CustomizationSettings { get; set; }
     }
 }

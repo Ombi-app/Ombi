@@ -32,6 +32,13 @@ namespace Ombi.Core.SettingModels
         public string ApiKey { get; set; }
         public string QualityProfile { get; set; }
         public bool SeasonFolders { get; set; }
+        /// <summary>
+        /// This is the root path ID
+        /// </summary>
+        /// <value>
+        /// The root path.
+        /// </value>
         public string RootPath { get; set; }
+        public string FullRootPath { get; set; }
     }
 }

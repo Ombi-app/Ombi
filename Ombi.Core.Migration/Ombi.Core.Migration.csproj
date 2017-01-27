@@ -69,6 +69,7 @@
     <Compile Include="MigrationAttribute.cs" />
     <Compile Include="MigrationRunner.cs" />
     <Compile Include="Migrations\BaseMigration.cs" />
+    <Compile Include="Migrations\Version2200.cs" />
     <Compile Include="Migrations\Version1100.cs" />
     <Compile Include="Migrations\Version195.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

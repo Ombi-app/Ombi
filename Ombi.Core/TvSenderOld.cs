@@ -70,7 +70,7 @@ namespace Ombi.Core
             {
                 int.TryParse(sonarrSettings.QualityProfile, out qualityProfile);
             }
-            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.RootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
+            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.FullRootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
 
 
             var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);

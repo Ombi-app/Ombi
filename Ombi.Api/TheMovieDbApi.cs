@@ -25,12 +25,18 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NLog;
+using NLog.Fluent;
+using Ombi.Api.Models.Movie;
+using RestSharp;
 using TMDbLib.Client;
 using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
+using Movie = TMDbLib.Objects.Movies.Movie;
 
 namespace Ombi.Api
 {
@@ -39,9 +45,13 @@ namespace Ombi.Api
         public TheMovieDbApi()
         {
             Client = new TMDbClient(ApiKey);
+            Api = new ApiRequest();
         }
 
+        private ApiRequest Api { get; }
         public TMDbClient Client { get; set; }
+        private const string BaseUrl = "https://api.themoviedb.org/3/";
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         public async Task<List<SearchMovie>> SearchMovie(string searchTerm)
         {
             var results = await Client.SearchMovie(searchTerm);
@@ -56,7 +66,27 @@ namespace Ombi.Api
         public async Task<List<MovieResult>> GetUpcomingMovies()
         {
             var movies = await Client.GetMovieList(MovieListType.Upcoming);
-            return movies?.Results ??  new List<MovieResult>();
+            return movies?.Results ?? new List<MovieResult>();
+        }
+
+        public TmdbMovieDetails GetMovieInformationWithVideos(int tmdbId)
+        {
+            var request = new RestRequest { Resource = "movie/{movieId}", Method = Method.GET };
+            request.AddUrlSegment("movieId", tmdbId.ToString());
+            request.AddQueryParameter("api_key", ApiKey);
+            request.AddQueryParameter("append_to_response", "videos"); // Get the videos
+
+            try
+            {
+
+                var obj = Api.ExecuteJson<TmdbMovieDetails>(request, new Uri(BaseUrl));
+                return obj;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return null;
+            }
         }
 
         public async Task<Movie> GetMovieInformation(int tmdbId)

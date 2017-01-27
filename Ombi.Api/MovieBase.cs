@@ -32,6 +32,8 @@ namespace Ombi.Api
     public abstract class MovieBase
     {
         private static readonly string Encrypted = "0T3QNSseexLO7n7UPiJvl70Y+KKnvbeTlsusl7Kwq0hPH0BHOuFNGwksNCjkwqWedyDdI/MJeUR4wtL4bIl0Z+//uHXEaYM/4H2pjeLbH5EWdUe5TTj1AhaIR5PQweamvcienRyFD/3YPCC/+qL5mHkKXBkPumMod3Zb/4yN0Ik=";
-        protected string ApiKey = StringCipher.Decrypt(Encrypted, "ApiKey");
+        private string _apiKey;
+
+        protected string ApiKey => _apiKey ?? (_apiKey = StringCipher.Decrypt(Encrypted, "ApiKey"));
     }
 }
