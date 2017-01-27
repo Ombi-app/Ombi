@@ -211,8 +211,8 @@ namespace Ombi.UI.Modules.Admin
             Get["/headphones"] = _ => Headphones();
             Post["/headphones"] = _ => SaveHeadphones();
 
-            Get["/newsletter"] = _ => Newsletter();
-            Post["/newsletter"] = _ => SaveNewsletter();
+            Get["/newsletter", true] = async (x, ct) => await Newsletter();
+            Post["/newsletter", true] = async (x, ct) => await SaveNewsletter();
 
             Post["/createapikey"] = x => CreateApiKey();
 
@@ -845,13 +845,13 @@ namespace Ombi.UI.Modules.Admin
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-        private Negotiator Newsletter()
+        private async Task<Negotiator> Newsletter()
         {
-            var settings = NewsLetterService.GetSettings();
+            var settings = await NewsLetterService.GetSettingsAsync();
             return View["NewsletterSettings", settings];
         }
 
-        private Response SaveNewsletter()
+        private async Task<Response> SaveNewsletter()
         {
             var settings = this.Bind<NewletterSettings>();
 
@@ -859,9 +859,17 @@ namespace Ombi.UI.Modules.Admin
             if (!valid.IsValid)
             {
                 var error = valid.SendJsonError();
-                Log.Info("Error validating Headphones settings, message: {0}", error.Message);
+                Log.Info("Error validating Newsletter settings, message: {0}", error.Message);
                 return Response.AsJson(error);
             }
+
+            // Make sure emails are setup
+            var emailSettings = await EmailService.GetSettingsAsync();
+            if (!emailSettings.Enabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please enable your email notifications" });
+            }
+
             settings.SendRecentlyAddedEmail = settings.SendRecentlyAddedEmail;
             var result = NewsLetterService.SaveSettings(settings);
 

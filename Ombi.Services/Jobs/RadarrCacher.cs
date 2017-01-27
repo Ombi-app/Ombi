@@ -66,7 +66,15 @@ namespace Ombi.Services.Jobs
                     var movies = RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
                     if (movies != null)
                     {
-                        var movieIds = movies.Select(x => x.tmdbId).ToList();
+                        var movieIds = new List<int>();
+                        foreach (var m in movies)
+                        {
+                            if (m.tmdbId > 0)
+                            {
+                                movieIds.Add(m.tmdbId);
+                            }
+                        }
+                        //var movieIds = movies.Select(x => x.tmdbId).ToList();
                         Cache.Set(CacheKeys.RadarrMovies, movieIds, CacheKeys.TimeFrameMinutes.SchedulerCaching);
                     }
                 }

@@ -119,14 +119,6 @@ namespace Ombi.Services.Notification
                 return false;
             }
 
-            if (!settings.EnableUserEmailNotifications)
-            {
-                if (!settings.Enabled)
-                {
-                    return false;
-                }
-            }
-
             return true;
         }
 
@@ -237,10 +229,6 @@ namespace Ombi.Services.Notification
 
         private async Task EmailAvailableRequest(NotificationModel model, EmailNotificationSettings settings)
         {
-            if (!settings.EnableUserEmailNotifications)
-            {
-                await Task.FromResult(false);
-            }
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: {model.Title} is now available!",
