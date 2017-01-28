@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: JobNames.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: EmbyUser.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,25 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace Ombi.Services.Jobs
-{
-    public static class JobNames
-    {
-        public const string StoreBackup = "Database Backup";
-        public const string CpCacher = "CouchPotato Cacher";
-        public const string WatcherCacher = "Watcher Cacher";
-        public const string SonarrCacher = "Sonarr Cacher";
-        public const string RadarrCacher = "Radarr Cacher";
-        public const string SrCacher = "SickRage Cacher";
-        public const string PlexChecker = "Plex Availability Cacher";
-        public const string EmbyChecker = "Emby Availability Cacher";
-        public const string PlexCacher = "Plex Cacher";
-        public const string StoreCleanup = "Database Cleanup";
-        public const string RequestLimitReset = "Request Limit Reset";
-        public const string EpisodeCacher = "Plex Episode Cacher";
-        public const string RecentlyAddedEmail = "Recently Added Email Notification";
-        public const string FaultQueueHandler = "Request Fault Queue Handler";
-        public const string PlexUserChecker = "Plex User Checker";
 
+
+namespace Ombi.Api.Models.Emby
+{
+    public class EmbyConfiguration
+    {
+        public bool PlayDefaultAudioTrack { get; set; }
+        public bool DisplayMissingEpisodes { get; set; }
+        public bool DisplayUnairedEpisodes { get; set; }
+        public object[] GroupedFolders { get; set; }
+        public string SubtitleMode { get; set; }
+        public bool DisplayCollectionsView { get; set; }
+        public bool EnableLocalPassword { get; set; }
+        public object[] OrderedViews { get; set; }
+        public object[] LatestItemsExcludes { get; set; }
+        public bool HidePlayedInLatest { get; set; }
+        public bool RememberAudioSelections { get; set; }
+        public bool RememberSubtitleSelections { get; set; }
+        public bool EnableNextEpisodeAutoPlay { get; set; }
     }
 }

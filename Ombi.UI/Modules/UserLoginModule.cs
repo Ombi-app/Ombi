@@ -34,6 +34,7 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.Linker;
 using NLog;
+using Ombi.Api;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Plex;
 using Ombi.Core;

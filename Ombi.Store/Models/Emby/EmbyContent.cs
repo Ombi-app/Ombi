@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: JobNames.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: Emby.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,25 +24,20 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace Ombi.Services.Jobs
-{
-    public static class JobNames
-    {
-        public const string StoreBackup = "Database Backup";
-        public const string CpCacher = "CouchPotato Cacher";
-        public const string WatcherCacher = "Watcher Cacher";
-        public const string SonarrCacher = "Sonarr Cacher";
-        public const string RadarrCacher = "Radarr Cacher";
-        public const string SrCacher = "SickRage Cacher";
-        public const string PlexChecker = "Plex Availability Cacher";
-        public const string EmbyChecker = "Emby Availability Cacher";
-        public const string PlexCacher = "Plex Cacher";
-        public const string StoreCleanup = "Database Cleanup";
-        public const string RequestLimitReset = "Request Limit Reset";
-        public const string EpisodeCacher = "Plex Episode Cacher";
-        public const string RecentlyAddedEmail = "Recently Added Email Notification";
-        public const string FaultQueueHandler = "Request Fault Queue Handler";
-        public const string PlexUserChecker = "Plex User Checker";
 
+using System;
+using Dapper.Contrib.Extensions;
+using Ombi.Store.Models.Plex;
+
+namespace Ombi.Store.Models.Emby
+{
+    [Table(nameof(EmbyContent))]
+    public class EmbyContent : Entity
+    {
+        public string Title { get; set; }
+        public string EmbyId { get; set; }
+        public DateTime PremierDate { get; set; }
+        public string ProviderId { get; set; }
+        public EmbyMediaType Type { get; set; }
     }
 }

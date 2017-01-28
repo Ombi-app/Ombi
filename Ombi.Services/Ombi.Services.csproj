@@ -93,9 +93,11 @@
     <Compile Include="Interfaces\IStoreBackup.cs" />
     <Compile Include="Interfaces\IStoreCleanup.cs" />
     <Compile Include="Interfaces\IUserRequestLimitResetter.cs" />
+    <Compile Include="Jobs\IEmbyAvailabilityChecker.cs" />
     <Compile Include="Jobs\IFaultQueueHandler.cs" />
     <Compile Include="Jobs\IPlexEpisodeCacher.cs" />
     <Compile Include="Jobs\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\EmbyAvailabilityChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />

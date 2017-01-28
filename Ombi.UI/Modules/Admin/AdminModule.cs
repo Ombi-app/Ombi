@@ -97,6 +97,8 @@ namespace Ombi.UI.Modules.Admin
         private IDiscordApi DiscordApi { get; }
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
         private IRadarrApi RadarrApi { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
+        private IEmbyApi EmbyApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -124,7 +126,8 @@ namespace Ombi.UI.Modules.Admin
              ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
              ISettingsService<WatcherSettings> watcherSettings ,
              ISettingsService<DiscordNotificationSettings> discord,
-             IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi
+             IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi,
+             ISettingsService<EmbySettings> embySettings, IEmbyApi emby
              , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
@@ -160,7 +163,9 @@ namespace Ombi.UI.Modules.Admin
             DiscordApi = discordapi;
             RadarrSettings = settings;
             RadarrApi = radarrApi;
-
+            EmbyApi = emby;
+            EmbySettings = embySettings;
+                
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
             
             Get["/"] = _ => Admin();
@@ -179,6 +184,10 @@ namespace Ombi.UI.Modules.Admin
 
             Get["/plex"] = _ => Plex();
             Post["/plex", true] = async (x, ct) => await SavePlex();
+
+            Get["/emby", true] = async (x, ct) => await Emby();
+            Post["/emby", true] = async (x, ct) => await SaveEmby();
+
 
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
@@ -438,6 +447,13 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(valid.SendJsonError());
             }
 
+            var embySettings = await EmbySettings.GetSettingsAsync();
+
+            if (embySettings.Enable)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Emby is enabled, we cannot enable Plex and Emby" });
+            }
+
             if (string.IsNullOrEmpty(plexSettings.MachineIdentifier))
             {
                 //Lookup identifier
@@ -450,6 +466,41 @@ namespace Ombi.UI.Modules.Admin
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Plex!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Negotiator> Emby()
+        {
+            var settings = await EmbySettings.GetSettingsAsync();
+
+            return View["Emby", settings];
+        }
+
+        private async Task<Response> SaveEmby()
+        {
+            var emby = this.Bind<EmbySettings>();
+            var valid = this.Validate(emby);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+
+            var plexSettings = await PlexService.GetSettingsAsync();
+            if (plexSettings.Enable)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Plex is enabled, we cannot enable Plex and Emby" });
+            }
+
+            // Get the users
+            var users = EmbyApi.GetUsers(emby.FullUri, emby.ApiKey);
+            // Find admin
+            var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
+            emby.AdministratorId = admin?.Id;
+
+            var result = await EmbySettings.SaveSettingsAsync(emby);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Emby!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 

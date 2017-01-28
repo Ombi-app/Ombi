@@ -388,7 +388,7 @@ namespace Ombi.Services.Jobs
                                         currentItem.RatingKey);
 
                                     // We do not want "all episodes" this as a season
-                                    var filtered = seasons.Directory.Where( x => !x.Title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
+                                    var filtered = seasons.Directory.Where(x => !x.Title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
 
                                     t1.Seasons.AddRange(filtered);
                                 }
@@ -447,12 +447,15 @@ namespace Ombi.Services.Jobs
 
         private bool ValidateSettings(PlexSettings plex)
         {
-            if (plex?.Ip == null || plex?.PlexAuthToken == null)
+            if (plex.Enable)
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
-                return false;
+                if (plex?.Ip == null || plex?.PlexAuthToken == null)
+                {
+                    Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                    return false;
+                }
             }
-            return true;
+            return plex.Enable;
         }
 
         public void Execute(IJobExecutionContext context)

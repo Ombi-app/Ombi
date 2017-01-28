@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: JobNames.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: EmbyLibrary.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,25 +24,24 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace Ombi.Services.Jobs
+namespace Ombi.Api.Models.Emby
 {
-    public static class JobNames
+    public class EmbyLibrary
     {
-        public const string StoreBackup = "Database Backup";
-        public const string CpCacher = "CouchPotato Cacher";
-        public const string WatcherCacher = "Watcher Cacher";
-        public const string SonarrCacher = "Sonarr Cacher";
-        public const string RadarrCacher = "Radarr Cacher";
-        public const string SrCacher = "SickRage Cacher";
-        public const string PlexChecker = "Plex Availability Cacher";
-        public const string EmbyChecker = "Emby Availability Cacher";
-        public const string PlexCacher = "Plex Cacher";
-        public const string StoreCleanup = "Database Cleanup";
-        public const string RequestLimitReset = "Request Limit Reset";
-        public const string EpisodeCacher = "Plex Episode Cacher";
-        public const string RecentlyAddedEmail = "Recently Added Email Notification";
-        public const string FaultQueueHandler = "Request Fault Queue Handler";
-        public const string PlexUserChecker = "Plex User Checker";
-
+        public string Name { get; set; }
+        public string ServerId { get; set; }
+        public string Id { get; set; }
+        public bool HasDynamicCategories { get; set; }
+        public string PlayAccess { get; set; }
+        public bool IsFolder { get; set; }
+        public string Type { get; set; }
+        public EmbyUserdata UserData { get; set; }
+        public int ChildCount { get; set; }
+        public string CollectionType { get; set; }
+        public string OriginalCollectionType { get; set; }
+        public EmbyImagetags ImageTags { get; set; }
+        public object[] BackdropImageTags { get; set; }
+        public string LocationType { get; set; }
     }
+
 }

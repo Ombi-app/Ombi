@@ -164,4 +164,29 @@ CREATE TABLE IF NOT EXISTS PlexContent
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexContent_Id ON PlexContent (Id);
 
+CREATE TABLE IF NOT EXISTS EmbyEpisodes
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    EpisodeTitle						VARCHAR(100) NOT NULL,
+	ShowTitle							VARCHAR(100) NOT NULL,
+	EmbyId								VARCHAR(100) NOT NULL,
+	SeasonNumber						INTEGER NOT NULL,
+	EpisodeNumber						INTEGER NOT NULL,
+	ParentId							VARCHAR(100) NOT NULL,
+	ProviderId							VARCHAR(100) NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS EmbyEpisodes_Id ON EmbyEpisodes (Id);
+
+CREATE TABLE IF NOT EXISTS EmbyContent
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Title								VARCHAR(100) NOT NULL,
+	PremierDate							VARCHAR(100) NOT NULL,
+	EmbyId								VARCHAR(100) NOT NULL,
+	ProviderId							VARCHAR(100) NOT NULL,
+	Type								INTEGER NOT NULL
+);
+CREATE UNIQUE INDEX IF NOT EXISTS EmbyEpisodes_Id ON EmbyEpisodes (Id);
+
+
 COMMIT;

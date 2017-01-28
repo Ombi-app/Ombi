@@ -49,6 +49,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Emby\EmbyConfiguration.cs" />
+    <Compile Include="Emby\EmbyImagetags.cs" />
+    <Compile Include="Emby\EmbyItem.cs" />
+    <Compile Include="Emby\EmbyItemContainer.cs" />
+    <Compile Include="Emby\EmbyMovieItem.cs" />
+    <Compile Include="Emby\EmbyPolicy.cs" />
+    <Compile Include="Emby\EmbySeriesItem.cs" />
+    <Compile Include="Emby\EmbyUser.cs" />
+    <Compile Include="Emby\EmbyUserdata.cs" />
     <Compile Include="Movie\CouchPotatoAdd.cs" />
     <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />

@@ -31,6 +31,7 @@ using Ninject;
 using Ninject.Planning.Bindings.Resolvers;
 using Ninject.Syntax;
 using NLog;
+using Ombi.Api;
 using Ombi.Api.Interfaces;
 using Ombi.Core;
 using Ombi.Core.Migration;
@@ -81,6 +82,7 @@ namespace Ombi.UI
 
                 Debug.WriteLine("Settings up Scheduler");
                 var scheduler = new Scheduler();
+
 
 
                 // Reset any jobs running 

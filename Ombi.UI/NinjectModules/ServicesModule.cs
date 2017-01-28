@@ -58,6 +58,9 @@ namespace Ombi.UI.NinjectModules
             Bind<IPlexEpisodeCacher>().To<PlexEpisodeCacher>();
             Bind<IFaultQueueHandler>().To<FaultQueueHandler>();
             Bind<IPlexUserChecker>().To<PlexUserChecker>();
+
+            Bind<IEmbyAvailabilityChecker>().To<EmbyAvailabilityChecker>();
+
      
             Bind<IAnalytics>().To<Analytics>();
             Bind<ISchedulerFactory>().To<StdSchedulerFactory>();
