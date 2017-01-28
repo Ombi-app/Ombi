@@ -19,7 +19,7 @@ Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
 
-* User mangement system (supports plex.tv accounts and local accounts) [NEW]
+* User management system (supports plex.tv accounts and local accounts) [NEW]
 * Sending newsletters [NEW]
 * Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
 
@@ -29,7 +29,7 @@ Here some of the features Ombi has:
 * Secure authentication so you don't have to worry about those script kiddies
 * We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
 * We have allowed the ability for a user to add a custom note on a request
-* It automatically update the status of requests when they are available on Plex
+* It automatically updates the status of requests when they are available on Plex
 * Slick, responsive and mobile friendly UI
 
 
@@ -67,7 +67,7 @@ Search the existing requests to see if your suggestion has already been submitte
 [Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
-Do you have an issue or a question? if so check out our [FAQ!](https://github.com/tidusjar/Ombi/wiki/FAQ)
+Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
 
 # Docker
 
@@ -77,12 +77,12 @@ Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has cr
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
 
-Please feed free to submit a pull request!
+Please feel free to submit a pull request!
 
 # Donation
-If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
+If you feel like donating you can donate [here](https://paypal.me/PlexRequestsNet)!
 
-### A massive thanks to everyone for all their help!
+### A massive thanks to everyone for all their helps!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
