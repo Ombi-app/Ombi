@@ -200,16 +200,17 @@ namespace Ombi.Services.Jobs
                 html = template.LoadTemplate(sb.ToString());
                 Log.Debug("Loaded the template");
             }
-            
 
 
-            Send(newletterSettings, html, plexSettings, testEmail);
+            string escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
+            Log.Debug(escapedHtml);
+            Send(newletterSettings, escapedHtml, plexSettings, testEmail);
         }
 
         private void GenerateMovieHtml(List<RecentlyAddedChild> movies, PlexSettings plexSettings, StringBuilder sb)
         {
             var orderedMovies = movies.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<RecentlyAddedChild>();
-            sb.Append("<h1>New Movies:</h1><br/><br/>");
+            sb.Append("<h1>New Movies:</h1><br /><br />");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var movie in orderedMovies)
@@ -259,13 +260,13 @@ namespace Ombi.Services.Jobs
                 }
 
             }
-            sb.Append("</table><br/><br/>");
+            sb.Append("</table><br /><br />");
         }
 
         private void GenerateMovieHtml(List<Metadata> movies, PlexSettings plexSettings, StringBuilder sb)
         {
             var orderedMovies = movies.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList() ?? new List<Metadata>();
-            sb.Append("<h1>New Movies:</h1><br/><br/>");
+            sb.Append("<h1>New Movies:</h1><br /><br />");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var movie in orderedMovies)
@@ -315,14 +316,14 @@ namespace Ombi.Services.Jobs
                 }
 
             }
-            sb.Append("</table><br/><br/>");
+            sb.Append("</table><br /><br />");
         }
 
         private void GenerateTvHtml(List<RecentlyAddedChild> tv, PlexSettings plexSettings, StringBuilder sb)
         {
            var orderedTv = tv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
-            sb.Append("<h1>New Episodes:</h1><br/><br/>");
+            sb.Append("<h1>New Episodes:</h1><br /><br />");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var t in orderedTv)
@@ -375,14 +376,14 @@ namespace Ombi.Services.Jobs
                     EndLoopHtml(sb);
                 }
             }
-            sb.Append("</table><br/><br/>");
+            sb.Append("</table><br /><br />");
         }
 
         private void GenerateTvHtml(List<Metadata> tv, PlexSettings plexSettings, StringBuilder sb)
         {
             var orderedTv = tv.OrderByDescending(x => x?.addedAt.UnixTimeStampToDateTime()).ToList();
             // TV
-            sb.Append("<h1>New Episodes:</h1><br/><br/>");
+            sb.Append("<h1>New Episodes:</h1><br /><br />");
             sb.Append(
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var t in orderedTv)
@@ -435,7 +436,7 @@ namespace Ombi.Services.Jobs
                     EndLoopHtml(sb);
                 }
             }
-            sb.Append("</table><br/><br/>");
+            sb.Append("</table><br /><br />");
         }
 
         private void Send(NewletterSettings newletterSettings, string html, PlexSettings plexSettings, bool testEmail = false)
@@ -516,10 +517,12 @@ namespace Ombi.Services.Jobs
 
         private void EndLoopHtml(StringBuilder sb)
         {
+            //NOTE: BR have to be in TD's as per html spec or it will be put outside of the table...
+            //Source: http://stackoverflow.com/questions/6588638/phantom-br-tag-rendered-by-browsers-prior-to-table-tag
+            sb.Append("<hr />");
+            sb.Append("<br />");
+            sb.Append("<br />");
             sb.Append("</td>");
-            sb.Append("<hr>");
-            sb.Append("<br>");
-            sb.Append("<br>");
             sb.Append("</tr>");
         }
 
