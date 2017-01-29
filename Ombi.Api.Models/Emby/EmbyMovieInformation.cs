@@ -70,7 +70,7 @@ namespace Ombi.Api.Models.Emby
         public string DisplayPreferencesId { get; set; }
         public object[] Tags { get; set; }
         public string[] Keywords { get; set; }
-        public EmbyMediastream1[] MediaStreams { get; set; }
+        public EmbyMediastream[] MediaStreams { get; set; }
         public string VideoType { get; set; }
         public EmbyImagetags ImageTags { get; set; }
         public string[] BackdropImageTags { get; set; }

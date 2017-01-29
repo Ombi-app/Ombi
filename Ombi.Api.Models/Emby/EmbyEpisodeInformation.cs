@@ -78,7 +78,7 @@ namespace Ombi.Api.Models.Emby
         public object[] Keywords { get; set; }
         public string SeriesPrimaryImageTag { get; set; }
         public string SeasonName { get; set; }
-        public EmbyMediastream1[] MediaStreams { get; set; }
+        public EmbyMediastream[] MediaStreams { get; set; }
         public string VideoType { get; set; }
         public EmbyImagetags ImageTags { get; set; }
         public object[] BackdropImageTags { get; set; }

@@ -60,7 +60,6 @@
     <Compile Include="Emby\EmbyItemContainer.cs" />
     <Compile Include="Emby\EmbyMediasource.cs" />
     <Compile Include="Emby\EmbyMediastream.cs" />
-    <Compile Include="Emby\EmbyMediastream1.cs" />
     <Compile Include="Emby\EmbyMediaType.cs" />
     <Compile Include="Emby\EmbyMovieItem.cs" />
     <Compile Include="Emby\EmbyPerson.cs" />
