@@ -31,6 +31,7 @@ using Ombi.Core.Queue;
 using Ombi.Helpers.Analytics;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
+using Ombi.Services.Jobs.Interfaces;
 using Ombi.UI.Jobs;
 using Quartz;
 using Quartz.Impl;
@@ -60,6 +61,8 @@ namespace Ombi.UI.NinjectModules
             Bind<IPlexUserChecker>().To<PlexUserChecker>();
 
             Bind<IEmbyAvailabilityChecker>().To<EmbyAvailabilityChecker>();
+            Bind<IEmbyContentCacher>().To<EmbyContentCacher>();
+            Bind<IEmbyEpisodeCacher>().To<EmbyEpisodeCacher>();
 
      
             Bind<IAnalytics>().To<Analytics>();

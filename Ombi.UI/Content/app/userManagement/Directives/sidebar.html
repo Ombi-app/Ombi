@@ -49,7 +49,7 @@
 
 
             <button ng-click="updateUser()" class="btn btn-primary-outline">Update</button>
-            <button ng-click="deleteUser()" class="btn btn-danger-outline">Delete</button>
+            <button ng-show="selectedUser.type == 1" ng-click="deleteUser()" class="btn btn-danger-outline">Delete</button>
             <button ng-click="closeSidebarClick()" style="float: right; margin-right: 10px;" class="btn btn-danger-outline">Close</button>
         </div>
     </div>

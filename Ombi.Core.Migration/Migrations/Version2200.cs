@@ -58,16 +58,20 @@ namespace Ombi.Core.Migration.Migrations
 
         private void UpdatePlexSettings()
         {
+#if !DEBUG
             var s = PlexSettings.GetSettings();
             s.Enable = true;
             PlexSettings.SaveSettings(s);
+#endif
         }
         private void UpdateCustomSettings()
         {
+
             var settings = Customization.GetSettings();
             settings.NewSearch = true; // Use the new search
 
             Customization.SaveSettings(settings);
+
         }
     }
 }

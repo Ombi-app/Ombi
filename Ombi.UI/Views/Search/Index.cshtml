@@ -161,7 +161,7 @@
                             <div class="col-md-7 col-xs-7">
 
                                 {{#if available}}
-                                <span class="label label-success">@UI.Search_Available_on_plex</span>
+                                <span class="label label-success">@UI.Search_Available</span>
                                 {{else}}
                                 {{#if approved}}
                                 <span class="label label-info">@UI.Search_Processing_Request</span>
@@ -207,7 +207,9 @@
                             <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
                             <br />
                             <br />
+                            {{#if url}}
                             <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                            {{/if}}
                             {{else}}
                             {{#if_eq requested true}}
                             <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
@@ -325,7 +327,7 @@
                         <span class="label label-info" target="_blank">Release Date: {{releaseDate}}</span>
                         {{/if}}
                         {{#if available}}
-                        <span class="label label-success">@UI.Search_Available_on_plex</span>
+                        <span class="label label-success">@UI.Search_Available</span>
                         {{else}}
                         {{#if approved}}
                         <span class="label label-info">@UI.Search_Processing_Request</span>
@@ -357,9 +359,11 @@
                         {{#if_eq type "movie"}}
                         {{#if_eq available true}}
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
+                        {{#if url}}
                         <br />
                         <br />
                         <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                        {{/if}}
                         {{else}}
                         {{#if_eq requested true}}
                         <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
@@ -396,8 +400,10 @@
                         </div>
                         {{/if_eq}}
                         {{#if available}}
+                        {{#if url}}
                         <br />
                         <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                        {{/if}}
                         {{/if}}
                         {{/if_eq}}
                         {{/if_eq}}
@@ -432,7 +438,7 @@
 
 
         <!-- Music Results template -->
-        <script id="music-template" type="text/x-handlebars-template">
+    <script id="music-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imageDiv" class="col-sm-2">
                     {{#if coverArtUrl}}
@@ -458,7 +464,9 @@
                         <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
                         {{#if_eq available true}}
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
+                        {{#if url}}
                         <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                        {{/if}}
                         {{else}}
                         {{#if_eq requested true}}
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>

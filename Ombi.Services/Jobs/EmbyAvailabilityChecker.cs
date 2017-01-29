@@ -148,7 +148,7 @@ namespace Ombi.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotificationEngine.NotifyUsers(modifiedModel, embySettings.ApiKey, NotificationType.RequestAvailable); // TODO Emby
+                //NotificationEngine.NotifyUsers(modifiedModel, embySettings.ApiKey, NotificationType.RequestAvailable); // TODO Emby
                 RequestService.BatchUpdate(modifiedModel);
             }
         }

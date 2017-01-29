@@ -447,11 +447,19 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(valid.SendJsonError());
             }
 
-            var embySettings = await EmbySettings.GetSettingsAsync();
-
-            if (embySettings.Enable)
+           
+            if (plexSettings.Enable)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Emby is enabled, we cannot enable Plex and Emby" });
+                var embySettings = await EmbySettings.GetSettingsAsync();
+                if (embySettings.Enable)
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = false,
+                            Message = "Emby is enabled, we cannot enable Plex and Emby"
+                        });
+                }
             }
 
             if (string.IsNullOrEmpty(plexSettings.MachineIdentifier))
@@ -485,10 +493,18 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(valid.SendJsonError());
             }
 
-            var plexSettings = await PlexService.GetSettingsAsync();
-            if (plexSettings.Enable)
+            if (emby.Enable)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Plex is enabled, we cannot enable Plex and Emby" });
+                var plexSettings = await PlexService.GetSettingsAsync();
+                if (plexSettings.Enable)
+                {
+                    return
+                        Response.AsJson(new JsonResponseModel
+                        {
+                            Result = false,
+                            Message = "Plex is enabled, we cannot enable Plex and Emby"
+                        });
+                }
             }
 
             // Get the users

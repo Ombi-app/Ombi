@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: JobNames.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: MovieInformation.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,27 +24,36 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace Ombi.Services.Jobs
+
+
+namespace Ombi.Api.Models.Emby
 {
-    public static class JobNames
+    public class EmbyMediasource
     {
-        public const string StoreBackup = "Database Backup";
-        public const string CpCacher = "CouchPotato Cacher";
-        public const string WatcherCacher = "Watcher Cacher";
-        public const string SonarrCacher = "Sonarr Cacher";
-        public const string RadarrCacher = "Radarr Cacher";
-        public const string SrCacher = "SickRage Cacher";
-        public const string PlexChecker = "Plex Availability Cacher";
-        public const string EmbyChecker = "Emby Availability Cacher";
-        public const string PlexCacher = "Plex Cacher";
-        public const string EmbyCacher = "Emby Cacher";
-        public const string StoreCleanup = "Database Cleanup";
-        public const string RequestLimitReset = "Request Limit Reset";
-        public const string EpisodeCacher = "Plex Episode Cacher";
-        public const string EmbyEpisodeCacher = "Emby Episode Cacher";
-        public const string RecentlyAddedEmail = "Recently Added Email Notification";
-        public const string FaultQueueHandler = "Request Fault Queue Handler";
-        public const string PlexUserChecker = "Plex User Checker";
+        public string Protocol { get; set; }
+        public string Id { get; set; }
+        public string Path { get; set; }
+        public string Type { get; set; }
+        public string Container { get; set; }
+        public string Name { get; set; }
+        public bool IsRemote { get; set; }
+        public string ETag { get; set; }
+        public long RunTimeTicks { get; set; }
+        public bool ReadAtNativeFramerate { get; set; }
+        public bool SupportsTranscoding { get; set; }
+        public bool SupportsDirectStream { get; set; }
+        public bool SupportsDirectPlay { get; set; }
+        public bool IsInfiniteStream { get; set; }
+        public bool RequiresOpening { get; set; }
+        public bool RequiresClosing { get; set; }
+        public bool SupportsProbing { get; set; }
+        public string VideoType { get; set; }
+        public EmbyMediastream[] MediaStreams { get; set; }
+        public object[] PlayableStreamFileNames { get; set; }
+        public object[] Formats { get; set; }
+        public int Bitrate { get; set; }
+        public EmbyRequiredhttpheaders RequiredHttpHeaders { get; set; }
+        public int DefaultAudioStreamIndex { get; set; }
 
     }
 }

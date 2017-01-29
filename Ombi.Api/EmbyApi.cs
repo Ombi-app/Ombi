@@ -36,8 +36,6 @@ namespace Ombi.Api
 {
     public class EmbyApi : IEmbyApi
     {
-        public string ApiKey => "4aa083121ab646bfa38aa5f7196056cf";
-
         public EmbyApi()
         {
             Api = new ApiRequest();
@@ -59,7 +57,7 @@ namespace Ombi.Api
                 Method = Method.GET
             };
 
-            AddHeaders(request, ApiKey);
+            AddHeaders(request, apiKey);
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetUsers for Emby, Retrying {0}", timespan), new[] {
                 TimeSpan.FromSeconds (1),
@@ -80,7 +78,7 @@ namespace Ombi.Api
             };
 
             request.AddUrlSegment("userId", userId);
-            AddHeaders(request, ApiKey);
+            AddHeaders(request, apiKey);
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling ViewLibrary for Emby, Retrying {0}", timespan), new[] {
                 TimeSpan.FromSeconds (1),
@@ -96,6 +94,58 @@ namespace Ombi.Api
         {
             return GetAll<EmbyMovieItem>("Movie", apiKey, userId, baseUri);
         }
+
+        public EmbyItemContainer<EmbyEpisodeItem> GetAllEpisodes(string apiKey, string userId, Uri baseUri)
+        {
+            return GetAll<EmbyEpisodeItem>("Episode", apiKey, userId, baseUri);
+        }
+
+        public EmbyInformation GetInformation(string mediaId, EmbyMediaType type, string apiKey, string userId, Uri baseUri)
+        {
+            var request = new RestRequest
+            {
+                Resource = "emby/users/{userId}/items/{mediaId}",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("userId", userId);
+            request.AddUrlSegment("mediaId", mediaId);
+
+            AddHeaders(request, apiKey);
+
+
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetAll<T>({1}) for Emby, Retrying {0}", timespan, type), new[] {
+                TimeSpan.FromSeconds (1),
+                TimeSpan.FromSeconds(5)
+            });
+
+            switch (type)
+            {
+                case EmbyMediaType.Movie:
+                    return new EmbyInformation
+                    {
+                        MovieInformation = policy.Execute(() => Api.ExecuteJson<EmbyMovieInformation>(request, baseUri))
+                    };
+                case EmbyMediaType.Series:
+                    return new EmbyInformation
+                    {
+                        SeriesInformation =
+                            policy.Execute(() => Api.ExecuteJson<EmbySeriesInformation>(request, baseUri))
+                    };
+                case EmbyMediaType.Music:
+                    break;
+                case EmbyMediaType.Episode:
+                    return new EmbyInformation
+                    {
+                        EpisodeInformation = 
+                            policy.Execute(() => Api.ExecuteJson<EmbyEpisodeInformation>(request, baseUri))
+                    };
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+            return new EmbyInformation();
+        }
+
 
         public EmbyItemContainer<EmbySeriesItem> GetAllShows(string apiKey, string userId, Uri baseUri)
         {
@@ -114,7 +164,7 @@ namespace Ombi.Api
             request.AddQueryParameter("Recursive", true.ToString());
             request.AddQueryParameter("IncludeItemTypes", type);
 
-            AddHeaders(request, ApiKey);
+            AddHeaders(request, apiKey);
 
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetAll<T>({1}) for Emby, Retrying {0}", timespan, type), new[] {
