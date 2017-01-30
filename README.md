@@ -1,5 +1,4 @@
-# Ombi
-
+![](http://i.imgur.com/qQsN78U.png)
 ____
 [![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
@@ -9,22 +8,27 @@ ____
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 [![Stories in Progress](https://badge.waffle.io/tidusjar/Ombi.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/Ombi)
 
+| Service  | Master                      | Early Access                 | Dev                          |
+|----------|:---------------------------:|:----------------------------:|:----------------------------:|
+| AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)
+| Travis   | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/master.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/EAP.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/dev.svg)](https://travis-ci.org/tidusjar/Ombi)
+
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
 
-* User mangement system (supports plex.tv accounts and local accounts) [NEW]
+* User management system (supports plex.tv accounts and local accounts) [NEW]
 * Sending newsletters [NEW]
 * Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
 
-* Allow your users to report issues and manage them seperatly
+* Allow your users to report issues and manage them separately
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
 * Secure authentication so you don't have to worry about those script kiddies
 * We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
 * We have allowed the ability for a user to add a custom note on a request
-* It automatically update the status of requests when they are available on Plex
+* It automatically updates the status of requests when they are available on Plex
 * Slick, responsive and mobile friendly UI
 
 
@@ -62,7 +66,7 @@ Search the existing requests to see if your suggestion has already been submitte
 [Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
-Do you have an issue or a question? if so check out our [FAQ!](https://github.com/tidusjar/Ombi/wiki/FAQ)
+Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
 
 # Docker
 
@@ -72,13 +76,16 @@ Looking for a Docker Image? Well [rogueosb](https://github.com/rogueosb/) has cr
 
 We are looking for any contributions to the project! Just pick up a task, if you have any questions ask and i'll get straight on it!
 
-Please feed free to submit a pull request!
+Please feel free to submit a pull request!
 
 # Donation
-If you feel like donating you can [here!](https://paypal.me/PlexRequestsNet)
+If you feel like donating you can donate [here](https://paypal.me/PlexRequestsNet)!
 
-### A massive thanks to everyone for all their help!
+### A massive thanks to everyone for all their helps!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
 
+### Sponsors ###
+- [JetBrains](http://www.jetbrains.com/) for providing us with free licenses to their great tools
+    - [ReSharper](http://www.jetbrains.com/resharper/)
