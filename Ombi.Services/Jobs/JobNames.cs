@@ -45,6 +45,7 @@ namespace Ombi.Services.Jobs
         public const string RecentlyAddedEmail = "Recently Added Email Notification";
         public const string FaultQueueHandler = "Request Fault Queue Handler";
         public const string PlexUserChecker = "Plex User Checker";
+        public const string EmbyUserChecker = "Emby User Checker";
 
     }
 }

@@ -51,5 +51,6 @@ namespace Ombi.Core.SettingModels
         public int EmbyEpisodeCacher { get; set; }
         public int EmbyContentCacher { get; set; }
         public int EmbyAvailabilityChecker { get; set; }
+        public int EmbyUserChecker { get; set; }
     }
 }

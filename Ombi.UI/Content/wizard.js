@@ -25,12 +25,15 @@
 
     $('#contentBody').on('click', '#embyApiKeySave', function (e) {
         e.preventDefault();
+        $('#spinner').attr("class", "fa fa-spinner fa-spin");
 
         var $form = $("#embyAuthForm");
         $.post($form.prop("action"), $form.serialize(), function (response) {
             if (response.result === true) {
                 loadArea("authArea");
             } else {
+
+                $('#spinner').attr("class", "fa fa-times");
                 generateNotify(response.message, "warning");
             }
         });

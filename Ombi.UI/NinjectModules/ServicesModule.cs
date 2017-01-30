@@ -63,6 +63,7 @@ namespace Ombi.UI.NinjectModules
             Bind<IEmbyAvailabilityChecker>().To<EmbyAvailabilityChecker>();
             Bind<IEmbyContentCacher>().To<EmbyContentCacher>();
             Bind<IEmbyEpisodeCacher>().To<EmbyEpisodeCacher>();
+            Bind<IEmbyUserChecker>().To<EmbyUserChecker>();
 
      
             Bind<IAnalytics>().To<Analytics>();

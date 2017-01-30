@@ -95,6 +95,7 @@
     <Compile Include="Interfaces\IStoreBackup.cs" />
     <Compile Include="Interfaces\IStoreCleanup.cs" />
     <Compile Include="Interfaces\IUserRequestLimitResetter.cs" />
+    <Compile Include="Jobs\IEmbyUserChecker.cs" />
     <Compile Include="Jobs\Interfaces\IEmbyEpisodeCacher.cs" />
     <Compile Include="Jobs\Interfaces\IEmbyContentCacher.cs" />
     <Compile Include="Jobs\Interfaces\IEmbyAvailabilityChecker.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Jobs\EmbyAvailabilityChecker.cs" />
     <Compile Include="Jobs\EmbyContentCacher.cs" />
     <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
+    <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />

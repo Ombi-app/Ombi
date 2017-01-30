@@ -46,7 +46,7 @@ namespace Ombi.UI.Modules.Admin
             IRadarrCacher radarrCacher, ICouchPotatoCacher cpCacher, IStoreBackup store, ISickRageCacher srCacher, IAvailabilityChecker plexChceker,
             IStoreCleanup cleanup, IUserRequestLimitResetter requestLimit, IPlexEpisodeCacher episodeCacher, IRecentlyAdded recentlyAdded,
             IFaultQueueHandler faultQueueHandler, IPlexUserChecker plexUserChecker, IEmbyAvailabilityChecker embyAvailabilityChecker, IEmbyEpisodeCacher embyEpisode,
-            IEmbyContentCacher embyContentCacher) : base("admin", settingsService, security)
+            IEmbyContentCacher embyContentCacher, IEmbyUserChecker embyUser) : base("admin", settingsService, security)
         {
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
@@ -67,6 +67,7 @@ namespace Ombi.UI.Modules.Admin
             EmbyAvailabilityChecker = embyAvailabilityChecker;
             EmbyContentCacher = embyContentCacher;
             EmbyEpisodeCacher = embyEpisode;
+            EmbyUserChecker = embyUser;
 
             Post["/schedulerun", true] = async (x, ct) => await ScheduleRun((string)Request.Form.key);
         }
@@ -88,6 +89,7 @@ namespace Ombi.UI.Modules.Admin
         private IEmbyAvailabilityChecker EmbyAvailabilityChecker { get; }
         private IEmbyContentCacher EmbyContentCacher { get; }
         private IEmbyEpisodeCacher EmbyEpisodeCacher { get; }
+        private IEmbyUserChecker EmbyUserChecker { get; }
 
 
         private async Task<Response> ScheduleRun(string key)
@@ -161,6 +163,10 @@ namespace Ombi.UI.Modules.Admin
             if (key.Equals(JobNames.EmbyChecker, StringComparison.CurrentCultureIgnoreCase))
             {
                 EmbyAvailabilityChecker.CheckAndUpdateAll();
+            }
+            if (key.Equals(JobNames.EmbyUserChecker, StringComparison.CurrentCultureIgnoreCase))
+            {
+                EmbyUserChecker.Start();
             }
 
 

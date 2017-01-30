@@ -33,7 +33,7 @@ using Ombi.Helpers;
 
 namespace Ombi.Store.Repository
 {
-    public class BaseExternalUserRepository<T> : BaseGenericRepository<T>, IExternalUserRepository<T> where T : class
+    public class BaseExternalUserRepository<T> : BaseGenericRepository<T>, IExternalUserRepository<T> where T : Entity
     {
         public BaseExternalUserRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config,cache)
         {

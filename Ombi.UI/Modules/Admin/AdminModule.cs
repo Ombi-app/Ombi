@@ -1130,6 +1130,8 @@ namespace Ombi.UI.Modules.Admin
         {
             var s = await ScheduledJobSettings.GetSettingsAsync();
             var allJobs = await JobRecorder.GetJobsAsync();
+            var emby = await EmbySettings.GetSettingsAsync();
+            var plex = await PlexService.GetSettingsAsync();
 
             var dict = new Dictionary<string, DateTime>();
 
@@ -1150,6 +1152,8 @@ namespace Ombi.UI.Modules.Admin
 
             var model = new ScheduledJobsViewModel
             {
+                Emby = emby.Enable,
+                Plex = plex.Enable,
                 CouchPotatoCacher = s.CouchPotatoCacher,
                 PlexAvailabilityChecker = s.PlexAvailabilityChecker,
                 SickRageCacher = s.SickRageCacher,

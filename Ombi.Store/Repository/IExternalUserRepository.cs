@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Ombi.Store.Repository
 {
-    public interface IExternalUserRepository<T> where T : class
+    public interface IExternalUserRepository<T> where T : Entity
     {
         T Get(string id);
         T Get(int id);

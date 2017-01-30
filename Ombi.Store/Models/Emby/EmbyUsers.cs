@@ -32,7 +32,7 @@ namespace Ombi.Store.Models.Emby
     [Table(nameof(EmbyUsers))]
     public class EmbyUsers : Entity
     {
-        public string PlexUserId { get; set; }
+        public string EmbyUserId { get; set; }
         public string UserAlias { get; set; }
         public int Permissions { get; set; }
         public int Features { get; set; }

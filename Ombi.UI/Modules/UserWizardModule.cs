@@ -121,7 +121,7 @@ namespace Ombi.UI.Modules
             if (model?.user == null)
             {
                 return
-                    Response.AsJson(new JsonResponseModel {Result = false, Message = "Incorrect username or password!"});
+                    Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect username or password!" });
             }
 
             // Set the auth token in the session so we can use it in the next form
@@ -132,7 +132,7 @@ namespace Ombi.UI.Modules
 
             return
                 Response.AsJson(
-                    new {Result = true, firstServer?.Port, Ip = firstServer?.LocalAddresses, firstServer?.Scheme});
+                    new { Result = true, firstServer?.Port, Ip = firstServer?.LocalAddresses, firstServer?.Scheme });
         }
 
         private async Task<Response> Plex()
@@ -144,7 +144,7 @@ namespace Ombi.UI.Modules
                 return Response.AsJson(valid.SendJsonError());
             }
             form.PlexAuthToken = Session[SessionKeys.UserWizardPlexAuth].ToString();
-                // Set the auth token from the previous form
+            // Set the auth token from the previous form
 
             // Get the machine ID from the settings (This could have changed)
             try
@@ -163,7 +163,7 @@ namespace Ombi.UI.Modules
             var result = await PlexSettings.SaveSettingsAsync(form);
             if (result)
             {
-                return Response.AsJson(new JsonResponseModel {Result = true});
+                return Response.AsJson(new JsonResponseModel { Result = true });
             }
             return
                 Response.AsJson(new JsonResponseModel
@@ -189,7 +189,7 @@ namespace Ombi.UI.Modules
             var result = await PlexRequestSettings.SaveSettingsAsync(currentSettings);
             if (result)
             {
-                return Response.AsJson(new {Result = true});
+                return Response.AsJson(new { Result = true });
             }
 
             return
@@ -207,7 +207,7 @@ namespace Ombi.UI.Modules
             var result = await Auth.SaveSettingsAsync(form);
             if (result)
             {
-                return Response.AsJson(new JsonResponseModel {Result = true});
+                return Response.AsJson(new JsonResponseModel { Result = true });
             }
             return
                 Response.AsJson(new JsonResponseModel
@@ -219,9 +219,9 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> CreateUser()
         {
-            var username = (string) Request.Form.Username;
+            var username = (string)Request.Form.Username;
             var userId = Mapper.CreateUser(username, Request.Form.Password,
-                EnumHelper<Permissions>.All() - (int) Permissions.ReadOnlyUser, 0);
+                EnumHelper<Permissions>.All() - (int)Permissions.ReadOnlyUser, 0);
             Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username,
                 CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
@@ -236,15 +236,15 @@ namespace Ombi.UI.Modules
 
             var baseUrl = string.IsNullOrEmpty(settings.BaseUrl) ? string.Empty : $"/{settings.BaseUrl}";
 
-            return CustomModuleExtensions.LoginAndRedirect(this, (Guid) userId, fallbackRedirectUrl: $"{baseUrl}/search");
+            return CustomModuleExtensions.LoginAndRedirect(this, (Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
         }
 
         private async Task<Response> EmbyAuth()
         {
-            var ip = (string) Request.Form.Ip;
-            var port = (int) Request.Form.Port;
-            var apiKey = (string) Request.Form.ApiKey;
-            var ssl = (bool) Request.Form.Ssl;
+            var ip = (string)Request.Form.Ip;
+            var port = (int)Request.Form.Port;
+            var apiKey = (string)Request.Form.ApiKey;
+            var ssl = (bool)Request.Form.Ssl;
 
             var settings = new EmbySettings
             {
@@ -262,7 +262,7 @@ namespace Ombi.UI.Modules
 
                 if (result != null && result.Any())
                 {
-
+                    settings.AdministratorId = result.FirstOrDefault(x => x.Policy.IsAdministrator)?.Id ?? string.Empty;
                     await EmbySettings.SaveSettingsAsync(settings);
 
                     return Response.AsJson(new JsonResponseModel
