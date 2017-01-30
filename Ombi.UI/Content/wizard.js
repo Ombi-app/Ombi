@@ -3,8 +3,38 @@
     // Step 1
     $('#firstNext')
         .click(function () {
-            loadArea("plexAuthArea");
+            loadArea("mediaApplicationChoice");
         });
+
+
+    // Plex click
+    $('#contentBody')
+        .on("click", "#plexImg", function(e) {
+                e.preventDefault();
+                return loadArea("plexAuthArea");
+        });
+
+
+    $('#contentBody')
+        .on("click", "#embyImg", function (e) {
+            e.preventDefault();
+            return loadArea("embyApiKey");
+        });
+
+    
+
+    $('#contentBody').on('click', '#embyApiKeySave', function (e) {
+        e.preventDefault();
+
+        var $form = $("#embyAuthForm");
+        $.post($form.prop("action"), $form.serialize(), function (response) {
+            if (response.result === true) {
+                loadArea("authArea");
+            } else {
+                generateNotify(response.message, "warning");
+            }
+        });
+    });
 
     // Step 2 - Get the auth token
     $('#contentBody').on('click', '#requestToken', function (e) {
