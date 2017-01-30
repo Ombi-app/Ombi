@@ -26,12 +26,11 @@
 #endregion
 
 using Dapper.Contrib.Extensions;
-using Newtonsoft.Json;
 
-namespace Ombi.Store.Models
+namespace Ombi.Store.Models.Emby
 {
-    [Table(nameof(PlexUsers))]
-    public class PlexUsers : Entity
+    [Table(nameof(EmbyUsers))]
+    public class EmbyUsers : Entity
     {
         public string PlexUserId { get; set; }
         public string UserAlias { get; set; }

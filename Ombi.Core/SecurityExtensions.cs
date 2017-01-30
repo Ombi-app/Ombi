@@ -36,13 +36,14 @@ using Ombi.Core.SettingModels;
 using Ombi.Core.Users;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core
 {
     public class SecurityExtensions : ISecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IPlexUserRepository plexUsers, ISettingsService<UserManagementSettings> umSettings)
+        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IExternalUserRepository<PlexUsers> plexUsers, ISettingsService<UserManagementSettings> umSettings)
         {
             UserRepository = userRepository;
             Linker = linker;
@@ -52,7 +53,7 @@ namespace Ombi.Core
 
         private IUserRepository UserRepository { get; }
         private IResourceLinker Linker { get; }
-        private IPlexUserRepository PlexUsers { get; }
+        private IExternalUserRepository<PlexUsers> PlexUsers { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
         public bool IsLoggedIn(NancyContext context)

@@ -27,7 +27,7 @@
 
 using Dapper.Contrib.Extensions;
 
-namespace Ombi.Store.Models
+namespace Ombi.Store.Models.Plex
 {
     [Table("PlexEpisodes")]
     public class PlexEpisodes : Entity

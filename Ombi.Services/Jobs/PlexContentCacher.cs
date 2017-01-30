@@ -48,7 +48,7 @@ namespace Ombi.Services.Jobs
     public class PlexContentCacher : IJob, IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, IPlexNotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;

@@ -68,8 +68,9 @@
     <Compile Include="Models\Emby\EmbyContent.cs" />
     <Compile Include="Models\Emby\EmbyEpisodes.cs" />
     <Compile Include="Models\IssueBlobs.cs" />
-    <Compile Include="Models\PlexEpisodes.cs" />
-    <Compile Include="Models\PlexUsers.cs" />
+    <Compile Include="Models\Plex\PlexEpisodes.cs" />
+    <Compile Include="Models\Emby\EmbyUsers.cs" />
+    <Compile Include="Models\Plex\PlexUsers.cs" />
     <Compile Include="Models\Plex\MetadataItems.cs" />
     <Compile Include="Models\Plex\PlexContent.cs" />
     <Compile Include="Models\Emby\EmbyMediaType.cs" />
@@ -80,6 +81,8 @@
     <Compile Include="Models\UsersToNotify.cs" />
     <Compile Include="PlexDatabase.cs" />
     <Compile Include="Repository\BaseGenericRepository.cs" />
+    <Compile Include="Repository\BaseExternalUserRepository.cs" />
+    <Compile Include="Repository\IExternalUserRepository.cs" />
     <Compile Include="Repository\IRequestRepository.cs" />
     <Compile Include="Repository\ISettingsRepository.cs" />
     <Compile Include="ISqliteConfiguration.cs" />
@@ -91,7 +94,6 @@
     <Compile Include="Repository\SettingsJsonRepository.cs" />
     <Compile Include="Repository\RequestJsonRepository.cs" />
     <Compile Include="Repository\GenericRepository.cs" />
-    <Compile Include="Repository\PlexUserRepository.cs" />
     <Compile Include="Repository\UserRepository.cs" />
     <Compile Include="RequestedModel.cs" />
     <Compile Include="UserEntity.cs" />

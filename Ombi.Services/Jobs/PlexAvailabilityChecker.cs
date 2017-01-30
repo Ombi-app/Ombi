@@ -51,7 +51,7 @@ namespace Ombi.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, IPlexNotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -152,7 +152,7 @@ namespace Ombi.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken, NotificationType.RequestAvailable);
+                NotificationEngine.NotifyUsers(modifiedModel, NotificationType.RequestAvailable);
                 RequestService.BatchUpdate(modifiedModel);
             }
         }

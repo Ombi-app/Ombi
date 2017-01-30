@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: RepositoryModule.cs
+//    File: PlexUsers.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,31 +25,19 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Core;
-using Ombi.Services.Interfaces;
-using Ombi.Services.Jobs;
-using Ombi.Store;
-using Ombi.Store.Repository;
+using Dapper.Contrib.Extensions;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Store.Models.Plex
 {
-    public class RepositoryModule : NinjectModule
+    [Table(nameof(PlexUsers))]
+    public class PlexUsers : Entity
     {
-        public override void Load()
-        {
-            Bind<IRepository<UsersModel>>().To<UserRepository<UsersModel>>();
-            Bind(typeof(IRepository<>)).To(typeof(GenericRepository<>));
-            Bind(typeof(IExternalUserRepository<>)).To(typeof(BaseExternalUserRepository<>));
-
-            Bind<IRequestService>().To<JsonRequestModelRequestService>();
-            Bind<IRequestRepository>().To<RequestJsonRepository>();
-            Bind<IIssueService>().To<IssueJsonService>();
-            Bind<ISettingsRepository>().To<SettingsJsonRepository>();
-            Bind<IJobRecord>().To<JobRecord>();
-
-            Bind<IUserRepository>().To<UserRepository>();
-        }
-
+        public string PlexUserId { get; set; }
+        public string UserAlias { get; set; }
+        public int Permissions { get; set; }
+        public int Features { get; set; }
+        public string Username { get; set; }
+        public string EmailAddress { get; set; }
+        public string LoginId { get; set; }
     }
 }

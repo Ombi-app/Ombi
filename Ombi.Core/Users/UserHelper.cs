@@ -30,13 +30,14 @@ using System.Linq;
 using Ombi.Core.Models;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Users
 {
     public class UserHelper : IUserHelper
     {
-        public UserHelper(IUserRepository userRepository, IPlexUserRepository plexUsers, ISecurityExtensions security)
+        public UserHelper(IUserRepository userRepository, IExternalUserRepository<PlexUsers> plexUsers, ISecurityExtensions security)
         {
             LocalUserRepository = userRepository;
             PlexUserRepository = plexUsers;
@@ -44,7 +45,7 @@ namespace Ombi.Core.Users
         }
 
         private IUserRepository LocalUserRepository { get; }
-        private IPlexUserRepository PlexUserRepository { get; }
+        private IExternalUserRepository<PlexUsers> PlexUserRepository { get; }
         private ISecurityExtensions Security { get; }
 
 

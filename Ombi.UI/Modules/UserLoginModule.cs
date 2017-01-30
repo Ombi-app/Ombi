@@ -45,6 +45,7 @@ using Ombi.Helpers.Analytics;
 using Ombi.Helpers.Permissions;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Ombi.UI.Authentication;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
@@ -55,7 +56,7 @@ namespace Ombi.UI.Modules
     public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
-            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IPlexUserRepository plexUsers, ICustomUserMapper custom,
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IExternalUserRepository<PlexUsers> plexUsers, ICustomUserMapper custom,
              ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings)
             : base("userlogin", pr, security)
         {
@@ -162,7 +163,7 @@ namespace Ombi.UI.Modules
         private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
         private IRepository<UserLogins> UserLogins { get; }
-        private IPlexUserRepository PlexUserRepository { get; }
+        private IExternalUserRepository<PlexUsers> PlexUserRepository { get; }
         private ICustomUserMapper CustomUserMapper { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 

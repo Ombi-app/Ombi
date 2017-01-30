@@ -7,6 +7,7 @@ using Nancy.Extensions;
 using Nancy.Responses.Negotiation;
 using Newtonsoft.Json;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Emby;
 using Ombi.Api.Models.Plex;
 using Ombi.Core;
 using Ombi.Core.Models;
@@ -16,6 +17,8 @@ using Ombi.Helpers.Analytics;
 using Ombi.Helpers.Permissions;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Ombi.UI.Models;
 using Ombi.UI.Models.UserManagement;
@@ -26,8 +29,8 @@ namespace Ombi.UI.Modules
 {
     public class UserManagementModule : BaseModule
     {
-        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IPlexUserRepository plexRepo
-            , ISecurityExtensions security, IRequestService req, IAnalytics ana) : base("usermanagement", pr, security)
+        public UserManagementModule(ISettingsService<PlexRequestSettings> pr, ICustomUserMapper m, IPlexApi plexApi, ISettingsService<PlexSettings> plex, IRepository<UserLogins> userLogins, IExternalUserRepository<PlexUsers> plexRepo
+            , ISecurityExtensions security, IRequestService req, IAnalytics ana, ISettingsService<EmbySettings> embyService, IEmbyApi embyApi, IExternalUserRepository<EmbyUsers> embyRepo) : base("usermanagement", pr, security)
         {
 #if !DEBUG
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
@@ -40,6 +43,9 @@ namespace Ombi.UI.Modules
             PlexRequestSettings = pr;
             RequestService = req;
             Analytics = ana;
+            EmbySettings = embyService;
+            EmbyApi = embyApi;
+            EmbyRepository = embyRepo;
 
             Get["/"] = x => Load();
 
@@ -57,10 +63,13 @@ namespace Ombi.UI.Modules
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private IRepository<UserLogins> UserLoginsRepo { get; }
-        private IPlexUserRepository PlexUsersRepository { get; }
+        private IExternalUserRepository<PlexUsers> PlexUsersRepository { get; }
+        private IExternalUserRepository<EmbyUsers> EmbyRepository { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
         private IRequestService RequestService { get; }
         private IAnalytics Analytics { get; }
+        private IEmbyApi EmbyApi { get; }
 
         private Negotiator Load()
         {
@@ -69,48 +78,19 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> LoadUsers()
         {
-            var localUsers = await UserMapper.GetUsersAsync();
-            var plexDbUsers = await PlexUsersRepository.GetAllAsync();
-            var model = new List<UserManagementUsersViewModel>();
-
-            var userLogins = UserLoginsRepo.GetAll().ToList();
-
-            foreach (var user in localUsers)
-            {
-                var userDb = userLogins.FirstOrDefault(x => x.UserId == user.UserGuid);
-                model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
-            }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
-            if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (plexSettings.Enable)
             {
-                //Get Plex Users
-                var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
-				if (plexUsers != null && plexUsers.User != null) {
-					foreach (var u in plexUsers.User) {
-						var dbUser = plexDbUsers.FirstOrDefault (x => x.PlexUserId == u.Id);
-						var userDb = userLogins.FirstOrDefault (x => x.UserId == u.Id);
-
-						// We don't have the user in the database yet
-						if (dbUser == null) {
-							model.Add (MapPlexUser (u, null, userDb?.LastLoggedIn ?? DateTime.MinValue));
-						} else {
-							// The Plex User is in the database
-							model.Add (MapPlexUser (u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
-						}
-					}
-				}
-
-                // Also get the server admin
-                var account = PlexApi.GetAccount(plexSettings.PlexAuthToken);
-                if (account != null)
-                {
-                    var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == account.Id);
-                    var userDb = userLogins.FirstOrDefault(x => x.UserId == account.Id);
-                    model.Add(MapPlexAdmin(account, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
-                }
+                return await LoadPlexUsers();
             }
-            return Response.AsJson(model);
+            if (embySettings.Enable)
+            {
+                return await LoadEmbyUsers();
+            }
+
+            return null;
         }
 
         private async Task<Response> CreateUser()
@@ -416,7 +396,7 @@ namespace Ombi.UI.Modules
             var m = new UserManagementUsersViewModel
             {
                 Id = plexInfo.Id,
-                PermissionsFormattedString = newUser ? "Processing..." :( permissions == 0 ? "None" : permissions.ToString()),
+                PermissionsFormattedString = newUser ? "Processing..." : (permissions == 0 ? "None" : permissions.ToString()),
                 FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
                 Username = plexInfo.Title,
                 Type = UserType.PlexUser,
@@ -428,6 +408,36 @@ namespace Ombi.UI.Modules
                     Thumb = plexInfo.Thumb
                 },
                 ManagedUser = string.IsNullOrEmpty(plexInfo.Username)
+            };
+
+            m.Permissions.AddRange(GetPermissions(permissions));
+            m.Features.AddRange(GetFeatures(features));
+
+            return m;
+        }
+
+        private UserManagementUsersViewModel MapEmbyUser(EmbyUser embyInfo, EmbyUsers dbUser, DateTime lastLoggedIn)
+        {
+            var newUser = false;
+            if (dbUser == null)
+            {
+                newUser = true;
+                dbUser = new EmbyUsers();
+            }
+            var features = (Features)dbUser?.Features;
+            var permissions = (Permissions)dbUser?.Permissions;
+
+            var m = new UserManagementUsersViewModel
+            {
+                Id = embyInfo.Id,
+                PermissionsFormattedString = newUser ? "Processing..." : (permissions == 0 ? "None" : permissions.ToString()),
+                FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
+                Username = embyInfo.Name,
+                Type = UserType.EmbyUser,
+                EmailAddress =dbUser.EmailAddress,
+                Alias = dbUser?.UserAlias ?? string.Empty,
+                LastLoggedIn = lastLoggedIn,
+                ManagedUser = false
             };
 
             m.Permissions.AddRange(GetPermissions(permissions));
@@ -504,6 +514,102 @@ namespace Ombi.UI.Modules
                 retVal.Add(pm);
             }
             return retVal;
+        }
+
+        private async Task<Response> LoadPlexUsers()
+        {
+            var localUsers = await UserMapper.GetUsersAsync();
+            var plexDbUsers = await PlexUsersRepository.GetAllAsync();
+            var model = new List<UserManagementUsersViewModel>();
+
+            var userLogins = UserLoginsRepo.GetAll().ToList();
+
+            foreach (var user in localUsers)
+            {
+                var userDb = userLogins.FirstOrDefault(x => x.UserId == user.UserGuid);
+                model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
+            }
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
+            {
+                //Get Plex Users
+                var plexUsers = PlexApi.GetUsers(plexSettings.PlexAuthToken);
+                if (plexUsers != null && plexUsers.User != null)
+                {
+                    foreach (var u in plexUsers.User)
+                    {
+                        var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == u.Id);
+                        var userDb = userLogins.FirstOrDefault(x => x.UserId == u.Id);
+
+                        // We don't have the user in the database yet
+                        if (dbUser == null)
+                        {
+                            model.Add(MapPlexUser(u, null, userDb?.LastLoggedIn ?? DateTime.MinValue));
+                        }
+                        else
+                        {
+                            // The Plex User is in the database
+                            model.Add(MapPlexUser(u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
+                        }
+                    }
+                }
+
+                // Also get the server admin
+                var account = PlexApi.GetAccount(plexSettings.PlexAuthToken);
+                if (account != null)
+                {
+                    var dbUser = plexDbUsers.FirstOrDefault(x => x.PlexUserId == account.Id);
+                    var userDb = userLogins.FirstOrDefault(x => x.UserId == account.Id);
+                    model.Add(MapPlexAdmin(account, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
+                }
+            }
+            return Response.AsJson(model);
+        }
+
+        private async Task<Response> LoadEmbyUsers()
+        {
+            var localUsers = await UserMapper.GetUsersAsync();
+            var embyDbUsers = await EmbyRepository.GetAllAsync();
+            var model = new List<UserManagementUsersViewModel>();
+
+            var userLogins = UserLoginsRepo.GetAll().ToList();
+
+            foreach (var user in localUsers)
+            {
+                var userDb = userLogins.FirstOrDefault(x => x.UserId == user.UserGuid);
+                model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
+            }
+
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (!string.IsNullOrEmpty(embySettings.ApiKey))
+            {
+                //Get Plex Users
+                var plexUsers = EmbyApi.GetUsers(embySettings.FullUri, embySettings.ApiKey);
+                if (plexUsers != null)
+                {
+                    foreach (var u in plexUsers)
+                    {
+                        var dbUser = embyDbUsers.FirstOrDefault(x => x.PlexUserId == u.Id);
+                        var userDb = userLogins.FirstOrDefault(x => x.UserId == u.Id);
+
+                        // We don't have the user in the database yet
+                        model.Add(dbUser == null
+                            ? MapEmbyUser(u, null, userDb?.LastLoggedIn ?? DateTime.MinValue)
+                            : MapEmbyUser(u, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
+                    }
+                }
+
+                // Also get the server admin
+                var account = PlexApi.GetAccount(embySettings.PlexAuthToken);
+                if (account != null)
+                {
+                    var dbUser = embyDbUsers.FirstOrDefault(x => x.PlexUserId == account.Id);
+                    var userDb = userLogins.FirstOrDefault(x => x.UserId == account.Id);
+                    model.Add(MapPlexAdmin(account, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
+                }
+            }
+            return Response.AsJson(model);
         }
     }
 }

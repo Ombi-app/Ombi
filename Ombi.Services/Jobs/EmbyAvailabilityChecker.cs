@@ -52,7 +52,7 @@ namespace Ombi.Services.Jobs
     public class EmbyAvailabilityChecker : IJob, IEmbyAvailabilityChecker
     {
         public EmbyAvailabilityChecker(ISettingsService<EmbySettings> embySettings, IRequestService request, IEmbyApi emby, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<EmbyEpisodes> repo, INotificationEngine e, IRepository<EmbyContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<EmbyEpisodes> repo, IEmbyNotificationEngine e, IRepository<EmbyContent> content)
         {
             Emby = embySettings;
             RequestService = request;
@@ -148,7 +148,7 @@ namespace Ombi.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                //NotificationEngine.NotifyUsers(modifiedModel, embySettings.ApiKey, NotificationType.RequestAvailable); // TODO Emby
+                NotificationEngine.NotifyUsers(modifiedModel, NotificationType.RequestAvailable);
                 RequestService.BatchUpdate(modifiedModel);
             }
         }

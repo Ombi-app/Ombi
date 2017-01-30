@@ -86,6 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IEmbyNotificationEngine.cs" />
+    <Compile Include="Interfaces\IPlexNotificationEngine.cs" />
     <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
     <Compile Include="Interfaces\IJobRecord.cs" />
@@ -135,7 +137,8 @@
     <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Models\SonarrCachedResult.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
-    <Compile Include="Notification\NotificationEngine.cs" />
+    <Compile Include="Notification\EmbyNotificationEngine.cs" />
+    <Compile Include="Notification\PlexNotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
