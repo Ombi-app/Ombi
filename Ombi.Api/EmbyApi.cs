@@ -27,9 +27,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using Newtonsoft.Json;
 using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Emby;
+using Ombi.Helpers;
 using RestSharp;
 
 namespace Ombi.Api
@@ -152,6 +155,43 @@ namespace Ombi.Api
             return GetAll<EmbySeriesItem>("Series", apiKey, userId, baseUri);
         }
 
+        public EmbyUser LogIn(string username, string password, string apiKey, Uri baseUri)
+        {
+            var request = new RestRequest
+            {
+                Resource = "emby/users/authenticatebyname",
+                Method = Method.POST
+            };
+
+            var body = new
+            {
+                username,
+                password = StringHasher.GetSha1Hash(password).ToLower(),
+                passwordMd5 = StringHasher.CalcuateMd5Hash(password)
+            };
+
+            request.AddJsonBody(body);
+
+            request.AddHeader("X-Emby-Authorization",
+                $"MediaBrowser Client=\"Ombi\", Device=\"Ombi\", DeviceId=\"{AssemblyHelper.GetProductVersion()}\", Version=\"{AssemblyHelper.GetAssemblyVersion()}\"");
+            AddHeaders(request, apiKey);
+
+
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling LogInfor Emby, Retrying {0}", timespan), new[] {
+                TimeSpan.FromSeconds (1),
+                TimeSpan.FromSeconds(5)
+            });
+
+            var obj = policy.Execute(() => Api.Execute(request, baseUri));
+
+            if (obj.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                return null;
+            }
+
+            return JsonConvert.DeserializeObject<EmbyUserLogin>(obj.Content)?.User;
+        }
+
         private EmbyItemContainer<T> GetAll<T>(string type, string apiKey, string userId, Uri baseUri)
         {
             var request = new RestRequest
@@ -180,9 +220,13 @@ namespace Ombi.Api
 
         private static void AddHeaders(IRestRequest req, string apiKey)
         {
-            req.AddHeader("X-MediaBrowser-Token", apiKey);
+            if (!string.IsNullOrEmpty(apiKey))
+            {
+                req.AddHeader("X-MediaBrowser-Token", apiKey);
+            }
             req.AddHeader("Accept", "application/json");
             req.AddHeader("Content-Type", "application/json");
+            req.AddHeader("Device", "Ombi");
         }
     }
 }

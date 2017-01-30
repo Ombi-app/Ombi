@@ -110,7 +110,7 @@ namespace Ombi.UI
                     {
                         Log.Info("This is not Mono");
                         Console.WriteLine("Press any key to exit");
-                        Console.ReadLine();
+                       Console.ReadLine();
                     }
                 }
             }

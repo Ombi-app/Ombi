@@ -326,8 +326,8 @@ namespace Ombi.UI.Jobs
             var embyUserChecker =
                 TriggerBuilder.Create()
                 .WithIdentity("EmbyUserChecker", "Emby")
-                .StartNow()
-                //.StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
+                //.StartNow()
+                .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
                 .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyUserChecker).RepeatForever())
                 .Build();
 

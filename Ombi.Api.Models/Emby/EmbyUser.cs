@@ -45,4 +45,9 @@ namespace Ombi.Api.Models.Emby
         public EmbyConfiguration Configuration { get; set; }
         public EmbyPolicy Policy { get; set; }
     }
+
+    public class EmbyUserLogin
+    {
+        public EmbyUser User { get; set; }
+    }
 }

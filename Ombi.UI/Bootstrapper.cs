@@ -42,6 +42,7 @@ using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Helpers;
 using Ombi.Store;
+using Ombi.Store.Models.Emby;
 using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Ombi.UI.Authentication;
@@ -89,7 +90,8 @@ namespace Ombi.UI
             var config = new CustomAuthenticationConfiguration
             {
                 RedirectUrl = redirect,
-                PlexUserRepository = container.Get<IExternalUserRepository<PlexUsers>>(), // TODO emby
+                PlexUserRepository = container.Get<IExternalUserRepository<PlexUsers>>(),
+                EmbyUserRepository = container.Get<IExternalUserRepository<EmbyUsers>>(), 
                 LocalUserRepository = container.Get<IUserRepository>()
             };
 

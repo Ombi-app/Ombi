@@ -30,6 +30,8 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Ombi.Helpers;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 
 namespace Ombi.Store.Repository
 {
@@ -43,9 +45,25 @@ namespace Ombi.Store.Repository
         private ISqliteConfiguration DbConfig { get; }
         private IDbConnection Db => DbConfig.DbConnection();
 
+        private string TableName
+        {
+            get
+            {
+                if (typeof(T) == typeof(PlexUsers))
+                {
+                    return "PlexUsers";
+                }
+                if (typeof(T) == typeof(EmbyUsers))
+                {
+                    return "EmbyUsers";
+                }
+                return string.Empty;
+            }
+        }
+
         public T GetUser(string userGuid)
         {
-            var sql = @"SELECT * FROM PlexUsers
+            var sql = $@"SELECT * FROM {TableName}
             WHERE PlexUserId = @UserGuid
              COLLATE NOCASE";
             return Db.QueryFirstOrDefault<T>(sql, new {UserGuid = userGuid});
@@ -53,7 +71,7 @@ namespace Ombi.Store.Repository
 
         public T GetUserByUsername(string username)
         {
-            var sql = @"SELECT * FROM PlexUsers
+            var sql = $@"SELECT * FROM {TableName}
             WHERE Username = @UserName
              COLLATE NOCASE";
             return Db.QueryFirstOrDefault<T>(sql, new {UserName = username});
@@ -61,7 +79,7 @@ namespace Ombi.Store.Repository
 
         public async Task<T> GetUserAsync(string userguid)
         {
-            var sql = @"SELECT * FROM PlexUsers
+            var sql = $@"SELECT * FROM {TableName}
             WHERE PlexUserId = @UserGuid
              COLLATE NOCASE";
             return await Db.QueryFirstOrDefaultAsync<T>(sql, new {UserGuid = userguid});

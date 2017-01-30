@@ -81,10 +81,8 @@ namespace Ombi.Services.Jobs
                 }
                 var embyUsers = EmbyApi.GetUsers(settings.FullUri, settings.ApiKey);
                 var userManagementSettings = UserManagementSettings.GetSettings();
-                var requests = RequestService.GetAll().ToList();
 
                 var dbUsers = Repo.GetAll().ToList();
-                var localUsers = LocalUserRepository.GetAll().ToList();
 
                 // Regular users
                 foreach (var user in embyUsers)
