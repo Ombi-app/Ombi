@@ -58,5 +58,12 @@ namespace Ombi.Api.Models.Netflix
         public string Mediatype { get; set; }
         [JsonProperty(PropertyName = "runtime")]
         public string Runtime { get; set; }
+
+
+        // For errors
+        [JsonProperty(PropertyName = "errorcode")]
+        public int ErrorCode { get; set; }
+        [JsonProperty(PropertyName = "message")]
+        public string Message { get; set; }
     }
 }

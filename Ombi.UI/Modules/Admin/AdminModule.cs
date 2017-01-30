@@ -93,6 +93,10 @@ namespace Ombi.UI.Modules.Admin
         private IAnalytics Analytics { get; }
         private IRecentlyAdded RecentlyAdded { get; }
         private ISettingsService<NotificationSettingsV2> NotifySettings { get; }
+        private ISettingsService<DiscordNotificationSettings> DiscordSettings { get; }
+        private IDiscordApi DiscordApi { get; }
+        private ISettingsService<RadarrSettings> RadarrSettings { get; }
+        private IRadarrApi RadarrApi { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
         public AdminModule(ISettingsService<PlexRequestSettings> prService,
@@ -118,7 +122,9 @@ namespace Ombi.UI.Modules.Admin
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
              ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
-             ISettingsService<WatcherSettings> watcherSettings 
+             ISettingsService<WatcherSettings> watcherSettings ,
+             ISettingsService<DiscordNotificationSettings> discord,
+             IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi
              , ISecurityExtensions security) : base("admin", prService, security)
         {
             PrService = prService;
@@ -150,6 +156,10 @@ namespace Ombi.UI.Modules.Admin
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
             WatcherSettings = watcherSettings;
+            DiscordSettings = discord;
+            DiscordApi = discordapi;
+            RadarrSettings = settings;
+            RadarrApi = radarrApi;
 
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
             
@@ -165,18 +175,22 @@ namespace Ombi.UI.Modules.Admin
             Get["/getusers"] = _ => GetUsers();
 
             Get["/couchpotato"] = _ => CouchPotato();
-            Post["/couchpotato"] = _ => SaveCouchPotato();
+            Post["/couchpotato", true] = async (x, ct) => await SaveCouchPotato();
 
             Get["/plex"] = _ => Plex();
             Post["/plex", true] = async (x, ct) => await SavePlex();
 
             Get["/sonarr"] = _ => Sonarr();
             Post["/sonarr"] = _ => SaveSonarr();
+            Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
+
+            Get["/radarr", true] = async (x, ct) => await Radarr();
+            Post["/radarr", true] = async (x, ct) => await SaveRadarr();
+            Post["/radarrprofiles"] = _ => GetRadarrQualityProfiles();
 
             Get["/sickrage"] = _ => Sickrage();
             Post["/sickrage"] = _ => SaveSickrage();
 
-            Post["/sonarrprofiles"] = _ => GetSonarrQualityProfiles();
             Post["/cpprofiles", true] = async (x, ct) => await GetCpProfiles();
             Post["/cpapikey"] = x => GetCpApiKey();
 
@@ -208,9 +222,12 @@ namespace Ombi.UI.Modules.Admin
 
 
             Post["/testslacknotification", true] = async (x, ct) => await TestSlackNotification();
-
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
+
+            Post["/testdiscordnotification", true] = async (x, ct) => await TestDiscordNotification();
+            Get["/discordnotification", true] = async (x, ct) => await DiscordNotification();
+            Post["/discordnotification", true] = async (x, ct) => await SaveDiscordNotifications();
 
             Get["/landingpage", true] = async (x, ct) => await LandingPage();
             Post["/landingpage", true] = async (x, ct) => await SaveLandingPage();
@@ -368,7 +385,7 @@ namespace Ombi.UI.Modules.Admin
             return View["CouchPotato", settings];
         }
 
-        private Response SaveCouchPotato()
+        private async Task<Response> SaveCouchPotato()
         {
             var couchPotatoSettings = this.Bind<CouchPotatoSettings>();
             var valid = this.Validate(couchPotatoSettings);
@@ -377,7 +394,7 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(valid.SendJsonError());
             }
 
-            var watcherSettings = WatcherSettings.GetSettings();
+            var watcherSettings = await WatcherSettings.GetSettingsAsync();
 
             if (watcherSettings.Enabled)
             {
@@ -389,8 +406,20 @@ namespace Ombi.UI.Modules.Admin
                     });
             }
 
+            var radarrSettings = await RadarrSettings.GetSettingsAsync();
+
+            if (radarrSettings.Enabled)
+            {
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Cannot have Radarr and CouchPotato both enabled."
+                    });
+            }
+
             couchPotatoSettings.ApiKey = couchPotatoSettings.ApiKey.Trim();
-            var result = CpService.SaveSettings(couchPotatoSettings);
+            var result = await CpService.SaveSettingsAsync(couchPotatoSettings);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for CouchPotato!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
@@ -448,12 +477,65 @@ namespace Ombi.UI.Modules.Admin
             {
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = "SickRage is enabled, we cannot enable Sonarr and SickRage" });
             }
+
             sonarrSettings.ApiKey = sonarrSettings.ApiKey.Trim();
             var result = SonarrService.SaveSettings(sonarrSettings);
 
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Sonarr!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Negotiator> Radarr()
+        {
+            var settings = await RadarrSettings.GetSettingsAsync();
+
+            return View["Radarr", settings];
+        }
+
+        private async Task<Response> SaveRadarr()
+        {
+            var radarrSettings = this.Bind<RadarrSettings>();
+
+            //Check Watcher and CP make sure they are not enabled
+            var watcher = await WatcherSettings.GetSettingsAsync();
+            if (watcher.Enabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Watcher is enabled, we cannot enable Watcher and Radarr" });
+            }
+
+            var cp = await CpService.GetSettingsAsync();
+            if (cp.Enabled)
+            {
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is enabled, we cannot enable Watcher and CouchPotato" });
+            }
+
+            var valid = this.Validate(radarrSettings);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+
+            radarrSettings.ApiKey = radarrSettings.ApiKey.Trim();
+            var result = await RadarrSettings.SaveSettingsAsync(radarrSettings);
+
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Radarr!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private Response GetRadarrQualityProfiles()
+        {
+            var settings = this.Bind<RadarrSettings>();
+            var profiles = RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+
+            // set the cache
+            if (profiles != null)
+            {
+                Cache.Set(CacheKeys.RadarrQualityProfiles, profiles);
+            }
+
+            return Response.AsJson(profiles);
         }
 
         private Negotiator Sickrage()
@@ -915,6 +997,71 @@ namespace Ombi.UI.Modules.Admin
             Log.Info("Saved slack settings, result: {0}", result);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Slack Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Negotiator> DiscordNotification()
+        {
+            var settings = await DiscordSettings.GetSettingsAsync();
+            return View["DiscordNotification", settings];
+        }
+
+        private async Task<Response> TestDiscordNotification()
+        {
+            var settings = this.BindAndValidate<DiscordNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+
+            var currentDicordSettings = await DiscordSettings.GetSettingsAsync();
+            try
+            {
+                NotificationService.Subscribe(new DiscordNotification(DiscordApi, DiscordSettings));
+                settings.Enabled = true;
+                await NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent Discord notification test");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to subscribe and publish test Discord Notification");
+            }
+            finally
+            {
+                if (!currentDicordSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new DiscordNotification(DiscordApi, DiscordSettings));
+                }
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Discord Notification! If you do not receive it please check the logs." });
+        }
+
+        private async Task<Response> SaveDiscordNotifications()
+        {
+            var settings = this.BindAndValidate<DiscordNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+
+            var result = await DiscordSettings.SaveSettingsAsync(settings);
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new DiscordNotification(DiscordApi, DiscordSettings));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new DiscordNotification(DiscordApi, DiscordSettings));
+            }
+
+            Log.Info("Saved discord settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Discord Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 

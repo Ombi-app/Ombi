@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net45\RestSharp.dll</HintPath>
       <Private>True</Private>
@@ -43,19 +47,26 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="TraktApiSharp, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TraktApiSharp.0.8.0\lib\portable-net45+netcore45+wpa81\TraktApiSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IApiRequest.cs" />
     <Compile Include="ICouchPotatoApi.cs" />
+    <Compile Include="IDiscordApi.cs" />
     <Compile Include="IHeadphonesApi.cs" />
     <Compile Include="IMusicBrainzApi.cs" />
     <Compile Include="INetflixApi.cs" />
     <Compile Include="IPlexApi.cs" />
     <Compile Include="IPushbulletApi.cs" />
+    <Compile Include="IRadarrApi.cs" />
     <Compile Include="ISlackApi.cs" />
     <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
     <Compile Include="ISonarrApi.cs" />
+    <Compile Include="ITraktApi.cs" />
     <Compile Include="IWatcherApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -58,6 +58,7 @@ using Ombi.Store.Repository;
 using Ombi.UI.Helpers;
 using Ombi.UI.Models;
 using TMDbLib.Objects.General;
+using TraktApiSharp.Objects.Get.Shows;
 using Action = Ombi.Helpers.Analytics.Action;
 using EpisodesModel = Ombi.Store.EpisodesModel;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
@@ -76,7 +77,7 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender)
+            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi)
             : base("search", prSettings, security)
         {
             Auth = auth;
@@ -108,6 +109,8 @@ namespace Ombi.UI.Modules
             PlexContentRepository = content;
             MovieSender = movieSender;
             WatcherCacher = watcherCacher;
+            RadarrCacher = radarrCacher;
+            TraktApi = traktApi;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -119,6 +122,13 @@ namespace Ombi.UI.Modules
             Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
             Get["movie/playing", true] = async (x, ct) => await CurrentlyPlayingMovies();
 
+            Get["tv/popular", true] = async (x, ct) => await ProcessShows(ShowSearchType.Popular);
+            Get["tv/trending", true] = async (x, ct) => await ProcessShows(ShowSearchType.Trending);
+            Get["tv/mostwatched", true] = async (x, ct) => await ProcessShows(ShowSearchType.MostWatched);
+            Get["tv/anticipated", true] = async (x, ct) => await ProcessShows(ShowSearchType.Anticipated);
+
+            Get["tv/poster/{id}"] = p => GetTvPoster((int)p.id);
+
             Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
             Post["request/tv", true] =
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
@@ -128,6 +138,7 @@ namespace Ombi.UI.Modules
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
+        private ITraktApi TraktApi { get; }
         private IWatcherCacher WatcherCacher { get; }
         private IMovieSender MovieSender { get; }
         private IRepository<PlexContent> PlexContentRepository { get; }
@@ -157,6 +168,7 @@ namespace Ombi.UI.Modules
         private IAnalytics Analytics { get; }
         private ITransientFaultQueue FaultQueue { get; }
         private IRepository<RequestLimit> RequestLimitRepo { get; }
+        private IRadarrCacher RadarrCacher { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
@@ -188,6 +200,17 @@ namespace Ombi.UI.Modules
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
+        private Response GetTvPoster(int theTvDbId)
+        {
+            var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+
+            var banner = result.image?.medium;
+            if (!string.IsNullOrEmpty(banner))
+            {
+                banner = banner.Replace("http", "https"); // Always use the Https banners
+            }
+            return banner;
+        }
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
         {
             List<MovieResult> apiMovies;
@@ -236,6 +259,7 @@ namespace Ombi.UI.Modules
 
             var cpCached = CpCacher.QueuedIds();
             var watcherCached = WatcherCacher.QueuedIds();
+            var radarrCached = RadarrCacher.QueuedIds();
             var content = PlexContentRepository.GetAll();
             var plexMovies = Checker.GetPlexMovies(content);
             var viewMovies = new List<SearchMovieViewModel>();
@@ -246,6 +270,7 @@ namespace Ombi.UI.Modules
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfoTask = await MovieApi.GetMovieInformation(movie.Id).ConfigureAwait(false);
+                    
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                     imdbId = movieInfoTask?.ImdbId;
@@ -287,13 +312,19 @@ namespace Ombi.UI.Modules
                 }
                 else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
                 {
+                    viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
                 else if(watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
                 {
+                    viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-
+                else if (radarrCached.Contains(movie.Id) && canSee)
+                {
+                    viewMovie.Approved = true;
+                    viewMovie.Requested = true;
+                }
                 viewMovies.Add(viewMovie);
             }
 
@@ -310,6 +341,186 @@ namespace Ombi.UI.Modules
             }
 
             return true;
+        }
+
+        private async Task<Response> ProcessShows(ShowSearchType type)
+        {
+            var shows = new List<SearchTvShowViewModel>();
+            var prSettings = await PrService.GetSettingsAsync();
+            switch (type)
+            {
+                case ShowSearchType.Popular:
+                    Analytics.TrackEventAsync(Category.Search, Action.TvShow, "Popular", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                    var popularShows = await TraktApi.GetPopularShows();
+                    
+                    foreach (var popularShow in popularShows)
+                    {
+                        var theTvDbId = int.Parse(popularShow.Ids.Tvdb.ToString());
+                        
+                        var model = new SearchTvShowViewModel
+                        {
+                            FirstAired = popularShow.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Id = theTvDbId,
+                            ImdbId = popularShow.Ids.Imdb,
+                            Network = popularShow.Network,
+                            Overview = popularShow.Overview.RemoveHtml(),
+                            Rating = popularShow.Rating.ToString(),
+                            Runtime = popularShow.Runtime.ToString(),
+                            SeriesName = popularShow.Title,
+                            Status = popularShow.Status.DisplayName,
+                            DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                            DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                            EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason),
+                            Trailer = popularShow.Trailer,
+                            Homepage = popularShow.Homepage
+                        };
+                        shows.Add(model);
+                    }
+                    shows = await MapToTvModel(shows, prSettings);
+                    break;
+                case ShowSearchType.Anticipated:
+                    Analytics.TrackEventAsync(Category.Search, Action.TvShow, "Anticipated", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                    var anticipated = await TraktApi.GetAnticipatedShows();
+                    foreach (var anticipatedShow in anticipated)
+                    {
+                        var show = anticipatedShow.Show;
+                        var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+
+                        var model = new SearchTvShowViewModel
+                        {
+                            FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Id = theTvDbId,
+                            ImdbId = show.Ids.Imdb,
+                            Network = show.Network ?? string.Empty,
+                            Overview = show.Overview?.RemoveHtml() ?? string.Empty,
+                            Rating = show.Rating.ToString(),
+                            Runtime = show.Runtime.ToString(),
+                            SeriesName = show.Title,
+                            Status = show.Status?.DisplayName ?? string.Empty,
+                            DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                            DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                            EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason),
+                            Trailer = show.Trailer,
+                            Homepage = show.Homepage
+                        };
+                        shows.Add(model);
+                    }
+                    shows = await MapToTvModel(shows, prSettings);
+                    break;
+                case ShowSearchType.MostWatched:
+                    Analytics.TrackEventAsync(Category.Search, Action.TvShow, "MostWatched", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                    var mostWatched = await TraktApi.GetMostWatchesShows();
+                    foreach (var watched in mostWatched)
+                    {
+                        var show = watched.Show;
+                        var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var model = new SearchTvShowViewModel
+                        {
+                            FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Id = theTvDbId,
+                            ImdbId = show.Ids.Imdb,
+                            Network = show.Network,
+                            Overview = show.Overview.RemoveHtml(),
+                            Rating = show.Rating.ToString(),
+                            Runtime = show.Runtime.ToString(),
+                            SeriesName = show.Title,
+                            Status = show.Status.DisplayName,
+                            DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                            DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                            EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason),
+                            Trailer = show.Trailer,
+                            Homepage = show.Homepage
+                        };
+                        shows.Add(model);
+                    }
+                    shows = await MapToTvModel(shows, prSettings);
+                    break;
+                case ShowSearchType.Trending:
+                    Analytics.TrackEventAsync(Category.Search, Action.TvShow, "Trending", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                    var trending = await TraktApi.GetTrendingShows();
+                    foreach (var watched in trending)
+                    {
+                        var show = watched.Show;
+                        var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var model = new SearchTvShowViewModel
+                        {
+                            FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
+                            Id = theTvDbId,
+                            ImdbId = show.Ids.Imdb,
+                            Network = show.Network,
+                            Overview = show.Overview.RemoveHtml(),
+                            Rating = show.Rating.ToString(),
+                            Runtime = show.Runtime.ToString(),
+                            SeriesName = show.Title,
+                            Status = show.Status.DisplayName,
+                            DisableTvRequestsByEpisode = prSettings.DisableTvRequestsByEpisode,
+                            DisableTvRequestsBySeason = prSettings.DisableTvRequestsBySeason,
+                            EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason),
+                            Trailer = show.Trailer,
+                            Homepage = show.Homepage
+                        };
+                        shows.Add(model);
+                    }
+                    shows = await MapToTvModel(shows, prSettings);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+
+            return Response.AsJson(shows);
+        }
+
+        private async Task<List<SearchTvShowViewModel>> MapToTvModel(List<SearchTvShowViewModel> shows, PlexRequestSettings prSettings)
+        {
+
+            var plexSettings = await PlexService.GetSettingsAsync();
+
+            var providerId = string.Empty;
+            // Get the requests
+            var allResults = await RequestService.GetAllAsync();
+            allResults = allResults.Where(x => x.Type == RequestType.TvShow);
+            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+            var dbTv = distinctResults.ToDictionary(x => x.ProviderId);
+
+            // Check the external applications
+            var sonarrCached = SonarrCacher.QueuedIds().ToList();
+            var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
+            var content = PlexContentRepository.GetAll();
+            var plexTvShows = Checker.GetPlexTvShows(content).ToList();
+
+            foreach (var show in shows)
+            {
+                if (plexSettings.AdvancedSearch)
+                {
+                    providerId = show.Id.ToString();
+                }
+
+                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4),
+                    providerId);
+                if (plexShow != null)
+                {
+                    show.Available = true;
+                    show.PlexUrl = plexShow.Url;
+                }
+                else
+                {
+                    if (dbTv.ContainsKey(show.Id))
+                    {
+                        var dbt = dbTv[show.Id];
+
+                        show.Requested = true;
+                        show.Episodes = dbt.Episodes.ToList();
+                        show.Approved = dbt.Approved;
+                    }
+                    if (sonarrCached.Select(x => x.TvdbId).Contains(show.Id) || sickRageCache.Contains(show.Id))
+                    // compare to the sonarr/sickrage db
+                    {
+                        show.Requested = true;
+                    }
+                }
+            }
+            return shows;
         }
 
         private async Task<Response> SearchTvShow(string searchTerm)
@@ -345,6 +556,10 @@ namespace Ombi.UI.Modules
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
             {
+                if (!(t.show.externals?.thetvdb.HasValue) ?? false)
+                {
+                    continue;
+                }
                 var banner = t.show.image?.medium;
                 if (!string.IsNullOrEmpty(banner))
                 {
@@ -679,11 +894,13 @@ namespace Ombi.UI.Modules
             DateTime.TryParse(showInfo.premiered, out firstAir);
             string fullShowName = $"{showInfo.name} ({firstAir.Year})";
 
+            // For some reason the poster path is always http
+            var posterPath = showInfo.image?.medium.Replace("http:", "https:");
             var model = new RequestedModel
             {
                 Type = RequestType.TvShow,
                 Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = showInfo.image?.medium,
+                PosterPath = posterPath,
                 Title = showInfo.name,
                 ReleaseDate = firstAir,
                 Status = showInfo.status,
@@ -1384,6 +1601,14 @@ namespace Ombi.UI.Modules
                 default:
                     return false;
             }
+        }
+
+        private enum ShowSearchType
+        {
+            Popular,
+            Anticipated,
+            MostWatched,
+            Trending
         }
     }
 }

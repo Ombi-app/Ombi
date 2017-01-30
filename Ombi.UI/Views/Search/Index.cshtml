@@ -75,9 +75,20 @@
     <!-- TV tab -->
             <div role="tabpanel" class="tab-pane" id="TvShowTab">
                 <div class="input-group">
-                    <input id="tvSearchContent" type="text" class="form-control form-control-custom form-control-search">
+                    <input id="tvSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
                     <div class="input-group-addon">
-                        <i id="tvSearchButton" class="fa fa-search"></i>
+                        <div class="btn-group">
+                            <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                @UI.Search_Suggestions
+                                <i class="fa fa-chevron-down"></i>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a id="popularShows" href="#">Popular Shows</a></li>
+                                <li><a id="trendingShows" href="#">Trending Shows</a></li>
+                                <li><a id="mostWatchedShows" href="#">Most Watched Shows</a></li>
+                                <li><a id="anticipatedShows" href="#">Most Anticipated Shows</a></li>
+                            </ul>
+                        </div><i id="tvSearchButton" class="fa fa-search"></i>
                     </div>
                 </div>
                 <br />
@@ -106,273 +117,286 @@
             </div>
         }
 
-<!-- Movie and TV Results template -->
-<script id="search-template" type="text/x-handlebars-template">
-    <div class="row">
-        <div class="col-sm-2">
+        <!-- Movie and TV Results template -->
+        <script id="search-template" type="text/x-handlebars-template">
+            <div class="row">
+                <div id="{{id}}imgDiv" class="col-sm-2">
 
-            {{#if_eq type "movie"}}
-            {{#if posterPath}}
-            <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
-            {{/if}}
-            {{/if_eq}}
-            {{#if_eq type "tv"}}
-            {{#if posterPath}}
-            <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
-            {{/if}}
-            {{/if_eq}}
+                    {{#if_eq type "movie"}}
+                    {{#if posterPath}}
+                    <img class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{posterPath}}" alt="poster">
+                    {{/if}}
+                    {{/if_eq}}
+                    {{#if_eq type "tv"}}
+                    {{#if posterPath}}
+                    <img class="img-responsive" width="150" src="{{posterPath}}" alt="poster">
+                    {{/if}}
+                    {{/if_eq}}
 
-        </div>
-        <div class="col-sm-5 ">
-            <div>
-                {{#if_eq type "movie"}}
-                <a href="https://www.themoviedb.org/movie/{{id}}/" target="_blank">
-                    <h4>{{title}} ({{year}})</h4>
-                </a>
-                {{else}}
-                <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
-                    <h4>{{title}} ({{year}})</h4>
-                </a>
-                {{/if_eq}}
-                {{#if_eq type "tv"}}
-                {{#if available}}
-                <span class="label label-success">@UI.Search_Available_on_plex</span>
-                {{else}}
-                {{#if approved}}
-                <span class="label label-info">@UI.Search_Processing_Request</span>
-                {{else if requested}}
-                <span class="label label-warning">@UI.Search_Pending_approval</span>
-                {{else}}                
-                <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
-                {{/if}}
-                {{/if}}
-                <br />
-                <br />
-                {{/if_eq}}
-            </div>
-            <p>{{overview}}</p>
-        </div>
-        <div class="col-sm-2 col-sm-push-3">
-            <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
-                {{#if_eq type "movie"}}
-                    {{#if_eq available true}}
+                </div>
+                <div class="col-sm-5 ">
+                    <div>
+                        {{#if_eq type "movie"}}
+                        <a href="https://www.themoviedb.org/movie/{{id}}/" target="_blank">
+                            <h4>{{title}} ({{year}})</h4>
+                        </a>
+                        {{else}}
+                        <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
+                            <h4>{{title}} ({{year}})</h4>
+                        </a>
+                        {{/if_eq}}
+                        {{#if status}}
+                        <span class="label label-info" target="_blank">{{status}}</span>
+                        {{/if}}
+                        {{#if homepage}}
+                        <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
+                        {{/if}}
+                        {{#if trailer}}
+                        <a href="{{trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
+                        {{/if}}
+                        {{#if firstAired}}
+                        <span class="label label-info" target="_blank">First Aired: {{firstAired}}</span>
+                        {{/if}}
+                        {{#if available}}
+                        <span class="label label-success">@UI.Search_Available_on_plex</span>
+                        {{else}}
+                        {{#if approved}}
+                        <span class="label label-info">@UI.Search_Processing_Request</span>
+                        {{else if requested}}
+                        <span class="label label-warning">@UI.Search_Pending_approval</span>
+                        {{else}}
+                        <span class="label label-danger">@UI.Search_Not_Requested_Yet</span>
+                        {{/if}}
+                        {{/if}}
+
+                        <span id="{{id}}netflixTab"></span>
+
+                        <br />
+                        <br />
+                    </div>
+                    <p>{{overview}}</p>
+                </div>
+                <div class="col-sm-2 col-sm-push-3">
+                    <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
+                        <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+                        {{#if_eq type "movie"}}
+                        {{#if_eq available true}}
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button>
                         <br />
                         <br />
                         <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                    {{else}}
-                        {{#if_eq requested true}}
-                            <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
                         {{else}}
-                            <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        {{#if_eq requested true}}
+                        <button style="text-align: right" class="btn btn-primary-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
+                        {{else}}
+                        <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestMovie" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
                         {{/if_eq}}
-                    {{/if_eq}}
-                {{/if_eq}}
+                        {{/if_eq}}
+                        {{/if_eq}}
 
-                {{#if_eq type "tv"}}
-                    {{#if_eq tvFullyAvailable true}}
+                        {{#if_eq type "tv"}}
+                        {{#if_eq tvFullyAvailable true}}
                         @*//TODO Not used yet*@
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
-                    {{else}}
-                        {{#if_eq enableTvRequestsForOnlySeries true}}
-                            <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} btn-primary-outline dropdownTv" season-select="0" type="button"><i class="fa fa-plus"></i> @UI.Search_Request</button>
                         {{else}}
-                            <div class="dropdown">
-                                <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                    <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                    <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">@UI.Search_AllSeasons</a></li>
-                                    {{#if_eq disableTvRequestsBySeason false}}
-                                    <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">@UI.Search_FirstSeason</a></li>
-                                    <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">@UI.Search_LatestSeason</a></li>
-                                    <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">@UI.Search_SelectSeason...</a></li>
-                                    {{/if_eq}}
-                                    {{#if_eq disableTvRequestsByEpisode false}}
-                                    <li><a id="EpisodeSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#episodesModal" href="#">@UI.Search_SelectEpisode...</a></li>
-                                    {{/if_eq}}
-                                </ul>
-                            </div>
+                        {{#if_eq enableTvRequestsForOnlySeries true}}
+                        <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} btn-primary-outline dropdownTv" season-select="0" type="button"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        {{else}}
+                        <div class="dropdown">
+                            <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">@UI.Search_AllSeasons</a></li>
+                                {{#if_eq disableTvRequestsBySeason false}}
+                                <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">@UI.Search_FirstSeason</a></li>
+                                <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">@UI.Search_LatestSeason</a></li>
+                                <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">@UI.Search_SelectSeason...</a></li>
+                                {{/if_eq}}
+                                {{#if_eq disableTvRequestsByEpisode false}}
+                                <li><a id="EpisodeSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#episodesModal" href="#">@UI.Search_SelectEpisode...</a></li>
+                                {{/if_eq}}
+                            </ul>
+                        </div>
                         {{/if_eq}}
-                {{#if available}}
-                <br />
-                <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                {{/if}}
-                    {{/if_eq}}
-                {{/if_eq}}
-
-
-                <br />
-            </form>
-            {{#if_eq available true}}
-            <form method="POST" action="@url/issues/nonrequestissue/" id="report{{id}}">
-                <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
-                <input name="type" type="text" value="{{type}}" hidden="hidden" />
-                <div class="dropdown">
-                    <button id="{{id}}" class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-exclamation"></i> @UI.Search_ReportIssue
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">@UI.Issues_WrongAudio</a></li>
-                        <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">@UI.Issues_NoSubs</a></li>
-                        <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">@UI.Issues_WrongContent</a></li>
-                        <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">@UI.Issues_Playback</a></li>
-                        <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" data-type="{{type}}" href="#" data-toggle="modal" data-target="#issuesModal">@UI.Issues_Other</a></li>
-                    </ul>
-                </div>
-            </form>
-            {{/if_eq}}
-        </div>
-
-    </div>
-    <hr />
-</script>
-
-
-<!-- Music Results template -->
-<script id="music-template" type="text/x-handlebars-template">
-    <div class="row">
-        <div id="{{id}}imageDiv" class="col-sm-2">
-            {{#if coverArtUrl}}
-            <img id="{{id}}cover" class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
-            {{/if}}
-        </div>
-        <div class="col-sm-5 ">
-            <div>
-                <a href="https://musicbrainz.org/release/{{id}}" target="_blank">
-                    <h4>
-                        {{artist}} - {{title}}
-                        {{#if year}}
-                        ({{year}})
+                        {{#if available}}
+                        <br />
+                        <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
                         {{/if}}
-                    </h4>
-                </a>
-
-            </div>
-            <p>{{overview}}</p>
-        </div>
-        <div class="col-sm-2 col-sm-push-3">
-            <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
-                <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
-                {{#if_eq available true}}
-                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
-                <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                {{else}}
-                {{#if_eq requested true}}
-                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
-                {{else}}
-                <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestAlbum" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
-                {{/if_eq}}
-                {{/if_eq}}
-                <br />
-                <small class="row">@UI.Search_TrackCount: {{trackCount}}</small>
-                <small class="row">@UI.Search_Country: {{country}}</small>
-            </form>
-        </div>
-
-    </div>
-    <hr />
-
-</script>
-
-<div class="modal fade" id="seasonsModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">@UI.Search_Modal_SeasonsTitle</h4>
-            </div>
-            <div class="modal-body" id="seasonsBody">
-
-            </div>
-
-            <div hidden="hidden" id="selectedSeasonsId"></div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">@UI.Common_Close</button>
-                <button type="button" id="seasonsRequest" class="btn btn-primary">@UI.Search_Request</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="episodesModal">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content col-md-12">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">@UI.Search_Modal_SeasonsTitle</h4>
-            </div>
-            <div class="text-center" id="episodeModalLoading"><i class="fa fa-5x fa-spinner fa-spin"></i></div>
-            <div class="modal-body" id="episodesBody">
-               
-            </div>
-
-            <div hidden="hidden" id="selectedEpisodeId"></div>
-            <div hidden="hidden" id="episodeTvID"></div>
-            <div class="modal-footer col-md-12">
-                <button type="button" class="btn btn-default btn-default-outline" data-dismiss="modal">@UI.Common_Close</button>
-                <button type="button" id="episodesRequest" class="btn btn-primary">@UI.Search_Request</button>
-            </div>
-        </div>
-    </div>
-</div>
+                        {{/if_eq}}
+                        {{/if_eq}}
 
 
-<div class="modal fade" id="issuesModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
-                <h4 class="modal-title">@UI.Issues_Modal_Title</h4>
-            </div>
-            <form method="POST" action="@url/issues/nonrequestissuecomment" id="commentForm">
-                <div class="modal-body">
-                    <input id="providerIdModal" name="providerId" class="providerId" type="text" hidden="hidden" value="" />
-                    <input name="issue" class="issue" type="text" hidden="hidden" value="" />
-                    <input id="typeModal" name="type" class="type" type="text" hidden="hidden" value="" />
-                    <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
+                        <br />
+                    </form>
+                    {{#if_eq available true}}
+                    <form method="POST" action="@url/issues/nonrequestissue/" id="report{{id}}">
+                        <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
+                        <input name="type" type="text" value="{{type}}" hidden="hidden" />
+                        <div class="dropdown">
+                            <button id="{{id}}" class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                <i class="fa fa-exclamation"></i> @UI.Search_ReportIssue
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                                <li><a id="{{id}}" issue-select="0" class="dropdownIssue" href="#">@UI.Issues_WrongAudio</a></li>
+                                <li><a id="{{id}}" issue-select="1" class="dropdownIssue" href="#">@UI.Issues_NoSubs</a></li>
+                                <li><a id="{{id}}" issue-select="2" class="dropdownIssue" href="#">@UI.Issues_WrongContent</a></li>
+                                <li><a id="{{id}}" issue-select="3" class="dropdownIssue" href="#">@UI.Issues_Playback</a></li>
+                                <li><a id="{{id}}" issue-select="4" class="dropdownIssue" data-identifier="{{id}}" data-type="{{type}}" href="#" data-toggle="modal" data-target="#issuesModal">@UI.Issues_Other</a></li>
+                            </ul>
+                        </div>
+                    </form>
+                    {{/if_eq}}
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-outline" data-dismiss="modal">@UI.Common_Close</button>
-                    <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">@UI.Issues_Modal_Save</button>
+
+            </div>
+            <hr />
+        </script>
+
+
+        <!-- Music Results template -->
+        <script id="music-template" type="text/x-handlebars-template">
+            <div class="row">
+                <div id="{{id}}imageDiv" class="col-sm-2">
+                    {{#if coverArtUrl}}
+                    <img id="{{id}}cover" class="img-responsive" src="{{coverArtUrl}}" width="150" alt="poster">
+                    {{/if}}
                 </div>
-            </form>
+                <div class="col-sm-5 ">
+                    <div>
+                        <a href="https://musicbrainz.org/release/{{id}}" target="_blank">
+                            <h4>
+                                {{artist}} - {{title}}
+                                {{#if year}}
+                                ({{year}})
+                                {{/if}}
+                            </h4>
+                        </a>
+
+                    </div>
+                    <p>{{overview}}</p>
+                </div>
+                <div class="col-sm-2 col-sm-push-3">
+                    <form method="POST" action="@url/search/request/{{type}}" id="form{{id}}">
+                        <input name="{{type}}Id" type="text" value="{{id}}" hidden="hidden" />
+                        {{#if_eq available true}}
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
+                        <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
+                        {{else}}
+                        {{#if_eq requested true}}
+                        <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Requested</button>
+                        {{else}}
+                        <button id="{{id}}" style="text-align: right" class="btn btn-primary-outline requestAlbum" type="submit"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        {{/if_eq}}
+                        {{/if_eq}}
+                        <br />
+                        <small class="row">@UI.Search_TrackCount: {{trackCount}}</small>
+                        <small class="row">@UI.Search_Country: {{country}}</small>
+                    </form>
+                </div>
+
+            </div>
+            <hr />
+
+        </script>
+
+        <div class="modal fade" id="seasonsModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">@UI.Search_Modal_SeasonsTitle</h4>
+                    </div>
+                    <div class="modal-body" id="seasonsBody">
+
+                    </div>
+
+                    <div hidden="hidden" id="selectedSeasonsId"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">@UI.Common_Close</button>
+                        <button type="button" id="seasonsRequest" class="btn btn-primary">@UI.Search_Request</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
-<script id="seasons-template" type="text/x-handlebars-template">
-    <div class="form-group">
-        <div class="checkbox">
-            <input type="checkbox" class="selectedSeasons" id="{{id}}" name="{{id}}"><label for="{{id}}">@UI.Search_Season {{id}}</label>
+        <div class="modal fade" id="episodesModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content col-md-12">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">@UI.Search_Modal_SeasonsTitle</h4>
+                    </div>
+                    <div class="text-center" id="episodeModalLoading"><i class="fa fa-5x fa-spinner fa-spin"></i></div>
+                    <div class="modal-body" id="episodesBody">
+
+                    </div>
+
+                    <div hidden="hidden" id="selectedEpisodeId"></div>
+                    <div hidden="hidden" id="episodeTvID"></div>
+                    <div class="modal-footer col-md-12">
+                        <button type="button" class="btn btn-default btn-default-outline" data-dismiss="modal">@UI.Common_Close</button>
+                        <button type="button" id="episodesRequest" class="btn btn-primary">@UI.Search_Request</button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</script>
-
-<script id="seasonNumber-template" type="text/x-handlebars-template">
-
-    <div id="seasonNumber{{seasonNumber}}" class="col-md-12">
-        <strong>@UI.Search_Season {{seasonNumber}}</strong>
-    </div>
 
 
-</script>
-
-
-<script id="episode-template" type="text/x-handlebars-template">
-    <div class="form-group col-md-6">
-        <div class="checkbox" style="margin-bottom:0px; margin-top:0px;">
-            {{#if_eq requested true}}
-                <input type="checkbox" checked="checked" disabled="disabled" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
-            {{else}}
-                <input type="checkbox" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
-            {{/if_eq}}
+        <div class="modal fade" id="issuesModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="fa fa-times"></i></button>
+                        <h4 class="modal-title">@UI.Issues_Modal_Title</h4>
+                    </div>
+                    <form method="POST" action="@url/issues/nonrequestissuecomment" id="commentForm">
+                        <div class="modal-body">
+                            <input id="providerIdModal" name="providerId" class="providerId" type="text" hidden="hidden" value="" />
+                            <input name="issue" class="issue" type="text" hidden="hidden" value="" />
+                            <input id="typeModal" name="type" class="type" type="text" hidden="hidden" value="" />
+                            <textarea class="form-control form-control-custom" rows="3" id="commentArea" name="commentArea"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger-outline" data-dismiss="modal">@UI.Common_Close</button>
+                            <button type="button" class="btn btn-primary-outline theSaveButton" data-dismiss="modal">@UI.Issues_Modal_Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
 
-</script>
+        <script id="seasons-template" type="text/x-handlebars-template">
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" class="selectedSeasons" id="{{id}}" name="{{id}}"><label for="{{id}}">@UI.Search_Season {{id}}</label>
+                </div>
+            </div>
+        </script>
 
-@Html.LoadSearchAssets()
+        <script id="seasonNumber-template" type="text/x-handlebars-template">
+
+            <div id="seasonNumber{{seasonNumber}}" class="col-md-12">
+                <strong>@UI.Search_Season {{seasonNumber}}</strong>
+            </div>
+
+
+        </script>
+
+
+        <script id="episode-template" type="text/x-handlebars-template">
+            <div class="form-group col-md-6">
+                <div class="checkbox" style="margin-bottom:0px; margin-top:0px;">
+                    {{#if_eq requested true}}
+                    <input type="checkbox" checked="checked" disabled="disabled" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
+                    {{else}}
+                    <input type="checkbox" class="selectedEpisodes" id="{{episodeId}}" epNumber="{{number}}" epSeason="{{season}}" name="{{episodeId}}"><label for="{{episodeId}}">{{number}}. {{name}}</label>
+                    {{/if_eq}}
+                </div>
+            </div>
+
+        </script>
+
+        @Html.LoadSearchAssets()

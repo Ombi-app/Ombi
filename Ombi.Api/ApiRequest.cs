@@ -70,7 +70,7 @@ namespace Ombi.Api
 
             return response.Data;
         }
-        
+
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
         {
             var client = new RestClient { BaseUrl = baseUri };

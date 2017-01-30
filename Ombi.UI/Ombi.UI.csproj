@@ -206,6 +206,10 @@
       <HintPath>..\packages\TMDbLib.0.9.0.0-alpha\lib\net45\TMDbLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="TraktApiSharp, Version=0.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TraktApiSharp.0.8.0\lib\portable-net45+netcore45+wpa81\TraktApiSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Authentication\CustomAuthenticationConfiguration.cs" />
@@ -273,6 +277,7 @@
     <Compile Include="Modules\IssuesModule.cs" />
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
+    <Compile Include="Modules\SearchExtensionModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />
     <Compile Include="NinjectModules\ConfigurationModule.cs" />
@@ -287,6 +292,7 @@
     </Compile>
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\RadarrValidator.cs" />
     <Compile Include="Validators\WatcherValidator.cs" />
     <Compile Include="Validators\SlackSettingsValidator.cs" />
     <Compile Include="Validators\UserViewModelValidator.cs" />
@@ -786,6 +792,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\UserLogin\Password.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\DiscordNotification.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\Radarr.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">

@@ -1,0 +1,244 @@
+﻿@using Ombi.UI.Helpers
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.RadarrSettings>
+@Html.Partial("Shared/Partial/_Sidebar")
+@{
+    int port;
+    if (Model.Port == 0)
+    {
+        port = 7878;
+    }
+    else
+    {
+        port = Model.Port;
+    }
+}
+<div class="col-sm-8 col-sm-push-1">
+    <form class="form-horizontal" method="POST" id="mainForm">
+        <fieldset>
+            <legend>Radarr Settings</legend>
+            @Html.Checkbox(Model.Enabled, "Enabled", "Enabled")
+
+
+            <div class="form-group">
+                <label for="Ip" class="control-label">Radarr Hostname or IP</label>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" value="@Model.Ip">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="portNumber" class="control-label">Port</label>
+
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="@port">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ApiKey" class="control-label">Radarr API Key</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" value="@Model.ApiKey">
+                </div>
+            </div>
+            @Html.Checkbox(Model.Ssl, "Ssl", "Ssl")
+
+
+
+            <div class="form-group">
+                <label for="SubDir" class="control-label">Radarr Base Url</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " id="SubDir" name="SubDir" value="@Model.SubDir">
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button type="submit" id="getProfiles" class="btn btn-primary-outline">Get Quality Profiles <div id="getSpinner"/></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select" class="control-label">Quality Profiles</label>
+                <div id="profiles">
+                    <select class="form-control form-control-custom" id="select"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="RootPath" class="control-label">Root save directory for TV shows</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " placeholder="C:\Media\Tv" id="RootPath" name="RootPath" value="@Model.RootPath">
+                    <label>Enter the root folder where movies are saved. For example <strong>C:\Media\TV</strong>.</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button id="testRadarr" type="button" class="btn btn-primary-outline">Test Connectivity <div id="spinner"/></button>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div>
+                    <button id="save" type="submit" class="btn btn-primary-outline ">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+
+
+<script>
+    $(function () {
+
+        @if (!string.IsNullOrEmpty(Model.QualityProfile))
+        {
+
+            <text>
+
+        preLoad();
+
+        function preLoad() {
+            var qualitySelected = @Model.QualityProfile;
+            if (!qualitySelected) {
+                return;
+            }
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: "radarrprofiles",
+                dataType: "json",
+                success: function(response) {
+                    response.forEach(function(result) {
+                        if (result.id == qualitySelected) {
+
+                            $("#select").append("<option selected='selected' value='" + result.id + "'>" + result.name + "</option>");
+                        } else {
+                            $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
+                        }
+                    });
+                },
+                error: function(e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        }
+        </text>
+        }
+
+
+        $('#save').click(function(e) {
+            e.preventDefault();
+            var port = $('#portNumber').val();
+            if (isNaN(port)) {
+                generateNotify("You must specify a Port.", "warning");
+                return;
+            }
+            var qualityProfile = $("#profiles option:selected").val();
+
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&qualityProfile=" + qualityProfile;
+
+            $.ajax({
+                type: $form.prop("method"),
+                data: data,
+                url: $form.prop("action"),
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        $('#getProfiles').click(function (e) {
+
+            $('#getSpinner').attr("class", "fa fa-spinner fa-spin");
+            e.preventDefault();
+            if (!$('#Ip').val()) {
+                generateNotify("Please enter a valid IP/Hostname.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            if (!$('#portNumber').val()) {
+                generateNotify("Please enter a valid Port Number.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            if (!$('#ApiKey').val()) {
+                generateNotify("Please enter a valid ApiKey.", "warning");
+        				$('#getSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: "radarrprofiles",
+                dataType: "json",
+                success: function (response) {
+                    response.forEach(function (result) {
+        				$('#getSpinner').attr("class", "fa fa-check");
+                        $("#select").append("<option value='" + result.id + "'>" + result.name + "</option>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+        				$('#getSpinner').attr("class", "fa fa-times");
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
+        var base = '@Html.GetBaseUrl()';
+        $('#testRadarr').click(function (e) {
+
+            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+            e.preventDefault();
+            var qualityProfile = $("#profiles option:selected").val();
+
+            var $form = $("#mainForm");
+
+            var data = $form.serialize();
+            data = data + "&qualityProfile=" + qualityProfile;
+            
+            var url = createBaseUrl(base, '/test/radarr');
+            $.ajax({
+                type: $form.prop("method"),
+                url: url,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+                    if (response.result === true) {
+                        generateNotify(response.message, "success");
+        				$('#spinner').attr("class", "fa fa-check");
+                    } else {
+                        generateNotify(response.message, "warning");
+        				$('#spinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+        				$('#spinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+
+
+
+    })
+</script>

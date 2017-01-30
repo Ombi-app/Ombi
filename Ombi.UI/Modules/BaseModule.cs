@@ -115,7 +115,7 @@ namespace Ombi.UI.Modules
                         var username = Security.GetUsername(User.UserName, Session);
                         if (string.IsNullOrEmpty(username))
                         {
-                            return Session[SessionKeys.UsernameKey].ToString();
+                            return "Unknown User";
                         }
                         _username = username;
                     }

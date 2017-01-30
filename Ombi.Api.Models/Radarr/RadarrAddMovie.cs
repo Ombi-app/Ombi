@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RadarrAddMovie.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,31 +25,31 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Ombi.Api.Models.Sonarr;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Radarr
 {
-    public class ApiModule : NinjectModule
+    public class RadarrAddMovie
     {
-        public override void Load()
+
+        public RadarrAddMovie()
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
+            images = new List<string>();
         }
+        public RadarrError Error { get; set; }
+        public RadarrAddOptions addOptions { get; set; }
+        public string title { get; set; }
+        public string rootFolderPath { get; set; }
+        public int qualityProfileId { get; set; }
+        public bool monitored { get; set; }
+        public int tmdbId { get; set; }
+        public List<string> images { get; set; }
+        public string cleanTitle { get; set; }
+        public string imdbId { get; set; }
+        public string titleSlug { get; set; }
+        public int id { get; set; }
+
     }
 }

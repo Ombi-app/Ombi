@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RadarrAddOptions.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
-
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Radarr
 {
-    public class ApiModule : NinjectModule
+    public class RadarrAddOptions
     {
-        public override void Load()
-        {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
-        }
+        public bool ignoreEpisodesWithFiles { get; set; }
+        public bool ignoreEpisodesWithoutFiles { get; set; }
+        public bool searchForMovie { get; set; }
     }
 }

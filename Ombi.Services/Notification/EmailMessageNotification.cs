@@ -244,9 +244,9 @@ namespace Ombi.Services.Notification
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: {model.Title} is now available!",
-                $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)",
+                $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! You requested {model.Title} on PlexRequests! This is now available on Plex! :)" };
+            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)" };
 
             var message = new MimeMessage
             {

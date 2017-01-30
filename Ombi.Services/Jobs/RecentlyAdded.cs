@@ -455,7 +455,7 @@ namespace Ombi.Services.Jobs
 
             if (!testEmail)
             {
-                var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification);
+                var users = UserHelper.GetUsersWithFeature(Features.Newsletter);
                 if (users != null)
                 {
                     foreach (var user in users)

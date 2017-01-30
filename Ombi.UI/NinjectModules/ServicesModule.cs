@@ -48,6 +48,7 @@ namespace Ombi.UI.NinjectModules
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
             Bind<IRecentlyAdded>().To<RecentlyAdded>();
+            Bind<IRadarrCacher>().To<RadarrCacher>();
             Bind<IPlexContentCacher>().To<PlexContentCacher>();
             Bind<IJobFactory>().To<CustomJobFactory>();
             Bind<IMovieSender>().To<MovieSender>();

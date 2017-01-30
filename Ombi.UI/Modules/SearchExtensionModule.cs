@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: SearchExtensionModule.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,31 +25,38 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
+using System.Threading.Tasks;
+using Nancy;
 using Ombi.Api.Interfaces;
+using Ombi.Core;
+using Ombi.Core.SettingModels;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.UI.Modules
 {
-    public class ApiModule : NinjectModule
+    public class SearchExtensionModule : BaseAuthModule
     {
-        public override void Load()
+        public SearchExtensionModule(ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security, INetflixApi netflix) : base("searchextension",pr, security)
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
+            NetflixApi = netflix;
+
+            Get["/netflix/{searchTerm}", true] = async (x, ctx) => await Netflix(x.searchTerm);
         }
+
+        private INetflixApi NetflixApi { get; }
+
+
+        public async Task<Response> Netflix(string title)
+        {
+            var result = NetflixApi.CheckNetflix(title);
+
+            if (!string.IsNullOrEmpty(result.Message))
+            {
+                return Response.AsJson(new { Result = false });
+            }
+
+            return Response.AsJson(new { Result = true, NetflixId = result.ShowId });
+        }
+
+
     }
 }

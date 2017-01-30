@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    File: SonarrValidator.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,31 +25,19 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using FluentValidation;
+using Ombi.Core.SettingModels;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.UI.Validators
 {
-    public class ApiModule : NinjectModule
+    public class RadarrValidator : AbstractValidator<RadarrSettings>
     {
-        public override void Load()
+        public RadarrValidator()
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
+            RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
+            RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
+            RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
+            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
         }
     }
 }
