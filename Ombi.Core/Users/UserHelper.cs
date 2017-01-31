@@ -30,22 +30,26 @@ using System.Linq;
 using Ombi.Core.Models;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Users
 {
     public class UserHelper : IUserHelper
     {
-        public UserHelper(IUserRepository userRepository, IPlexUserRepository plexUsers, ISecurityExtensions security)
+        public UserHelper(IUserRepository userRepository, IExternalUserRepository<PlexUsers> plexUsers, IExternalUserRepository<EmbyUsers> emby, ISecurityExtensions security)
         {
             LocalUserRepository = userRepository;
             PlexUserRepository = plexUsers;
             Security = security;
+            EmbyUserRepository = emby;
         }
 
         private IUserRepository LocalUserRepository { get; }
-        private IPlexUserRepository PlexUserRepository { get; }
+        private IExternalUserRepository<PlexUsers> PlexUserRepository { get; }
         private ISecurityExtensions Security { get; }
+        private IExternalUserRepository<EmbyUsers> EmbyUserRepository { get; }
 
 
         public IEnumerable<UserHelperModel> GetUsers()
@@ -53,7 +57,8 @@ namespace Ombi.Core.Users
             var model = new List<UserHelperModel>();
 
             var localUsers = LocalUserRepository.GetAll();
-            var plexUsers = PlexUserRepository.GetAll();
+            var plexUsers = PlexUserRepository.GetAll().ToList();
+            var embyUsers = EmbyUserRepository.GetAll().ToList();
 
             foreach (var user in localUsers)
             {
@@ -68,14 +73,30 @@ namespace Ombi.Core.Users
                 });
             }
 
-            model.AddRange(plexUsers.Select(user => new UserHelperModel
+            if (plexUsers.Any())
             {
-                Type = UserType.LocalUser,
-                Username = user.Username,
-                UserAlias = user.UserAlias,
-                EmailAddress = user.EmailAddress,
-                Permissions = (Permissions)user.Permissions
-            }));
+                model.AddRange(plexUsers.Select(user => new UserHelperModel
+                {
+                    Type = UserType.PlexUser,
+                    Username = user.Username,
+                    UserAlias = user.UserAlias,
+                    EmailAddress = user.EmailAddress,
+                    Permissions = (Permissions) user.Permissions
+                }));
+            }
+
+            if (embyUsers.Any())
+            {
+                model.AddRange(embyUsers.Select(user => new UserHelperModel
+                {
+                    Type = UserType.EmbyUser,
+                    Username = user.Username,
+                    UserAlias = user.UserAlias,
+                    EmailAddress = user.EmailAddress,
+                    Permissions = (Permissions)user.Permissions
+                }));
+
+            }
 
             return model;
         }
@@ -86,9 +107,11 @@ namespace Ombi.Core.Users
 
             var localUsers = LocalUserRepository.GetAll().ToList();
             var plexUsers = PlexUserRepository.GetAll().ToList();
+            var embyUsers = EmbyUserRepository.GetAll().ToList();
 
             var filteredLocal = localUsers.Where(x => ((Permissions)x.Permissions).HasFlag(permission));
             var filteredPlex = plexUsers.Where(x => ((Permissions)x.Permissions).HasFlag(permission));
+            var filteredEmby = embyUsers.Where(x => ((Permissions)x.Permissions).HasFlag(permission));
 
 
             foreach (var user in filteredLocal)
@@ -107,13 +130,24 @@ namespace Ombi.Core.Users
 
             model.AddRange(filteredPlex.Select(user => new UserHelperModel
             {
-                Type = UserType.LocalUser,
+                Type = UserType.PlexUser,
                 Username = user.Username,
                 UserAlias = user.UserAlias,
                 EmailAddress = user.EmailAddress,
                 Permissions = (Permissions)user.Permissions,
                 Features = (Features)user.Features
             }));
+
+            model.AddRange(filteredEmby.Select(user => new UserHelperModel
+            {
+                Type = UserType.EmbyUser,
+                Username = user.Username,
+                UserAlias = user.UserAlias,
+                EmailAddress = user.EmailAddress,
+                Permissions = (Permissions)user.Permissions,
+                Features = (Features)user.Features
+            }));
+
 
             return model;
         }
@@ -124,9 +158,11 @@ namespace Ombi.Core.Users
 
             var localUsers = LocalUserRepository.GetAll().ToList();
             var plexUsers = PlexUserRepository.GetAll().ToList();
+            var embyUsers = PlexUserRepository.GetAll().ToList();
 
             var filteredLocal = localUsers.Where(x => ((Features)x.Features).HasFlag(features));
             var filteredPlex = plexUsers.Where(x => ((Features)x.Features).HasFlag(features));
+            var filteredEmby = embyUsers.Where(x => ((Features)x.Features).HasFlag(features));
 
 
             foreach (var user in filteredLocal)
@@ -145,7 +181,17 @@ namespace Ombi.Core.Users
 
             model.AddRange(filteredPlex.Select(user => new UserHelperModel
             {
-                Type = UserType.LocalUser,
+                Type = UserType.PlexUser,
+                Username = user.Username,
+                UserAlias = user.UserAlias,
+                EmailAddress = user.EmailAddress,
+                Permissions = (Permissions)user.Permissions,
+                Features = (Features)user.Features
+            }));
+
+            model.AddRange(filteredEmby.Select(user => new UserHelperModel
+            {
+                Type = UserType.EmbyUser,
                 Username = user.Username,
                 UserAlias = user.UserAlias,
                 EmailAddress = user.EmailAddress,

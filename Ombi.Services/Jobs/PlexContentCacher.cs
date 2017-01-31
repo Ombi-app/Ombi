@@ -48,7 +48,7 @@ namespace Ombi.Services.Jobs
     public class PlexContentCacher : IJob, IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, IPlexNotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -385,12 +385,15 @@ namespace Ombi.Services.Jobs
 
         private bool ValidateSettings(PlexSettings plex)
         {
-            if (plex?.Ip == null || plex?.PlexAuthToken == null)
+            if (plex.Enable)
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
-                return false;
+                if (plex?.Ip == null || plex?.PlexAuthToken == null)
+                {
+                    Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                    return false;
+                }
             }
-            return true;
+            return plex.Enable;
         }
 
         public void Execute(IJobExecutionContext context)

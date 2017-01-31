@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LogEntity.cs
+//    File: PlexUsers.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -27,16 +27,17 @@
 
 using Dapper.Contrib.Extensions;
 
-namespace Ombi.Store.Models
+namespace Ombi.Store.Models.Emby
 {
-    [Table("PlexEpisodes")]
-    public class PlexEpisodes : Entity
+    [Table(nameof(EmbyUsers))]
+    public class EmbyUsers : Entity
     {
-        public string EpisodeTitle { get; set; }
-        public string ShowTitle { get; set; }
-        public string RatingKey { get; set; }
-        public string ProviderId { get; set; }
-        public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
+        public string EmbyUserId { get; set; }
+        public string UserAlias { get; set; }
+        public int Permissions { get; set; }
+        public int Features { get; set; }
+        public string Username { get; set; }
+        public string EmailAddress { get; set; }
+        public string LoginId { get; set; }
     }
 }

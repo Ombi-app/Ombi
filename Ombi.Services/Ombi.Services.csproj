@@ -86,6 +86,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IEmbyNotificationEngine.cs" />
+    <Compile Include="Interfaces\IPlexNotificationEngine.cs" />
     <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
     <Compile Include="Interfaces\IJobRecord.cs" />
@@ -93,9 +95,17 @@
     <Compile Include="Interfaces\IStoreBackup.cs" />
     <Compile Include="Interfaces\IStoreCleanup.cs" />
     <Compile Include="Interfaces\IUserRequestLimitResetter.cs" />
-    <Compile Include="Jobs\IFaultQueueHandler.cs" />
-    <Compile Include="Jobs\IPlexEpisodeCacher.cs" />
-    <Compile Include="Jobs\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\IEmbyUserChecker.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyEpisodeCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyContentCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyAvailabilityChecker.cs" />
+    <Compile Include="Jobs\Interfaces\IFaultQueueHandler.cs" />
+    <Compile Include="Jobs\Interfaces\IPlexEpisodeCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\EmbyAvailabilityChecker.cs" />
+    <Compile Include="Jobs\EmbyContentCacher.cs" />
+    <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
+    <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
@@ -129,7 +139,8 @@
     <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Models\SonarrCachedResult.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
-    <Compile Include="Notification\NotificationEngine.cs" />
+    <Compile Include="Notification\EmbyNotificationEngine.cs" />
+    <Compile Include="Notification\PlexNotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />

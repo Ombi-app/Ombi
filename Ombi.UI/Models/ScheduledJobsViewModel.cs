@@ -33,6 +33,8 @@ namespace Ombi.UI.Models
 {
     public class ScheduledJobsViewModel : ScheduledJobsSettings
     {
+        public bool Emby { get; set; }
+        public bool Plex { get; set; }
         public Dictionary<string,DateTime> JobRecorder { get; set; }
     }
 }
