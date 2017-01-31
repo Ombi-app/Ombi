@@ -153,6 +153,7 @@ namespace Ombi.UI.Modules
                 var firstServer = servers.Server.FirstOrDefault(x => x.AccessToken == form.PlexAuthToken);
 
                 Session[SessionKeys.UserWizardMachineId] = firstServer?.MachineIdentifier;
+                form.MachineIdentifier = firstServer?.MachineIdentifier;
             }
             catch (Exception e)
             {

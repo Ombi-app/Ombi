@@ -12,19 +12,21 @@ using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
 using Ombi.Store.Repository;
 
 namespace Ombi.Services.Notification
 {
     public class EmbyNotificationEngine : IEmbyNotificationEngine
     {
-        public EmbyNotificationEngine(IEmbyApi p, IRepository<UsersToNotify> repo, ISettingsService<EmbySettings> embySettings, INotificationService service, IUserHelper userHelper)
+        public EmbyNotificationEngine(IEmbyApi p, IRepository<UsersToNotify> repo, ISettingsService<EmbySettings> embySettings, INotificationService service, IUserHelper userHelper, IExternalUserRepository<EmbyUsers> embyUsers)
         {
             EmbyApi = p;
             UserNotifyRepo = repo;
             Notification = service;
             UserHelper = userHelper;
             EmbySettings = embySettings;
+            EmbyUserRepo = embyUsers;
         }
 
         private IEmbyApi EmbyApi { get; }
@@ -33,6 +35,7 @@ namespace Ombi.Services.Notification
         private INotificationService Notification { get; }
         private IUserHelper UserHelper { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
+        private IExternalUserRepository<EmbyUsers> EmbyUserRepo { get; }
 
         public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, NotificationType type)
         {
@@ -68,22 +71,23 @@ namespace Ombi.Services.Notification
                     
                     foreach (var user in selectedUsers)
                     {
+                        var localUser =
+                             users.FirstOrDefault(x =>
+                                    x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
+                                    x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
                         Log.Info("Notifying user {0}", user);
                         if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                         {
                             Log.Info("This user is the Plex server owner");
-                            await PublishUserNotification(userAccount?.Name, userAccount?.Name, model.Title, model.PosterPath, type, model.Type); // TODO Emby needs email address
+                            await PublishUserNotification(userAccount?.Name, localUser?.EmailAddress, model.Title, model.PosterPath, type, model.Type); 
                             return;
                         }
 
-                        var localUser =
-                            users.FirstOrDefault( x =>
-                                    x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
-                                    x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+
 
                         // So if the request was from an alias, then we need to use the local user (since that contains the alias).
-                        // If we do not have a local user, then we should be using the Plex user if that user exists.
-                        // This will execute most of the time since Plex and Local users will most always be in the database.
+                        // If we do not have a local user, then we should be using the Emby user if that user exists.
+                        // This will execute most of the time since Emby and Local users will most always be in the database.
                         if (localUser != null)
                         {
                             if (string.IsNullOrEmpty(localUser?.EmailAddress))
@@ -98,16 +102,17 @@ namespace Ombi.Services.Notification
                         }
                         else
                         {
+                            var embyUser = EmbyUserRepo.GetUserByUsername(user);
                             var email = embyUsers.FirstOrDefault(x => x.Name.Equals(user, StringComparison.CurrentCultureIgnoreCase));
-                            if (string.IsNullOrEmpty(email?.Name)) // TODO this needs to be the email
+                            if (string.IsNullOrEmpty(embyUser?.EmailAddress)) // TODO this needs to be the email
                             {
-                                Log.Info("There is no email address for this Emby user ({0}), cannot send notification", email?.Name); //TODO
+                                Log.Info("There is no email address for this Emby user ({0}), cannot send notification", email?.Name); 
                                 // We do not have a plex user that requested this!
                                 continue;
                             }
 
-                            Log.Info("Sending notification to: {0} at: {1}, for : {2}", email.Name, email.Name, model.Title);
-                            await PublishUserNotification(email.Name, email.Name, model.Title, model.PosterPath, type, model.Type); //TODO
+                            Log.Info("Sending notification to: {0} at: {1}, for : {2}", embyUser?.Username, embyUser?.EmailAddress, model.Title);
+                            await PublishUserNotification(email?.Name, embyUser?.EmailAddress, model.Title, model.PosterPath, type, model.Type);
                         }
                     }
                 }
@@ -162,11 +167,12 @@ namespace Ombi.Services.Notification
                 Log.Debug("Users being notified for this request count {0}", users.Count);
                 foreach (var user in usersToNotify)
                 {
+                    var embyUser = EmbyUserRepo.GetUserByUsername(user);
                     Log.Info("Notifying user {0}", user);
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
                     {
                         Log.Info("This user is the Emby server owner");
-                        await PublishUserNotification(userAccount.Name, userAccount.Name, model.Title, model.PosterPath, type, model.Type); // TODO
+                        await PublishUserNotification(userAccount.Name, embyUser.EmailAddress, model.Title, model.PosterPath, type, model.Type);
                         return;
                     }
 
@@ -174,12 +180,12 @@ namespace Ombi.Services.Notification
                     if (email == null)
                     {
                         Log.Info("There is no email address for this Emby user, cannot send notification");
-                        // We do not have a plex user that requested this!
+                        // We do not have a emby user that requested this!
                         continue;
                     }
 
-                    Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Name, email.Name, model.Title); // TODO
-                    await PublishUserNotification(email.Name, email.Name, model.Title, model.PosterPath, type, model.Type); // TODO
+                    Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Name, embyUser.EmailAddress, model.Title); 
+                    await PublishUserNotification(email.Name, embyUser.EmailAddress, model.Title, model.PosterPath, type, model.Type); 
                 }
             }
             catch (Exception e)
