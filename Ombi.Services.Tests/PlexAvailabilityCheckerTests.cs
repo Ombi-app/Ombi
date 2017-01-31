@@ -249,7 +249,7 @@
 //            });
 //            CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedMovies);
 //            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
-//            var movies = Checker.GetPlexMovies();
+//            var movies = Checker.GetEmbyMovies();
 
 //            Assert.That(movies.Any(x => x.ProviderId == "1212"));
 //        }
@@ -267,7 +267,7 @@
 //            });
 //            SettingsMock.Setup(x => x.GetSettings()).Returns(F.Create<PlexSettings>());
 //            CacheMock.Setup(x => x.Get<List<PlexSearch>>(CacheKeys.PlexLibaries)).Returns(cachedTv);
-//            var movies = Checker.GetPlexTvShows();
+//            var movies = Checker.GetEmbyTvShows();
 
 //            Assert.That(movies.Any(x => x.ProviderId == "1212"));
 //        }

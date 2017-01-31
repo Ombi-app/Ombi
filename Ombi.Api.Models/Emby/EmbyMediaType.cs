@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: PlexUsers.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: EmbyMediaType.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,13 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Dapper.Contrib.Extensions;
-using Newtonsoft.Json;
-
-namespace Ombi.Store.Models
+namespace Ombi.Api.Models.Emby
 {
-    [Table(nameof(PlexUsers))]
-    public class PlexUsers : Entity
+    public enum EmbyMediaType
     {
-        public string PlexUserId { get; set; }
-        public string UserAlias { get; set; }
-        public int Permissions { get; set; }
-        public int Features { get; set; }
-        public string Username { get; set; }
-        public string EmailAddress { get; set; }
-        public string LoginId { get; set; }
+        Movie = 0,
+        Series = 1,
+        Music = 2,
+        Episode = 3
     }
 }

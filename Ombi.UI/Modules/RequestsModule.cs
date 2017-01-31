@@ -65,7 +65,7 @@ namespace Ombi.UI.Modules
             ISickRageApi sickRageApi,
             ICacheProvider cache,
             IAnalytics an,
-            INotificationEngine engine,
+            IPlexNotificationEngine engine,
             ISecurityExtensions security,
             ISettingsService<CustomizationSettings> customSettings) : base("requests", prSettings, security)
         {
@@ -438,8 +438,7 @@ namespace Ombi.UI.Modules
             originalRequest.Available = available;
 
             var result = await Service.UpdateRequestAsync(originalRequest);
-            var plexService = await PlexSettings.GetSettingsAsync();
-            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken, available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
+            await NotificationEngine.NotifyUsers(originalRequest, available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });

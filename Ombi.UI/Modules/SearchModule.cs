@@ -50,9 +50,11 @@ using Ombi.Helpers;
 using Ombi.Helpers.Analytics;
 using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
+using Ombi.Services.Jobs;
 using Ombi.Services.Notification;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
 using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Ombi.UI.Helpers;
@@ -68,7 +70,7 @@ namespace Ombi.UI.Modules
     public class SearchModule : BaseAuthModule
     {
         public SearchModule(ICacheProvider cache, 
-            ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker checker,
+            ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker plexChecker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
             INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi,
@@ -77,7 +79,8 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus)
+            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus,
+            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
             : base("search", prSettings, security)
         {
             Auth = auth;
@@ -86,7 +89,7 @@ namespace Ombi.UI.Modules
             PrService = prSettings;
             MovieApi = new TheMovieDbApi();
             Cache = cache;
-            Checker = checker;
+            PlexChecker = plexChecker;
             CpCacher = cpCacher;
             SonarrCacher = sonarrCacher;
             SickRageCacher = sickRageCacher;
@@ -112,6 +115,9 @@ namespace Ombi.UI.Modules
             RadarrCacher = radarrCacher;
             TraktApi = traktApi;
             CustomizationSettings = cus;
+            EmbyChecker = embyChecker;
+            EmbyContentRepository = embyContent;
+            EmbySettings = embySettings;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
@@ -143,6 +149,7 @@ namespace Ombi.UI.Modules
         private IWatcherCacher WatcherCacher { get; }
         private IMovieSender MovieSender { get; }
         private IRepository<PlexContent> PlexContentRepository { get; }
+        private IRepository<EmbyContent> EmbyContentRepository { get; }
         private TvMazeApi TvApi { get; }
         private IPlexApi PlexApi { get; }
         private TheMovieDbApi MovieApi { get; }
@@ -152,13 +159,15 @@ namespace Ombi.UI.Modules
         private IRequestService RequestService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<AuthenticationSettings> Auth { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
         private ISettingsService<PlexSettings> PlexService { get; }
         private ISettingsService<PlexRequestSettings> PrService { get; }
         private ISettingsService<SonarrSettings> SonarrService { get; }
         private ISettingsService<SickRageSettings> SickRageService { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
         private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        private IAvailabilityChecker Checker { get; }
+        private IAvailabilityChecker PlexChecker { get; }
+        private IEmbyAvailabilityChecker EmbyChecker { get; }
         private ICouchPotatoCacher CpCacher { get; }
         private ISonarrCacher SonarrCacher { get; }
         private ISickRageCacher SickRageCacher { get; }
@@ -269,8 +278,7 @@ namespace Ombi.UI.Modules
             var cpCached = CpCacher.QueuedIds();
             var watcherCached = WatcherCacher.QueuedIds();
             var radarrCached = RadarrCacher.QueuedIds();
-            var content = PlexContentRepository.GetAll();
-            var plexMovies = Checker.GetPlexMovies(content);
+
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
             foreach (var movie in apiMovies)
@@ -292,8 +300,7 @@ namespace Ombi.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
-
-                var imdbId = string.Empty;
+                
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
@@ -313,14 +320,35 @@ namespace Ombi.UI.Modules
                     counter++;
                 }
 
-                
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
-                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
-                    imdbId);
-                if (plexMovie != null)
+
+                var plexSettings = await PlexService.GetSettingsAsync();
+                var embySettings = await EmbySettings.GetSettingsAsync();
+                if (plexSettings.Enable)
                 {
-                    viewMovie.Available = true;
-                    viewMovie.PlexUrl = plexMovie.Url;
+                    var content = PlexContentRepository.GetAll();
+                    var plexMovies = PlexChecker.GetPlexMovies(content);
+
+                    var plexMovie = PlexChecker.GetMovie(plexMovies.ToArray(), movie.Title,
+                        movie.ReleaseDate?.Year.ToString(),
+                        viewMovie.ImdbId);
+                    if (plexMovie != null)
+                    {
+                        viewMovie.Available = true;
+                        viewMovie.PlexUrl = plexMovie.Url;
+                    }
+                }
+                if (embySettings.Enable)
+                {
+                    var embyContent = EmbyContentRepository.GetAll();
+                    var embyMovies = EmbyChecker.GetEmbyMovies(embyContent);
+
+                    var embyMovie = EmbyChecker.GetMovie(embyMovies.ToArray(), movie.Title,
+                        movie.ReleaseDate?.Year.ToString(), viewMovie.ImdbId);
+                    if (embyMovie != null)
+                    {
+                        viewMovie.Available = true;
+                    }
                 }
                 else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
@@ -335,7 +363,7 @@ namespace Ombi.UI.Modules
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-                else if(watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
+                else if (watcherCached.Contains(viewMovie.ImdbId) && canSee) // compare to the watcher db
                 {
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
@@ -507,7 +535,7 @@ namespace Ombi.UI.Modules
             var sonarrCached = SonarrCacher.QueuedIds().ToList();
             var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
             var content = PlexContentRepository.GetAll();
-            var plexTvShows = Checker.GetPlexTvShows(content).ToList();
+            var plexTvShows = PlexChecker.GetPlexTvShows(content).ToList();
 
             foreach (var show in shows)
             {
@@ -516,7 +544,7 @@ namespace Ombi.UI.Modules
                     providerId = show.Id.ToString();
                 }
 
-                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4),
+                var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4),
                     providerId);
                 if (plexShow != null)
                 {
@@ -571,7 +599,7 @@ namespace Ombi.UI.Modules
             var sonarrCached = SonarrCacher.QueuedIds();
             var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
             var content = PlexContentRepository.GetAll();
-            var plexTvShows = Checker.GetPlexTvShows(content);
+            var plexTvShows = PlexChecker.GetPlexTvShows(content);
 
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
@@ -611,7 +639,7 @@ namespace Ombi.UI.Modules
                     providerId = viewT.Id.ToString();
                 }
 
-                var plexShow = Checker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
+                var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
                     providerId);
                 if (plexShow != null)
                 {
@@ -658,7 +686,7 @@ namespace Ombi.UI.Modules
             var dbAlbum = allResults.ToDictionary(x => x.MusicBrainzId);
 
             var content = PlexContentRepository.GetAll();
-            var plexAlbums = Checker.GetPlexAlbums(content);
+            var plexAlbums = PlexChecker.GetPlexAlbums(content);
 
             var viewAlbum = new List<SearchMusicViewModel>();
             foreach (var a in apiAlbums)
@@ -678,7 +706,7 @@ namespace Ombi.UI.Modules
                 DateTime release;
                 DateTimeHelper.CustomParse(a.ReleaseEvents?.FirstOrDefault()?.date, out release);
                 var artist = a.ArtistCredit?.FirstOrDefault()?.artist;
-                var plexAlbum = Checker.GetAlbum(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name);
+                var plexAlbum = PlexChecker.GetAlbum(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name);
                 if (plexAlbum != null)
                 {
                     viewA.Available = true;
@@ -760,8 +788,8 @@ namespace Ombi.UI.Modules
             {
 
                 var content = PlexContentRepository.GetAll();
-                var movies = Checker.GetPlexMovies(content);
-                if (Checker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
+                var movies = PlexChecker.GetPlexMovies(content);
+                if (PlexChecker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
                 {
                     return
                         Response.AsJson(new JsonResponseModel
@@ -1043,67 +1071,136 @@ namespace Ombi.UI.Modules
             try
             {
 
-                var content = PlexContentRepository.GetAll();
-                var shows = Checker.GetPlexTvShows(content);
-                var providerId = string.Empty;
                 var plexSettings = await PlexService.GetSettingsAsync();
-                if (plexSettings.AdvancedSearch)
+                if (plexSettings.Enable)
                 {
-                    providerId = showId.ToString();
-                }
-                if (episodeRequest)
-                {
-                    var cachedEpisodesTask = await Checker.GetEpisodes();
-                    var cachedEpisodes = cachedEpisodesTask.ToList();
-                    foreach (var d in difference) // difference is from an existing request
-                    {
-                        if (
-                            cachedEpisodes.Any(
-                                x =>
-                                    x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber &&
-                                    x.ProviderId == providerId))
-                        {
-                            return
-                                Response.AsJson(new JsonResponseModel
-                                {
-                                    Result = false,
-                                    Message =
-                                        $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}"
-                                });
-                        }
-                    }
+                    var content = PlexContentRepository.GetAll();
+                    var shows = PlexChecker.GetPlexTvShows(content);
 
-                    var diff = await GetEpisodeRequestDifference(showId, model);
-                    model.Episodes = diff.ToList();
-                }
-                else
-                {
-                    if (plexSettings.EnableTvEpisodeSearching)
+                    var providerId = string.Empty;
+                    if (plexSettings.AdvancedSearch)
                     {
-                        foreach (var s in showInfo.Season)
+                        providerId = showId.ToString();
+                    }
+                    if (episodeRequest)
+                    {
+                        var cachedEpisodesTask = await PlexChecker.GetEpisodes();
+                        var cachedEpisodes = cachedEpisodesTask.ToList();
+                        foreach (var d in difference) // difference is from an existing request
                         {
-                            var result = Checker.IsEpisodeAvailable(showId.ToString(), s.SeasonNumber, s.EpisodeNumber);
-                            if (result)
+                            if (
+                                cachedEpisodes.Any(
+                                    x =>
+                                        x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber &&
+                                        x.ProviderId == providerId))
                             {
                                 return
                                     Response.AsJson(new JsonResponseModel
                                     {
                                         Result = false,
-                                        Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                        Message =
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}"
                                     });
                             }
                         }
+
+                        var diff = await GetEpisodeRequestDifference(showId, model);
+                        model.Episodes = diff.ToList();
                     }
-                    else if (Checker.IsTvShowAvailable(shows.ToArray(), showInfo.name, showInfo.premiered?.Substring(0, 4),
-                        providerId, model.SeasonList))
+                    else
                     {
-                        return
-                            Response.AsJson(new JsonResponseModel
+                        if (plexSettings.EnableTvEpisodeSearching)
+                        {
+                            foreach (var s in showInfo.Season)
                             {
-                                Result = false,
-                                Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
-                            });
+                                var result = PlexChecker.IsEpisodeAvailable(showId.ToString(), s.SeasonNumber,
+                                    s.EpisodeNumber);
+                                if (result)
+                                {
+                                    return
+                                        Response.AsJson(new JsonResponseModel
+                                        {
+                                            Result = false,
+                                            Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                        });
+                                }
+                            }
+                        }
+                        else if (PlexChecker.IsTvShowAvailable(shows.ToArray(), showInfo.name,
+                            showInfo.premiered?.Substring(0, 4),
+                            providerId, model.SeasonList))
+                        {
+                            return
+                                Response.AsJson(new JsonResponseModel
+                                {
+                                    Result = false,
+                                    Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                });
+                        }
                     }
+                }
+                var embySettings = await EmbySettings.GetSettingsAsync();
+                if (embySettings.Enable)
+                {
+                    var embyContent = EmbyContentRepository.GetAll();
+                    var embyMovies = EmbyChecker.GetEmbyTvShows(embyContent);
+                    var providerId = showId.ToString();
+                    if (episodeRequest)
+                    {
+                        var cachedEpisodesTask = await EmbyChecker.GetEpisodes();
+                        var cachedEpisodes = cachedEpisodesTask.ToList();
+                        foreach (var d in difference) // difference is from an existing request
+                        {
+                            if (
+                                cachedEpisodes.Any(
+                                    x =>
+                                        x.SeasonNumber == d.SeasonNumber && x.EpisodeNumber == d.EpisodeNumber &&
+                                        x.ProviderId == providerId))
+                            {
+                                return
+                                    Response.AsJson(new JsonResponseModel
+                                    {
+                                        Result = false,
+                                        Message =
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}"
+                                    });
+                            }
+                        }
+
+                        var diff = await GetEpisodeRequestDifference(showId, model);
+                        model.Episodes = diff.ToList();
+                    }
+                    else
+                    {
+                        if (embySettings.EnableEpisodeSearching)
+                        {
+                            foreach (var s in showInfo.Season)
+                            {
+                                var result = EmbyChecker.IsEpisodeAvailable(showId.ToString(), s.SeasonNumber,
+                                    s.EpisodeNumber);
+                                if (result)
+                                {
+                                    return
+                                        Response.AsJson(new JsonResponseModel
+                                        {
+                                            Result = false,
+                                            Message = $"{fullShowName} is already in Emby!"
+                                        });
+                                }
+                            }
+                        }
+                        else if (EmbyChecker.IsTvShowAvailable(embyMovies.ToArray(), showInfo.name,
+                           showInfo.premiered?.Substring(0, 4),
+                           providerId, model.SeasonList))
+                        {
+                            return
+                                Response.AsJson(new JsonResponseModel
+                                {
+                                    Result = false,
+                                    Message = $"{fullShowName} is already in Emby!"
+                                });
+                        }
+                    } 
                 }
             }
             catch (Exception)
@@ -1261,8 +1358,8 @@ namespace Ombi.UI.Modules
 
 
             var content = PlexContentRepository.GetAll();
-            var albums = Checker.GetPlexAlbums(content);
-            var alreadyInPlex = Checker.IsAlbumAvailable(albums.ToArray(), albumInfo.title, release.ToString("yyyy"),
+            var albums = PlexChecker.GetPlexAlbums(content);
+            var alreadyInPlex = PlexChecker.IsAlbumAvailable(albums.ToArray(), albumInfo.title, release.ToString("yyyy"),
                 artist.name);
 
             if (alreadyInPlex)
@@ -1390,7 +1487,8 @@ namespace Ombi.UI.Modules
 
             var existingRequest = requests.FirstOrDefault(x => x.Type == RequestType.TvShow && x.TvDbId == providerId.ToString());
             var show = await Task.Run(() => TvApi.ShowLookupByTheTvDbId(providerId));
-            var tvMaxeEpisodes = await Task.Run(() => TvApi.EpisodeLookup(show.id));
+            var tvMazeEpisodesTask = await Task.Run(() => TvApi.EpisodeLookup(show.id));
+            var tvMazeEpisodes = tvMazeEpisodesTask.ToList();
 
             var sonarrEpisodes = new List<SonarrEpisodes>();
             if (sonarrEnabled)
@@ -1400,26 +1498,59 @@ namespace Ombi.UI.Modules
                 sonarrEpisodes = sonarrEp?.ToList() ?? new List<SonarrEpisodes>();
             }
 
-            var plexCacheTask = await Checker.GetEpisodes(providerId);
-            var plexCache = plexCacheTask.ToList();
-            foreach (var ep in tvMaxeEpisodes)
+            var plexSettings = await PlexService.GetSettingsAsync();
+            if (plexSettings.Enable)
             {
-                var requested = existingRequest?.Episodes
-                    .Any(episodesModel =>
-                    ep.number == episodesModel.EpisodeNumber && ep.season == episodesModel.SeasonNumber) ?? false;
-
-                var alreadyInPlex = plexCache.Any(x => x.EpisodeNumber == ep.number && x.SeasonNumber == ep.season);
-                var inSonarr = sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.hasFile);
-
-                model.Add(new EpisodeListViewModel
+                var plexCacheTask = await PlexChecker.GetEpisodes(providerId);
+                var plexCache = plexCacheTask.ToList();
+                foreach (var ep in tvMazeEpisodes)
                 {
-                    Id = show.id,
-                    SeasonNumber = ep.season,
-                    EpisodeNumber = ep.number,
-                    Requested = requested || alreadyInPlex || inSonarr,
-                    Name = ep.name,
-                    EpisodeId = ep.id
-                });
+                    var requested = existingRequest?.Episodes
+                                        .Any(episodesModel =>
+                                            ep.number == episodesModel.EpisodeNumber &&
+                                            ep.season == episodesModel.SeasonNumber) ?? false;
+
+                    var alreadyInPlex = plexCache.Any(x => x.EpisodeNumber == ep.number && x.SeasonNumber == ep.season);
+                    var inSonarr =
+                        sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.hasFile);
+
+                    model.Add(new EpisodeListViewModel
+                    {
+                        Id = show.id,
+                        SeasonNumber = ep.season,
+                        EpisodeNumber = ep.number,
+                        Requested = requested || alreadyInPlex || inSonarr,
+                        Name = ep.name,
+                        EpisodeId = ep.id
+                    });
+                }
+            }
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (embySettings.Enable)
+            {
+                var embyCacheTask = await EmbyChecker.GetEpisodes(providerId);
+                var cache = embyCacheTask.ToList();
+                foreach (var ep in tvMazeEpisodes)
+                {
+                    var requested = existingRequest?.Episodes
+                                        .Any(episodesModel =>
+                                            ep.number == episodesModel.EpisodeNumber &&
+                                            ep.season == episodesModel.SeasonNumber) ?? false;
+
+                    var alreadyInEmby = cache.Any(x => x.EpisodeNumber == ep.number && x.SeasonNumber == ep.season);
+                    var inSonarr =
+                        sonarrEpisodes.Any(x => x.seasonNumber == ep.season && x.episodeNumber == ep.number && x.hasFile);
+
+                    model.Add(new EpisodeListViewModel
+                    {
+                        Id = show.id,
+                        SeasonNumber = ep.season,
+                        EpisodeNumber = ep.number,
+                        Requested = requested || alreadyInEmby || inSonarr,
+                        Name = ep.name,
+                        EpisodeId = ep.id
+                    });
+                }
             }
             return model;
 
@@ -1651,3 +1782,4 @@ namespace Ombi.UI.Modules
         }
     }
 }
+

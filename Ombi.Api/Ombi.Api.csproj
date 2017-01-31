@@ -70,10 +70,14 @@
       <HintPath>..\packages\TraktApiSharp.0.8.0\lib\portable-net45+netcore45+wpa81\TraktApiSharp.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WebSocket4Net, Version=0.14.1.0, Culture=neutral, PublicKeyToken=eb4e154b696bf72a, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebSocket4Net.0.14.1\lib\net45\WebSocket4Net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
     <Compile Include="DiscordApi.cs" />
+    <Compile Include="EmbyApi.cs" />
     <Compile Include="NetflixRouletteApi.cs" />
     <Compile Include="RadarrApi.cs" />
     <Compile Include="TraktApi.cs" />

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: NotificationEngine.cs
+//    File: PlexNotificationEngine.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -31,7 +31,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using Ombi.Api.Interfaces;
+using Ombi.Core;
 using Ombi.Core.Models;
+using Ombi.Core.SettingModels;
 using Ombi.Core.Users;
 using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
@@ -41,14 +43,15 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Services.Notification
 {
-    public class NotificationEngine : INotificationEngine
+    public class PlexNotificationEngine : IPlexNotificationEngine
     {
-        public NotificationEngine(IPlexApi p, IRepository<UsersToNotify> repo, INotificationService service, IUserHelper userHelper)
+        public PlexNotificationEngine(IPlexApi p, IRepository<UsersToNotify> repo, INotificationService service, IUserHelper userHelper, ISettingsService<PlexSettings> ps)
         {
             PlexApi = p;
             UserNotifyRepo = repo;
             Notification = service;
             UserHelper = userHelper;
+            PlexSettings = ps;
         }
 
         private IPlexApi PlexApi { get; }
@@ -56,13 +59,15 @@ namespace Ombi.Services.Notification
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private INotificationService Notification { get; }
         private IUserHelper UserHelper { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
 
-        public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey, NotificationType type)
+        public async Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, NotificationType type)
         {
             try
             {
-                var plexUser = PlexApi.GetUsers(apiKey);
-                var userAccount = PlexApi.GetAccount(apiKey);
+                var settings = await PlexSettings.GetSettingsAsync();
+                var plexUser = PlexApi.GetUsers(settings.PlexAuthToken);
+                var userAccount = PlexApi.GetAccount(settings.PlexAuthToken);
 
                 var adminUsername = userAccount.Username ?? string.Empty;
                 
@@ -161,12 +166,13 @@ namespace Ombi.Services.Notification
             }
         }
 
-        public async Task NotifyUsers(RequestedModel model, string apiKey, NotificationType type)
+        public async Task NotifyUsers(RequestedModel model, NotificationType type)
         {
             try
             {
-                var plexUser = PlexApi.GetUsers(apiKey);
-                var userAccount = PlexApi.GetAccount(apiKey);
+                var settings = await PlexSettings.GetSettingsAsync();
+                var plexUser = PlexApi.GetUsers(settings.PlexAuthToken);
+                var userAccount = PlexApi.GetAccount(settings.PlexAuthToken);
 
                 var adminUsername = userAccount.Username ?? string.Empty;
 

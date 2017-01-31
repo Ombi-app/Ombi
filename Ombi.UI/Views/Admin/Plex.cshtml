@@ -17,6 +17,8 @@
         <fieldset>
             <legend>Plex Settings</legend>
             @*<input id="advancedToggle" type="checkbox"/>*@ @*TODO*@
+            
+            @Html.Checkbox(Model.Enable, "Enable", "Enable")
             <div class="form-group">
                 <label for="Ip" class="control-label">Plex Hostname or IP</label>
                 <div>
