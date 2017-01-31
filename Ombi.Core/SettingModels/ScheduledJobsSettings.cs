@@ -46,5 +46,6 @@ namespace Ombi.Core.SettingModels
         public int FaultQueueHandler { get; set; }
         public int PlexContentCacher { get; set; }
         public int PlexUserChecker { get; set; }
+        public int RadarrCacher { get; set; }
     }
 }

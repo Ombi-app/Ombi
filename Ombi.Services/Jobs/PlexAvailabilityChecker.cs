@@ -79,6 +79,7 @@ namespace Ombi.Services.Jobs
 
         public void CheckAndUpdateAll()
         {
+
             var plexSettings = Plex.GetSettings();
 
             if (!ValidateSettings(plexSettings))
@@ -457,6 +458,24 @@ namespace Ombi.Services.Jobs
         public void Execute(IJobExecutionContext context)
         {
 
+            Job.SetRunning(true, JobNames.PlexChecker);
+            try
+            {
+                CheckAndUpdateAll();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                Job.Record(JobNames.PlexChecker);
+                Job.SetRunning(false, JobNames.PlexChecker);
+            }
+        }
+
+        public void Start()
+        {
             Job.SetRunning(true, JobNames.PlexChecker);
             try
             {

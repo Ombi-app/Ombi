@@ -97,7 +97,7 @@ namespace Ombi.Core.Queue
                 Content = ByteConverterHelper.ReturnBytes(request),
                 PrimaryIdentifier = id,
                 FaultType = faultType,
-                Message = description ?? string.Empty
+                Description = description ?? string.Empty
             };
             await RequestQueue.InsertAsync(queue);
         }

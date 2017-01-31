@@ -24,7 +24,8 @@ Function.prototype.bind = function (parent) {
 
 $(function () {
 
-    var searchSource = $("#search-template").html();
+    var useNewSearch = $('#useNewSearch').text() == 'True';
+    var searchSource = useNewSearch ? $("#search-templateNew").html() : $("#search-template").html();
     var seasonsSource = $("#seasons-template").html();
     var musicSource = $("#music-template").html();
     var seasonsNumberSource = $("#seasonNumber-template").html();
@@ -70,6 +71,25 @@ $(function () {
     $('#moviesInTheaters').on('click', function (e) {
         e.preventDefault();
         moviesInTheaters();
+    });
+
+    // TV DropDown
+    $('#popularShows').on('click', function (e) {
+        e.preventDefault();
+        popularShows();
+    });
+
+    $('#trendingShows').on('click', function (e) {
+        e.preventDefault();
+        trendingTv();
+    });
+    $('#mostWatchedShows').on('click', function (e) {
+        e.preventDefault();
+        mostwatchedTv();
+    });
+    $('#anticipatedShows').on('click', function (e) {
+        e.preventDefault();
+        anticipatedTv();
     });
 
     // Type in TV search
@@ -293,6 +313,23 @@ $(function () {
         getMovies(url);
     }
 
+    function popularShows() {
+        var url = createBaseUrl(base, '/search/tv/popular');
+        getTvShows(url, true);
+    }
+    function anticipatedTv() {
+        var url = createBaseUrl(base, '/search/tv/anticipated');
+        getTvShows(url, true);
+    }
+    function trendingTv() {
+        var url = createBaseUrl(base, '/search/tv/trending');
+        getTvShows(url, true);
+    }
+    function mostwatchedTv() {
+        var url = createBaseUrl(base, '/search/tv/mostwatched');
+        getTvShows(url, true);
+    }
+
     function getMovies(url) {
         resetMovies();
 
@@ -304,6 +341,8 @@ $(function () {
 
                     var html = searchTemplate(context);
                     $("#movieList").append(html);
+
+                    checkNetflix(context.title, context.id);
                 });
             }
             else {
@@ -321,10 +360,10 @@ $(function () {
         var query = $("#tvSearchContent").val();
 
         var url = createBaseUrl(base, '/search/tv/');
-        query ? getTvShows(url + query) : resetTvShows();
+        query ? getTvShows(url + query, false) : resetTvShows();
     }
 
-    function getTvShows(url) {
+    function getTvShows(url, loadImage) {
         resetTvShows();
 
         $('#tvSearchButton').attr("class", "fa fa-spinner fa-spin");
@@ -334,6 +373,11 @@ $(function () {
                     var context = buildTvShowContext(result);
                     var html = searchTemplate(context);
                     $("#tvList").append(html);
+
+                    checkNetflix(context.title, context.id);
+                    if (loadImage) {
+                        getTvPoster(result.id);
+                    }
                 });
             }
             else {
@@ -342,6 +386,19 @@ $(function () {
             $('#tvSearchButton').attr("class", "fa fa-search");
         });
     };
+
+    function checkNetflix(title, id) {
+        var url = createBaseUrl(base, '/searchextension/netflix/' + title);
+        $.ajax(url).success(function (results) {
+            
+                if (results.result) {
+                    // It's on Netflix
+                    $('#' + id + 'netflixTab')
+                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Avaialble on Netflix</span></a>");
+                }
+            
+        });
+    }
 
     function resetTvShows() {
         $("#tvList").html("");
@@ -388,6 +445,16 @@ $(function () {
         });
     };
 
+    function getTvPoster(theTvDbId) {
+
+        var url = createBaseUrl(base, '/search/tv/poster/');
+        $.ajax(url + theTvDbId).success(function (result) {
+            if (result) {
+                $('#' + theTvDbId + "imgDiv").html(" <img class='img-responsive' src='" + result + "' width='150' alt='poster'>");
+            }
+        });
+    };
+
     function buildMovieContext(result) {
         var date = new Date(result.releaseDate);
         var year = date.getFullYear();
@@ -404,7 +471,11 @@ $(function () {
             requested: result.requested,
             approved: result.approved,
             available: result.available,
-            url: result.plexUrl
+            url: result.plexUrl,
+            trailer: result.trailer,
+            homepage: result.homepage,
+            releaseDate: Humanize(result.releaseDate),
+            status: result.status
         };
 
         return context;
@@ -414,6 +485,7 @@ $(function () {
         var date = new Date(result.firstAired);
         var year = date.getFullYear();
         var context = {
+            status: result.status,
             posterPath: result.banner,
             id: result.id,
             title: result.seriesName,
@@ -430,8 +502,11 @@ $(function () {
             tvPartialAvailable: result.tvPartialAvailable,
             disableTvRequestsByEpisode: result.disableTvRequestsByEpisode,
             disableTvRequestsBySeason: result.disableTvRequestsBySeason,
-            enableTvRequestsForOnlySeries: result.enableTvRequestsForOnlySeries
-        };
+            enableTvRequestsForOnlySeries: result.enableTvRequestsForOnlySeries,
+            trailer: result.trailer,
+            homepage: result.homepage,
+            firstAired: Humanize(result.firstAired)
+    };
 
         return context;
     }

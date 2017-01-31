@@ -31,20 +31,7 @@
 
                 </div>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
 
-                    @if (Model.EnableUserEmailNotifications)
-                    {
-                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications" checked="checked"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="EnableUserEmailNotifications" name="EnableUserEmailNotifications"><label for="EnableUserEmailNotifications">Enable user email notifications</label>
-                    }
-
-                </div>
-            </div>
             <div class="form-group">
                 <div class="checkbox">
 
@@ -59,7 +46,7 @@
 
                 </div>
             </div>
-            <small>Please note that if user notifications is enabled, the email will get sent with the SMTP set-up below.</small>
+           
             <div class="form-group">
                 <label for="EmailHost" class="control-label">SMTP Host name or IP</label>
                 <div class="">
@@ -82,12 +69,15 @@
                     <input type="text" class="form-control form-control-custom " id="EmailSender" name="EmailSender" value="@Model.EmailSender">
                 </div>
             </div>
+
+            <small>The sender is who the email will be sent from, this can be for any email including user notification emails (if that is enabled).</small>
             <div class="form-group">
                 <label for="RecipientEmail" class="control-label">Email Recipient</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " id="RecipientEmail" name="RecipientEmail" value="@Model.RecipientEmail">
                 </div>
             </div>
+            <small>The recipient email is used for emails going to the administrator.</small>
 
 
 

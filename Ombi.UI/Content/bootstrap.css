@@ -5259,6 +5259,7 @@ a.thumbnail.active {
   background-color: #4e5d6c;
   border: 1px solid transparent;
 }
+
 .list-group-item:first-child {
   border-top-right-radius: 0;
   border-top-left-radius: 0;

@@ -199,7 +199,7 @@ namespace Ombi.UI.Helpers
             var assetLocation = GetBaseUrl();
 
             var content = GetContentUrl(assetLocation);
-            
+
             sb.AppendLine($"<script src=\"{content}/Content/wizard.js?v={Assembly}\" type=\"text/javascript\"></script>");
 
             return helper.Raw(sb.ToString());
@@ -226,9 +226,9 @@ namespace Ombi.UI.Helpers
             sb.Append($"<script src=\"{content}/Content/app/userManagement/userManagementService.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/app/userManagement/Directives/userManagementDirective.js?v={Assembly}\" type=\"text/javascript\"></script>");
             sb.Append($"<script src=\"{content}/Content/moment.min.js\"></script>");
-            sb.Append($"<script src=\"{content}/Content/spin.min.js\"></script>");    
-            sb.Append($"<script src=\"{content}/Content/Angular/angular-spinner.min.js\"></script>");   
-            sb.Append($"<script src=\"{content}/Content/Angular/angular-loading-spinner.js\"></script>");   
+            sb.Append($"<script src=\"{content}/Content/spin.min.js\"></script>");
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-spinner.min.js\"></script>");
+            sb.Append($"<script src=\"{content}/Content/Angular/angular-loading-spinner.js\"></script>");
 
             return helper.Raw(sb.ToString());
         }
@@ -290,16 +290,19 @@ namespace Ombi.UI.Helpers
             return helper.Raw(asset);
         }
 
-        public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title)
+        public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string icon = null)
         {
             var content = GetLinkUrl(GetBaseUrl());
             if (!string.IsNullOrEmpty(content))
             {
                 url = $"/{content}{url}";
             }
-            var returnString = context.Request.Path == url 
-                                      ? $"<a class=\"list-group-item active\" href=\"{url}\">{title}</a>" 
-                                      : $"<a class=\"list-group-item\" href=\"{url}\">{title}</a>";
+
+
+            var iconHtml = string.IsNullOrEmpty(icon) ? "" : $"<span style=\"font-size:16px; \" class=\"pull-right hidden-xs showopacity {icon}\"></span>";
+            var returnString = context.Request.Path == url
+                                          ? $"<a class=\"list-group-item active\" href=\"{url}\">{title} {iconHtml}</a>"
+                                          : $"<a class=\"list-group-item\" href=\"{url}\">{title} {iconHtml}</a>";
 
             return helper.Raw(returnString);
         }
@@ -311,8 +314,8 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
-            var returnString = context.Request.Path == url ? 
-                                      $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>" 
+            var returnString = context.Request.Path == url ?
+                                      $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>"
                                       : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
 
             return helper.Raw(returnString);
@@ -326,8 +329,8 @@ namespace Ombi.UI.Helpers
                 url = $"/{content}{url}";
             }
 
-            var returnString = context.Request.Path == url 
-                ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>" 
+            var returnString = context.Request.Path == url
+                ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>"
                 : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
 
             return helper.Raw(returnString);

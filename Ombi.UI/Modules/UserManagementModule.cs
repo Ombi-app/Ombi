@@ -420,7 +420,7 @@ namespace Ombi.UI.Modules
                 FeaturesFormattedString = newUser ? "Processing..." : features.ToString(),
                 Username = plexInfo.Title,
                 Type = UserType.PlexUser,
-                EmailAddress = plexInfo.Email,
+                EmailAddress = string.IsNullOrEmpty(plexInfo.Email) ? dbUser.EmailAddress : plexInfo.Email,
                 Alias = dbUser?.UserAlias ?? string.Empty,
                 LastLoggedIn = lastLoggedIn,
                 PlexInfo = new UserManagementPlexInformation

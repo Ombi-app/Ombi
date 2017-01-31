@@ -94,40 +94,33 @@ namespace Ombi.Core
         /// Gets the username this could be the alias! We should always use this method when getting the username
         /// </summary>
         /// <param name="username">The username.</param>
-        /// <returns><c>null</c> if we cannot find a user</returns>
+        /// <param name="session"></param>
+        /// <returns>
+        ///   <c>null</c> if we cannot find a user
+        /// </returns>
         public string GetUsername(string username, ISession session)
         {
             var plexUser = PlexUsers.GetUserByUsername(username);
             if (plexUser != null)
             {
-                if (!string.IsNullOrEmpty(plexUser.UserAlias))
-                {
-                    return plexUser.UserAlias;
-                }
-                else
-                {
-                    return plexUser.Username;
-                }
+                return !string.IsNullOrEmpty(plexUser.UserAlias) ? plexUser.UserAlias : plexUser.Username;
             }
 
             var dbUser = UserRepository.GetUserByUsername(username);
             if (dbUser != null)
             {
                 var userProps = ByteConverterHelper.ReturnObject<UserProperties>(dbUser.UserProperties);
-                if (!string.IsNullOrEmpty(userProps.UserAlias))
-                {
-                    return userProps.UserAlias;
-                }
-                else
-                {
-                    return dbUser.UserName;
-                }
+                return !string.IsNullOrEmpty(userProps.UserAlias) ? userProps.UserAlias : dbUser.UserName;
             }
 
             // could be a local user
-            var localName = session[SessionKeys.UsernameKey];
+            var hasSessionKey = session[SessionKeys.UsernameKey] != null;
+            if (hasSessionKey)
+            {
+               return (string)session[SessionKeys.UsernameKey];
+            }
 
-            return localName as string;
+            return string.Empty;
         }
 
 

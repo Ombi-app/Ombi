@@ -34,6 +34,7 @@ namespace Ombi.Services.Interfaces
 {
     public interface IAvailabilityChecker
     {
+        void Start();
         void CheckAndUpdateAll();
         IEnumerable<PlexContent> GetPlexMovies(IEnumerable<PlexContent> content);
         bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null);

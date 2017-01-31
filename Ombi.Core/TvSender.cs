@@ -34,19 +34,22 @@ using Ombi.Api.Interfaces;
 using Ombi.Api.Models.SickRage;
 using Ombi.Api.Models.Sonarr;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 
 namespace Ombi.Core
 {
     public class TvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ISickRageApi srApi)
+        public TvSender(ISonarrApi sonarrApi, ISickRageApi srApi, ICacheProvider cache)
         {
             SonarrApi = sonarrApi;
             SickrageApi = srApi;
+            Cache = cache;
         }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickrageApi { get; }
+        private ICacheProvider Cache { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task<SonarrAddSeries> SendToSonarr(SonarrSettings sonarrSettings, RequestedModel model)
@@ -82,6 +85,8 @@ namespace Ombi.Core
             var latest = model.SeasonsRequested?.Equals("Latest", StringComparison.CurrentCultureIgnoreCase);
             var specificSeasonRequest = model.SeasonList?.Any();
 
+            var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.FullRootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
+
             if (episodeRequest)
             {
                 // Does series exist?
@@ -96,7 +101,7 @@ namespace Ombi.Core
 
                 // Series doesn't exist, need to add it as unmonitored.
                 var addResult = await Task.Run(() => SonarrApi.AddSeries(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, 0, new int[0], sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, rootFolderPath, 0, new int[0], sonarrSettings.ApiKey,
                     sonarrSettings.FullUri, false));
 
 
@@ -125,7 +130,7 @@ namespace Ombi.Core
             {
                 // Set the series as monitored with a season count as 0 so it doesn't search for anything
                 SonarrApi.AddSeriesNew(model.ProviderId, model.Title, qualityProfile,
-                    sonarrSettings.SeasonFolders, sonarrSettings.RootPath, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
+                    sonarrSettings.SeasonFolders, rootFolderPath, new int[] {1,2,3,4,5,6,7,8,9,10,11,12,13}, sonarrSettings.ApiKey,
                     sonarrSettings.FullUri);
 
                 await Task.Delay(TimeSpan.FromSeconds(1));
@@ -372,5 +377,20 @@ namespace Ombi.Core
 
             return selectedSeries;
         }
+
+        private async Task<string> GetRootPath(int pathId, SonarrSettings sonarrSettings)
+        {
+            var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+            {
+                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+            });
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+            return string.Empty;
+        }
+
     }
 }

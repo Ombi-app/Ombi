@@ -39,7 +39,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class UserRequestLimitResetter : IJob
+    public class UserRequestLimitResetter : IJob, IUserRequestLimitResetter
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -91,6 +91,31 @@ namespace Ombi.Services.Jobs
                 {
                     Repo.Delete(u);
                 }
+            }
+        }
+
+
+        public void Start()
+        {
+            Record.SetRunning(true, JobNames.CpCacher);
+            try
+            {
+                var settings = Settings.GetSettings();
+                var users = Repo.GetAll();
+                var requestLimits = users as RequestLimit[] ?? users.ToArray();
+
+                MovieLimit(settings, requestLimits);
+                TvLimit(settings, requestLimits);
+                AlbumLimit(settings, requestLimits);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+            finally
+            {
+                Record.Record(JobNames.RequestLimitReset);
+                Record.SetRunning(false, JobNames.CpCacher);
             }
         }
 

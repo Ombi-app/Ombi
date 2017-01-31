@@ -41,7 +41,7 @@ namespace Ombi.Store.Models
 
         public FaultType FaultType { get; set; }
         public DateTime? LastRetry { get; set; }
-        public string Message { get; set; }
+        public string Description { get; set; }
     }
 
     public enum FaultType

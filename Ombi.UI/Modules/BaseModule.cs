@@ -31,6 +31,7 @@ using System.Linq;
 using System.Threading;
 using Nancy;
 using Nancy.Security;
+using NLog;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Helpers;
@@ -100,6 +101,7 @@ namespace Ombi.UI.Modules
         }
 
 
+        private static Logger Log = LogManager.GetCurrentClassLogger();
         private string _username;
         /// <summary>
         /// Returns the Username or UserAlias
@@ -112,15 +114,16 @@ namespace Ombi.UI.Modules
                 {
                     try
                     {
-                        var username = Security.GetUsername(User.UserName, Session);
+                        var username = Security.GetUsername(User?.UserName, Session);
                         if (string.IsNullOrEmpty(username))
                         {
-                            return Session[SessionKeys.UsernameKey].ToString();
+                            return string.Empty;
                         }
                         _username = username;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
+                        Log.Info(e);
                         return string.Empty;
                     }
                 }
@@ -149,9 +152,10 @@ namespace Ombi.UI.Modules
         
         protected bool LoggedIn => Context?.CurrentUser != null;
 
-        protected string Culture { get; set; }
+        private string Culture { get; set; }
         protected const string CultureCookieName = "_culture";
-        protected Response SetCookie()
+
+        private Response SetCookie()
         {
             try
             {

@@ -37,7 +37,9 @@ namespace Ombi.Core
         public const string PlexEpisodes = nameof(PlexEpisodes);
         public const string TvDbToken = nameof(TvDbToken);
         public const string SonarrQualityProfiles = nameof(SonarrQualityProfiles);
+        public const string RadarrQualityProfiles = nameof(RadarrQualityProfiles);
         public const string SonarrQueued = nameof(SonarrQueued);
+        public const string RadarrMovies = nameof(RadarrMovies);
         public const string SickRageQualityProfiles = nameof(SickRageQualityProfiles);
         public const string SickRageQueued = nameof(SickRageQueued);
         public const string CouchPotatoQualityProfiles = nameof(CouchPotatoQualityProfiles);
@@ -45,5 +47,6 @@ namespace Ombi.Core
         public const string WatcherQueued = nameof(WatcherQueued);
         public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
         public const string LastestProductVersion = nameof(LastestProductVersion);
+        public const string SonarrRootFolders = nameof(SonarrRootFolders);
     }
 }

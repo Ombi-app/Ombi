@@ -45,7 +45,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class FaultQueueHandler : IJob
+    public class FaultQueueHandler : IJob, IFaultQueueHandler
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -53,7 +53,7 @@ namespace Ombi.Services.Jobs
             ISickRageApi srApi, ISettingsService<SonarrSettings> sonarrSettings, ISettingsService<SickRageSettings> srSettings,
             ICouchPotatoApi cpApi, ISettingsService<CouchPotatoSettings> cpsettings, IRequestService requestService,
             ISettingsService<HeadphonesSettings> hpSettings, IHeadphonesApi headphonesApi, ISettingsService<PlexRequestSettings> prSettings,
-            ISecurityExtensions security, IMovieSender movieSender)
+            ISecurityExtensions security, IMovieSender movieSender, ICacheProvider cache)
         {
             Record = record;
             Repo = repo;
@@ -71,6 +71,8 @@ namespace Ombi.Services.Jobs
             Security = security;
             PrSettings = prSettings.GetSettings();
             MovieSender = movieSender;
+
+            Cache = cache;
         }
 
         private IMovieSender MovieSender { get; }
@@ -78,6 +80,7 @@ namespace Ombi.Services.Jobs
         private IJobRecord Record { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SrApi { get; }
+        private ICacheProvider Cache { get; }
         private ICouchPotatoApi CpApi { get; }
         private IHeadphonesApi HpApi { get; }
         private IRequestService RequestService { get; }
@@ -88,9 +91,8 @@ namespace Ombi.Services.Jobs
         private ISettingsService<HeadphonesSettings> HeadphoneSettings { get; }
         private ISecurityExtensions Security { get; }
 
-        public void Execute(IJobExecutionContext context)
+        public void Start()
         {
-
             Record.SetRunning(true, JobNames.CpCacher);
             try
             {
@@ -112,6 +114,11 @@ namespace Ombi.Services.Jobs
                 Record.Record(JobNames.FaultQueueHandler);
                 Record.SetRunning(false, JobNames.CpCacher);
             }
+        }
+        public void Execute(IJobExecutionContext context)
+        {
+
+            Start();
         }
 
 
@@ -163,7 +170,7 @@ namespace Ombi.Services.Jobs
             try
             {
 
-                var sender = new TvSenderOld(SonarrApi, SrApi);
+                var sender = new TvSenderOld(SonarrApi, SrApi, Cache);
                 if (sonarr.Enabled)
                 {
                     var task = sender.SendToSonarr(sonarr, tvModel, sonarr.QualityProfile);

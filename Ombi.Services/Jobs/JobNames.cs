@@ -32,6 +32,7 @@ namespace Ombi.Services.Jobs
         public const string CpCacher = "CouchPotato Cacher";
         public const string WatcherCacher = "Watcher Cacher";
         public const string SonarrCacher = "Sonarr Cacher";
+        public const string RadarrCacher = "Radarr Cacher";
         public const string SrCacher = "SickRage Cacher";
         public const string PlexChecker = "Plex Availability Cacher";
         public const string PlexCacher = "Plex Cacher";

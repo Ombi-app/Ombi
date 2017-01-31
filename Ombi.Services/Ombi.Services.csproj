@@ -86,13 +86,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
     <Compile Include="Interfaces\IJobRecord.cs" />
     <Compile Include="Interfaces\INotificationEngine.cs" />
+    <Compile Include="Interfaces\IStoreBackup.cs" />
+    <Compile Include="Interfaces\IStoreCleanup.cs" />
+    <Compile Include="Interfaces\IUserRequestLimitResetter.cs" />
+    <Compile Include="Jobs\IFaultQueueHandler.cs" />
+    <Compile Include="Jobs\IPlexEpisodeCacher.cs" />
+    <Compile Include="Jobs\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\RadarrCacher.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
-    <Compile Include="Jobs\IPlexContentCacher.cs" />
-    <Compile Include="Jobs\IRecentlyAdded.cs" />
+    <Compile Include="Interfaces\IPlexContentCacher.cs" />
+    <Compile Include="Interfaces\IRecentlyAdded.cs" />
     <Compile Include="Jobs\JobRecord.cs" />
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\PlexContentCacher.cs" />
@@ -126,6 +134,7 @@
     <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
     <Compile Include="Notification\PushbulletNotification.cs" />
+    <Compile Include="Notification\DiscordNotification.cs" />
     <Compile Include="Notification\SlackNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

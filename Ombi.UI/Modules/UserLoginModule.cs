@@ -233,13 +233,28 @@ namespace Ombi.UI.Modules
             var result = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
 
 
+            var landingSettings = await LandingPageSettings.GetSettingsAsync();
+
+            if (landingSettings.Enabled)
+            {
+                if (!landingSettings.BeforeLogin) // After Login
+                {
+                    var uri = Linker.BuildRelativeUri(Context, "LandingPageIndex");
+                    if (loginGuid != Guid.Empty)
+                    {
+                        return CustomModuleExtensions.LoginAndRedirect(this, result.LoginGuid, null, uri.ToString());
+                    }
+                    return Response.AsRedirect(uri.ToString());
+                }
+            }
+
+
             var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
             if (result.LoginGuid != Guid.Empty)
             {
                 return CustomModuleExtensions.LoginAndRedirect(this, result.LoginGuid, null, retVal.ToString());
             }
             return Response.AsJson(new { result = true, url = retVal.ToString() });
-
         }
 
         private async Task<PlexUsers> IsPlexUser(string username)
@@ -317,6 +332,21 @@ namespace Ombi.UI.Modules
 
 
             var m = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
+
+            var landingSettings = await LandingPageSettings.GetSettingsAsync();
+
+            if (landingSettings.Enabled)
+            {
+                if (!landingSettings.BeforeLogin) // After Login
+                {
+                    var uri = Linker.BuildRelativeUri(Context, "LandingPageIndex");
+                    if (m.LoginGuid != Guid.Empty)
+                    {
+                        return CustomModuleExtensions.LoginAndRedirect(this, m.LoginGuid, null, uri.ToString());
+                    }
+                    return Response.AsRedirect(uri.ToString());
+                }
+            }
 
             var retVal = Linker.BuildRelativeUri(Context, "SearchIndex");
             if (m.LoginGuid != Guid.Empty)
@@ -534,7 +564,7 @@ namespace Ombi.UI.Modules
             UserLogins.Insert(new UserLogins { UserId = userId, Type = UserType.PlexUser, LastLoggedIn = DateTime.UtcNow });
             Log.Debug("We are authenticated! Setting session.");
             // Add to the session (Used in the BaseModules)
-            Session[SessionKeys.UsernameKey] = (string)username;
+            Session[SessionKeys.UsernameKey] = username;
             Session[SessionKeys.ClientDateTimeOffsetKey] = dateTimeOffset;
 
             var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);

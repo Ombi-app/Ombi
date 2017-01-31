@@ -78,7 +78,7 @@ namespace Ombi.Services.Jobs
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public void Execute(IJobExecutionContext context)
+        public void Start()
         {
             try
             {
@@ -99,6 +99,10 @@ namespace Ombi.Services.Jobs
                 JobRecord.Record(JobNames.RecentlyAddedEmail);
                 JobRecord.SetRunning(false, JobNames.RecentlyAddedEmail);
             }
+        }
+        public void Execute(IJobExecutionContext context)
+        {
+            Start();
         }
 
         public void Test()
@@ -455,7 +459,7 @@ namespace Ombi.Services.Jobs
 
             if (!testEmail)
             {
-                var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification);
+                var users = UserHelper.GetUsersWithFeature(Features.Newsletter);
                 if (users != null)
                 {
                     foreach (var user in users)

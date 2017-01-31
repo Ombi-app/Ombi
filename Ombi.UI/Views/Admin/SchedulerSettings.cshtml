@@ -3,22 +3,32 @@
 
 <div class="col-sm-8 col-sm-push-1">
 
+    
+    <table class="table table-striped table-hover table-responsive table-condensed">
+        <thead>
+            <tr>
+                <td>Job Name</td>
+                <td>Last Run</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var record in Model.JobRecorder)
+        {
 
-    <div class="row">
-        <div class="col-md-4"><strong>Job Name</strong>
-        </div>
-        <div class="col-md-6 col-md-push-3"><strong>Last Run</strong>
-        </div>
-    </div>
-    <hr style="margin-top: 4px; margin-bottom: 4px"/>
-    @foreach (var record in Model.JobRecorder)
-    {
-        <div class="row">
-            <div class="col-md-4">@record.Key</div>
-            <div class="col-md-5 col-md-push-3 date">@record.Value.ToString("R")</div>
-        </div>
-        <hr style="margin-top: 4px; margin-bottom: 4px"/>
-    }
+            <tr>
+                <td>
+                    @record.Key
+                </td>
+                <td>
+                    @record.Value.ToString("R")
+            </td>
+                <td class="refresh" id="@record.Key"><i class="fa fa-refresh"></i></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
     <br/>
     <br/>
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -44,6 +54,14 @@
             <div class="form-group">
                 <label for="CouchPotatoCacher" class="control-label">Couch Potato Cacher (min)</label>
                 <input type="text" class="form-control form-control-custom " id="CouchPotatoCacher" name="CouchPotatoCacher" value="@Model.CouchPotatoCacher">
+            </div>
+            <div class="form-group">
+                <label for="WatcherCacher" class="control-label">Wactcher Cacher (min)</label>
+                <input type="text" class="form-control form-control-custom " id="WatcherCacher" name="WatcherCacher" value="@Model.WatcherCacher">
+            </div>
+            <div class="form-group">
+                <label for="RadarrCacher" class="control-label">Radarr Cacher (min)</label>
+                <input type="text" class="form-control form-control-custom " id="RadarrCacher" name="RadarrCacher" value="@Model.RadarrCacher">
             </div>
 
             <small>Please note, the minimum time for this to run is 11 hours, if set below 11 then we will ignore that value. This is a very resource intensive job, the less we run it the better.</small>
@@ -112,6 +130,34 @@
             var val = $obj.text();
             var newDate = utcToLocal(val);
             $obj.text(newDate);
+        });
+
+
+        $('.refresh').click(function(e) {
+            var id = e.currentTarget.id;
+
+            var ev = $(e.currentTarget.children[0]);
+            ev.addClass("fa-spin");
+
+            var url = createLocalUrl("/admin/schedulerun");
+            $.ajax({
+                type: 'POST',
+                data: {key:id},
+                url: url,
+                dataType: "json",
+                success: function (response) {
+                    if (response.result === true) {
+                        generateNotify("Success!", "success");
+                    } else {
+                        generateNotify(response.message, "warning");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+
         });
 
         $('#save')

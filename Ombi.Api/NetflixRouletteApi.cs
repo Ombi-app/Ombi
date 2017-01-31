@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Netflix;
@@ -43,10 +44,10 @@ namespace Ombi.Api
         private IApiRequest Api { get; }
         private Uri Endpoint => new Uri("http://netflixroulette.net/api/api.php");
 
-        public NetflixMovieResult GetMovies(string movieName, string year = null)
+        public NetflixMovieResult CheckNetflix(string title, string year = null)
         {
             var request = new RestRequest();
-            request.AddQueryParameter("title", movieName);
+            request.AddQueryParameter("title", title);
             if (!string.IsNullOrEmpty(year))
             {
                 request.AddQueryParameter("year", year);

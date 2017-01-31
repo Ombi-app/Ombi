@@ -98,10 +98,31 @@ namespace Ombi.Services.Notification
                             return;
                         }
 
-                        var localUser =
-                            users.FirstOrDefault( x =>
-                                    x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
-                                    x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+                        UserHelperModel localUser = null;
+                            //users.FirstOrDefault( x =>
+                            //        x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
+                            //        x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+                            
+                        foreach (var userHelperModel in users)
+                        {
+                            if (!string.IsNullOrEmpty(userHelperModel.Username))
+                            {
+                                if (userHelperModel.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    localUser = userHelperModel;
+                                    break;
+                                }
+                            }
+                            if (!string.IsNullOrEmpty(userHelperModel.UserAlias))
+                            {
+                                if (userHelperModel.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    localUser = userHelperModel;
+                                    break;
+                                }
+                            }
+                        }
+
 
                         // So if the request was from an alias, then we need to use the local user (since that contains the alias).
                         // If we do not have a local user, then we should be using the Plex user if that user exists.
@@ -152,8 +173,36 @@ namespace Ombi.Services.Notification
                 var users = UserHelper.GetUsersWithFeature(Features.RequestAddedNotification).ToList();
                 Log.Debug("Notifying Users Count {0}", users.Count);
 
-                var selectedUsers = users.Select(x => x.Username).Intersect(model.RequestedUsers, StringComparer.CurrentCultureIgnoreCase);
-                foreach (var user in selectedUsers)
+                // Get the usernames or alias depending if they have an alias
+                var userNamesWithFeature = users.Select(x => x.UsernameOrAlias).ToList();
+                Log.Debug("Users with the feature count {0}", userNamesWithFeature.Count);
+                Log.Debug("Usernames: ");
+                foreach (var u in userNamesWithFeature)
+                {
+                    Log.Debug(u);
+                }
+                
+                Log.Debug("Users in the requested model count: {0}", model.AllUsers.Count);
+                Log.Debug("usernames from model: ");
+                foreach (var modelAllUser in model.AllUsers)
+                {
+                    Log.Debug(modelAllUser);
+                }
+
+                if (model.AllUsers == null || !model.AllUsers.Any())
+                {
+                    Log.Debug("There are no users in the model.AllUsers, no users to notify");
+                    return;
+                }
+                var usersToNotify = userNamesWithFeature.Intersect(model.AllUsers, StringComparer.CurrentCultureIgnoreCase).ToList();
+
+                if (!usersToNotify.Any())
+                {
+                    Log.Debug("Could not find any users after the .Intersect()");
+                }
+
+                Log.Debug("Users being notified for this request count {0}", users.Count);
+                foreach (var user in usersToNotify)
                 {
                     Log.Info("Notifying user {0}", user);
                     if (user.Equals(adminUsername, StringComparison.CurrentCultureIgnoreCase))
