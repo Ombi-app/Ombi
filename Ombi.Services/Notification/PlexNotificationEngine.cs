@@ -103,10 +103,31 @@ namespace Ombi.Services.Notification
                             return;
                         }
 
-                        var localUser =
-                            users.FirstOrDefault( x =>
-                                    x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
-                                    x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+                        UserHelperModel localUser = null;
+                            //users.FirstOrDefault( x =>
+                            //        x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase) ||
+                            //        x.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase));
+                            
+                        foreach (var userHelperModel in users)
+                        {
+                            if (!string.IsNullOrEmpty(userHelperModel.Username))
+                            {
+                                if (userHelperModel.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    localUser = userHelperModel;
+                                    break;
+                                }
+                            }
+                            if (!string.IsNullOrEmpty(userHelperModel.UserAlias))
+                            {
+                                if (userHelperModel.UserAlias.Equals(user, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    localUser = userHelperModel;
+                                    break;
+                                }
+                            }
+                        }
+
 
                         // So if the request was from an alias, then we need to use the local user (since that contains the alias).
                         // If we do not have a local user, then we should be using the Plex user if that user exists.
