@@ -171,6 +171,7 @@ namespace Ombi.Services.Notification
             try
             {
                 var settings = await PlexSettings.GetSettingsAsync();
+                
                 var plexUser = PlexApi.GetUsers(settings.PlexAuthToken); // TODO emby
                 var userAccount = PlexApi.GetAccount(settings.PlexAuthToken);
                 var localUsers = UserHelper.GetUsers().ToList();
