@@ -130,6 +130,7 @@ namespace Ombi.Services.Notification
                 var embySettings = await EmbySettings.GetSettingsAsync();
                 var embyUsers = EmbyApi.GetUsers(embySettings.FullUri, embySettings.ApiKey);
                 var userAccount = embyUsers.FirstOrDefault(x => x.Policy.IsAdministrator);
+                var localUsers = UserHelper.GetUsers().ToList();
 
                 var adminUsername = userAccount.Name ?? string.Empty;
 
@@ -179,9 +180,15 @@ namespace Ombi.Services.Notification
                     var email = embyUsers.FirstOrDefault(x => x.Name.Equals(user, StringComparison.CurrentCultureIgnoreCase));
                     if (email == null)
                     {
-                        Log.Info("There is no email address for this Emby user, cannot send notification");
-                        // We do not have a emby user that requested this!
-                        continue;
+                        // Local User?
+                        var local = localUsers.FirstOrDefault(x => x.UsernameOrAlias.Equals(user));
+                        if (local != null)
+                        {
+
+                            Log.Info("Sending notification to: {0} at: {1}, for title: {2}", local.UsernameOrAlias, local.EmailAddress, model.Title);
+                            await PublishUserNotification(local.UsernameOrAlias, local.EmailAddress, model.Title, model.PosterPath, type, model.Type);
+                            continue;
+                        }
                     }
 
                     Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Name, embyUser.EmailAddress, model.Title); 

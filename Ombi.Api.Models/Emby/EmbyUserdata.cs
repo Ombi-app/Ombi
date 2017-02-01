@@ -31,7 +31,7 @@ namespace Ombi.Api.Models.Emby
 {
     public class EmbyUserdata
     {
-        public int PlaybackPositionTicks { get; set; }
+        public double PlaybackPositionTicks { get; set; }
         public int PlayCount { get; set; }
         public bool IsFavorite { get; set; }
         public bool Played { get; set; }

@@ -69,7 +69,10 @@ namespace Ombi.Services.Jobs
         public void CacheContent()
         {
             var embySettings = Emby.GetSettings();
-
+            if (!embySettings.Enable)
+            {
+                return;
+            }
             if (!ValidateSettings(embySettings))
             {
                 Log.Debug("Validation of emby settings failed.");

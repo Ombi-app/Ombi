@@ -171,8 +171,10 @@ namespace Ombi.Services.Notification
             try
             {
                 var settings = await PlexSettings.GetSettingsAsync();
-                var plexUser = PlexApi.GetUsers(settings.PlexAuthToken);
+                
+                var plexUser = PlexApi.GetUsers(settings.PlexAuthToken); // TODO emby
                 var userAccount = PlexApi.GetAccount(settings.PlexAuthToken);
+                var localUsers = UserHelper.GetUsers().ToList();
 
                 var adminUsername = userAccount.Username ?? string.Empty;
 
@@ -219,11 +221,17 @@ namespace Ombi.Services.Notification
                     }
 
                     var email = plexUser.User.FirstOrDefault(x => x.Username.Equals(user, StringComparison.CurrentCultureIgnoreCase));
-                    if (email == null)
+                    if (email == null) // This is not a Plex User
                     {
-                        Log.Info("There is no email address for this Plex user, cannot send notification");
-                        // We do not have a plex user that requested this!
-                        continue;
+                        // Local User?
+                        var local = localUsers.FirstOrDefault(x => x.UsernameOrAlias.Equals(user));
+                        if (local != null)
+                        {
+
+                            Log.Info("Sending notification to: {0} at: {1}, for title: {2}", local.UsernameOrAlias, local.EmailAddress, model.Title);
+                            await PublishUserNotification(local.UsernameOrAlias, local.EmailAddress, model.Title, model.PosterPath, type, model.Type);
+                            continue;
+                        }
                     }
 
                     Log.Info("Sending notification to: {0} at: {1}, for title: {2}", email.Username, email.Email, model.Title);
