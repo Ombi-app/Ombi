@@ -17,11 +17,9 @@ ____
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
 * Easily manage your requests
-
-* User management system (supports plex.tv accounts and local accounts) [NEW]
-* Sending newsletters [NEW]
-* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline) [NEW]
-
+* User management system (supports plex.tv accounts and local accounts)
+* Sending newsletters
+* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline)
 * Allow your users to report issues and manage them separately
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
 * Allow your users to get notifications!
@@ -35,9 +33,12 @@ Here some of the features Ombi has:
 ### Integration 
 We integrate with the following applications:
 * Plex server 1.2 (and higher)
+* Emby (beta)
 * Sonarr
 * SickRage
 * CouchPotato
+* Radarr (beta)
+* Watcher (beta)
 * Headphones
 
 ### Notifications
@@ -46,6 +47,7 @@ Supported notifications:
 * Pushbullet
 * Pushover
 * Slack
+* Discord
 * Weekly Recently Added email notification to all of your Plex Users!
 
 # Feature Requests
