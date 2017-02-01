@@ -81,7 +81,10 @@ namespace Ombi.Services.Jobs
         public void CheckAndUpdateAll()
         {
             var embySettings = Emby.GetSettings();
-
+            if (!embySettings.Enable)
+            {
+                return;
+            }
             if (!ValidateSettings(embySettings))
             {
                 Log.Debug("Validation of the Emby settings failed.");
