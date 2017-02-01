@@ -4,6 +4,7 @@ namespace Ombi.Services.Jobs
 {
     public interface IMassEmail
     {
-        void MassEmailAdminTest();
+        void Execute(IJobExecutionContext context);
+        void MassEmailAdminTest(string html);
     }
 }

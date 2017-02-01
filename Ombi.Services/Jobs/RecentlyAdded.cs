@@ -111,11 +111,14 @@ namespace Ombi.Services.Jobs
             var settings = NewsletterSettings.GetSettings();
             Start(settings, true);
         }
-        public void MassEmailAdminTest()
+        public void MassEmailAdminTest(string html)
         {
-            Log.Debug("Starting Test Newsletter");
+            Log.Debug("Starting Mass Email Test");
             var settings = NewsletterSettings.GetSettings();
-            Start(settings, true);
+            var plexSettings = PlexSettings.GetSettings();
+            var template = new MassEmailTemplate();
+            var body = template.LoadTemplate(html);
+            Send(settings, body, plexSettings, true);
         }
 
         private void Start(NewletterSettings newletterSettings, bool testEmail = false)

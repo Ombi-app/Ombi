@@ -124,7 +124,7 @@ namespace Ombi.UI.Modules.Admin
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded, IMassEmail massEmail,
              ISettingsService<WatcherSettings> watcherSettings ,
              ISettingsService<DiscordNotificationSettings> discord,
              IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi,
@@ -159,6 +159,7 @@ namespace Ombi.UI.Modules.Admin
             Analytics = analytics;
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
+            MassEmail = massEmail;
             WatcherSettings = watcherSettings;
             DiscordSettings = discord;
             DiscordApi = discordapi;
@@ -1252,7 +1253,7 @@ namespace Ombi.UI.Modules.Admin
             try
             {
                 Log.Debug("Clicked Admin Mass Email Test");
-                RecentlyAdded.RecentlyAddedAdminTest();
+                MassEmail.MassEmailAdminTest("Dhruv's Test Email");
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
             }
             catch (Exception e)
