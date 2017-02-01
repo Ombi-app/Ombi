@@ -28,17 +28,17 @@
             </div>
             <div class="form-group">
 
-              <br>
+                <br>
                 <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
-              <small>You can add multiple email addresses by using the ; delimiter</small>
-<div>
+                <small>You can add multiple email addresses by using the ; delimiter</small>
+                <div>
                     <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
                 </div>
             </div>
 
             <div class="form-group">
                 <div>
-                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="spinner"></div></button>
+                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="testEmailSpinner"></div></button>
                 </div>
             </div>
 
@@ -46,13 +46,30 @@
             <br />
             <div class="form-group">
                 <div>
-                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    <button type="submit" id="save" class="btn btn-primary-outline">Save</button>
                 </div>
             </div>
             <!-- Email Nofication Section -->
 
         </fieldset>
 
+    </form>
+    <form id="massemail" class="form-horizontal">
+        <fieldset>
+            <legend>Mass Email</legend>
+            <div class="form-group">
+                <label for="massEmailBody" class="control-label">Send mass email to all users who recieve newsletter</label>
+
+                <textarea id="massEmailBody" class="form-control" rows="5"></textarea>
+                <small>Supports HTML</small>
+
+            </div>
+            <div class="form-group">
+                <div>
+                    <button id="sendMassEmailBtn" class="btn btn-primary-outline">Send Mass Email<div id="sendMassEmailSpinner"></div></button>
+                </div>
+            </div>
+        </fieldset>
     </form>
 </div>
 
@@ -90,8 +107,8 @@
         $('#recentlyAddedBtn').click(function (e) {
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+            var url = createBaseUrl(base, '/admin/testnewsletteradminemail');
+            $('#testEmailSpinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: "post",
                 url: url,
@@ -99,17 +116,45 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#spinner').attr("class", "fa fa-check");
+                        $('#testEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#spinner').attr("class", "fa fa-times");
+                        $('#testEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
-                    $('#spinner').attr("class", "fa fa-times");
+                    $('#testEmailSpinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+
+        $('#sendMassEmailBtn').click(function (e) {
+            e.preventDefault();
+            var base = '@Html.GetBaseUrl()';
+            var url = createBaseUrl(base, '/admin/testmassadminemail');
+            $('#sendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
+            $.ajax({
+                type: "post",
+                url: url,
+                data: $("#massEmailBody").val(),
+                dataType: "json",
+                success: function (response) {
+                    if (response) {
+                        generateNotify(response.message, "success");
+                        $('#sendMassEmailSpinner').attr("class", "fa fa-check");
+                    } else {
+
+                        generateNotify(response.message, "danger");
+                        $('#sendMassEmailSpinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                    $('#sendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });

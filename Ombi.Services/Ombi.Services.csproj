@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IEmbyNotificationEngine.cs" />
+    <Compile Include="Interfaces\IMassEmail.cs" />
     <Compile Include="Interfaces\IPlexNotificationEngine.cs" />
     <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />

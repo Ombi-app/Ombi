@@ -48,7 +48,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded
+    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded, IMassEmail
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email, IJobRecord rec,
@@ -105,7 +105,13 @@ namespace Ombi.Services.Jobs
             Start();
         }
 
-        public void Test()
+        public void RecentlyAddedAdminTest()
+        {
+            Log.Debug("Starting Recently Added Newsletter Test");
+            var settings = NewsletterSettings.GetSettings();
+            Start(settings, true);
+        }
+        public void MassEmailAdminTest()
         {
             Log.Debug("Starting Test Newsletter");
             var settings = NewsletterSettings.GetSettings();
