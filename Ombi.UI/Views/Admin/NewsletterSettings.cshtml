@@ -66,6 +66,11 @@
             </div>
             <div class="form-group">
                 <div>
+                    <button id="testSendMassEmailBtn" class="btn btn-primary-outline">Send Test to Admin<div id="testSendMassEmailSpinner"></div></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
                     <button id="sendMassEmailBtn" class="btn btn-primary-outline">Send Mass Email (WIP Needs Backend Code Still)<div id="sendMassEmailSpinner"></div></button>
                 </div>
             </div>
@@ -116,26 +121,26 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#testEmailSpinner').attr("class", "fa fa-check");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#testEmailSpinner').attr("class", "fa fa-times");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
-                    $('#testEmailSpinner').attr("class", "fa fa-times");
+                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });
 
-        $('#sendMassEmailBtn').click(function (e) {
+        $('#testSendMassEmailBtn').click(function (e) {
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
             var url = createBaseUrl(base, '/admin/testmassadminemail');
-            $('#sendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
+            $('#testSendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: "post",
                 url: url,
@@ -144,17 +149,17 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#sendMassEmailSpinner').attr("class", "fa fa-check");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#sendMassEmailSpinner').attr("class", "fa fa-times");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
-                    $('#sendMassEmailSpinner').attr("class", "fa fa-times");
+                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });
