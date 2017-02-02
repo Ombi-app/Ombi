@@ -82,6 +82,11 @@ namespace Ombi.Services.Jobs
 
             var plexSettings = Plex.GetSettings();
 
+            if (!plexSettings.Enable)
+            {
+                return;
+            }
+
             if (!ValidateSettings(plexSettings))
             {
                 Log.Debug("Validation of the plex settings failed.");
