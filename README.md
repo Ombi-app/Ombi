@@ -12,7 +12,7 @@ ____
 |----------|:---------------------------:|:----------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)
 | Travis   | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/master.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/EAP.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/dev.svg)](https://travis-ci.org/tidusjar/Ombi)
-
+| Download | Download button             |       Download button        |   Download button            |
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
