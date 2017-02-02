@@ -1252,8 +1252,16 @@ namespace Ombi.UI.Modules.Admin
         {
             try
             {
+                var settings = this.Bind<MassEmailSettings>();
                 Log.Debug("Clicked Admin Mass Email Test");
-                MassEmail.MassEmailAdminTest("Dhruv's Test Email");
+                if (settings.Subject == null) {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Subject" });
+                }
+                if (settings.Body == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Body" });
+                }
+                MassEmail.MassEmailAdminTest(settings.Body.Replace("\n", "<br/>"), settings.Subject);
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
             }
             catch (Exception e)
@@ -1266,9 +1274,18 @@ namespace Ombi.UI.Modules.Admin
         {
             try
             {
-                Log.Debug("Clicked Send Mass Email");
-                RecentlyAdded.RecentlyAddedAdminTest();
-                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
+                var settings = this.Bind<MassEmailSettings>();
+                Log.Debug("Clicked Admin Mass Email Test");
+                if (settings.Subject == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Subject" });
+                }
+                if (settings.Body == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Body" });
+                }
+                MassEmail.SendMassEmail(settings.Body.Replace("\n", "<br/>"), settings.Subject);
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to All users" });
             }
             catch (Exception e)
             {
