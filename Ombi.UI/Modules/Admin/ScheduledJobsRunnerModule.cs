@@ -142,7 +142,7 @@ namespace Ombi.UI.Modules.Admin
             }
             if (key.Equals(JobNames.RecentlyAddedEmail, StringComparison.CurrentCultureIgnoreCase))
             {
-                RecentlyAdded.Start();
+                RecentlyAdded.StartNewsLetter();
             }
             if (key.Equals(JobNames.FaultQueueHandler, StringComparison.CurrentCultureIgnoreCase))
             {

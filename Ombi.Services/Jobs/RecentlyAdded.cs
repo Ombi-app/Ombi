@@ -67,8 +67,6 @@ namespace Ombi.Services.Jobs
         private IPlexApi Api { get; }
         private TvMazeApi TvApi = new TvMazeApi();
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
-        private const int MetadataTypeTv = 4;
-        private const int MetadataTypeMovie = 1;
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<NewletterSettings> NewsletterSettings { get; }
@@ -78,7 +76,7 @@ namespace Ombi.Services.Jobs
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public void Start()
+        public void StartNewsLetter()
         {
             try
             {
@@ -88,7 +86,7 @@ namespace Ombi.Services.Jobs
                     return;
                 }
                 JobRecord.SetRunning(true, JobNames.RecentlyAddedEmail);
-                Start(settings);
+                StartNewsLetter(settings);
             }
             catch (Exception e)
             {
@@ -102,35 +100,33 @@ namespace Ombi.Services.Jobs
         }
         public void Execute(IJobExecutionContext context)
         {
-            Start();
+            StartNewsLetter();
         }
 
         public void RecentlyAddedAdminTest()
         {
             Log.Debug("Starting Recently Added Newsletter Test");
             var settings = NewsletterSettings.GetSettings();
-            Start(settings, true);
+            StartNewsLetter(settings, true);
         }
+
         public void MassEmailAdminTest(string html, string subject)
         {
             Log.Debug("Starting Mass Email Test");
-            var settings = NewsletterSettings.GetSettings();
-            var plexSettings = PlexSettings.GetSettings();
             var template = new MassEmailTemplate();
             var body = template.LoadTemplate(html);
-            Send(settings, body, plexSettings, true, subject);
+            SendMassEmail(body, subject, true);
         }
+
         public void SendMassEmail(string html, string subject)
         {
             Log.Debug("Starting Mass Email Test");
-            var settings = NewsletterSettings.GetSettings();
-            var plexSettings = PlexSettings.GetSettings();
             var template = new MassEmailTemplate();
             var body = template.LoadTemplate(html);
-            Send(settings, body, plexSettings, false, subject);
+            SendMassEmail(body, subject, false);
         }
 
-        private void Start(NewletterSettings newletterSettings, bool testEmail = false)
+        private void StartNewsLetter(NewletterSettings newletterSettings, bool testEmail = false)
         {
             var sb = new StringBuilder();
             var plexSettings = PlexSettings.GetSettings();
@@ -222,7 +218,7 @@ namespace Ombi.Services.Jobs
 
             string escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
             Log.Debug(escapedHtml);
-            Send(newletterSettings, escapedHtml, plexSettings, testEmail);
+            SendNewsletter(newletterSettings, escapedHtml, plexSettings, testEmail);
         }
 
         private void GenerateMovieHtml(List<RecentlyAddedChild> movies, PlexSettings plexSettings, StringBuilder sb)
@@ -457,9 +453,49 @@ namespace Ombi.Services.Jobs
             sb.Append("</table><br /><br />");
         }
 
-        private void Send(NewletterSettings newletterSettings, string html, PlexSettings plexSettings, bool testEmail = false, string subject = "New Content on Plex!")
+
+        private void SendMassEmail(string html, string subject, bool testEmail)
         {
-            Log.Debug("Entering Send");
+            var settings = EmailSettings.GetSettings();
+
+            if (!settings.Enabled || string.IsNullOrEmpty(settings.EmailHost))
+            {
+                return;
+            }
+
+            var body = new BodyBuilder { HtmlBody = html, TextBody = "This email is only available on devices that support HTML." };
+
+            var message = new MimeMessage
+            {
+                Body = body.ToMessageBody(),
+                Subject = subject
+            };
+            Log.Debug("Created Plain/HTML MIME body");
+
+            if (!testEmail)
+            {
+                var users = UserHelper.GetUsers(); // Get all users
+                if (users != null)
+                {
+                    foreach (var user in users)
+                    {
+                        if (!string.IsNullOrEmpty(user.EmailAddress))
+                        {
+                            message.Bcc.Add(new MailboxAddress(user.Username, user.EmailAddress)); // BCC everyone
+                        }
+                    }
+                }
+            }
+            message.Bcc.Add(new MailboxAddress(settings.EmailUsername, settings.RecipientEmail)); // Include the admin
+
+            message.From.Add(new MailboxAddress(settings.EmailUsername, settings.EmailSender));
+            SendMail(settings, message);
+        }
+
+        // TODO Emby
+        private void SendNewsletter(NewletterSettings newletterSettings, string html, bool testEmail = false, string subject = "New Content on Plex!")
+        {
+            Log.Debug("Entering SendNewsletter");
             var settings = EmailSettings.GetSettings();
 
             if (!settings.Enabled || string.IsNullOrEmpty(settings.EmailHost))
@@ -506,6 +542,11 @@ namespace Ombi.Services.Jobs
             message.Bcc.Add(new MailboxAddress(settings.EmailUsername, settings.RecipientEmail)); // Include the admin
 
             message.From.Add(new MailboxAddress(settings.EmailUsername, settings.EmailSender));
+            SendMail(settings, message);
+        }
+
+        private void SendMail(EmailNotificationSettings settings, MimeMessage message)
+        {
             try
             {
                 using (var client = new SmtpClient())
