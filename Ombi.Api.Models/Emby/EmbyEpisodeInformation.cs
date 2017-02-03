@@ -49,7 +49,7 @@ namespace Ombi.Api.Models.Emby
         public object[] Taglines { get; set; }
         public object[] Genres { get; set; }
         public string[] SeriesGenres { get; set; }
-        public int CommunityRating { get; set; }
+        public float CommunityRating { get; set; }
         public int VoteCount { get; set; }
         public long RunTimeTicks { get; set; }
         public string PlayAccess { get; set; }

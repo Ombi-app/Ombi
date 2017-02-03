@@ -441,11 +441,15 @@ namespace Ombi.UI.Modules.Admin
         private async Task<Response> SavePlex()
         {
             var plexSettings = this.Bind<PlexSettings>();
-            var valid = this.Validate(plexSettings);
-            if (!valid.IsValid)
-            {
-                return Response.AsJson(valid.SendJsonError());
-            }
+
+			if (plexSettings.Enable)
+			{
+				var valid = this.Validate(plexSettings);
+				if (!valid.IsValid)
+				{
+					return Response.AsJson(valid.SendJsonError());
+				}
+			}
 
            
             if (plexSettings.Enable)
@@ -462,7 +466,7 @@ namespace Ombi.UI.Modules.Admin
                 }
             }
 
-            if (string.IsNullOrEmpty(plexSettings.MachineIdentifier))
+            if (string.IsNullOrEmpty(plexSettings.MachineIdentifier) && plexSettings.Enable)
             {
                 //Lookup identifier
                 var server = PlexApi.GetServer(plexSettings.PlexAuthToken);
@@ -1166,7 +1170,13 @@ namespace Ombi.UI.Modules.Admin
                 FaultQueueHandler = s.FaultQueueHandler,
                 PlexEpisodeCacher = s.PlexEpisodeCacher,
                 PlexUserChecker = s.PlexUserChecker,
-                UserRequestLimitResetter = s.UserRequestLimitResetter
+                UserRequestLimitResetter = s.UserRequestLimitResetter,
+				EmbyAvailabilityChecker = s.EmbyAvailabilityChecker,
+				EmbyContentCacher = s.EmbyContentCacher,
+				EmbyEpisodeCacher = s.EmbyEpisodeCacher,
+				EmbyUserChecker = s.EmbyUserChecker,
+				RadarrCacher = s.RadarrCacher,
+				WatcherCacher = s.WatcherCacher
             };
             return View["SchedulerSettings", model];
         }
