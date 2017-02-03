@@ -87,6 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Interfaces\IEmbyNotificationEngine.cs" />
+    <Compile Include="Interfaces\IMassEmail.cs" />
     <Compile Include="Interfaces\IPlexNotificationEngine.cs" />
     <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
     <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
+    <Compile Include="Jobs\Templates\MassEmailTemplate.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
     <Compile Include="Interfaces\IPlexContentCacher.cs" />
@@ -180,6 +182,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Jobs\Templates\MassEmailTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Jobs\Templates\RecentlyAddedTemplate.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
