@@ -6,7 +6,7 @@
     <h1>@UI.UserLogin_Title</h1>
     <div>
         <p>
-            @UI.UserLogin_Paragraph <span title="@UI.UserLogin_Paragraph_SpanHover"><i class="fa fa-question-circle"></i></span>
+            @string.Format(UI.UserLogin_Paragraph, Html.GetMediaServerName())
         </p>
     </div>
     <div id="contentBody">

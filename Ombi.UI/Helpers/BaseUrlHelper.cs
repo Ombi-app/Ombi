@@ -354,6 +354,12 @@ namespace Ombi.UI.Helpers
             return helper.Raw(GetCustomizationSettings().ApplicationName);
         }
 
+        public static IHtmlString GetMediaServerName(this HtmlHelpers helper)
+        {
+            var s = GetEmbySettings();
+            return helper.Raw(s.Enable ? "Emby" : "Plex");
+        }
+
         private static string GetBaseUrl()
         {
             return GetSettings().BaseUrl;
@@ -371,9 +377,19 @@ namespace Ombi.UI.Helpers
 
         private static CustomizationSettings GetCustomizationSettings()
         {
-            var returnValue = Cache.GetOrSet(CacheKeys.GetPlexRequestSettings, () =>
+            var returnValue = Cache.GetOrSet(CacheKeys.GetCustomizationSettings, () =>
             {
                 var settings = Locator.Resolve<ISettingsService<CustomizationSettings>>().GetSettings();
+                return settings;
+            });
+            return returnValue;
+        }
+
+        private static EmbySettings GetEmbySettings()
+        {
+            var returnValue = Cache.GetOrSet(CacheKeys.GetEmbySettings, () =>
+            {
+                var settings = Locator.Resolve<ISettingsService<EmbySettings>>().GetSettings();
                 return settings;
             });
             return returnValue;
