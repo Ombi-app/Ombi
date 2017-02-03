@@ -1146,6 +1146,8 @@ namespace Ombi.UI.Modules.Admin
             var emby = await EmbySettings.GetSettingsAsync();
             var plex = await PlexService.GetSettingsAsync();
 
+
+
             var dict = new Dictionary<string, DateTime>();
 
 
@@ -1158,7 +1160,24 @@ namespace Ombi.UI.Modules.Admin
                 }
                 else
                 {
-                    dict.Add(j.Name,j.LastRun);
+                    if (j.Name.Contains("Plex"))
+                    {
+                        if (plex.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else if (j.Name.Contains("Emby"))
+                    {
+                        if (emby.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else
+                    {
+                        dict.Add(j.Name, j.LastRun);
+                    }
                 }
 
             }

@@ -305,8 +305,8 @@ namespace Ombi.UI.Jobs
             var embyEpisode =
                 TriggerBuilder.Create()
                 .WithIdentity("EmbyEpisodeCacher", "Emby")
-				.StartNow()
-				//.StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                //.StartNow()
+                .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
                 .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyEpisodeCacher).RepeatForever())
                 .Build();
 
