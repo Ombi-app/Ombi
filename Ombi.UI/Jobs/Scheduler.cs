@@ -35,6 +35,7 @@ using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
+using Ombi.Services.Jobs.RecentlyAddedNewsletter;
 using Ombi.UI.Helpers;
 using Quartz;
 using Quartz.Impl;
@@ -70,7 +71,7 @@ namespace Ombi.UI.Jobs
                 JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                 JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
-                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
+                JobBuilder.Create<RecentlyAddedNewsletter>().WithIdentity("RecentlyAddedModel", "Email").Build(),
                 JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
                 JobBuilder.Create<RadarrCacher>().WithIdentity("RadarrCacher", "Cache").Build(),
 
@@ -304,8 +305,8 @@ namespace Ombi.UI.Jobs
             var embyEpisode =
                 TriggerBuilder.Create()
                 .WithIdentity("EmbyEpisodeCacher", "Emby")
-				.StartNow()
-				//.StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                //.StartNow()
+                .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
                 .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyEpisodeCacher).RepeatForever())
                 .Build();
 

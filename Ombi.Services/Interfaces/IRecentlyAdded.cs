@@ -6,6 +6,6 @@ namespace Ombi.Services.Jobs
     {
         void Execute(IJobExecutionContext context);
         void RecentlyAddedAdminTest();
-        void Start();
+        void StartNewsLetter();
     }
 }

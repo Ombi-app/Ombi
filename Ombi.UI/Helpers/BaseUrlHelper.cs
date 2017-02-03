@@ -314,6 +314,7 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
+
             var returnString = context.Request.Path == url ?
                                       $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>"
                                       : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
@@ -328,7 +329,14 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
-
+            if (url.Contains("issues"))
+            {
+                var custom = GetCustomizationSettings();
+                if (!custom.EnableIssues)
+                {
+                    return helper.Raw(string.Empty);
+                }
+            }
             var returnString = context.Request.Path == url
                 ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>"
                 : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";

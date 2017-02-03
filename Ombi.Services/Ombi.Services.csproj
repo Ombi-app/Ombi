@@ -108,6 +108,8 @@
     <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
     <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\EmbyRecentlyAddedNewsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\IEmbyAddedNewsletter.cs" />
     <Compile Include="Jobs\Templates\MassEmailTemplate.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
@@ -117,7 +119,7 @@
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\PlexContentCacher.cs" />
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
-    <Compile Include="Jobs\RecentlyAdded.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\RecentlyAddedNewsletter.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
     <Compile Include="Jobs\PlexUserChecker.cs" />
     <Compile Include="Jobs\StoreCleanup.cs" />

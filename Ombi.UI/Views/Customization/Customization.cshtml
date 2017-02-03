@@ -104,7 +104,8 @@
                 </div>
             </div>
 
-            @Html.Checkbox(Model.Settings.NewSearch, "NewSearch", "Use New Search")
+            @*@Html.Checkbox(Model.Settings.NewSearch, "NewSearch", "Use New Search")*@
+            @Html.Checkbox(Model.Settings.EnableIssues, "EnableIssues", "Enable Issues")
             <div class="form-group">
                 <div>
                     <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>

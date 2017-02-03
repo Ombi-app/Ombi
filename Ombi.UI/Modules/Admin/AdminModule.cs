@@ -42,6 +42,7 @@ using Nancy.Validation;
 using NLog;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Movie;
 using Ombi.Core;
 using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
@@ -823,6 +824,10 @@ namespace Ombi.UI.Modules.Admin
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            if (!settings.Enabled)
+            {
+                return Response.AsJson(new CouchPotatoProfiles{list = new List<ProfileList>()});
+            }
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
             // set the cache
@@ -1141,6 +1146,8 @@ namespace Ombi.UI.Modules.Admin
             var emby = await EmbySettings.GetSettingsAsync();
             var plex = await PlexService.GetSettingsAsync();
 
+
+
             var dict = new Dictionary<string, DateTime>();
 
 
@@ -1153,7 +1160,24 @@ namespace Ombi.UI.Modules.Admin
                 }
                 else
                 {
-                    dict.Add(j.Name,j.LastRun);
+                    if (j.Name.Contains("Plex"))
+                    {
+                        if (plex.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else if (j.Name.Contains("Emby"))
+                    {
+                        if (emby.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else
+                    {
+                        dict.Add(j.Name, j.LastRun);
+                    }
                 }
 
             }

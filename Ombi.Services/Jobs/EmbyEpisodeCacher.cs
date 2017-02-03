@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dapper;
 using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Emby;
@@ -65,7 +66,8 @@ namespace Ombi.Services.Jobs
 
         private const string TableName = "EmbyEpisodes";
 
-
+        // Note, once an episode exists, we store it and it always exists.
+        // We might want to look at checking if something has been removed from the server in the future.
         public void CacheEpisodes(EmbySettings settings)
         {
             var allEpisodes = EmbyApi.GetAllEpisodes(settings.ApiKey, settings.AdministratorId, settings.FullUri);
@@ -74,25 +76,40 @@ namespace Ombi.Services.Jobs
             {
                 var epInfo = EmbyApi.GetInformation(ep.Id, EmbyMediaType.Episode, settings.ApiKey,
                     settings.AdministratorId, settings.FullUri);
-				if (epInfo.EpisodeInformation?.ProviderIds?.Tvdb == null)
-				{
-					continue;
-				}
-                model.Add(new EmbyEpisodes
+                if (epInfo.EpisodeInformation?.ProviderIds?.Tvdb == null)
                 {
-                    EmbyId = ep.Id,
-                    EpisodeNumber = ep.IndexNumber,
-                    SeasonNumber = ep.ParentIndexNumber,
-                    EpisodeTitle = ep.Name,
-                    ParentId = ep.SeriesId,
-                    ShowTitle = ep.SeriesName,
-                    ProviderId = epInfo.EpisodeInformation.ProviderIds.Tvdb
+                    continue;
+                }
+
+                // Check it this episode exists
+                var item = Repo.Custom(connection =>
+                {
+                    connection.Open();
+                    var media =
+                        connection.QueryFirstOrDefault<EmbyEpisodes>(
+                            "select * from EmbyEpisodes where ProviderId = @ProviderId",
+                            new {ProviderId = epInfo.EpisodeInformation?.ProviderIds?.Tvdb});
+                    connection.Dispose();
+                    return media;
                 });
+
+                if (item == null)
+                {
+                    // add it
+                    model.Add(new EmbyEpisodes
+                    {
+                        EmbyId = ep.Id,
+                        EpisodeNumber = ep.IndexNumber,
+                        SeasonNumber = ep.ParentIndexNumber,
+                        EpisodeTitle = ep.Name,
+                        ParentId = ep.SeriesId,
+                        ShowTitle = ep.SeriesName,
+                        ProviderId = epInfo.EpisodeInformation.ProviderIds.Tvdb,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
             }
-
-            // Delete all of the current items
-            Repo.DeleteAll(TableName);
-
+        
             // Insert the new items
             var result = Repo.BatchInsert(model, TableName, typeof(EmbyEpisodes).GetPropertyNames());
 

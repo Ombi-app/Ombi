@@ -30,6 +30,7 @@
 using System.Data;
 using NLog;
 using Ombi.Core.SettingModels;
+using Ombi.Store;
 
 namespace Ombi.Core.Migration.Migrations
 {
@@ -52,8 +53,15 @@ namespace Ombi.Core.Migration.Migrations
         public void Start(IDbConnection con)
         {
             UpdatePlexSettings();
-            //UpdateCustomSettings(); Turned off the migration for now until the search has been improved on.
-            //UpdateSchema(con, Version);
+            UpdateCustomSettings();
+            AddNewColumns(con);
+            UpdateSchema(con, Version);
+        }
+
+        private void AddNewColumns(IDbConnection con)
+        {
+            con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
+            con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
         }
 
         private void UpdatePlexSettings()
@@ -68,7 +76,7 @@ namespace Ombi.Core.Migration.Migrations
         {
 
             var settings = Customization.GetSettings();
-            settings.NewSearch = true; // Use the new search
+            settings.EnableIssues = true; 
 
             Customization.SaveSettings(settings);
 
