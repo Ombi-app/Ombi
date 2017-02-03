@@ -52,8 +52,8 @@ namespace Ombi.Core.Migration.Migrations
         public void Start(IDbConnection con)
         {
             UpdatePlexSettings();
-            //UpdateCustomSettings(); Turned off the migration for now until the search has been improved on.
-            //UpdateSchema(con, Version);
+            UpdateCustomSettings();
+            UpdateSchema(con, Version);
         }
 
         private void UpdatePlexSettings()
@@ -68,7 +68,7 @@ namespace Ombi.Core.Migration.Migrations
         {
 
             var settings = Customization.GetSettings();
-            settings.NewSearch = true; // Use the new search
+            settings.EnableIssues = true; 
 
             Customization.SaveSettings(settings);
 
