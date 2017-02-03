@@ -48,7 +48,7 @@ using Quartz;
 
 namespace Ombi.Services.Jobs
 {
-    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded
+    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded, IMassEmail
     {
         public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email, IJobRecord rec,
@@ -105,11 +105,29 @@ namespace Ombi.Services.Jobs
             Start();
         }
 
-        public void Test()
+        public void RecentlyAddedAdminTest()
         {
-            Log.Debug("Starting Test Newsletter");
+            Log.Debug("Starting Recently Added Newsletter Test");
             var settings = NewsletterSettings.GetSettings();
             Start(settings, true);
+        }
+        public void MassEmailAdminTest(string html, string subject)
+        {
+            Log.Debug("Starting Mass Email Test");
+            var settings = NewsletterSettings.GetSettings();
+            var plexSettings = PlexSettings.GetSettings();
+            var template = new MassEmailTemplate();
+            var body = template.LoadTemplate(html);
+            Send(settings, body, plexSettings, true, subject);
+        }
+        public void SendMassEmail(string html, string subject)
+        {
+            Log.Debug("Starting Mass Email Test");
+            var settings = NewsletterSettings.GetSettings();
+            var plexSettings = PlexSettings.GetSettings();
+            var template = new MassEmailTemplate();
+            var body = template.LoadTemplate(html);
+            Send(settings, body, plexSettings, false, subject);
         }
 
         private void Start(NewletterSettings newletterSettings, bool testEmail = false)
@@ -439,7 +457,7 @@ namespace Ombi.Services.Jobs
             sb.Append("</table><br /><br />");
         }
 
-        private void Send(NewletterSettings newletterSettings, string html, PlexSettings plexSettings, bool testEmail = false)
+        private void Send(NewletterSettings newletterSettings, string html, PlexSettings plexSettings, bool testEmail = false, string subject = "New Content on Plex!")
         {
             Log.Debug("Entering Send");
             var settings = EmailSettings.GetSettings();
@@ -454,7 +472,7 @@ namespace Ombi.Services.Jobs
             var message = new MimeMessage
             {
                 Body = body.ToMessageBody(),
-                Subject = "New Content on Plex!",
+                Subject = subject
             };
             Log.Debug("Created Plain/HTML MIME body");
 

@@ -74,6 +74,10 @@ namespace Ombi.Services.Jobs
             {
                 var epInfo = EmbyApi.GetInformation(ep.Id, EmbyMediaType.Episode, settings.ApiKey,
                     settings.AdministratorId, settings.FullUri);
+				if (epInfo.EpisodeInformation?.ProviderIds?.Tvdb == null)
+				{
+					continue;
+				}
                 model.Add(new EmbyEpisodes
                 {
                     EmbyId = ep.Id,
@@ -82,7 +86,7 @@ namespace Ombi.Services.Jobs
                     EpisodeTitle = ep.Name,
                     ParentId = ep.SeriesId,
                     ShowTitle = ep.SeriesName,
-                    ProviderId = epInfo.EpisodeInformation.ProviderIds.Tmdb
+                    ProviderId = epInfo.EpisodeInformation.ProviderIds.Tvdb
                 });
             }
 
@@ -108,15 +112,6 @@ namespace Ombi.Services.Jobs
                     return;
                 }
 
-                var jobs = Job.GetJobs();
-                var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EmbyEpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
-                if (job != null)
-                {
-                    if (job.LastRun > DateTime.Now.AddHours(-11)) // If it's been run in the last 11 hours
-                    {
-                        return;
-                    }
-                }
                 Job.SetRunning(true, JobNames.EmbyEpisodeCacher);
                 CacheEpisodes(s);
             }
@@ -141,15 +136,6 @@ namespace Ombi.Services.Jobs
                     return;
                 }
 
-                var jobs = Job.GetJobs();
-                var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EmbyEpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
-                if (job != null)
-                {
-                    if (job.LastRun > DateTime.Now.AddHours(-11)) // If it's been run in the last 11 hours
-                    {
-                        return;
-                    }
-                }
                 Job.SetRunning(true, JobNames.EmbyEpisodeCacher);
                 CacheEpisodes(s);
             }
