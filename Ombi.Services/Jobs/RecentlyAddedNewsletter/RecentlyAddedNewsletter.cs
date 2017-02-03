@@ -46,14 +46,15 @@ using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs.Templates;
 using Quartz;
 
-namespace Ombi.Services.Jobs
+namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 {
-    public class RecentlyAdded : HtmlTemplateGenerator, IJob, IRecentlyAdded, IMassEmail
+    public class RecentlyAddedNewsletter : HtmlTemplateGenerator, IJob, IRecentlyAdded, IMassEmail
     {
-        public RecentlyAdded(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
+        public RecentlyAddedNewsletter(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email, IJobRecord rec,
                ISettingsService<NewletterSettings> newsletter,
-            IPlexReadOnlyDatabase db, IUserHelper userHelper)
+            IPlexReadOnlyDatabase db, IUserHelper userHelper, IEmbyAddedNewsletter embyNews,
+            ISettingsService<EmbySettings> embyS)
         {
             JobRecord = rec;
             Api = api;
@@ -62,17 +63,21 @@ namespace Ombi.Services.Jobs
             NewsletterSettings = newsletter;
             PlexDb = db;
             UserHelper = userHelper;
+            EmbyNewsletter = embyNews;
+            EmbySettings = embyS;
         }
 
         private IPlexApi Api { get; }
         private TvMazeApi TvApi = new TvMazeApi();
         private readonly TheMovieDbApi _movieApi = new TheMovieDbApi();
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<NewletterSettings> NewsletterSettings { get; }
         private IJobRecord JobRecord { get; }
         private IPlexReadOnlyDatabase PlexDb { get; }
         private IUserHelper UserHelper { get; }
+        private IEmbyAddedNewsletter EmbyNewsletter { get; }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -128,97 +133,107 @@ namespace Ombi.Services.Jobs
 
         private void StartNewsLetter(NewletterSettings newletterSettings, bool testEmail = false)
         {
-            var sb = new StringBuilder();
-            var plexSettings = PlexSettings.GetSettings();
-            Log.Debug("Got Plex Settings");
-
-            var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
-            Log.Debug("Getting Plex Library Sections");
-
-            var tvSections = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
-            Log.Debug("Filtered sections for TV");
-            var movieSection = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
-            Log.Debug("Filtered sections for Movies");
-
-            var plexVersion = Api.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri).Version;
-
-            var html = string.Empty;
-            if (plexVersion.StartsWith("1.3"))
+            var embySettings = EmbySettings.GetSettings();
+            if (embySettings.Enable)
             {
-                var tvMetadata = new List<Metadata>();
-                var movieMetadata = new List<Metadata>();
-                foreach (var tvSection in tvSections)
-                {
-                    var item = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
-                        tvSection?.Key);
-                    if (item?.MediaContainer?.Metadata != null)
-                    {
-                        tvMetadata.AddRange(item?.MediaContainer?.Metadata);
-                    }
-                }
-                Log.Debug("Got RecentlyAdded TV Shows");
-                foreach (var movie in movieSection)
-                {
-                    var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
-                    if (recentlyAddedMovies?.MediaContainer?.Metadata != null)
-                    {
-                        movieMetadata.AddRange(recentlyAddedMovies?.MediaContainer?.Metadata);
-                    }
-                }
-                Log.Debug("Got RecentlyAdded Movies");
+                var html = EmbyNewsletter.GetNewsletterHtml(testEmail);
 
-                Log.Debug("Started Generating Movie HTML");
-                GenerateMovieHtml(movieMetadata, plexSettings, sb);
-                Log.Debug("Finished Generating Movie HTML");
-                Log.Debug("Started Generating TV HTML");
-                GenerateTvHtml(tvMetadata, plexSettings, sb);
-                Log.Debug("Finished Generating TV HTML");
-
-                var template = new RecentlyAddedTemplate();
-                html = template.LoadTemplate(sb.ToString());
-                Log.Debug("Loaded the template");
+                var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
+                Log.Debug(escapedHtml);
+                SendNewsletter(newletterSettings, escapedHtml, testEmail);
             }
             else
             {
-                // Old API
-                var tvChild = new List<RecentlyAddedChild>();
-                var movieChild = new List<RecentlyAddedChild>();
-                foreach (var tvSection in tvSections)
+                var sb = new StringBuilder();
+                var plexSettings = PlexSettings.GetSettings();
+                Log.Debug("Got Plex Settings");
+
+                var libs = Api.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
+                Log.Debug("Getting Plex Library Sections");
+
+                var tvSections = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
+                Log.Debug("Filtered sections for TV");
+                var movieSection = libs.Directories.Where(x => x.type.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase)); // We could have more than 1 lib
+                Log.Debug("Filtered sections for Movies");
+
+                var plexVersion = Api.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri).Version;
+
+                var html = string.Empty;
+                if (plexVersion.StartsWith("1.3"))
                 {
-                    var recentlyAddedTv = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
-                    if (recentlyAddedTv?._children != null)
+                    var tvMetadata = new List<Metadata>();
+                    var movieMetadata = new List<Metadata>();
+                    foreach (var tvSection in tvSections)
                     {
-                        tvChild.AddRange(recentlyAddedTv?._children);
+                        var item = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                            tvSection?.Key);
+                        if (item?.MediaContainer?.Metadata != null)
+                        {
+                            tvMetadata.AddRange(item?.MediaContainer?.Metadata);
+                        }
                     }
-                }
+                    Log.Debug("Got RecentlyAdded TV Shows");
+                    foreach (var movie in movieSection)
+                    {
+                        var recentlyAddedMovies = Api.RecentlyAdded(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
+                        if (recentlyAddedMovies?.MediaContainer?.Metadata != null)
+                        {
+                            movieMetadata.AddRange(recentlyAddedMovies?.MediaContainer?.Metadata);
+                        }
+                    }
+                    Log.Debug("Got RecentlyAdded Movies");
 
-                Log.Debug("Got RecentlyAdded TV Shows");
-                foreach (var movie in movieSection)
+                    Log.Debug("Started Generating Movie HTML");
+                    GenerateMovieHtml(movieMetadata, plexSettings, sb);
+                    Log.Debug("Finished Generating Movie HTML");
+                    Log.Debug("Started Generating TV HTML");
+                    GenerateTvHtml(tvMetadata, plexSettings, sb);
+                    Log.Debug("Finished Generating TV HTML");
+
+                    var template = new RecentlyAddedTemplate();
+                    html = template.LoadTemplate(sb.ToString());
+                    Log.Debug("Loaded the template");
+                }
+                else
                 {
-                    var recentlyAddedMovies = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
-                    if (recentlyAddedMovies?._children != null)
+                    // Old API
+                    var tvChild = new List<RecentlyAddedChild>();
+                    var movieChild = new List<RecentlyAddedChild>();
+                    foreach (var tvSection in tvSections)
                     {
-                        tvChild.AddRange(recentlyAddedMovies?._children);
+                        var recentlyAddedTv = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, tvSection?.Key);
+                        if (recentlyAddedTv?._children != null)
+                        {
+                            tvChild.AddRange(recentlyAddedTv?._children);
+                        }
                     }
+
+                    Log.Debug("Got RecentlyAdded TV Shows");
+                    foreach (var movie in movieSection)
+                    {
+                        var recentlyAddedMovies = Api.RecentlyAddedOld(plexSettings.PlexAuthToken, plexSettings.FullUri, movie?.Key);
+                        if (recentlyAddedMovies?._children != null)
+                        {
+                            tvChild.AddRange(recentlyAddedMovies?._children);
+                        }
+                    }
+                    Log.Debug("Got RecentlyAdded Movies");
+
+                    Log.Debug("Started Generating Movie HTML");
+                    GenerateMovieHtml(movieChild, plexSettings, sb);
+                    Log.Debug("Finished Generating Movie HTML");
+                    Log.Debug("Started Generating TV HTML");
+                    GenerateTvHtml(tvChild, plexSettings, sb);
+                    Log.Debug("Finished Generating TV HTML");
+
+                    var template = new RecentlyAddedTemplate();
+                    html = template.LoadTemplate(sb.ToString());
+                    Log.Debug("Loaded the template");
                 }
-                Log.Debug("Got RecentlyAdded Movies");
-
-                Log.Debug("Started Generating Movie HTML");
-                GenerateMovieHtml(movieChild, plexSettings, sb);
-                Log.Debug("Finished Generating Movie HTML");
-                Log.Debug("Started Generating TV HTML");
-                GenerateTvHtml(tvChild, plexSettings, sb);
-                Log.Debug("Finished Generating TV HTML");
-
-                var template = new RecentlyAddedTemplate();
-                html = template.LoadTemplate(sb.ToString());
-                Log.Debug("Loaded the template");
+                string escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
+                Log.Debug(escapedHtml);
+                SendNewsletter(newletterSettings, escapedHtml, testEmail);
             }
-
-
-            string escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
-            Log.Debug(escapedHtml);
-            SendNewsletter(newletterSettings, escapedHtml, testEmail);
         }
 
         private void GenerateMovieHtml(List<RecentlyAddedChild> movies, PlexSettings plexSettings, StringBuilder sb)

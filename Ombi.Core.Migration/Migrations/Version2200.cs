@@ -30,6 +30,7 @@
 using System.Data;
 using NLog;
 using Ombi.Core.SettingModels;
+using Ombi.Store;
 
 namespace Ombi.Core.Migration.Migrations
 {
@@ -53,7 +54,14 @@ namespace Ombi.Core.Migration.Migrations
         {
             UpdatePlexSettings();
             UpdateCustomSettings();
+            AddNewColumns(con);
             UpdateSchema(con, Version);
+        }
+
+        private void AddNewColumns(IDbConnection con)
+        {
+            con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
+            con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
         }
 
         private void UpdatePlexSettings()

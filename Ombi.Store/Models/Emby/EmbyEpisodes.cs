@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using Dapper.Contrib.Extensions;
 
 namespace Ombi.Store.Models.Emby
@@ -39,5 +40,6 @@ namespace Ombi.Store.Models.Emby
         public int SeasonNumber { get; set; }
         public string ParentId { get; set; }
         public string ProviderId { get; set; }
+        public DateTime AddedAt { get; set; }
     }
 }

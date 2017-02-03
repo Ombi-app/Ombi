@@ -103,6 +103,27 @@ namespace Ombi.Api
             return GetAll<EmbyEpisodeItem>("Episode", apiKey, userId, baseUri);
         }
 
+        public EmbyItemContainer<EmbyMovieInformation> GetCollection(string mediaId, string apiKey, string userId, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "emby/users/{userId}/items?parentId={mediaId}",
+                Method = Method.GET
+            };
+
+            request.AddUrlSegment("userId", userId);
+            request.AddUrlSegment("mediaId", mediaId);
+
+            AddHeaders(request, apiKey);
+
+
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetCollections for Emby, Retrying {0}", timespan), new[] {
+                TimeSpan.FromSeconds (1),
+                TimeSpan.FromSeconds(5)
+            });
+            return policy.Execute(() => Api.ExecuteJson<EmbyItemContainer<EmbyMovieInformation>>(request, baseUrl));
+        }
+
         public EmbyInformation GetInformation(string mediaId, EmbyMediaType type, string apiKey, string userId, Uri baseUri)
         {
             var request = new RestRequest

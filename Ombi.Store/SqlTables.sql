@@ -187,7 +187,8 @@ CREATE TABLE IF NOT EXISTS EmbyEpisodes
 	SeasonNumber						INTEGER NOT NULL,
 	EpisodeNumber						INTEGER NOT NULL,
 	ParentId							VARCHAR(100) NOT NULL,
-	ProviderId							VARCHAR(100) NOT NULL
+	ProviderId							VARCHAR(100) NOT NULL,
+	AddedAt								VARCHAR(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS EmbyEpisodes_Id ON EmbyEpisodes (Id);
 
@@ -198,9 +199,21 @@ CREATE TABLE IF NOT EXISTS EmbyContent
 	PremierDate							VARCHAR(100) NOT NULL,
 	EmbyId								VARCHAR(100) NOT NULL,
 	ProviderId							VARCHAR(100) NOT NULL,
-	Type								INTEGER NOT NULL
+	Type								INTEGER NOT NULL,
+	AddedAt								VARCHAR(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS EmbyEpisodes_Id ON EmbyEpisodes (Id);
+
+CREATE TABLE IF NOT EXISTS RecentlyAddedLog
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    ProviderId								VARCHAR(100) NOT NULL,
+    AddedAt								VARCHAR(100) NOT NULL
+
+);
+CREATE UNIQUE INDEX IF NOT EXISTS RecentlyAddedLog_Id ON RecentlyAddedLog (Id);
+
+CREATE INDEX IF NOT EXISTS RecentlyAddedLog_ProviderId ON RecentlyAddedLog (ProviderId);
 
 
 COMMIT;

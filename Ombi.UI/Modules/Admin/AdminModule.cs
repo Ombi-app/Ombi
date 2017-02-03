@@ -42,6 +42,7 @@ using Nancy.Validation;
 using NLog;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Movie;
 using Ombi.Core;
 using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
@@ -822,6 +823,10 @@ namespace Ombi.UI.Modules.Admin
             if (!valid.IsValid)
             {
                 return Response.AsJson(valid.SendJsonError());
+            }
+            if (!settings.Enabled)
+            {
+                return Response.AsJson(new CouchPotatoProfiles{list = new List<ProfileList>()});
             }
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
