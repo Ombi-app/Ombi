@@ -218,7 +218,7 @@ namespace Ombi.Services.Jobs
 
             string escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
             Log.Debug(escapedHtml);
-            SendNewsletter(newletterSettings, escapedHtml, plexSettings, testEmail);
+            SendNewsletter(newletterSettings, escapedHtml, testEmail);
         }
 
         private void GenerateMovieHtml(List<RecentlyAddedChild> movies, PlexSettings plexSettings, StringBuilder sb)
