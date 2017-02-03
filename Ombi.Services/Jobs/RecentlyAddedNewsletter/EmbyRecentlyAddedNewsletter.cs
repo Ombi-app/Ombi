@@ -106,7 +106,9 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var episodes = Episodes.GetAll().ToList();
             var movie = embyContent.Where(x => x.Type == EmbyMediaType.Movie).ToList();
 
-            var recentlyAdded = RecentlyAddedLog.GetAll();
+            var recentlyAdded = RecentlyAddedLog.GetAll().ToList();
+
+            var firstRun = !recentlyAdded.Any();
 
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
@@ -156,7 +158,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var html = template.LoadTemplate(sb.ToString());
             Log.Debug("Loaded the template");
 
-            if (!test)
+            if (!test || firstRun)
             {
                 foreach (var a in filteredMovies)
                 {
