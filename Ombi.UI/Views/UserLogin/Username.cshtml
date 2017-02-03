@@ -6,7 +6,7 @@
     <h1>@UI.UserLogin_Title</h1>
     <div>
         <p>
-            @string.Format(UI.UserLogin_Paragraph, Html.GetMediaServerName())
+            @string.Format(UI.UserLogin_Paragraph, Html.GetMediaServerName().ToHtmlString()).ToString()
         </p>
     </div>
     <div id="contentBody">
