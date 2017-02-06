@@ -283,11 +283,30 @@ namespace Ombi.UI.Helpers
 
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
+            var sb = new StringBuilder();
 
-            var asset = $"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon.ico\" />";
-            asset += $"<link rel=\"icon\" href=\"{content}/Content/favicon.ico\" type=\"image/ico\" />";
+            sb.Append($"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon/favicon.ico\" />");
+            sb.Append($"<link rel=\"icon\" href=\"{content}/Content/favicon/favicon.ico\" type=\"image/ico\" />");
 
-            return helper.Raw(asset);
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"{content}/Content/favicon/apple-icon-57x57.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"{content}/Content/favicon/apple-icon-60x60.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"{content}/Content/favicon/apple-icon-72x72.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"{content}/Content/favicon/apple-icon-76x76.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"{content}/Content/favicon/apple-icon-114x114.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"{content}/Content/favicon/apple-icon-120x120.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"{content}/Content/favicon/apple-icon-144x144.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"{content}/Content/favicon/apple-icon-152x152.png\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"{content}/Content/favicon/apple-icon-180x180.png\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\"  href=\"{content}/Content/favicon/android-icon-192x192.png\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"{content}/Content/favicon/favicon-32x32.png\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"{content}/Content/favicon/favicon-96x96.png\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"{content}/Content/favicon/favicon-16x16.png\">");
+            sb.Append($"<link rel=\"manifest\" href=\"{content}/Content/favicon/manifest.json\">");
+            sb.Append($"<meta name=\"msapplication-TileColor\" content=\"#ffffff\">");
+            sb.Append($"<meta name=\"msapplication-TileImage\" content=\"{content}/Content/favicon/ms-icon-144x144.png\">");
+            sb.Append($"<meta name=\"theme-color\" content=\"#ffffff\">");
+
+            return helper.Raw(sb.ToString());
         }
 
         public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string icon = null)
