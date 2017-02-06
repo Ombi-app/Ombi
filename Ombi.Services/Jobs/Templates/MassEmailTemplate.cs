@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2017 Jamie Rees
-//    File: Emby.cs
+//    Copyright (c) 2016 Jamie Rees
+//    File: RecentlyAddedTemplate.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,19 +26,33 @@
 #endregion
 
 using System;
-using Dapper.Contrib.Extensions;
-using Ombi.Store.Models.Plex;
+using System.IO;
+using System.Text;
+using System.Windows.Forms;
+using NLog;
 
-namespace Ombi.Store.Models.Emby
+namespace Ombi.Services.Jobs.Templates
 {
-    [Table(nameof(EmbyContent))]
-    public class EmbyContent : Entity
-    {
-        public string Title { get; set; }
-        public string EmbyId { get; set; }
-        public DateTime PremierDate { get; set; }
-        public string ProviderId { get; set; }
-        public EmbyMediaType Type { get; set; }
-        public DateTime AddedAt { get; set; }
+    public class MassEmailTemplate
+    { 
+        public string TemplateLocation => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) ?? string.Empty, "Jobs", "Templates", "MassEmailTemplate.html");
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
+        private const string RecentlyAddedKey = "{@MASSEMAIL}";
+
+        public string LoadTemplate(string html)
+        {
+            try
+            {
+                var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
+                sb.Replace(RecentlyAddedKey, html);
+                return sb.ToString();
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return string.Empty;
+            }
+        }
     }
 }

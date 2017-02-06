@@ -69,7 +69,7 @@ namespace Ombi.UI.Modules
 {
     public class SearchModule : BaseAuthModule
     {
-        public SearchModule(ICacheProvider cache, 
+        public SearchModule(ICacheProvider cache,
             ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker plexChecker,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
@@ -141,7 +141,7 @@ namespace Ombi.UI.Modules
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
             Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
-            
+
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
@@ -187,10 +187,14 @@ namespace Ombi.UI.Modules
 
             var settings = await PrService.GetSettingsAsync();
             var custom = await CustomizationSettings.GetSettingsAsync();
+            var emby = await EmbySettings.GetSettingsAsync();
+            var plex = await PlexService.GetSettingsAsync();
             var searchViewModel = new SearchLoadViewModel
             {
                 Settings = settings,
-                CustomizationSettings = custom
+                CustomizationSettings = custom,
+                Emby = emby.Enable,
+                Plex = plex.Enable
             };
 
 
@@ -300,11 +304,11 @@ namespace Ombi.UI.Modules
                     VoteAverage = movie.VoteAverage,
                     VoteCount = movie.VoteCount
                 };
-                
+
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
-                    
+
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                     viewMovie.ImdbId = movieInfo?.imdb_id;
@@ -400,11 +404,11 @@ namespace Ombi.UI.Modules
                 case ShowSearchType.Popular:
                     Analytics.TrackEventAsync(Category.Search, Action.TvShow, "Popular", Username, CookieHelper.GetAnalyticClientId(Cookies));
                     var popularShows = await TraktApi.GetPopularShows();
-                    
+
                     foreach (var popularShow in popularShows)
                     {
                         var theTvDbId = int.Parse(popularShow.Ids.Tvdb.ToString());
-                        
+
                         var model = new SearchTvShowViewModel
                         {
                             FirstAired = popularShow.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -577,6 +581,7 @@ namespace Ombi.UI.Modules
             Analytics.TrackEventAsync(Category.Search, Action.TvShow, searchTerm, Username,
                 CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
             var prSettings = await PrService.GetSettingsAsync();
             var providerId = string.Empty;
 
@@ -600,6 +605,8 @@ namespace Ombi.UI.Modules
             var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
             var content = PlexContentRepository.GetAll();
             var plexTvShows = PlexChecker.GetPlexTvShows(content);
+            var embyContent = EmbyContentRepository.GetAll();
+            var embyCached = EmbyChecker.GetEmbyTvShows(embyContent);
 
             var viewTv = new List<SearchTvShowViewModel>();
             foreach (var t in apiTv)
@@ -633,20 +640,28 @@ namespace Ombi.UI.Modules
                     EnableTvRequestsForOnlySeries = (prSettings.DisableTvRequestsByEpisode && prSettings.DisableTvRequestsBySeason)
                 };
 
+                providerId = viewT.Id.ToString();
 
-                if (plexSettings.AdvancedSearch)
+                if (embySettings.Enable)
                 {
-                    providerId = viewT.Id.ToString();
+                    var embyShow = EmbyChecker.GetTvShow(embyCached.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId);
+                    if (embyShow != null)
+                    {
+                        viewT.Available = true;
+                    }
                 }
-
-                var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
+                if (plexSettings.Enable)
+                {
+                    var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
                     providerId);
-                if (plexShow != null)
-                {
-                    viewT.Available = true;
-                    viewT.PlexUrl = plexShow.Url;
+                    if (plexShow != null)
+                    {
+                        viewT.Available = true;
+                        viewT.PlexUrl = plexShow.Url;
+                    }
                 }
-                else if (t.show?.externals?.thetvdb != null)
+
+                if (t.show?.externals?.thetvdb != null && !viewT.Available)
                 {
                     var tvdbid = (int)t.show.externals.thetvdb;
                     if (dbTv.ContainsKey(tvdbid))
@@ -747,7 +762,7 @@ namespace Ombi.UI.Modules
                         Message = "You have reached your weekly request limit for Movies! Please contact your admin."
                     });
             }
-
+            var embySettings = await EmbySettings.GetSettingsAsync();
             Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username,
                 CookieHelper.GetAnalyticClientId(Cookies));
             var movieInfo = await MovieApi.GetMovieInformation(movieId);
@@ -806,7 +821,7 @@ namespace Ombi.UI.Modules
                     Response.AsJson(new JsonResponseModel
                     {
                         Result = false,
-                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullMovieName)
+                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullMovieName,GetMediaServerName())
                     });
             }
             //#endif
@@ -851,7 +866,7 @@ namespace Ombi.UI.Modules
                     }
                     if (!result.MovieSendingEnabled)
                     {
-                        
+
                         return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
                     }
 
@@ -946,7 +961,7 @@ namespace Ombi.UI.Modules
                         });
                 }
             }
-
+            var embySettings = await EmbySettings.GetSettingsAsync();
             var showInfo = TvApi.ShowLookupByTheTvDbId(showId);
             DateTime firstAir;
             DateTime.TryParse(showInfo.premiered, out firstAir);
@@ -1053,7 +1068,7 @@ namespace Ombi.UI.Modules
                             Response.AsJson(new JsonResponseModel
                             {
                                 Result = false,
-                                Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,embySettings.Enable ? "Emby" : "Plex")}"
                             });
                     }
                 }
@@ -1099,7 +1114,7 @@ namespace Ombi.UI.Modules
                                     {
                                         Result = false,
                                         Message =
-                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}"
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
                                     });
                             }
                         }
@@ -1121,7 +1136,7 @@ namespace Ombi.UI.Modules
                                         Response.AsJson(new JsonResponseModel
                                         {
                                             Result = false,
-                                            Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                            Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
                                         });
                                 }
                             }
@@ -1134,12 +1149,11 @@ namespace Ombi.UI.Modules
                                 Response.AsJson(new JsonResponseModel
                                 {
                                     Result = false,
-                                    Message = $"{fullShowName} {Resources.UI.Search_AlreadyInPlex}"
+                                    Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
                                 });
                         }
                     }
                 }
-                var embySettings = await EmbySettings.GetSettingsAsync();
                 if (embySettings.Enable)
                 {
                     var embyContent = EmbyContentRepository.GetAll();
@@ -1162,7 +1176,7 @@ namespace Ombi.UI.Modules
                                     {
                                         Result = false,
                                         Message =
-                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {Resources.UI.Search_AlreadyInPlex}"
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
                                     });
                             }
                         }
@@ -1200,7 +1214,7 @@ namespace Ombi.UI.Modules
                                     Message = $"{fullShowName} is already in Emby!"
                                 });
                         }
-                    } 
+                    }
                 }
             }
             catch (Exception)
@@ -1209,7 +1223,7 @@ namespace Ombi.UI.Modules
                     Response.AsJson(new JsonResponseModel
                     {
                         Result = false,
-                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName)
+                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName,GetMediaServerName())
                     });
             }
 
@@ -1445,7 +1459,7 @@ namespace Ombi.UI.Modules
 
             return img;
         }
-        
+
         private Response GetSeasons()
         {
             var seriesId = (int)Request.Query.tvId;
@@ -1779,6 +1793,12 @@ namespace Ombi.UI.Modules
 
             return
                 Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
+        }
+
+        private string GetMediaServerName()
+        {
+            var e = EmbySettings.GetSettings();
+            return e.Enable ? "Emby" : "Plex";
         }
     }
 }

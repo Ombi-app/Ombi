@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2017 Jamie Rees
-//    File: Emby.cs
+//    Copyright (c) 2016 Jamie Rees
+//    File: LogEntity.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -27,18 +27,14 @@
 
 using System;
 using Dapper.Contrib.Extensions;
-using Ombi.Store.Models.Plex;
+using Newtonsoft.Json;
 
-namespace Ombi.Store.Models.Emby
+namespace Ombi.Store.Models
 {
-    [Table(nameof(EmbyContent))]
-    public class EmbyContent : Entity
+    [Table("RecentlyAddedLog")]
+    public class RecentlyAddedLog : Entity
     {
-        public string Title { get; set; }
-        public string EmbyId { get; set; }
-        public DateTime PremierDate { get; set; }
         public string ProviderId { get; set; }
-        public EmbyMediaType Type { get; set; }
         public DateTime AddedAt { get; set; }
     }
 }

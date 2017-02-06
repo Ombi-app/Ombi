@@ -46,7 +46,7 @@ namespace Ombi.Services.Jobs
     public class EmbyContentCacher : IJob, IEmbyContentCacher
     {
         public EmbyContentCacher(ISettingsService<EmbySettings> embySettings, IRequestService request, IEmbyApi emby, ICacheProvider cache,
-             IJobRecord rec, IRepository<EmbyEpisodes> repo,IRepository<EmbyContent> content)
+             IJobRecord rec, IRepository<EmbyEpisodes> repo, IRepository<EmbyContent> content)
         {
             Emby = embySettings;
             RequestService = request;
@@ -108,35 +108,23 @@ namespace Ombi.Services.Jobs
 
                 foreach (var m in movies)
                 {
-                    var movieInfo = EmbyApi.GetInformation(m.Id, EmbyMediaType.Movie, embySettings.ApiKey,
-                        embySettings.AdministratorId, embySettings.FullUri).MovieInformation;
-
-                    if (string.IsNullOrEmpty(movieInfo.ProviderIds.Imdb))
+                    if (m.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        Log.Error("Provider Id on movie {0} is null", movieInfo.Name);
-                        continue;
-                    }
-
-                    // Check if it exists
-                    var item = EmbyContent.Custom(connection =>
-                    {
-                        connection.Open();
-                        var media = connection.QueryFirstOrDefault<EmbyContent>("select * from EmbyContent where ProviderId = @ProviderId and type = @type", new { ProviderId = movieInfo.ProviderIds.Imdb, type = 0 });
-                        connection.Dispose();
-                        return media;
-                    });
-
-                    if (item == null)
-                    {
-                        // Doesn't exist, insert it
-                        EmbyContent.Insert(new EmbyContent
+                        var info = EmbyApi.GetCollection(m.Id, embySettings.ApiKey,
+                            embySettings.AdministratorId, embySettings.FullUri);
+                        foreach (var item in info.Items)
                         {
-                            ProviderId = movieInfo.ProviderIds.Imdb,
-                            PremierDate = movieInfo.PremiereDate,
-                            Title = movieInfo.Name,
-                            Type = Store.Models.Plex.EmbyMediaType.Movie,
-                            EmbyId = m.Id
-                        });
+                            var movieInfo = EmbyApi.GetInformation(item.Id, EmbyMediaType.Movie, embySettings.ApiKey,
+           embySettings.AdministratorId, embySettings.FullUri).MovieInformation;
+                            ProcessMovies(movieInfo);
+                        }
+                    }
+                    else
+                    {
+                        var movieInfo = EmbyApi.GetInformation(m.Id, EmbyMediaType.Movie, embySettings.ApiKey,
+           embySettings.AdministratorId, embySettings.FullUri).MovieInformation;
+
+                        ProcessMovies(movieInfo);
                     }
                 }
 
@@ -170,7 +158,8 @@ namespace Ombi.Services.Jobs
                             PremierDate = tvInfo.PremiereDate,
                             Title = tvInfo.Name,
                             Type = Store.Models.Plex.EmbyMediaType.Series,
-                            EmbyId = t.Id
+                            EmbyId = t.Id,
+                            AddedAt = DateTime.UtcNow
                         });
                     }
                 }
@@ -216,7 +205,7 @@ namespace Ombi.Services.Jobs
             }
         }
 
-        
+
 
         private bool ValidateSettings(EmbySettings emby)
         {
@@ -247,6 +236,37 @@ namespace Ombi.Services.Jobs
             {
                 Job.Record(JobNames.EmbyCacher);
                 Job.SetRunning(false, JobNames.EmbyCacher);
+            }
+        }
+
+        private void ProcessMovies(EmbyMovieInformation movieInfo)
+        {
+            if (string.IsNullOrEmpty(movieInfo.ProviderIds.Imdb))
+            {
+                Log.Error("Provider Id on movie {0} is null", movieInfo.Name);
+                return;
+            }
+            // Check if it exists
+            var item = EmbyContent.Custom(connection =>
+            {
+                connection.Open();
+                var media = connection.QueryFirstOrDefault<EmbyContent>("select * from EmbyContent where ProviderId = @ProviderId and type = @type", new { ProviderId = movieInfo.ProviderIds.Imdb, type = 0 });
+                connection.Dispose();
+                return media;
+            });
+
+            if (item == null)
+            {
+                // Doesn't exist, insert it
+                EmbyContent.Insert(new EmbyContent
+                {
+                    ProviderId = movieInfo.ProviderIds.Imdb,
+                    PremierDate = movieInfo.PremiereDate,
+                    Title = movieInfo.Name,
+                    Type = Store.Models.Plex.EmbyMediaType.Movie,
+                    EmbyId = movieInfo.Id,
+                    AddedAt = DateTime.UtcNow
+                });
             }
         }
     }

@@ -156,7 +156,7 @@ namespace Ombi.UI.Modules.Admin
             var cp = await CpSettings.GetSettingsAsync();
             if (cp.Enabled)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is enabled, we cannot enable Watcher and CouchPotato" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "CouchPotato is enabled, we cannot enable Radarr and CouchPotato" });
             }
 
             var valid = this.Validate(radarrSettings);

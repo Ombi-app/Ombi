@@ -42,6 +42,7 @@ using Nancy.Validation;
 using NLog;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Movie;
 using Ombi.Core;
 using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
@@ -92,6 +93,7 @@ namespace Ombi.UI.Modules.Admin
         private IJobRecord JobRecorder { get; }
         private IAnalytics Analytics { get; }
         private IRecentlyAdded RecentlyAdded { get; }
+        private IMassEmail MassEmail { get; }
         private ISettingsService<NotificationSettingsV2> NotifySettings { get; }
         private ISettingsService<DiscordNotificationSettings> DiscordSettings { get; }
         private IDiscordApi DiscordApi { get; }
@@ -123,7 +125,7 @@ namespace Ombi.UI.Modules.Admin
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
-             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded,
+             ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded, IMassEmail massEmail,
              ISettingsService<WatcherSettings> watcherSettings ,
              ISettingsService<DiscordNotificationSettings> discord,
              IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi,
@@ -158,6 +160,7 @@ namespace Ombi.UI.Modules.Admin
             Analytics = analytics;
             NotifySettings = notifyService;
             RecentlyAdded = recentlyAdded;
+            MassEmail = massEmail;
             WatcherSettings = watcherSettings;
             DiscordSettings = discord;
             DiscordApi = discordapi;
@@ -222,6 +225,9 @@ namespace Ombi.UI.Modules.Admin
 
             Get["/newsletter", true] = async (x, ct) => await Newsletter();
             Post["/newsletter", true] = async (x, ct) => await SaveNewsletter();
+            Post["/testnewsletteradminemail"] = x => TestNewsletterAdminEmail(); 
+            Post["/testmassadminemail"] = x => TestMassAdminEmail();
+            Post["/sendmassemail"] = x => SendMassEmail();
 
             Post["/createapikey"] = x => CreateApiKey();
 
@@ -246,7 +252,6 @@ namespace Ombi.UI.Modules.Admin
             Get["/notificationsettings", true] = async (x, ct) => await NotificationSettings();
             Post["/notificationsettings"] = x => SaveNotificationSettings();
 
-            Post["/recentlyAddedTest"] = x => RecentlyAddedTest();
         }
 
         private async Task<Negotiator> Authentication()
@@ -441,11 +446,15 @@ namespace Ombi.UI.Modules.Admin
         private async Task<Response> SavePlex()
         {
             var plexSettings = this.Bind<PlexSettings>();
-            var valid = this.Validate(plexSettings);
-            if (!valid.IsValid)
-            {
-                return Response.AsJson(valid.SendJsonError());
-            }
+
+			if (plexSettings.Enable)
+			{
+				var valid = this.Validate(plexSettings);
+				if (!valid.IsValid)
+				{
+					return Response.AsJson(valid.SendJsonError());
+				}
+			}
 
            
             if (plexSettings.Enable)
@@ -462,7 +471,7 @@ namespace Ombi.UI.Modules.Admin
                 }
             }
 
-            if (string.IsNullOrEmpty(plexSettings.MachineIdentifier))
+            if (string.IsNullOrEmpty(plexSettings.MachineIdentifier) && plexSettings.Enable)
             {
                 //Lookup identifier
                 var server = PlexApi.GetServer(plexSettings.PlexAuthToken);
@@ -815,6 +824,10 @@ namespace Ombi.UI.Modules.Admin
             {
                 return Response.AsJson(valid.SendJsonError());
             }
+            if (!settings.Enabled)
+            {
+                return Response.AsJson(new CouchPotatoProfiles{list = new List<ProfileList>()});
+            }
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
             // set the cache
@@ -1133,6 +1146,8 @@ namespace Ombi.UI.Modules.Admin
             var emby = await EmbySettings.GetSettingsAsync();
             var plex = await PlexService.GetSettingsAsync();
 
+
+
             var dict = new Dictionary<string, DateTime>();
 
 
@@ -1145,7 +1160,24 @@ namespace Ombi.UI.Modules.Admin
                 }
                 else
                 {
-                    dict.Add(j.Name,j.LastRun);
+                    if (j.Name.Contains("Plex"))
+                    {
+                        if (plex.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else if (j.Name.Contains("Emby"))
+                    {
+                        if (emby.Enable)
+                        {
+                            dict.Add(j.Name, j.LastRun);
+                        }
+                    }
+                    else
+                    {
+                        dict.Add(j.Name, j.LastRun);
+                    }
                 }
 
             }
@@ -1166,7 +1198,13 @@ namespace Ombi.UI.Modules.Admin
                 FaultQueueHandler = s.FaultQueueHandler,
                 PlexEpisodeCacher = s.PlexEpisodeCacher,
                 PlexUserChecker = s.PlexUserChecker,
-                UserRequestLimitResetter = s.UserRequestLimitResetter
+                UserRequestLimitResetter = s.UserRequestLimitResetter,
+				EmbyAvailabilityChecker = s.EmbyAvailabilityChecker,
+				EmbyContentCacher = s.EmbyContentCacher,
+				EmbyEpisodeCacher = s.EmbyEpisodeCacher,
+				EmbyUserChecker = s.EmbyUserChecker,
+				RadarrCacher = s.RadarrCacher,
+				WatcherCacher = s.WatcherCacher
             };
             return View["SchedulerSettings", model];
         }
@@ -1229,14 +1267,59 @@ namespace Ombi.UI.Modules.Admin
             var model = this.Bind<NotificationSettingsV2>();
             return View["NotificationSettings", model];
         }
-
-        private Response RecentlyAddedTest()
+       
+        private Response TestNewsletterAdminEmail()
         {
             try
             {
-                Log.Debug("Clicked TEST");
-                RecentlyAdded.Test();
+                Log.Debug("Clicked Admin Newsletter Email Test");
+                RecentlyAdded.RecentlyAddedAdminTest();
                 return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
+            }
+        }
+        private Response TestMassAdminEmail()
+        {
+            try
+            {
+                var settings = this.Bind<MassEmailSettings>();
+                Log.Debug("Clicked Admin Mass Email Test");
+                if (settings.Subject == null) {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Subject" });
+                }
+                if (settings.Body == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Body" });
+                }
+                MassEmail.MassEmailAdminTest(settings.Body.Replace("\n", "<br/>"), settings.Subject);
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to administrator" });
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = e.Message });
+            }
+        }
+        private Response SendMassEmail()
+        {
+            try
+            {
+                var settings = this.Bind<MassEmailSettings>();
+                Log.Debug("Clicked Admin Mass Email Test");
+                if (settings.Subject == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Subject" });
+                }
+                if (settings.Body == null)
+                {
+                    return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Body" });
+                }
+                MassEmail.SendMassEmail(settings.Body.Replace("\n", "<br/>"), settings.Subject);
+                return Response.AsJson(new JsonResponseModel { Result = true, Message = "Sent email to All users" });
             }
             catch (Exception e)
             {

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2017 Jamie Rees
-//    File: Emby.cs
+//    Copyright (c) 2016 Jamie Rees
+//    File: EmailNotificationSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,21 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using Dapper.Contrib.Extensions;
-using Ombi.Store.Models.Plex;
-
-namespace Ombi.Store.Models.Emby
+namespace Ombi.Core.SettingModels
 {
-    [Table(nameof(EmbyContent))]
-    public class EmbyContent : Entity
+    public sealed class MassEmailSettings : NotificationSettings
     {
-        public string Title { get; set; }
-        public string EmbyId { get; set; }
-        public DateTime PremierDate { get; set; }
-        public string ProviderId { get; set; }
-        public EmbyMediaType Type { get; set; }
-        public DateTime AddedAt { get; set; }
+        public string Users { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
     }
 }

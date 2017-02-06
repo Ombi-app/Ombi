@@ -223,7 +223,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Currently we are indexing all of the available tv shows and movies on the Plex server, so there might be some unexpected behavior. This shouldn&apos;t take too long..
+        ///   Looks up a localized string similar to Currently we are indexing all of the available tv shows and movies on the media server, so there might be some unexpected behavior. This shouldn&apos;t take too long..
         /// </summary>
         public static string Layout_CacherRunning {
             get {
@@ -736,7 +736,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to is already in Plex!.
+        ///   Looks up a localized string similar to is already in {0}!.
         /// </summary>
         public static string Search_AlreadyInPlex {
             get {
@@ -790,7 +790,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to We could not check if {0} is in Plex, are you sure it&apos;s correctly setup?.
+        ///   Looks up a localized string similar to We could not check if {0} is in {1}, are you sure it&apos;s correctly setup?.
         /// </summary>
         public static string Search_CouldNotCheckPlex {
             get {
@@ -813,15 +813,6 @@ namespace Ombi.UI.Resources {
         public static string Search_ErrorNotEnabled {
             get {
                 return ResourceManager.GetString("Search_ErrorNotEnabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sorry, but this functionality is currently only for users with Plex accounts.
-        /// </summary>
-        public static string Search_ErrorPlexAccountOnly {
-            get {
-                return ResourceManager.GetString("Search_ErrorPlexAccountOnly", resourceCulture);
             }
         }
         
@@ -907,7 +898,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!.
+        ///   Looks up a localized string similar to Want to watch something that is not currently on {0}?! No problem! Just search for it below and request it!.
         /// </summary>
         public static string Search_Paragraph {
             get {
@@ -1132,8 +1123,8 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Want to watch a movie or tv show but it&apos;s not currently on Plex?
-        ///            Login below with your Plex.tv username and password!.
+        ///   Looks up a localized string similar to Want to watch a movie or tv show but it&apos;s not currently on {0}?
+        ///            Login below with your username and password!.
         /// </summary>
         public static string UserLogin_Paragraph {
             get {
@@ -1178,7 +1169,7 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Plex.tv Username .
+        ///   Looks up a localized string similar to Username .
         /// </summary>
         public static string UserLogin_Username {
             get {

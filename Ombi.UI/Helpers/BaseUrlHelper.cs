@@ -333,6 +333,7 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
+
             var returnString = context.Request.Path == url ?
                                       $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>"
                                       : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
@@ -347,7 +348,14 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
-
+            if (url.Contains("issues"))
+            {
+                var custom = GetCustomizationSettings();
+                if (!custom.EnableIssues)
+                {
+                    return helper.Raw(string.Empty);
+                }
+            }
             var returnString = context.Request.Path == url
                 ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>"
                 : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
@@ -363,6 +371,12 @@ namespace Ombi.UI.Helpers
         public static IHtmlString GetApplicationName(this HtmlHelpers helper)
         {
             return helper.Raw(GetCustomizationSettings().ApplicationName);
+        }
+
+        public static IHtmlString GetMediaServerName(this HtmlHelpers helper)
+        {
+            var s = GetEmbySettings();
+            return helper.Raw(s.Enable ? "Emby" : "Plex");
         }
 
         private static string GetBaseUrl()
@@ -382,9 +396,19 @@ namespace Ombi.UI.Helpers
 
         private static CustomizationSettings GetCustomizationSettings()
         {
-            var returnValue = Cache.GetOrSet(CacheKeys.GetPlexRequestSettings, () =>
+            var returnValue = Cache.GetOrSet(CacheKeys.GetCustomizationSettings, () =>
             {
                 var settings = Locator.Resolve<ISettingsService<CustomizationSettings>>().GetSettings();
+                return settings;
+            });
+            return returnValue;
+        }
+
+        private static EmbySettings GetEmbySettings()
+        {
+            var returnValue = Cache.GetOrSet(CacheKeys.GetEmbySettings, () =>
+            {
+                var settings = Locator.Resolve<ISettingsService<EmbySettings>>().GetSettings();
                 return settings;
             });
             return returnValue;

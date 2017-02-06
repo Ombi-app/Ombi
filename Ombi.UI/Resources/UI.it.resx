@@ -121,13 +121,13 @@
     <value>Accesso</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vuoi guardare un film o una serie tv ma non è attualmente in Plex? Effettua il login con il tuo username e la password Plex.tv !</value>
+    <value>Vuoi guardare un film o una serie tv ma non è attualmente in {0}? Effettua il login con il tuo username e la password !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>I dati di accesso vengono utilizzati solo per autenticare l'account Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Nome utente</value>
+    <value>Nome utente</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Nome utente</value>
@@ -214,7 +214,7 @@
     <value>Msuica</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vuoi guardare qualcosa che non è attualmente in Plex?! Non c'è problema! Basta cercarla qui sotto e richiederla!</value>
+    <value>Vuoi guardare qualcosa che non è attualmente in {0}?! Non c'è problema! Basta cercarla qui sotto e richiederla!</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggerimenti</value>
@@ -409,7 +409,7 @@
     <value>è già stato richiesto!</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>Non siamo riusciti a controllare se {0} è in Plex, sei sicuro che sia configurato correttamente?</value>
+    <value>Non siamo riusciti a controllare se {0} è in {1}, sei sicuro che sia configurato correttamente?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Qualcosa è andato storto aggiungendo il film a CouchPotato! Controlla le impostazioni</value>
@@ -418,7 +418,7 @@
     <value>Hai raggiunto il numero massimo di richieste settimanali per i Film! Contatta l'amministratore</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>è già disponibile in Plex!</value>
+    <value>è già disponibile in {0}!</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
     <value>Qualcosa è andato storto aggiungendo il film a SickRage! Controlla le impostazioni</value>
@@ -434,9 +434,6 @@
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
     <value>Hai raggiunto il numero massimo di richieste settimanali per le Serie TV! Contatta l'amministratore</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Spiacente, ma questa funzione è disponibile solo per gli utenti con un account Plex.</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
     <value>Spiacente, ma l'amministratore non ha ancora abilitato questa funzionalità.</value>

@@ -286,7 +286,9 @@ namespace Ombi.Services.Jobs
             var ep = await EpisodeRepo.CustomAsync(async connection =>
                {
                    connection.Open();
-                   var result = await connection.QueryAsync<EmbyEpisodes>("select * from EmbyEpisodes where ProviderId = @ProviderId", new { ProviderId = theTvDbId });
+                   var result = await connection.QueryAsync<EmbyEpisodes>(@"select ee.* from EmbyEpisodes ee inner join EmbyContent ec
+					on ee.ParentId = ec.EmbyId
+					where ec.ProviderId = @ProviderId", new { ProviderId = theTvDbId });
 
                    return result;
                });

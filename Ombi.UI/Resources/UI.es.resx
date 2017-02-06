@@ -121,13 +121,13 @@
     <value>INICIAR SESIÓN</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>¿Quieres ver una película o programa de televisión, pero no es actualmente en Plex? Ingresa abajo con su nombre de usuario y contraseña Plex.tv !</value>
+    <value>¿Quieres ver una película o programa de televisión, pero no es actualmente en {0}? Ingresa abajo con su nombre de usuario y contraseña !</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Sus datos de acceso sólo se utilizan para autenticar su cuenta Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv nombre de usuario</value>
+    <value>nombre de usuario</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Username</value>
@@ -211,7 +211,7 @@
     <value>Álbumes</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>¿Quieres ver algo que no se encuentra actualmente en Plex ?! ¡No hay problema! Sólo la búsqueda de abajo y que solicitarlo !</value>
+    <value>¿Quieres ver algo que no se encuentra actualmente en {0}?! ¡No hay problema! Sólo la búsqueda de abajo y que solicitarlo !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Buscar</value>
@@ -409,7 +409,7 @@
     <value>ya ha sido solicitada !!</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>No hemos podido comprobar si {0} está en Plex, ¿estás seguro de que es correcta la configuración ?!</value>
+    <value>No hemos podido comprobar si {0} está en {1}, ¿estás seguro de que es correcta la configuración ?!</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Algo salió mal la adición de la película para CouchPotato! Por favor verifica la configuracion.!</value>
@@ -418,7 +418,7 @@
     <value>Ha llegado a su límite de solicitudes semanales de películas! Por favor, póngase en contacto con su administrador.!</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>ya está en Plex !!</value>
+    <value>ya está en {0}!!</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
     <value>Algo salió mal la adición de la película para SickRage! Por favor verifica la configuracion.!</value>
@@ -434,9 +434,6 @@
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
     <value>Ha llegado a su límite de solicitudes semanales de programas de televisión! Por favor, póngase en contacto con su administrador.!</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Lo sentimos, pero esta funcionalidad es actualmente sólo para los usuarios con cuentas Plex!</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
     <value>Lo sentimos, pero el administrador aún no ha habilitado esta funcionalidad.!</value>
