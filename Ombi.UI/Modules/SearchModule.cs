@@ -525,50 +525,54 @@ namespace Ombi.UI.Modules
 
         private async Task<List<SearchTvShowViewModel>> MapToTvModel(List<SearchTvShowViewModel> shows, PlexRequestSettings prSettings)
         {
-
             var plexSettings = await PlexService.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
 
-            var providerId = string.Empty;
             // Get the requests
             var allResults = await RequestService.GetAllAsync();
             allResults = allResults.Where(x => x.Type == RequestType.TvShow);
             var distinctResults = allResults.DistinctBy(x => x.ProviderId);
-            var dbTv = distinctResults.ToDictionary(x => x.ProviderId);
-
-            // Check the external applications
-            var sonarrCached = SonarrCacher.QueuedIds().ToList();
-            var sickRageCache = SickRageCacher.QueuedIds(); // consider just merging sonarr/sickrage arrays
+            var dbTv = distinctResults.ToDictionary(x => x.ImdbId);
+            
             var content = PlexContentRepository.GetAll();
-            var plexTvShows = PlexChecker.GetPlexTvShows(content).ToList();
+            var plexTvShows = PlexChecker.GetPlexTvShows(content);
+            var embyContent = EmbyContentRepository.GetAll();
+            var embyCached = EmbyChecker.GetEmbyTvShows(embyContent).ToList();
 
             foreach (var show in shows)
             {
-                if (plexSettings.AdvancedSearch)
+            
+                var providerId = show.Id.ToString();
+
+              if (embySettings.Enable)
                 {
-                    providerId = show.Id.ToString();
+                    var embyShow = EmbyChecker.GetTvShow(embyCached.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4), providerId);
+                    if (embyShow != null)
+                    {
+                        show.Available = true;
+                    }
+                }
+                if (plexSettings.Enable)
+                {
+                    var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4),
+                    providerId);
+                    if (plexShow != null)
+                    {
+                        show.Available = true;
+                        show.PlexUrl = plexShow.Url;
+                    }
                 }
 
-                var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4),
-                    providerId);
-                if (plexShow != null)
+                if (show.ImdbId != null && !show.Available)
                 {
-                    show.Available = true;
-                    show.PlexUrl = plexShow.Url;
-                }
-                else
-                {
-                    if (dbTv.ContainsKey(show.Id))
+                    var imdbId = show.ImdbId;
+                    if (dbTv.ContainsKey(imdbId))
                     {
-                        var dbt = dbTv[show.Id];
+                        var dbt = dbTv[imdbId];
 
                         show.Requested = true;
                         show.Episodes = dbt.Episodes.ToList();
                         show.Approved = dbt.Approved;
-                    }
-                    if (sonarrCached.Select(x => x.TvdbId).Contains(show.Id) || sickRageCache.Contains(show.Id))
-                    // compare to the sonarr/sickrage db
-                    {
-                        show.Requested = true;
                     }
                 }
             }
