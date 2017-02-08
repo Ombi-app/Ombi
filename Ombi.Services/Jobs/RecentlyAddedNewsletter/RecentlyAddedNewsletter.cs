@@ -140,7 +140,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
                 var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
                 Log.Debug(escapedHtml);
-                SendNewsletter(newletterSettings, escapedHtml, testEmail);
+                SendNewsletter(newletterSettings, escapedHtml, testEmail, "New Content On Emby!");
             }
             else
             {

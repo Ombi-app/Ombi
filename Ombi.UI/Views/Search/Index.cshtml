@@ -8,12 +8,14 @@
     {
         url = "/" + baseUrl.ToHtmlString();
     }
+
+
 }
 <div>
 
     <div hidden="hidden" id="useNewSearch">@Model.CustomizationSettings.NewSearch</div>
     <h1 id="searchTitle">@UI.Search_Title</h1>
-    <h4>@UI.Search_Paragraph</h4>
+    <h4>@string.Format(UI.Search_Paragraph, Model.Emby ? "Emby" : "Plex")</h4>
     <br />
     <!-- Nav tabs -->
 
@@ -315,9 +317,7 @@
                             </a>{{#if status}}<span class="label label-primary" style="font-size:60%" target="_blank">{{status}}</span>{{/if}}
                         </h4>
                         {{/if_eq}}
-                        {{#if status}}
-                        <span class="label label-info" target="_blank">{{status}}</span>
-                        {{/if}}
+   
 
                         {{#if firstAired}}
                         <span class="label label-info" target="_blank">Air Date: {{firstAired}}</span>
@@ -583,3 +583,4 @@
         </script>
 
         @Html.LoadSearchAssets()
+

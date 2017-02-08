@@ -121,13 +121,13 @@
     <value>Logga in</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vill du titta på en film eller TV-show, men det är inte närvarande på Plex? Logga in nedan med Plex.tv användarnamn och lösenord !!</value>
+    <value>Vill du titta på en film eller TV-show, men det är inte närvarande på {0}? Logga in nedan med användarnamn och lösenord !!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv användarnamn</value>
+    <value>Användarnamn</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Användarnamn</value>
@@ -214,7 +214,7 @@
     <value>Album</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vill titta på något som inte är närvarande på Plex ?! Inga problem! Bara söka efter den nedan och begär det !</value>
+    <value>Vill titta på något som inte är närvarande på {0}?! Inga problem! Bara söka efter den nedan och begär det !</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Sök</value>
@@ -409,7 +409,7 @@
     <value>har redan begärts</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>Vi kunde inte kontrollera om {0} är i Plex, är du säker det är korrekt installation?</value>
+    <value>Vi kunde inte kontrollera om {0} är i {1}, är du säker det är korrekt installation?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Något gick fel att lägga till filmen i CouchPotato! Kontrollera inställningarna.</value>
@@ -418,7 +418,7 @@
     <value>Du har nått din weekly begäran gräns för filmer! Kontakta din admin.</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>är redan i Plex</value>
+    <value>är redan i {0}</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
     <value>Något gick fel att lägga till filmen i SickRage! Kontrollera inställningarna.</value>
@@ -434,9 +434,6 @@
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
     <value>Du har nått din weekly begäran gräns för TV-program! Kontakta din admin.</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Ledsen, men denna funktion är för närvarande endast för användare med Plex konton</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
     <value>Ledsen, men administratören har ännu inte aktiverat denna funktion.</value>
