@@ -46,7 +46,7 @@ namespace Ombi.Core
         {
             Db = new DbConfiguration(new SqliteFactory());
             var created = Db.CheckDb();
-            TableCreation.CreateTables(Db.DbConnection());
+            Db.DbConnection().CreateTables();
 
             if (created)
             {
@@ -55,7 +55,7 @@ namespace Ombi.Core
             else
             {
                 // Shrink DB
-                TableCreation.Vacuum(Db.DbConnection());
+                Db.DbConnection().Vacuum();
             }
 
             // Add the new 'running' item into the scheduled jobs so we can check if the cachers are running
@@ -113,6 +113,7 @@ namespace Ombi.Core
             try
             {
                 Task.Run(() => { CacheSonarrQualityProfiles(mc); });
+                Task.Run(() => { CacheRadarrQualityProfiles(mc); });
                 Task.Run(() => { CacheCouchPotatoQualityProfiles(mc); });
                 // we don't need to cache sickrage profiles, those are static
             }
@@ -126,7 +127,6 @@ namespace Ombi.Core
         {
             try
             {
-                Log.Info("Executing GetSettings call to Sonarr for quality profiles");
                 var sonarrSettingsService = new SettingsServiceV2<SonarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), cacheProvider));
                 var sonarrSettings = sonarrSettingsService.GetSettings();
                 if (sonarrSettings.Enabled)
@@ -144,11 +144,31 @@ namespace Ombi.Core
             }
         }
 
+        private void CacheRadarrQualityProfiles(ICacheProvider cacheProvider)
+        {
+            try
+            {
+                var radarrService = new SettingsServiceV2<RadarrSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), cacheProvider));
+                var radarrSettings = radarrService.GetSettings();
+                if (radarrSettings.Enabled)
+                {
+                    Log.Info("Begin executing GetProfiles call to Radarr for quality profiles");
+                    RadarrApi radarrApi = new RadarrApi();
+                    var profiles = radarrApi.GetProfiles(radarrSettings.ApiKey, radarrSettings.FullUri);
+                    cacheProvider.Set(CacheKeys.RadarrQualityProfiles, profiles);
+                    Log.Info("Finished executing GetProfiles call to Radarr for quality profiles");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to cache Sonarr quality profiles!");
+            }
+        }
+
         private void CacheCouchPotatoQualityProfiles(ICacheProvider cacheProvider)
         {
             try
             {
-                Log.Info("Executing GetSettings call to CouchPotato for quality profiles");
                 var cpSettingsService = new SettingsServiceV2<CouchPotatoSettings>(new SettingsJsonRepository(new DbConfiguration(new SqliteFactory()), cacheProvider));
                 var cpSettings = cpSettingsService.GetSettings();
                 if (cpSettings.Enabled)
