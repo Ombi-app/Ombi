@@ -25,6 +25,12 @@
 
     $('#contentBody').on('click', '#embyApiKeySave', function (e) {
         e.preventDefault();
+
+        var port = $('#portNumber').val();
+        if (!port) {
+            generateNotify("Please provide a port number", "warning");
+        }
+
         $('#spinner').attr("class", "fa fa-spinner fa-spin");
 
         var $form = $("#embyAuthForm");
