@@ -305,7 +305,7 @@ namespace Ombi.UI.Modules
             if (defaultPath)
             {
                 // Return default path
-                return rootFoldersResult.FirstOrDefault(x => x.id.Equals(outRoot)?.path ?? string.Empty;
+                return rootFoldersResult.FirstOrDefault(x => x.id.Equals(outRoot))?.path ?? string.Empty;
             }
             else
             {
