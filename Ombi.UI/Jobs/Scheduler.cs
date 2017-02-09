@@ -35,6 +35,7 @@ using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
+using Ombi.Services.Jobs.RecentlyAddedNewsletter;
 using Ombi.UI.Helpers;
 using Quartz;
 using Quartz.Impl;
@@ -55,9 +56,6 @@ namespace Ombi.UI.Jobs
 
         private IEnumerable<IJobDetail> CreateJobs()
         {
-            var settingsService = Service.Resolve<ISettingsService<ScheduledJobsSettings>>();
-            var s = settingsService.GetSettings();
-
             var jobs = new List<IJobDetail>();
 
             var jobList = new List<IJobDetail>
@@ -73,9 +71,15 @@ namespace Ombi.UI.Jobs
                 JobBuilder.Create<StoreBackup>().WithIdentity("StoreBackup", "Database").Build(),
                 JobBuilder.Create<StoreCleanup>().WithIdentity("StoreCleanup", "Database").Build(),
                 JobBuilder.Create<UserRequestLimitResetter>().WithIdentity("UserRequestLimiter", "Request").Build(),
-                JobBuilder.Create<RecentlyAdded>().WithIdentity("RecentlyAddedModel", "Email").Build(),
+                JobBuilder.Create<RecentlyAddedNewsletter>().WithIdentity("RecentlyAddedModel", "Email").Build(),
                 JobBuilder.Create<FaultQueueHandler>().WithIdentity("FaultQueueHandler", "Fault").Build(),
                 JobBuilder.Create<RadarrCacher>().WithIdentity("RadarrCacher", "Cache").Build(),
+
+
+                JobBuilder.Create<EmbyEpisodeCacher>().WithIdentity("EmbyEpisodeCacher", "Emby").Build(),
+                JobBuilder.Create<EmbyAvailabilityChecker>().WithIdentity("EmbyAvailabilityChecker", "Emby").Build(),
+                JobBuilder.Create<EmbyContentCacher>().WithIdentity("EmbyContentCacher", "Emby").Build(),
+                JobBuilder.Create<EmbyUserChecker>().WithIdentity("EmbyUserChecker", "Emby").Build(),
             };
             
             jobs.AddRange(jobList);
@@ -174,6 +178,22 @@ namespace Ombi.UI.Jobs
             if (s.RadarrCacher == 0)
             {
                 s.RadarrCacher = 60;
+            }
+            if (s.EmbyContentCacher == 0)
+            {
+                s.EmbyContentCacher = 60;
+            }
+            if (s.EmbyAvailabilityChecker == 0)
+            {
+                s.EmbyAvailabilityChecker = 60;
+            }
+            if (s.EmbyEpisodeCacher == 0)
+            {
+                s.EmbyEpisodeCacher = 11;
+            }
+            if (s.EmbyUserChecker == 0)
+            {
+                s.EmbyUserChecker = 24;
             }
 
             var triggers = new List<ITrigger>();
@@ -280,6 +300,38 @@ namespace Ombi.UI.Jobs
                     .WithSimpleSchedule(x => x.WithIntervalInHours(s.FaultQueueHandler).RepeatForever())
                     .Build();
 
+
+            //Emby
+            var embyEpisode =
+                TriggerBuilder.Create()
+                .WithIdentity("EmbyEpisodeCacher", "Emby")
+                //.StartNow()
+                .StartAt(DateBuilder.FutureDate(10, IntervalUnit.Minute))
+                .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyEpisodeCacher).RepeatForever())
+                .Build();
+
+            var embyContentCacher =
+                TriggerBuilder.Create()
+                .WithIdentity("EmbyContentCacher", "Emby")
+                .StartNow()
+                .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyContentCacher).RepeatForever())
+                .Build();
+
+            var embyAvailabilityChecker =
+                 TriggerBuilder.Create()
+                 .WithIdentity("EmbyAvailabilityChecker", "Emby")
+                 .StartAt(DateBuilder.FutureDate(5, IntervalUnit.Minute))
+                 .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyAvailabilityChecker).RepeatForever())
+                 .Build();
+
+            var embyUserChecker =
+                TriggerBuilder.Create()
+                .WithIdentity("EmbyUserChecker", "Emby")
+                //.StartNow()
+                .StartAt(DateBuilder.FutureDate(1, IntervalUnit.Minute))
+                .WithSimpleSchedule(x => x.WithIntervalInHours(s.EmbyUserChecker).RepeatForever())
+                .Build();
+
             triggers.Add(rencentlyAdded);
             triggers.Add(plexAvailabilityChecker);
             triggers.Add(srCacher);
@@ -294,6 +346,10 @@ namespace Ombi.UI.Jobs
             triggers.Add(plexCacher);
             triggers.Add(plexUserChecker);
             triggers.Add(radarrCacher);
+            triggers.Add(embyEpisode);
+            triggers.Add(embyAvailabilityChecker);
+            triggers.Add(embyContentCacher);
+            triggers.Add(embyUserChecker);
 
             return triggers;
         }

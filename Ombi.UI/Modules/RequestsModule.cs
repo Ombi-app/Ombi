@@ -65,9 +65,11 @@ namespace Ombi.UI.Modules
             ISickRageApi sickRageApi,
             ICacheProvider cache,
             IAnalytics an,
-            INotificationEngine engine,
+            IPlexNotificationEngine engine,
+            IEmbyNotificationEngine embyEngine,
             ISecurityExtensions security,
-            ISettingsService<CustomizationSettings> customSettings) : base("requests", prSettings, security)
+            ISettingsService<CustomizationSettings> customSettings,
+            ISettingsService<EmbySettings> embyS) : base("requests", prSettings, security)
         {
             Service = service;
             PrSettings = prSettings;
@@ -81,8 +83,10 @@ namespace Ombi.UI.Modules
             CpApi = cpApi;
             Cache = cache;
             Analytics = an;
-            NotificationEngine = engine;
+            PlexNotificationEngine = engine;
+            EmbyNotificationEngine = embyEngine;
             CustomizationSettings = customSettings;
+            EmbySettings = embyS;
 
             Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
@@ -111,11 +115,13 @@ namespace Ombi.UI.Modules
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
         private ISonarrApi SonarrApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private ICacheProvider Cache { get; }
-        private INotificationEngine NotificationEngine { get; }
+        private INotificationEngine PlexNotificationEngine { get; }
+        private INotificationEngine EmbyNotificationEngine { get; }
 
         private async Task<Negotiator> LoadRequests()
         {
@@ -293,8 +299,18 @@ namespace Ombi.UI.Modules
                 return r.path;
             }
 
-            // Return default path
-            return rootFoldersResult.FirstOrDefault(x => x.id.Equals(int.Parse(sonarrSettings.RootPath)))?.path ?? string.Empty;
+            int outRoot;
+            var defaultPath = int.TryParse(sonarrSettings.RootPath, out outRoot);
+
+            if (defaultPath)
+            {
+                // Return default path
+                return rootFoldersResult.FirstOrDefault(x => x.id.Equals(outRoot))?.path ?? string.Empty;
+            }
+            else
+            {
+                return rootFoldersResult.FirstOrDefault()?.path ?? string.Empty;
+            }
         }
 
         private async Task<Response> GetAlbumRequests()
@@ -438,8 +454,21 @@ namespace Ombi.UI.Modules
             originalRequest.Available = available;
 
             var result = await Service.UpdateRequestAsync(originalRequest);
-            var plexService = await PlexSettings.GetSettingsAsync();
-            await NotificationEngine.NotifyUsers(originalRequest, plexService.PlexAuthToken, available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            if (plexSettings.Enable)
+            {
+                await
+                    PlexNotificationEngine.NotifyUsers(originalRequest,
+                        available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
+            }
+
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (embySettings.Enable)
+            {
+                await EmbyNotificationEngine.NotifyUsers(originalRequest,
+                        available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
+            }
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
                                        : new { Result = false, Available = false, Message = "Could not update the availability, please try again or check the logs" });

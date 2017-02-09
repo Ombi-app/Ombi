@@ -33,6 +33,7 @@ using Ombi.Core.SettingModels;
 using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
+using Ombi.Services.Jobs.Interfaces;
 using Ombi.UI.Models;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
@@ -44,7 +45,8 @@ namespace Ombi.UI.Modules.Admin
             ISecurityExtensions security, IPlexContentCacher contentCacher, ISonarrCacher sonarrCacher, IWatcherCacher watcherCacher,
             IRadarrCacher radarrCacher, ICouchPotatoCacher cpCacher, IStoreBackup store, ISickRageCacher srCacher, IAvailabilityChecker plexChceker,
             IStoreCleanup cleanup, IUserRequestLimitResetter requestLimit, IPlexEpisodeCacher episodeCacher, IRecentlyAdded recentlyAdded,
-            IFaultQueueHandler faultQueueHandler, IPlexUserChecker plexUserChecker) : base("admin", settingsService, security)
+            IFaultQueueHandler faultQueueHandler, IPlexUserChecker plexUserChecker, IEmbyAvailabilityChecker embyAvailabilityChecker, IEmbyEpisodeCacher embyEpisode,
+            IEmbyContentCacher embyContentCacher, IEmbyUserChecker embyUser) : base("admin", settingsService, security)
         {
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
@@ -62,6 +64,10 @@ namespace Ombi.UI.Modules.Admin
             RecentlyAdded = recentlyAdded;
             FaultQueueHandler = faultQueueHandler;
             PlexUserChecker = plexUserChecker;
+            EmbyAvailabilityChecker = embyAvailabilityChecker;
+            EmbyContentCacher = embyContentCacher;
+            EmbyEpisodeCacher = embyEpisode;
+            EmbyUserChecker = embyUser;
 
             Post["/schedulerun", true] = async (x, ct) => await ScheduleRun((string)Request.Form.key);
         }
@@ -80,6 +86,10 @@ namespace Ombi.UI.Modules.Admin
         private IRecentlyAdded RecentlyAdded { get; }
         private IFaultQueueHandler FaultQueueHandler { get; }
         private IPlexUserChecker PlexUserChecker { get; }
+        private IEmbyAvailabilityChecker EmbyAvailabilityChecker { get; }
+        private IEmbyContentCacher EmbyContentCacher { get; }
+        private IEmbyEpisodeCacher EmbyEpisodeCacher { get; }
+        private IEmbyUserChecker EmbyUserChecker { get; }
 
 
         private async Task<Response> ScheduleRun(string key)
@@ -132,7 +142,7 @@ namespace Ombi.UI.Modules.Admin
             }
             if (key.Equals(JobNames.RecentlyAddedEmail, StringComparison.CurrentCultureIgnoreCase))
             {
-                RecentlyAdded.Start();
+                RecentlyAdded.StartNewsLetter();
             }
             if (key.Equals(JobNames.FaultQueueHandler, StringComparison.CurrentCultureIgnoreCase))
             {
@@ -141,6 +151,22 @@ namespace Ombi.UI.Modules.Admin
             if (key.Equals(JobNames.PlexUserChecker, StringComparison.CurrentCultureIgnoreCase))
             {
                 RequestLimit.Start();
+            }
+            if (key.Equals(JobNames.EmbyEpisodeCacher, StringComparison.CurrentCultureIgnoreCase))
+            {
+                EmbyEpisodeCacher.Start();
+            }
+            if (key.Equals(JobNames.EmbyCacher, StringComparison.CurrentCultureIgnoreCase))
+            {
+                EmbyContentCacher.CacheContent();
+            }
+            if (key.Equals(JobNames.EmbyChecker, StringComparison.CurrentCultureIgnoreCase))
+            {
+                EmbyAvailabilityChecker.CheckAndUpdateAll();
+            }
+            if (key.Equals(JobNames.EmbyUserChecker, StringComparison.CurrentCultureIgnoreCase))
+            {
+                EmbyUserChecker.Start();
             }
 
 

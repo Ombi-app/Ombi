@@ -121,13 +121,13 @@
     <value>Inloggen</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Wilt u een film of een tv serie kijken, maar staat deze niet op Plex? Log hieronder in met uw gebruikersnaam en wachtwoord van Plex.tv</value>
+    <value>Wilt u een film of een tv serie kijken, maar staat deze niet op {0}? Log hieronder in met uw gebruikersnaam en wachtwoord van</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren bij Plex.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Gebruikersnaam</value>
+    <value> Gebruikersnaam</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Gebruikersnaam</value>
@@ -217,7 +217,7 @@
     <value>Albums</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Wilt u kijken naar iets dat dat momenteel niet op Plex is?! Geen probleem! zoek hieronder en vraag het aan!</value>
+    <value>Wilt u kijken naar iets dat dat momenteel niet op {0} is?! Geen probleem! zoek hieronder en vraag het aan!</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggesties</value>
@@ -409,10 +409,7 @@
     <value>Is al aangevraagd!</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>Staat al op Plex!</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Sorry, deze functie is momenteel alleen voor gebruikers met een Plex account.</value>
+    <value>Staat al op {0}!</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
     <value>Sorry, uw administrator heeft deze functie nog niet geactiveerd.</value>
@@ -424,7 +421,7 @@
     <value>Kon niet opslaan, probeer het later nog eens.</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>We konden niet controleren of {0} al in plex bestaat, weet je zeker dat het correct is ingesteld?</value>
+    <value>We konden niet controleren of {0} al in {1} bestaat, weet je zeker dat het correct is ingesteld?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Er is iets foutgegaan tijdens het toevoegen van de film aan CouchPotato! Controleer je instellingen</value>

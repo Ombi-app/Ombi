@@ -100,9 +100,9 @@ namespace Ombi.Api
 
             var obj = RetryHandler.Execute<CouchPotatoStatus>(() => Api.Execute<CouchPotatoStatus>(request, url),
                 (exception, timespan) => Log.Error(exception, "Exception when calling GetStatus for CP, Retrying {0}", timespan), new TimeSpan[] {
-                    TimeSpan.FromSeconds (2),
-                    TimeSpan.FromSeconds(5),
-                    TimeSpan.FromSeconds(10)});
+                    TimeSpan.FromSeconds (1),
+                    TimeSpan.FromSeconds(2),
+                    TimeSpan.FromSeconds(3)});
 
             return obj;
         }
@@ -140,9 +140,9 @@ namespace Ombi.Api
             {
                 var obj = RetryHandler.Execute(() => Api.Execute<CouchPotatoMovies>(request, baseUrl),
                     (exception, timespan) => Log.Error(exception, "Exception when calling GetMovies for CP, Retrying {0}", timespan), new[] {
-                        TimeSpan.FromSeconds (5),
-                        TimeSpan.FromSeconds(10),
-                        TimeSpan.FromSeconds(30)
+                        TimeSpan.FromSeconds (1),
+                        TimeSpan.FromSeconds(5),
+                        TimeSpan.FromSeconds(5)
                     });
 
                 return obj;

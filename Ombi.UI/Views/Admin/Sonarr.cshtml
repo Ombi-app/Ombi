@@ -10,6 +10,13 @@
     {
         port = Model.Port;
     }
+
+    var rootFolder = string.Empty;
+    if (!string.IsNullOrEmpty(Model.RootPath))
+
+    {
+        rootFolder = Model.RootPath.Replace("/", "//");
+    }
 }
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
@@ -184,7 +191,7 @@
 
         console.log('Hit root folders..');
 
-        var rootFolderSelected = '@Model.RootPath';
+        var rootFolderSelected = '@rootFolder';
         if (!rootFolderSelected) {
             return;
         }

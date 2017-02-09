@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LogEntity.cs
+//    File: EmailNotificationSettings.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,19 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Dapper.Contrib.Extensions;
-
-namespace Ombi.Store.Models
+namespace Ombi.Core.SettingModels
 {
-    [Table("PlexEpisodes")]
-    public class PlexEpisodes : Entity
+    public sealed class MassEmailSettings : NotificationSettings
     {
-        public string EpisodeTitle { get; set; }
-        public string ShowTitle { get; set; }
-        public string RatingKey { get; set; }
-        public string ProviderId { get; set; }
-        public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
+        public string Users { get; set; }
+        public string Subject { get; set; }
+        public string Body { get; set; }
     }
 }

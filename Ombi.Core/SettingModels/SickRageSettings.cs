@@ -37,7 +37,7 @@ namespace Ombi.Core.SettingModels
 
         public Dictionary<string, string> Qualities => new Dictionary<string, string>
         {
-            { "default", "Use Deafult" },
+            { "default", "Use Default" },
             { "sdtv", "SD TV" },
             { "sddvd", "SD DVD" },
             { "hdtv", "HD TV" },

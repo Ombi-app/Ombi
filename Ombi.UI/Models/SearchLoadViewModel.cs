@@ -32,6 +32,8 @@ namespace Ombi.UI.Models
     public class SearchLoadViewModel
     {
         public PlexRequestSettings Settings { get; set; }
+        public bool Plex { get; set; }
+        public bool Emby { get; set; }
         public CustomizationSettings CustomizationSettings { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace Ombi.Helpers
     public enum UserType
     {
         PlexUser,
-        LocalUser
+        LocalUser,
+        EmbyUser
     }
 }

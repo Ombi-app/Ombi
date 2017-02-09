@@ -7,52 +7,87 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Newsletter Settings</legend>
+            <div style="padding:10px">
 
-            <!-- Email Nofication Section -->
-            <div class="form-group">
-                <div class="checkbox">
+                <!-- Email Nofication Section -->
+                <div class="form-group">
+                    <div class="checkbox">
 
-                    <small>Note: This will require you to setup your email notifications</small>
-                    <br />
-                    @if (Model.SendRecentlyAddedEmail)
-                    {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
-                    }
+                        <small>Note: This will require you to setup your email notifications</small>
+                        <br />
+                        @if (Model.SendRecentlyAddedEmail)
+                        {
+                            <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
+                        }
 
 
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
+                <div class="form-group">
 
-              <br>
-                <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
-              <small>You can add multiple email address by using the ; delimiter</small>
-<div>
-                    <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
+                    <br>
+                    <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
+                    <small>You can add multiple email addresses by using the ; delimiter</small>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div>
-                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="spinner"></div></button>
+                <div class="form-group">
+                    <div>
+                        <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="testEmailSpinner"></div></button>
+                    </div>
                 </div>
-            </div>
 
-            <br />
-            <br />
-            <div class="form-group">
-                <div>
-                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                <br />
+                <br />
+                <div class="form-group">
+                    <div>
+                        <button type="submit" id="save" class="btn btn-primary-outline">Save</button>
+                    </div>
                 </div>
             </div>
             <!-- Email Nofication Section -->
 
         </fieldset>
 
+    </form>
+    <form id="massemail" class="form-horizontal">
+        <fieldset>
+            <legend>Mass Email</legend>
+            <div style="padding:10px">
+                <div class="form-group">
+                    <small>Note: This will require you to setup your email notifications</small>
+                </div>
+                <div class="form-group">
+                    <label for="massEmailSubject" class="control-label">Subject</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " placeholder="A Message from the Admin" id="massEmailSubject" name="massEmailSubject" value="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="massEmailBody" class="control-label">Body</label>
+
+                    <textarea id="massEmailBody" class="form-control" rows="5"></textarea>
+                    <small>Supports HTML</small>
+
+                </div>
+                <div class="form-group">
+                    <div>
+                        <button id="testSendMassEmailBtn" class="btn btn-primary-outline">Send Test to Admin<div id="testSendMassEmailSpinner"></div></button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <button id="sendMassEmailBtn" class="btn btn-primary-outline">Send To All Users<div id="sendMassEmailSpinner"></div></button>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
     </form>
 </div>
 
@@ -90,8 +125,8 @@
         $('#recentlyAddedBtn').click(function (e) {
             e.preventDefault();
             var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+            var url = createBaseUrl(base, '/admin/testnewsletteradminemail');
+            $('#testEmailSpinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: "post",
                 url: url,
@@ -99,17 +134,74 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#spinner').attr("class", "fa fa-check");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#spinner').attr("class", "fa fa-times");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
-                    $('#spinner').attr("class", "fa fa-times");
+                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+
+        $('#testSendMassEmailBtn').click(function (e) {
+            e.preventDefault();
+            var base = '@Html.GetBaseUrl()';
+            var url = createBaseUrl(base, '/admin/testmassadminemail');
+            $('#testSendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
+            var data = { "Users": "", "Body": $("#massEmailBody").val(), "Subject": $("#massEmailSubject").val() };
+            $.ajax({
+                type: "post",
+                url: url,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    if (response.result) {
+                        generateNotify(response.message, "success");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
+                    } else {
+
+                        generateNotify(response.message, "danger");
+                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
+                }
+            });
+        });
+        $('#sendMassEmailBtn').click(function (e) {
+            e.preventDefault();
+            var base = '@Html.GetBaseUrl()';
+            var url = createBaseUrl(base, '/admin/sendmassemail');
+            $('#sendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
+            var data = { "Users": "", "Body": $("#massEmailBody").val(), "Subject": $("#massEmailSubject").val() };
+            $.ajax({
+                type: "post",
+                url: url,
+                data: data,
+                dataType: "json",
+                success: function (response) {
+                    if (response.result) {
+                        generateNotify(response.message, "success");
+                        $('#sendMassEmailSpinner').attr("class", "fa fa-check");
+                    } else {
+
+                        generateNotify(response.message, "danger");
+                        $('#sendMassEmailSpinner').attr("class", "fa fa-times");
+                    }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                    $('#sendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });

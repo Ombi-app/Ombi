@@ -35,22 +35,53 @@
         <fieldset>
             <legend>Scheduler Settings</legend>
             <small>Please note, you will need to restart for these settings to take effect</small>
-
-            <div class="form-group">
-                <label for="PlexAvailabilityChecker" class="control-label">Plex Availability Checker (min)</label>
-                <input type="text" class="form-control form-control-custom " id="PlexAvailabilityChecker" name="PlexAvailabilityChecker" value="@Model.PlexAvailabilityChecker">
-            </div>
-
-            <div class="form-group">
-                <label for="PlexContentCacher" class="control-label">Plex Content Cacher (min)</label>
-                <input type="text" class="form-control form-control-custom " id="PlexContentCacher" name="PlexContentCacher" value="@Model.PlexContentCacher">
-            </div>
             
-            <div class="form-group">
-                <label for="PlexUserChecker" class="control-label">Plex User Checker (hours)</label>
-                <input type="text" class="form-control form-control-custom " id="PlexUserChecker" name="PlexUserChecker" value="@Model.PlexUserChecker">
-            </div>
+            
+            @if (Model.Plex)
+            {
+                <div class="form-group">
+                    <label for="PlexAvailabilityChecker" class="control-label">Plex Availability Checker (min)</label>
+                    <input type="text" class="form-control form-control-custom " id="PlexAvailabilityChecker" name="PlexAvailabilityChecker" value="@Model.PlexAvailabilityChecker">
+                </div>
 
+                <div class="form-group">
+                    <label for="PlexContentCacher" class="control-label">Plex Content Cacher (min)</label>
+                    <input type="text" class="form-control form-control-custom " id="PlexContentCacher" name="PlexContentCacher" value="@Model.PlexContentCacher">
+                </div>
+
+                <div class="form-group">
+                    <label for="PlexUserChecker" class="control-label">Plex User Checker (hours)</label>
+                    <input type="text" class="form-control form-control-custom " id="PlexUserChecker" name="PlexUserChecker" value="@Model.PlexUserChecker">
+                </div>
+
+                <small>Please note, the minimum time for this to run is 11 hours, if set below 11 then we will ignore that value. This is a very resource intensive job, the less we run it the better.</small>
+                <div class="form-group">
+                    <label for="PlexEpisodeCacher" class="control-label">Plex Episode Cacher (hours)</label>
+                    <input type="text" class="form-control form-control-custom " id="PlexEpisodeCacher" name="PlexEpisodeCacher" value="@Model.PlexEpisodeCacher">
+                </div>
+            }
+            @if (Model.Emby)
+            {
+                <div class="form-group">
+                    <label for="EmbyAvailabilityChecker" class="control-label">Emby Availability Checker (min)</label>
+                    <input type="text" class="form-control form-control-custom " id="EmbyAvailabilityChecker" name="EmbyAvailabilityChecker" value="@Model.EmbyAvailabilityChecker">
+                </div>
+
+                <div class="form-group">
+                    <label for="EmbyContentCacher" class="control-label">Emby Content Cacher (min)</label>
+                    <input type="text" class="form-control form-control-custom " id="EmbyContentCacher" name="EmbyContentCacher" value="@Model.EmbyContentCacher">
+                </div>
+
+                <div class="form-group">
+                    <label for="EmbyUserChecker" class="control-label">Emby User Checker (hours)</label>
+                    <input type="text" class="form-control form-control-custom " id="EmbyUserChecker" name="EmbyUserChecker" value="@Model.EmbyUserChecker">
+                </div>
+
+                <div class="form-group">
+                    <label for="EmbyEpisodeCacher" class="control-label">Emby Episode Cacher (hours)</label>
+                    <input type="text" class="form-control form-control-custom " id="EmbyEpisodeCacher" name="EmbyEpisodeCacher" value="@Model.EmbyEpisodeCacher">
+                </div>
+            }
             <div class="form-group">
                 <label for="CouchPotatoCacher" class="control-label">Couch Potato Cacher (min)</label>
                 <input type="text" class="form-control form-control-custom " id="CouchPotatoCacher" name="CouchPotatoCacher" value="@Model.CouchPotatoCacher">
@@ -64,11 +95,7 @@
                 <input type="text" class="form-control form-control-custom " id="RadarrCacher" name="RadarrCacher" value="@Model.RadarrCacher">
             </div>
 
-            <small>Please note, the minimum time for this to run is 11 hours, if set below 11 then we will ignore that value. This is a very resource intensive job, the less we run it the better.</small>
-            <div class="form-group">
-                <label for="PlexEpisodeCacher" class="control-label">Plex Episode Cacher (hours)</label>
-                <input type="text" class="form-control form-control-custom " id="PlexEpisodeCacher" name="PlexEpisodeCacher" value="@Model.PlexEpisodeCacher">
-            </div>
+
             
             <div class="form-group">
                 <label for="SonarrCacher" class="control-label">Sonarr Cacher (min)</label>
