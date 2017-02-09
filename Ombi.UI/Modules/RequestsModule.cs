@@ -299,8 +299,18 @@ namespace Ombi.UI.Modules
                 return r.path;
             }
 
-            // Return default path
-            return rootFoldersResult.FirstOrDefault(x => x.id.Equals(int.Parse(sonarrSettings.RootPath)))?.path ?? string.Empty;
+            int outRoot;
+            var defaultPath = int.TryParse(sonarrSettings.RootPath, out outRoot);
+
+            if (defaultPath)
+            {
+                // Return default path
+                return rootFoldersResult.FirstOrDefault(x => x.id.Equals(outRoot)?.path ?? string.Empty;
+            }
+            else
+            {
+                return rootFoldersResult.FirstOrDefault()?.path ?? string.Empty;
+            }
         }
 
         private async Task<Response> GetAlbumRequests()
