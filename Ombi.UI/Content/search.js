@@ -394,7 +394,7 @@ $(function () {
                 if (results.result) {
                     // It's on Netflix
                     $('#' + id + 'netflixTab')
-                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Avaialble on Netflix</span></a>");
+                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Available on Netflix</span></a>");
                 }
             
         });
