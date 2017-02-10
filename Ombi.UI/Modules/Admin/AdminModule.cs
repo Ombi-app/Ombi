@@ -225,7 +225,9 @@ namespace Ombi.UI.Modules.Admin
 
             Get["/newsletter", true] = async (x, ct) => await Newsletter();
             Post["/newsletter", true] = async (x, ct) => await SaveNewsletter();
-            Post["/testnewsletteradminemail"] = x => TestNewsletterAdminEmail(); 
+            Post["/testnewsletteradminemail"] = x => TestNewsletterAdminEmail();
+            
+            Get["/massemail"] = _ => MassEmailView();
             Post["/testmassadminemail"] = x => TestMassAdminEmail();
             Post["/sendmassemail"] = x => SendMassEmail();
 
@@ -929,6 +931,10 @@ namespace Ombi.UI.Modules.Admin
         {
             var settings = await NewsLetterService.GetSettingsAsync();
             return View["NewsletterSettings", settings];
+        }
+        private Negotiator MassEmailView()
+        {
+            return View["MassEmail"];
         }
 
         private async Task<Response> SaveNewsletter()
