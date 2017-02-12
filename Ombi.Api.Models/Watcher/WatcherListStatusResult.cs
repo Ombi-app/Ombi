@@ -49,13 +49,6 @@ namespace Ombi.Api.Models.Watcher
         public string requiredwords { get; set; }
     }
 
-    public class Quality
-    {
-        [JsonProperty("Quality")]
-        public Quality2 quality { get; set; }
-        public Filters Filters { get; set; }
-    }
-
     public class WatcherListStatusResult
     {
         public string status { get; set; }
@@ -72,7 +65,7 @@ namespace Ombi.Api.Models.Watcher
         public string dvd { get; set; }
         public string tomatorating { get; set; }
         public string imdbid { get; set; }
-        public Quality quality { get; set; }
+        public string quality { get; set; }
 
     }
 

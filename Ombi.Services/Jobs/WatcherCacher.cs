@@ -70,7 +70,7 @@ namespace Ombi.Services.Jobs
             {
                 if (watcherSettings.Enabled)
                 {
-                    var movies = WatcherApi.ListMovies(watcherSettings.ApiKey, watcherSettings.FullUri);
+                   var movies = WatcherApi.ListMovies(watcherSettings.ApiKey, watcherSettings.FullUri);
                     if (movies.Error)
                     {
                         Log.Error("Error when trying to get Watchers movies");
