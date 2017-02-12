@@ -183,8 +183,9 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             return escapedHtml;
         }
 
-        private void GenerateMovieHtml(IEnumerable<EmbyRecentlyAddedModel> movies, StringBuilder sb)
+        private void GenerateMovieHtml(IEnumerable<EmbyRecentlyAddedModel> recentlyAddedMovies, StringBuilder sb)
         {
+            var movies = recentlyAddedMovies?.ToList() ?? new List<EmbyRecentlyAddedModel>();
             if (!movies.Any())
             {
                 return;
