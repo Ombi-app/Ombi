@@ -8,11 +8,13 @@ ____
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 [![Stories in Progress](https://badge.waffle.io/tidusjar/Ombi.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/Ombi)
 
+[![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
+
 | Service  | Master                      | Early Access                 | Dev                          |
 |----------|:---------------------------:|:----------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)
 | Travis   | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/master.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/EAP.svg)](https://travis-ci.org/tidusjar/Ombi) | [![Travis](https://img.shields.io/travis/tidusjar/Ombi/dev.svg)](https://travis-ci.org/tidusjar/Ombi)
-
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)             |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
