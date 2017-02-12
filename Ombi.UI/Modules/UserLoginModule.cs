@@ -330,7 +330,15 @@ namespace Ombi.UI.Modules
                 if (settings.UserAuthentication) // Authenticate with Plex
                 {
                     Log.Debug("Need to auth and also provide pass");
-                    var signedIn = (EmbyUser)EmbyApi.LogIn(username, password, embySettings.ApiKey, embySettings.FullUri);
+                    EmbyUser signedIn = null;
+                    try
+                    {
+                        signedIn = (EmbyUser)EmbyApi.LogIn(username, password, embySettings.ApiKey, embySettings.FullUri);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e);
+                    }
                     if (signedIn != null)
                     {
                         Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
@@ -732,15 +740,32 @@ namespace Ombi.UI.Modules
 
         private bool CheckIfEmbyUser(string username, EmbySettings s)
         {
-            var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
-            var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
-            return allUsers != null && allUsers.Any(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            try
+            {
+                var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
+                var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
+                return allUsers != null && allUsers.Any(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return false;
+            }
         }
         private EmbyUser GetEmbyUser(string username, EmbySettings s)
         {
-            var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
-            var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
-            return allUsers?.FirstOrDefault(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            try
+            {
+
+                var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
+                var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
+                return allUsers?.FirstOrDefault(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return null;
+            }
         }
 
 

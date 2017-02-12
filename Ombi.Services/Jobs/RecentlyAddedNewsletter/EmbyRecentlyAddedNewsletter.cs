@@ -183,8 +183,9 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             return escapedHtml;
         }
 
-        private void GenerateMovieHtml(IEnumerable<EmbyRecentlyAddedModel> movies, StringBuilder sb)
+        private void GenerateMovieHtml(IEnumerable<EmbyRecentlyAddedModel> recentlyAddedMovies, StringBuilder sb)
         {
+            var movies = recentlyAddedMovies?.ToList() ?? new List<EmbyRecentlyAddedModel>();
             if (!movies.Any())
             {
                 return;
@@ -241,8 +242,10 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             public EmbySeriesInformation Series { get; set; }
             public List<EmbyEpisodeInformation> Episodes { get; set; }
         }
-        private void GenerateTvHtml(List<EmbyRecentlyAddedModel> tv, StringBuilder sb)
+        private void GenerateTvHtml(IEnumerable<EmbyRecentlyAddedModel> recenetlyAddedTv, StringBuilder sb)
         {
+            var tv = recenetlyAddedTv?.ToList() ?? new List<EmbyRecentlyAddedModel>();
+
             if (!tv.Any())
             {
                 return;

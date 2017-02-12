@@ -9,7 +9,7 @@
             <legend>Newsletter Settings</legend>
             <div style="padding:10px">
 
-                <!-- Email Nofication Section -->
+                <!-- Newsletter Section -->
                 <div class="form-group">
                     <div class="checkbox">
 
@@ -51,42 +51,7 @@
                     </div>
                 </div>
             </div>
-            <!-- Email Nofication Section -->
-
-        </fieldset>
-
-    </form>
-    <form id="massemail" class="form-horizontal">
-        <fieldset>
-            <legend>Mass Email</legend>
-            <div style="padding:10px">
-                <div class="form-group">
-                    <small>Note: This will require you to setup your email notifications</small>
-                </div>
-                <div class="form-group">
-                    <label for="massEmailSubject" class="control-label">Subject</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " placeholder="A Message from the Admin" id="massEmailSubject" name="massEmailSubject" value="">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="massEmailBody" class="control-label">Body</label>
-
-                    <textarea id="massEmailBody" class="form-control" rows="5"></textarea>
-                    <small>Supports HTML</small>
-
-                </div>
-                <div class="form-group">
-                    <div>
-                        <button id="testSendMassEmailBtn" class="btn btn-primary-outline">Send Test to Admin<div id="testSendMassEmailSpinner"></div></button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div>
-                        <button id="sendMassEmailBtn" class="btn btn-primary-outline">Send To All Users<div id="sendMassEmailSpinner"></div></button>
-                    </div>
-                </div>
-            </div>
+            <!-- Newsletter Section -->
         </fieldset>
     </form>
 </div>
@@ -94,8 +59,6 @@
 
 <script>
     $(function () {
-
-
         var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
             e.preventDefault();
@@ -145,63 +108,6 @@
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
                     $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
-                }
-            });
-        });
-
-        $('#testSendMassEmailBtn').click(function (e) {
-            e.preventDefault();
-            var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/testmassadminemail');
-            $('#testSendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
-            var data = { "Users": "", "Body": $("#massEmailBody").val(), "Subject": $("#massEmailSubject").val() };
-            $.ajax({
-                type: "post",
-                url: url,
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    if (response.result) {
-                        generateNotify(response.message, "success");
-                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
-                    } else {
-
-                        generateNotify(response.message, "danger");
-                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
-                }
-            });
-        });
-        $('#sendMassEmailBtn').click(function (e) {
-            e.preventDefault();
-            var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/sendmassemail');
-            $('#sendMassEmailSpinner').attr("class", "fa fa-spinner fa-spin");
-            var data = { "Users": "", "Body": $("#massEmailBody").val(), "Subject": $("#massEmailSubject").val() };
-            $.ajax({
-                type: "post",
-                url: url,
-                data: data,
-                dataType: "json",
-                success: function (response) {
-                    if (response.result) {
-                        generateNotify(response.message, "success");
-                        $('#sendMassEmailSpinner').attr("class", "fa fa-check");
-                    } else {
-
-                        generateNotify(response.message, "danger");
-                        $('#sendMassEmailSpinner').attr("class", "fa fa-times");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                    $('#sendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });
