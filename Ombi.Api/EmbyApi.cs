@@ -64,7 +64,6 @@ namespace Ombi.Api
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetUsers for Emby, Retrying {0}", timespan), new[] {
                 TimeSpan.FromSeconds (1),
-                TimeSpan.FromSeconds(5)
             });
 
             var obj = policy.Execute(() => Api.ExecuteJson<List<EmbyUser>>(request, baseUri));
@@ -199,8 +198,7 @@ namespace Ombi.Api
 
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling LogInfor Emby, Retrying {0}", timespan), new[] {
-                TimeSpan.FromSeconds (1),
-                TimeSpan.FromSeconds(5)
+                TimeSpan.FromSeconds (1)
             });
 
             var obj = policy.Execute(() => Api.Execute(request, baseUri));
