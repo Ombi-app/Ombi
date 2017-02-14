@@ -31,6 +31,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using NLog;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
@@ -41,6 +42,7 @@ using Ombi.Services.Jobs.Templates;
 using Ombi.Store.Models;
 using Ombi.Store.Models.Emby;
 using Ombi.Store.Repository;
+using TMDbLib.Objects.Exceptions;
 using EmbyMediaType = Ombi.Store.Models.Plex.EmbyMediaType;
 
 namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
@@ -79,7 +81,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
         {
             try
             {
-               return GetHtml(test);
+                return GetHtml(test);
             }
             catch (Exception e)
             {
@@ -196,32 +198,42 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var movie in orderedMovies)
             {
+                // We have a try within a try so we can catch the rate limit without ending the loop (finally block)
                 try
                 {
-
-                    var imdbId = movie.ProviderIds.Imdb;
-                    var info = MovieApi.GetMovieInformation(imdbId).Result;
-                    if (info == null)
+                    try
                     {
-                        throw new Exception($"Movie with Imdb id {imdbId} returned null from the MovieApi");
+
+                        var imdbId = movie.ProviderIds.Imdb;
+                        var info = MovieApi.GetMovieInformation(imdbId).Result;
+                        if (info == null)
+                        {
+                            throw new Exception($"Movie with Imdb id {imdbId} returned null from the MovieApi");
+                        }
+                        AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
+
+                        sb.Append("<tr>");
+                        sb.Append(
+                            "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
+
+                        Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
+                        Header(sb, 3, $"{info.Title} {info.ReleaseDate?.ToString("yyyy") ?? string.Empty}");
+                        EndTag(sb, "a");
+
+                        if (info.Genres.Any())
+                        {
+                            AddParagraph(sb,
+                                $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+                        }
+
+                        AddParagraph(sb, info.Overview);
                     }
-                    AddImageInsideTable(sb, $"https://image.tmdb.org/t/p/w500{info.BackdropPath}");
-
-                    sb.Append("<tr>");
-                    sb.Append(
-                        "<td align=\"center\" style=\"font-family: sans-serif; font-size: 14px; vertical-align: top;\" valign=\"top\">");
-
-                    Href(sb, $"https://www.imdb.com/title/{info.ImdbId}/");
-                    Header(sb, 3, $"{info.Title} {info.ReleaseDate?.ToString("yyyy") ?? string.Empty}");
-                    EndTag(sb, "a");
-
-                    if (info.Genres.Any())
+                    catch (RequestLimitExceededException limit)
                     {
-                        AddParagraph(sb,
-                            $"Genre: {string.Join(", ", info.Genres.Select(x => x.Name.ToString()).ToArray())}");
+                        // We have hit a limit, we need to now wait.
+                        Thread.Sleep(TimeSpan.FromSeconds(10));
+                        Log.Info(limit);
                     }
-
-                    AddParagraph(sb, info.Overview);
                 }
                 catch (Exception e)
                 {
@@ -260,8 +272,8 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             {
                 var seriesItem = t.EmbyInformation.SeriesInformation;
                 var relatedEpisodes = t.EpisodeInformation;
-                
-                
+
+
                 try
                 {
                     var info = TvApi.ShowLookupByTheTvDbId(int.Parse(seriesItem.ProviderIds.Tvdb));
@@ -328,8 +340,8 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             sb.Append("</table><br /><br />");
         }
 
-        
-        
+
+
 
         private void EndLoopHtml(StringBuilder sb)
         {
