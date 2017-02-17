@@ -68,8 +68,11 @@ namespace Ombi.Core.Migration.Migrations
         {
 #if !DEBUG
             var s = PlexSettings.GetSettings();
-            s.Enable = true;
-            PlexSettings.SaveSettings(s);
+            if (!string.IsNullOrEmpty(s.Ip))
+            {
+                s.Enable = true;
+                PlexSettings.SaveSettings(s);
+            }
 #endif
         }
         private void UpdateCustomSettings()

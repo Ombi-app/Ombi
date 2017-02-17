@@ -181,7 +181,7 @@ namespace Ombi.Core.Migration.Migrations
             try
             {
                 var settings = PlexSettings.GetSettings();
-                if (string.IsNullOrEmpty(settings.PlexAuthToken))
+                if (string.IsNullOrEmpty(settings.PlexAuthToken) || !settings.Enable)
                 {
                     return;
                 }
