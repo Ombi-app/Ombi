@@ -33,6 +33,7 @@ using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Emby;
 using Ombi.Helpers;
+using Polly;
 using RestSharp;
 
 namespace Ombi.Api
@@ -78,7 +79,7 @@ namespace Ombi.Api
                 Resource = "emby/System/Info",
                 Method = Method.GET
             };
-            
+
             AddHeaders(request, apiKey);
 
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetSystemInformation for Emby, Retrying {0}", timespan), new[] {
@@ -162,29 +163,71 @@ namespace Ombi.Api
                 TimeSpan.FromSeconds(5)
             });
 
-            switch (type)
+            IRestResponse response = null;
+            try
             {
-                case EmbyMediaType.Movie:
-                    return new EmbyInformation
-                    {
-                        MovieInformation = policy.Execute(() => Api.ExecuteJson<EmbyMovieInformation>(request, baseUri))
-                    };
-                case EmbyMediaType.Series:
-                    return new EmbyInformation
-                    {
-                        SeriesInformation =
-                            policy.Execute(() => Api.ExecuteJson<EmbySeriesInformation>(request, baseUri))
-                    };
-                case EmbyMediaType.Music:
-                    break;
-                case EmbyMediaType.Episode:
-                    return new EmbyInformation
-                    {
-                        EpisodeInformation = 
-                            policy.Execute(() => Api.ExecuteJson<EmbyEpisodeInformation>(request, baseUri))
-                    };
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+
+                switch (type)
+                {
+                    case EmbyMediaType.Movie:
+                        response = policy.Execute(() => Api.Execute(request, baseUri));
+                        break;
+
+                    case EmbyMediaType.Series:
+                        response = policy.Execute(() => Api.Execute(request, baseUri));
+                        break;
+                    case EmbyMediaType.Music:
+                        break;
+                    case EmbyMediaType.Episode:
+                        response = policy.Execute(() => Api.Execute(request, baseUri));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+
+                var info = new EmbyInformation();
+
+                switch (type)
+                {
+                    case EmbyMediaType.Movie:
+                        return new EmbyInformation
+                        {
+                            MovieInformation = JsonConvert.DeserializeObject<EmbyMovieInformation>(response.Content)
+                        };
+                    case EmbyMediaType.Series:
+                        return new EmbyInformation
+                        {
+                            SeriesInformation = JsonConvert.DeserializeObject<EmbySeriesInformation>(response.Content)
+                        };
+                    case EmbyMediaType.Music:
+                        break;
+                    case EmbyMediaType.Episode:
+                        return new EmbyInformation
+                        {
+                            EpisodeInformation = JsonConvert.DeserializeObject<EmbyEpisodeInformation>(response.Content)
+                        };
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(type), type, null);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.Error("Could not get the media item's information");
+                Log.Error(e);
+                Log.Debug("ResponseContent");
+                Log.Debug(response?.Content ?? "Empty");
+                Log.Debug("ResponseStatusCode");
+                Log.Debug(response?.StatusCode ?? HttpStatusCode.PreconditionFailed);
+
+                Log.Debug("ResponseError");
+                Log.Debug(response?.ErrorMessage ?? "No Error");
+                Log.Debug("ResponseException");
+                Log.Debug(response?.ErrorException ?? new Exception());
+
+
+
+                throw;
             }
             return new EmbyInformation();
         }
