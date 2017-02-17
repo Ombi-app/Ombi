@@ -14,5 +14,6 @@ namespace Ombi.Api.Interfaces
         EmbyItemContainer<EmbyLibrary> ViewLibrary(string apiKey, string userId, Uri baseUri);
         EmbyInformation GetInformation(string mediaId, EmbyMediaType type, string apiKey, string userId, Uri baseUri);
         EmbyUser LogIn(string username, string password, string apiKey,  Uri baseUri);
+        EmbySystemInfo GetSystemInformation(string apiKey, Uri baseUrl);
     }
 }

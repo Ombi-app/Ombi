@@ -71,6 +71,7 @@
     <Compile Include="Emby\EmbySeriesItem.cs" />
     <Compile Include="Emby\EmbySeriesstudioinfo.cs" />
     <Compile Include="Emby\EmbyStudio.cs" />
+    <Compile Include="Emby\EmbySystemInfo.cs" />
     <Compile Include="Emby\EmbyUser.cs" />
     <Compile Include="Emby\EmbyUserdata.cs" />
     <Compile Include="Emby\EmbyMovieInformation.cs" />

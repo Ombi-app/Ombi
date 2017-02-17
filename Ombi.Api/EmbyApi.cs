@@ -71,6 +71,26 @@ namespace Ombi.Api
             return obj;
         }
 
+        public EmbySystemInfo GetSystemInformation(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest
+            {
+                Resource = "emby/System/Info",
+                Method = Method.GET
+            };
+            
+            AddHeaders(request, apiKey);
+
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetSystemInformation for Emby, Retrying {0}", timespan), new[] {
+                TimeSpan.FromSeconds (1),
+                TimeSpan.FromSeconds(5)
+            });
+
+            var obj = policy.Execute(() => Api.ExecuteJson<EmbySystemInfo>(request, baseUrl));
+
+            return obj;
+        }
+
         public EmbyItemContainer<EmbyLibrary> ViewLibrary(string apiKey, string userId, Uri baseUri)
         {
             var request = new RestRequest
