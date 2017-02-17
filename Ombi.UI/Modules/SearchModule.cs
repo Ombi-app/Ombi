@@ -437,6 +437,11 @@ namespace Ombi.UI.Modules
                     {
                         var show = anticipatedShow.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
 
                         var model = new SearchTvShowViewModel
                         {
@@ -466,6 +471,12 @@ namespace Ombi.UI.Modules
                     {
                         var show = watched.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
+
                         var model = new SearchTvShowViewModel
                         {
                             FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -494,6 +505,12 @@ namespace Ombi.UI.Modules
                     {
                         var show = watched.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
+
                         var model = new SearchTvShowViewModel
                         {
                             FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
