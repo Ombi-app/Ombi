@@ -69,7 +69,9 @@ namespace Ombi.UI.Modules
             IEmbyNotificationEngine embyEngine,
             ISecurityExtensions security,
             ISettingsService<CustomizationSettings> customSettings,
-            ISettingsService<EmbySettings> embyS) : base("requests", prSettings, security)
+            ISettingsService<EmbySettings> embyS,
+            ISettingsService<RadarrSettings> radarr,
+            IRadarrApi radarrApi) : base("requests", prSettings, security)
         {
             Service = service;
             PrSettings = prSettings;
@@ -87,6 +89,8 @@ namespace Ombi.UI.Modules
             EmbyNotificationEngine = embyEngine;
             CustomizationSettings = customSettings;
             EmbySettings = embyS;
+            Radarr = radarr;
+            RadarrApi = radarrApi;
 
             Get["/", true] = async (x, ct) => await LoadRequests();
             Get["/movies", true] = async (x, ct) => await GetMovies();
@@ -115,8 +119,10 @@ namespace Ombi.UI.Modules
         private ISettingsService<SickRageSettings> SickRageSettings { get; }
         private ISettingsService<CouchPotatoSettings> CpSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private ISettingsService<RadarrSettings> Radarr { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private ISonarrApi SonarrApi { get; }
+        private IRadarrApi RadarrApi { get; }
         private ISickRageApi SickRageApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private ICacheProvider Cache { get; }
@@ -144,27 +150,57 @@ namespace Ombi.UI.Modules
             }
 
             List<QualityModel> qualities = new List<QualityModel>();
+            var rootFolders = new List<RootFolderModel>();
 
+            var radarr = await Radarr.GetSettingsAsync();
             if (IsAdmin)
             {
-                var cpSettings = CpSettings.GetSettings();
-                if (cpSettings.Enabled)
+                try
                 {
-                    try
+                    var cpSettings = await CpSettings.GetSettingsAsync();
+                    if (cpSettings.Enabled)
                     {
-                        var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                        try
                         {
-                            return await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey)).ConfigureAwait(false);
-                        });
-                        if (result != null)
+                            var result = await Cache.GetOrSetAsync(CacheKeys.CouchPotatoQualityProfiles, async () =>
+                            {
+                                return
+                                    await Task.Run(() => CpApi.GetProfiles(cpSettings.FullUri, cpSettings.ApiKey))
+                                        .ConfigureAwait(false);
+                            });
+                            if (result != null)
+                            {
+                                qualities =
+                                    result.list.Select(x => new QualityModel {Id = x._id, Name = x.label}).ToList();
+                            }
+                        }
+                        catch (Exception e)
                         {
-                            qualities = result.list.Select(x => new QualityModel { Id = x._id, Name = x.label }).ToList();
+                            Log.Info(e);
                         }
                     }
-                    catch (Exception e)
+                    if (radarr.Enabled)
                     {
-                        Log.Info(e);
+                        var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.RadarrRootFolders, async () =>
+                        {
+                            return await Task.Run(() => RadarrApi.GetRootFolders(radarr.ApiKey, radarr.FullUri));
+                        });
+
+                        rootFolders =
+                            rootFoldersResult.Select(
+                                    x => new RootFolderModel {Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace})
+                                .ToList();
+
+                        var result = await Cache.GetOrSetAsync(CacheKeys.RadarrQualityProfiles, async () =>
+                        {
+                            return await Task.Run(() => RadarrApi.GetProfiles(radarr.ApiKey, radarr.FullUri));
+                        });
+                        qualities = result.Select(x => new QualityModel { Id = x.id.ToString(), Name = x.name }).ToList();
                     }
+                }
+                catch (Exception e)
+                {
+                    Log.Error(e);
                 }
             }
 
@@ -194,6 +230,9 @@ namespace Ombi.UI.Modules
                 Denied = movie.Denied,
                 DeniedReason = movie.DeniedReason,
                 Qualities = qualities.ToArray(),
+                HasRootFolders = rootFolders.Any(),
+                RootFolders = rootFolders.ToArray(),
+                CurrentRootPath = radarr.Enabled ? GetRootPath(movie.RootFolderSelected, radarr).Result : null
             }).ToList();
 
             return Response.AsJson(viewModel);
@@ -301,6 +340,32 @@ namespace Ombi.UI.Modules
 
             int outRoot;
             var defaultPath = int.TryParse(sonarrSettings.RootPath, out outRoot);
+
+            if (defaultPath)
+            {
+                // Return default path
+                return rootFoldersResult.FirstOrDefault(x => x.id.Equals(outRoot))?.path ?? string.Empty;
+            }
+            else
+            {
+                return rootFoldersResult.FirstOrDefault()?.path ?? string.Empty;
+            }
+        }
+
+        private async Task<string> GetRootPath(int pathId, RadarrSettings radarrSettings)
+        {
+            var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.RadarrRootFolders, async () =>
+            {
+                return await Task.Run(() => RadarrApi.GetRootFolders(radarrSettings.ApiKey, radarrSettings.FullUri));
+            });
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+
+            int outRoot;
+            var defaultPath = int.TryParse(radarrSettings.RootPath, out outRoot);
 
             if (defaultPath)
             {

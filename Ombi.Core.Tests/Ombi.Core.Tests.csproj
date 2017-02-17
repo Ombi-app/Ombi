@@ -60,6 +60,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="AuthenticationSettingsTests.cs" />
+    <Compile Include="MovieSenderTests.cs" />
     <Compile Include="NotificationMessageResolverTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -68,6 +69,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Interfaces\Ombi.Api.Interfaces.csproj">
+      <Project>{95834072-A675-415D-AA8F-877C91623810}</Project>
+      <Name>Ombi.Api.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Api.Models\Ombi.Api.Models.csproj">
+      <Project>{CB37A5F8-6DFC-4554-99D3-A42B502E4591}</Project>
+      <Name>Ombi.Api.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj">
+      <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
+      <Name>Ombi.Api</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj">
       <Project>{DD7DC444-D3BF-4027-8AB9-EFC71F5EC581}</Project>
       <Name>Ombi.Core</Name>
@@ -75,6 +88,10 @@
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj">
       <Project>{1252336D-42A3-482A-804C-836E60173DFA}</Project>
       <Name>Ombi.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj">
+      <Project>{92433867-2B7B-477B-A566-96C382427525}</Project>
+      <Name>Ombi.Store</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
