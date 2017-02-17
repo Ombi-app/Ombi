@@ -27,6 +27,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using NLog;
@@ -76,14 +77,7 @@ namespace Ombi.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute(request);
-
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-
+           
             return response;
         }
 
