@@ -69,6 +69,7 @@ namespace Ombi.UI.Modules.Admin
 
 
             Post["/sonarrrootfolders"] = _ => GetSonarrRootFolders();
+            Post["/radarrrootfolders"] = _ => GetSonarrRootFolders();
 
             Get["/watcher", true] = async (x, ct) => await Watcher();
             Post["/watcher", true] = async (x, ct) => await SaveWatcher();
@@ -191,7 +192,22 @@ namespace Ombi.UI.Modules.Admin
         {
             var settings = this.Bind<SonarrSettings>();
 
-              var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+
+            // set the cache
+            if (rootFolders != null)
+            {
+                Cache.Set(CacheKeys.SonarrRootFolders, rootFolders);
+            }
+
+            return Response.AsJson(rootFolders);
+        }
+
+        private Response GetRadarrRootFolders()
+        {
+            var settings = this.Bind<RadarrSettings>();
+
+            var rootFolders = RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
 
             // set the cache
             if (rootFolders != null)

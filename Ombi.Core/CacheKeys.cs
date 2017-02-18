@@ -50,5 +50,6 @@ namespace Ombi.Core
         public const string GetPlexRequestSettings = nameof(GetPlexRequestSettings);
         public const string LastestProductVersion = nameof(LastestProductVersion);
         public const string SonarrRootFolders = nameof(SonarrRootFolders);
+        public const string RadarrRootFolders = nameof(RadarrRootFolders);
     }
 }
