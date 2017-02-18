@@ -26,14 +26,19 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Radarr;
+using Ombi.Api.Models.Sonarr;
 using Ombi.Api.Models.Watcher;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 using Ploeh.AutoFixture;
 
@@ -48,6 +53,7 @@ namespace Ombi.Core.Tests
         private Mock<ICouchPotatoApi> CpApiMock { get; set; }
         private Mock<IWatcherApi> WatcherApiMock { get; set; }
         private Mock<IRadarrApi> RadarrApiMock { get; set; }
+        private Mock<ICacheProvider> CacheMock { get; set; }
 
         private Fixture F { get; set; }
 
@@ -61,6 +67,8 @@ namespace Ombi.Core.Tests
             RadarrMock = new Mock<ISettingsService<RadarrSettings>>();
             CpApiMock = new Mock<ICouchPotatoApi>();
             WatcherApiMock = new Mock<IWatcherApi>();
+            CacheMock = new Mock<ICacheProvider>();
+
 
             RadarrMock.Setup(x => x.GetSettingsAsync())
                 .ReturnsAsync(F.Build<RadarrSettings>().With(x => x.Enabled, false).Create());
@@ -69,7 +77,7 @@ namespace Ombi.Core.Tests
             CpMock.Setup(x => x.GetSettingsAsync())
                  .ReturnsAsync(F.Build<CouchPotatoSettings>().With(x => x.Enabled, false).Create());
 
-            Sender = new MovieSender(CpMock.Object, WatcherMock.Object, CpApiMock.Object, WatcherApiMock.Object, RadarrApiMock.Object, RadarrMock.Object);    
+            Sender = new MovieSender(CpMock.Object, WatcherMock.Object, CpApiMock.Object, WatcherApiMock.Object, RadarrApiMock.Object, RadarrMock.Object, CacheMock.Object);    
         }
 
         [Test]
@@ -79,6 +87,9 @@ namespace Ombi.Core.Tests
                 .ReturnsAsync(F.Build<RadarrSettings>().With(x => x.Enabled, true).Create());
             RadarrApiMock.Setup(x => x.AddMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<Uri>(), It.IsAny<bool>())).Returns(new RadarrAddMovie { title = "Abc" });
+
+            CacheMock.Setup(x => x.GetOrSet<List<SonarrRootFolder>>(CacheKeys.RadarrRootFolders, It.IsAny<Func<List<SonarrRootFolder>>>(), It.IsAny<int>()))
+                .Returns(F.CreateMany<SonarrRootFolder>().ToList());
 
             var model = F.Create<RequestedModel>();
 
@@ -100,6 +111,9 @@ namespace Ombi.Core.Tests
                 .ReturnsAsync(F.Build<RadarrSettings>().With(x => x.Enabled, true).Create());
             RadarrApiMock.Setup(x => x.AddMovie(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(),
                 It.IsAny<Uri>(), It.IsAny<bool>())).Returns(new RadarrAddMovie {  Error = new RadarrError{message = "Movie Already Added"}});
+
+            CacheMock.Setup(x => x.GetOrSet<List<SonarrRootFolder>>(CacheKeys.RadarrRootFolders, It.IsAny<Func<List<SonarrRootFolder>>>(), It.IsAny<int>()))
+                .Returns(F.CreateMany<SonarrRootFolder>().ToList());
 
             var model = F.Create<RequestedModel>();
 

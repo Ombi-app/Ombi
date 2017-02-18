@@ -26,10 +26,12 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Core.SettingModels;
+using Ombi.Helpers;
 using Ombi.Store;
 
 namespace Ombi.Core
@@ -37,7 +39,8 @@ namespace Ombi.Core
     public class MovieSender : IMovieSender
     {
         public MovieSender(ISettingsService<CouchPotatoSettings> cp, ISettingsService<WatcherSettings> watcher,
-            ICouchPotatoApi cpApi, IWatcherApi watcherApi, IRadarrApi radarrApi, ISettingsService<RadarrSettings> radarrSettings)
+            ICouchPotatoApi cpApi, IWatcherApi watcherApi, IRadarrApi radarrApi, ISettingsService<RadarrSettings> radarrSettings,
+             ICacheProvider cache)
         {
             CouchPotatoSettings = cp;
             WatcherSettings = watcher;
@@ -45,6 +48,7 @@ namespace Ombi.Core
             WatcherApi = watcherApi;
             RadarrSettings = radarrSettings;
             RadarrApi = radarrApi;
+            Cache = cache;
         }
 
         private ISettingsService<CouchPotatoSettings> CouchPotatoSettings { get; }
@@ -53,6 +57,7 @@ namespace Ombi.Core
         private IRadarrApi RadarrApi { get; }
         private ICouchPotatoApi CpApi { get; }
         private IWatcherApi WatcherApi { get; }
+        private ICacheProvider Cache { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         public async Task<MovieSenderResult> Send(RequestedModel model, string qualityId = "")
@@ -114,8 +119,9 @@ namespace Ombi.Core
             {
                 int.TryParse(settings.QualityProfile, out qualityProfile);
             }
-       
-            var result = RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, settings.RootPath, settings.ApiKey, settings.FullUri, true);
+
+            var rootFolderPath = model.RootFolderSelected <= 0 ? settings.FullRootPath : GetRootPath(model.RootFolderSelected, settings);
+            var result = RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, true);
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {
@@ -127,6 +133,17 @@ namespace Ombi.Core
                 return new MovieSenderResult { Result = true, MovieSendingEnabled = true };
             }
             return new MovieSenderResult { Result = false, MovieSendingEnabled = true };
+        }
+
+        private string GetRootPath(int pathId, RadarrSettings sonarrSettings)
+        {
+            var rootFoldersResult = Cache.GetOrSet(CacheKeys.RadarrRootFolders, () => RadarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+
+            foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
+            {
+                return r.path;
+            }
+            return string.Empty;
         }
     }
 }
