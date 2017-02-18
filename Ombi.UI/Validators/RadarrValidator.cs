@@ -38,7 +38,6 @@ namespace Ombi.UI.Validators
             RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
             RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
             RuleFor(request => request.QualityProfile).NotEmpty().NotNull().WithMessage("You must specify a Quality Profile.");
-            RuleFor(request => request.RootPath).NotEmpty().NotNull().WithMessage("You must enter a root path.");
         }
     }
 }
