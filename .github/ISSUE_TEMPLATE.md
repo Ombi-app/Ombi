@@ -14,6 +14,14 @@ V 1.XX.XX
 
 Stable/Early Access Preview/development
 
+#### Media Sever:
+
+Plex/Emby
+
+#### Media Server Version:
+
+<!-- If appropriate --->
+
 #### Operating System:
 
 (Place text here)
