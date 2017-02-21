@@ -40,12 +40,15 @@ namespace Ombi.UI.Modules
     public class LandingPageModule : BaseModule
     {
         public LandingPageModule(ISettingsService<PlexRequestSettings> settingsService, ISettingsService<LandingPageSettings> landing,
-            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker, ISecurityExtensions security) : base("landing", settingsService, security)
+            ISettingsService<PlexSettings> ps, IPlexApi pApi, IResourceLinker linker, ISecurityExtensions security, ISettingsService<EmbySettings> emby,
+            IEmbyApi embyApi) : base("landing", settingsService, security)
         {
             LandingSettings = landing;
             PlexSettings = ps;
             PlexApi = pApi;
             Linker = linker;
+            EmbySettings = emby;
+            EmbyApi = embyApi;
 
             Get["LandingPageIndex","/", true] = async (x, ct) => 
             {
@@ -75,26 +78,49 @@ namespace Ombi.UI.Modules
 
         private ISettingsService<LandingPageSettings> LandingSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexApi PlexApi { get; }
+        private IEmbyApi EmbyApi { get; }
         private IResourceLinker Linker { get; }
 
         private async Task<Response> CheckStatus()
         {
             var plexSettings = await PlexSettings.GetSettingsAsync();
-            if (string.IsNullOrEmpty(plexSettings.PlexAuthToken) || string.IsNullOrEmpty(plexSettings.Ip))
+            if (plexSettings.Enable)
             {
-                return Response.AsJson(false);
-            }
-            try
-            {
-                var status = PlexApi.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri);
-                return Response.AsJson(status != null);
-            }
-            catch (Exception)
-            {
-                return Response.AsJson(false);
+                if (string.IsNullOrEmpty(plexSettings.PlexAuthToken) || string.IsNullOrEmpty(plexSettings.Ip))
+                {
+                    return Response.AsJson(false);
+                }
+                try
+                {
+                    var status = PlexApi.GetStatus(plexSettings.PlexAuthToken, plexSettings.FullUri);
+                    return Response.AsJson(status != null);
+                }
+                catch (Exception)
+                {
+                    return Response.AsJson(false);
+                }
             }
 
+            var emby = await EmbySettings.GetSettingsAsync();
+            if (emby.Enable)
+            {
+                if (string.IsNullOrEmpty(emby.AdministratorId) || string.IsNullOrEmpty(emby.Ip))
+                {
+                    return Response.AsJson(false);
+                }
+                try
+                {
+                    var status = EmbyApi.GetSystemInformation(emby.ApiKey, emby.FullUri);
+                    return Response.AsJson(status?.Version != null);
+                }
+                catch (Exception)
+                {
+                    return Response.AsJson(false);
+                }
+            }
+            return Response.AsJson(false);
         }
     }
 }

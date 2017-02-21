@@ -62,6 +62,7 @@ namespace Ombi.Core.Migration.Migrations
         private void UpdateApplicationSettings()
         {
             var plex = PlexRequestSettings.GetSettings();
+            
             var jobSettings = Jobs.GetSettings();
             var newsLetter = NewsletterSettings.GetSettings();
 

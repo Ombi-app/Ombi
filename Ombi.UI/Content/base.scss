@@ -642,3 +642,35 @@ $border-radius: 10px;
   background-color: #3e3e3e;
   border: 1px solid transparent;
 }
+
+.wizard-heading{
+    text-align: center;
+}
+.wizard-img{
+    width: 300px;
+    display: block $i;
+    margin: 0 auto $i;
+}
+
+.pace {
+  -webkit-pointer-events: none;
+  pointer-events: none;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+.pace-inactive {
+  display: none;
+}
+
+.pace .pace-progress {
+  background: $primary-colour;
+  position: fixed;
+  z-index: 2000;
+  top: 0;
+  right: 100%;
+  width: 100%;
+  height: 5px;
+}

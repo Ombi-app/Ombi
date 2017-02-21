@@ -30,35 +30,59 @@
 using System.Data;
 using NLog;
 using Ombi.Core.SettingModels;
+using Ombi.Store;
 
 namespace Ombi.Core.Migration.Migrations
 {
     [Migration(22000, "v2.20.0.0")]
     public class Version2200 : BaseMigration, IMigration
     {
-        public Version2200(ISettingsService<CustomizationSettings> custom)
+        public Version2200(ISettingsService<CustomizationSettings> custom, ISettingsService<PlexSettings> ps)
         {
             Customization = custom;
+            PlexSettings = ps;
         }
 
         public int Version => 22000;
         private ISettingsService<CustomizationSettings> Customization { get; set; }
+        private ISettingsService<PlexSettings> PlexSettings { get; set; }
 
 
         private static Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void Start(IDbConnection con)
         {
-            //UpdateCustomSettings(); Turned off the migration for now until the search has been improved on.
-            //UpdateSchema(con, Version);
+            UpdatePlexSettings();
+            UpdateCustomSettings();
+            AddNewColumns(con);
+            UpdateSchema(con, Version);
         }
 
+        private void AddNewColumns(IDbConnection con)
+        {
+            con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
+            con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
+        }
+
+        private void UpdatePlexSettings()
+        {
+#if !DEBUG
+            var s = PlexSettings.GetSettings();
+            if (!string.IsNullOrEmpty(s.Ip))
+            {
+                s.Enable = true;
+                PlexSettings.SaveSettings(s);
+            }
+#endif
+        }
         private void UpdateCustomSettings()
         {
+
             var settings = Customization.GetSettings();
-            settings.NewSearch = true; // Use the new search
+            settings.EnableIssues = true; 
 
             Customization.SaveSettings(settings);
+
         }
     }
 }

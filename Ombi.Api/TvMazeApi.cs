@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json;
 using NLog;
 using Ombi.Api.Models.Tv;
 using RestSharp;
@@ -90,21 +91,29 @@ namespace Ombi.Api
             };
             request.AddUrlSegment("id", theTvDbId.ToString());
             request.AddHeader("Content-Type", "application/json");
-
-            var obj = Api.Execute<TvMazeShow>(request, new Uri(Uri));
-
-            var episodes = EpisodeLookup(obj.id).ToList();
-
-            foreach (var e in episodes)
+            try
             {
-                obj.Season.Add(new TvMazeCustomSeason
+                var result = Api.Execute(request, new Uri(Uri));
+                var obj = JsonConvert.DeserializeObject<TvMazeShow>(result.Content);
+
+                var episodes = EpisodeLookup(obj.id).ToList();
+
+                foreach (var e in episodes)
                 {
-                    SeasonNumber = e.season,
-                    EpisodeNumber = e.number
-                });
+                    obj.Season.Add(new TvMazeCustomSeason
+                    {
+                        SeasonNumber = e.season,
+                        EpisodeNumber = e.number
+                    });
+                }
+
+                return obj;
             }
-            
-            return obj;
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return null;
+            }           
         }
 
         public List<TvMazeSeasons> GetSeasons(int id)

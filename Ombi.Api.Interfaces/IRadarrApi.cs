@@ -11,5 +11,6 @@ namespace Ombi.Api.Interfaces
         List<RadarrMovieResponse> GetMovies(string apiKey, Uri baseUrl);
         List<SonarrProfile> GetProfiles(string apiKey, Uri baseUrl);
         SystemStatus SystemStatus(string apiKey, Uri baseUrl);
+        List<SonarrRootFolder> GetRootFolders(string apiKey, Uri baseUrl);
     }
 }

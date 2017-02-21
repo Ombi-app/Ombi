@@ -105,7 +105,7 @@ namespace Ombi.Core.Queue
         public IEnumerable<RequestQueue> GetQueue()
         {
             var items = RequestQueue.GetAll();
-
+             
 
             return items;
         }
