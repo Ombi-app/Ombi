@@ -23,6 +23,8 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Radarr Settings</legend>
+
+            <input hidden="hidden" name="FullRootPath" id="fullRootPath" value="@Model.FullRootPath" />
             @Html.Checkbox(Model.Enabled, "Enabled", "Enabled")
 
 
