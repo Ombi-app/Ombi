@@ -379,7 +379,7 @@
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
                         {{else}}
                         {{#if_eq enableTvRequestsForOnlySeries true}}
-                        <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} btn-primary-outline dropdownTv" season-select="0" type="button"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}}disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
                         {{else}}
                         <div class="dropdown">
                             <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
