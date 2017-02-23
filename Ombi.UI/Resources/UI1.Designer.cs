@@ -718,6 +718,15 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actors.
+        /// </summary>
+        public static string Search_Actors {
+            get {
+                return ResourceManager.GetString("Search_Actors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Albums.
         /// </summary>
         public static string Search_Albums {

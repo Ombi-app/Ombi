@@ -95,7 +95,10 @@ $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         //if ($tvl.mixItUp('isLoaded')) $tvl.mixItUp('destroy');
         //$tvl.mixItUp(mixItUpConfig(activeState)); // init or reinit
     }
-    if (target === "#MoviesTab") {
+    if (target === "#MoviesTab" || target === "#ActorsTab") {
+        if (target === "#ActorsTab") {
+            actorLoad();
+        }
         $('#approveMovies,#deleteMovies').show();
         if ($tvl.mixItUp('isLoaded')) {
             activeState = $tvl.mixItUp('getState');
@@ -732,6 +735,36 @@ function initLoad() {
     movieLoad();
 
 }
+
+
+function actorLoad() {
+    var $ml = $('#actorMovieList');
+    if ($ml.mixItUp('isLoaded')) {
+        activeState = $ml.mixItUp('getState');
+        $ml.mixItUp('destroy');
+    }
+    $ml.html("");
+
+    var url = createBaseUrl(base, '/requests/actor');
+    $.ajax(url).success(function (results) {
+        if (results.length > 0) {
+            results.forEach(function (result) {
+                var context = buildRequestContext(result, "movie");
+                var html = searchTemplate(context);
+                $ml.append(html);
+            });
+
+
+            $('.customTooltip').tooltipster({
+                contentCloning: true
+            });
+        }
+        else {
+            $ml.html(noResultsHtml.format("movie"));
+        }
+        $ml.mixItUp(mixItUpConfig());
+    });
+};
 
 function movieLoad() {
     var $ml = $('#movieList');

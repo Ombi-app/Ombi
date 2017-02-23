@@ -25,6 +25,10 @@
                 <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
 
             </li>
+            <li role="presentation">
+                <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> @UI.Search_Actors</a>
+
+            </li>
         }
         @if (Model.Settings.SearchForTvShows)
         {
@@ -70,8 +74,22 @@
                 <div id="movieList">
                 </div>
             </div>
-        }
+                        <!-- Actors tab -->
+            <div role="tabpanel" class="tab-pane" id="ActorsTab">
+                <div class="input-group">
+                    <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+                    <div class="input-group-addon">
+                        <i id="actorSearchButton" class="fa fa-search"></i>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <!-- Movie content -->
+                <div id="actorMovieList">
+                </div>
+            </div>
 
+        }
 
         @if (Model.Settings.SearchForTvShows)
         {
