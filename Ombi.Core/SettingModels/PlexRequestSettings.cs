@@ -41,6 +41,7 @@ namespace Ombi.Core.SettingModels
         public int Port { get; set; }
         public string BaseUrl { get; set; }
         public bool SearchForMovies { get; set; }
+        public bool SearchForActors { get; set; }
         public bool SearchForTvShows { get; set; }
         public bool SearchForMusic { get; set; }
         [Obsolete("Use the user management settings")]

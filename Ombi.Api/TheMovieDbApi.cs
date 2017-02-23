@@ -69,6 +69,11 @@ namespace Ombi.Api
             return movies?.Results ?? new List<MovieResult>();
         }
 
+        private async Task<Movie> GetMovie(int id)
+        {
+            return await Client.GetMovie(id);
+        }
+
         public TmdbMovieDetails GetMovieInformationWithVideos(int tmdbId)
         {
             var request = new RestRequest { Resource = "movie/{movieId}", Method = Method.GET };
@@ -99,6 +104,34 @@ namespace Ombi.Api
         {
             var movies = await Client.GetMovie(imdbId);
             return movies ?? new Movie();
+        }
+
+        public async Task<List<Movie>> SearchActor(string searchTerm)
+        {
+            SearchContainer<SearchPerson> result = await Client.SearchPerson(searchTerm);
+            var person = result?.Results[0] ?? null;
+            var movies = new List<Movie>();
+            var counter = 0;
+            try
+            {
+                if (person != null)
+                {
+                    var credits = await Client.GetPersonMovieCredits(person.Id);
+                    //only get the first 10 movies and delay a bit between each request so we don't overload the API
+                    foreach (var credit in credits.Cast)
+                    {   if (counter == 10)
+                            break;
+                        movies.Add(await GetMovie(credit.Id));
+                        counter++;
+                        await Task.Delay(50);
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Log.LogException(LogLevel.Error, $"Aggregating movies for {searchTerm} failed.", e);
+            }
+            return movies;
         }
     }
 }

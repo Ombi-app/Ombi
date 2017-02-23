@@ -115,6 +115,7 @@ namespace Ombi.UI.Modules
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
+            Get["actor/{searchTerm}", true] = async (x, ct) => await SearchActor((string)x.searchTerm);
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
             Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
@@ -209,6 +210,12 @@ namespace Ombi.UI.Modules
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
+        private async Task<Response> SearchActor(string searchTerm)
+        {
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchActor(searchTerm).ConfigureAwait(false));
+            return await TransformMovieResultsToResponse(movies);
+        }
+
         private Response GetTvPoster(int theTvDbId)
         {
             var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
@@ -220,15 +227,10 @@ namespace Ombi.UI.Modules
             }
             return banner;
         }
-        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
-        {
-            List<MovieResult> apiMovies;
 
-            switch (searchType)
-            {
-                case MovieSearchType.Search:
-                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
-                    apiMovies = movies.Select(x =>
+        private List<MovieResult> TransformSearchMovieListToMovieResultList(List<TMDbLib.Objects.Search.SearchMovie> searchMovies)
+        {
+            return searchMovies.Select(x =>
                             new MovieResult
                             {
                                 Adult = x.Adult,
@@ -247,6 +249,39 @@ namespace Ombi.UI.Modules
                                 VoteCount = x.VoteCount
                             })
                         .ToList();
+        }
+
+        private List<MovieResult> TransformMovieListToMovieResultList(List<TMDbLib.Objects.Movies.Movie> movies)
+        {
+            return movies.Select(x =>
+                            new MovieResult
+                            {
+                                Adult = x.Adult,
+                                BackdropPath = x.BackdropPath,
+                                GenreIds = x.Genres.Select(y => y.Id).ToList(),
+                                Id = x.Id,
+                                OriginalLanguage = x.OriginalLanguage,
+                                OriginalTitle = x.OriginalTitle,
+                                Overview = x.Overview,
+                                Popularity = x.Popularity,
+                                PosterPath = x.PosterPath,
+                                ReleaseDate = x.ReleaseDate,
+                                Title = x.Title,
+                                Video = x.Video,
+                                VoteAverage = x.VoteAverage,
+                                VoteCount = x.VoteCount
+                            })
+                        .ToList();
+        }
+        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
+        {
+            List<MovieResult> apiMovies;
+
+            switch (searchType)
+            {
+                case MovieSearchType.Search:
+                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
+                    apiMovies = TransformSearchMovieListToMovieResultList(movies);
                     break;
                 case MovieSearchType.CurrentlyPlaying:
                     apiMovies = await MovieApi.GetCurrentPlayingMovies();
@@ -259,6 +294,11 @@ namespace Ombi.UI.Modules
                     break;
             }
 
+            return await TransformMovieResultsToResponse(apiMovies);
+        }
+
+        private async Task<Response> TransformMovieResultsToResponse(List<MovieResult> movies)
+        {
             var allResults = await RequestService.GetAllAsync();
             allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
@@ -273,7 +313,7 @@ namespace Ombi.UI.Modules
             var plexMovies = Checker.GetPlexMovies(content);
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
-            foreach (var movie in apiMovies)
+            foreach (var movie in movies)
             {
                 var viewMovie = new SearchMovieViewModel
                 {
@@ -297,7 +337,7 @@ namespace Ombi.UI.Modules
                 if (counter <= 5) // Let's only do it for the first 5 items
                 {
                     var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
-                    
+
                     // TODO needs to be careful about this, it's adding extra time to search...
                     // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
                     viewMovie.ImdbId = movieInfo?.imdb_id;
@@ -313,7 +353,7 @@ namespace Ombi.UI.Modules
                     counter++;
                 }
 
-                
+
                 var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
                 var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
                     imdbId);
@@ -335,7 +375,7 @@ namespace Ombi.UI.Modules
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-                else if(watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
+                else if (watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
                 {
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
@@ -349,6 +389,7 @@ namespace Ombi.UI.Modules
             }
 
             return Response.AsJson(viewMovies);
+
         }
 
         private bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,
