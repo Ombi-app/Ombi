@@ -116,6 +116,7 @@ namespace Ombi.UI.Modules
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
             Get["actor/{searchTerm}", true] = async (x, ct) => await SearchActor((string)x.searchTerm);
+            Get["actor/new/{searchTerm}", true] = async (x, ct) => await SearchActor((string)x.searchTerm, true);
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
             Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
@@ -173,6 +174,8 @@ namespace Ombi.UI.Modules
         private IRadarrCacher RadarrCacher { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
+        private IEnumerable<PlexContent> _plexMovies = null;
+        private Dictionary<int, RequestedModel> _dbMovies = null;
 
         private async Task<Negotiator> RequestLoad()
         {
@@ -214,6 +217,29 @@ namespace Ombi.UI.Modules
         {
             var movies = TransformMovieListToMovieResultList(await MovieApi.SearchActor(searchTerm).ConfigureAwait(false));
             return await TransformMovieResultsToResponse(movies);
+        }
+
+        private async Task<Response> SearchActor(string searchTerm, bool filterExisting)
+        {
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchActor(searchTerm, AlreadyAvailable).ConfigureAwait(false));
+            return await TransformMovieResultsToResponse(movies);
+        }
+
+        private async Task<bool> AlreadyAvailable(int id, string title, string year)
+        {
+            await Task.Yield();
+            return IsMovieInCache(id, String.Empty) || Checker.IsMovieAvailable(plexMovies(), title, year);
+        }
+
+        private IEnumerable<PlexContent> plexMovies()
+        {
+            if(_plexMovies == null)
+            {
+                var content = PlexContentRepository.GetAll();
+                _plexMovies = Checker.GetPlexMovies(content);
+            }
+
+            return _plexMovies;
         }
 
         private Response GetTvPoster(int theTvDbId)
@@ -297,22 +323,25 @@ namespace Ombi.UI.Modules
             return await TransformMovieResultsToResponse(apiMovies);
         }
 
+        private async Task<Dictionary<int, RequestedModel>> requestedMovies()
+        {
+            if (_dbMovies == null)
+            {
+                var allResults = await RequestService.GetAllAsync();
+                allResults = allResults.Where(x => x.Type == RequestType.Movie);
+
+                var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+                _dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+            }
+            return _dbMovies;
+        }
+
         private async Task<Response> TransformMovieResultsToResponse(List<MovieResult> movies)
         {
-            var allResults = await RequestService.GetAllAsync();
-            allResults = allResults.Where(x => x.Type == RequestType.Movie);
-
-            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
-            var dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
-
-
-            var cpCached = CpCacher.QueuedIds();
-            var watcherCached = WatcherCacher.QueuedIds();
-            var radarrCached = RadarrCacher.QueuedIds();
-            var content = PlexContentRepository.GetAll();
-            var plexMovies = Checker.GetPlexMovies(content);
+            await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
+            Dictionary<int, RequestedModel> dbMovies = await requestedMovies();
             foreach (var movie in movies)
             {
                 var viewMovie = new SearchMovieViewModel
@@ -353,10 +382,8 @@ namespace Ombi.UI.Modules
                     counter++;
                 }
 
-
-                var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
-                var plexMovie = Checker.GetMovie(plexMovies.ToArray(), movie.Title, movie.ReleaseDate?.Year.ToString(),
-                    imdbId);
+                var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), await requestedMovies());
+                var plexMovie = Checker.GetMovie(plexMovies(), movie.Title, movie.ReleaseDate?.Year.ToString(), imdbId);
                 if (plexMovie != null)
                 {
                     viewMovie.Available = true;
@@ -370,26 +397,29 @@ namespace Ombi.UI.Modules
                     viewMovie.Approved = dbm.Approved;
                     viewMovie.Available = dbm.Available;
                 }
-                else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
+                else if (canSee)
                 {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                else if (watcherCached.Contains(imdbId) && canSee) // compare to the watcher db
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                else if (radarrCached.Contains(movie.Id) && canSee)
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
+                    bool exists = IsMovieInCache(movie, imdbId);
+                    viewMovie.Approved = exists;
+                    viewMovie.Requested = exists;
                 }
                 viewMovies.Add(viewMovie);
             }
 
             return Response.AsJson(viewMovies);
+        }
 
+        private bool IsMovieInCache(MovieResult movie, string imdbId)
+        {   int id = movie.Id;
+            return IsMovieInCache(id, imdbId);
+        }
+
+        private bool IsMovieInCache(int id, string imdbId)
+        {   var cpCached = CpCacher.QueuedIds();
+            var watcherCached = WatcherCacher.QueuedIds();
+            var radarrCached = RadarrCacher.QueuedIds();
+
+            return cpCached.Contains(id) || watcherCached.Contains(imdbId) || radarrCached.Contains(id);
         }
 
         private bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,

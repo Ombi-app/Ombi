@@ -108,8 +108,15 @@ namespace Ombi.Api
 
         public async Task<List<Movie>> SearchActor(string searchTerm)
         {
+            return await SearchActor(searchTerm, null);
+        }
+
+        public async Task<List<Movie>> SearchActor(string searchTerm, Func<int, string, string, Task<bool>> alreadyAvailable)
+        {
             SearchContainer<SearchPerson> result = await Client.SearchPerson(searchTerm);
-            var person = result?.Results[0] ?? null;
+            
+            var people = result?.Results ?? new List<SearchPerson>();
+            var person = (people.Count != 0 ? people[0] : null);
             var movies = new List<Movie>();
             var counter = 0;
             try
@@ -121,15 +128,23 @@ namespace Ombi.Api
                     foreach (var credit in credits.Cast)
                     {   if (counter == 10)
                             break;
-                        movies.Add(await GetMovie(credit.Id));
-                        counter++;
+                        if (alreadyAvailable == null || !(await alreadyAvailable(credit.Id, credit.Title, credit.ReleaseDate.Value.Year.ToString())))
+                        {
+                            movies.Add(await GetMovie(credit.Id));
+                            counter++;
+                        }
+                        else
+                        {
+                            //if we didn't add the movie, delay longer since we know we'll be making additional API calls
+                            await Task.Delay(75);
+                        }
                         await Task.Delay(50);
                     }
                 }
             }
             catch(Exception e)
             {
-                Log.LogException(LogLevel.Error, $"Aggregating movies for {searchTerm} failed.", e);
+                Log.Log(LogLevel.Error, e);
             }
             return movies;
         }
