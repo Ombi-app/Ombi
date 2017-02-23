@@ -84,6 +84,8 @@ namespace Ombi.UI.Modules.Admin
 
         private async Task<Response> ScheduleRun(string key)
         {
+            await Task.Yield();
+
             if (key.Equals(JobNames.PlexCacher, StringComparison.CurrentCultureIgnoreCase))
             {
                 PlexContentCacher.CacheContent();
