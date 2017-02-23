@@ -241,7 +241,7 @@ namespace Ombi.UI.Modules
         private async Task<bool> AlreadyAvailable(int id, string title, string year)
         {
             await Task.Yield();
-            return IsMovieInCache(id, String.Empty) || Checker.IsMovieAvailable(plexMovies(), title, year);
+            return IsMovieInCache(id, String.Empty) || PlexChecker.IsMovieAvailable(plexMovies(), title, year);
         }
 
         private IEnumerable<PlexContent> plexMovies()
@@ -249,7 +249,7 @@ namespace Ombi.UI.Modules
             if(_plexMovies == null)
             {
                 var content = PlexContentRepository.GetAll();
-                _plexMovies = Checker.GetPlexMovies(content);
+                _plexMovies = PlexChecker.GetPlexMovies(content);
             }
 
             return _plexMovies;
@@ -434,7 +434,7 @@ namespace Ombi.UI.Modules
                 }
                 else if (canSee)
                 {
-                    bool exists = IsMovieInCache(movie, imdbId);
+                    bool exists = IsMovieInCache(movie, viewMovie.ImdbId);
                     viewMovie.Approved = exists;
                     viewMovie.Requested = exists;
                 }
