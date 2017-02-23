@@ -87,16 +87,7 @@
 
 
         changeDisabledStatus($('#UsePassword'), @Model.UserAuthentication.ToString().ToLower(), $('#passLabel'));
-        if ($('#PlexAuthToken')) {
-            loadUserList();
-        }
 
-        $('#refreshUsers').click(function (e) {
-            e.preventDefault();
-            loadUserList();
-        });
-
-       
         $('#mainForm').on('click', '#userAuth', function () {
             var checked = this.checked;
             changeDisabledStatus($('#UsePassword'), checked, $('#passLabel'));
@@ -112,41 +103,5 @@
                 $label.css("color", "grey");
             }
         }
-
-
-        function loadUserList() {
-            $('#users').html("");
-            var url = "getusers";
-            $.ajax({
-                type: "Get",
-                url: url,
-                dataType: "json",
-                success: function (response) {
-
-                $('#users').html("");
-                if(!response.result){
-                	generateNotify(response.message,"danger");
-                    $('#users').append("<option>Error!</option>");
-                	return;
-                }
-                    if (response.users.length > 0) {
-                        $(response.users).each(function () {
-                            $('#users').append("<option>" + this + "</option>");
-                        });
-                    } else {
-                        $('#users').append("<option>No Users, Please refresh!</option>");
-                    }
-                },
-                error: function (e) {
-                    console.log(e);
-                    generateNotify("Something went wrong!", "danger");
-                    $('#users').html("");
-                    $('#users').append("<option>Error!</option>");
-                }
-            });
-
-        }
-
-
     });
 </script>

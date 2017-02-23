@@ -72,9 +72,9 @@ namespace Ombi.UI.Helpers
             return Security.IsLoggedIn(context);
         }
 
-        public static bool IsPlexUser(this HtmlHelpers helper)
+        public static bool IsExternalUser(this HtmlHelpers helper)
         {
-            return Security.IsPlexUser(helper.CurrentUser);
+            return Security.IsExternalUser(helper.CurrentUser);
         }
         public static bool IsNormalUser(this HtmlHelpers helper)
         {

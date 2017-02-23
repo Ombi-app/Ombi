@@ -31,6 +31,8 @@ using Ombi.Core.Queue;
 using Ombi.Helpers.Analytics;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
+using Ombi.Services.Jobs.Interfaces;
+using Ombi.Services.Jobs.RecentlyAddedNewsletter;
 using Ombi.UI.Jobs;
 using Quartz;
 using Quartz.Impl;
@@ -47,7 +49,8 @@ namespace Ombi.UI.NinjectModules
             Bind<IWatcherCacher>().To<WatcherCacher>();
             Bind<ISonarrCacher>().To<SonarrCacher>();
             Bind<ISickRageCacher>().To<SickRageCacher>();
-            Bind<IRecentlyAdded>().To<RecentlyAdded>();
+            Bind<IRecentlyAdded>().To<RecentlyAddedNewsletter>();
+            Bind<IMassEmail>().To<RecentlyAddedNewsletter>();
             Bind<IRadarrCacher>().To<RadarrCacher>();
             Bind<IPlexContentCacher>().To<PlexContentCacher>();
             Bind<IJobFactory>().To<CustomJobFactory>();
@@ -58,6 +61,13 @@ namespace Ombi.UI.NinjectModules
             Bind<IPlexEpisodeCacher>().To<PlexEpisodeCacher>();
             Bind<IFaultQueueHandler>().To<FaultQueueHandler>();
             Bind<IPlexUserChecker>().To<PlexUserChecker>();
+
+            Bind<IEmbyAvailabilityChecker>().To<EmbyAvailabilityChecker>();
+            Bind<IEmbyContentCacher>().To<EmbyContentCacher>();
+            Bind<IEmbyEpisodeCacher>().To<EmbyEpisodeCacher>();
+            Bind<IEmbyUserChecker>().To<EmbyUserChecker>();
+            Bind<IEmbyAddedNewsletter>().To<EmbyAddedNewsletter>();
+
      
             Bind<IAnalytics>().To<Analytics>();
             Bind<ISchedulerFactory>().To<StdSchedulerFactory>();

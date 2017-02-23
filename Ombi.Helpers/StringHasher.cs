@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -48,6 +49,11 @@ namespace Ombi.Helpers
 
                 return sb.ToString();
             }
+        }
+
+        public static string GetSha1Hash(string input)
+        {
+            return string.Join("", (new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
         }
     }
 }

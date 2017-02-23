@@ -35,13 +35,17 @@ namespace Ombi.Services.Jobs
         public const string RadarrCacher = "Radarr Cacher";
         public const string SrCacher = "SickRage Cacher";
         public const string PlexChecker = "Plex Availability Cacher";
+        public const string EmbyChecker = "Emby Availability Cacher";
         public const string PlexCacher = "Plex Cacher";
+        public const string EmbyCacher = "Emby Cacher";
         public const string StoreCleanup = "Database Cleanup";
         public const string RequestLimitReset = "Request Limit Reset";
         public const string EpisodeCacher = "Plex Episode Cacher";
+        public const string EmbyEpisodeCacher = "Emby Episode Cacher";
         public const string RecentlyAddedEmail = "Recently Added Email Notification";
         public const string FaultQueueHandler = "Request Fault Queue Handler";
         public const string PlexUserChecker = "Plex User Checker";
+        public const string EmbyUserChecker = "Emby User Checker";
 
     }
 }

@@ -1,4 +1,5 @@
 ﻿#region Copyright
+
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: UserWizardModule.cs
@@ -23,6 +24,7 @@
 //    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
+
 #endregion
 
 using System;
@@ -50,8 +52,11 @@ namespace Ombi.UI.Modules
 {
     public class UserWizardModule : BaseModule
     {
-        public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex, IPlexApi plexApi,
-            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a, ISecurityExtensions security) : base("wizard", pr, security)
+        public UserWizardModule(ISettingsService<PlexRequestSettings> pr, ISettingsService<PlexSettings> plex,
+            IPlexApi plexApi,
+            ISettingsService<AuthenticationSettings> auth, ICustomUserMapper m, IAnalytics a,
+            ISecurityExtensions security, IEmbyApi embyApi,
+            ISettingsService<EmbySettings> embySettings) : base("wizard", pr, security)
         {
             PlexSettings = plex;
             PlexApi = plexApi;
@@ -59,10 +64,13 @@ namespace Ombi.UI.Modules
             Auth = auth;
             Mapper = m;
             Analytics = a;
+            EmbySettings = embySettings;
+            EmbyApi = embyApi;
 
             Get["/", true] = async (x, ct) =>
             {
-                a.TrackEventAsync(Category.Wizard, Action.Start, "Started the wizard", Username, CookieHelper.GetAnalyticClientId(Cookies));
+                a.TrackEventAsync(Category.Wizard, Action.Start, "Started the wizard", Username,
+                    CookieHelper.GetAnalyticClientId(Cookies));
 
                 var settings = await PlexRequestSettings.GetSettingsAsync();
 
@@ -76,7 +84,10 @@ namespace Ombi.UI.Modules
             Post["/plex", true] = async (x, ct) => await Plex();
             Post["/plexrequest", true] = async (x, ct) => await PlexRequest();
             Post["/auth", true] = async (x, ct) => await Authentication();
-            Post["/createuser",true] = async (x,ct) => await CreateUser();
+            Post["/createuser", true] = async (x, ct) => await CreateUser();
+
+
+            Post["/embyauth", true] = async (x, ct) => await EmbyAuth();
         }
 
         private ISettingsService<PlexSettings> PlexSettings { get; }
@@ -85,6 +96,8 @@ namespace Ombi.UI.Modules
         private ISettingsService<AuthenticationSettings> Auth { get; }
         private ICustomUserMapper Mapper { get; }
         private IAnalytics Analytics { get; }
+        private IEmbyApi EmbyApi { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -95,23 +108,31 @@ namespace Ombi.UI.Modules
 
             if (string.IsNullOrEmpty(user.username) || string.IsNullOrEmpty(user.password))
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please provide a valid username and password" });
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false,
+                        Message = "Please provide a valid username and password"
+                    });
             }
 
             var model = PlexApi.SignIn(user.username, user.password);
 
             if (model?.user == null)
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect username or password!" });
+                return
+                    Response.AsJson(new JsonResponseModel { Result = false, Message = "Incorrect username or password!" });
             }
 
             // Set the auth token in the session so we can use it in the next form
             Session[SessionKeys.UserWizardPlexAuth] = model.user.authentication_token;
-            
+
             var servers = PlexApi.GetServer(model.user.authentication_token);
             var firstServer = servers.Server.FirstOrDefault();
-            
-            return Response.AsJson(new { Result = true, firstServer?.Port, Ip = firstServer?.LocalAddresses, firstServer?.Scheme });
+
+            return
+                Response.AsJson(
+                    new { Result = true, firstServer?.Port, Ip = firstServer?.LocalAddresses, firstServer?.Scheme });
         }
 
         private async Task<Response> Plex()
@@ -122,7 +143,8 @@ namespace Ombi.UI.Modules
             {
                 return Response.AsJson(valid.SendJsonError());
             }
-            form.PlexAuthToken = Session[SessionKeys.UserWizardPlexAuth].ToString(); // Set the auth token from the previous form
+            form.PlexAuthToken = Session[SessionKeys.UserWizardPlexAuth].ToString();
+            // Set the auth token from the previous form
 
             // Get the machine ID from the settings (This could have changed)
             try
@@ -131,6 +153,7 @@ namespace Ombi.UI.Modules
                 var firstServer = servers.Server.FirstOrDefault(x => x.AccessToken == form.PlexAuthToken);
 
                 Session[SessionKeys.UserWizardMachineId] = firstServer?.MachineIdentifier;
+                form.MachineIdentifier = firstServer?.MachineIdentifier;
             }
             catch (Exception e)
             {
@@ -143,7 +166,12 @@ namespace Ombi.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save the settings to the database, please try again." });
+            return
+                Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = "Could not save the settings to the database, please try again."
+                });
         }
 
         private async Task<Response> PlexRequest()
@@ -158,14 +186,19 @@ namespace Ombi.UI.Modules
             currentSettings.SearchForMovies = form.SearchForMovies;
             currentSettings.SearchForTvShows = form.SearchForTvShows;
             currentSettings.SearchForMusic = form.SearchForMusic;
-            
+
             var result = await PlexRequestSettings.SaveSettingsAsync(currentSettings);
             if (result)
             {
                 return Response.AsJson(new { Result = true });
             }
 
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save the settings to the database, please try again." });
+            return
+                Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = "Could not save the settings to the database, please try again."
+                });
         }
 
         private async Task<Response> Authentication()
@@ -177,14 +210,21 @@ namespace Ombi.UI.Modules
             {
                 return Response.AsJson(new JsonResponseModel { Result = true });
             }
-            return Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not save the settings to the database, please try again." });
+            return
+                Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = "Could not save the settings to the database, please try again."
+                });
         }
 
         private async Task<Response> CreateUser()
         {
             var username = (string)Request.Form.Username;
-            var userId = Mapper.CreateUser(username, Request.Form.Password, EnumHelper<Permissions>.All() - (int)Permissions.ReadOnlyUser, 0);
-            Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username, CookieHelper.GetAnalyticClientId(Cookies));
+            var userId = Mapper.CreateUser(username, Request.Form.Password,
+                EnumHelper<Permissions>.All() - (int)Permissions.ReadOnlyUser, 0);
+            Analytics.TrackEventAsync(Category.Wizard, Action.Finish, "Finished the wizard", username,
+                CookieHelper.GetAnalyticClientId(Cookies));
             Session[SessionKeys.UsernameKey] = username;
 
             // Destroy the Plex Auth Token
@@ -197,7 +237,55 @@ namespace Ombi.UI.Modules
 
             var baseUrl = string.IsNullOrEmpty(settings.BaseUrl) ? string.Empty : $"/{settings.BaseUrl}";
 
-            return CustomModuleExtensions.LoginAndRedirect(this,(Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
+            return CustomModuleExtensions.LoginAndRedirect(this, (Guid)userId, fallbackRedirectUrl: $"{baseUrl}/search");
+        }
+
+        private async Task<Response> EmbyAuth()
+        {
+            var ip = (string)Request.Form.Ip;
+            var port = (int)Request.Form.Port;
+            var apiKey = (string)Request.Form.ApiKey;
+            var ssl = (bool)Request.Form.Ssl;
+
+            var settings = new EmbySettings
+            {
+                ApiKey = apiKey,
+                Enable = true,
+                Ip = ip,
+                Port = port,
+                Ssl = ssl,
+            };
+
+            try
+            {
+                // Test that we can connect
+                var result = EmbyApi.GetUsers(settings.FullUri, apiKey);
+
+                if (result != null && result.Any())
+                {
+                    settings.AdministratorId = result.FirstOrDefault(x => x.Policy.IsAdministrator)?.Id ?? string.Empty;
+                    await EmbySettings.SaveSettingsAsync(settings);
+
+                    return Response.AsJson(new JsonResponseModel
+                    {
+                        Result = true
+                    });
+                }
+            }
+            catch (Exception e)
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = $"Could not connect to Emby, please check your settings. Error: {e.Message}"
+                });
+            }
+
+            return Response.AsJson(new JsonResponseModel
+            {
+                Result = false,
+                Message = "Could not connect to Emby, please check your settings."
+            });
         }
     }
 }

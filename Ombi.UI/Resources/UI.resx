@@ -121,14 +121,14 @@
     <value>Login</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Want to watch a movie or tv show but it's not currently on Plex?
-            Login below with your Plex.tv username and password!</value>
+    <value>Want to watch a movie or tv show but it's not currently on {0}?
+            Login below with your username and password!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Your login details are only used to authenticate your Plex account.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Plex.tv Username </value>
+    <value>Username </value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Username</value>
@@ -215,7 +215,7 @@
     <value>Don't include titles that are already requested/available</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</value>
+    <value>Want to watch something that is not currently on {0}?! No problem! Just search for it below and request it!</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Search</value>
@@ -413,7 +413,7 @@
     <value>has already been requested!</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>We could not check if {0} is in Plex, are you sure it's correctly setup?</value>
+    <value>We could not check if {0} is in {1}, are you sure it's correctly setup?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
     <value>Something went wrong adding the movie to CouchPotato! Please check your settings.</value>
@@ -422,7 +422,7 @@
     <value>You have reached your weekly request limit for Movies! Please contact your admin.</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>is already in Plex!</value>
+    <value>is already in {0}!</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
     <value>Something went wrong adding the movie to SickRage! Please check your settings.</value>
@@ -438,9 +438,6 @@
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
     <value>You have reached your weekly request limit for TV Shows! Please contact your admin.</value>
-  </data>
-  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
-    <value>Sorry, but this functionality is currently only for users with Plex accounts</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
     <value>Sorry, but your administrator has not yet enabled this functionality.</value>
@@ -491,7 +488,7 @@
     <value>TV show status</value>
   </data>
   <data name="Layout_CacherRunning" xml:space="preserve">
-    <value>Currently we are indexing all of the available tv shows and movies on the Plex server, so there might be some unexpected behavior. This shouldn't take too long.</value>
+    <value>Currently we are indexing all of the available tv shows and movies on the media server, so there might be some unexpected behavior. This shouldn't take too long.</value>
   </data>
   <data name="Layout_Usermanagement" xml:space="preserve">
     <value>User Management</value>
