@@ -211,6 +211,9 @@
   <data name="Search_Albums" xml:space="preserve">
     <value>Albums</value>
   </data>
+  <data name="Search_NewOnly" xml:space="preserve">
+    <value>Don't include titles that are already requested/available</value>
+  </data>
   <data name="Search_Paragraph" xml:space="preserve">
     <value>Want to watch something that is not currently on Plex?! No problem! Just search for it below and request it!</value>
   </data>

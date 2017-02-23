@@ -65,14 +65,23 @@ $(function () {
 
     // Type in actor search
     $("#actorSearchContent").on("input", function () {
+        triggerActorSearch();
+    });
+
+    // if they toggle the checkbox, we want to refresh our search
+    $("#actorsSearchNew").click(function () {
+        triggerActorSearch();
+    });
+
+    function triggerActorSearch()
+    {
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
         searchTimer = setTimeout(function () {
             moviesFromActor();
         }.bind(this), 800);
-
-    });
+    }
 
     $('#moviesComingSoon').on('click', function (e) {
         e.preventDefault();
@@ -326,7 +335,8 @@ $(function () {
 
     function moviesFromActor() {
         var query = $("#actorSearchContent").val();
-        var url = createBaseUrl(base, '/search/actor/');
+        var $newOnly = $('#actorsSearchNew')[0].checked;
+        var url = createBaseUrl(base, '/search/actor/' + (!!$newOnly ? 'new/' : ''));
         query ? getMovies(url + query, "#actorMovieList", "#actorSearchButton") : resetMovies("#actorMovieList");
     }
 

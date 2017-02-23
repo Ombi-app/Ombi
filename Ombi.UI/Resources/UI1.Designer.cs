@@ -898,6 +898,15 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don&apos;t include titles that are already requested/available.
+        /// </summary>
+        public static string Search_NewOnly {
+            get {
+                return ResourceManager.GetString("Search_NewOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Not Requested yet.
         /// </summary>
         public static string Search_Not_Requested_Yet {

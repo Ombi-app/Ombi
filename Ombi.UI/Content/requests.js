@@ -745,7 +745,8 @@ function actorLoad() {
     }
     $ml.html("");
 
-    var url = createBaseUrl(base, '/requests/actor');
+    var $newOnly = $('#searchNewOnly').val();
+    var url = createBaseUrl(base, '/requests/actor' + (!!$newOnly ? '/new' : ''));
     $.ajax(url).success(function (results) {
         if (results.length > 0) {
             results.forEach(function (result) {

@@ -25,10 +25,13 @@
                 <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
 
             </li>
-            <li role="presentation">
-                <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> @UI.Search_Actors</a>
+            @if (Model.Settings.SearchForActors)
+            {
+                <li role="presentation">
+                    <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> @UI.Search_Actors</a>
 
-            </li>
+                </li>
+            }
         }
         @if (Model.Settings.SearchForTvShows)
         {
@@ -74,21 +77,27 @@
                 <div id="movieList">
                 </div>
             </div>
+            @if (Model.Settings.SearchForActors)
+            {
                         <!-- Actors tab -->
-            <div role="tabpanel" class="tab-pane" id="ActorsTab">
-                <div class="input-group">
-                    <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
-                    <div class="input-group-addon">
-                        <i id="actorSearchButton" class="fa fa-search"></i>
+                <div role="tabpanel" class="tab-pane" id="ActorsTab">
+                    <div class="input-group">
+                        <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+                        <div class="input-group-addon">
+                            <i id="actorSearchButton" class="fa fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" class="newMoviesOnly" id="actorsSearchNew" name="actorsSearchNew"><label for="actorsSearchNew">@UI.Search_NewOnly</label>
+                    </div>
+
+                    <br />
+                    <br />
+                    <!-- Movie content -->
+                    <div id="actorMovieList">
                     </div>
                 </div>
-                <br />
-                <br />
-                <!-- Movie content -->
-                <div id="actorMovieList">
-                </div>
-            </div>
-
+            }
         }
 
         @if (Model.Settings.SearchForTvShows)
@@ -139,7 +148,7 @@
         }
 
 
-    <script id="search-templateNew" type="text/x-handlebars-template">
+        <script id="search-templateNew" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -301,7 +310,7 @@
         </script>
 
         <!-- Movie and TV Results template -->
-    <script id="search-template" type="text/x-handlebars-template">
+        <script id="search-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -327,7 +336,7 @@
                         <h4>
                             <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
                                 {{title}} ({{year}})
-                                
+
                             </a>{{#if status}}<span class="label label-primary" style="font-size:60%" target="_blank">{{status}}</span>{{/if}}
                         </h4>
                         {{/if_eq}}
@@ -356,7 +365,7 @@
 
 
                         <span id="{{id}}netflixTab"></span>
-                        
+
                         {{#if homepage}}
                         <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
                         {{/if}}
