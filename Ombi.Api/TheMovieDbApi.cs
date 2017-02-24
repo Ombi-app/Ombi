@@ -141,11 +141,6 @@ namespace Ombi.Api
                             movies.Add(await GetMovie(m.Id));
                             counter++;
                         }
-                        else
-                        {
-                            //if we didn't add the movie, delay longer since we know we'll be making additional API calls
-                            await Task.Delay(75);
-                        }
                         await Task.Delay(50);
                     }
                 }
