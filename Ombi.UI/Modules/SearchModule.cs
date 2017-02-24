@@ -121,8 +121,8 @@ namespace Ombi.UI.Modules
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
-            Get["actor/{searchTerm}", true] = async (x, ct) => await SearchActor((string)x.searchTerm);
-            Get["actor/new/{searchTerm}", true] = async (x, ct) => await SearchActor((string)x.searchTerm, true);
+            Get["actor/{searchTerm}", true] = async (x, ct) => await SearchPerson((string)x.searchTerm);
+            Get["actor/new/{searchTerm}", true] = async (x, ct) => await SearchPerson((string)x.searchTerm, true);
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
             Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
@@ -229,15 +229,15 @@ namespace Ombi.UI.Modules
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
-        private async Task<Response> SearchActor(string searchTerm)
+        private async Task<Response> SearchPerson(string searchTerm)
         {
-            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchActor(searchTerm).ConfigureAwait(false));
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm).ConfigureAwait(false));
             return await TransformMovieResultsToResponse(movies);
         }
 
-        private async Task<Response> SearchActor(string searchTerm, bool filterExisting)
+        private async Task<Response> SearchPerson(string searchTerm, bool filterExisting)
         {
-            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchActor(searchTerm, AlreadyAvailable).ConfigureAwait(false));
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm, AlreadyAvailable).ConfigureAwait(false));
             return await TransformMovieResultsToResponse(movies);
         }
 

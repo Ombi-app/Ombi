@@ -37,6 +37,8 @@ using TMDbLib.Objects.General;
 using TMDbLib.Objects.Movies;
 using TMDbLib.Objects.Search;
 using Movie = TMDbLib.Objects.Movies.Movie;
+using TMDbLib.Objects.People;
+using System.Linq;
 
 namespace Ombi.Api
 {
@@ -106,15 +108,15 @@ namespace Ombi.Api
             return movies ?? new Movie();
         }
 
-        public async Task<List<Movie>> SearchActor(string searchTerm)
+        public async Task<List<Movie>> SearchPerson(string searchTerm)
         {
-            return await SearchActor(searchTerm, null);
+            return await SearchPerson(searchTerm, null);
         }
 
-        public async Task<List<Movie>> SearchActor(string searchTerm, Func<int, string, string, Task<bool>> alreadyAvailable)
+        public async Task<List<Movie>> SearchPerson(string searchTerm, Func<int, string, string, Task<bool>> alreadyAvailable)
         {
             SearchContainer<SearchPerson> result = await Client.SearchPerson(searchTerm);
-            
+
             var people = result?.Results ?? new List<SearchPerson>();
             var person = (people.Count != 0 ? people[0] : null);
             var movies = new List<Movie>();
@@ -124,13 +126,19 @@ namespace Ombi.Api
                 if (person != null)
                 {
                     var credits = await Client.GetPersonMovieCredits(person.Id);
+                    
+                    // grab results from both cast and crew, prefer items in cast.  we can handle directors like this.
+                    List<Movie> movieResults = (from MovieRole role in credits.Cast select new Movie() { Id = role.Id, Title = role.Title, ReleaseDate = role.ReleaseDate }).ToList();
+                    movieResults.AddRange((from MovieJob job in credits.Crew select new Movie() { Id = job.Id, Title = job.Title, ReleaseDate = job.ReleaseDate }).ToList());
+
                     //only get the first 10 movies and delay a bit between each request so we don't overload the API
-                    foreach (var credit in credits.Cast)
-                    {   if (counter == 10)
+                    foreach (var m in movieResults)
+                    {
+                        if (counter == 10)
                             break;
-                        if (alreadyAvailable == null || !(await alreadyAvailable(credit.Id, credit.Title, credit.ReleaseDate.Value.Year.ToString())))
+                        if (alreadyAvailable == null || !(await alreadyAvailable(m.Id, m.Title, m.ReleaseDate.Value.Year.ToString())))
                         {
-                            movies.Add(await GetMovie(credit.Id));
+                            movies.Add(await GetMovie(m.Id));
                             counter++;
                         }
                         else
@@ -142,7 +150,7 @@ namespace Ombi.Api
                     }
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Log.Log(LogLevel.Error, e);
             }
