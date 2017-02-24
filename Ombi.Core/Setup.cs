@@ -77,6 +77,7 @@ namespace Ombi.Core
             {
                 SearchForMovies = true,
                 SearchForTvShows = true,
+                SearchForActors = true,
                 BaseUrl = baseUrl ?? string.Empty,
                 CollectAnalyticData = true,
             };
