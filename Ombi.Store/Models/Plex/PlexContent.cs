@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Data.Linq.Mapping;
 
 namespace Ombi.Store.Models.Plex
@@ -47,5 +48,8 @@ namespace Ombi.Store.Models.Plex
         /// Only used for Albums
         /// </summary>
         public string Artist { get; set; }
+
+        public string ItemId { get; set; }
+        public DateTime AddedAt { get; set; }
     }
 }

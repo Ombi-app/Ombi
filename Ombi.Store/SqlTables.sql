@@ -174,7 +174,10 @@ CREATE TABLE IF NOT EXISTS PlexContent
 	Url								VARCHAR(100) NOT NULL,
 	Artist							VARCHAR(100),
 	Seasons							BLOB,
-	Type							INTEGER NOT NULL
+	Type							INTEGER NOT NULL,
+	ItemID						VARCHAR(100) NOT NULL,
+	
+	AddedAt								VARCHAR(100) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS PlexContent_Id ON PlexContent (Id);
 

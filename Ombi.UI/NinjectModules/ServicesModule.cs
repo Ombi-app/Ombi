@@ -67,6 +67,7 @@ namespace Ombi.UI.NinjectModules
             Bind<IEmbyEpisodeCacher>().To<EmbyEpisodeCacher>();
             Bind<IEmbyUserChecker>().To<EmbyUserChecker>();
             Bind<IEmbyAddedNewsletter>().To<EmbyAddedNewsletter>();
+            Bind<IPlexNewsletter>().To<PlexRecentlyAddedNewsletter>();
 
      
             Bind<IAnalytics>().To<Analytics>();

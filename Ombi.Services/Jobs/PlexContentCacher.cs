@@ -115,7 +115,8 @@ namespace Ombi.Services.Jobs
                         ReleaseYear = video.Year,
                         Title = video.Title,
                         ProviderId = video.ProviderId,
-                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, video.RatingKey)
+                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, video.RatingKey),
+                        ItemId =  video.RatingKey
                     }));
                 }
             }
@@ -145,6 +146,7 @@ namespace Ombi.Services.Jobs
                         ProviderId = x.ProviderId,
                         Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray(),
                         Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey),
+                        ItemId= x.RatingKey
 
                     }));
                 }
@@ -271,7 +273,8 @@ namespace Ombi.Services.Jobs
                                 ReleaseYear = m.ReleaseYear ?? string.Empty,
                                 Title = m.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Movie,
-                                Url = m.Url
+                                Url = m.Url,
+                                ItemId = m.ItemId
                             });
                         }
                     }
@@ -311,7 +314,8 @@ namespace Ombi.Services.Jobs
                                 Title = t.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Show,
                                 Url = t.Url,
-                                Seasons = ByteConverterHelper.ReturnBytes(t.Seasons)
+                                Seasons = ByteConverterHelper.ReturnBytes(t.Seasons),
+                                ItemId = t.ItemId
                             });
                         }
                     }
@@ -352,7 +356,7 @@ namespace Ombi.Services.Jobs
                                 ReleaseYear = a.ReleaseYear ?? string.Empty,
                                 Title = a.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Artist,
-                                Url = a.Url
+                                Url = a.Url,
                             });
                         }
                     }
