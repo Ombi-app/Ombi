@@ -187,6 +187,10 @@ namespace Ombi.UI.Modules
         private long _plexMovieCacheTime = 0;
         private IEnumerable<PlexContent> _plexMovies = null;
 
+        private long _embyMovieCacheTime = 0;
+        private IEnumerable<EmbyContent> _embyMovies = null;
+
+
         private long _dbMovieCacheTime = 0;
         private Dictionary<int, RequestedModel> _dbMovies = null;
 
@@ -243,11 +247,15 @@ namespace Ombi.UI.Modules
 
         private async Task<bool> AlreadyAvailable(int id, string title, string year)
         {
-            await Task.Yield();
-            return IsMovieInCache(id, String.Empty) || PlexChecker.IsMovieAvailable(plexMovies(), title, year);
+            var plexSettings = await PlexService.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+
+            return IsMovieInCache(id, String.Empty) ||
+                (plexSettings.Enable && PlexChecker.IsMovieAvailable(PlexMovies(), title, year)) ||
+                (embySettings.Enable && EmbyChecker.IsMovieAvailable(EmbyMovies(), title, year, String.Empty));
         }
 
-        private IEnumerable<PlexContent> plexMovies()
+        private IEnumerable<PlexContent> PlexMovies()
         {   long now = DateTime.Now.Ticks;
             if(_plexMovies == null || (now - _plexMovieCacheTime) > 10000)
             {
@@ -257,6 +265,19 @@ namespace Ombi.UI.Modules
             }
 
             return _plexMovies;
+        }
+
+        private IEnumerable<EmbyContent> EmbyMovies()
+        {
+            long now = DateTime.Now.Ticks;
+            if (_embyMovies == null || (now - _embyMovieCacheTime) > 10000)
+            {
+                var content = EmbyContentRepository.GetAll();
+                _embyMovies = EmbyChecker.GetEmbyMovies(content);
+                _embyMovieCacheTime = now;
+            }
+
+            return _embyMovies;
         }
 
         private Response GetTvPoster(int theTvDbId)
@@ -340,7 +361,7 @@ namespace Ombi.UI.Modules
             return await TransformMovieResultsToResponse(apiMovies);
         }
 
-        private async Task<Dictionary<int, RequestedModel>> requestedMovies()
+        private async Task<Dictionary<int, RequestedModel>> RequestedMovies()
         {
             long now = DateTime.Now.Ticks;
             if (_dbMovies == null || (now - _dbMovieCacheTime) > 10000)
@@ -360,7 +381,7 @@ namespace Ombi.UI.Modules
             await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
-            Dictionary<int, RequestedModel> dbMovies = await requestedMovies();
+            Dictionary<int, RequestedModel> dbMovies = await RequestedMovies();
             foreach (var movie in movies)
             {
                 var viewMovie = new SearchMovieViewModel

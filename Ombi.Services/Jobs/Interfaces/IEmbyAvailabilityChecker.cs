@@ -14,11 +14,11 @@ namespace Ombi.Services.Jobs
         IEnumerable<EmbyContent> GetEmbyTvShows(IEnumerable<EmbyContent> content);
         Task<IEnumerable<EmbyEpisodes>> GetEpisodes();
         Task<IEnumerable<EmbyEpisodes>> GetEpisodes(int theTvDbId);
-        EmbyContent GetMovie(EmbyContent[] embyMovies, string title, string year, string providerId);
-        EmbyContent GetTvShow(EmbyContent[] embyShows, string title, string year, string providerId, int[] seasons = null);
+        EmbyContent GetMovie(IEnumerable<EmbyContent> embyMovies, string title, string year, string providerId);
+        EmbyContent GetTvShow(IEnumerable<EmbyContent> embyShows, string title, string year, string providerId, int[] seasons = null);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
-        bool IsMovieAvailable(EmbyContent[] embyMovies, string title, string year, string providerId);
-        bool IsTvShowAvailable(EmbyContent[] embyShows, string title, string year, string providerId, int[] seasons = null);
+        bool IsMovieAvailable(IEnumerable<EmbyContent> embyMovies, string title, string year, string providerId);
+        bool IsTvShowAvailable(IEnumerable<EmbyContent> embyShows, string title, string year, string providerId, int[] seasons = null);
         void Start();
     }
 }
