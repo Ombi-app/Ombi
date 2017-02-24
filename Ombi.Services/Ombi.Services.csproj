@@ -108,7 +108,9 @@
     <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
     <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\PlexRecentlyAddedNewsletter.cs" />
     <Compile Include="Jobs\RecentlyAddedNewsletter\EmbyRecentlyAddedNewsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\IPlexNewsletter.cs" />
     <Compile Include="Jobs\RecentlyAddedNewsletter\IEmbyAddedNewsletter.cs" />
     <Compile Include="Jobs\Templates\MassEmailTemplate.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />

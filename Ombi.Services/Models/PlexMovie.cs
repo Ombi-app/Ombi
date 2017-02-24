@@ -7,5 +7,6 @@
         public string ReleaseYear { get; set; }
         public string ProviderId { get; set; }
         public string Url { get; set; }
+        public string ItemId { get; set; }
     }
 }

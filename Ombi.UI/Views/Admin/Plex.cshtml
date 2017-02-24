@@ -222,6 +222,7 @@
                     if (response.result === true) {
                         generateNotify("Success!", "success");
                         $('#authToken').val(response.authToken);
+                        $('#MachineIdentifier').val(response.identifier);
                     } else {
                         generateNotify(response.message, "warning");
                     }

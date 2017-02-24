@@ -27,26 +27,37 @@
 
 #endregion
 
+using System;
 using System.Data;
 using NLog;
 using Ombi.Core.SettingModels;
 using Ombi.Store;
+using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
+using Ombi.Store.Repository;
+using Quartz.Collection;
 
 namespace Ombi.Core.Migration.Migrations
 {
     [Migration(22000, "v2.20.0.0")]
     public class Version2200 : BaseMigration, IMigration
     {
-        public Version2200(ISettingsService<CustomizationSettings> custom, ISettingsService<PlexSettings> ps)
+        public Version2200(ISettingsService<CustomizationSettings> custom, ISettingsService<PlexSettings> ps, IRepository<RecentlyAddedLog> log,
+            IRepository<PlexContent> content, IRepository<PlexEpisodes> plexEp)
         {
             Customization = custom;
             PlexSettings = ps;
+            Log = log;
+            PlexContent = content;
+            PlexEpisodes = plexEp;
         }
 
         public int Version => 22000;
-        private ISettingsService<CustomizationSettings> Customization { get; set; }
-        private ISettingsService<PlexSettings> PlexSettings { get; set; }
-
+        private ISettingsService<CustomizationSettings> Customization { get;  }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
+        private IRepository<RecentlyAddedLog> Log { get;  }
+        private IRepository<PlexContent> PlexContent { get; }
+        private IRepository<PlexEpisodes> PlexEpisodes { get; }
 
         private static Logger Logger = LogManager.GetCurrentClassLogger();
 
@@ -56,12 +67,46 @@ namespace Ombi.Core.Migration.Migrations
             UpdateCustomSettings();
             AddNewColumns(con);
             UpdateSchema(con, Version);
+            UpdateRecentlyAdded(con);
+        }
+
+        private void UpdateRecentlyAdded(IDbConnection con)
+        {
+            var allContent = PlexContent.GetAll();
+
+            var content = new HashSet<RecentlyAddedLog>();
+            foreach (var plexContent in allContent)
+            {
+                content.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.UtcNow,
+                    ProviderId = plexContent.ProviderId
+                });
+            }
+
+            Log.BatchInsert(content, "RecentlyAddedLog");
+
+            var allEp = PlexEpisodes.GetAll();
+            content.Clear();
+            foreach (var ep in allEp)
+            {
+                content.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.UtcNow,
+                    ProviderId = ep.ProviderId
+                });
+            }
+
+            Log.BatchInsert(content, "RecentlyAddedLog");
         }
 
         private void AddNewColumns(IDbConnection con)
         {
             con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
             con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
+
+            con.AlterTable("PlexContent", "ADD", "ItemID", true, "VARCHAR(100)");
+            con.AlterTable("PlexContent", "ADD", "AddedAt", true, "VARCHAR(100)");
         }
 
         private void UpdatePlexSettings()

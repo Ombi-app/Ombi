@@ -111,7 +111,7 @@ namespace Ombi.Services.Jobs
             }
         
             // Insert the new items
-            var result = Repo.BatchInsert(model, TableName, typeof(EmbyEpisodes).GetPropertyNames());
+            var result = Repo.BatchInsert(model, TableName);
 
             if (!result)
             {

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: PlexContent.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: InstallService.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,31 +25,33 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using System.Data.Linq.Mapping;
+using System.Linq;
+using Ombi.Common;
+using Ombi.Common.EnvironmentInfo;
+using Ombi.Common.Processes;
 
-namespace Ombi.Store.Models.Plex
+namespace Ombi.Updater
 {
-    [Table(Name = nameof(PlexContent))]
-    public class PlexContent : Entity
+    public class InstallService
     {
-        public string Title { get; set; }
-        public string ReleaseYear { get; set; }
-        public string ProviderId { get; set; }
-        public PlexMediaType Type { get; set; }
-        public string Url { get; set; }
+        public void Start(string installFolder)
+        {
+            var dector = new DetectApplicationType();
+            var processProvider = new ProcessProvider();
 
-        /// <summary>
-        /// Only used for TV Shows
-        /// </summary>
-        public byte[] Seasons { get; set; }
+            var processId = processProvider.FindProcessByName(ProcessProvider.OmbiProcessName)?.FirstOrDefault()?.Id ?? -1;
 
-        /// <summary>
-        /// Only used for Albums
-        /// </summary>
-        public string Artist { get; set; }
+            // Log if process is -1
 
-        public string ItemId { get; set; }
-        public DateTime AddedAt { get; set; }
+            var appType = dector.GetAppType();
+            processProvider.FindProcessByName(ProcessProvider.OmbiProcessName);
+
+            if (OsInfo.IsWindows)
+            {
+                var terminator = new TerminateOmbi(new ServiceProvider(processProvider), processProvider);
+                terminator.Terminate(processId);
+            }
+
+        }
     }
 }

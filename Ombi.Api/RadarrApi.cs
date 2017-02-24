@@ -108,7 +108,6 @@ namespace Ombi.Api
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
-            RadarrAddMovie result;
             try
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
