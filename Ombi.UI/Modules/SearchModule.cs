@@ -183,12 +183,15 @@ namespace Ombi.UI.Modules
         private IRadarrCacher RadarrCacher { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
+
+        private long _plexMovieCacheTime = 0;
         private IEnumerable<PlexContent> _plexMovies = null;
+
+        private long _dbMovieCacheTime = 0;
         private Dictionary<int, RequestedModel> _dbMovies = null;
 
         private async Task<Negotiator> RequestLoad()
         {
-
             var settings = await PrService.GetSettingsAsync();
             var custom = await CustomizationSettings.GetSettingsAsync();
             var emby = await EmbySettings.GetSettingsAsync();
@@ -245,11 +248,12 @@ namespace Ombi.UI.Modules
         }
 
         private IEnumerable<PlexContent> plexMovies()
-        {
-            if(_plexMovies == null)
+        {   long now = DateTime.Now.Ticks;
+            if(_plexMovies == null || (now - _plexMovieCacheTime) > 10000)
             {
                 var content = PlexContentRepository.GetAll();
                 _plexMovies = PlexChecker.GetPlexMovies(content);
+                _plexMovieCacheTime = now;
             }
 
             return _plexMovies;
@@ -338,13 +342,15 @@ namespace Ombi.UI.Modules
 
         private async Task<Dictionary<int, RequestedModel>> requestedMovies()
         {
-            if (_dbMovies == null)
+            long now = DateTime.Now.Ticks;
+            if (_dbMovies == null || (now - _dbMovieCacheTime) > 10000)
             {
                 var allResults = await RequestService.GetAllAsync();
                 allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
                 var distinctResults = allResults.DistinctBy(x => x.ProviderId);
                 _dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+                _dbMovieCacheTime = now;
             }
             return _dbMovies;
         }
