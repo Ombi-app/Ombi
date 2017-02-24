@@ -354,7 +354,7 @@ namespace Ombi.UI.Modules
                         viewMovie.Available = true;
                     }
                 }
-                else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
+                if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
                     var dbm = dbMovies[movie.Id];
 
@@ -362,17 +362,17 @@ namespace Ombi.UI.Modules
                     viewMovie.Approved = dbm.Approved;
                     viewMovie.Available = dbm.Available;
                 }
-                else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
+                if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
                 {
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-                else if (watcherCached.Contains(viewMovie.ImdbId) && canSee) // compare to the watcher db
+                if (watcherCached.Contains(viewMovie.ImdbId) && canSee) // compare to the watcher db
                 {
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
                 }
-                else if (radarrCached.Contains(movie.Id) && canSee)
+                if (radarrCached.Contains(movie.Id) && canSee)
                 {
                     viewMovie.Approved = true;
                     viewMovie.Requested = true;
