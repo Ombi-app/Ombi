@@ -430,7 +430,7 @@ namespace Ombi.UI.Modules
                         viewMovie.Available = true;
                     }
                 }
-                else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
+                if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
                     var dbm = dbMovies[movie.Id];
 
