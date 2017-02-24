@@ -231,13 +231,13 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> SearchPerson(string searchTerm)
         {
-            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm).ConfigureAwait(false));
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm));
             return await TransformMovieResultsToResponse(movies);
         }
 
         private async Task<Response> SearchPerson(string searchTerm, bool filterExisting)
         {
-            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm, AlreadyAvailable).ConfigureAwait(false));
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm, AlreadyAvailable));
             return await TransformMovieResultsToResponse(movies);
         }
 
