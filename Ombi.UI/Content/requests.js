@@ -567,16 +567,21 @@ $(document).on("click", ".change-root-folder", function (e) {
     e.preventDefault();
     var $this = $(this);
     var $button = $this.parents('.btn-split').children('.change').first();
-    var rootFolderId = e.target.id
+    var rootFolderId = e.target.id;
     var $form = $this.parents('form').first();
+
+    var requestId = $button.attr('id');
 
     if ($button.text() === " Loading...") {
         return;
     }
 
-    loadingButton($button.attr('id'), "success");
+    loadingButton(requestId, "success");
 
     changeRootFolder($form, rootFolderId, function () {
+        if ($('#' + requestId + "rootPathMain").length) {
+            $('#' + requestId + "currentRootPath").text($this.text);
+        }
     });
 
 });
