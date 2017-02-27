@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.UI", "Ombi.UI\Ombi.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Helpers.Tests", "Ombi.Helpers.Tests\Ombi.Helpers.Tests.csproj", "{0E6395D3-B074-49E8-898D-0EB99E507E0E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core.Migration", "Ombi.Core.Migration\Ombi.Core.Migration.csproj", "{8406EE57-D533-47C0-9302-C6B5F8C31E55}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Common", "Ombi.Common\Ombi.Common.csproj", "{BFD45569-90CF-47CA-B575-C7B0FF97F67B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +99,10 @@ Global
 		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8406EE57-D533-47C0-9302-C6B5F8C31E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

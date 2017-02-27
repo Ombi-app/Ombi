@@ -161,15 +161,15 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == EmbyMediaType.Movie);
         }
 
-        public bool IsMovieAvailable(EmbyContent[] embyMovies, string title, string year, string providerId)
+        public bool IsMovieAvailable(IEnumerable<EmbyContent> embyMovies, string title, string year, string providerId)
         {
             var movie = GetMovie(embyMovies, title, year, providerId);
             return movie != null;
         }
 
-        public EmbyContent GetMovie(EmbyContent[] embyMovies, string title, string year, string providerId)
+        public EmbyContent GetMovie(IEnumerable<EmbyContent> embyMovies, string title, string year, string providerId)
         {
-            if (embyMovies.Length == 0)
+            if (embyMovies.Count() == 0)
             {
                 return null;
             }
@@ -200,14 +200,14 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == EmbyMediaType.Series);
         }
 
-        public bool IsTvShowAvailable(EmbyContent[] embyShows, string title, string year, string providerId, int[] seasons = null)
+        public bool IsTvShowAvailable(IEnumerable<EmbyContent> embyShows, string title, string year, string providerId, int[] seasons = null)
         {
             var show = GetTvShow(embyShows, title, year, providerId, seasons);
             return show != null;
         }
 
 
-        public EmbyContent GetTvShow(EmbyContent[] embyShows, string title, string year, string providerId,
+        public EmbyContent GetTvShow(IEnumerable<EmbyContent> embyShows, string title, string year, string providerId,
             int[] seasons = null)
         {
             foreach (var show in embyShows)

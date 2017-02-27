@@ -121,6 +121,8 @@ namespace Ombi.UI.Modules
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
+            Get["actor/{searchTerm}", true] = async (x, ct) => await SearchPerson((string)x.searchTerm);
+            Get["actor/new/{searchTerm}", true] = async (x, ct) => await SearchPerson((string)x.searchTerm, true);
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
             Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
@@ -182,9 +184,18 @@ namespace Ombi.UI.Modules
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
+        private long _plexMovieCacheTime = 0;
+        private IEnumerable<PlexContent> _plexMovies = null;
+
+        private long _embyMovieCacheTime = 0;
+        private IEnumerable<EmbyContent> _embyMovies = null;
+
+
+        private long _dbMovieCacheTime = 0;
+        private Dictionary<int, RequestedModel> _dbMovies = null;
+
         private async Task<Negotiator> RequestLoad()
         {
-
             var settings = await PrService.GetSettingsAsync();
             var custom = await CustomizationSettings.GetSettingsAsync();
             var emby = await EmbySettings.GetSettingsAsync();
@@ -222,6 +233,53 @@ namespace Ombi.UI.Modules
             return await ProcessMovies(MovieSearchType.Search, searchTerm);
         }
 
+        private async Task<Response> SearchPerson(string searchTerm)
+        {
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm));
+            return await TransformMovieResultsToResponse(movies);
+        }
+
+        private async Task<Response> SearchPerson(string searchTerm, bool filterExisting)
+        {
+            var movies = TransformMovieListToMovieResultList(await MovieApi.SearchPerson(searchTerm, AlreadyAvailable));
+            return await TransformMovieResultsToResponse(movies);
+        }
+
+        private async Task<bool> AlreadyAvailable(int id, string title, string year)
+        {
+            var plexSettings = await PlexService.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+
+            return IsMovieInCache(id, String.Empty) ||
+                (plexSettings.Enable && PlexChecker.IsMovieAvailable(PlexMovies(), title, year)) ||
+                (embySettings.Enable && EmbyChecker.IsMovieAvailable(EmbyMovies(), title, year, String.Empty));
+        }
+
+        private IEnumerable<PlexContent> PlexMovies()
+        {   long now = DateTime.Now.Ticks;
+            if(_plexMovies == null || (now - _plexMovieCacheTime) > 10000)
+            {
+                var content = PlexContentRepository.GetAll();
+                _plexMovies = PlexChecker.GetPlexMovies(content);
+                _plexMovieCacheTime = now;
+            }
+
+            return _plexMovies;
+        }
+
+        private IEnumerable<EmbyContent> EmbyMovies()
+        {
+            long now = DateTime.Now.Ticks;
+            if (_embyMovies == null || (now - _embyMovieCacheTime) > 10000)
+            {
+                var content = EmbyContentRepository.GetAll();
+                _embyMovies = EmbyChecker.GetEmbyMovies(content);
+                _embyMovieCacheTime = now;
+            }
+
+            return _embyMovies;
+        }
+
         private Response GetTvPoster(int theTvDbId)
         {
             var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
@@ -233,15 +291,10 @@ namespace Ombi.UI.Modules
             }
             return banner;
         }
-        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
-        {
-            List<MovieResult> apiMovies;
 
-            switch (searchType)
-            {
-                case MovieSearchType.Search:
-                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
-                    apiMovies = movies.Select(x =>
+        private List<MovieResult> TransformSearchMovieListToMovieResultList(List<TMDbLib.Objects.Search.SearchMovie> searchMovies)
+        {
+            return searchMovies.Select(x =>
                             new MovieResult
                             {
                                 Adult = x.Adult,
@@ -260,6 +313,39 @@ namespace Ombi.UI.Modules
                                 VoteCount = x.VoteCount
                             })
                         .ToList();
+        }
+
+        private List<MovieResult> TransformMovieListToMovieResultList(List<TMDbLib.Objects.Movies.Movie> movies)
+        {
+            return movies.Select(x =>
+                            new MovieResult
+                            {
+                                Adult = x.Adult,
+                                BackdropPath = x.BackdropPath,
+                                GenreIds = x.Genres.Select(y => y.Id).ToList(),
+                                Id = x.Id,
+                                OriginalLanguage = x.OriginalLanguage,
+                                OriginalTitle = x.OriginalTitle,
+                                Overview = x.Overview,
+                                Popularity = x.Popularity,
+                                PosterPath = x.PosterPath,
+                                ReleaseDate = x.ReleaseDate,
+                                Title = x.Title,
+                                Video = x.Video,
+                                VoteAverage = x.VoteAverage,
+                                VoteCount = x.VoteCount
+                            })
+                        .ToList();
+        }
+        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
+        {
+            List<MovieResult> apiMovies;
+
+            switch (searchType)
+            {
+                case MovieSearchType.Search:
+                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
+                    apiMovies = TransformSearchMovieListToMovieResultList(movies);
                     break;
                 case MovieSearchType.CurrentlyPlaying:
                     apiMovies = await MovieApi.GetCurrentPlayingMovies();
@@ -272,20 +358,31 @@ namespace Ombi.UI.Modules
                     break;
             }
 
-            var allResults = await RequestService.GetAllAsync();
-            allResults = allResults.Where(x => x.Type == RequestType.Movie);
+            return await TransformMovieResultsToResponse(apiMovies);
+        }
 
-            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
-            var dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+        private async Task<Dictionary<int, RequestedModel>> RequestedMovies()
+        {
+            long now = DateTime.Now.Ticks;
+            if (_dbMovies == null || (now - _dbMovieCacheTime) > 10000)
+            {
+                var allResults = await RequestService.GetAllAsync();
+                allResults = allResults.Where(x => x.Type == RequestType.Movie);
 
+                var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+                _dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+                _dbMovieCacheTime = now;
+            }
+            return _dbMovies;
+        }
 
-            var cpCached = CpCacher.QueuedIds();
-            var watcherCached = WatcherCacher.QueuedIds();
-            var radarrCached = RadarrCacher.QueuedIds();
-
+        private async Task<Response> TransformMovieResultsToResponse(List<MovieResult> movies)
+        {
+            await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
             var counter = 0;
-            foreach (var movie in apiMovies)
+            Dictionary<int, RequestedModel> dbMovies = await RequestedMovies();
+            foreach (var movie in movies)
             {
                 var viewMovie = new SearchMovieViewModel
                 {
@@ -354,7 +451,7 @@ namespace Ombi.UI.Modules
                         viewMovie.Available = true;
                     }
                 }
-                else if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
+                if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
                 {
                     var dbm = dbMovies[movie.Id];
 
@@ -362,25 +459,29 @@ namespace Ombi.UI.Modules
                     viewMovie.Approved = dbm.Approved;
                     viewMovie.Available = dbm.Available;
                 }
-                else if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
+                else if (canSee)
                 {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                else if (watcherCached.Contains(viewMovie.ImdbId) && canSee) // compare to the watcher db
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                else if (radarrCached.Contains(movie.Id) && canSee)
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
+                    bool exists = IsMovieInCache(movie, viewMovie.ImdbId);
+                    viewMovie.Approved = exists;
+                    viewMovie.Requested = exists;
                 }
                 viewMovies.Add(viewMovie);
             }
 
             return Response.AsJson(viewMovies);
+        }
+
+        private bool IsMovieInCache(MovieResult movie, string imdbId)
+        {   int id = movie.Id;
+            return IsMovieInCache(id, imdbId);
+        }
+
+        private bool IsMovieInCache(int id, string imdbId)
+        {   var cpCached = CpCacher.QueuedIds();
+            var watcherCached = WatcherCacher.QueuedIds();
+            var radarrCached = RadarrCacher.QueuedIds();
+
+            return cpCached.Contains(id) || watcherCached.Contains(imdbId) || radarrCached.Contains(id);
         }
 
         private bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,
@@ -437,6 +538,11 @@ namespace Ombi.UI.Modules
                     {
                         var show = anticipatedShow.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
 
                         var model = new SearchTvShowViewModel
                         {
@@ -466,6 +572,12 @@ namespace Ombi.UI.Modules
                     {
                         var show = watched.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
+
                         var model = new SearchTvShowViewModel
                         {
                             FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -494,6 +606,12 @@ namespace Ombi.UI.Modules
                     {
                         var show = watched.Show;
                         var theTvDbId = int.Parse(show.Ids.Tvdb.ToString());
+                        var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+                        if (result == null)
+                        {
+                            continue;
+                        }
+
                         var model = new SearchTvShowViewModel
                         {
                             FirstAired = show.FirstAired?.ToString("yyyy-MM-ddTHH:mm:ss"),
@@ -1395,6 +1513,7 @@ namespace Ombi.UI.Modules
             {
                 Title = albumInfo.title,
                 MusicBrainzId = albumInfo.id,
+                ReleaseId = releaseId,
                 Overview = albumInfo.disambiguation,
                 PosterPath = img,
                 Type = RequestType.Album,

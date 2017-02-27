@@ -27,6 +27,13 @@
                 <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> @UI.Search_Movies</a>
 
             </li>
+            @if (Model.Settings.SearchForActors)
+            {
+                <li role="presentation">
+                    <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> @UI.Search_Actors</a>
+
+                </li>
+            }
         }
         @if (Model.Settings.SearchForTvShows)
         {
@@ -72,8 +79,28 @@
                 <div id="movieList">
                 </div>
             </div>
-        }
+            @if (Model.Settings.SearchForActors)
+            {
+                        <!-- Actors tab -->
+                <div role="tabpanel" class="tab-pane" id="ActorsTab">
+                    <div class="input-group">
+                        <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+                        <div class="input-group-addon">
+                            <i id="actorSearchButton" class="fa fa-search"></i>
+                        </div>
+                    </div>
+                    <div class="checkbox">
+                        <input type="checkbox" id="actorsSearchNew" name="actorsSearchNew"><label for="actorsSearchNew">@UI.Search_NewOnly</label>
+                    </div>
 
+                    <br />
+                    <br />
+                    <!-- Movie content -->
+                    <div id="actorMovieList">
+                    </div>
+                </div>
+            }
+        }
 
         @if (Model.Settings.SearchForTvShows)
         {
@@ -123,7 +150,7 @@
         }
 
 
-    <script id="search-templateNew" type="text/x-handlebars-template">
+        <script id="search-templateNew" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -287,7 +314,7 @@
         </script>
 
         <!-- Movie and TV Results template -->
-    <script id="search-template" type="text/x-handlebars-template">
+        <script id="search-template" type="text/x-handlebars-template">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
 
@@ -313,7 +340,7 @@
                         <h4>
                             <a href="http://www.imdb.com/title/{{imdb}}/" target="_blank">
                                 {{title}} ({{year}})
-                                
+
                             </a>{{#if status}}<span class="label label-primary" style="font-size:60%" target="_blank">{{status}}</span>{{/if}}
                         </h4>
                         {{/if_eq}}
@@ -340,7 +367,7 @@
 
 
                         <span id="{{id}}netflixTab"></span>
-                        
+
                         {{#if homepage}}
                         <a href="{{homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
                         {{/if}}
@@ -379,7 +406,7 @@
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
                         {{else}}
                         {{#if_eq enableTvRequestsForOnlySeries true}}
-                        <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} btn-primary-outline dropdownTv" season-select="0" type="button"><i class="fa fa-plus"></i> @UI.Search_Request</button>
+                        <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}}disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
                         {{else}}
                         <div class="dropdown">
                             <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

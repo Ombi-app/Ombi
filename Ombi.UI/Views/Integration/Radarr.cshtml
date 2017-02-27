@@ -11,11 +11,20 @@
     {
         port = Model.Port;
     }
+
+    var rootFolder = string.Empty;
+    if (!string.IsNullOrEmpty(Model.RootPath))
+
+    {
+        rootFolder = Model.RootPath.Replace("/", "//");
+    }
 }
 <div class="col-sm-8 col-sm-push-1">
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Radarr Settings</legend>
+
+            <input hidden="hidden" name="FullRootPath" id="fullRootPath" value="@Model.FullRootPath" />
             @Html.Checkbox(Model.Enabled, "Enabled", "Enabled")
 
 
@@ -64,10 +73,17 @@
             </div>
 
             <div class="form-group">
-                <label for="RootPath" class="control-label">Root save directory for Movies</label>
                 <div>
-                    <input type="text" class="form-control form-control-custom " placeholder="C:\Media\Movies" id="RootPath" name="RootPath" value="@Model.RootPath">
-                    <label>Enter the root folder where movies are saved. For example <strong>C:\Media\Movies</strong>.</label>
+                    <button type="submit" id="getRootFolders" class="btn btn-primary-outline">Get Root Folders <div id="getRootFolderSpinner" /></button>
+
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="selectRootFolder" class="control-label">Default Root Folders</label>
+                <div id="rootFolders">
+                    <select class="form-control form-control-custom" id="selectRootFolder"></select>
+
                 </div>
             </div>
 
@@ -128,6 +144,39 @@
         }
         </text>
         }
+         @if (!string.IsNullOrEmpty(Model.RootPath))
+          {
+              <text>
+
+        console.log('Hit root folders..');
+
+        var rootFolderSelected = '@rootFolder';
+        if (!rootFolderSelected) {
+            return;
+        }
+        var $form = $("#mainForm");
+        $.ajax({
+            type: $form.prop("method"),
+            data: $form.serialize(),
+            url: "sonarrrootfolders",
+            dataType: "json",
+            success: function(response) {
+                response.forEach(function(result) {
+                    $('#selectedRootFolder').html("");
+                    if (result.id == rootFolderSelected) {
+                        $("#selectRootFolder").append("<option selected='selected' value='" + result.id + "'>" + result.path + "</option>");
+                    } else {
+                        $("#selectRootFolder").append("<option value='" + result.id + "'>" + result.path + "</option>");
+                    }
+                });
+            },
+            error: function(e) {
+                console.log(e);
+                generateNotify("Something went wrong!", "danger");
+            }
+        });
+        </text>
+          }
 
 
         $('#save').click(function(e) {
@@ -138,11 +187,14 @@
                 return;
             }
             var qualityProfile = $("#profiles option:selected").val();
+            var rootFolder = $("#rootFolders option:selected").val();
+            var rootFolderPath = $('#rootFolders option:selected').text();
+            $('#fullRootPath').val(rootFolderPath);
 
             var $form = $("#mainForm");
 
             var data = $form.serialize();
-            data = data + "&qualityProfile=" + qualityProfile;
+            data = data + "&qualityProfile=" + qualityProfile + "&rootPath=" + rootFolder;
 
             $.ajax({
                 type: $form.prop("method"),
@@ -202,6 +254,45 @@
             });
         });
 
+        $('#getRootFolders').click(function (e) {
+
+            $('#getRootFolderSpinner').attr("class", "fa fa-spinner fa-spin");
+            e.preventDefault();
+            if (!$('#Ip').val()) {
+                generateNotify("Please enter a valid IP/Hostname.", "warning");
+                $('#getRootFolderSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            if (!$('#portNumber').val()) {
+                generateNotify("Please enter a valid Port Number.", "warning");
+                $('#getRootFolderSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            if (!$('#ApiKey').val()) {
+                generateNotify("Please enter a valid ApiKey.", "warning");
+                $('#getRootFolderSpinner').attr("class", "fa fa-times");
+                return;
+            }
+            var $form = $("#mainForm");
+            $.ajax({
+                type: $form.prop("method"),
+                data: $form.serialize(),
+                url: "radarrrootfolders",
+                dataType: "json",
+                success: function (response) {
+                    response.forEach(function (result) {
+                        $('#getRootFolderSpinner').attr("class", "fa fa-check");
+                        $("#selectRootFolder").append("<option value='" + result.id + "'>" + result.path + "</option>");
+                    });
+                },
+                error: function (e) {
+                    console.log(e);
+                    $('#getRootFolderSpinner').attr("class", "fa fa-times");
+                    generateNotify("Something went wrong!", "danger");
+                }
+            });
+        });
+
         var base = '@Html.GetBaseUrl()';
         $('#testRadarr').click(function (e) {
 
@@ -213,7 +304,7 @@
 
             var data = $form.serialize();
             data = data + "&qualityProfile=" + qualityProfile;
-            
+
             var url = createBaseUrl(base, '/test/radarr');
             $.ajax({
                 type: $form.prop("method"),

@@ -62,7 +62,7 @@ namespace Ombi.Core
 
             // Artist is now active
             // Add album
-            var albumResult = await Api.AddAlbum(Settings.ApiKey, Settings.FullUri, request.MusicBrainzId);
+            var albumResult = await Api.AddAlbum(Settings.ApiKey, Settings.FullUri, request.ReleaseId);
             if (!albumResult)
             {
                 Log.Error("Couldn't add the album to headphones");

@@ -228,7 +228,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
                         AddParagraph(sb, info.Overview);
                     }
-                    catch (RequestLimitExceededException limit)
+                    catch (Exception limit)
                     {
                         // We have hit a limit, we need to now wait.
                         Thread.Sleep(TimeSpan.FromSeconds(10));
