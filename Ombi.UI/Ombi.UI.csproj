@@ -281,6 +281,7 @@
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\SearchExtensionModule.cs" />
+    <Compile Include="Modules\Search\MusicSearchModule.cs" />
     <Compile Include="Modules\Search\SearchModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />

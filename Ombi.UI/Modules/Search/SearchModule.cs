@@ -67,29 +67,34 @@ using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
 
 namespace Ombi.UI.Modules
 {
-    public class SearchModule : BaseAuthModule
+    public abstract class SearchModule : BaseAuthModule
     {
-        public SearchModule(ICacheProvider cache,
-            ISettingsService<PlexRequestSettings> prSettings, IAvailabilityChecker plexChecker,
-            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify, IMusicBrainzApi mbApi, IHeadphonesApi hpApi,
-            ISettingsService<HeadphonesSettings> hpService,
-            ICouchPotatoCacher cpCacher, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher, IPlexApi plexApi,
+        public SearchModule(IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
-            IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISecurityExtensions security, IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus,
-            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
-            : base("search", prSettings, security)
+            ISecurityExtensions security, IAvailabilityChecker plexChecker) : base("search", prSettings, security)
         {
             Auth = auth;
             PlexService = plexService;
             PlexApi = plexApi;
             PrService = prSettings;
-            MovieApi = new TheMovieDbApi();
-            Cache = cache;
             PlexChecker = plexChecker;
+
+        }
+
+        public SearchModule(IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
+            ISecurityExtensions security, IAvailabilityChecker plexChecker,
+            /* param cutoff for refactor */
+            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
+            ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
+            INotificationService notify,             ICouchPotatoCacher cpCacher, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
+            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
+            IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus,
+            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) 
+            : this(plexApi, prSettings, plexService, auth, security, plexChecker)
+        {
+            MovieApi = new TheMovieDbApi();
             CpCacher = cpCacher;
             SonarrCacher = sonarrCacher;
             SickRageCacher = sickRageCacher;
@@ -99,9 +104,6 @@ namespace Ombi.UI.Modules
             SickRageService = sickRageService;
             SickrageApi = srApi;
             NotificationService = notify;
-            MusicBrainzApi = mbApi;
-            HeadphonesApi = hpApi;
-            HeadphonesService = hpService;
             UsersToNotifyRepo = u;
             EmailNotificationSettings = email;
             IssueService = issue;
@@ -123,8 +125,6 @@ namespace Ombi.UI.Modules
 
             Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
-            Get["music/{searchTerm}", true] = async (x, ct) => await SearchAlbum((string)x.searchTerm);
-            Get["music/coverArt/{id}"] = p => GetMusicBrainzCoverArt((string)p.id);
 
             Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
             Get["movie/playing", true] = async (x, ct) => await CurrentlyPlayingMovies();
@@ -140,47 +140,43 @@ namespace Ombi.UI.Modules
             Post["request/tv", true] =
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
-            Post["request/album", true] = async (x, ct) => await RequestAlbum((string)Request.Form.albumId);
 
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
-        private ITraktApi TraktApi { get; }
-        private IWatcherCacher WatcherCacher { get; }
-        private IMovieSender MovieSender { get; }
-        private IRepository<PlexContent> PlexContentRepository { get; }
-        private IRepository<EmbyContent> EmbyContentRepository { get; }
-        private TvMazeApi TvApi { get; }
-        private IPlexApi PlexApi { get; }
-        private TheMovieDbApi MovieApi { get; }
-        private INotificationService NotificationService { get; }
-        private ISonarrApi SonarrApi { get; }
-        private ISickRageApi SickrageApi { get; }
-        private IRequestService RequestService { get; }
-        private ICacheProvider Cache { get; }
-        private ISettingsService<AuthenticationSettings> Auth { get; }
-        private ISettingsService<EmbySettings> EmbySettings { get; }
-        private ISettingsService<PlexSettings> PlexService { get; }
-        private ISettingsService<PlexRequestSettings> PrService { get; }
-        private ISettingsService<SonarrSettings> SonarrService { get; }
-        private ISettingsService<SickRageSettings> SickRageService { get; }
-        private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
-        private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        private IAvailabilityChecker PlexChecker { get; }
-        private IEmbyAvailabilityChecker EmbyChecker { get; }
-        private ICouchPotatoCacher CpCacher { get; }
-        private ISonarrCacher SonarrCacher { get; }
-        private ISickRageCacher SickRageCacher { get; }
-        private IMusicBrainzApi MusicBrainzApi { get; }
-        private IHeadphonesApi HeadphonesApi { get; }
-        private IRepository<UsersToNotify> UsersToNotifyRepo { get; }
-        private IIssueService IssueService { get; }
-        private IAnalytics Analytics { get; }
-        private ITransientFaultQueue FaultQueue { get; }
-        private IRepository<RequestLimit> RequestLimitRepo { get; }
-        private IRadarrCacher RadarrCacher { get; }
-        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        protected ITraktApi TraktApi { get; }
+        protected IWatcherCacher WatcherCacher { get; }
+        protected IMovieSender MovieSender { get; }
+        protected IRepository<PlexContent> PlexContentRepository { get; }
+        protected IRepository<EmbyContent> EmbyContentRepository { get; }
+        protected TvMazeApi TvApi { get; }
+        protected IPlexApi PlexApi { get; }
+        protected TheMovieDbApi MovieApi { get; }
+        protected INotificationService NotificationService { get; }
+        protected ISonarrApi SonarrApi { get; }
+        protected ISickRageApi SickrageApi { get; }
+        protected IRequestService RequestService { get; }
+        protected ICacheProvider Cache { get; }
+        protected ISettingsService<AuthenticationSettings> Auth { get; }
+        protected ISettingsService<EmbySettings> EmbySettings { get; }
+        protected ISettingsService<PlexSettings> PlexService { get; }
+        protected ISettingsService<PlexRequestSettings> PrService { get; }
+        protected ISettingsService<SonarrSettings> SonarrService { get; }
+        protected ISettingsService<SickRageSettings> SickRageService { get; }
+        protected ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
+        protected IAvailabilityChecker PlexChecker { get; }
+        protected IEmbyAvailabilityChecker EmbyChecker { get; }
+        protected ICouchPotatoCacher CpCacher { get; }
+        protected ISonarrCacher SonarrCacher { get; }
+        protected ISickRageCacher SickRageCacher { get; }
+        protected IRepository<UsersToNotify> UsersToNotifyRepo { get; }
+        protected IIssueService IssueService { get; }
+        protected IAnalytics Analytics { get; }
+        protected ITransientFaultQueue FaultQueue { get; }
+        protected IRepository<RequestLimit> RequestLimitRepo { get; }
+        protected IRadarrCacher RadarrCacher { get; }
+        protected ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        protected static Logger Log = LogManager.GetCurrentClassLogger();
 
         private async Task<Negotiator> RequestLoad()
         {
@@ -706,61 +702,6 @@ namespace Ombi.UI.Modules
             return Response.AsJson(viewTv);
         }
 
-        private async Task<Response> SearchAlbum(string searchTerm)
-        {
-            Analytics.TrackEventAsync(Category.Search, Action.Album, searchTerm, Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            var apiAlbums = new List<Release>();
-            await Task.Run(() => MusicBrainzApi.SearchAlbum(searchTerm)).ContinueWith((t) =>
-            {
-                apiAlbums = t.Result.releases ?? new List<Release>();
-            });
-
-            var allResults = await RequestService.GetAllAsync();
-            allResults = allResults.Where(x => x.Type == RequestType.Album);
-
-            var dbAlbum = allResults.ToDictionary(x => x.MusicBrainzId);
-
-            var content = PlexContentRepository.GetAll();
-            var plexAlbums = PlexChecker.GetPlexAlbums(content);
-
-            var viewAlbum = new List<SearchMusicViewModel>();
-            foreach (var a in apiAlbums)
-            {
-                var viewA = new SearchMusicViewModel
-                {
-                    Title = a.title,
-                    Id = a.id,
-                    Artist = a.ArtistCredit?.Select(x => x.artist?.name).FirstOrDefault(),
-                    Overview = a.disambiguation,
-                    ReleaseDate = a.date,
-                    TrackCount = a.TrackCount,
-                    ReleaseType = a.status,
-                    Country = a.country
-                };
-
-                DateTime release;
-                DateTimeHelper.CustomParse(a.ReleaseEvents?.FirstOrDefault()?.date, out release);
-                var artist = a.ArtistCredit?.FirstOrDefault()?.artist;
-                var plexAlbum = PlexChecker.GetAlbum(plexAlbums.ToArray(), a.title, release.ToString("yyyy"), artist?.name);
-                if (plexAlbum != null)
-                {
-                    viewA.Available = true;
-                    viewA.PlexUrl = plexAlbum.Url;
-                }
-                if (!string.IsNullOrEmpty(a.id) && dbAlbum.ContainsKey(a.id))
-                {
-                    var dba = dbAlbum[a.id];
-
-                    viewA.Requested = true;
-                    viewA.Approved = dba.Approved;
-                    viewA.Available = dba.Available;
-                }
-
-                viewAlbum.Add(viewA);
-            }
-            return Response.AsJson(viewAlbum);
-        }
 
         private async Task<Response> RequestMovie(int movieId)
         {
@@ -1332,155 +1273,7 @@ namespace Ombi.UI.Modules
         }
 
 
-        private async Task<Response> RequestAlbum(string releaseId)
-        {
-            if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestMusic))
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = "Sorry, you do not have the correct permissions to request music!"
-                    });
-            }
 
-            var settings = await PrService.GetSettingsAsync();
-            if (!await CheckRequestLimit(settings, RequestType.Album))
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = Resources.UI.Search_WeeklyRequestLimitAlbums
-                    });
-            }
-            Analytics.TrackEventAsync(Category.Search, Action.Request, "Album", Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            var existingRequest = await RequestService.CheckRequestAsync(releaseId);
-
-            if (existingRequest != null)
-            {
-                if (!existingRequest.UserHasRequested(Username))
-                {
-                    existingRequest.RequestedUsers.Add(Username);
-                    await RequestService.UpdateRequestAsync(existingRequest);
-                }
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = true,
-                        Message =
-                            Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
-                                ? $"{existingRequest.Title} {Resources.UI.Search_SuccessfullyAdded}"
-                                : $"{existingRequest.Title} {Resources.UI.Search_AlreadyRequested}"
-                    });
-            }
-
-            var albumInfo = MusicBrainzApi.GetAlbum(releaseId);
-            DateTime release;
-            DateTimeHelper.CustomParse(albumInfo.ReleaseEvents?.FirstOrDefault()?.date, out release);
-
-            var artist = albumInfo.ArtistCredits?.FirstOrDefault()?.artist;
-            if (artist == null)
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = Resources.UI.Search_MusicBrainzError
-                    });
-            }
-
-
-            var content = PlexContentRepository.GetAll();
-            var albums = PlexChecker.GetPlexAlbums(content);
-            var alreadyInPlex = PlexChecker.IsAlbumAvailable(albums.ToArray(), albumInfo.title, release.ToString("yyyy"),
-                artist.name);
-
-            if (alreadyInPlex)
-            {
-                return Response.AsJson(new JsonResponseModel
-                {
-                    Result = false,
-                    Message = $"{albumInfo.title} {Resources.UI.Search_AlreadyInPlex}"
-                });
-            }
-
-            var img = GetMusicBrainzCoverArt(albumInfo.id);
-
-            var model = new RequestedModel
-            {
-                Title = albumInfo.title,
-                MusicBrainzId = albumInfo.id,
-                ReleaseId = releaseId,
-                Overview = albumInfo.disambiguation,
-                PosterPath = img,
-                Type = RequestType.Album,
-                ProviderId = 0,
-                RequestedUsers = new List<string> { Username },
-                Status = albumInfo.status,
-                Issues = IssueState.None,
-                RequestedDate = DateTime.UtcNow,
-                ReleaseDate = release,
-                ArtistName = artist.name,
-                ArtistId = artist.id
-            };
-
-            try
-            {
-                if (ShouldAutoApprove(RequestType.Album))
-                {
-                    model.Approved = true;
-                    var hpSettings = HeadphonesService.GetSettings();
-
-                    if (!hpSettings.Enabled)
-                    {
-                        await RequestService.AddRequestAsync(model);
-                        return
-                            Response.AsJson(new JsonResponseModel
-                            {
-                                Result = true,
-                                Message = $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}"
-                            });
-                    }
-
-                    var sender = new HeadphonesSender(HeadphonesApi, hpSettings, RequestService);
-                    await sender.AddAlbum(model);
-                    return await AddRequest(model, settings, $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}");
-                }
-
-                return await AddRequest(model, settings, $"{model.Title} {Resources.UI.Search_SuccessfullyAdded}");
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-                await FaultQueue.QueueItemAsync(model, albumInfo.id, RequestType.Album, FaultType.RequestFault, e.Message);
-
-                await NotificationService.Publish(new NotificationModel
-                {
-                    DateTime = DateTime.Now,
-                    User = Username,
-                    RequestType = RequestType.Album,
-                    Title = model.Title,
-                    NotificationType = NotificationType.ItemAddedToFaultQueue
-                });
-                throw;
-            }
-        }
-
-        private string GetMusicBrainzCoverArt(string id)
-        {
-            var coverArt = MusicBrainzApi.GetCoverArt(id);
-            var firstImage = coverArt?.images?.FirstOrDefault();
-            var img = string.Empty;
-
-            if (firstImage != null)
-            {
-                img = firstImage.thumbnails?.small ?? firstImage.image;
-            }
-
-            return img;
-        }
 
         private Response GetSeasons()
         {
@@ -1637,7 +1430,7 @@ namespace Ombi.UI.Modules
             return requestLimit;
         }
 
-        private async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
+        protected async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
         {
             await RequestService.AddRequestAsync(model);
 
