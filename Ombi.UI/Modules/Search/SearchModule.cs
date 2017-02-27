@@ -85,17 +85,15 @@ namespace Ombi.UI.Modules
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
             ISecurityExtensions security, IAvailabilityChecker plexChecker,
             /* param cutoff for refactor */
+            ISettingsService<CustomizationSettings> cus, ITraktApi traktApi,
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify,             ICouchPotatoCacher cpCacher, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            INotificationService notify, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus,
-            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) 
+            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
             : this(plexApi, prSettings, plexService, auth, security, plexChecker)
         {
-            MovieApi = new TheMovieDbApi();
-            CpCacher = cpCacher;
             SonarrCacher = sonarrCacher;
             SickRageCacher = sickRageCacher;
             RequestService = request;
@@ -112,22 +110,15 @@ namespace Ombi.UI.Modules
             FaultQueue = tfQueue;
             TvApi = new TvMazeApi();
             PlexContentRepository = content;
-            MovieSender = movieSender;
-            WatcherCacher = watcherCacher;
-            RadarrCacher = radarrCacher;
-            TraktApi = traktApi;
             CustomizationSettings = cus;
             EmbyChecker = embyChecker;
             EmbyContentRepository = embyContent;
             EmbySettings = embySettings;
+            TraktApi = traktApi;
 
             Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
 
-            Get["movie/{searchTerm}", true] = async (x, ct) => await SearchMovie((string)x.searchTerm);
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
-
-            Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
-            Get["movie/playing", true] = async (x, ct) => await CurrentlyPlayingMovies();
 
             Get["tv/popular", true] = async (x, ct) => await ProcessShows(ShowSearchType.Popular);
             Get["tv/trending", true] = async (x, ct) => await ProcessShows(ShowSearchType.Trending);
@@ -136,7 +127,6 @@ namespace Ombi.UI.Modules
 
             Get["tv/poster/{id}"] = p => GetTvPoster((int)p.id);
 
-            Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
             Post["request/tv", true] =
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
@@ -145,13 +135,10 @@ namespace Ombi.UI.Modules
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
         }
         protected ITraktApi TraktApi { get; }
-        protected IWatcherCacher WatcherCacher { get; }
-        protected IMovieSender MovieSender { get; }
         protected IRepository<PlexContent> PlexContentRepository { get; }
         protected IRepository<EmbyContent> EmbyContentRepository { get; }
         protected TvMazeApi TvApi { get; }
         protected IPlexApi PlexApi { get; }
-        protected TheMovieDbApi MovieApi { get; }
         protected INotificationService NotificationService { get; }
         protected ISonarrApi SonarrApi { get; }
         protected ISickRageApi SickrageApi { get; }
@@ -166,7 +153,6 @@ namespace Ombi.UI.Modules
         protected ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
         protected IAvailabilityChecker PlexChecker { get; }
         protected IEmbyAvailabilityChecker EmbyChecker { get; }
-        protected ICouchPotatoCacher CpCacher { get; }
         protected ISonarrCacher SonarrCacher { get; }
         protected ISickRageCacher SickRageCacher { get; }
         protected IRepository<UsersToNotify> UsersToNotifyRepo { get; }
@@ -174,7 +160,6 @@ namespace Ombi.UI.Modules
         protected IAnalytics Analytics { get; }
         protected ITransientFaultQueue FaultQueue { get; }
         protected IRepository<RequestLimit> RequestLimitRepo { get; }
-        protected IRadarrCacher RadarrCacher { get; }
         protected ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         protected static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -197,26 +182,6 @@ namespace Ombi.UI.Modules
             return View["Search/Index", searchViewModel];
         }
 
-        private async Task<Response> UpcomingMovies()
-        {
-            Analytics.TrackEventAsync(Category.Search, Action.Movie, "Upcoming", Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            return await ProcessMovies(MovieSearchType.Upcoming, string.Empty);
-        }
-
-        private async Task<Response> CurrentlyPlayingMovies()
-        {
-            Analytics.TrackEventAsync(Category.Search, Action.Movie, "CurrentlyPlaying", Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            return await ProcessMovies(MovieSearchType.CurrentlyPlaying, string.Empty);
-        }
-
-        private async Task<Response> SearchMovie(string searchTerm)
-        {
-            Analytics.TrackEventAsync(Category.Search, Action.Movie, searchTerm, Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            return await ProcessMovies(MovieSearchType.Search, searchTerm);
-        }
 
         private Response GetTvPoster(int theTvDbId)
         {
@@ -229,157 +194,9 @@ namespace Ombi.UI.Modules
             }
             return banner;
         }
-        private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)
-        {
-            List<MovieResult> apiMovies;
-
-            switch (searchType)
-            {
-                case MovieSearchType.Search:
-                    var movies = await MovieApi.SearchMovie(searchTerm).ConfigureAwait(false);
-                    apiMovies = movies.Select(x =>
-                            new MovieResult
-                            {
-                                Adult = x.Adult,
-                                BackdropPath = x.BackdropPath,
-                                GenreIds = x.GenreIds,
-                                Id = x.Id,
-                                OriginalLanguage = x.OriginalLanguage,
-                                OriginalTitle = x.OriginalTitle,
-                                Overview = x.Overview,
-                                Popularity = x.Popularity,
-                                PosterPath = x.PosterPath,
-                                ReleaseDate = x.ReleaseDate,
-                                Title = x.Title,
-                                Video = x.Video,
-                                VoteAverage = x.VoteAverage,
-                                VoteCount = x.VoteCount
-                            })
-                        .ToList();
-                    break;
-                case MovieSearchType.CurrentlyPlaying:
-                    apiMovies = await MovieApi.GetCurrentPlayingMovies();
-                    break;
-                case MovieSearchType.Upcoming:
-                    apiMovies = await MovieApi.GetUpcomingMovies();
-                    break;
-                default:
-                    apiMovies = new List<MovieResult>();
-                    break;
-            }
-
-            var allResults = await RequestService.GetAllAsync();
-            allResults = allResults.Where(x => x.Type == RequestType.Movie);
-
-            var distinctResults = allResults.DistinctBy(x => x.ProviderId);
-            var dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
 
 
-            var cpCached = CpCacher.QueuedIds();
-            var watcherCached = WatcherCacher.QueuedIds();
-            var radarrCached = RadarrCacher.QueuedIds();
-
-            var viewMovies = new List<SearchMovieViewModel>();
-            var counter = 0;
-            foreach (var movie in apiMovies)
-            {
-                var viewMovie = new SearchMovieViewModel
-                {
-                    Adult = movie.Adult,
-                    BackdropPath = movie.BackdropPath,
-                    GenreIds = movie.GenreIds,
-                    Id = movie.Id,
-                    OriginalLanguage = movie.OriginalLanguage,
-                    OriginalTitle = movie.OriginalTitle,
-                    Overview = movie.Overview,
-                    Popularity = movie.Popularity,
-                    PosterPath = movie.PosterPath,
-                    ReleaseDate = movie.ReleaseDate,
-                    Title = movie.Title,
-                    Video = movie.Video,
-                    VoteAverage = movie.VoteAverage,
-                    VoteCount = movie.VoteCount
-                };
-
-                if (counter <= 5) // Let's only do it for the first 5 items
-                {
-                    var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
-
-                    // TODO needs to be careful about this, it's adding extra time to search...
-                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                    viewMovie.ImdbId = movieInfo?.imdb_id;
-                    viewMovie.Homepage = movieInfo?.homepage;
-                    var videoId = movieInfo?.video ?? false
-                        ? movieInfo?.videos?.results?.FirstOrDefault()?.key
-                        : string.Empty;
-
-                    viewMovie.Trailer = string.IsNullOrEmpty(videoId)
-                        ? string.Empty
-                        : $"https://www.youtube.com/watch?v={videoId}";
-
-                    counter++;
-                }
-
-                var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
-
-                var plexSettings = await PlexService.GetSettingsAsync();
-                var embySettings = await EmbySettings.GetSettingsAsync();
-                if (plexSettings.Enable)
-                {
-                    var content = PlexContentRepository.GetAll();
-                    var plexMovies = PlexChecker.GetPlexMovies(content);
-
-                    var plexMovie = PlexChecker.GetMovie(plexMovies.ToArray(), movie.Title,
-                        movie.ReleaseDate?.Year.ToString(),
-                        viewMovie.ImdbId);
-                    if (plexMovie != null)
-                    {
-                        viewMovie.Available = true;
-                        viewMovie.PlexUrl = plexMovie.Url;
-                    }
-                }
-                if (embySettings.Enable)
-                {
-                    var embyContent = EmbyContentRepository.GetAll();
-                    var embyMovies = EmbyChecker.GetEmbyMovies(embyContent);
-
-                    var embyMovie = EmbyChecker.GetMovie(embyMovies.ToArray(), movie.Title,
-                        movie.ReleaseDate?.Year.ToString(), viewMovie.ImdbId);
-                    if (embyMovie != null)
-                    {
-                        viewMovie.Available = true;
-                    }
-                }
-                if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
-                {
-                    var dbm = dbMovies[movie.Id];
-
-                    viewMovie.Requested = true;
-                    viewMovie.Approved = dbm.Approved;
-                    viewMovie.Available = dbm.Available;
-                }
-                if (cpCached.Contains(movie.Id) && canSee) // compare to the couchpotato db
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                if (watcherCached.Contains(viewMovie.ImdbId) && canSee) // compare to the watcher db
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                if (radarrCached.Contains(movie.Id) && canSee)
-                {
-                    viewMovie.Approved = true;
-                    viewMovie.Requested = true;
-                }
-                viewMovies.Add(viewMovie);
-            }
-
-            return Response.AsJson(viewMovies);
-        }
-
-        private bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,
+        protected bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,
             Dictionary<int, RequestedModel> moviesInDb)
         {
             if (usersCanViewOnlyOwnRequests)
@@ -546,7 +363,7 @@ namespace Ombi.UI.Modules
             allResults = allResults.Where(x => x.Type == RequestType.TvShow);
             var distinctResults = allResults.DistinctBy(x => x.ProviderId);
             var dbTv = distinctResults.ToDictionary(x => x.ImdbId);
-            
+
             var content = PlexContentRepository.GetAll();
             var plexTvShows = PlexChecker.GetPlexTvShows(content);
             var embyContent = EmbyContentRepository.GetAll();
@@ -554,10 +371,10 @@ namespace Ombi.UI.Modules
 
             foreach (var show in shows)
             {
-            
+
                 var providerId = show.Id.ToString();
 
-              if (embySettings.Enable)
+                if (embySettings.Enable)
                 {
                     var embyShow = EmbyChecker.GetTvShow(embyCached.ToArray(), show.SeriesName, show.FirstAired?.Substring(0, 4), providerId);
                     if (embyShow != null)
@@ -702,167 +519,6 @@ namespace Ombi.UI.Modules
             return Response.AsJson(viewTv);
         }
 
-
-        private async Task<Response> RequestMovie(int movieId)
-        {
-            if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestMovie))
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = "Sorry, you do not have the correct permissions to request a movie!"
-                    });
-            }
-            var settings = await PrService.GetSettingsAsync();
-            if (!await CheckRequestLimit(settings, RequestType.Movie))
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = "You have reached your weekly request limit for Movies! Please contact your admin."
-                    });
-            }
-            var embySettings = await EmbySettings.GetSettingsAsync();
-            Analytics.TrackEventAsync(Category.Search, Action.Request, "Movie", Username,
-                CookieHelper.GetAnalyticClientId(Cookies));
-            var movieInfo = await MovieApi.GetMovieInformation(movieId);
-            if (movieInfo == null)
-            {
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = "There was an issue adding this movie!"
-                    });
-            }
-            var fullMovieName =
-                $"{movieInfo.Title}{(movieInfo.ReleaseDate.HasValue ? $" ({movieInfo.ReleaseDate.Value.Year})" : string.Empty)}";
-
-            var existingRequest = await RequestService.CheckRequestAsync(movieId);
-            if (existingRequest != null)
-            {
-                // check if the current user is already marked as a requester for this movie, if not, add them
-                if (!existingRequest.UserHasRequested(Username))
-                {
-                    existingRequest.RequestedUsers.Add(Username);
-                    await RequestService.UpdateRequestAsync(existingRequest);
-                }
-
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = true,
-                        Message =
-                            Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
-                                ? $"{fullMovieName} {Ombi.UI.Resources.UI.Search_SuccessfullyAdded}"
-                                : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}"
-                    });
-            }
-
-            try
-            {
-
-                var content = PlexContentRepository.GetAll();
-                var movies = PlexChecker.GetPlexMovies(content);
-                if (PlexChecker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
-                {
-                    return
-                        Response.AsJson(new JsonResponseModel
-                        {
-                            Result = false,
-                            Message = $"{fullMovieName} is already in Plex!"
-                        });
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-                return
-                    Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullMovieName,GetMediaServerName())
-                    });
-            }
-            //#endif
-
-            var model = new RequestedModel
-            {
-                ProviderId = movieInfo.Id,
-                Type = RequestType.Movie,
-                Overview = movieInfo.Overview,
-                ImdbId = movieInfo.ImdbId,
-                PosterPath = movieInfo.PosterPath,
-                Title = movieInfo.Title,
-                ReleaseDate = movieInfo.ReleaseDate ?? DateTime.MinValue,
-                Status = movieInfo.Status,
-                RequestedDate = DateTime.UtcNow,
-                Approved = false,
-                RequestedUsers = new List<string> { Username },
-                Issues = IssueState.None,
-
-            };
-            try
-            {
-                if (ShouldAutoApprove(RequestType.Movie))
-                {
-                    model.Approved = true;
-
-                    var result = await MovieSender.Send(model);
-                    if (result.Result)
-                    {
-                        return await AddRequest(model, settings,
-                            $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-                    }
-                    if (result.Error)
-
-                    {
-                        return
-                            Response.AsJson(new JsonResponseModel
-                            {
-                                Message = "Could not add movie, please contract your administrator",
-                                Result = false
-                            });
-                    }
-                    if (!result.MovieSendingEnabled)
-                    {
-
-                        return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-                    }
-
-                    return Response.AsJson(new JsonResponseModel
-                    {
-                        Result = false,
-                        Message = Resources.UI.Search_CouchPotatoError
-                    });
-                }
-
-
-                return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-            }
-            catch (Exception e)
-            {
-                Log.Fatal(e);
-                await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault, e.Message);
-
-                await NotificationService.Publish(new NotificationModel
-                {
-                    DateTime = DateTime.Now,
-                    User = Username,
-                    RequestType = RequestType.Movie,
-                    Title = model.Title,
-                    NotificationType = NotificationType.ItemAddedToFaultQueue
-                });
-
-                return Response.AsJson(new JsonResponseModel
-                {
-                    Result = true,
-                    Message = $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}"
-                });
-            }
-        }
 
         /// <summary>
         /// Requests the tv show.
@@ -1030,7 +686,7 @@ namespace Ombi.UI.Modules
                             Response.AsJson(new JsonResponseModel
                             {
                                 Result = false,
-                                Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,embySettings.Enable ? "Emby" : "Plex")}"
+                                Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex, embySettings.Enable ? "Emby" : "Plex")}"
                             });
                     }
                 }
@@ -1076,7 +732,7 @@ namespace Ombi.UI.Modules
                                     {
                                         Result = false,
                                         Message =
-                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex, GetMediaServerName())}"
                                     });
                             }
                         }
@@ -1098,7 +754,7 @@ namespace Ombi.UI.Modules
                                         Response.AsJson(new JsonResponseModel
                                         {
                                             Result = false,
-                                            Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
+                                            Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex, GetMediaServerName())}"
                                         });
                                 }
                             }
@@ -1111,7 +767,7 @@ namespace Ombi.UI.Modules
                                 Response.AsJson(new JsonResponseModel
                                 {
                                     Result = false,
-                                    Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
+                                    Message = $"{fullShowName} {string.Format(Resources.UI.Search_AlreadyInPlex, GetMediaServerName())}"
                                 });
                         }
                     }
@@ -1138,7 +794,7 @@ namespace Ombi.UI.Modules
                                     {
                                         Result = false,
                                         Message =
-                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex,GetMediaServerName())}"
+                                            $"{fullShowName}  {d.SeasonNumber} - {d.EpisodeNumber} {string.Format(Resources.UI.Search_AlreadyInPlex, GetMediaServerName())}"
                                     });
                             }
                         }
@@ -1185,7 +841,7 @@ namespace Ombi.UI.Modules
                     Response.AsJson(new JsonResponseModel
                     {
                         Result = false,
-                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName,GetMediaServerName())
+                        Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullShowName, GetMediaServerName())
                     });
             }
 
@@ -1610,7 +1266,7 @@ namespace Ombi.UI.Modules
                 Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
         }
 
-        private string GetMediaServerName()
+        protected string GetMediaServerName()
         {
             var e = EmbySettings.GetSettings();
             return e.Enable ? "Emby" : "Plex";

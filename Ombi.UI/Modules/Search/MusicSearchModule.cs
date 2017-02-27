@@ -42,12 +42,12 @@ namespace Ombi.UI.Modules.Search
             /* another cutoff: these should be in other sub-modules */
             IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify, ICouchPotatoCacher cpCacher, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            INotificationService notify, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
             IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            IMovieSender movieSender, IRadarrCacher radarrCacher, ITraktApi traktApi, ISettingsService<CustomizationSettings> cus,
+            ISettingsService<CustomizationSettings> cus, ITraktApi traktApi,
             IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) : 
-            base(plexApi, prSettings, plexService, auth, security, plexChecker, request, sonarrApi, sonarrSettings, sickRageService, srApi, notify, cpCacher, watcherCacher, sonarrCacher, sickRageCacher,u, email, issue, a, rl, tfQueue, content, movieSender, radarrCacher, traktApi, cus, embyChecker, embyContent, embySettings)
+            base(plexApi, prSettings, plexService, auth, security, plexChecker, cus, traktApi, request, sonarrApi, sonarrSettings, sickRageService, srApi, notify, sonarrCacher, sickRageCacher,u, email, issue, a, rl, tfQueue, content, embyChecker, embyContent, embySettings)
         {
             HeadphonesApi = hpApi;
             HeadphonesService = hpService;
