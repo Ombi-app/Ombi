@@ -51,6 +51,49 @@ namespace Ombi.Core.Users
         private ISecurityExtensions Security { get; }
         private IExternalUserRepository<EmbyUsers> EmbyUserRepository { get; }
 
+        public UserHelperModel GetUser(string username)
+        {
+            var localUsers = LocalUserRepository.GetUserByUsername(username);
+            if (localUsers != null)
+            {
+                var props = ByteConverterHelper.ReturnObject<UserProperties>(localUsers.UserProperties);
+                return new UserHelperModel
+                {
+                    Type = UserType.LocalUser,
+                    Username = localUsers.UserName,
+                    UserAlias = props.UserAlias,
+                    EmailAddress = props.EmailAddress,
+                    Permissions = (Permissions) localUsers.Permissions
+                };
+            }
+
+            var plexUsers = PlexUserRepository.GetUserByUsername(username);
+            if (plexUsers != null)
+            {
+                return new UserHelperModel
+                {
+                    Type = UserType.PlexUser,
+                    Username = plexUsers.Username,
+                    UserAlias = plexUsers.UserAlias,
+                    EmailAddress = plexUsers.EmailAddress,
+                    Permissions = (Permissions)plexUsers.Permissions
+                };
+            }
+
+            var embyUsers = EmbyUserRepository.GetUserByUsername(username);
+            if (embyUsers != null)
+            {
+                return new UserHelperModel
+                {
+                    Type = UserType.EmbyUser,
+                    Username = embyUsers.Username,
+                    UserAlias = embyUsers.UserAlias,
+                    EmailAddress = embyUsers.EmailAddress,
+                    Permissions = (Permissions)embyUsers.Permissions
+                };
+            }
+            return null;
+        }
 
         public IEnumerable<UserHelperModel> GetUsers()
         {
