@@ -178,7 +178,7 @@ namespace Ombi.UI.Modules.Admin
 
             Post["/", true] = async (x, ct) => await SaveAdmin();
 
-            Post["/requestauth"] = _ => RequestAuthToken();
+            Post["/requestauth", true] = async (x, ct) => await RequestAuthToken();
 
             Get["/getusers"] = _ => GetUsers();
 
@@ -319,7 +319,7 @@ namespace Ombi.UI.Modules.Admin
                 : new JsonResponseModel { Result = false, Message = "We could not save to the database, please try again" });
         }
 
-        private Response RequestAuthToken()
+        private async Task<Response> RequestAuthToken()
         {
             var user = this.Bind<PlexAuth>();
 
@@ -335,11 +335,11 @@ namespace Ombi.UI.Modules.Admin
                 return Response.AsJson(new { Result = false, Message = "Incorrect username or password!" });
             }
 
-            var oldSettings = PlexService.GetSettings();
+            var oldSettings = await PlexService.GetSettingsAsync();
             if (oldSettings != null)
             {
                 oldSettings.PlexAuthToken = model.user.authentication_token;
-                PlexService.SaveSettings(oldSettings);
+                await PlexService.SaveSettingsAsync(oldSettings);
             }
             else
             {
@@ -347,10 +347,14 @@ namespace Ombi.UI.Modules.Admin
                 {
                     PlexAuthToken = model.user.authentication_token
                 };
-                PlexService.SaveSettings(newModel);
+                await PlexService.SaveSettingsAsync(newModel);
             }
 
-            return Response.AsJson(new { Result = true, AuthToken = model.user.authentication_token });
+            var server = PlexApi.GetServer(model.user.authentication_token);
+            var machine =
+                server.Server.FirstOrDefault(x => x.AccessToken == model.user.authentication_token)?.MachineIdentifier;
+
+            return Response.AsJson(new { Result = true, AuthToken = model.user.authentication_token, Identifier = machine });
         }
 
 
