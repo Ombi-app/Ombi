@@ -134,7 +134,7 @@ namespace Ombi.Services.Jobs
             Repo.DeleteAll(TableName);
 
             // Insert the new items
-            var result = Repo.BatchInsert(entities.Select(x => x.Key).ToList(), TableName, typeof(PlexEpisodes).GetPropertyNames());
+            var result = Repo.BatchInsert(entities.Select(x => x.Key).ToList(), TableName);
 
             if (!result)
             {

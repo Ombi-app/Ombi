@@ -286,7 +286,7 @@ namespace Ombi.Store.Repository
             }
         }
 
-        public bool BatchInsert(IEnumerable<T> entities, string tableName, params string[] values)
+        public bool BatchInsert(IEnumerable<T> entities, string tableName)
         {
             // If we have nothing to update, then it didn't fail...
             var enumerable = entities as T[] ?? entities.ToArray();
