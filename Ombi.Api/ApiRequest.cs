@@ -58,9 +58,7 @@ namespace Ombi.Api
             var client = new RestClient { BaseUrl = baseUri };
 
             var response = client.Execute<T>(request);
-            Log.Trace("Api Content Response:");
-            Log.Trace(response.Content);
-
+            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
 
             if (response.ErrorException != null)
             {
@@ -85,9 +83,7 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace("Request made to " + client.BaseUrl + " with details of " + request.ToString());
-            Log.Trace("Api Content Response:");
-            Log.Trace(response.Content);
+            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
 
             if (response.ErrorException != null)
             {
@@ -104,9 +100,7 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace("Request made to " + client.BaseUrl + " with details of " + request.ToString());
-            Log.Trace("Api Content Response:");
-            Log.Trace(response.Content);
+            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
@@ -114,10 +108,7 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            Log.Trace("Deserialzing Object");
             var json = JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            Log.Trace("Finished Deserialzing Object");
-
             return json;
         }
 
