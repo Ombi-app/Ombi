@@ -90,8 +90,8 @@ namespace Ombi.Core
             var artistExists = index.Any(x => x.ArtistID == request.ArtistId);
             if (!artistExists)
             {
-                var artistAdd = Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
-                Log.Info("Artist add result : {0}", artistAdd);
+                var artistAdd = await Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
+                Log.Info("Artist add result for {1}: {0}", artistAdd, request.ArtistName);
             }
 
             var counter = 0;
@@ -116,13 +116,13 @@ namespace Ombi.Core
             {
                 Thread.Sleep(WaitTime);
                 counter++;
-                Log.Trace("Artist status {1}. Counter = {0}", counter, artistStatus);
+                Log.Trace("Artist {2} status {1}. Counter = {0}", counter, artistStatus, request.ArtistName);
                 index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
                 artistStatus = index.Where(x => x.ArtistID == request.ArtistId).Select(x => x.Status).FirstOrDefault();
                 if (counter > CounterMax)
                 {
                     Log.Trace("Artist status is still not active. Counter = {0}. Returning false", counter);
-                    Log.Warn("The artist status is still not Active. We have waited long enough, seems to be a big delay in headphones.");
+                    Log.Warn($"The artist status for {request.ArtistName} is still not Active. We have waited long enough, seems to be a big delay in headphones.");
                     return false;
                 }
             }
