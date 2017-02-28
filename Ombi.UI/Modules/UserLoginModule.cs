@@ -373,7 +373,6 @@ namespace Ombi.UI.Modules
                 return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
             }
 
-
             var m = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner, plexSettings.Enable, embySettings.Enable);
 
             var landingSettings = await LandingPageSettings.GetSettingsAsync();
@@ -397,7 +396,6 @@ namespace Ombi.UI.Modules
                 return CustomModuleExtensions.LoginAndRedirect(this, m.LoginGuid, null, retVal.ToString());
             }
             return Response.AsJson(new { result = true, url = retVal.ToString() });
-
         }
 
         private async Task<Response> LoginUser()

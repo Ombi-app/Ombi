@@ -66,10 +66,11 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            if (response.StatusCode != HttpStatusCode.OK)
-                return default(T);
-            else
+            if (response.StatusCode == HttpStatusCode.OK)
                 return response.Data;
+            else
+                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+
         }
 
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
@@ -92,10 +93,11 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            T result = default(T);
             if (response.StatusCode == HttpStatusCode.OK)
-                result = DeserializeXml<T>(response.Content);
-            return result;
+                return DeserializeXml<T>(response.Content);
+            else
+                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+
         }
 
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
@@ -111,10 +113,10 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            T result = default(T);
             if (response.StatusCode == HttpStatusCode.OK)
-                result = JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            return result;
+                return JsonConvert.DeserializeObject<T>(response.Content, _settings);
+            else
+                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
         }
 
         private T DeserializeXml<T>(string input)
