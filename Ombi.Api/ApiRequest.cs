@@ -63,13 +63,14 @@ namespace Ombi.Api
             {
                 var message = "Error retrieving response. Check inner details for more info.";
                 Log.Error(response.ErrorException);
+                Log.Error(response.ErrorException.InnerException);
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            //if (response.StatusCode == HttpStatusCode.OK)
                 return response.Data;
-            else
-                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            //else
+            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
 
         }
 
@@ -89,14 +90,15 @@ namespace Ombi.Api
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
+                Log.Error(response.ErrorException.InnerException);
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            //if (response.StatusCode == HttpStatusCode.OK)
                 return DeserializeXml<T>(response.Content);
-            else
-                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            //else
+            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
 
         }
 
@@ -109,14 +111,15 @@ namespace Ombi.Api
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
+                Log.Error(response.ErrorException.InnerException);
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            //if (response.StatusCode == HttpStatusCode.OK)
                 return JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            else
-                throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            //else
+            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
         }
 
         private T DeserializeXml<T>(string input)
