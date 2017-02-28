@@ -84,8 +84,10 @@ namespace Ombi.Api
         public T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
+            Log.Trace("Request made to " + client.BaseUrl + " with details of " + request.ToString());
+            Log.Trace("Api Content Response:");
+            Log.Trace(response.Content);
 
             if (response.ErrorException != null)
             {
@@ -95,12 +97,14 @@ namespace Ombi.Api
             }
 
             var result = DeserializeXml<T>(response.Content);
-            return result;}
+            return result;
+        }
 
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
+            Log.Trace("Request made to " + client.BaseUrl + " with details of " + request.ToString());
             Log.Trace("Api Content Response:");
             Log.Trace(response.Content);
             if (response.ErrorException != null)
