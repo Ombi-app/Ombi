@@ -56,9 +56,8 @@ namespace Ombi.Api
         public T Execute<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute<T>(request);
-            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
+            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
 
             if (response.ErrorException != null)
             {
@@ -67,15 +66,16 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            return response.Data;
+            if (response.StatusCode != HttpStatusCode.OK)
+                return default(T);
+            else
+                return response.Data;
         }
 
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
-           
             return response;
         }
 
@@ -83,7 +83,7 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
+            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
 
             if (response.ErrorException != null)
             {
@@ -92,7 +92,9 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            var result = DeserializeXml<T>(response.Content);
+            T result = default(T);
+            if (response.StatusCode == HttpStatusCode.OK)
+                result = DeserializeXml<T>(response.Content);
             return result;
         }
 
@@ -100,7 +102,8 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace($"Request made to {client.BaseUrl} with details of {request.ToString()}. The response was {response.Content}");
+            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
+
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
@@ -108,8 +111,10 @@ namespace Ombi.Api
                 throw new ApiRequestException(message, response.ErrorException);
             }
 
-            var json = JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            return json;
+            T result = default(T);
+            if (response.StatusCode == HttpStatusCode.OK)
+                result = JsonConvert.DeserializeObject<T>(response.Content, _settings);
+            return result;
         }
 
         private T DeserializeXml<T>(string input)

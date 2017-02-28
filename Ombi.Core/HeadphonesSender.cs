@@ -79,7 +79,7 @@ namespace Ombi.Core
             request.Approved = true;
 
             // Update the record
-            var updated = RequestService.UpdateRequest(request);
+            bool updated = RequestService.UpdateRequest(request);
 
             return updated;
         }
@@ -90,7 +90,7 @@ namespace Ombi.Core
             var artistExists = index.Any(x => x.ArtistID == request.ArtistId);
             if (!artistExists)
             {
-                var artistAdd = await Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
+                bool artistAdd = await Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
                 Log.Info("Artist add result for {1}: {0}", artistAdd, request.ArtistName);
             }
 
