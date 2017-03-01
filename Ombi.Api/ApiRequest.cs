@@ -57,8 +57,9 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute<T>(request);
-            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
+            /**
             if (response.ErrorException != null)
             {
                 var message = "Error retrieving response. Check inner details for more info.";
@@ -66,11 +67,12 @@ namespace Ombi.Api
                 Log.Error(response.ErrorException.InnerException);
                 throw new ApiRequestException(message, response.ErrorException);
             }
+            **/
 
-            //if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
                 return response.Data;
-            //else
-            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
 
         }
 
@@ -85,8 +87,9 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
+            /**
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
@@ -94,11 +97,12 @@ namespace Ombi.Api
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApiRequestException(message, response.ErrorException);
             }
+            **/
 
-            //if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
                 return DeserializeXml<T>(response.Content);
-            //else
-            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
 
         }
 
@@ -106,8 +110,9 @@ namespace Ombi.Api
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace($"Request made to {client.BaseUrl} with status code {response.StatusCode}. The response was {response.Content}");
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
+            /**
             if (response.ErrorException != null)
             {
                 Log.Error(response.ErrorException);
@@ -115,11 +120,12 @@ namespace Ombi.Api
                 var message = "Error retrieving response. Check inner details for more info.";
                 throw new ApiRequestException(message, response.ErrorException);
             }
+            **/
 
-            //if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK)
                 return JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            //else
-            //    throw new Exception($"Got StatusCode={response.StatusCode} for {baseUri}.");
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
         }
 
         private T DeserializeXml<T>(string input)
