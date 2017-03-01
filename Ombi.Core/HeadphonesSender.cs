@@ -79,7 +79,7 @@ namespace Ombi.Core
             request.Approved = true;
 
             // Update the record
-            var updated = RequestService.UpdateRequest(request);
+            bool updated = RequestService.UpdateRequest(request);
 
             return updated;
         }
@@ -88,87 +88,20 @@ namespace Ombi.Core
         {
             var index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
             var artistExists = index.Any(x => x.ArtistID == request.ArtistId);
+            bool artistAdd = false;
             if (!artistExists)
             {
-                var artistAdd = Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
-                Log.Info("Artist add result : {0}", artistAdd);
+                artistAdd = await Api.AddArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
+                Log.Info("Artist add result for {1}: {0}", artistAdd, request.ArtistName);
             }
 
-            var counter = 0;
-            while (index.All(x => x.ArtistID != request.ArtistId))
-            {
-                Thread.Sleep(WaitTime);
-                counter++;
-                Log.Trace("Artist is still not present in the index. Counter = {0}", counter);
-                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
-
-                if (counter > CounterMax)
-                {
-                    Log.Trace("Artist is still not present in the index. Counter = {0}. Returning false", counter);
-                    Log.Warn("We have tried adding the artist but it seems they are still not in headphones.");
-                    return false;
-                }
-            }
-            
-            counter = 0;
-            var artistStatus = index.Where(x => x.ArtistID == request.ArtistId).Select(x => x.Status).FirstOrDefault();
-            while (artistStatus != "Active")
-            {
-                Thread.Sleep(WaitTime);
-                counter++;
-                Log.Trace("Artist status {1}. Counter = {0}", counter, artistStatus);
-                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
-                artistStatus = index.Where(x => x.ArtistID == request.ArtistId).Select(x => x.Status).FirstOrDefault();
-                if (counter > CounterMax)
-                {
-                    Log.Trace("Artist status is still not active. Counter = {0}. Returning false", counter);
-                    Log.Warn("The artist status is still not Active. We have waited long enough, seems to be a big delay in headphones.");
-                    return false;
-                }
-            }
-
-            var addedArtist = index.FirstOrDefault(x => x.ArtistID == request.ArtistId);
-            var artistName = addedArtist?.ArtistName ?? string.Empty;
-            counter = 0;
-            while (artistName.Contains("Fetch failed"))
-            {
-                Thread.Sleep(WaitTime);
-                await Api.RefreshArtist(Settings.ApiKey, Settings.FullUri, request.ArtistId);
-
-                index = await Api.GetIndex(Settings.ApiKey, Settings.FullUri);
-
-                artistName = index?.FirstOrDefault(x => x.ArtistID == request.ArtistId)?.ArtistName ?? string.Empty;
-                counter++;
-                if (counter > CounterMax)
-                {
-                    Log.Trace("Artist fetch has failed. Counter = {0}. Returning false", counter);
-                    Log.Warn("Artist in headphones fetch has failed, we have tried refreshing the artist but no luck.");
-                    return false;
-                }
-            }
-
-            return true;
+            return artistExists || artistAdd;
         }
 
         private async Task<bool> SetAlbumStatus(RequestedModel request)
         {
-            var counter = 0;
-            var setStatus = await Api.QueueAlbum(Settings.ApiKey, Settings.FullUri, request.MusicBrainzId);
-
-            while (!setStatus)
-            {
-                Thread.Sleep(WaitTime);
-                counter++;
-                Log.Trace("Setting Album status. Counter = {0}", counter);
-                setStatus = await Api.QueueAlbum(Settings.ApiKey, Settings.FullUri, request.MusicBrainzId);
-                if (counter > CounterMax)
-                {
-                    Log.Trace("Album status is still not active. Counter = {0}. Returning false", counter);
-                    Log.Warn("We tried to se the status for the album but headphones didn't want to snatch it.");
-                    return false;
-                }
-            }
-            return true;
+            bool setStatus = await Api.QueueAlbum(Settings.ApiKey, Settings.FullUri, request.ReleaseId);
+            return setStatus;
         }
     }
 }
