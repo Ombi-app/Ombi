@@ -75,7 +75,7 @@ namespace Ombi.UI
             var s = new Setup();
             var cn = s.SetupDb(baseUrl);
             s.CacheQualityProfiles();
-            ConfigureTargets(cn); 
+            ConfigureTargets(cn);
             SetupLogging();
 
             if (port == -1 || port == 3579)
@@ -110,7 +110,7 @@ namespace Ombi.UI
                     {
                         Log.Info("This is not Mono");
                         Console.WriteLine("Press any key to exit");
-                       Console.ReadLine();
+                        Console.ReadLine();
                     }
                 }
             }
