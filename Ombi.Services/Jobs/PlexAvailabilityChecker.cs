@@ -194,15 +194,15 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Movie);
         }
 
-        public bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null)
+        public bool IsMovieAvailable(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null)
         {
             var movie = GetMovie(plexMovies, title, year, providerId);
             return movie != null;
         }
 
-        public PlexContent GetMovie(PlexContent[] plexMovies, string title, string year, string providerId = null)
+        public PlexContent GetMovie(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null)
         {
-            if (plexMovies.Length == 0)
+            if (plexMovies.Count() == 0)
             {
                 return null;
             }
@@ -236,14 +236,14 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Show);
         }
 
-        public bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
+        public bool IsTvShowAvailable(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null, int[] seasons = null)
         {
             var show = GetTvShow(plexShows, title, year, providerId, seasons);
             return show != null;
         }
 
 
-        public PlexContent GetTvShow(PlexContent[] plexShows, string title, string year, string providerId = null,
+        public PlexContent GetTvShow(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null,
             int[] seasons = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
@@ -345,14 +345,14 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Artist);
         }
 
-        public bool IsAlbumAvailable(PlexContent[] plexAlbums, string title, string year, string artist)
+        public bool IsAlbumAvailable(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.Any(x =>
                 x.Title.Contains(title) &&
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public PlexContent GetAlbum(PlexContent[] plexAlbums, string title, string year, string artist)
+        public PlexContent GetAlbum(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.FirstOrDefault(x =>
                 x.Title.Contains(title) &&

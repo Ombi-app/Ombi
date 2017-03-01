@@ -202,6 +202,7 @@ namespace Ombi.Core.StatusChecker
 
         public async Task<Uri> OAuth(string url, ISession session)
         {
+            await Task.Yield();
 
             var csrf = StringCipher.Encrypt(Guid.NewGuid().ToString("N"), "CSRF");
             session[SessionKeys.CSRF] = csrf;
