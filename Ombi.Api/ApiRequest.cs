@@ -59,17 +59,7 @@ namespace Ombi.Api
             var response = client.Execute<T>(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            /**
-            if (response.ErrorException != null)
-            {
-                var message = "Error retrieving response. Check inner details for more info.";
-                Log.Error(response.ErrorException);
-                Log.Error(response.ErrorException.InnerException);
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-            **/
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                 return response.Data;
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
@@ -89,17 +79,7 @@ namespace Ombi.Api
             var response = client.Execute(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            /**
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                Log.Error(response.ErrorException.InnerException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-            **/
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                 return DeserializeXml<T>(response.Content);
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
@@ -112,17 +92,7 @@ namespace Ombi.Api
             var response = client.Execute(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            /**
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                Log.Error(response.ErrorException.InnerException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-            **/
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
                 return JsonConvert.DeserializeObject<T>(response.Content, _settings);
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
