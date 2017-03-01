@@ -1,9 +1,8 @@
 #region Copyright
 
-// /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: SearchModule.cs
-//    Created By: Jamie Rees
+//  ************************************************************************
+//    Copyright (c) 2016-2017 Ombi
+//    File: BaseSearchModule.cs
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
