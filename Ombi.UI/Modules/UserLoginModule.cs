@@ -65,7 +65,7 @@ namespace Ombi.UI.Modules
             AuthService = auth;
             LandingPageSettings = lp;
             Analytics = a;
-            Api = api;
+            PlexApi = api;
             PlexSettings = plexSettings;
             Linker = linker;
             UserLogins = userLogins;
@@ -126,7 +126,7 @@ namespace Ombi.UI.Modules
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
-        private IPlexApi Api { get; }
+        private IPlexApi PlexApi { get; }
         private IEmbyApi EmbyApi { get; }
         private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
@@ -301,12 +301,18 @@ namespace Ombi.UI.Modules
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
 
-            if (plexSettings.Enable)
+            // attempt local login first as it has the least amount of overhead
+            userId = CustomUserMapper.ValidateUser(username, password)?.ToString();
+            if (userId != null)
+            {
+                authenticated = true;
+            }
+            else if (userId == null && plexSettings.Enable)
             {
                 if (settings.UserAuthentication) // Authenticate with Plex
                 {
                     Log.Debug("Need to auth and also provide pass");
-                    var signedIn = (PlexAuthentication) Api.SignIn(username, password);
+                    var signedIn = (PlexAuthentication) PlexApi.SignIn(username, password);
                     if (signedIn.user?.authentication_token != null)
                     {
                         Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
@@ -325,9 +331,9 @@ namespace Ombi.UI.Modules
                     }
                 }
             }
-            if (embySettings.Enable)
+            else if (userId == null && embySettings.Enable)
             {
-                if (settings.UserAuthentication) // Authenticate with Plex
+                if (settings.UserAuthentication) // Authenticate with Emby
                 {
                     Log.Debug("Need to auth and also provide pass");
                     EmbyUser signedIn = null;
@@ -355,16 +361,6 @@ namespace Ombi.UI.Modules
                         }
                         userId = signedIn?.Id;
                     }
-                }
-            }
-
-            if (string.IsNullOrEmpty(userId))
-            {
-                // Local user?
-                userId = CustomUserMapper.ValidateUser(username, password)?.ToString();
-                if (userId != null)
-                {
-                    authenticated = true;
                 }
             }
 
@@ -440,7 +436,7 @@ namespace Ombi.UI.Modules
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
                 Log.Debug("Need to auth and also provide pass");
-                var signedIn = (PlexAuthentication)Api.SignIn(username, password);
+                var signedIn = (PlexAuthentication)PlexApi.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
                     Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
@@ -711,7 +707,7 @@ namespace Ombi.UI.Modules
 
         private bool CheckIfUserIsOwner(string authToken, string userName)
         {
-            var userAccount = Api.GetAccount(authToken);
+            var userAccount = PlexApi.GetAccount(authToken);
             if (userAccount == null)
             {
                 return false;
@@ -721,7 +717,7 @@ namespace Ombi.UI.Modules
 
         private string GetOwnerId(string authToken, string userName)
         {
-            var userAccount = Api.GetAccount(authToken);
+            var userAccount = PlexApi.GetAccount(authToken);
             if (userAccount == null)
             {
                 return string.Empty;
@@ -731,7 +727,7 @@ namespace Ombi.UI.Modules
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
-            var users = Api.GetUsers(authToken);
+            var users = PlexApi.GetUsers(authToken);
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers != null && allUsers.Any(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase));
         }
@@ -769,7 +765,7 @@ namespace Ombi.UI.Modules
 
         private string GetUserIdIsInPlexFriends(string username, string authToken)
         {
-            var users = Api.GetUsers(authToken);
+            var users = PlexApi.GetUsers(authToken);
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers?.Where(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id).FirstOrDefault();
         }
