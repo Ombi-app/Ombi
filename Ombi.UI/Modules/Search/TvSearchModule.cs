@@ -1,212 +1,88 @@
-#region Copyright
-
-// /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: SearchModule.cs
-//    Created By: Jamie Rees
-//   
-//    Permission is hereby granted, free of charge, to any person obtaining
-//    a copy of this software and associated documentation files (the
-//    "Software"), to deal in the Software without restriction, including
-//    without limitation the rights to use, copy, modify, merge, publish,
-//    distribute, sublicense, and/or sell copies of the Software, and to
-//    permit persons to whom the Software is furnished to do so, subject to
-//    the following conditions:
-//   
-//    The above copyright notice and this permission notice shall be
-//    included in all copies or substantial portions of the Software.
-//   
-//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-//    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-//    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-//    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-//    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//  ************************************************************************/
-
-#endregion
-
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
-using Nancy;
-using Nancy.Extensions;
-using Nancy.Responses.Negotiation;
-using Newtonsoft.Json;
-using NLog;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
-using Ombi.Api.Models.Music;
-using Ombi.Api.Models.Sonarr;
-using Ombi.Api.Models.Tv;
+﻿using Ombi.Api.Interfaces;
 using Ombi.Core;
-using Ombi.Core.Models;
-using Ombi.Core.Queue;
 using Ombi.Core.SettingModels;
-using Ombi.Helpers;
-using Ombi.Helpers.Analytics;
-using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
-using Ombi.Services.Jobs;
 using Ombi.Services.Notification;
 using Ombi.Store;
-using Ombi.Store.Models;
-using Ombi.Store.Models.Emby;
-using Ombi.Store.Models.Plex;
-using Ombi.Store.Repository;
-using Ombi.UI.Helpers;
-using Ombi.UI.Models;
-using TMDbLib.Objects.General;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Ombi.Api.Models.Sonarr;
+using Ombi.Api.Models.Tv;
 using TraktApiSharp.Objects.Get.Shows;
-using Action = Ombi.Helpers.Analytics.Action;
 using EpisodesModel = Ombi.Store.EpisodesModel;
-using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
+using System.Threading.Tasks;
+using Ombi.UI.Models;
+using Nancy;
+using Ombi.UI.Helpers;
+using Ombi.Core.Models;
+using Ombi.Store.Models;
+using Action = Ombi.Helpers.Analytics.Action;
+using Ombi.Helpers.Analytics;
+using Ombi.Helpers;
+using Nancy.Extensions;
+using Ombi.Api;
+using System.Globalization;
+using Ombi.Helpers.Permissions;
+using Newtonsoft.Json;
+using Ombi.Services.Jobs;
+using Ombi.Core.Queue;
+using Ombi.Store.Repository;
+using Ombi.Store.Models.Plex;
+using Ombi.Store.Models.Emby;
 
-namespace Ombi.UI.Modules
+namespace Ombi.UI.Modules.Search
 {
-    public abstract class SearchModule : BaseAuthModule
+    public class TvSearchModule : BaseSearchModule
     {
-        public SearchModule(IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
-            ISecurityExtensions security, IAvailabilityChecker plexChecker) : base("search", prSettings, security)
-        {
-            Auth = auth;
-            PlexService = plexService;
-            PlexApi = plexApi;
-            PrService = prSettings;
-            PlexChecker = plexChecker;
+        protected ISonarrCacher SonarrCacher { get; }
+        protected ISickRageCacher SickRageCacher { get; }
+        protected ISettingsService<SonarrSettings> SonarrService { get; }
+        protected ISettingsService<SickRageSettings> SickRageService { get; }
+        protected ISonarrApi SonarrApi { get; }
+        protected ISickRageApi SickrageApi { get; }
+        protected ITraktApi TraktApi { get; }
+        protected TvMazeApi TvApi { get; }
 
-        }
-
-        public SearchModule(IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
-            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
-            ISecurityExtensions security, IAvailabilityChecker plexChecker,
-            /* param cutoff for refactor */
-            ISettingsService<CustomizationSettings> cus, ITraktApi traktApi,
-            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
+        public TvSearchModule(ITraktApi traktApi, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
             ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            /* parameters needed for base class constructor */
+            IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
+            ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
+            ISecurityExtensions security, IAvailabilityChecker plexChecker, INotificationService notify,
+            ISettingsService<CustomizationSettings> cus, IRequestService request, IAnalytics a,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
-            : this(plexApi, prSettings, plexService, auth, security, plexChecker)
+            IIssueService issue, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue,
+            IRepository<PlexContent> content, IEmbyAvailabilityChecker embyChecker,
+            IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) 
+            : base(plexApi, prSettings,plexService, auth, security, plexChecker, notify, cus, request, a, u,
+                  email, issue, rl, tfQueue,content, embyChecker, embyContent, embySettings)
         {
-            SonarrCacher = sonarrCacher;
-            SickRageCacher = sickRageCacher;
-            RequestService = request;
-            SonarrApi = sonarrApi;
-            SonarrService = sonarrSettings;
-            SickRageService = sickRageService;
-            SickrageApi = srApi;
-            NotificationService = notify;
-            UsersToNotifyRepo = u;
-            EmailNotificationSettings = email;
-            IssueService = issue;
-            Analytics = a;
-            RequestLimitRepo = rl;
-            FaultQueue = tfQueue;
-            TvApi = new TvMazeApi();
-            PlexContentRepository = content;
-            CustomizationSettings = cus;
-            EmbyChecker = embyChecker;
-            EmbyContentRepository = embyContent;
-            EmbySettings = embySettings;
             TraktApi = traktApi;
-
-            Get["SearchIndex", "/", true] = async (x, ct) => await RequestLoad();
+            TvApi = new TvMazeApi();
+            SonarrApi = sonarrApi;
+            SonarrCacher = sonarrCacher;
+            SonarrService = sonarrSettings;
+            SickrageApi = srApi;
+            SickRageService = sickRageService;
+            SickRageCacher = sickRageCacher;
 
             Get["tv/{searchTerm}", true] = async (x, ct) => await SearchTvShow((string)x.searchTerm);
-
             Get["tv/popular", true] = async (x, ct) => await ProcessShows(ShowSearchType.Popular);
             Get["tv/trending", true] = async (x, ct) => await ProcessShows(ShowSearchType.Trending);
             Get["tv/mostwatched", true] = async (x, ct) => await ProcessShows(ShowSearchType.MostWatched);
             Get["tv/anticipated", true] = async (x, ct) => await ProcessShows(ShowSearchType.Anticipated);
-
             Get["tv/poster/{id}"] = p => GetTvPoster((int)p.id);
-
             Post["request/tv", true] =
                 async (x, ct) => await RequestTvShow((int)Request.Form.tvId, (string)Request.Form.seasons);
             Post["request/tvEpisodes", true] = async (x, ct) => await RequestTvShow(0, "episode");
 
             Get["/seasons"] = x => GetSeasons();
             Get["/episodes", true] = async (x, ct) => await GetEpisodes();
-        }
-        protected ITraktApi TraktApi { get; }
-        protected IRepository<PlexContent> PlexContentRepository { get; }
-        protected IRepository<EmbyContent> EmbyContentRepository { get; }
-        protected TvMazeApi TvApi { get; }
-        protected IPlexApi PlexApi { get; }
-        protected INotificationService NotificationService { get; }
-        protected ISonarrApi SonarrApi { get; }
-        protected ISickRageApi SickrageApi { get; }
-        protected IRequestService RequestService { get; }
-        protected ICacheProvider Cache { get; }
-        protected ISettingsService<AuthenticationSettings> Auth { get; }
-        protected ISettingsService<EmbySettings> EmbySettings { get; }
-        protected ISettingsService<PlexSettings> PlexService { get; }
-        protected ISettingsService<PlexRequestSettings> PrService { get; }
-        protected ISettingsService<SonarrSettings> SonarrService { get; }
-        protected ISettingsService<SickRageSettings> SickRageService { get; }
-        protected ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        protected IAvailabilityChecker PlexChecker { get; }
-        protected IEmbyAvailabilityChecker EmbyChecker { get; }
-        protected ISonarrCacher SonarrCacher { get; }
-        protected ISickRageCacher SickRageCacher { get; }
-        protected IRepository<UsersToNotify> UsersToNotifyRepo { get; }
-        protected IIssueService IssueService { get; }
-        protected IAnalytics Analytics { get; }
-        protected ITransientFaultQueue FaultQueue { get; }
-        protected IRepository<RequestLimit> RequestLimitRepo { get; }
-        protected ISettingsService<CustomizationSettings> CustomizationSettings { get; }
-        protected static Logger Log = LogManager.GetCurrentClassLogger();
 
-        private async Task<Negotiator> RequestLoad()
-        {
-
-            var settings = await PrService.GetSettingsAsync();
-            var custom = await CustomizationSettings.GetSettingsAsync();
-            var emby = await EmbySettings.GetSettingsAsync();
-            var plex = await PlexService.GetSettingsAsync();
-            var searchViewModel = new SearchLoadViewModel
-            {
-                Settings = settings,
-                CustomizationSettings = custom,
-                Emby = emby.Enable,
-                Plex = plex.Enable
-            };
-
-
-            return View["Search/Index", searchViewModel];
         }
 
-
-        private Response GetTvPoster(int theTvDbId)
-        {
-            var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
-
-            var banner = result.image?.medium;
-            if (!string.IsNullOrEmpty(banner))
-            {
-                banner = banner.Replace("http", "https"); // Always use the Https banners
-            }
-            return banner;
-        }
-
-
-        protected bool CanUserSeeThisRequest(int movieId, bool usersCanViewOnlyOwnRequests,
-            Dictionary<int, RequestedModel> moviesInDb)
-        {
-            if (usersCanViewOnlyOwnRequests)
-            {
-                var result = moviesInDb.FirstOrDefault(x => x.Value.ProviderId == movieId);
-                return result.Value == null || result.Value.UserHasRequested(Username);
-            }
-
-            return true;
-        }
 
         private async Task<Response> ProcessShows(ShowSearchType type)
         {
@@ -894,42 +770,6 @@ namespace Ombi.UI.Modules
             }
         }
 
-        private async Task<Response> AddUserToRequest(RequestedModel existingRequest, PlexRequestSettings settings,
-            string fullShowName, bool episodeReq = false)
-        {
-            // check if the current user is already marked as a requester for this show, if not, add them
-            if (!existingRequest.UserHasRequested(Username))
-            {
-                existingRequest.RequestedUsers.Add(Username);
-            }
-            if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) || episodeReq)
-            {
-                return
-                    await
-                        UpdateRequest(existingRequest, settings,
-                            $"{fullShowName} {Resources.UI.Search_SuccessfullyAdded}");
-            }
-
-            return
-                await UpdateRequest(existingRequest, settings, $"{fullShowName} {Resources.UI.Search_AlreadyRequested}");
-        }
-
-        private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
-        {
-            var sendNotification = ShouldAutoApprove(type)
-                ? !prSettings.IgnoreNotifyForAutoApprovedRequests
-                : true;
-
-            if (IsAdmin)
-            {
-                sendNotification = false; // Don't bother sending a notification if the user is an admin
-
-            }
-            return sendNotification;
-        }
-
-
-
 
         private Response GetSeasons()
         {
@@ -1041,142 +881,6 @@ namespace Ombi.UI.Modules
 
         }
 
-        public async Task<bool> CheckRequestLimit(PlexRequestSettings s, RequestType type)
-        {
-            if (IsAdmin)
-                return true;
-
-            if (Security.HasPermissions(User, Permissions.BypassRequestLimit))
-                return true;
-
-            var requestLimit = GetRequestLimitForType(type, s);
-            if (requestLimit == 0)
-            {
-                return true;
-            }
-
-            var limit = await RequestLimitRepo.GetAllAsync();
-            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == type);
-            if (usersLimit == null)
-            {
-                // Have not set a requestLimit yet
-                return true;
-            }
-
-            return requestLimit > usersLimit.RequestCount;
-        }
-
-        private int GetRequestLimitForType(RequestType type, PlexRequestSettings s)
-        {
-            int requestLimit;
-            switch (type)
-            {
-                case RequestType.Movie:
-                    requestLimit = s.MovieWeeklyRequestLimit;
-                    break;
-                case RequestType.TvShow:
-                    requestLimit = s.TvWeeklyRequestLimit;
-                    break;
-                case RequestType.Album:
-                    requestLimit = s.AlbumWeeklyRequestLimit;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
-            }
-            return requestLimit;
-        }
-
-        protected async Task<Response> AddRequest(RequestedModel model, PlexRequestSettings settings, string message)
-        {
-            await RequestService.AddRequestAsync(model);
-
-            if (ShouldSendNotification(model.Type, settings))
-            {
-                var notificationModel = new NotificationModel
-                {
-                    Title = model.Title,
-                    User = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type,
-                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
-                };
-                await NotificationService.Publish(notificationModel);
-            }
-
-            var limit = await RequestLimitRepo.GetAllAsync();
-            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
-            if (usersLimit == null)
-            {
-                await RequestLimitRepo.InsertAsync(new RequestLimit
-                {
-                    Username = Username,
-                    RequestType = model.Type,
-                    FirstRequestDate = DateTime.UtcNow,
-                    RequestCount = 1
-                });
-            }
-            else
-            {
-                usersLimit.RequestCount++;
-                await RequestLimitRepo.UpdateAsync(usersLimit);
-            }
-
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
-        }
-
-        private async Task<Response> UpdateRequest(RequestedModel model, PlexRequestSettings settings, string message)
-        {
-            await RequestService.UpdateRequestAsync(model);
-
-            if (ShouldSendNotification(model.Type, settings))
-            {
-                var notificationModel = new NotificationModel
-                {
-                    Title = model.Title,
-                    User = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type,
-                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
-                };
-                await NotificationService.Publish(notificationModel);
-            }
-
-            var limit = await RequestLimitRepo.GetAllAsync();
-            var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
-            if (usersLimit == null)
-            {
-                await RequestLimitRepo.InsertAsync(new RequestLimit
-                {
-                    Username = Username,
-                    RequestType = model.Type,
-                    FirstRequestDate = DateTime.UtcNow,
-                    RequestCount = 1
-                });
-            }
-            else
-            {
-                usersLimit.RequestCount++;
-                await RequestLimitRepo.UpdateAsync(usersLimit);
-            }
-
-            return Response.AsJson(new JsonResponseModel { Result = true, Message = message });
-        }
-
-        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
-        {
-            var newRequest = request
-                .Select(r =>
-                    new EpisodesModel
-                    {
-                        SeasonNumber = r.SeasonNumber,
-                        EpisodeNumber = r.EpisodeNumber
-                    }).ToList();
-
-            return newRequest.Except(existing);
-        }
-
         private async Task<IEnumerable<EpisodesModel>> GetEpisodeRequestDifference(int showId, RequestedModel model)
         {
             var episodes = await GetEpisodes(showId);
@@ -1185,26 +889,6 @@ namespace Ombi.UI.Modules
 
             var diff = model.Episodes.Except(available);
             return diff;
-        }
-
-        public bool ShouldAutoApprove(RequestType requestType)
-        {
-            var admin = Security.HasPermissions(Context.CurrentUser, Permissions.Administrator);
-            // if the user is an admin, they go ahead and allow auto-approval
-            if (admin) return true;
-
-            // check by request type if the category requires approval or not
-            switch (requestType)
-            {
-                case RequestType.Movie:
-                    return Security.HasPermissions(User, Permissions.AutoApproveMovie);
-                case RequestType.TvShow:
-                    return Security.HasPermissions(User, Permissions.AutoApproveTv);
-                case RequestType.Album:
-                    return Security.HasPermissions(User, Permissions.AutoApproveAlbum);
-                default:
-                    return false;
-            }
         }
 
         private enum ShowSearchType
@@ -1266,11 +950,30 @@ namespace Ombi.UI.Modules
                 Response.AsJson(new JsonResponseModel { Result = false, Message = Resources.UI.Search_TvNotSetUp });
         }
 
-        protected string GetMediaServerName()
+        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<Models.EpisodesModel> request)
         {
-            var e = EmbySettings.GetSettings();
-            return e.Enable ? "Emby" : "Plex";
+            var newRequest = request
+                .Select(r =>
+                    new EpisodesModel
+                    {
+                        SeasonNumber = r.SeasonNumber,
+                        EpisodeNumber = r.EpisodeNumber
+                    }).ToList();
+
+            return newRequest.Except(existing);
         }
+        private Response GetTvPoster(int theTvDbId)
+        {
+            var result = TvApi.ShowLookupByTheTvDbId(theTvDbId);
+
+            var banner = result.image?.medium;
+            if (!string.IsNullOrEmpty(banner))
+            {
+                banner = banner.Replace("http", "https"); // Always use the Https banners
+            }
+            return banner;
+        }
+
+
     }
 }
-

@@ -28,7 +28,7 @@ using Ombi.Store.Models.Plex;
 
 namespace Ombi.UI.Modules.Search
 {
-    public class MovieSearchModule : SearchModule
+    public class MovieSearchModule : BaseSearchModule
     {
         protected TheMovieDbApi MovieApi { get; }
         protected ICouchPotatoCacher CpCacher { get; }
@@ -36,20 +36,19 @@ namespace Ombi.UI.Modules.Search
         protected IMovieSender MovieSender { get; }
         protected IWatcherCacher WatcherCacher { get; }
 
-        public MovieSearchModule(ICouchPotatoCacher cpCacher, IMovieSender movieSender, IRadarrCacher radarrCacher, IWatcherCacher watcherCacher,
-            /* param cutoff for refactor: these should be in the base */
+        public MovieSearchModule(ICouchPotatoCacher cpCacher, IMovieSender movieSender,
+            IRadarrCacher radarrCacher, IWatcherCacher watcherCacher,
+            /* parameters needed for base class constructor */
             IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
-            ISecurityExtensions security, IAvailabilityChecker plexChecker,
-            /* another cutoff: these should be in other sub-modules */
-            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            ISecurityExtensions security, IAvailabilityChecker plexChecker, INotificationService notify,
+            ISettingsService<CustomizationSettings> cus, IRequestService request, IAnalytics a,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISettingsService<CustomizationSettings> cus, ITraktApi traktApi,
-            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) :
-            base(plexApi, prSettings, plexService, auth, security, plexChecker, cus, traktApi, request, sonarrApi, sonarrSettings, sickRageService, srApi, notify, sonarrCacher, sickRageCacher, u, email, issue, a, rl, tfQueue, content, embyChecker, embyContent, embySettings)
+            IIssueService issue, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue,
+            IRepository<PlexContent> content, IEmbyAvailabilityChecker embyChecker,
+            IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
+            : base(plexApi, prSettings, plexService, auth, security, plexChecker, notify, cus, request, a, u,
+                  email, issue, rl, tfQueue, content, embyChecker, embyContent, embySettings)
         {
             MovieApi = new TheMovieDbApi();
             CpCacher = cpCacher;
@@ -61,7 +60,6 @@ namespace Ombi.UI.Modules.Search
             Get["movie/upcoming", true] = async (x, ct) => await UpcomingMovies();
             Get["movie/playing", true] = async (x, ct) => await CurrentlyPlayingMovies();
             Post["request/movie", true] = async (x, ct) => await RequestMovie((int)Request.Form.movieId);
-
         }
 
         private async Task<Response> ProcessMovies(MovieSearchType searchType, string searchTerm)

@@ -28,26 +28,25 @@ using Ombi.Core.Models;
 
 namespace Ombi.UI.Modules.Search
 {
-    public class MusicSearchModule : SearchModule
+    public class MusicSearchModule : BaseSearchModule
     {
         private IMusicBrainzApi MusicBrainzApi { get; }
         private IHeadphonesApi HeadphonesApi { get; }
         private ISettingsService<HeadphonesSettings> HeadphonesService { get; }
 
-        public MusicSearchModule(IMusicBrainzApi mbApi, IHeadphonesApi hpApi, ISettingsService<HeadphonesSettings> hpService,
-            /* param cutoff for refactor: these should be in the base */
+        public MusicSearchModule(IMusicBrainzApi mbApi, IHeadphonesApi hpApi,
+            ISettingsService<HeadphonesSettings> hpService,
+            /* parameters needed for base class constructor */
             IPlexApi plexApi, ISettingsService<PlexRequestSettings> prSettings,
             ISettingsService<PlexSettings> plexService, ISettingsService<AuthenticationSettings> auth,
-            ISecurityExtensions security, IAvailabilityChecker plexChecker, 
-            /* another cutoff: these should be in other sub-modules */
-            IRequestService request, ISonarrApi sonarrApi, ISettingsService<SonarrSettings> sonarrSettings,
-            ISettingsService<SickRageSettings> sickRageService, ISickRageApi srApi,
-            INotificationService notify, IWatcherCacher watcherCacher, ISonarrCacher sonarrCacher, ISickRageCacher sickRageCacher,
+            ISecurityExtensions security, IAvailabilityChecker plexChecker, INotificationService notify,
+            ISettingsService<CustomizationSettings> cus, IRequestService request, IAnalytics a,
             IRepository<UsersToNotify> u, ISettingsService<EmailNotificationSettings> email,
-            IIssueService issue, IAnalytics a, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue, IRepository<PlexContent> content,
-            ISettingsService<CustomizationSettings> cus, ITraktApi traktApi,
-            IEmbyAvailabilityChecker embyChecker, IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings) : 
-            base(plexApi, prSettings, plexService, auth, security, plexChecker, cus, traktApi, request, sonarrApi, sonarrSettings, sickRageService, srApi, notify, sonarrCacher, sickRageCacher,u, email, issue, a, rl, tfQueue, content, embyChecker, embyContent, embySettings)
+            IIssueService issue, IRepository<RequestLimit> rl, ITransientFaultQueue tfQueue,
+            IRepository<PlexContent> content, IEmbyAvailabilityChecker embyChecker,
+            IRepository<EmbyContent> embyContent, ISettingsService<EmbySettings> embySettings)
+            : base(plexApi, prSettings,plexService, auth, security, plexChecker, notify, cus, request, a, u,
+                  email, issue, rl, tfQueue,content, embyChecker, embyContent, embySettings)
         {
             HeadphonesApi = hpApi;
             HeadphonesService = hpService;
