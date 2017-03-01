@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: PlexContent.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: AppType.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,32 +24,12 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using System;
-using System.Data.Linq.Mapping;
-
-namespace Ombi.Store.Models.Plex
+namespace Ombi.Updater
 {
-    [Table(Name = nameof(PlexContent))]
-    public class PlexContent : Entity
+    public enum AppType
     {
-        public string Title { get; set; }
-        public string ReleaseYear { get; set; }
-        public string ProviderId { get; set; }
-        public PlexMediaType Type { get; set; }
-        public string Url { get; set; }
-
-        /// <summary>
-        /// Only used for TV Shows
-        /// </summary>
-        public byte[] Seasons { get; set; }
-
-        /// <summary>
-        /// Only used for Albums
-        /// </summary>
-        public string Artist { get; set; }
-
-        public string ItemId { get; set; }
-        public DateTime AddedAt { get; set; }
+        Normal,
+        Console,
+        Service
     }
 }
