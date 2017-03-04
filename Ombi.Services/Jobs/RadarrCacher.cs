@@ -67,11 +67,15 @@ namespace Ombi.Services.Jobs
                     if (movies != null)
                     {
                         var movieIds = new List<int>();
-                        foreach (var m in movies)
+                        foreach (var m in movies.records)
                         {
                             if (m.tmdbId > 0)
                             {
                                 movieIds.Add(m.tmdbId);
+                            }
+                            else
+                            {
+                                Log.Error("TMDBId is not > 0 for movie {0}", m.title);
                             }
                         }
                         //var movieIds = movies.Select(x => x.tmdbId).ToList();

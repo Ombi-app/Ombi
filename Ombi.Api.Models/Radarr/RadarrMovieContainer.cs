@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: StringHasher.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RadarrMovieContainer.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,39 +25,17 @@
 //  ************************************************************************/
 #endregion
 
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
+using System.Collections.Generic;
 
-namespace Ombi.Helpers
+namespace Ombi.Api.Models.Radarr
 {
-    public class StringHasher
+    public class RadarrMovieContainer
     {
-        public static string CalcuateMd5Hash(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-            {
-                return string.Empty;
-            }
-            using (var md5 = MD5.Create())
-            {
-                var inputBytes = Encoding.UTF8.GetBytes(input);
-                var hash = md5.ComputeHash(inputBytes);
-
-                var sb = new StringBuilder();
-
-                foreach (var t in hash)
-                {
-                    sb.Append(t.ToString("x2"));
-                }
-
-                return sb.ToString();
-            }
-        }
-
-        public static string GetSha1Hash(string input)
-        {
-            return string.Join("", (new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
-        }
+        public int page { get; set; }
+        public int pageSize { get; set; }
+        public string sortKey { get; set; }
+        public string sortDirection { get; set; }
+        public int totalRecords { get; set; }
+        public List<RadarrMovieResponse> records { get; set; }   
     }
 }

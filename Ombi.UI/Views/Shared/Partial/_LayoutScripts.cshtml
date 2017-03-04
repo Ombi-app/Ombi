@@ -26,6 +26,23 @@
                 console.log(e);
             }
         });
+
+        
+
+        var gravatarUrl = createBaseUrl(base, 'layout/gravatar');
+        $.ajax({
+            url: gravatarUrl,
+            success: function (result) {
+                if (result.result) {
+                    $('#gravatarImg').html("<img src=\"" + result.message + "\" class=\"gravatar\" width=\"30\" height=\"30\" alt=\"\">");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("error " + error);
+            }
+        });
+
+
         // End Check for update
 
         checkCacheInProgress();

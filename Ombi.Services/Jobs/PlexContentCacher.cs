@@ -264,7 +264,7 @@ namespace Ombi.Services.Jobs
                             return media;
                         });
 
-                        if (item == null)
+                        if (item == null && !string.IsNullOrEmpty(m.ItemId))
                         { 
                             // Doesn't exist, insert it
                             PlexContent.Insert(new PlexContent
@@ -305,7 +305,7 @@ namespace Ombi.Services.Jobs
                             return media;
                         });
 
-                        if (item == null)
+                        if (item == null && !string.IsNullOrEmpty(t.ItemId))
                         {
                             PlexContent.Insert(new PlexContent
                             {

@@ -33,6 +33,7 @@ using Nancy;
 using Nancy.Responses.Negotiation;
 using NLog;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Sonarr;
 using Ombi.Core;
 using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
@@ -104,7 +105,8 @@ namespace Ombi.UI.Modules
 
             Post["/changeavailability", true] = async (x, ct) => await ChangeRequestAvailability((int)Request.Form.Id, (bool)Request.Form.Available);
 
-            Post["/changeRootFolder", true] = async (x, ct) => await ChangeRootFolder((int) Request.Form.requestId, (int) Request.Form.rootFolderId);
+            Post["/changeRootFoldertv", true] = async (x, ct) => await ChangeRootFolder(RequestType.TvShow, (int)Request.Form.requestId, (int)Request.Form.rootFolderId);
+            Post["/changeRootFoldermovie", true] = async (x, ct) => await ChangeRootFolder(RequestType.Movie, (int)Request.Form.requestId, (int)Request.Form.rootFolderId);
 
             Get["/UpdateFilters", true] = async (x, ct) => await GetFilterAndSortSettings();
         }
@@ -171,7 +173,7 @@ namespace Ombi.UI.Modules
                             if (result != null)
                             {
                                 qualities =
-                                    result.list.Select(x => new QualityModel {Id = x._id, Name = x.label}).ToList();
+                                    result.list.Select(x => new QualityModel { Id = x._id, Name = x.label }).ToList();
                             }
                         }
                         catch (Exception e)
@@ -188,7 +190,7 @@ namespace Ombi.UI.Modules
 
                         rootFolders =
                             rootFoldersResult.Select(
-                                    x => new RootFolderModel {Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace})
+                                    x => new RootFolderModel { Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace })
                                 .ToList();
 
                         var result = await Cache.GetOrSetAsync(CacheKeys.RadarrQualityProfiles, async () =>
@@ -204,7 +206,7 @@ namespace Ombi.UI.Modules
                 }
             }
 
-           
+
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
@@ -265,14 +267,14 @@ namespace Ombi.UI.Modules
                         });
                         qualities = result.Select(x => new QualityModel { Id = x.id.ToString(), Name = x.name }).ToList();
 
-                        
-                            var rootFoldersResult =await  Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
-                            {
-                                return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
-                            });
-                        
-                        rootFolders = rootFoldersResult.Select(x => new RootFolderModel { Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace}).ToList();
-                        }
+
+                        var rootFoldersResult = await Cache.GetOrSetAsync(CacheKeys.SonarrRootFolders, async () =>
+                        {
+                            return await Task.Run(() => SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri));
+                        });
+
+                        rootFolders = rootFoldersResult.Select(x => new RootFolderModel { Id = x.id.ToString(), Path = x.path, FreeSpace = x.freespace }).ToList();
+                    }
                     else
                     {
                         var sickRageSettings = await SickRageSettings.GetSettingsAsync();
@@ -318,7 +320,7 @@ namespace Ombi.UI.Modules
                 TvSeriesRequestType = tv.SeasonsRequested,
                 Qualities = qualities.ToArray(),
                 Episodes = tv.Episodes.ToArray(),
-                RootFolders =  rootFolders.ToArray(),
+                RootFolders = rootFolders.ToArray(),
                 HasRootFolders = rootFolders.Any(),
                 CurrentRootPath = sonarrSettings.Enabled ? GetRootPath(tv.RootFolderSelected, sonarrSettings).Result : null
             }).ToList();
@@ -555,11 +557,21 @@ namespace Ombi.UI.Modules
             return Response.AsJson(vm);
         }
 
-        private async Task<Response> ChangeRootFolder(int id, int rootFolderId)
+        private async Task<Response> ChangeRootFolder(RequestType type, int id, int rootFolderId)
         {
-            // Get all root folders
-            var settings = await SonarrSettings.GetSettingsAsync();
-            var rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            var rootFolders = new List<SonarrRootFolder>();
+            if (type == RequestType.TvShow)
+            {
+                // Get all root folders
+                var settings = await SonarrSettings.GetSettingsAsync();
+                rootFolders = SonarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            }
+            else
+            {
+
+                var settings = await Radarr.GetSettingsAsync();
+                rootFolders = RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            }
 
             // Get Request
             var allRequests = await Service.GetAllAsync();
@@ -567,7 +579,7 @@ namespace Ombi.UI.Modules
 
             if (request == null)
             {
-                return Response.AsJson(new JsonResponseModel {Result = false});
+                return Response.AsJson(new JsonResponseModel { Result = false });
             }
 
             foreach (var folder in rootFolders)
@@ -581,7 +593,7 @@ namespace Ombi.UI.Modules
 
             await Service.UpdateRequestAsync(request);
 
-            return Response.AsJson(new JsonResponseModel {Result =  true});
-        } 
-     }
+            return Response.AsJson(new JsonResponseModel { Result = true });
+        }
+    }
 }
