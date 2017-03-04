@@ -105,7 +105,7 @@ namespace Ombi.Core.Migration.Migrations
             con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
             con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
 
-            con.AlterTable("PlexContent", "ADD", "ItemID", true, "VARCHAR(100)");
+            con.AlterTable("PlexContent", "ADD", "ItemId", true, "VARCHAR(100)");
             con.AlterTable("PlexContent", "ADD", "AddedAt", true, "VARCHAR(100)");
         }
 

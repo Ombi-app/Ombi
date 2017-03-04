@@ -382,7 +382,6 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> GetAlbumRequests()
         {
-            var settings = PrSettings.GetSettings();
             var dbAlbum = await Service.GetAllAsync();
             dbAlbum = dbAlbum.Where(x => x.Type == RequestType.Album);
             if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
