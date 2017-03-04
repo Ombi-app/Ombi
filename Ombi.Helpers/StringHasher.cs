@@ -35,6 +35,10 @@ namespace Ombi.Helpers
     {
         public static string CalcuateMd5Hash(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
             using (var md5 = MD5.Create())
             {
                 var inputBytes = Encoding.UTF8.GetBytes(input);

@@ -128,6 +128,13 @@ namespace Ombi.UI.Modules
             {
                 var user = UserHelper.GetUser(Username);
                 var hashed = StringHasher.CalcuateMd5Hash(user.EmailAddress);
+                if (string.IsNullOrEmpty(hashed))
+                {
+                    return Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false
+                    });
+                }
                 return
                     Response.AsJson(new JsonResponseModel
                     {

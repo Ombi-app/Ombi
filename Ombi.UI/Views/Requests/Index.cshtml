@@ -281,7 +281,7 @@
                 </form>
                 
                 
-                <form method="POST" action="@formAction/requests/changeRootFolder" id="changeFolder{{requestId}}">
+                <form method="POST" action="@formAction/requests/changeRootFolder{{#if_eq type "tv"}}tv{{else}}movie{{/if_eq}}" id="changeFolder{{requestId}}">
                     <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
                     {{#if_eq hasRootFolders true}}
                     <div class="btn-group btn-split">
