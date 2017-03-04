@@ -112,6 +112,7 @@
     <Compile Include="Radarr\RadarrAddMovie.cs" />
     <Compile Include="Radarr\RadarrAddOptions.cs" />
     <Compile Include="Radarr\RadarrError.cs" />
+    <Compile Include="Radarr\RadarrMovieContainer.cs" />
     <Compile Include="Radarr\RadarrMovieResponse.cs" />
     <Compile Include="SickRage\SickRageBase.cs" />
     <Compile Include="SickRage\SickrageShows.cs" />

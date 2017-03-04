@@ -1513,6 +1513,7 @@ namespace Ombi.UI.Modules
             {
                 Title = albumInfo.title,
                 MusicBrainzId = albumInfo.id,
+                ReleaseId = releaseId,
                 Overview = albumInfo.disambiguation,
                 PosterPath = img,
                 Type = RequestType.Album,
