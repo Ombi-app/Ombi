@@ -73,6 +73,9 @@ namespace Ombi.Helpers.Permissions
         UsersCanViewOnlyOwnIssues = 2048,
 
         [Display(Name = "Bypass the request limit")]
-        BypassRequestLimit = 4096
+        BypassRequestLimit = 4096,
+
+        [Display(Name = "User can see who requested")]
+        ViewUsers = 8192
     }
 }

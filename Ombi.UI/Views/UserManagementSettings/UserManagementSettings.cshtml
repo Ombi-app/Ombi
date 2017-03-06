@@ -1,4 +1,4 @@
-﻿@using Ombi.UI.Helpers
+@using Ombi.UI.Helpers
 @inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Ombi.Core.SettingModels.UserManagementSettings>
 @Html.Partial("Shared/Partial/_Sidebar")
 
@@ -25,6 +25,7 @@
             @Html.Checkbox(Model.UsersCanViewOnlyOwnIssues, "UsersCanViewOnlyOwnIssues", "Users can only view their own issues")
             @Html.Checkbox(Model.UsersCanViewOnlyOwnRequests, "UsersCanViewOnlyOwnRequests", "Users can only view their own requests")
             @Html.Checkbox(Model.BypassRequestLimit, "BypassRequestLimit", "Bypass the request limit")
+            @Html.Checkbox(Model.ViewUsers, "ViewUsers", "User can see who made requests")
 
 
 
