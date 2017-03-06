@@ -81,6 +81,7 @@ namespace Ombi.Services.Jobs
                     continue;
                 }
 
+                
                 // Check it this episode exists
                 var item = Repo.Custom(connection =>
                 {
@@ -93,6 +94,15 @@ namespace Ombi.Services.Jobs
                     return media;
                 });
 
+                if (item != null)
+                {
+                    if (item.EmbyId != ep.Id) // The id's dont match, delete it
+                    {
+                        Repo.Delete(item);
+                        item = null;
+                    }
+                }
+                
                 if (item == null)
                 {
                     // add it

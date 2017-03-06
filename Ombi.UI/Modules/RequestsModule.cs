@@ -208,6 +208,8 @@ namespace Ombi.UI.Modules
 
 
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
+            var allowViewUsers = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ViewUsers);
+
             var viewModel = dbMovies.Select(movie => new RequestViewModel
             {
                 ProviderId = movie.ProviderId,
@@ -224,7 +226,7 @@ namespace Ombi.UI.Modules
                 Approved = movie.Available || movie.Approved,
                 Title = movie.Title,
                 Overview = movie.Overview,
-                RequestedUsers = canManageRequest ? movie.AllUsers.ToArray() : new string[] { },
+                RequestedUsers = canManageRequest || allowViewUsers ? movie.AllUsers.ToArray() : new string[] { },
                 ReleaseYear = movie.ReleaseDate.Year.ToString(),
                 Available = movie.Available,
                 Admin = canManageRequest,
@@ -294,6 +296,8 @@ namespace Ombi.UI.Modules
 
 
             var canManageRequest = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ManageRequests);
+            var allowViewUsers = Security.HasAnyPermissions(User, Permissions.Administrator, Permissions.ViewUsers);
+
             var viewModel = dbTv.Select(tv => new RequestViewModel
             {
                 ProviderId = tv.ProviderId,
@@ -310,7 +314,7 @@ namespace Ombi.UI.Modules
                 Approved = tv.Available || tv.Approved,
                 Title = tv.Title,
                 Overview = tv.Overview,
-                RequestedUsers = canManageRequest ? tv.AllUsers.ToArray() : new string[] { },
+                RequestedUsers = canManageRequest || allowViewUsers ? tv.AllUsers.ToArray() : new string[] { },
                 ReleaseYear = tv.ReleaseDate.Year.ToString(),
                 Available = tv.Available,
                 Admin = canManageRequest,
@@ -382,7 +386,6 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> GetAlbumRequests()
         {
-            var settings = PrSettings.GetSettings();
             var dbAlbum = await Service.GetAllAsync();
             dbAlbum = dbAlbum.Where(x => x.Type == RequestType.Album);
             if (Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests) && !IsAdmin)
