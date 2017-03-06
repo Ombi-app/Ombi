@@ -117,12 +117,16 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
-
+            var filteredSeries = series.Where(x => recentlyAdded.All(c => c.ProviderId != x.ProviderId)).ToList();
 
             var info = new List<PlexRecentlyAddedModel>();
             foreach (var m in filteredMovies)
             {
                 var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, m.ItemId);
+                if (i.Video == null)
+                {
+                    continue;
+                }
                 info.Add(new PlexRecentlyAddedModel
                 {
                     Metadata = i,
@@ -132,10 +136,14 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             GenerateMovieHtml(info, sb);
 
             info.Clear();
-            foreach (var t in series)
+            foreach (var t in filteredSeries)
             {
                 var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
-                
+                if (i.Directory == null)
+                {
+                    continue;
+
+                }
                 //var ep = filteredEp.Where(x => x.ShowTitle == t.Title);
                 info.Add(new PlexRecentlyAddedModel
                 {
@@ -176,6 +184,14 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     });
                 }
                 foreach (var a in filteredEp)
+                {
+                    RecentlyAddedLog.Insert(new RecentlyAddedLog
+                    {
+                        ProviderId = a.ProviderId,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
+                foreach (var a in filteredSeries)
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
