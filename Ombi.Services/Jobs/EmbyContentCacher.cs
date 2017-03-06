@@ -115,7 +115,7 @@ namespace Ombi.Services.Jobs
                         foreach (var item in info.Items)
                         {
                             var movieInfo = EmbyApi.GetInformation(item.Id, EmbyMediaType.Movie, embySettings.ApiKey,
-           embySettings.AdministratorId, embySettings.FullUri).MovieInformation;
+                                embySettings.AdministratorId, embySettings.FullUri).MovieInformation;
                             ProcessMovies(movieInfo);
                         }
                     }
@@ -149,6 +149,12 @@ namespace Ombi.Services.Jobs
                         connection.Dispose();
                         return media;
                     });
+                    if (item != null && item.EmbyId != t.Id)
+                    {
+                        // delete this item since the Id has changed
+                        EmbyContent.Delete(item);
+                        item = null;
+                    }
 
                     if (item == null)
                     {
@@ -254,6 +260,13 @@ namespace Ombi.Services.Jobs
                 connection.Dispose();
                 return media;
             });
+
+            if (item != null && item.EmbyId != movieInfo.Id)
+            {
+                // delete this item since the Id has changed
+                EmbyContent.Delete(item);
+                item = null;
+            }
 
             if (item == null)
             {
