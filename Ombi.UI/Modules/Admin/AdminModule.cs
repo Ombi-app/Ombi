@@ -1132,9 +1132,10 @@ namespace Ombi.UI.Modules.Admin
 
             Analytics.TrackEventAsync(Category.Admin, Action.Update, "Update Landing Page", Username, CookieHelper.GetAnalyticClientId(Cookies));
             var plexSettings = await PlexService.GetSettingsAsync();
-            if (string.IsNullOrEmpty(plexSettings.Ip))
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (string.IsNullOrEmpty(plexSettings.Ip) && string.IsNullOrEmpty(embySettings.Ip))
             {
-                return Response.AsJson(new JsonResponseModel { Result = false, Message = "We cannot enable the landing page if Plex is not setup!" });
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = "We cannot enable the landing page if Plex/Emby is not setup!" });
             }
 
             if (settings.Enabled && settings.EnabledNoticeTime && string.IsNullOrEmpty(settings.NoticeMessage))
