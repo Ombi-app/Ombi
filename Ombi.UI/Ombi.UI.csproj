@@ -281,6 +281,11 @@
     <Compile Include="Modules\LandingPageModule.cs" />
     <Compile Include="Modules\LayoutModule.cs" />
     <Compile Include="Modules\SearchExtensionModule.cs" />
+    <Compile Include="Modules\Search\BaseSearchModule.cs" />
+    <Compile Include="Modules\Search\MovieSearchModule.cs" />
+    <Compile Include="Modules\Search\MusicSearchModule.cs" />
+    <Compile Include="Modules\Search\SearchIndexModule.cs" />
+    <Compile Include="Modules\Search\TvSearchModule.cs" />
     <Compile Include="Modules\UserWizardModule.cs" />
     <Compile Include="NinjectModules\ApiModule.cs" />
     <Compile Include="NinjectModules\ConfigurationModule.cs" />
@@ -374,7 +379,6 @@
     <Compile Include="Modules\UserLoginModule.cs" />
     <Compile Include="Modules\LoginModule.cs" />
     <Compile Include="Modules\RequestsModule.cs" />
-    <Compile Include="Modules\SearchModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
