@@ -29,6 +29,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using CommandLine;
 using Microsoft.Owin.Hosting;
@@ -41,6 +42,7 @@ using Ombi.Core.SettingModels;
 using Ombi.Helpers;
 using Ombi.Store;
 using Ombi.Store.Repository;
+using Ombi.UI.Modules.Admin;
 using Ombi.UI.Start;
 
 namespace Ombi.UI
@@ -50,7 +52,6 @@ namespace Ombi.UI
         private static Logger Log = LogManager.GetCurrentClassLogger();
         static void Main(string[] args)
         {
-
             var result = Parser.Default.ParseArguments<StartupOptions>(args);
             var baseUrl = result.MapResult(
                 o => o.BaseUrl,

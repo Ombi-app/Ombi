@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26206.0
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.UI", "Ombi.UI\Ombi.UI.csproj", "{68F5F5F3-B8BB-4911-875F-6F00AAE04EA6}"
 EndProject
@@ -40,6 +40,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core.Migration", "Ombi.Core.Migration\Ombi.Core.Migration.csproj", "{8406EE57-D533-47C0-9302-C6B5F8C31E55}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Common", "Ombi.Common\Ombi.Common.csproj", "{BFD45569-90CF-47CA-B575-C7B0FF97F67B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Mono", "Ombi.Mono\Ombi.Mono.csproj", "{96C89180-1FB5-48B7-9D35-6EB5F11C9D95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Windows", "Ombi.Windows\Ombi.Windows.csproj", "{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platform", "Platform", "{3186D191-D5C6-46B1-86E0-3F3B65A12096}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -103,9 +109,21 @@ Global
 		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFD45569-90CF-47CA-B575-C7B0FF97F67B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96C89180-1FB5-48B7-9D35-6EB5F11C9D95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96C89180-1FB5-48B7-9D35-6EB5F11C9D95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96C89180-1FB5-48B7-9D35-6EB5F11C9D95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96C89180-1FB5-48B7-9D35-6EB5F11C9D95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{96C89180-1FB5-48B7-9D35-6EB5F11C9D95} = {3186D191-D5C6-46B1-86E0-3F3B65A12096}
+		{FA5F2172-E82F-4D73-9C50-BEDC6A0A4037} = {3186D191-D5C6-46B1-86E0-3F3B65A12096}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		RESX_PrefixTranslations = False

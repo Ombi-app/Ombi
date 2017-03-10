@@ -184,8 +184,7 @@ namespace Ombi.Updater
 
         private DirectoryInfo CreateTempPath()
         {
-            try
-            {
+            try            {
                 var location = Path.GetDirectoryName(Assembly.GetAssembly(typeof(Updater)).Location ?? string.Empty);
                 var path = Path.Combine(location, "UpdateTemp");
                 return Directory.CreateDirectory(path);

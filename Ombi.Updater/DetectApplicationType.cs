@@ -22,8 +22,7 @@ namespace Ombi.Updater
                 return AppType.Normal;
             }
 
-            if (_serviceProvider.ServiceExist(ServiceProvider.OmbiServiceName)
-               )
+            if (_serviceProvider.ServiceExist(ServiceProvider.OmbiServiceName))
             {
                 return AppType.Service;
             }
