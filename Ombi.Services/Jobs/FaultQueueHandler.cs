@@ -158,6 +158,15 @@ namespace Ombi.Services.Jobs
                     }
                     else
                     {
+                        // Make sure it's been requested
+                        var existingRequests = RequestService.GetAll();
+                        var thisItem = existingRequests.Any(x => x.Title.Equals(tvModel.Title));
+                        if (!thisItem)
+                        {
+                            tvModel.Approved = true;
+                            RequestService.AddRequest(tvModel);
+                        }
+
                         // Successful, remove from the fault queue
                         Repo.Delete(t);
                     }
@@ -261,7 +270,6 @@ namespace Ombi.Services.Jobs
         {
             var sonarrSettings = SonarrSettings.GetSettings();
             var sickrageSettings = SickrageSettings.GetSettings();
-            var cpSettings = CpSettings.GetSettings();
             var hpSettings = HeadphoneSettings.GetSettings();
 
             if (!requests.Any())
