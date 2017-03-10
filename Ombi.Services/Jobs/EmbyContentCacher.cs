@@ -105,7 +105,13 @@ namespace Ombi.Services.Jobs
             try
             {
                 var movies = GetMovies();
-
+                // Delete everything
+                EmbyContent.Custom(connection =>
+                {
+                    connection.Open();
+                    connection.Query("delete from EmbyContent where type = @type", new { type = 0 });
+                    return new List<EmbyContent>();
+                });
                 foreach (var m in movies)
                 {
                     if (m.Type.Equals("boxset", StringComparison.CurrentCultureIgnoreCase))
@@ -129,7 +135,13 @@ namespace Ombi.Services.Jobs
                 }
 
                 var tv = GetTvShows();
-
+                // Delete everything
+                EmbyContent.Custom(connection =>
+                {
+                    connection.Open();
+                    connection.Query("delete from EmbyContent where type = @type", new { type = 1 });
+                    return new List<EmbyContent>();
+                });
                 foreach (var t in tv)
                 {
                     var tvInfo = EmbyApi.GetInformation(t.Id, EmbyMediaType.Series, embySettings.ApiKey,
