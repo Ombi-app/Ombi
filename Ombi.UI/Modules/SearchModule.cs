@@ -982,7 +982,7 @@ namespace Ombi.UI.Modules
                         return
                             Response.AsJson(new JsonResponseModel
                             {
-                                Message = "Could not add movie, please contract your administrator",
+                                Message = "Could not add movie, please contac your administrator",
                                 Result = false
                             });
                     }
