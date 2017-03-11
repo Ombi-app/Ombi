@@ -941,6 +941,10 @@
       <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
       <Name>Ombi.Api</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ombi.Common\Ombi.Common.csproj">
+      <Project>{BFD45569-90CF-47CA-B575-C7B0FF97F67B}</Project>
+      <Name>Ombi.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ombi.Core.Migration\Ombi.Core.Migration.csproj">
       <Project>{8406EE57-D533-47C0-9302-C6B5F8C31E55}</Project>
       <Name>Ombi.Core.Migration</Name>

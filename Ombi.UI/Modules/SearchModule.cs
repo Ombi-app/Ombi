@@ -982,7 +982,7 @@ namespace Ombi.UI.Modules
                         return
                             Response.AsJson(new JsonResponseModel
                             {
-                                Message = "Could not add movie, please contract your administrator",
+                                Message = "Could not add movie, please contact your administrator",
                                 Result = false
                             });
                     }
@@ -1420,9 +1420,7 @@ namespace Ombi.UI.Modules
 
         private bool ShouldSendNotification(RequestType type, PlexRequestSettings prSettings)
         {
-            var sendNotification = ShouldAutoApprove(type)
-                ? !prSettings.IgnoreNotifyForAutoApprovedRequests
-                : true;
+            var sendNotification = !ShouldAutoApprove(type) || !prSettings.IgnoreNotifyForAutoApprovedRequests;
 
             if (IsAdmin)
             {

@@ -239,13 +239,13 @@ namespace Ombi.Services.Jobs
 
                     var movies = GetPlexMovies(results);
 
-                    //// Time to destroy the plex movies from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 0 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 0 });
+                        return new List<PlexContent>();
+                    });
 
                     foreach (var m in movies)
                     {
@@ -280,13 +280,13 @@ namespace Ombi.Services.Jobs
                     }
 
                     var tv = GetPlexTvShows(results);
-                    //// Time to destroy the plex tv from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 1 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex tv from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 1 });
+                        return new List<PlexContent>();
+                    });
                     foreach (var t in tv)
                     {
                         if (string.IsNullOrEmpty(t.ProviderId))
@@ -321,13 +321,13 @@ namespace Ombi.Services.Jobs
                     }
 
                     var albums = GetPlexAlbums(results);
-                    //// Time to destroy the plex movies from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 2 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 2 });
+                        return new List<PlexContent>();
+                    });
 
                     foreach (var a in albums)
                     {

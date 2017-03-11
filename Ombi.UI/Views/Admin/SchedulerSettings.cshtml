@@ -87,7 +87,7 @@
                 <input type="text" class="form-control form-control-custom " id="CouchPotatoCacher" name="CouchPotatoCacher" value="@Model.CouchPotatoCacher">
             </div>
             <div class="form-group">
-                <label for="WatcherCacher" class="control-label">Wactcher Cacher (min)</label>
+                <label for="WatcherCacher" class="control-label">Watcher Cacher (min)</label>
                 <input type="text" class="form-control form-control-custom " id="WatcherCacher" name="WatcherCacher" value="@Model.WatcherCacher">
             </div>
             <div class="form-group">
@@ -175,13 +175,19 @@
                 success: function (response) {
                     if (response.result === true) {
                         generateNotify("Success!", "success");
+                        ev.removeClass("fa-spin");
+                        ev.addClass("fa-check");
                     } else {
                         generateNotify(response.message, "warning");
+                        ev.removeClass("fa-spin");
+                        ev.addClass("fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
+                    ev.removeClass("fa-spin");
+                    ev.addClass("fa-times");
                 }
             });
 
