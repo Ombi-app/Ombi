@@ -47,7 +47,8 @@
                 </div>
             </div>
 
-			@Html.Checkbox(Model.EnableEpisodeSearching, "EnableEpisodeSearching", "Enable Episode Searching")
+            @Html.Checkbox(Model.EnableEpisodeSearching, "EnableEpisodeSearching", "Enable Episode Searching") 
+            @Html.ToolTip("This will allow Ombi to search through all of the episodes stored on Emby")
 
             <div class="form-group">
                 <label for="SubDir" class="control-label">Emby Base Url</label>
@@ -81,6 +82,7 @@
 
 <script>
     $(function () {
+
         var base = '@Html.GetBaseUrl()';
 
         $('#testEmby').click(function (e) {

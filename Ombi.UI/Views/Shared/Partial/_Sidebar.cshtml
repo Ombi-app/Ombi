@@ -49,8 +49,12 @@
 </div>
 
 <script>
+
     $('#sidebar > a').on('click', function (e) {
         e.preventDefault();
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
 
         if (!$(this).hasClass("active")) {
             var lastActive = $(this).closest("#sidebar").children(".active");

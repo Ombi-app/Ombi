@@ -13,18 +13,11 @@
                 <div class="form-group">
                     <div class="checkbox">
 
-                        <small>Note: This will require you to setup your email notifications</small>
+                        <small>Note: This will require you to setup your email notifications 
+                        </small><span class="customTooltip" title="It also requires users to have the Newsletter feature"><i class="fa fa-info-circle"></i></span>
                         <br />
-                        @if (Model.SendRecentlyAddedEmail)
-                        {
-                            <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
-                        }
-                        else
-                        {
-                            <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
-                        }
-
-
+                        <br />
+                        @Html.Checkbox(Model.SendRecentlyAddedEmail, "SendRecentlyAddedEmail", "Enable newsletter")
                     </div>
                 </div>
                 <div class="form-group">
@@ -59,6 +52,10 @@
 
 <script>
     $(function () {
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
+
         var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
             e.preventDefault();

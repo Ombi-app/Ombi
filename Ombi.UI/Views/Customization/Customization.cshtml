@@ -23,7 +23,7 @@
 
 
             <div class="form-group">
-                <label for="ApplicationName" class="control-label">Application Name</label>
+                <label for="ApplicationName" class="control-label">Application Name @Html.ToolTip("Change the name of the application :( I quite like the name Ombi...")</label>
 
                 <div>
                     <input type="text" class="form-control form-control-custom " id="ApplicationName" name="ApplicationName" placeholder="Application Name" value="@Model.Settings.ApplicationName">
@@ -120,7 +120,11 @@
 
 <script>
 
-    $(function() {
+    $(function () {
+
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
         
         $('#save').click(function (e) {
             e.preventDefault();
