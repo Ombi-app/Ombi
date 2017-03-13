@@ -135,6 +135,7 @@
     <Compile Include="SettingModels\RequestSettings.cs" />
     <Compile Include="SettingModels\ScheduledJobsSettings.cs" />
     <Compile Include="SettingModels\SlackNotificationSettings.cs" />
+    <Compile Include="SettingModels\MattermostNotificationSettings.cs" />
     <Compile Include="SettingModels\PushoverNotificationSettings.cs" />
     <Compile Include="SettingModels\PushBulletNotificationSettings.cs" />
     <Compile Include="SettingModels\EmailNotificationSettings.cs" />

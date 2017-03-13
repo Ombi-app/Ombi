@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    File: MattermostNotificationBody.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,32 +25,30 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using Newtonsoft.Json;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Notifications
 {
-    public class ApiModule : NinjectModule
+    public class MattermostNotificationBody
     {
-        public override void Load()
+        [JsonConstructor]
+        public MattermostNotificationBody()
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IMattermostApi>().To<MattermostApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
+            username = "Ombi";
         }
+
+        [JsonIgnore]
+        private string _username;
+        public string username
+        {
+            get { return _username; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                    _username = value;
+            }
+        }
+        public string channel { get; set; }
+        public string text { get; set; }
     }
 }

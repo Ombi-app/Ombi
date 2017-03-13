@@ -72,8 +72,10 @@ namespace Ombi.UI.Tests
         private Mock<ICacheProvider> Cache { get; set; }
         private Mock<ISettingsService<LogSettings>> Log { get; set; }
         private Mock<ISettingsService<SlackNotificationSettings>> SlackSettings { get; set; }
+        private Mock<ISettingsService<MattermostNotificationSettings>> MattermostSettings { get; set; }
         private Mock<ISettingsService<LandingPageSettings>> LandingPageSettings { get; set; }
         private Mock<ISlackApi> SlackApi { get; set; }
+        private Mock<IMattermostApi> MattermostApi { get; set; }
         private Mock<IAnalytics> Analytics { get; set; }
         private Mock<ISettingsService<NotificationSettingsV2>> NotifyV2 { get; set; }
         private Mock<IRecentlyAdded> RecentlyAdded { get; set; }
@@ -113,6 +115,8 @@ namespace Ombi.UI.Tests
             Log = new Mock<ISettingsService<LogSettings>>();
             SlackApi = new Mock<ISlackApi>();
             SlackSettings = new Mock<ISettingsService<SlackNotificationSettings>>();
+            MattermostApi = new Mock<IMattermostApi>();
+            MattermostSettings = new Mock<ISettingsService<MattermostNotificationSettings>>();
             LandingPageSettings = new Mock<ISettingsService<LandingPageSettings>>();
             ScheduledJobsSettingsMock = new Mock<ISettingsService<ScheduledJobsSettings>>();
             RecorderMock = new Mock<IJobRecord>();
@@ -146,8 +150,10 @@ namespace Ombi.UI.Tests
                 with.Dependency(Cache.Object);
                 with.Dependency(Log.Object);
                 with.Dependency(SlackApi.Object);
+                with.Dependency(MattermostApi.Object);
                 with.Dependency(LandingPageSettings.Object);
                 with.Dependency(SlackSettings.Object);
+                with.Dependency(MattermostSettings.Object);
                 with.Dependency(ScheduledJobsSettingsMock.Object);
                 with.Dependency(RecorderMock.Object);
                 with.Dependency(RecentlyAdded.Object);

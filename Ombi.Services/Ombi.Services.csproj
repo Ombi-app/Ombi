@@ -136,6 +136,7 @@
     <Compile Include="Notification\PushbulletNotification.cs" />
     <Compile Include="Notification\DiscordNotification.cs" />
     <Compile Include="Notification\SlackNotification.cs" />
+    <Compile Include="Notification\MattermostNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

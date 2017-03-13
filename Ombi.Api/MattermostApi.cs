@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
+//    File: PlexApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,32 +25,34 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
+using System;
+using System.Threading.Tasks;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Notifications;
+using RestSharp;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api
 {
-    public class ApiModule : NinjectModule
+    public class MattermostApi : IMattermostApi
     {
-        public override void Load()
+        public async Task<string> PushAsync(string webhook, MattermostNotificationBody message)
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IMattermostApi>().To<MattermostApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
+            var request = new RestRequest
+            {
+                Method = Method.POST,
+                Resource = "/"
+            };
+
+            request.AddJsonBody(message);
+
+            var api = new ApiRequest();
+            return await Task.Run(
+                () =>
+                {
+                    var result = api.Execute(request, new Uri(webhook));
+                    return result.Content;
+                });
         }
     }
 }
+
