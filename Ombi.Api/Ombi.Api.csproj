@@ -76,6 +76,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApiRequest.cs" />
+    <Compile Include="AppveyorApi.cs" />
     <Compile Include="DiscordApi.cs" />
     <Compile Include="EmbyApi.cs" />
     <Compile Include="NetflixRouletteApi.cs" />

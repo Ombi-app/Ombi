@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appveyor\AppveyorProject.cs" />
     <Compile Include="Emby\EmbyChapter.cs" />
     <Compile Include="Emby\EmbyConfiguration.cs" />
     <Compile Include="Emby\EmbyEpisodeInformation.cs" />

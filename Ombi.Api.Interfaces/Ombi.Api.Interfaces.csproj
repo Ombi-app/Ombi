@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IApiRequest.cs" />
+    <Compile Include="IAppveyorApi.cs" />
     <Compile Include="ICouchPotatoApi.cs" />
     <Compile Include="IDiscordApi.cs" />
     <Compile Include="IEmbyApi.cs" />
