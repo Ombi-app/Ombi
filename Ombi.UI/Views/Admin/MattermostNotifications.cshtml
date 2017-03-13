@@ -24,7 +24,7 @@
             <div class="form-group">
                 <label for="WebhookUrl" class="control-label">Incoming Webhook Url</label>
                 <small class="control-label">This is the full webhook url.</small>
-                <small class="control-label"> Mattermost > Settings > Add app or integration > Build > Make a Custom Integration > Incoming Webhooks > Add Incoming Webhook. You will then have a Webhook Url</small>
+                <small class="control-label"> Mattermost > Integrations > Incoming Webhook > Add Incoming Webhook. You will then have a Webhook Url</small>
                 <div class="">
                     <input type="text" class="form-control form-control-custom " id="WebhookUrl" name="WebhookUrl"  value="@Model.WebhookUrl">
                 </div>
@@ -43,6 +43,14 @@
                 <small class="control-label">You can override the default username (Ombi) here</small>
                 <div class="">
                     <input type="text" class="form-control form-control-custom " id="Username" name="Username" value="@Model.Username">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="IconUrl" class="control-label">Icon Override</label>
+                <small class="control-label">You can override the default icon here</small>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " id="IconUrl" name="IconUrl" value="@Model.IconUrl">
                 </div>
             </div>
 

@@ -50,5 +50,6 @@ namespace Ombi.Api.Models.Notifications
         }
         public string channel { get; set; }
         public string text { get; set; }
+        public string icon_url { get; set; }
     }
 }

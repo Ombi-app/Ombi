@@ -125,7 +125,7 @@ namespace Ombi.Services.Notification
         {
             try
             {
-                var notification = new MattermostNotificationBody { username = config.Username, channel = config.Channel ?? string.Empty, text = message };
+                var notification = new MattermostNotificationBody { username = config.Username, channel = config.Channel ?? string.Empty, icon_url = config.IconUrl ?? string.Empty, text = message };
 
                 var result = await Api.PushAsync(config.WebhookUrl, notification);
                 if (!result.Equals("ok"))
