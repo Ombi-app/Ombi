@@ -168,7 +168,7 @@ namespace Ombi.Core.StatusChecker
             var model = new StatusModel
             {
                 DownloadUri = downloadLink,
-                ReleaseNotes = $"{branchDisplay} (See recent commits for details)",
+                ReleaseNotes = $"{branchDisplay} (See Recent Changes tab for more details)",
                 ReleaseTitle = $"Ombi {branchDisplay}",
                 NewVersion = branchResult.build.version,
                 UpdateUri = downloadLink,
