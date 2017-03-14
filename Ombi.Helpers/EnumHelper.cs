@@ -82,6 +82,19 @@ namespace Ombi.Helpers
             if (descriptionAttributes == null) return string.Empty;
             return (descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
         }
+
+        public static BranchAttribute GetBranchValue<U>(T value) where U : BranchAttribute
+        {
+            var fieldInfo = value.GetType().GetField(value.ToString());
+
+            var descriptionAttributes = fieldInfo.GetCustomAttributes(
+                typeof(BranchAttribute), false) as BranchAttribute[];
+
+            return descriptionAttributes?.FirstOrDefault();
+        }
+
+
+
         public static string GetDisplayDescription(T value)
         {
             var fieldInfo = value.GetType().GetField(value.ToString());
@@ -126,5 +139,10 @@ namespace Ombi.Helpers
         {
             return Enum.GetValues(typeof(T)).Cast<int>().Sum();
         }
+    }
+    public class BranchAttribute : Attribute
+    {
+        public string DisplayName { get; set; }
+        public string BranchName { get; set; }
     }
 }

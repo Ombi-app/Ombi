@@ -51,6 +51,7 @@ namespace Ombi.UI.NinjectModules
             Bind<IRadarrApi>().To<RadarrApi>();
             Bind<ITraktApi>().To<TraktApi>();
             Bind<IEmbyApi>().To<EmbyApi>();
+            Bind<IAppveyorApi>().To<AppveyorApi>();
         }
     }
 }

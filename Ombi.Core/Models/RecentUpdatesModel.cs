@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
-//    Copyright (c) 2016 Jamie Rees
-//    File: CustomHtmlHelper.cs
+//    Copyright (c) 2017 Jamie Rees
+//    File: RecentUpdatesModel.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,33 +25,19 @@
 //  ************************************************************************/
 #endregion
 
-using System.Text;
-using Nancy.ViewEngines.Razor;
-using Ombi.Helpers;
+using System;
 
-namespace Ombi.UI.Helpers
+namespace Ombi.Core.Models
 {
-    public static class CustomHtmlHelper
+    public class RecentUpdatesModel
     {
-        public static IHtmlString GetInformationalVersion(this HtmlHelpers helper)
-        {
-            var fileVersion = AssemblyHelper.GetAssemblyVersion();
-            var htmlString = $"<!--\r\n##################################################################\r\nVersion: {fileVersion}\r\n##################################################################\r\n--> ";
-
-            return helper.Raw(htmlString);
-        }
-
-        public static IHtmlString Checkbox(this HtmlHelpers helper, bool check, string name, string display, string tooltipText = null)
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("<div class=\"form-group\">");
-            sb.AppendLine("<div class=\"checkbox\">");
-            sb.AppendFormat("<input type=\"checkbox\" id=\"{0}\" name=\"{0}\" {2}><label for=\"{0}\">{1}  {3}</label>", name, display, check ? "checked=\"checked\"" : string.Empty, 
-                string.IsNullOrEmpty(tooltipText) ? string.Empty : helper.ToolTip(tooltipText).ToHtmlString());
-            sb.AppendLine("</div>");
-            sb.AppendLine("</div>");
-            return helper.Raw(sb.ToString());
-        }
+        public string Version { get; set; }
+        public string Message { get; set; }
+        public bool Installed { get; set; }
+        public DateTime Date { get; set; }
+        public string Branch { get; set; }
     }
+
+
+    
 }

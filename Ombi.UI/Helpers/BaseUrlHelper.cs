@@ -363,6 +363,14 @@ namespace Ombi.UI.Helpers
             return helper.Raw(returnString);
         }
 
+        public static IHtmlString ToolTip(this HtmlHelpers helper, string tooltipText)
+        {
+            //< span class="customTooltip" title="It also requires users to have the Newsletter feature"><i class="fa fa-info-circle"></i></span>
+            return
+                helper.Raw(
+                    $"<span class=\"customTooltip\" title=\"{tooltipText}\"><i class=\"fa fa-info-circle\"></i></span>");
+        }
+
         public static IHtmlString GetBaseUrl(this HtmlHelpers helper)
         {
             return helper.Raw(GetBaseUrl());

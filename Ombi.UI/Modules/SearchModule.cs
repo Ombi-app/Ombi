@@ -185,14 +185,13 @@ namespace Ombi.UI.Modules
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
         private long _plexMovieCacheTime = 0;
-        private IEnumerable<PlexContent> _plexMovies = null;
+        private IEnumerable<PlexContent> _plexMovies;
 
         private long _embyMovieCacheTime = 0;
-        private IEnumerable<EmbyContent> _embyMovies = null;
-
+        private IEnumerable<EmbyContent> _embyMovies;
 
         private long _dbMovieCacheTime = 0;
-        private Dictionary<int, RequestedModel> _dbMovies = null;
+        private Dictionary<int, RequestedModel> _dbMovies;
 
         private async Task<Negotiator> RequestLoad()
         {

@@ -201,6 +201,8 @@ namespace Ombi.Services.Jobs
                 results = GetLibraries(plexSettings);
                 if (plexSettings.AdvancedSearch)
                 {
+                    Log.Debug("Going through all the items now");
+                    Log.Debug($"Item count {results.Count}");
                     foreach (PlexSearch t in results)
                     {
                         foreach (Directory1 t1 in t.Directory)
@@ -236,7 +238,7 @@ namespace Ombi.Services.Jobs
                 }
                 if (results != null)
                 {
-
+                    Log.Debug("done all that, moving onto the DB now");
                     var movies = GetPlexMovies(results);
 
                     // Time to destroy the plex movies from the DB
@@ -279,6 +281,7 @@ namespace Ombi.Services.Jobs
                         }
                     }
 
+                    Log.Debug("Done movies");
                     var tv = GetPlexTvShows(results);
                     // Time to destroy the plex tv from the DB
                     PlexContent.Custom(connection =>
@@ -319,7 +322,7 @@ namespace Ombi.Services.Jobs
                             });
                         }
                     }
-
+                    Log.Debug("Done TV");
                     var albums = GetPlexAlbums(results);
                     // Time to destroy the plex movies from the DB
                     PlexContent.Custom(connection =>
@@ -360,10 +363,13 @@ namespace Ombi.Services.Jobs
                             });
                         }
                     }
+                    Log.Debug("Done albums");
                 }
             }
             catch (Exception ex)
             {
+                Log.Debug("Exception:");
+                Log.Debug(ex);
                 Log.Error(ex, "Failed to obtain Plex libraries");
             }
 
@@ -372,8 +378,10 @@ namespace Ombi.Services.Jobs
 
         private List<PlexSearch> GetLibraries(PlexSettings plexSettings)
         {
+            Log.Debug("Getting Lib sections");
             var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri);
-
+            
+            Log.Debug("Going through sections now");
             var libs = new List<PlexSearch>();
             if (sections != null)
             {
@@ -382,6 +390,7 @@ namespace Ombi.Services.Jobs
                     var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.Key);
                     if (lib != null)
                     {
+                        Log.Debug("adding lib");
                         libs.Add(lib);
                     }
                 }

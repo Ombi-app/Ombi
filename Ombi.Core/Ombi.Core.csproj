@@ -99,6 +99,7 @@
     <Compile Include="IPlexReadOnlyDatabase.cs" />
     <Compile Include="ISecurityExtensions.cs" />
     <Compile Include="IStatusChecker.cs" />
+    <Compile Include="Models\RecentUpdatesModel.cs" />
     <Compile Include="MovieSender.cs" />
     <Compile Include="MovieSenderResult.cs" />
     <Compile Include="Notification\NotificationMessage.cs" />
