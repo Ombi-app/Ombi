@@ -162,7 +162,7 @@ namespace Ombi.Core.StatusChecker
             }
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
-            var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
+            var branchDisplay = EnumHelper<Branches>.GetBranchValue<BranchAttribute>(branch).DisplayName;
             var fileversion = AssemblyHelper.GetFileVersion();
             
             var model = new StatusModel

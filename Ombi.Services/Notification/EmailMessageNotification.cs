@@ -30,82 +30,23 @@ using System.Threading.Tasks;
 using MimeKit;
 using NLog;
 using Ombi.Core;
-using Ombi.Core.Models;
 using Ombi.Core.Notification.Templates;
 using Ombi.Core.SettingModels;
-using Ombi.Services.Interfaces;
 using Ombi.Store;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Ombi.Services.Notification
 {
-    public class EmailMessageNotification : INotification
+    public class EmailMessageNotification : BaseNotification<EmailNotificationSettings, MimeMessage>
     {
-        public EmailMessageNotification(ISettingsService<EmailNotificationSettings> settings)
+        public EmailMessageNotification(ISettingsService<EmailNotificationSettings> settings) : base(settings)
         {
-            EmailNotificationSettings = settings;
         }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        public string NotificationName => "EmailMessageNotification";
+        public override string NotificationName => "EmailMessageNotification";
 
-        public async Task NotifyAsync(NotificationModel model)
-        {
-            var configuration = GetConfiguration();
-            await NotifyAsync(model, configuration);
-        }
-
-        public async Task NotifyAsync(NotificationModel model, Settings settings)
-        {
-            if (settings == null) await NotifyAsync(model);
-
-            var emailSettings = (EmailNotificationSettings)settings;
-
-            if (!ValidateConfiguration(emailSettings))
-            {
-                return;
-            }
-
-            switch (model.NotificationType)
-            {
-                case NotificationType.NewRequest:
-                    await EmailNewRequest(model, emailSettings);
-                    break;
-                case NotificationType.Issue:
-                    await EmailIssue(model, emailSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    await EmailAvailableRequest(model, emailSettings);
-                    break;
-                case NotificationType.RequestApproved:
-                    await EmailRequestApproved(model, emailSettings);
-                    break;
-                case NotificationType.AdminNote:
-                    throw new NotImplementedException();
-
-                case NotificationType.Test:
-                    await EmailTest(model, emailSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    await EmailRequestDeclined(model, emailSettings);
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await EmailAddedToRequestQueue(model, emailSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-        }
-
-        private EmailNotificationSettings GetConfiguration()
-        {
-            var settings = EmailNotificationSettings.GetSettings();
-            return settings;
-        }
-
-        private bool ValidateConfiguration(EmailNotificationSettings settings)
+        protected override bool ValidateConfiguration(EmailNotificationSettings settings)
         {
             if (settings.Authentication)
             {
@@ -122,7 +63,7 @@ namespace Ombi.Services.Notification
             return true;
         }
 
-        private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -143,7 +84,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -164,7 +105,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task EmailAddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailAddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -185,7 +126,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task EmailRequestDeclined(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailRequestDeclined(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -206,7 +147,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task EmailRequestApproved(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailRequestApproved(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -227,7 +168,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task EmailAvailableRequest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailAvailableRequest(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -247,7 +188,7 @@ namespace Ombi.Services.Notification
             await Send(message, settings);
         }
 
-        private async Task Send(MimeMessage message, EmailNotificationSettings settings)
+        protected override async Task Send(MimeMessage message, EmailNotificationSettings settings)
         {
             try
             {
@@ -274,7 +215,7 @@ namespace Ombi.Services.Notification
             }
         }
 
-        private async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(

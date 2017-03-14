@@ -112,7 +112,7 @@ namespace Ombi.UI.Modules.Admin
             vm.DbLocation = SqlConfig.CurrentPath;
 
             vm.ApplicationVersion = AssemblyHelper.GetFileVersion();
-            vm.Branch = EnumHelper<Branches>.GetDisplayValue(systemSettings.Branch);
+            vm.Branch = EnumHelper<Branches>.GetBranchValue<BranchAttribute>(systemSettings.Branch).DisplayName;
             vm.LogLevel = LogManager.Configuration.LoggingRules.FirstOrDefault(x => x.NameMatches("database"))?.Levels?.FirstOrDefault()?.Name ?? "Unknown";
 
             return vm;
