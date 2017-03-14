@@ -144,6 +144,7 @@
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Models\SonarrCachedResult.cs" />
+    <Compile Include="Notification\BaseNotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\EmbyNotificationEngine.cs" />
     <Compile Include="Notification\PlexNotificationEngine.cs" />

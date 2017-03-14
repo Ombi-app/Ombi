@@ -142,7 +142,7 @@ namespace Ombi.UI.Modules.Admin
 
             var settings = this.Bind<SystemSettings>();
 
-            Analytics.TrackEventAsync(Category.Admin, Action.Update, $"Updated Branch {EnumHelper<Branches>.GetDisplayValue(settings.Branch)}", Username, CookieHelper.GetAnalyticClientId(Cookies));
+            Analytics.TrackEventAsync(Category.Admin, Action.Update, $"Updated Branch {EnumHelper<Branches>.GetBranchValue<BranchAttribute>(settings.Branch).DisplayName}", Username, CookieHelper.GetAnalyticClientId(Cookies));
             await SystemSettings.SaveSettingsAsync(settings);
 
             // Clear the cache
