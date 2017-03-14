@@ -360,6 +360,7 @@ namespace Ombi.Services.Jobs
                                 Title = a.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Artist,
                                 Url = a.Url,
+                                ItemId = "album"
                             });
                         }
                     }
