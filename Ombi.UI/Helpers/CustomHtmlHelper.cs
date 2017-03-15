@@ -41,13 +41,14 @@ namespace Ombi.UI.Helpers
             return helper.Raw(htmlString);
         }
 
-        public static IHtmlString Checkbox(this HtmlHelpers helper, bool check, string name, string display)
+        public static IHtmlString Checkbox(this HtmlHelpers helper, bool check, string name, string display, string tooltipText = null)
         {
             var sb = new StringBuilder();
 
             sb.AppendLine("<div class=\"form-group\">");
             sb.AppendLine("<div class=\"checkbox\">");
-            sb.AppendFormat("<input type=\"checkbox\" id=\"{0}\" name=\"{0}\" {2}><label for=\"{0}\">{1}</label>", name, display, check ? "checked=\"checked\"" : string.Empty);
+            sb.AppendFormat("<input type=\"checkbox\" id=\"{0}\" name=\"{0}\" {2}><label for=\"{0}\">{1}  {3}</label>", name, display, check ? "checked=\"checked\"" : string.Empty, 
+                string.IsNullOrEmpty(tooltipText) ? string.Empty : helper.ToolTip(tooltipText).ToHtmlString());
             sb.AppendLine("</div>");
             sb.AppendLine("</div>");
             return helper.Raw(sb.ToString());

@@ -40,6 +40,7 @@ namespace Ombi.UI.NinjectModules
         {
             Bind<IRepository<UsersModel>>().To<UserRepository<UsersModel>>();
             Bind(typeof(IRepository<>)).To(typeof(GenericRepository<>));
+            Bind(typeof(IExternalUserRepository<>)).To(typeof(BaseExternalUserRepository<>));
 
             Bind<IRequestService>().To<JsonRequestModelRequestService>();
             Bind<IRequestRepository>().To<RequestJsonRepository>();
@@ -48,7 +49,6 @@ namespace Ombi.UI.NinjectModules
             Bind<IJobRecord>().To<JobRecord>();
 
             Bind<IUserRepository>().To<UserRepository>();
-            Bind<IPlexUserRepository>().To<PlexUserRepository>();
         }
 
     }

@@ -22,7 +22,7 @@ namespace Ombi.Core
         Func<NancyContext, Response> HttpStatusCodeIfNot(HttpStatusCode statusCode, Func<NancyContext, bool> test);
         bool IsLoggedIn(NancyContext context);
         bool IsNormalUser(IUserIdentity user);
-        bool IsPlexUser(IUserIdentity user);
+        bool IsExternalUser(IUserIdentity user);
         bool HasPermissions(string userName, Permissions perm);
 
         /// <summary>

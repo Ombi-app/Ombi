@@ -17,6 +17,8 @@
         <fieldset>
             <legend>Plex Settings</legend>
             @*<input id="advancedToggle" type="checkbox"/>*@ @*TODO*@
+            
+            @Html.Checkbox(Model.Enable, "Enable", "Enable")
             <div class="form-group">
                 <label for="Ip" class="control-label">Plex Hostname or IP</label>
                 <div>
@@ -220,6 +222,7 @@
                     if (response.result === true) {
                         generateNotify("Success!", "success");
                         $('#authToken').val(response.authToken);
+                        $('#MachineIdentifier').val(response.identifier);
                     } else {
                         generateNotify(response.message, "warning");
                     }

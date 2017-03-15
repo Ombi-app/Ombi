@@ -25,10 +25,12 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 using Ombi.Core.Models;
+using Ombi.Helpers;
 
 namespace Ombi.Core.SettingModels
 {
@@ -50,13 +52,15 @@ namespace Ombi.Core.SettingModels
 
     public enum Branches
     {
-        [Display(Name = "Stable")]
+        [Branch(DisplayName= "Stable", BranchName = "master")]
         Stable,
 
-        [Display(Name = "Early Access Preview")]
+        [Branch(DisplayName = "Early Access Preview", BranchName = "eap")]
         EarlyAccessPreview,
 
-        [Display(Name = "Development")]
+        [Branch(DisplayName = "Development", BranchName = "dev")]
         Dev,   
     }
+
+
 }

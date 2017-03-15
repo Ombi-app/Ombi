@@ -38,8 +38,10 @@ using Ombi.Core.SettingModels;
 using Ombi.Helpers;
 using Ombi.Services.Interfaces;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Quartz;
+using PlexMediaType = Ombi.Api.Models.Plex.PlexMediaType;
 
 namespace Ombi.Services.Jobs
 {
@@ -132,7 +134,7 @@ namespace Ombi.Services.Jobs
             Repo.DeleteAll(TableName);
 
             // Insert the new items
-            var result = Repo.BatchInsert(entities.Select(x => x.Key).ToList(), TableName, typeof(PlexEpisodes).GetPropertyNames());
+            var result = Repo.BatchInsert(entities.Select(x => x.Key).ToList(), TableName);
 
             if (!result)
             {
