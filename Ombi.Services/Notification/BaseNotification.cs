@@ -35,7 +35,7 @@ using Ombi.Services.Interfaces;
 
 namespace Ombi.Services.Notification
 {
-    public abstract class BaseNotification<T,U> : INotification where T : Settings, new() where U : new()
+    public abstract class BaseNotification<T> : INotification where T : Settings, new()
     {
         protected BaseNotification(ISettingsService<T> settings)
         {
@@ -63,34 +63,41 @@ namespace Ombi.Services.Notification
                 return;
             }
 
-            switch (model.NotificationType)
+            try
             {
-                case NotificationType.NewRequest:
-                    await EmailNewRequest(model, notificationSettings);
-                    break;
-                case NotificationType.Issue:
-                    await EmailIssue(model, notificationSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    await EmailAvailableRequest(model, notificationSettings);
-                    break;
-                case NotificationType.RequestApproved:
-                    await EmailRequestApproved(model, notificationSettings);
-                    break;
-                case NotificationType.AdminNote:
-                    throw new NotImplementedException();
+                switch (model.NotificationType)
+                {
+                    case NotificationType.NewRequest:
+                        await NewRequest(model, notificationSettings);
+                        break;
+                    case NotificationType.Issue:
+                        await Issue(model, notificationSettings);
+                        break;
+                    case NotificationType.RequestAvailable:
+                        await AvailableRequest(model, notificationSettings);
+                        break;
+                    case NotificationType.RequestApproved:
+                        await RequestApproved(model, notificationSettings);
+                        break;
+                    case NotificationType.AdminNote:
+                        throw new NotImplementedException();
 
-                case NotificationType.Test:
-                    await EmailTest(model, notificationSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    await EmailRequestDeclined(model, notificationSettings);
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await EmailAddedToRequestQueue(model, notificationSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                    case NotificationType.Test:
+                        await Test(model, notificationSettings);
+                        break;
+                    case NotificationType.RequestDeclined:
+                        await RequestDeclined(model, notificationSettings);
+                        break;
+                    case NotificationType.ItemAddedToFaultQueue:
+                        await AddedToRequestQueue(model, notificationSettings);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            catch (NotImplementedException)
+            {
+                // Do nothing, it's not implimented meaning it might not be ready or even used
             }
 
         }
@@ -103,14 +110,14 @@ namespace Ombi.Services.Notification
 
 
         protected abstract bool ValidateConfiguration(T settings);
-        protected abstract Task EmailNewRequest(NotificationModel model, T settings);
-        protected abstract Task EmailIssue(NotificationModel model, T settings);
-        protected abstract Task EmailAddedToRequestQueue(NotificationModel model, T settings);
-        protected abstract Task EmailRequestDeclined(NotificationModel model, T settings);
-        protected abstract Task EmailRequestApproved(NotificationModel model, T settings);
-        protected abstract Task EmailAvailableRequest(NotificationModel model, T settings);
-        protected abstract Task Send(U message, T settings);
-        protected abstract Task EmailTest(NotificationModel model, T settings);
+        protected abstract Task NewRequest(NotificationModel model, T settings);
+        protected abstract Task Issue(NotificationModel model, T settings);
+        protected abstract Task AddedToRequestQueue(NotificationModel model, T settings);
+        protected abstract Task RequestDeclined(NotificationModel model, T settings);
+        protected abstract Task RequestApproved(NotificationModel model, T settings);
+        protected abstract Task AvailableRequest(NotificationModel model, T settings);
+        protected abstract Task Send(NotificationMessage model, T settings);
+        protected abstract Task Test(NotificationModel model, T settings);
 
     }
 }

@@ -147,6 +147,7 @@
     <Compile Include="Notification\BaseNotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\EmbyNotificationEngine.cs" />
+    <Compile Include="Notification\NotificationMessage.cs" />
     <Compile Include="Notification\PlexNotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />

@@ -78,19 +78,21 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> LoadUsers()
         {
-
+            var model = new List<UserManagementUsersViewModel>();
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
             if (plexSettings.Enable)
             {
-                return await LoadPlexUsers();
+                model.AddRange(await LoadPlexUsers());
             }
             if (embySettings.Enable)
             {
-                return await LoadEmbyUsers();
+                model.AddRange(await LoadEmbyUsers());
             }
 
-            return null;
+            model.AddRange(await LoadLocalUsers());
+
+            return Response.AsJson(model);
         }
 
         private async Task<Response> CreateUser()
@@ -547,19 +549,26 @@ namespace Ombi.UI.Modules
             return retVal;
         }
 
-        private async Task<Response> LoadPlexUsers()
+        private async Task<IEnumerable<UserManagementUsersViewModel>>  LoadLocalUsers()
         {
-            var localUsers = await UserMapper.GetUsersAsync();
-            var plexDbUsers = await PlexUsersRepository.GetAllAsync();
+
+            var localUsers = await UserMapper.GetUsersAsync(); var userLogins = UserLoginsRepo.GetAll().ToList();
+
             var model = new List<UserManagementUsersViewModel>();
-
-            var userLogins = UserLoginsRepo.GetAll().ToList();
-
             foreach (var user in localUsers)
             {
                 var userDb = userLogins.FirstOrDefault(x => x.UserId == user.UserGuid);
                 model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
             }
+            return model;
+        }
+
+        private async Task<IEnumerable<UserManagementUsersViewModel>> LoadPlexUsers()
+        {
+            var plexDbUsers = await PlexUsersRepository.GetAllAsync();
+            var model = new List<UserManagementUsersViewModel>();
+
+            var userLogins = UserLoginsRepo.GetAll().ToList();
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
             if (!string.IsNullOrEmpty(plexSettings.PlexAuthToken))
@@ -595,22 +604,15 @@ namespace Ombi.UI.Modules
                     model.Add(MapPlexAdmin(account, dbUser, userDb?.LastLoggedIn ?? DateTime.MinValue));
                 }
             }
-            return Response.AsJson(model);
+            return model;
         }
 
-        private async Task<Response> LoadEmbyUsers()
+        private async Task<IEnumerable<UserManagementUsersViewModel>> LoadEmbyUsers()
         {
-            var localUsers = await UserMapper.GetUsersAsync();
             var embyDbUsers = await EmbyRepository.GetAllAsync();
             var model = new List<UserManagementUsersViewModel>();
 
             var userLogins = UserLoginsRepo.GetAll().ToList();
-
-            foreach (var user in localUsers)
-            {
-                var userDb = userLogins.FirstOrDefault(x => x.UserId == user.UserGuid);
-                model.Add(MapLocalUser(user, userDb?.LastLoggedIn ?? DateTime.MinValue));
-            }
 
             var embySettings = await EmbySettings.GetSettingsAsync();
             if (!string.IsNullOrEmpty(embySettings.ApiKey))
@@ -631,7 +633,7 @@ namespace Ombi.UI.Modules
                     }
                 }
             }
-            return Response.AsJson(model);
+            return model;
         }
     }
 }

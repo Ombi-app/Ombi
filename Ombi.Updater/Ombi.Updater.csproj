@@ -59,7 +59,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>(ROBOCOPY "$(ProjectDir)bin\$(ConfigurationName)\UpdateService" "$(SolutionDir)Ombi.UI\bin\$(ConfigurationName)\UpdateService" "*")^&amp; IF %25ERRORLEVEL%25 GEQ 16 exit 1
+    <PostBuildEvent>(ROBOCOPY "$(ProjectDir)bin\$(ConfigurationName)\UpdateService" "$(SolutionDir)Ombi.UI\bin\$(ConfigurationName)\UpdateService" "*")^&amp; IF %25ERRORLEVEL%25 LEQ 2 exit 0
 exit 0</PostBuildEvent>
   </PropertyGroup>
 </Project>
