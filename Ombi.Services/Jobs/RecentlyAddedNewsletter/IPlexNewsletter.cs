@@ -2,6 +2,6 @@
 {
     public interface IPlexNewsletter
     {
-        string GetNewsletterHtml(bool test);
+        Newsletter GetNewsletter(bool test);
     }
 }

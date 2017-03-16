@@ -42,11 +42,9 @@ using Ombi.Core.SettingModels;
 using Ombi.Helpers;
 using Ombi.Services.Jobs.Templates;
 using Ombi.Store.Models;
-using Ombi.Store.Models.Emby;
 using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using TMDbLib.Objects.Exceptions;
-using EmbyMediaType = Ombi.Store.Models.Plex.EmbyMediaType;
 using PlexMediaType = Ombi.Store.Models.Plex.PlexMediaType;
 
 namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
@@ -81,7 +79,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public string GetNewsletterHtml(bool test)
+        public Newsletter GetNewsletter(bool test)
         {
             try
             {
@@ -90,7 +88,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             catch (Exception e)
             {
                 Log.Error(e);
-                return string.Empty;
+                return null;
             }
         }
 
@@ -100,9 +98,10 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             public PlexContent Content { get; set; }
         }
 
-        private string GetHtml(bool test)
+        private Newsletter GetHtml(bool test)
         {
             var sb = new StringBuilder();
+            var newsletter = new Newsletter();
             var plexSettings = PlexSettings.GetSettings();
 
             var plexContent = Content.GetAll().ToList();
@@ -134,6 +133,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 });
             }
             GenerateMovieHtml(info, sb);
+            newsletter.MovieCount = info.Count;
 
             info.Clear();
             foreach (var t in filteredSeries)
@@ -168,6 +168,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 //}
             }
             GenerateTvHtml(info, sb);
+            newsletter.TvCount = info.Count;
 
             var template = new RecentlyAddedTemplate();
             var html = template.LoadTemplate(sb.ToString());
@@ -203,7 +204,8 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
             Log.Debug(escapedHtml);
-            return escapedHtml;
+            newsletter.Html = escapedHtml;
+            return newsletter;
         }
 
         private void GenerateMovieHtml(IEnumerable<PlexRecentlyAddedModel> recentlyAddedMovies, StringBuilder sb)
