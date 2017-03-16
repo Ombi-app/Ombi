@@ -108,6 +108,7 @@
     <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
     <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\Newsletter.cs" />
     <Compile Include="Jobs\RecentlyAddedNewsletter\PlexRecentlyAddedNewsletter.cs" />
     <Compile Include="Jobs\RecentlyAddedNewsletter\EmbyRecentlyAddedNewsletter.cs" />
     <Compile Include="Jobs\RecentlyAddedNewsletter\IPlexNewsletter.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Notification\BaseNotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
     <Compile Include="Notification\EmbyNotificationEngine.cs" />
+    <Compile Include="Notification\NotificationMessage.cs" />
     <Compile Include="Notification\PlexNotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />

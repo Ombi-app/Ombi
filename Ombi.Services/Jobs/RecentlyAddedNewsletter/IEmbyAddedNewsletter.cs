@@ -2,6 +2,6 @@
 {
     public interface IEmbyAddedNewsletter
     {
-        string GetNewsletterHtml(bool test);
+        Newsletter GetNewsletter(bool test);
     }
 }

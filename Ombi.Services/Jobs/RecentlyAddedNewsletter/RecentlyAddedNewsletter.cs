@@ -137,22 +137,26 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var embySettings = EmbySettings.GetSettings();
             if (embySettings.Enable)
             {
-                var html = EmbyNewsletter.GetNewsletterHtml(testEmail);
-
-                var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
-                Log.Debug(escapedHtml);
-                SendNewsletter(newletterSettings, escapedHtml, testEmail, "New Content On Emby!");
+                var letter = EmbyNewsletter.GetNewsletter(testEmail) ?? new Newsletter();
+                if (letter.Send)
+                {
+                    SendNewsletter(newletterSettings, letter.Html, testEmail, "New Content On Emby!");
+                }
+                else
+                {
+                    Log.Warn("There is no new content to send the newsletter");
+                }
             }
             else
             {
                 var plexSettings = PlexSettings.GetSettings();
                 if (plexSettings.Enable)
                 {
-                    var html = PlexNewsletter.GetNewsletterHtml(testEmail);
-
-                    var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
-                    Log.Debug(escapedHtml);
-                    SendNewsletter(newletterSettings, html, testEmail);
+                    var letter = PlexNewsletter.GetNewsletter(testEmail) ?? new Newsletter();
+                    if (letter.Send)
+                    {
+                        SendNewsletter(newletterSettings, letter.Html, testEmail);
+                    }
                 }
             }
         }

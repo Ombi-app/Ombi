@@ -1,4 +1,4 @@
-﻿@using Ombi.UI.Helpers
+﻿ @using Ombi.UI.Helpers
 @Html.Partial("Shared/Partial/_Sidebar")
 @{
     int port;
@@ -16,6 +16,7 @@
 
     {
         rootFolder = Model.RootPath.Replace("/", "//");
+        rootFolder = rootFolder.Replace(@"\", @"\\");
     }
 }
 <div class="col-sm-8 col-sm-push-1">

@@ -175,14 +175,6 @@ namespace Ombi.UI.Modules
                         isOwner = true;
                         userId = GetOwnerId(plexSettings.PlexAuthToken, username);
                     }
-                    UsersModel dbUser = await IsDbuser(username);
-                    if (dbUser != null) // in the db?
-                    {
-                        var perms = (Permissions) dbUser.Permissions;
-                        authenticated = true;
-                        isOwner = perms.HasFlag(Permissions.Administrator);
-                        userId = dbUser.UserGuid;
-                    }
                     Log.Debug("Friends list result = {0}", authenticated);
                 }
                 else if (!settings.UserAuthentication) // No auth, let them pass!
@@ -207,14 +199,6 @@ namespace Ombi.UI.Modules
                         authenticated = true;
                         isOwner = true;
                     }
-                    UsersModel dbUser = await IsDbuser(username);
-                    if (dbUser != null) // in the db?
-                    {
-                        var perms = (Permissions)dbUser.Permissions;
-                        authenticated = true;
-                        isOwner = perms.HasFlag(Permissions.Administrator);
-                        userId = dbUser.UserGuid;
-                    }
                     Log.Debug("Friends list result = {0}", authenticated);
                 }
                 else if (!settings.UserAuthentication) // No auth, let them pass!
@@ -222,6 +206,16 @@ namespace Ombi.UI.Modules
                     authenticated = true;
                 }
             }
+
+            UsersModel dbUser = await IsDbuser(username);
+            if (dbUser != null) // in the db?
+            {
+                var perms = (Permissions)dbUser.Permissions;
+                authenticated = true;
+                isOwner = perms.HasFlag(Permissions.Administrator);
+                userId = dbUser.UserGuid;
+            }
+
             if (settings.UsePassword || isOwner || Security.HasPermissions(username, Permissions.Administrator))
             {
                 Session[SessionKeys.UserLoginName] = username;
