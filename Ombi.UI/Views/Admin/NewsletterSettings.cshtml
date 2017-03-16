@@ -32,7 +32,9 @@
 
                 <div class="form-group">
                     <div>
-                        <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="testEmailSpinner"></div></button>
+
+                        <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin @Html.ToolTip("Note: nothing will send if there is no new content...")
+                            <div id="testEmailSpinner"></div></button>
                     </div>
                 </div>
 
@@ -84,6 +86,8 @@
 
         $('#recentlyAddedBtn').click(function (e) {
             e.preventDefault();
+
+            generateNotify("This could take some time depending on if you have episode searching enabled and also how many new items have been added!", "info");
             var base = '@Html.GetBaseUrl()';
             var url = createBaseUrl(base, '/admin/testnewsletteradminemail');
             $('#testEmailSpinner').attr("class", "fa fa-spinner fa-spin");
@@ -94,11 +98,11 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#testSendMassEmailSpinner').attr("class", "fa fa-check");
+                        $('#testEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
+                        $('#testEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {

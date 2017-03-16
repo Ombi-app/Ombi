@@ -185,7 +185,6 @@ namespace Ombi.Api
                         throw new ArgumentOutOfRangeException(nameof(type), type, null);
                 }
 
-                var info = new EmbyInformation();
 
                 switch (type)
                 {

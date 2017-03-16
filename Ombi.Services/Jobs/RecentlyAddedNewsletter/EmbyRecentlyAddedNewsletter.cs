@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Newtonsoft.Json;
 using NLog;
 using Ombi.Api;
 using Ombi.Api.Interfaces;
@@ -116,7 +117,6 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
 
-
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
             {
@@ -137,27 +137,40 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             {
                 var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
                     embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                var ep = filteredEp.Where(x => x.ParentId == t.EmbyId);
-
-                if (ep.Any())
+                var ep = filteredEp.Where(x => x.ParentId == t.EmbyId).ToList();
+                var item = new EmbyRecentlyAddedModel
                 {
-                    var episodeList = new List<EmbyEpisodeInformation>();
-                    foreach (var embyEpisodese in ep)
+                    EmbyContent = t,
+                    EmbyInformation = i,
+                };
+                if (ep.Any() && embySettings.EnableEpisodeSearching)
+                {
+                    try
                     {
-                        var epInfo = Api.GetInformation(embyEpisodese.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Episode,
-                            embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                        episodeList.Add(epInfo.EpisodeInformation);
+                        var episodeList = new List<EmbyEpisodeInformation>();
+                        foreach (var embyEpisodese in ep)
+                        {
+                            var epInfo = Api.GetInformation(embyEpisodese.EmbyId,
+                                Ombi.Api.Models.Emby.EmbyMediaType.Episode,
+                                embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+                            episodeList.Add(epInfo.EpisodeInformation);
+                            Thread.Sleep(200); // Let's not try and overload the server
+                        }
+                        item.EpisodeInformation = episodeList;
                     }
-                    info.Add(new EmbyRecentlyAddedModel
+                    catch (JsonReaderException)
                     {
-                        EmbyContent = t,
-                        EmbyInformation = i,
-                        EpisodeInformation = episodeList
-                    });
+                        Log.Error(
+                            "Failed getting episode information, we may have overloaded Emby's api... Waiting and we will skip this one and go to the next");
+                        Thread.Sleep(500);
+                    }
                 }
+
+                info.Add(item);
             }
             GenerateTvHtml(info, sb);
             newsletter.TvCount = info.Count;
+
 
             var template = new RecentlyAddedTemplate();
             var html = template.LoadTemplate(sb.ToString());
@@ -183,10 +196,12 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 }
             }
 
+
             var escapedHtml = new string(html.Where(c => !char.IsControl(c)).ToArray());
             Log.Debug(escapedHtml);
             newsletter.Html = escapedHtml;
             return newsletter;
+
         }
 
         private void GenerateMovieHtml(IEnumerable<EmbyRecentlyAddedModel> recentlyAddedMovies, StringBuilder sb)
@@ -276,11 +291,12 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             {
                 var seriesItem = t.EmbyInformation.SeriesInformation;
                 var relatedEpisodes = t.EpisodeInformation;
-
+                var endLoop = false;
 
                 try
                 {
                     var info = TvApi.ShowLookupByTheTvDbId(int.Parse(seriesItem.ProviderIds.Tvdb));
+                    if(info == null)continue;
 
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
@@ -299,30 +315,33 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     Header(sb, 3, title);
                     EndTag(sb, "a");
 
-                    var results = relatedEpisodes.GroupBy(p => p.ParentIndexNumber,
-                        (key, g) => new
-                        {
-                            ParentIndexNumber = key,
-                            IndexNumber = g.ToList()
-                        }
-                    );
-                    // Group the episodes
-                    foreach (var embyEpisodeInformation in results.OrderBy(x => x.ParentIndexNumber))
+                    if (relatedEpisodes != null)
                     {
-                        var epSb = new StringBuilder();
-                        for (var i = 0; i < embyEpisodeInformation.IndexNumber.Count; i++)
+                        var results = relatedEpisodes.GroupBy(p => p.ParentIndexNumber,
+                            (key, g) => new
+                            {
+                                ParentIndexNumber = key,
+                                IndexNumber = g.ToList()
+                            }
+                        );
+                        // Group the episodes
+                        foreach (var embyEpisodeInformation in results.OrderBy(x => x.ParentIndexNumber))
                         {
-                            var ep = embyEpisodeInformation.IndexNumber[i];
-                            if (i < embyEpisodeInformation.IndexNumber.Count)
+                            var epSb = new StringBuilder();
+                            for (var i = 0; i < embyEpisodeInformation.IndexNumber.Count; i++)
                             {
-                                epSb.Append($"{ep.IndexNumber},");
+                                var ep = embyEpisodeInformation.IndexNumber[i];
+                                if (i < embyEpisodeInformation.IndexNumber.Count)
+                                {
+                                    epSb.Append($"{ep.IndexNumber},");
+                                }
+                                else
+                                {
+                                    epSb.Append(ep);
+                                }
                             }
-                            else
-                            {
-                                epSb.Append(ep);
-                            }
+                            AddParagraph(sb, $"Season: {embyEpisodeInformation.ParentIndexNumber}, Episode: {epSb}");
                         }
-                        AddParagraph(sb, $"Season: {embyEpisodeInformation.ParentIndexNumber}, Episode: {epSb}");
                     }
 
                     if (info.genres.Any())
@@ -331,6 +350,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     }
 
                     AddParagraph(sb, string.IsNullOrEmpty(seriesItem.Overview) ? info.summary : seriesItem.Overview);
+                    endLoop = true;
                 }
                 catch (Exception e)
                 {
@@ -338,7 +358,8 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 }
                 finally
                 {
-                    EndLoopHtml(sb);
+                    if(endLoop)
+                        EndLoopHtml(sb);
                 }
             }
             sb.Append("</table><br /><br />");
