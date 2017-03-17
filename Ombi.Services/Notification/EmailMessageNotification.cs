@@ -76,7 +76,7 @@ namespace Ombi.Services.Notification
             {
                 Message = html,
                 Subject = $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
-                To = model.UserEmail,
+                To = settings.RecipientEmail,
             };
 
             message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}");
@@ -96,7 +96,7 @@ namespace Ombi.Services.Notification
             {
                 Message = html,
                 Subject = $"Ombi: New issue for {model.Title}!",
-                To = model.UserEmail,
+                To = settings.RecipientEmail,
             };
 
             message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!");
@@ -118,7 +118,7 @@ namespace Ombi.Services.Notification
             {
                 Message = html,
                 Subject = $"Ombi: A request could not be added",
-                To = model.UserEmail,
+                To = settings.RecipientEmail,
             };
 
             message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
@@ -241,7 +241,7 @@ namespace Ombi.Services.Notification
             {
                 Message = html,
                 Subject = $"Ombi: Test",
-                To = model.UserEmail,
+                To = settings.RecipientEmail,
             };
 
             message.Other.Add("PlainTextBody", "This is just a test! Success!");

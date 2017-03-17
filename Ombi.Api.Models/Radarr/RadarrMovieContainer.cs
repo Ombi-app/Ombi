@@ -29,6 +29,9 @@ using System.Collections.Generic;
 
 namespace Ombi.Api.Models.Radarr
 {
+    /// <summary>
+    /// This is not used now... Keeping it here incase Radarr changes their mind again.
+    /// </summary>
     public class RadarrMovieContainer
     {
         public int page { get; set; }

@@ -152,7 +152,7 @@ namespace Ombi.Api
         }
 
 
-        public RadarrMovieContainer GetMovies(string apiKey, Uri baseUrl)
+        public List<RadarrMovieResponse> GetMovies(string apiKey, Uri baseUrl)
         {
             var request = new RestRequest { Resource = "/api/movie", Method = Method.GET };
             request.AddHeader("X-Api-Key", apiKey);
@@ -165,7 +165,7 @@ namespace Ombi.Api
 
             var obj = policy.Execute(() => Api.Execute(request, baseUrl));
 
-            return JsonConvert.DeserializeObject<RadarrMovieContainer>(obj.Content);
+            return JsonConvert.DeserializeObject<List<RadarrMovieResponse>>(obj.Content);
         }
     }
 }

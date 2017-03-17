@@ -67,7 +67,7 @@ namespace Ombi.Services.Jobs
                     if (movies != null)
                     {
                         var movieIds = new List<int>();
-                        foreach (var m in movies.records)
+                        foreach (var m in movies)
                         {
                             if (m.tmdbId > 0)
                             {
