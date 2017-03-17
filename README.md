@@ -2,11 +2,9 @@
 ____
 [![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
-[![Linux Status](https://travis-ci.org/tidusjar/Ombi.svg)](https://travis-ci.org/tidusjar/Ombi)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Average time to resolve an issue")
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
-[![Stories in Progress](https://badge.waffle.io/tidusjar/Ombi.svg?label=in progress&title=In Progress)](http://waffle.io/tidusjar/Ombi)
 
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
 
