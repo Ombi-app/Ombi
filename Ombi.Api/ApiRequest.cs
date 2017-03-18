@@ -45,7 +45,7 @@ namespace Ombi.Api
             MissingMemberHandling = MissingMemberHandling.Ignore
         };
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// An API request handler
         /// </summary>
@@ -58,8 +58,7 @@ namespace Ombi.Api
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute<T>(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
-
-            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+            if ((int)response.StatusCode < 300)
                 return response.Data;
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
@@ -78,8 +77,7 @@ namespace Ombi.Api
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
-
-            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+            if ((int)response.StatusCode < 300)
                 return DeserializeXml<T>(response.Content);
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
@@ -92,7 +90,7 @@ namespace Ombi.Api
             var response = client.Execute(request);
             Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+            if ((int)response.StatusCode < 300)
                 return JsonConvert.DeserializeObject<T>(response.Content, _settings);
             else
                 throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
