@@ -116,6 +116,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
 
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
@@ -133,7 +134,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             newsletter.MovieCount = info.Count;
 
             info.Clear();
-            foreach (var t in series)
+            foreach (var t in filteredSeries)
             {
                 var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
                     embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);

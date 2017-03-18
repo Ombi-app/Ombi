@@ -24,6 +24,7 @@ Function.prototype.bind = function (parent) {
 
 $(function () {
 
+    var netflixEnabled = $('#enableNetflix').text() == 'True';
     var useNewSearch = $('#useNewSearch').text() == 'True';
     var searchSource = useNewSearch ? $("#search-templateNew").html() : $("#search-template").html();
     var seasonsSource = $("#seasons-template").html();
@@ -416,6 +417,9 @@ $(function () {
     };
 
     function checkNetflix(title, id) {
+        if (!netflixEnabled) {
+            return;
+        }
         var url = createBaseUrl(base, '/searchextension/netflix/' + title);
         $.ajax(url).success(function (results) {
             
