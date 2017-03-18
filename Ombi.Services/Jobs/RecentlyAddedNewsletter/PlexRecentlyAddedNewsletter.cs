@@ -49,7 +49,8 @@ using PlexMediaType = Ombi.Store.Models.Plex.PlexMediaType;
 
 namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 {
-    public class PlexRecentlyAddedNewsletter : HtmlTemplateGenerator, IPlexNewsletter
+    public class 
+        PlexRecentlyAddedNewsletter : HtmlTemplateGenerator, IPlexNewsletter
     {
         public PlexRecentlyAddedNewsletter(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmailNotificationSettings> email,

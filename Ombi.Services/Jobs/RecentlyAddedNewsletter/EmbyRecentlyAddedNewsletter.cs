@@ -116,6 +116,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
 
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
@@ -133,7 +134,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             newsletter.MovieCount = info.Count;
 
             info.Clear();
-            foreach (var t in series)
+            foreach (var t in filteredSeries)
             {
                 var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
                     embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
@@ -154,7 +155,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                                 Ombi.Api.Models.Emby.EmbyMediaType.Episode,
                                 embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
                             episodeList.Add(epInfo.EpisodeInformation);
-                            Thread.Sleep(200); // Let's not try and overload the server
+                            Thread.Sleep(600); // Let's not try and overload the server
                         }
                         item.EpisodeInformation = episodeList;
                     }
@@ -162,7 +163,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     {
                         Log.Error(
                             "Failed getting episode information, we may have overloaded Emby's api... Waiting and we will skip this one and go to the next");
-                        Thread.Sleep(500);
+                        Thread.Sleep(1000);
                     }
                 }
 

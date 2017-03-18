@@ -53,9 +53,9 @@ namespace Ombi.Core.Migration.Migrations
         }
 
         public int Version => 22000;
-        private ISettingsService<CustomizationSettings> Customization { get;  }
+        private ISettingsService<CustomizationSettings> Customization { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
-        private IRepository<RecentlyAddedLog> Log { get;  }
+        private IRepository<RecentlyAddedLog> Log { get; }
         private IRepository<PlexContent> PlexContent { get; }
         private IRepository<PlexEpisodes> PlexEpisodes { get; }
 
@@ -68,6 +68,7 @@ namespace Ombi.Core.Migration.Migrations
             AddNewColumns(con);
             UpdateSchema(con, Version);
             UpdateRecentlyAdded(con);
+
         }
 
         private void UpdateRecentlyAdded(IDbConnection con)
@@ -124,10 +125,9 @@ namespace Ombi.Core.Migration.Migrations
         {
 
             var settings = Customization.GetSettings();
-            settings.EnableIssues = true; 
-
+            settings.EnableIssues = true;
+            settings.EnableNetflixResults = true;
             Customization.SaveSettings(settings);
-
         }
     }
 }
