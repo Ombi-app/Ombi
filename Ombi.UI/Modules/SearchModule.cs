@@ -864,6 +864,14 @@ namespace Ombi.UI.Modules
 
         private async Task<Response> RequestMovie(int movieId)
         {
+            if(string.IsNullOrEmpty(Username))
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = "Your session has expired, please refresh the page"
+                });
+            }
             if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestMovie))
             {
                 return
@@ -1031,6 +1039,14 @@ namespace Ombi.UI.Modules
         /// <returns></returns>
         private async Task<Response> RequestTvShow(int showId, string seasons)
         {
+            if (string.IsNullOrEmpty(Username))
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = false,
+                    Message = "Your session has expired, please refresh the page"
+                });
+            }
             if (Security.HasPermissions(User, Permissions.ReadOnlyUser) || !Security.HasPermissions(User, Permissions.RequestTvShow))
             {
                 return

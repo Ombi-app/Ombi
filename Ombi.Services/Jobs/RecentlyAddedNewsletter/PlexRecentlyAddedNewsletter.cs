@@ -97,6 +97,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
         {
             public PlexMetadata Metadata { get; set; }
             public PlexContent Content { get; set; }
+            public List<PlexEpisodeMetadata> EpisodeMetadata { get; set; }
         }
 
         private Newsletter GetHtml(bool test)
@@ -137,36 +138,82 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             newsletter.MovieCount = info.Count;
 
             info.Clear();
-            foreach (var t in filteredSeries)
+            if (filteredEp.Any())
             {
-                var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
-                if (i.Directory == null)
+                var recentlyAddedModel = new List<PlexRecentlyAddedModel>();
+                foreach (var plexEpisodes in filteredEp)
                 {
-                    continue;
+                    // Find related series item
+                    var relatedSeries = series.FirstOrDefault(x => x.ProviderId == plexEpisodes.ProviderId);
 
+                    if (relatedSeries == null)
+                    {
+                        continue;
+                    }
+
+                    // Get series information
+                    var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, relatedSeries.ItemId);
+
+                    var episodeInfo = Api.GetEpisodeMetaData(plexSettings.PlexAuthToken, plexSettings.FullUri, plexEpisodes.RatingKey);
+                    // Check if we already have this series
+                    var existingSeries = recentlyAddedModel.FirstOrDefault(x =>
+                        x.Metadata.Directory.RatingKey == i.Directory.RatingKey);
+
+                    if (existingSeries != null)
+                    {
+                        existingSeries.EpisodeMetadata.Add(episodeInfo);
+                    }
+                    else
+                    {
+                        recentlyAddedModel.Add(new PlexRecentlyAddedModel
+                        {
+                            Metadata = i,
+                            EpisodeMetadata = new List<PlexEpisodeMetadata>() {episodeInfo},
+                            Content = relatedSeries
+                        });
+                    }
                 }
-                //var ep = filteredEp.Where(x => x.ShowTitle == t.Title);
-                info.Add(new PlexRecentlyAddedModel
+
+                info.AddRange(recentlyAddedModel);
+            }
+            else
+            {
+                foreach (var t in filteredSeries)
                 {
-                    Metadata = i,
-                    Content = t
-                });
-                //if (ep.Any())
-                //{
-                //    var episodeList = new List<EmbyEpisodeInformation>();
-                //    foreach (var embyEpisodese in ep)
-                //    {
-                //        var epInfo = Api.GetInformation(embyEpisodese.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Episode,
-                //            embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                //        episodeList.Add(epInfo.EpisodeInformation);
-                //    }
-                //    info.Add(new EmbyRecentlyAddedModel
-                //    {
-                //        EmbyContent = t,
-                //        EmbyInformation = i,
-                //        EpisodeInformation = episodeList
-                //    });
-                //}
+                    var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
+                    if (i.Directory == null)
+                    {
+                        continue;
+
+                    }
+                    //var ep = filteredEp.Where(x => x.ShowTitle == t.Title);
+
+                    if (filteredEp.Any())
+                    {
+                        var episodeList = new List<PlexEpisodeMetadata>();
+                        foreach (var ep in filteredEp)
+                        {
+                            var epInfo = Api.GetEpisodeMetaData(plexSettings.PlexAuthToken, plexSettings.FullUri,
+                                ep.RatingKey);
+                            episodeList.Add(epInfo);
+                        }
+
+                        info.Add(new PlexRecentlyAddedModel
+                        {
+                            Metadata = i,
+                            Content = t,
+                            EpisodeMetadata = episodeList
+                        });
+                    }
+                    else
+                    {
+                        info.Add(new PlexRecentlyAddedModel
+                        {
+                            Metadata = i,
+                            Content = t
+                        });
+                    }
+                }
             }
             GenerateTvHtml(info, sb);
             newsletter.TvCount = info.Count;
@@ -294,9 +341,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 "<table border=\"0\" cellpadding=\"0\"  align=\"center\" cellspacing=\"0\" style=\"border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;\" width=\"100%\">");
             foreach (var t in orderedTv)
             {
-                //var seriesItem = t.EmbyInformation.SeriesInformation;
-                //var relatedEpisodes = t.EpisodeInformation;
-
+                var relatedEpisodes = t.EpisodeMetadata ?? new List<PlexEpisodeMetadata>();
 
                 try
                 {
@@ -319,31 +364,34 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     Header(sb, 3, title);
                     EndTag(sb, "a");
 
-                    //var results = relatedEpisodes.GroupBy(p => p.ParentIndexNumber,
-                    //    (key, g) => new
-                    //    {
-                    //        ParentIndexNumber = key,
-                    //        IndexNumber = g.ToList()
-                    //    }
-                    //);
+                    // Group by the ParentIndex (season number)
+                    var results = relatedEpisodes.GroupBy(p => p.Video.FirstOrDefault()?.ParentIndex,
+                        (key, g) => new
+                        {
+                            ParentIndexNumber = key,
+                            IndexNumber = g.ToList()
+                        }
+                    );
                     // Group the episodes
-                    //foreach (var embyEpisodeInformation in results.OrderBy(x => x.ParentIndexNumber))
-                    //{
-                    //    var epSb = new StringBuilder();
-                    //    for (var i = 0; i < embyEpisodeInformation.IndexNumber.Count; i++)
-                    //    {
-                    //        var ep = embyEpisodeInformation.IndexNumber[i];
-                    //        if (i < embyEpisodeInformation.IndexNumber.Count)
-                    //        {
-                    //            epSb.Append($"{ep.IndexNumber},");
-                    //        }
-                    //        else
-                    //        {
-                    //            epSb.Append(ep);
-                    //        }
-                    //    }
-                    //    AddParagraph(sb, $"Season: {embyEpisodeInformation.ParentIndexNumber}, Episode: {epSb}");
-                    //}
+                    foreach (var epInformation in results.OrderBy(x => x.ParentIndexNumber))
+                    {
+                        var orderedEpisodes = epInformation.IndexNumber.OrderBy(x => Convert.ToInt32(x.Video.FirstOrDefault().Index)).ToList();
+                        var epSb = new StringBuilder();
+                        for (var i = 0; i < orderedEpisodes.Count; i++)
+                        {
+                            var ep = orderedEpisodes[i];
+                            if (i <= orderedEpisodes.Count - 1)
+                            {
+                                epSb.Append($"{ep.Video.FirstOrDefault().Index},");
+                            }
+                            else
+                            {
+                                epSb.Append($"{ep.Video.FirstOrDefault().Index}");
+                            }
+
+                        }
+                        AddParagraph(sb, $"Season: {epInformation.ParentIndexNumber}, Episode: {epSb}");
+                    }
 
                     if (info.genres.Any())
                     {
