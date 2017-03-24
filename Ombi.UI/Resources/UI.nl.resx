@@ -121,7 +121,7 @@
     <value>Inloggen</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Wilt u een film of een tv serie kijken, maar staat deze niet op Plex? Log hieronder in met uw gebruikersnaam en wachtwoord van Plex.tv</value>
+    <value>Wilt u een film of een tv serie kijken, maar staat deze niet op de media server? Vraag deze dan hier aan! Log hieronder in met uw gebruikersnaam en wachtwoord van de media server.</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Uw login gegevens worden alleen gebruikt om uw account te verifiëren bij Plex.</value>
@@ -142,7 +142,7 @@
     <value>Er is iets fout gegaan!</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
-    <value>Succes!</value>
+    <value>Gelukt!</value>
   </data>
   <data name="Layout_Title" xml:space="preserve">
     <value>Ombi</value>
@@ -151,10 +151,10 @@
     <value>Zoeken</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Aanvragen</value>
+    <value>Aanvragen overzicht</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>Problemen</value>
+    <value>Probleem melden</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
     <value>Doneren</value>
@@ -217,7 +217,7 @@
     <value>Albums</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Wilt u kijken naar iets dat dat momenteel niet op Plex is?! Geen probleem! zoek hieronder en vraag het aan!</value>
+    <value>Wilt u kijken naar iets dat dat momenteel niet op de media server is?! Geen probleem! Leg hier je verzoek in.</value>
   </data>
   <data name="Search_Suggestions" xml:space="preserve">
     <value>Suggesties</value>
@@ -229,7 +229,7 @@
     <value>Nu in de Bioscoop</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Stuur me een bericht wanneer objecten die ik heb gevraagd zijn toegevoegd</value>
+    <value>Stuur me een bericht wanneer je verzoek die ik heb gevraagd zijn toegevoegd</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
     <value>Opslaan</value>
@@ -256,16 +256,16 @@
     <value>Probleem melden</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
-    <value>Verkeerde Audio</value>
+    <value>Verkeerde of geen audio beschikbaar</value>
   </data>
   <data name="Issues_NoSubs" xml:space="preserve">
-    <value>Geen ondertiteling</value>
+    <value>Missende of verkeerde ondertiteling</value>
   </data>
   <data name="Issues_WrongContent" xml:space="preserve">
-    <value>Verkeerde inhoud</value>
+    <value>Inhoud komt niet overéén met titel</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
-    <value>Problemen met het afspelen</value>
+    <value>Afspelen niet mogelijk</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
     <value>Overig</value>
@@ -283,7 +283,7 @@
     <value>Sluiten</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Een probleem toevoegen</value>
+    <value>Een probleem melden</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Wijzigingen opslaan</value>
@@ -295,10 +295,10 @@
     <value>Welkom</value>
   </data>
   <data name="Requests_Title" xml:space="preserve">
-    <value>Verzoeken</value>
+    <value>Aanvragen overzicht</value>
   </data>
   <data name="Requests_Paragraph" xml:space="preserve">
-    <value>Hieronder vindt u de jouwe en alle andere verzoeken kan zien, evenals hun download en goedkeuring-status.</value>
+    <value>Hieronder vindt u alle verzoeken, evenals hun download en goedkeuring-status.</value>
   </data>
   <data name="Requests_MoviesTabTitle" xml:space="preserve">
     <value>films</value>
@@ -319,7 +319,7 @@
     <value>Verwijder TV Series</value>
   </data>
   <data name="Requests_ApproveTvShows" xml:space="preserve">
-    <value> TV series goedkeuren</value>
+    <value>TV series goedkeuren</value>
   </data>
   <data name="Requests_DeleteMusic" xml:space="preserve">
     <value> Muziek verwijderen</value>
