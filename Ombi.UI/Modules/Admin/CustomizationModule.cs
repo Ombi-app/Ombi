@@ -122,8 +122,7 @@ namespace Ombi.UI.Modules.Admin
             }
             catch (Exception e)
             {
-
-                throw;
+                throw e;
             }
         }
     }
