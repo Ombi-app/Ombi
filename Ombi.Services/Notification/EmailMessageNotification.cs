@@ -227,6 +227,7 @@ namespace Ombi.Services.Notification
             catch (Exception e)
             {
                 Log.Error(e);
+                throw new InvalidOperationException(e.Message);
             }
         }
 

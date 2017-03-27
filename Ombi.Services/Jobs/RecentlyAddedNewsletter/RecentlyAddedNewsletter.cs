@@ -138,7 +138,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             if (embySettings.Enable)
             {
                 var letter = EmbyNewsletter.GetNewsletter(testEmail) ?? new Newsletter();
-                if (letter.Send)
+                if (letter.Send || testEmail)
                 {
                     SendNewsletter(newletterSettings, letter.Html, testEmail, "New Content On Emby!");
                 }
@@ -153,7 +153,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 if (plexSettings.Enable)
                 {
                     var letter = PlexNewsletter.GetNewsletter(testEmail) ?? new Newsletter();
-                    if (letter.Send)
+                    if (letter.Send || testEmail)
                     {
                         SendNewsletter(newletterSettings, letter.Html, testEmail);
                     }

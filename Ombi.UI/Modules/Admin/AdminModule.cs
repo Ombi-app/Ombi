@@ -126,7 +126,7 @@ namespace Ombi.UI.Modules.Admin
             ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
              ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded, IMassEmail massEmail,
-             ISettingsService<WatcherSettings> watcherSettings ,
+             ISettingsService<WatcherSettings> watcherSettings,
              ISettingsService<DiscordNotificationSettings> discord,
              IDiscordApi discordapi, ISettingsService<RadarrSettings> settings, IRadarrApi radarrApi,
              ISettingsService<EmbySettings> embySettings, IEmbyApi emby
@@ -168,9 +168,9 @@ namespace Ombi.UI.Modules.Admin
             RadarrApi = radarrApi;
             EmbyApi = emby;
             EmbySettings = embySettings;
-                
+
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
-            
+
             Get["/"] = _ => Admin();
 
             Get["/authentication", true] = async (x, ct) => await Authentication();
@@ -226,7 +226,7 @@ namespace Ombi.UI.Modules.Admin
             Get["/newsletter", true] = async (x, ct) => await Newsletter();
             Post["/newsletter", true] = async (x, ct) => await SaveNewsletter();
             Post["/testnewsletteradminemail"] = x => TestNewsletterAdminEmail();
-            
+
             Get["/massemail"] = _ => MassEmailView();
             Post["/testmassadminemail"] = x => TestMassAdminEmail();
             Post["/sendmassemail"] = x => SendMassEmail();
@@ -453,16 +453,16 @@ namespace Ombi.UI.Modules.Admin
         {
             var plexSettings = this.Bind<PlexSettings>();
 
-			if (plexSettings.Enable)
-			{
-				var valid = this.Validate(plexSettings);
-				if (!valid.IsValid)
-				{
-					return Response.AsJson(valid.SendJsonError());
-				}
-			}
+            if (plexSettings.Enable)
+            {
+                var valid = this.Validate(plexSettings);
+                if (!valid.IsValid)
+                {
+                    return Response.AsJson(valid.SendJsonError());
+                }
+            }
 
-           
+
             if (plexSettings.Enable)
             {
                 var embySettings = await EmbySettings.GetSettingsAsync();
@@ -565,9 +565,9 @@ namespace Ombi.UI.Modules.Admin
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 
-       
 
-      
+
+
 
         private Negotiator Sickrage()
         {
@@ -642,9 +642,11 @@ namespace Ombi.UI.Modules.Admin
                 await NotificationService.Publish(notificationModel, settings);
                 Log.Info("Sent email notification test");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Log.Error("Failed to subscribe and publish test Email Notification");
+                var msg = "Failed: " + ex.Message;
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = msg });
             }
             finally
             {
@@ -653,7 +655,9 @@ namespace Ombi.UI.Modules.Admin
                     NotificationService.UnSubscribe(new EmailMessageNotification(EmailService));
                 }
             }
+
             return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Email Notification!" });
+
         }
 
         private Response SaveEmailNotifications()
@@ -832,7 +836,7 @@ namespace Ombi.UI.Modules.Admin
             }
             if (!settings.Enabled)
             {
-                return Response.AsJson(new CouchPotatoProfiles{list = new List<ProfileList>()});
+                return Response.AsJson(new CouchPotatoProfiles { list = new List<ProfileList>() });
             }
             var profiles = CpApi.GetProfiles(settings.FullUri, settings.ApiKey);
 
@@ -1210,12 +1214,12 @@ namespace Ombi.UI.Modules.Admin
                 PlexEpisodeCacher = s.PlexEpisodeCacher,
                 PlexUserChecker = s.PlexUserChecker,
                 UserRequestLimitResetter = s.UserRequestLimitResetter,
-				EmbyAvailabilityChecker = s.EmbyAvailabilityChecker,
-				EmbyContentCacher = s.EmbyContentCacher,
-				EmbyEpisodeCacher = s.EmbyEpisodeCacher,
-				EmbyUserChecker = s.EmbyUserChecker,
-				RadarrCacher = s.RadarrCacher,
-				WatcherCacher = s.WatcherCacher
+                EmbyAvailabilityChecker = s.EmbyAvailabilityChecker,
+                EmbyContentCacher = s.EmbyContentCacher,
+                EmbyEpisodeCacher = s.EmbyEpisodeCacher,
+                EmbyUserChecker = s.EmbyUserChecker,
+                RadarrCacher = s.RadarrCacher,
+                WatcherCacher = s.WatcherCacher
             };
             return View["SchedulerSettings", model];
         }
@@ -1278,7 +1282,7 @@ namespace Ombi.UI.Modules.Admin
             var model = this.Bind<NotificationSettingsV2>();
             return View["NotificationSettings", model];
         }
-       
+
         private Response TestNewsletterAdminEmail()
         {
             try
@@ -1299,7 +1303,8 @@ namespace Ombi.UI.Modules.Admin
             {
                 var settings = this.Bind<MassEmailSettings>();
                 Log.Debug("Clicked Admin Mass Email Test");
-                if (settings.Subject == null) {
+                if (settings.Subject == null)
+                {
                     return Response.AsJson(new JsonResponseModel { Result = false, Message = "Please Set a Subject" });
                 }
                 if (settings.Body == null)
