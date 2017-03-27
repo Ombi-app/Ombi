@@ -26,18 +26,18 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Ombi.Helpers;
-using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexUserRepository : BaseGenericRepository<PlexUsers>, IPlexUserRepository
+    public class BaseExternalUserRepository<T> : BaseGenericRepository<T>, IExternalUserRepository<T> where T : Entity
     {
-        public PlexUserRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config,cache)
+        public BaseExternalUserRepository(ISqliteConfiguration config, ICacheProvider cache) : base(config,cache)
         {
             DbConfig = config;
         }
@@ -45,76 +45,75 @@ namespace Ombi.Store.Repository
         private ISqliteConfiguration DbConfig { get; }
         private IDbConnection Db => DbConfig.DbConnection();
 
-        public PlexUsers GetUser(string userGuid)
+        private string TableName
         {
-            var sql = @"SELECT * FROM PlexUsers
-            WHERE PlexUserId = @UserGuid
-             COLLATE NOCASE";
-            return Db.QueryFirstOrDefault<PlexUsers>(sql, new {UserGuid = userGuid});
+            get
+            {
+                if (typeof(T) == typeof(PlexUsers))
+                {
+                    return "PlexUsers";
+                }
+                if (typeof(T) == typeof(EmbyUsers))
+                {
+                    return "EmbyUsers";
+                }
+                return string.Empty;
+            }
         }
 
-        public PlexUsers GetUserByUsername(string username)
+        public T GetUser(string userGuid)
         {
-            var sql = @"SELECT * FROM PlexUsers
+            var sql = $@"SELECT * FROM {TableName}
+            WHERE PlexUserId = @UserGuid
+             COLLATE NOCASE";
+            return Db.QueryFirstOrDefault<T>(sql, new {UserGuid = userGuid});
+        }
+
+        public T GetUserByUsername(string username)
+        {
+            var sql = $@"SELECT * FROM {TableName}
             WHERE Username = @UserName
              COLLATE NOCASE";
-            return Db.QueryFirstOrDefault<PlexUsers>(sql, new {UserName = username});
+            return Db.QueryFirstOrDefault<T>(sql, new {UserName = username});
         }
 
-        public async Task<PlexUsers> GetUserAsync(string userguid)
+        public async Task<T> GetUserAsync(string userguid)
         {
-            var sql = @"SELECT * FROM PlexUsers
+            var sql = $@"SELECT * FROM {TableName}
             WHERE PlexUserId = @UserGuid
              COLLATE NOCASE";
-            return await Db.QueryFirstOrDefaultAsync<PlexUsers>(sql, new {UserGuid = userguid});
+            return await Db.QueryFirstOrDefaultAsync<T>(sql, new {UserGuid = userguid});
         }
 
         #region abstract implementation
 
 #pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
         [Obsolete]
-        public override PlexUsers Get(string id)
+        public override T Get(string id)
         {
             throw new System.NotImplementedException();
         }
 
         [Obsolete]
-        public override Task<PlexUsers> GetAsync(int id)
+        public override Task<T> GetAsync(int id)
         {
             throw new System.NotImplementedException();
         }
 
         [Obsolete]
-        public override PlexUsers Get(int id)
+        public override T Get(int id)
         {
             throw new System.NotImplementedException();
         }
 
         [Obsolete]
-        public override Task<PlexUsers> GetAsync(string id)
+        public override Task<T> GetAsync(string id)
         {
             throw new System.NotImplementedException();
         }
 
 #pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
         #endregion
-    }
-
-
-    public interface IPlexUserRepository
-    {
-        PlexUsers GetUser(string userGuid);
-        PlexUsers GetUserByUsername(string username);
-        Task<PlexUsers> GetUserAsync(string userguid);
-        IEnumerable<PlexUsers> Custom(Func<IDbConnection, IEnumerable<PlexUsers>> func);
-        long Insert(PlexUsers entity);
-        void Delete(PlexUsers entity);
-        IEnumerable<PlexUsers> GetAll();
-        bool UpdateAll(IEnumerable<PlexUsers> entity);
-        bool Update(PlexUsers entity);
-        Task<IEnumerable<PlexUsers>> GetAllAsync();
-        Task<bool> UpdateAsync(PlexUsers users);
-        Task<int> InsertAsync(PlexUsers users);
     }
 }
 

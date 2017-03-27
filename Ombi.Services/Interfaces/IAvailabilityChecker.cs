@@ -37,15 +37,15 @@ namespace Ombi.Services.Interfaces
         void Start();
         void CheckAndUpdateAll();
         IEnumerable<PlexContent> GetPlexMovies(IEnumerable<PlexContent> content);
-        bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null);
+        bool IsMovieAvailable(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null);
         IEnumerable<PlexContent> GetPlexTvShows(IEnumerable<PlexContent> content);
-        bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
+        bool IsTvShowAvailable(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null, int[] seasons = null);
         IEnumerable<PlexContent> GetPlexAlbums(IEnumerable<PlexContent> content);
-        bool IsAlbumAvailable(PlexContent[] plexAlbums, string title, string year, string artist);
+        bool IsAlbumAvailable(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist);
         bool IsEpisodeAvailable(string theTvDbId, int season, int episode);
-        PlexContent GetAlbum(PlexContent[] plexAlbums, string title, string year, string artist);
-        PlexContent GetMovie(PlexContent[] plexMovies, string title, string year, string providerId = null);
-        PlexContent GetTvShow(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null);
+        PlexContent GetAlbum(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist);
+        PlexContent GetMovie(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null);
+        PlexContent GetTvShow(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null, int[] seasons = null);
         /// <summary>
         /// Gets the episode's stored in the cache.
         /// </summary>

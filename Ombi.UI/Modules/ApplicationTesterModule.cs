@@ -46,7 +46,7 @@ namespace Ombi.UI.Modules
 
         public ApplicationTesterModule(ICouchPotatoApi cpApi, ISonarrApi sonarrApi, IPlexApi plexApi,
              ISickRageApi srApi, IHeadphonesApi hpApi, ISettingsService<PlexRequestSettings> pr, ISecurityExtensions security,
-             IWatcherApi watcherApi, IRadarrApi radarrApi) : base("test", pr, security)
+             IWatcherApi watcherApi, IRadarrApi radarrApi, IEmbyApi emby) : base("test", pr, security)
         {
             this.RequiresAuthentication();
             
@@ -57,6 +57,7 @@ namespace Ombi.UI.Modules
             HeadphonesApi = hpApi;
             WatcherApi = watcherApi;
             RadarrApi = radarrApi;
+            Emby = emby;
 
             Post["/cp"] = _ => CouchPotatoTest();
             Post["/sonarr"] = _ => SonarrTest();
@@ -66,6 +67,7 @@ namespace Ombi.UI.Modules
             Post["/headphones"] = _ => HeadphonesTest();
             Post["/plexdb"] = _ => TestPlexDb();
             Post["/watcher"] = _ => WatcherTest();
+            Post["/emby"] = _ => EmbyTest();
         }
         
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
@@ -76,6 +78,7 @@ namespace Ombi.UI.Modules
         private IHeadphonesApi HeadphonesApi { get; }
         private IWatcherApi WatcherApi { get; }
         private IRadarrApi RadarrApi { get; }
+        private IEmbyApi Emby { get; set; }
 
         private Response CouchPotatoTest()
         {
@@ -213,7 +216,7 @@ namespace Ombi.UI.Modules
                : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Plex, please check your settings." });
 
             }
-			catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+            catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
             {
                 Log.Warn("Exception thrown when attempting to get Plex's status: ");
                 Log.Warn(e);
@@ -221,6 +224,35 @@ namespace Ombi.UI.Modules
                 if (e.InnerException != null)
                 {
                     message = $"Could not connect to Plex, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
+                }
+                return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
+            }
+        }
+        private Response EmbyTest()
+        {
+            var emby = this.Bind<EmbySettings>();
+            var valid = this.Validate(emby);
+            if (!valid.IsValid)
+            {
+                return Response.AsJson(valid.SendJsonError());
+            }
+
+            try
+            {
+                var status = Emby.GetUsers(emby?.FullUri, emby?.ApiKey);
+                return status != null
+               ? Response.AsJson(new JsonResponseModel { Result = true, Message = "Connected to Emby successfully!" })
+               : Response.AsJson(new JsonResponseModel { Result = false, Message = "Could not connect to Emby, please check your settings." });
+
+            }
+            catch (Exception e) // Exceptions are expected, if we cannot connect so we will just log and swallow them.
+            {
+                Log.Warn("Exception thrown when attempting to get Emby's users: ");
+                Log.Warn(e);
+                var message = $"Could not connect to Emby, please check your settings. <strong>Exception Message:</strong> {e.Message}";
+                if (e.InnerException != null)
+                {
+                    message = $"Could not connect to Emby, please check your settings. <strong>Exception Message:</strong> {e.InnerException.Message}";
                 }
                 return Response.AsJson(new JsonResponseModel { Result = false, Message = message });
             }

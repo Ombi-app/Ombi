@@ -20,7 +20,7 @@
         $scope.searchTerm = "";
 
         $scope.hideColumns = false;
-
+        
         var ReadOnlyPermission = "Read Only User";
         var open = false;
 

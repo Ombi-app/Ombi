@@ -52,9 +52,9 @@ namespace Ombi.Api
 
             request.AddHeader("X-Api-Key", apiKey);
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetProfiles for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
-                TimeSpan.FromSeconds (2),
-                TimeSpan.FromSeconds(5),
-                TimeSpan.FromSeconds(10)
+                TimeSpan.FromSeconds (1),
+                TimeSpan.FromSeconds(2),
+                TimeSpan.FromSeconds(5)
             });
 
             var obj = policy.Execute(() => Api.ExecuteJson<List<SonarrProfile>>(request, baseUrl));
@@ -68,9 +68,9 @@ namespace Ombi.Api
 
             request.AddHeader("X-Api-Key", apiKey);
             var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetRootFolders for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
-                  TimeSpan.FromSeconds (2),
-                  TimeSpan.FromSeconds(5),
-                  TimeSpan.FromSeconds(10)
+                  TimeSpan.FromSeconds (1),
+                  TimeSpan.FromSeconds(2),
+                  TimeSpan.FromSeconds(5)
               });
 
             var obj = policy.Execute(() => Api.ExecuteJson<List<SonarrRootFolder>>(request, baseUrl));

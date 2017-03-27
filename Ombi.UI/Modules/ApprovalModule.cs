@@ -193,7 +193,7 @@ namespace Ombi.UI.Modules
             {
                 // Approve it
                 request.Approved = true;
-                Log.Warn("We approved movie: {0} but could not add it to CouchPotato/Watcher because it has not been setup", request.Title);
+                Log.Warn("We approved movie: {0} but could not add it to CouchPotato/Watcher/Radarr because it has not been setup", request.Title);
 
                 // Update the record
                 var inserted = await Service.UpdateRequestAsync(request);

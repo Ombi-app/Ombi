@@ -37,6 +37,7 @@ using Ombi.Core.Users;
 using Ombi.Helpers.Permissions;
 using Ombi.Services.Interfaces;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Quartz;
 
@@ -46,7 +47,7 @@ namespace Ombi.Services.Jobs
     {
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
-        public PlexUserChecker(IPlexUserRepository plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
+        public PlexUserChecker(IExternalUserRepository<PlexUsers> plexUsers, IPlexApi plexAPi, IJobRecord rec, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> prSettings, ISettingsService<UserManagementSettings> umSettings,
             IRequestService requestService, IUserRepository localUser)
         {
             Repo = plexUsers;
@@ -61,7 +62,7 @@ namespace Ombi.Services.Jobs
 
         private IJobRecord JobRecord { get; }
         private IPlexApi PlexApi { get; }
-        private IPlexUserRepository Repo { get; }
+        private IExternalUserRepository<PlexUsers> Repo { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
@@ -75,7 +76,7 @@ namespace Ombi.Services.Jobs
             try
             {
                 var settings = PlexSettings.GetSettings();
-                if (string.IsNullOrEmpty(settings.PlexAuthToken))
+                if (string.IsNullOrEmpty(settings.PlexAuthToken) || !settings.Enable)
                 {
                     return;
                 }

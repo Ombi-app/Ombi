@@ -23,7 +23,7 @@
 
 
             <div class="form-group">
-                <label for="ApplicationName" class="control-label">Application Name</label>
+                <label for="ApplicationName" class="control-label">Application Name @Html.ToolTip("Change the name of the application :( I quite like the name Ombi...")</label>
 
                 <div>
                     <input type="text" class="form-control form-control-custom " id="ApplicationName" name="ApplicationName" placeholder="Application Name" value="@Model.Settings.ApplicationName">
@@ -34,7 +34,7 @@
                 <label for="select" class="control-label">Theme</label>
                 <div id="themes">
                     <select class="form-control form-control-custom" id="select">
-                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Plex</option>
+                        <option @plexTheme class="form-control form-control-custom" value="@Themes.PlexTheme">Dark</option>
                         <option @originalTheme class="form-control form-control-custom" value="@Themes.OriginalTheme">Original Blue</option>
                     </select>
                 </div>
@@ -104,7 +104,9 @@
                 </div>
             </div>
 
-            @Html.Checkbox(Model.Settings.NewSearch, "NewSearch", "Use New Search")
+            @*@Html.Checkbox(Model.Settings.NewSearch, "NewSearch", "Use New Search")*@
+            @Html.Checkbox(Model.Settings.EnableIssues, "EnableIssues", "Enable Issues")
+            @Html.Checkbox(Model.Settings.EnableNetflixResults, "EnableNetflixResults", "Enable Netflix results to be shown in the search")
             <div class="form-group">
                 <div>
                     <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
@@ -119,7 +121,11 @@
 
 <script>
 
-    $(function() {
+    $(function () {
+
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
         
         $('#save').click(function (e) {
             e.preventDefault();

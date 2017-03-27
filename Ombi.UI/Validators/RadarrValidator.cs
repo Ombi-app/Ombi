@@ -37,7 +37,7 @@ namespace Ombi.UI.Validators
             RuleFor(request => request.ApiKey).NotEmpty().WithMessage("You must specify a Api Key.");
             RuleFor(request => request.Ip).NotEmpty().WithMessage("You must specify a IP/Host name.");
             RuleFor(request => request.Port).NotEmpty().WithMessage("You must specify a Port.");
-            RuleFor(request => request.QualityProfile).NotEmpty().WithMessage("You must specify a Quality Profile.");
+            RuleFor(request => request.QualityProfile).NotEmpty().NotNull().WithMessage("You must specify a Quality Profile.");
         }
     }
 }

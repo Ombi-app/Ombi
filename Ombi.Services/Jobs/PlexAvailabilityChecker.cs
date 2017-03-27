@@ -51,7 +51,7 @@ namespace Ombi.Services.Jobs
     public class PlexAvailabilityChecker : IJob, IAvailabilityChecker
     {
         public PlexAvailabilityChecker(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, IPlexNotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -81,6 +81,11 @@ namespace Ombi.Services.Jobs
         {
 
             var plexSettings = Plex.GetSettings();
+
+            if (!plexSettings.Enable)
+            {
+                return;
+            }
 
             if (!ValidateSettings(plexSettings))
             {
@@ -152,7 +157,7 @@ namespace Ombi.Services.Jobs
 
             if (modifiedModel.Any())
             {
-                NotificationEngine.NotifyUsers(modifiedModel, plexSettings.PlexAuthToken, NotificationType.RequestAvailable);
+                NotificationEngine.NotifyUsers(modifiedModel, NotificationType.RequestAvailable);
                 RequestService.BatchUpdate(modifiedModel);
             }
         }
@@ -189,15 +194,15 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Movie);
         }
 
-        public bool IsMovieAvailable(PlexContent[] plexMovies, string title, string year, string providerId = null)
+        public bool IsMovieAvailable(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null)
         {
             var movie = GetMovie(plexMovies, title, year, providerId);
             return movie != null;
         }
 
-        public PlexContent GetMovie(PlexContent[] plexMovies, string title, string year, string providerId = null)
+        public PlexContent GetMovie(IEnumerable<PlexContent> plexMovies, string title, string year, string providerId = null)
         {
-            if (plexMovies.Length == 0)
+            if (plexMovies.Count() == 0)
             {
                 return null;
             }
@@ -231,14 +236,14 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Show);
         }
 
-        public bool IsTvShowAvailable(PlexContent[] plexShows, string title, string year, string providerId = null, int[] seasons = null)
+        public bool IsTvShowAvailable(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null, int[] seasons = null)
         {
             var show = GetTvShow(plexShows, title, year, providerId, seasons);
             return show != null;
         }
 
 
-        public PlexContent GetTvShow(PlexContent[] plexShows, string title, string year, string providerId = null,
+        public PlexContent GetTvShow(IEnumerable<PlexContent> plexShows, string title, string year, string providerId = null,
             int[] seasons = null)
         {
             var advanced = !string.IsNullOrEmpty(providerId);
@@ -340,14 +345,14 @@ namespace Ombi.Services.Jobs
             return content.Where(x => x.Type == Store.Models.Plex.PlexMediaType.Artist);
         }
 
-        public bool IsAlbumAvailable(PlexContent[] plexAlbums, string title, string year, string artist)
+        public bool IsAlbumAvailable(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.Any(x =>
                 x.Title.Contains(title) &&
                 x.Artist.Equals(artist, StringComparison.CurrentCultureIgnoreCase));
         }
 
-        public PlexContent GetAlbum(PlexContent[] plexAlbums, string title, string year, string artist)
+        public PlexContent GetAlbum(IEnumerable<PlexContent> plexAlbums, string title, string year, string artist)
         {
             return plexAlbums.FirstOrDefault(x =>
                 x.Title.Contains(title) &&
@@ -388,7 +393,7 @@ namespace Ombi.Services.Jobs
                                         currentItem.RatingKey);
 
                                     // We do not want "all episodes" this as a season
-                                    var filtered = seasons.Directory.Where( x => !x.Title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
+                                    var filtered = seasons.Directory.Where(x => !x.Title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
 
                                     t1.Seasons.AddRange(filtered);
                                 }
@@ -447,12 +452,15 @@ namespace Ombi.Services.Jobs
 
         private bool ValidateSettings(PlexSettings plex)
         {
-            if (plex?.Ip == null || plex?.PlexAuthToken == null)
+            if (plex.Enable)
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
-                return false;
+                if (plex?.Ip == null || plex?.PlexAuthToken == null)
+                {
+                    Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                    return false;
+                }
             }
-            return true;
+            return plex.Enable;
         }
 
         public void Execute(IJobExecutionContext context)

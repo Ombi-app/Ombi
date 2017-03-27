@@ -81,7 +81,7 @@ namespace Ombi.Store.Repository
         bool UpdateAll(IEnumerable<T> entity);
         Task<bool> UpdateAllAsync(IEnumerable<T> entity);
 
-        bool BatchInsert(IEnumerable<T> entities, string tableName, params string[] values);
+        bool BatchInsert(IEnumerable<T> entities, string tableName);
 
         IEnumerable<T> Custom(Func<IDbConnection, IEnumerable<T>> func);
         Task<IEnumerable<T>> CustomAsync(Func<IDbConnection, Task<IEnumerable<T>>> func);

@@ -68,6 +68,8 @@ namespace Ombi.Store
         [JsonIgnore]
         public bool CanApprove => !Approved && !Available;
 
+        public string ReleaseId { get; set; }
+
         public bool UserHasRequested(string username)
         {
             return AllUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase));

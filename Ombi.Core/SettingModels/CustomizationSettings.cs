@@ -54,6 +54,7 @@ namespace Ombi.Core.SettingModels
         public int DefaultLang { get; set; }
 
         public bool NewSearch { get; set; }
-
+        public bool EnableIssues { get; set; }
+        public bool EnableNetflixResults { get; set; }
     }
 }

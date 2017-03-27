@@ -34,7 +34,7 @@ namespace Ombi.Services.Interfaces
 {
     public interface INotificationEngine
     {
-        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, string apiKey, NotificationType type);
-        Task NotifyUsers(RequestedModel modelChanged, string apiKey, NotificationType type);
+        Task NotifyUsers(IEnumerable<RequestedModel> modelChanged, NotificationType type);
+        Task NotifyUsers(RequestedModel modelChanged, NotificationType type);
     }
 }

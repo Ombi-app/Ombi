@@ -162,13 +162,13 @@ namespace Ombi.Core.StatusChecker
             }
             var downloadLink = $"{AppveyorApiUrl}/buildjobs/{jobId}/artifacts/{artifactResult.fileName}";
 
-            var branchDisplay = EnumHelper<Branches>.GetDisplayValue(branch);
+            var branchDisplay = EnumHelper<Branches>.GetBranchValue<BranchAttribute>(branch).DisplayName;
             var fileversion = AssemblyHelper.GetFileVersion();
             
             var model = new StatusModel
             {
                 DownloadUri = downloadLink,
-                ReleaseNotes = $"{branchDisplay} (See recent commits for details)",
+                ReleaseNotes = $"{branchDisplay} (See Recent Changes tab for more details)",
                 ReleaseTitle = $"Ombi {branchDisplay}",
                 NewVersion = branchResult.build.version,
                 UpdateUri = downloadLink,
@@ -202,6 +202,7 @@ namespace Ombi.Core.StatusChecker
 
         public async Task<Uri> OAuth(string url, ISession session)
         {
+            await Task.Yield();
 
             var csrf = StringCipher.Encrypt(Guid.NewGuid().ToString("N"), "CSRF");
             session[SessionKeys.CSRF] = csrf;

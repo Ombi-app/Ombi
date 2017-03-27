@@ -25,7 +25,10 @@
 //  ************************************************************************/
 #endregion
 
+using System;
 using System.Linq;
+using System.Threading.Tasks;
+using Nancy;
 using Nancy.Responses.Negotiation;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
@@ -48,6 +51,7 @@ namespace Ombi.UI.Modules.Admin
             Before += (ctx) => Security.AdminLoginRedirect(Permissions.Administrator, ctx);
 
             Get["Index", "/faultqueue"] = x => Index();
+            Get["DeleteFault", "/deleteFault", true] = async (x,ct) => await DeleteFault(Convert.ToInt32(Request.Form.id));
         }
         
         private IRepository<RequestQueue> RequestQueue { get; }
@@ -68,6 +72,36 @@ namespace Ombi.UI.Modules.Admin
             }).ToList();
 
             return View["RequestFaultQueue", model];
+        }
+
+        public async Task<Response> DeleteFault(int faultId)
+        {
+
+            if (faultId == 0)
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = true,
+                    Message = "Fault does not exist"
+                });
+            }
+
+            var fault = await RequestQueue.GetAsync(faultId);
+            if (fault == null)
+            {
+                return Response.AsJson(new JsonResponseModel
+                {
+                    Result = true,
+                    Message = "Fault does not exist"
+                });
+            }
+
+            await RequestQueue.DeleteAsync(fault);
+
+            return Response.AsJson(new JsonResponseModel
+            {
+                Result = true
+            });
         }
     }
 }

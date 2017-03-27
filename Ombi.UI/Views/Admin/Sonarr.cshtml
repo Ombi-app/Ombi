@@ -1,4 +1,4 @@
-﻿@using Ombi.UI.Helpers
+﻿ @using Ombi.UI.Helpers
 @Html.Partial("Shared/Partial/_Sidebar")
 @{
     int port;
@@ -9,6 +9,14 @@
     else
     {
         port = Model.Port;
+    }
+
+    var rootFolder = string.Empty;
+    if (!string.IsNullOrEmpty(Model.RootPath))
+
+    {
+        rootFolder = Model.RootPath.Replace("/", "//");
+        rootFolder = rootFolder.Replace(@"\", @"\\");
     }
 }
 <div class="col-sm-8 col-sm-push-1">
@@ -96,13 +104,6 @@
                 </div>
             </div>
 
-            @*<div class="form-group">
-                    <label for="RootPath" class="control-label">Root save directory for TV shows</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " placeholder="C:\Media\Tv" id="RootPath" name="RootPath" value="@Model.RootPath">
-                        <label>Enter the root folder where tv shows are saved. For example <strong>C:\Media\TV</strong>.</label>
-                    </div>
-                </div>*@
 
             <div class="form-group">
                 <div class="checkbox">
@@ -184,7 +185,7 @@
 
         console.log('Hit root folders..');
 
-        var rootFolderSelected = '@Model.RootPath';
+        var rootFolderSelected = '@rootFolder';
         if (!rootFolderSelected) {
             return;
         }
