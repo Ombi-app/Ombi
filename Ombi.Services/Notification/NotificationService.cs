@@ -100,5 +100,10 @@ namespace Ombi.Services.Notification
                 throw new InvalidOperationException(ex.Message);
             }
         }
+
+        public async Task PublishTest(NotificationModel model, Settings settings, INotification type)
+        {
+            await type.NotifyAsync(model, settings);
+        }
     }
 }

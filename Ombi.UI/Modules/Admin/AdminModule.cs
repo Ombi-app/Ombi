@@ -639,7 +639,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 NotificationService.Subscribe(new EmailMessageNotification(EmailService));
                 settings.Enabled = true;
-                await NotificationService.Publish(notificationModel, settings);
+                await NotificationService.PublishTest(notificationModel, settings, new EmailMessageNotification(EmailService));
                 Log.Info("Sent email notification test");
             }
             catch (Exception ex)
@@ -743,7 +743,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 NotificationService.Subscribe(new PushbulletNotification(PushbulletApi, PushbulletService));
                 settings.Enabled = true;
-                await NotificationService.Publish(notificationModel, settings);
+                await NotificationService.PublishTest(notificationModel, settings, new PushbulletNotification(PushbulletApi, PushbulletService));
                 Log.Info("Sent pushbullet notification test");
             }
             catch (Exception)
@@ -809,7 +809,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 NotificationService.Subscribe(new PushoverNotification(PushoverApi, PushoverService));
                 settings.Enabled = true;
-                await NotificationService.Publish(notificationModel, settings);
+                await NotificationService.PublishTest(notificationModel, settings, new PushoverNotification(PushoverApi, PushoverService));
                 Log.Info("Sent pushover notification test");
             }
             catch (Exception)
@@ -1004,7 +1004,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 NotificationService.Subscribe(new SlackNotification(SlackApi, SlackSettings));
                 settings.Enabled = true;
-                await NotificationService.Publish(notificationModel, settings);
+                await NotificationService.PublishTest(notificationModel, settings, new SlackNotification(SlackApi, SlackSettings));
                 Log.Info("Sent slack notification test");
             }
             catch (Exception e)
@@ -1075,7 +1075,7 @@ namespace Ombi.UI.Modules.Admin
             {
                 NotificationService.Subscribe(new DiscordNotification(DiscordApi, DiscordSettings));
                 settings.Enabled = true;
-                await NotificationService.Publish(notificationModel, settings);
+                await NotificationService.PublishTest(notificationModel, settings, new DiscordNotification(DiscordApi, DiscordSettings));
                 Log.Info("Sent Discord notification test");
             }
             catch (Exception e)
