@@ -520,14 +520,14 @@ namespace Ombi.UI.Modules.Admin
                             Message = "Plex is enabled, we cannot enable Plex and Emby"
                         });
                 }
+
+
+                // Get the users
+                var users = EmbyApi.GetUsers(emby.FullUri, emby.ApiKey);
+                // Find admin
+                var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
+                emby.AdministratorId = admin?.Id;
             }
-
-            // Get the users
-            var users = EmbyApi.GetUsers(emby.FullUri, emby.ApiKey);
-            // Find admin
-            var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
-            emby.AdministratorId = admin?.Id;
-
             var result = await EmbySettings.SaveSettingsAsync(emby);
 
             return Response.AsJson(result
