@@ -198,7 +198,7 @@
             dataType: "json",
             success: function (response) {
                 $(response).each(function (index, item) {
-                    item.date = moment.utc(item.data).local().format('lll');
+                    item.date = moment.utc(item.date).local().format('lll');
                     var html = changesTemplate(item);
                     $area.append(html);
                 });

@@ -692,7 +692,7 @@ namespace Ombi.UI.Modules
                 // Let's find that user!
 
                 var user = UserHelper.GetUser(username);
-                userId = user.UserId;
+                userId = user?.UserId ?? string.Empty;
             }
             UserLogins.Insert(new UserLogins { UserId = userId, Type = type, LastLoggedIn = DateTime.UtcNow });
 
