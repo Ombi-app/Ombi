@@ -165,20 +165,27 @@ namespace Ombi.UI.Modules
             {
                 if (settings.UserAuthentication) // Check against the users in Plex
                 {
-                    Log.Debug("Need to auth");
-                    authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
-                    if (authenticated)
+                    try
                     {
-                        userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                        Log.Debug("Need to auth");
+                        authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                        if (authenticated)
+                        {
+                            userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                        }
+                        if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
+                        {
+                            Log.Debug("User is the account owner");
+                            authenticated = true;
+                            isOwner = true;
+                            userId = GetOwnerId(plexSettings.PlexAuthToken, username);
+                        }
+                        Log.Debug("Friends list result = {0}", authenticated);
                     }
-                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
+                    catch (Exception)
                     {
-                        Log.Debug("User is the account owner");
-                        authenticated = true;
-                        isOwner = true;
-                        userId = GetOwnerId(plexSettings.PlexAuthToken, username);
+                        return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass })
                     }
-                    Log.Debug("Friends list result = {0}", authenticated);
                 }
                 else if (!settings.UserAuthentication) // No auth, let them pass!
                 {
