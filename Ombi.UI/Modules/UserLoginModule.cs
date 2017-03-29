@@ -184,7 +184,7 @@ namespace Ombi.UI.Modules
                     }
                     catch (Exception)
                     {
-                        return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass })
+                        return Response.AsJson(new {result = false, message = Resources.UI.UserLogin_IncorrectUserPass});
                     }
                 }
                 else if (!settings.UserAuthentication) // No auth, let them pass!
