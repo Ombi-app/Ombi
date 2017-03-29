@@ -97,7 +97,13 @@ namespace Ombi.Services.Notification
             catch (Exception ex)
             {
                 Log.Error(ex, $"Notification '{notification.NotificationName}' failed with exception");
+                throw new InvalidOperationException(ex.Message);
             }
+        }
+
+        public async Task PublishTest(NotificationModel model, Settings settings, INotification type)
+        {
+            await type.NotifyAsync(model, settings);
         }
     }
 }

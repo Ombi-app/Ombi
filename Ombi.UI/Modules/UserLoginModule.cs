@@ -59,7 +59,8 @@ namespace Ombi.UI.Modules
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
             ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IExternalUserRepository<PlexUsers> plexUsers, ICustomUserMapper custom,
-             ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings, IEmbyApi embyApi, ISettingsService<EmbySettings> emby, IExternalUserRepository<EmbyUsers> embyU)
+             ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings, IEmbyApi embyApi, ISettingsService<EmbySettings> emby, IExternalUserRepository<EmbyUsers> embyU,
+             IUserHelper userHelper)
             : base("userlogin", pr, security)
         {
             AuthService = auth;
@@ -75,6 +76,7 @@ namespace Ombi.UI.Modules
             EmbySettings = emby;
             EmbyApi = embyApi;
             EmbyUserRepository = embyU;
+            UserHelper = userHelper;
 
             Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
@@ -135,6 +137,7 @@ namespace Ombi.UI.Modules
         private IExternalUserRepository<EmbyUsers> EmbyUserRepository { get; }
         private ICustomUserMapper CustomUserMapper { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
+        private IUserHelper UserHelper { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
 
@@ -682,6 +685,14 @@ namespace Ombi.UI.Modules
             else if (emby)
             {
                 type = UserType.EmbyUser;;
+            }
+            if (string.IsNullOrEmpty(userId))
+            {
+                // It's possible we have no auth enabled meaning the userId is empty
+                // Let's find that user!
+
+                var user = UserHelper.GetUser(username);
+                userId = user.UserId;
             }
             UserLogins.Insert(new UserLogins { UserId = userId, Type = type, LastLoggedIn = DateTime.UtcNow });
 
