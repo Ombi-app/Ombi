@@ -208,7 +208,7 @@ namespace Ombi.Core.Users
 
             var localUsers = LocalUserRepository.GetAll().ToList();
             var plexUsers = PlexUserRepository.GetAll().ToList();
-            var embyUsers = PlexUserRepository.GetAll().ToList();
+            var embyUsers = EmbyUserRepository.GetAll().ToList();
 
             var filteredLocal = localUsers.Where(x => ((Features)x.Features).HasFlag(features));
             var filteredPlex = plexUsers.Where(x => ((Features)x.Features).HasFlag(features));
