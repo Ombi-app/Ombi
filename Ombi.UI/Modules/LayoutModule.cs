@@ -29,10 +29,12 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Nancy;
+using Nancy.Responses;
 using NLog;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Core.StatusChecker;
+using Ombi.Core.Users;
 using Ombi.Helpers;
 using Ombi.Services.Interfaces;
 using Ombi.Services.Jobs;
@@ -43,14 +45,16 @@ namespace Ombi.UI.Modules
 {
     public class LayoutModule : BaseAuthModule
     {
-        public LayoutModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings, IJobRecord rec, ISecurityExtensions security) : base("layout", pr, security)
+        public LayoutModule(ICacheProvider provider, ISettingsService<PlexRequestSettings> pr, ISettingsService<SystemSettings> settings, IJobRecord rec, ISecurityExtensions security, IUserHelper helper) : base("layout", pr, security)
         {
             Cache = provider;
             SystemSettings = settings;
             Job = rec;
+            UserHelper = helper;
 
             Get["/", true] = async (x,ct) => await CheckLatestVersion();
             Get["/cacher", true] = async (x,ct) => await CacherRunning();
+            Get["/gravatar"] = x => GetGravatarImage();
         }
 
         private ICacheProvider Cache { get; }
@@ -58,6 +62,7 @@ namespace Ombi.UI.Modules
         private static Logger Log = LogManager.GetCurrentClassLogger();
         private ISettingsService<SystemSettings> SystemSettings { get; }
         private IJobRecord Job { get; }
+        private IUserHelper UserHelper { get; }
 
         private async Task<Response> CheckLatestVersion()
         {
@@ -114,6 +119,32 @@ namespace Ombi.UI.Modules
                 Log.Warn("Exception Thrown when attempting to check the status");
                 Log.Warn(e);
                 return Response.AsJson(new { CurrentlyRunning = false, IsAdmin });
+            }
+        }
+
+        private Response GetGravatarImage()
+        {
+            if (LoggedIn)
+            {
+                var user = UserHelper.GetUser(Username);
+                var hashed = StringHasher.CalcuateMd5Hash(user.EmailAddress);
+                if (string.IsNullOrEmpty(hashed))
+                {
+                    return Response.AsJson(new JsonResponseModel
+                    {
+                        Result = false
+                    });
+                }
+                return
+                    Response.AsJson(new JsonResponseModel
+                    {
+                        Result = true,
+                        Message = $"https://www.gravatar.com/avatar/{hashed}"
+                    });
+            }
+            else
+            {
+                return Response.AsJson(new JsonResponseModel {Result = false});
             }
         }
     }

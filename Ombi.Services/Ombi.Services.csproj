@@ -86,6 +86,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IEmbyNotificationEngine.cs" />
+    <Compile Include="Interfaces\IMassEmail.cs" />
+    <Compile Include="Interfaces\IPlexNotificationEngine.cs" />
     <Compile Include="Interfaces\IRadarrCacher.cs" />
     <Compile Include="Interfaces\IWatcherCacher.cs" />
     <Compile Include="Interfaces\IJobRecord.cs" />
@@ -93,10 +96,24 @@
     <Compile Include="Interfaces\IStoreBackup.cs" />
     <Compile Include="Interfaces\IStoreCleanup.cs" />
     <Compile Include="Interfaces\IUserRequestLimitResetter.cs" />
-    <Compile Include="Jobs\IFaultQueueHandler.cs" />
-    <Compile Include="Jobs\IPlexEpisodeCacher.cs" />
-    <Compile Include="Jobs\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\IEmbyUserChecker.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyEpisodeCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyContentCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IEmbyAvailabilityChecker.cs" />
+    <Compile Include="Jobs\Interfaces\IFaultQueueHandler.cs" />
+    <Compile Include="Jobs\Interfaces\IPlexEpisodeCacher.cs" />
+    <Compile Include="Jobs\Interfaces\IPlexUserChecker.cs" />
+    <Compile Include="Jobs\EmbyAvailabilityChecker.cs" />
+    <Compile Include="Jobs\EmbyContentCacher.cs" />
+    <Compile Include="Jobs\EmbyEpisodeCacher.cs" />
+    <Compile Include="Jobs\EmbyUserChecker.cs" />
     <Compile Include="Jobs\RadarrCacher.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\Newsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\PlexRecentlyAddedNewsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\EmbyRecentlyAddedNewsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\IPlexNewsletter.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\IEmbyAddedNewsletter.cs" />
+    <Compile Include="Jobs\Templates\MassEmailTemplate.cs" />
     <Compile Include="Jobs\WatcherCacher.cs" />
     <Compile Include="Jobs\HtmlTemplateGenerator.cs" />
     <Compile Include="Interfaces\IPlexContentCacher.cs" />
@@ -105,7 +122,7 @@
     <Compile Include="Jobs\JobNames.cs" />
     <Compile Include="Jobs\PlexContentCacher.cs" />
     <Compile Include="Jobs\PlexEpisodeCacher.cs" />
-    <Compile Include="Jobs\RecentlyAdded.cs" />
+    <Compile Include="Jobs\RecentlyAddedNewsletter\RecentlyAddedNewsletter.cs" />
     <Compile Include="Jobs\StoreBackup.cs" />
     <Compile Include="Jobs\PlexUserChecker.cs" />
     <Compile Include="Jobs\StoreCleanup.cs" />
@@ -128,8 +145,11 @@
     <Compile Include="Interfaces\INotification.cs" />
     <Compile Include="Interfaces\INotificationService.cs" />
     <Compile Include="Models\SonarrCachedResult.cs" />
+    <Compile Include="Notification\BaseNotification.cs" />
     <Compile Include="Notification\EmailMessageNotification.cs" />
-    <Compile Include="Notification\NotificationEngine.cs" />
+    <Compile Include="Notification\EmbyNotificationEngine.cs" />
+    <Compile Include="Notification\NotificationMessage.cs" />
+    <Compile Include="Notification\PlexNotificationEngine.cs" />
     <Compile Include="Notification\NotificationModel.cs" />
     <Compile Include="Notification\NotificationService.cs" />
     <Compile Include="Notification\PushoverNotification.cs" />
@@ -169,6 +189,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Jobs\Templates\MassEmailTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Jobs\Templates\RecentlyAddedTemplate.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

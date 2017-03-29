@@ -39,6 +39,7 @@ namespace Ombi.Services.Interfaces
         /// <param name="model">The model.</param>
         /// <returns></returns>
         Task Publish(NotificationModel model);
+        Task PublishTest(NotificationModel model, Settings settings, INotification type);
         /// <summary>
         /// Sends a notification to the user, this is usually for testing the settings.
         /// </summary>

@@ -26,6 +26,8 @@
 #endregion
 
 using Nancy.Cryptography;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.UI.Authentication
@@ -47,7 +49,8 @@ namespace Ombi.UI.Authentication
         /// <summary>Gets or sets the username/identifier mapper</summary>
         public IUserRepository LocalUserRepository { get; set; }
 
-        public IPlexUserRepository PlexUserRepository { get; set; }
+        public IExternalUserRepository<PlexUsers> PlexUserRepository { get; set; }
+        public IExternalUserRepository<EmbyUsers> EmbyUserRepository { get; set; }
 
         /// <summary>Gets or sets RequiresSSL property</summary>
         /// <value>The flag that indicates whether SSL is required</value>

@@ -33,6 +33,8 @@ namespace Ombi.Core.SettingModels
         {
             AdvancedSearch = true;
         }
+
+        public bool Enable { get; set; }
         public bool AdvancedSearch { get; set; }
         public bool EnableTvEpisodeSearching { get; set; }
 

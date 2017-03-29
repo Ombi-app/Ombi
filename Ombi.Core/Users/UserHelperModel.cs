@@ -39,6 +39,7 @@ namespace Ombi.Core.Users
         public Features Features { get; set; }
         public string EmailAddress { get; set; }
         public UserType Type { get; set; }
+        public string UserId { get; set; }
 
         [JsonIgnore]
         public string UsernameOrAlias => string.IsNullOrEmpty(UserAlias) ? Username : UserAlias;

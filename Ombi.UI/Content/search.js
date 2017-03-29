@@ -24,6 +24,7 @@ Function.prototype.bind = function (parent) {
 
 $(function () {
 
+    var netflixEnabled = $('#enableNetflix').text() == 'True';
     var useNewSearch = $('#useNewSearch').text() == 'True';
     var searchSource = useNewSearch ? $("#search-templateNew").html() : $("#search-template").html();
     var seasonsSource = $("#seasons-template").html();
@@ -62,6 +63,26 @@ $(function () {
         }.bind(this), 800);
 
     });
+
+    // Type in actor search
+    $("#actorSearchContent").on("input", function () {
+        triggerActorSearch();
+    });
+
+    // if they toggle the checkbox, we want to refresh our search
+    $("#actorsSearchNew").click(function () {
+        triggerActorSearch();
+    });
+
+    function triggerActorSearch()
+    {
+        if (searchTimer) {
+            clearTimeout(searchTimer);
+        }
+        searchTimer = setTimeout(function () {
+            moviesFromActor();
+        }.bind(this), 800);
+    }
 
     $('#moviesComingSoon').on('click', function (e) {
         e.preventDefault();
@@ -300,7 +321,7 @@ $(function () {
     function movieSearch() {
         var query = $("#movieSearchContent").val();
         var url = createBaseUrl(base, '/search/movie/');
-        query ? getMovies(url + query) : resetMovies();
+        query ? getMovies(url + query) : resetMovies("#movieList");
     }
 
     function moviesComingSoon() {
@@ -311,6 +332,13 @@ $(function () {
     function moviesInTheaters() {
         var url = createBaseUrl(base, '/search/movie/playing');
         getMovies(url);
+    }
+
+    function moviesFromActor() {
+        var query = $("#actorSearchContent").val();
+        var $newOnly = $('#actorsSearchNew')[0].checked;
+        var url = createBaseUrl(base, '/search/actor/' + (!!$newOnly ? 'new/' : ''));
+        query ? getMovies(url + query, "#actorMovieList", "#actorSearchButton") : resetMovies("#actorMovieList");
     }
 
     function popularShows() {
@@ -330,30 +358,31 @@ $(function () {
         getTvShows(url, true);
     }
 
-    function getMovies(url) {
-        resetMovies();
-
-        $('#movieSearchButton').attr("class", "fa fa-spinner fa-spin");
+    function getMovies(url, target, button) {
+        target = target || "#movieList";
+        button = button || "#movieSearchButton";
+        resetMovies(target);
+        $(button).attr("class", "fa fa-spinner fa-spin");
         $.ajax(url).success(function (results) {
             if (results.length > 0) {
                 results.forEach(function (result) {
                     var context = buildMovieContext(result);
 
                     var html = searchTemplate(context);
-                    $("#movieList").append(html);
+                    $(target).append(html);
 
                     checkNetflix(context.title, context.id);
                 });
             }
             else {
-                $("#movieList").html(noResultsHtml);
+                $(target).html(noResultsHtml);
             }
-            $('#movieSearchButton').attr("class", "fa fa-search");
+            $(button).attr("class", "fa fa-search");
         });
     };
 
-    function resetMovies() {
-        $("#movieList").html("");
+    function resetMovies(target) {
+        $(target).html("");
     }
 
     function tvSearch() {
@@ -388,13 +417,16 @@ $(function () {
     };
 
     function checkNetflix(title, id) {
+        if (!netflixEnabled) {
+            return;
+        }
         var url = createBaseUrl(base, '/searchextension/netflix/' + title);
         $.ajax(url).success(function (results) {
             
                 if (results.result) {
                     // It's on Netflix
                     $('#' + id + 'netflixTab')
-                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Avaialble on Netflix</span></a>");
+                        .html("<a href='https://www.netflix.com/watch/"+results.netflixId+"' target='_blank'><span class='label label-success'>Available on Netflix</span></a>");
                 }
             
         });

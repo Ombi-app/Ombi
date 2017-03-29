@@ -30,67 +30,24 @@ using System.Threading.Tasks;
 using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Core;
-using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
-using Ombi.Services.Interfaces;
 using Ombi.Store;
 
 namespace Ombi.Services.Notification
 {
-    public class PushbulletNotification : INotification
+    public class PushbulletNotification : BaseNotification<PushbulletNotificationSettings>
     {
-        public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings)
+        public PushbulletNotification(IPushbulletApi pushbulletApi, ISettingsService<PushbulletNotificationSettings> settings) : base(settings)
         {
             PushbulletApi = pushbulletApi;
-            SettingsService = settings;
         }
         private IPushbulletApi PushbulletApi { get; }
         private ISettingsService<PushbulletNotificationSettings> SettingsService { get; }
 
-        private static Logger Log = LogManager.GetCurrentClassLogger();
-        public string NotificationName => "PushbulletNotification";
-        public async Task NotifyAsync(NotificationModel model)
-        {
-            var configuration = GetSettings();
-            await NotifyAsync(model, configuration);
-        }
-
-        public async Task NotifyAsync(NotificationModel model, Settings settings)
-        {
-            if (settings == null) await NotifyAsync(model);
-
-            var pushSettings = (PushbulletNotificationSettings)settings;
-
-            if (!ValidateConfiguration(pushSettings)) return;
-
-            switch (model.NotificationType)
-            {
-                case NotificationType.NewRequest:
-                    await PushNewRequestAsync(model, pushSettings);
-                    break;
-                case NotificationType.Issue:
-                    await PushIssueAsync(model, pushSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    break;
-                case NotificationType.RequestApproved:
-                    break;
-                case NotificationType.AdminNote:
-                    break;
-                case NotificationType.Test:
-                    await PushTestAsync(pushSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await PushFaultQueue(model, pushSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private bool ValidateConfiguration(PushbulletNotificationSettings settings)
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        public override string NotificationName => "PushbulletNotification";
+        
+        protected override  bool ValidateConfiguration(PushbulletNotificationSettings settings)
         {
             if (!settings.Enabled)
             {
@@ -103,44 +60,64 @@ namespace Ombi.Services.Notification
             return true;
         }
 
-        private PushbulletNotificationSettings GetSettings()
-        {
-            return SettingsService.GetSettings();
-        }
-
-        private async Task PushNewRequestAsync(NotificationModel model, PushbulletNotificationSettings settings)
+        protected override async Task NewRequest(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
             var pushTitle = $"Ombi: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested!";
-            await Push(settings, message, pushTitle);
+            var notification = new NotificationMessage
+            {
+                Message = message,
+                Subject = pushTitle
+            };
+            await Send(notification, settings);
         }
+        
 
-        private async Task PushIssueAsync(NotificationModel model, PushbulletNotificationSettings settings)
+        protected override async Task Issue(NotificationModel model, PushbulletNotificationSettings settings)
         {
             var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
             var pushTitle = $"Ombi: A new issue has been reported for {model.Title}";
-            await Push(settings, message, pushTitle);
+            var notification = new NotificationMessage
+            {
+                Message = message,
+                Subject = pushTitle
+            };
+            await Send(notification, settings);
         }
 
-        private async Task PushTestAsync(PushbulletNotificationSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationModel model, PushbulletNotificationSettings settings)
         {
-            var message = "This is just a test! Success!";
-            var pushTitle = "Ombi: Test Message!";
-            await Push(settings, message, pushTitle);
+           
+            var message = $"Hello!The user '{model.User}' has requested { model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var pushTitle = $"Ombi: A request could not be added.";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+                Subject = pushTitle
+            };
+            await Send(notification, settings);
         }
 
-        private async Task PushFaultQueue(NotificationModel model, PushbulletNotificationSettings settings)
+        protected override Task RequestDeclined(NotificationModel model, PushbulletNotificationSettings settings)
         {
-            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            var pushTitle = $"Ombi: The {model.RequestType.GetString()?.ToLower()} {model.Title} has been requested but could not be added!";
-            await Push(settings, message, pushTitle);
+            throw new NotImplementedException();
         }
 
-        private async Task Push(PushbulletNotificationSettings settings, string message, string title)
+        protected override Task RequestApproved(NotificationModel model, PushbulletNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task AvailableRequest(NotificationModel model, PushbulletNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task Send(NotificationMessage model, PushbulletNotificationSettings settings)
         {
             try
             {
-                var result = await PushbulletApi.PushAsync(settings.AccessToken, title, message, settings.DeviceIdentifier);
+                var result = await PushbulletApi.PushAsync(settings.AccessToken, model.Subject, model.Message, settings.DeviceIdentifier);
                 if (result != null)
                 {
                     Log.Error("Pushbullet api returned a null value, the notification did not get pushed");
@@ -150,6 +127,18 @@ namespace Ombi.Services.Notification
             {
                 Log.Error(e);
             }
+        }
+
+        protected override async Task Test(NotificationModel model, PushbulletNotificationSettings settings)
+        {
+            var message = "This is just a test! Success!";
+            var pushTitle = "Ombi: Test Message!";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+                Subject = pushTitle
+            };
+            await Send(notification,settings);
         }
     }
 }

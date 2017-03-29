@@ -7,59 +7,56 @@
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
             <legend>Newsletter Settings</legend>
+            <div style="padding:10px">
 
-            <!-- Email Nofication Section -->
-            <div class="form-group">
-                <div class="checkbox">
+                <!-- Newsletter Section -->
+                <div class="form-group">
+                    <div class="checkbox">
 
-                    <small>Note: This will require you to setup your email notifications</small>
-                    <br />
-                    @if (Model.SendRecentlyAddedEmail)
-                    {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail" checked="checked"><label for="SendRecentlyAddedEmail">Enable newsletter</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SendRecentlyAddedEmail" name="SendRecentlyAddedEmail"><label for="SendRecentlyAddedEmail">Enable newslette</label>
-                    }
+                        <small>Note: This will require you to setup your email notifications 
+                        </small><span class="customTooltip" title="It also requires users to have the Newsletter feature"><i class="fa fa-info-circle"></i></span>
+                        <br />
+                        <br />
+                        @Html.Checkbox(Model.SendRecentlyAddedEmail, "SendRecentlyAddedEmail", "Enable newsletter")
+                    </div>
+                </div>
+                <div class="form-group">
 
+                    <br>
+                    <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
+                    <small>You can add multiple email addresses by using the ; delimiter</small>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <div>
+
+                        <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin @Html.ToolTip("Note: nothing will send if there is no new content...")
+                            <div id="testEmailSpinner"></div></button>
+                    </div>
+                </div>
+
+                <br />
+                <br />
+                <div class="form-group">
+                    <div>
+                        <button type="submit" id="save" class="btn btn-primary-outline">Save</button>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-
-              <br>
-                <label for="CustomUsers" class="control-label">Email Addresses to Send to (For users that are not in your User Management section)</label>
-              <small>You can add multiple email address by using the ; delimiter</small>
-<div>
-                    <input type="text" class="form-control form-control-custom " placeholder="first@address.com;second@address.com" id="CustomUsers" name="CustomUsers" value="@Model.CustomUsers">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div>
-                    <button id="recentlyAddedBtn" class="btn btn-primary-outline">Send test email to Admin <div id="spinner"></div></button>
-                </div>
-            </div>
-
-            <br />
-            <br />
-            <div class="form-group">
-                <div>
-                    <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
-                </div>
-            </div>
-            <!-- Email Nofication Section -->
-
+            <!-- Newsletter Section -->
         </fieldset>
-
     </form>
 </div>
 
 
 <script>
     $(function () {
-
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
 
         var base = '@Html.GetBaseUrl()';
         $('#save').click(function (e) {
@@ -89,9 +86,11 @@
 
         $('#recentlyAddedBtn').click(function (e) {
             e.preventDefault();
+
+            generateNotify("This could take some time depending on if you have episode searching enabled and also how many new items have been added!", "info");
             var base = '@Html.GetBaseUrl()';
-            var url = createBaseUrl(base, '/admin/recentlyAddedTest');
-            $('#spinner').attr("class", "fa fa-spinner fa-spin");
+            var url = createBaseUrl(base, '/admin/testnewsletteradminemail');
+            $('#testEmailSpinner').attr("class", "fa fa-spinner fa-spin");
             $.ajax({
                 type: "post",
                 url: url,
@@ -99,17 +98,17 @@
                 success: function (response) {
                     if (response) {
                         generateNotify(response.message, "success");
-                        $('#spinner').attr("class", "fa fa-check");
+                        $('#testEmailSpinner').attr("class", "fa fa-check");
                     } else {
 
                         generateNotify(response.message, "danger");
-                        $('#spinner').attr("class", "fa fa-times");
+                        $('#testEmailSpinner').attr("class", "fa fa-times");
                     }
                 },
                 error: function (e) {
                     console.log(e);
                     generateNotify("Something went wrong!", "danger");
-                    $('#spinner').attr("class", "fa fa-times");
+                    $('#testSendMassEmailSpinner').attr("class", "fa fa-times");
                 }
             });
         });

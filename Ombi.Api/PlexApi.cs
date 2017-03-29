@@ -77,8 +77,7 @@ namespace Ombi.Api
 
             request.AddJsonBody(userModel);
 
-			var obj = RetryHandler.Execute<PlexAuthentication>(() => Api.Execute<PlexAuthentication> (request, new Uri(SignInUri)),
-				(exception, timespan) => Log.Error (exception, "Exception when calling SignIn for Plex, Retrying {0}", timespan));
+			var obj =  Api.Execute<PlexAuthentication> (request, new Uri(SignInUri));
 			
 			return obj;
         }

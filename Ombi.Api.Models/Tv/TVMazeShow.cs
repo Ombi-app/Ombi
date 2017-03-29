@@ -15,7 +15,7 @@ namespace Ombi.Api.Models.Tv
         public string language { get; set; }
         public List<string> genres { get; set; }
         public string status { get; set; }
-        public int runtime { get; set; }
+        public double runtime { get; set; }
         public string premiered { get; set; }
         public Schedule schedule { get; set; }
         public Rating rating { get; set; }

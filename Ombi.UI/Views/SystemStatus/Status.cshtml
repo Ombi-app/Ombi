@@ -4,79 +4,131 @@
 <div id="lightbox" style="display:none"></div>
 <div class="col-sm-8 col-sm-push-1">
     <fieldset>
-        <legend>Status</legend>
+        <legend>Updates</legend>
 
 
-        <div class="form-group">
-            <label class="control-label">Current Version: </label>
-            <label class="control-label">@Model.Status.CurrentVersion</label>
-        </div>
-
-        @if (Model.Status.UpdateAvailable)
-        {
-            <div class="form-group">
-                <label class="control-label">New Version: </label>
-                <label class="control-label">@Model.Status.NewVersion</label>
-            </div>
-        }
-
-        <form id="mainForm" method="post" action="save">
-
-            <div class="form-group">
-                <label for="select" class="control-label">Code Branch</label>
-                <div id="branches">
-                    <select class="form-control form-control-custom" id="select">
-                        @foreach (var b in Model.BranchDropdown)
-                        {
-                            if (b.Selected)
-                            {
-                                <option selected='selected' value='@b.Value'>@b.Name</option>
-                            }
-                            else
-                            {
-                                <option value='@b.Value'>@b.Name</option>
-                            }
-                        }
-                    </select>
-                </div>
-            </div>
-            <button id="saveSettings" class="btn btn-success-outline">Save</button>
-        </form>
-
-
-        <div class="form-group">
-            <label class="control-label">Update Available: </label>
-            @if (Model.Status.UpdateAvailable)
-            {
-                <label class="control-label"><a href="@Model.Status.UpdateUri" target="_blank"><i class="fa fa-check"></i></a></label>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#status" data-toggle="tab" aria-expanded="true">Status</a></li>
+            <li id="changesTab" class=""><a href="#changes" data-toggle="tab" aria-expanded="false">Recent Changes</a></li>
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade  active in" id="status">
                 <br />
-                <input id="args" class="form-control form-control-custom " placeholder="optional launch arguments e.g. /etc/mono /opt/PlexRequests.exe">
-                <br/>
-                <button id="autoUpdate" class="btn btn-success-outline">Automatic Update (beta) <i class="fa fa-download"></i></button>
-            }
-            else
-            {
-                <label class="control-label"><i class="fa fa-times"></i></label>
-            }
+                <div class="form-group">
+                    <label class="control-label">Current Version: </label>
+                    <label class="control-label">@Model.Status.CurrentVersion</label>
+                </div>
 
+                @if (Model.Status.UpdateAvailable)
+                {
+                    <div class="form-group">
+                        <label class="control-label">New Version: </label>
+                        <label class="control-label">@Model.Status.NewVersion</label>
+                    </div>
+                }
+                <hr />
+                <form id="mainForm" method="post" action="save">
+
+                    <div class="form-group">
+                        <label for="select" class="control-label">Code Branch</label>
+                        <div id="branches">
+                            <select class="form-control form-control-custom" id="select">
+                                @foreach (var b in Model.BranchDropdown)
+                                {
+                                    if (b.Selected)
+                                    {
+                                        <option selected='selected' value='@b.Value'>@b.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value='@b.Value'>@b.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <button id="saveSettings" class="btn btn-success-outline">Save</button>
+                </form>
+                <hr />
+                <div class="form-group">
+                    <label class="control-label">Update Available: </label>
+                    @if (Model.Status.UpdateAvailable)
+                    {
+                        <label class="control-label"><a href="@Model.Status.UpdateUri" target="_blank"><i class="fa fa-check"></i></a> @Html.ToolTip("Click the 'tick' to manually go to the page")</label>
+                        <br />
+                        <br />
+                        @*<label class="control-label">Launch Arguments</label>
+                        @Html.ToolTip("This is if you run Ombi outside of a regular install e.g. you are launching with a custom port. This field will be used after we have updated to launch the application.")
+                        <input id="args" class="form-control form-control-custom " placeholder="/etc/mono /opt/Ombi.exe">
+                        <br />
+                        <button id="autoUpdate" class="btn btn-success-outline">Automatic Update (beta) <i class="fa fa-download"></i></button>*@
+                    }
+                    else
+                    {
+                        <label class="control-label"><i class="fa fa-times"></i></label>
+                    }
+
+                </div>
+                <hr />
+                @if (Model.Status.UpdateAvailable)
+                {
+                    <h2>
+                        <a href="@Model.Status.DownloadUri">@Model.Status.ReleaseTitle</a>
+                    </h2>
+                    <hr />
+                    <label>Release Notes:</label>
+                    @Html.Raw(Model.Status.ReleaseNotes)
+                }
+            </div>
+            <div class="tab-pane fade" id="changes">
+                <br />
+                <div id="changesArea"></div>
+            </div>
         </div>
 
-        @if (Model.Status.UpdateAvailable)
-        {
-            <h2>
-                <a href="@Model.Status.DownloadUri">@Model.Status.ReleaseTitle</a>
-            </h2>
-            <hr />
-            <label>Release Notes:</label>
-            @Html.Raw(Model.Status.ReleaseNotes)
-        }
+
+
+
 
 
     </fieldset>
 </div>
 
-<script>
+<script id="changes-template" type="text/x-handlebars-template">
 
+    <fieldset>
+        <div class="col-md-12">
+            <h4 class="col-md-2">
+                {{version}}
+            </h4>
+            <h5 class="col-md-4">
+                <span class="date">
+                    - <span title="" data-original-title="Sunday, March 12 2017 10:30am">{{date}}</span>
+                </span>
+            </h5>
+
+            <h6 class="col-md-6">
+                <span class="status">
+                    <span class="label label-default">{{branch}}</span>
+                    {{#if installed}}
+                    <span class="label label-success">Installed</span>
+                    {{/if}}
+                </span>
+                </h6>
+
+            </div><hr />
+        <div class="col-md-12">
+            {{message}}
+            </div>
+</fieldset>
+    <br />
+    <br />
+</script>
+
+<script>
+    $('.customTooltip').tooltipster({
+        contentCloning: true
+    });
     var base = '@Html.GetBaseUrl()';
     $('#autoUpdate')
         .click(function (e) {
@@ -128,6 +180,30 @@
                 } else {
                     generateNotify(response.message, "warning");
                 }
+            }
+        });
+    });
+
+    var changesSource = $("#changes-template").html();
+    var changesTemplate = Handlebars.compile(changesSource);
+    var changesLoaded = false;
+    $('#changesTab').click(function (e) {
+        e.preventDefault();
+        if (changesLoaded) return;
+        var url = createBaseUrl(base, "/admin/changes");
+        $area = $('#changesArea');
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: "json",
+            success: function (response) {
+                $(response).each(function (index, item) {
+                    item.date = moment.utc(item.date).local().format('lll');
+                    var html = changesTemplate(item);
+                    $area.append(html);
+                });
+                changesLoaded = true;
+                return;
             }
         });
     });

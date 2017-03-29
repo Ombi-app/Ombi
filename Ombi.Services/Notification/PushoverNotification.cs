@@ -30,67 +30,24 @@ using System.Threading.Tasks;
 using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Core;
-using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
-using Ombi.Services.Interfaces;
 using Ombi.Store;
 
 namespace Ombi.Services.Notification
 {
-    public class PushoverNotification : INotification
+    public class PushoverNotification : BaseNotification<PushoverNotificationSettings>
     {
-        public PushoverNotification(IPushoverApi pushoverApi, ISettingsService<PushoverNotificationSettings> settings)
+        public PushoverNotification(IPushoverApi pushoverApi, ISettingsService<PushoverNotificationSettings> settings) : base(settings)
         {
             PushoverApi = pushoverApi;
-            SettingsService = settings;
         }
         private IPushoverApi PushoverApi { get;  }
-        private ISettingsService<PushoverNotificationSettings> SettingsService { get; }
 
         private static Logger Log = LogManager.GetCurrentClassLogger();
-        public string NotificationName => "PushoverNotification";
-        public async Task NotifyAsync(NotificationModel model)
-        {
-            var configuration = GetSettings();
-            await NotifyAsync(model, configuration);
-        }
+        public override string NotificationName => "PushoverNotification";
 
-        public async Task NotifyAsync(NotificationModel model, Settings settings)
-        {
-            if (settings == null) await NotifyAsync(model);
 
-            var pushSettings = (PushoverNotificationSettings)settings;
-
-            if (!ValidateConfiguration(pushSettings)) return;
-
-            switch (model.NotificationType)
-            {
-                case NotificationType.NewRequest:
-                    await PushNewRequestAsync(model, pushSettings);
-                    break;
-                case NotificationType.Issue:
-                    await PushIssueAsync(model, pushSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    break;
-                case NotificationType.RequestApproved:
-                    break;
-                case NotificationType.AdminNote:
-                    break;
-                case NotificationType.Test:
-                    await PushTestAsync(model, pushSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await PushFaultQueue(model, pushSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private bool ValidateConfiguration(PushoverNotificationSettings settings)
+        protected override bool ValidateConfiguration(PushoverNotificationSettings settings)
         {
             if (!settings.Enabled)
             {
@@ -103,40 +60,57 @@ namespace Ombi.Services.Notification
             return true;
         }
 
-        private PushoverNotificationSettings GetSettings()
-        {
-            return SettingsService.GetSettings();
-        }
-
-        private async Task PushNewRequestAsync(NotificationModel model, PushoverNotificationSettings settings)
+        protected override async Task NewRequest(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Ombi: The {model.RequestType.GetString()?.ToLower()} '{model.Title}' has been requested by user: {model.User}";
-            await Push(settings, message);
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
         }
 
-        private async Task PushIssueAsync(NotificationModel model, PushoverNotificationSettings settings)
+        protected override async Task Issue(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Ombi: A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
-            await Push(settings, message);
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
         }
 
-        private async Task PushTestAsync(NotificationModel model, PushoverNotificationSettings settings)
-        {
-            var message = $"Ombi: Test Message!";
-            await Push(settings, message);
-        }
-
-        private async Task PushFaultQueue(NotificationModel model, PushoverNotificationSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationModel model, PushoverNotificationSettings settings)
         {
             var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            await Push(settings, message);
+
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
         }
 
-        private async Task Push(PushoverNotificationSettings settings, string message)
+        protected override Task RequestDeclined(NotificationModel model, PushoverNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task RequestApproved(NotificationModel model, PushoverNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task AvailableRequest(NotificationModel model, PushoverNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task Send(NotificationMessage model, PushoverNotificationSettings settings)
         {
             try
             {
-                var result = await PushoverApi.PushAsync(settings.AccessToken, message, settings.UserToken);
+                var result = await PushoverApi.PushAsync(settings.AccessToken, model.Message, settings.UserToken);
                 if (result?.status != 1)
                 {
                     Log.Error("Pushover api returned a status that was not 1, the notification did not get pushed");
@@ -146,6 +120,17 @@ namespace Ombi.Services.Notification
             {
                 Log.Error(e);
             }
+        }
+
+        protected override async Task Test(NotificationModel model, PushoverNotificationSettings settings)
+        {
+
+            var message = $"Ombi: Test Message!";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
         }
     }
 }

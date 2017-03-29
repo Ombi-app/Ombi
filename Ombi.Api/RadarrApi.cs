@@ -62,6 +62,20 @@ namespace Ombi.Api
 
             return obj;
         }
+        public List<SonarrRootFolder> GetRootFolders(string apiKey, Uri baseUrl)
+        {
+            var request = new RestRequest { Resource = "/api/rootfolder", Method = Method.GET };
+
+            request.AddHeader("X-Api-Key", apiKey);
+            var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling GetRootFolders for Radarr, Retrying {0}", timespan), new TimeSpan[] {
+                  TimeSpan.FromSeconds (1),
+                  TimeSpan.FromSeconds(2)
+              });
+
+            var obj = policy.Execute(() => Api.ExecuteJson<List<SonarrRootFolder>>(request, baseUrl));
+
+            return obj;
+        }
 
         public RadarrAddMovie AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, Uri baseUrl, bool searchNow = false)
         {
@@ -94,7 +108,6 @@ namespace Ombi.Api
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(options);
 
-            RadarrAddMovie result;
             try
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {

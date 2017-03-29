@@ -30,82 +30,23 @@ using System.Threading.Tasks;
 using MimeKit;
 using NLog;
 using Ombi.Core;
-using Ombi.Core.Models;
 using Ombi.Core.Notification.Templates;
 using Ombi.Core.SettingModels;
-using Ombi.Services.Interfaces;
 using Ombi.Store;
 using SmtpClient = MailKit.Net.Smtp.SmtpClient;
 
 namespace Ombi.Services.Notification
 {
-    public class EmailMessageNotification : INotification
+    public class EmailMessageNotification : BaseNotification<EmailNotificationSettings>
     {
-        public EmailMessageNotification(ISettingsService<EmailNotificationSettings> settings)
+        public EmailMessageNotification(ISettingsService<EmailNotificationSettings> settings) : base(settings)
         {
-            EmailNotificationSettings = settings;
         }
 
         private static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        private ISettingsService<EmailNotificationSettings> EmailNotificationSettings { get; }
-        public string NotificationName => "EmailMessageNotification";
+        public override string NotificationName => "EmailMessageNotification";
 
-        public async Task NotifyAsync(NotificationModel model)
-        {
-            var configuration = GetConfiguration();
-            await NotifyAsync(model, configuration);
-        }
-
-        public async Task NotifyAsync(NotificationModel model, Settings settings)
-        {
-            if (settings == null) await NotifyAsync(model);
-
-            var emailSettings = (EmailNotificationSettings)settings;
-
-            if (!ValidateConfiguration(emailSettings))
-            {
-                return;
-            }
-
-            switch (model.NotificationType)
-            {
-                case NotificationType.NewRequest:
-                    await EmailNewRequest(model, emailSettings);
-                    break;
-                case NotificationType.Issue:
-                    await EmailIssue(model, emailSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    await EmailAvailableRequest(model, emailSettings);
-                    break;
-                case NotificationType.RequestApproved:
-                    await EmailRequestApproved(model, emailSettings);
-                    break;
-                case NotificationType.AdminNote:
-                    throw new NotImplementedException();
-
-                case NotificationType.Test:
-                    await EmailTest(model, emailSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    await EmailRequestDeclined(model, emailSettings);
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await EmailAddedToRequestQueue(model, emailSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-        }
-
-        private EmailNotificationSettings GetConfiguration()
-        {
-            var settings = EmailNotificationSettings.GetSettings();
-            return settings;
-        }
-
-        private bool ValidateConfiguration(EmailNotificationSettings settings)
+        protected override bool ValidateConfiguration(EmailNotificationSettings settings)
         {
             if (settings.Authentication)
             {
@@ -122,135 +63,150 @@ namespace Ombi.Services.Notification
             return true;
         }
 
-        private async Task EmailNewRequest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task NewRequest(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
                 $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}" };
+           
 
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!"
+                Message = html,
+                Subject = $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
+                To = settings.RecipientEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
 
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime.ToString("f")}");
 
             await Send(message, settings);
         }
 
-        private async Task EmailIssue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task Issue(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: New issue for {model.Title}!",
                 $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!"};
 
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: New issue for {model.Title}!"
+                Message = html,
+                Subject = $"Ombi: New issue for {model.Title}!",
+                To = settings.RecipientEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!");
+
 
 
             await Send(message, settings);
         }
 
-        private async Task EmailAddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Ombi: A request could not be added.",
                 $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying" };
 
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: A request could not be added"
+                Message = html,
+                Subject = $"Ombi: A request could not be added",
+                To = settings.RecipientEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
 
 
             await Send(message, settings);
         }
 
-        private async Task EmailRequestDeclined(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task RequestDeclined(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Ombi: Your request has been declined",
                 $"Hello! Your request for {model.Title} has been declined, Sorry!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been declined, Sorry!", };
 
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: Your request has been declined"
+                Message = html,
+                Subject = $"Ombi: Your request has been declined",
+                To = model.UserEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
+
+            message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been declined, Sorry!");
 
 
             await Send(message, settings);
         }
 
-        private async Task EmailRequestApproved(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task RequestApproved(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Ombi: Your request has been approved!",
                 $"Hello! Your request for {model.Title} has been approved!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! Your request for {model.Title} has been approved!", };
 
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: Your request has been approved!"
+                Message = html,
+                Subject = $"Ombi: Your request has been approved!",
+                To = model.UserEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
 
+            message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been approved!");
 
             await Send(message, settings);
         }
 
-        private async Task EmailAvailableRequest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task AvailableRequest(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: {model.Title} is now available!",
                 $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, TextBody = $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)" };
 
-            var message = new MimeMessage
+
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody(),
-                Subject = $"Ombi: {model.Title} is now available!"
+                Message = html,
+                Subject = $"Ombi: {model.Title} is now available!",
+                To = model.UserEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(model.UserEmail, model.UserEmail));
+
+            message.Other.Add("PlainTextBody", $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)");
 
             await Send(message, settings);
         }
 
-        private async Task Send(MimeMessage message, EmailNotificationSettings settings)
+        protected override async Task Send(NotificationMessage model, EmailNotificationSettings settings)
         {
             try
             {
+                var body = new BodyBuilder
+                {
+                    HtmlBody = model.Message,
+                    TextBody = model.Other["PlainTextBody"]
+                };
+
+                var message = new MimeMessage
+                {
+                    Body = body.ToMessageBody(),
+                    Subject = model.Subject
+                };
+                message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+                message.To.Add(new MailboxAddress(model.To, model.To));
+
                 using (var client = new SmtpClient())
                 {
                     client.Connect(settings.EmailHost, settings.EmailPort); // Let MailKit figure out the correct SecureSocketOptions.
@@ -271,23 +227,25 @@ namespace Ombi.Services.Notification
             catch (Exception e)
             {
                 Log.Error(e);
+                throw new InvalidOperationException(e.Message);
             }
         }
 
-        private async Task EmailTest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task Test(NotificationModel model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Test Message",
                 "This is just a test! Success!",
                 model.ImgSrc);
-            var body = new BodyBuilder { HtmlBody = html, };
-            var message = new MimeMessage
+            var message = new NotificationMessage
             {
-                Body = body.ToMessageBody()
+                Message = html,
+                Subject = $"Ombi: Test",
+                To = settings.RecipientEmail,
             };
-            message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
-            message.To.Add(new MailboxAddress(settings.RecipientEmail, settings.RecipientEmail));
+
+            message.Other.Add("PlainTextBody", "This is just a test! Success!");
 
             await Send(message, settings);
         }

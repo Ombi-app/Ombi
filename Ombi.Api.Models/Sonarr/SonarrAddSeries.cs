@@ -25,7 +25,7 @@ namespace Ombi.Api.Models.Sonarr
     {
         public SonarrAddSeries()
         {
-            images = new List<string>();
+            images = new List<SonarrImage>();
         }
         public AddOptions addOptions { get; set; }
         public string title { get; set; }
@@ -40,7 +40,7 @@ namespace Ombi.Api.Models.Sonarr
         public string imdbId { get; set; }
         public string titleSlug { get; set; }
         public int id { get; set; }
-        public List<string> images { get; set; }
+        public List<SonarrImage> images { get; set; }
         [JsonIgnore]
         public List<string> ErrorMessages { get; set; }
     }
@@ -51,4 +51,18 @@ namespace Ombi.Api.Models.Sonarr
         public bool ignoreEpisodesWithoutFiles { get; set; }
         public bool searchForMissingEpisodes { get; set; }
     }
+
+    public class Addoptions
+    {
+        public bool searchForMissingEpisodes { get; set; }
+        public bool ignoreEpisodesWithFiles { get; set; }
+        public bool ignoreEpisodesWithoutFiles { get; set; }
+    }
+
+    public class SonarrImage
+    {
+        public string coverType { get; set; }
+        public string url { get; set; }
+    }
+    
 }

@@ -73,6 +73,10 @@ namespace Ombi.Services.Jobs
                             {
                                 movieIds.Add(m.tmdbId);
                             }
+                            else
+                            {
+                                Log.Error("TMDBId is not > 0 for movie {0}", m.title);
+                            }
                         }
                         //var movieIds = movies.Select(x => x.tmdbId).ToList();
                         Cache.Set(CacheKeys.RadarrMovies, movieIds, CacheKeys.TimeFrameMinutes.SchedulerCaching);

@@ -34,13 +34,14 @@
             <small class="control-label">You will have to restart after changing the port.</small>
 
             <div class="form-group">
-                <label for="BaseUrl" class="control-label">Base Url</label>
+                <label for="BaseUrl" class="control-label">Base Url @Html.ToolTip("This will make Ombi run with a base url, usually used in reverse proxy scenarios")</label>
 
                 <div>
                     <input type="text" class="form-control form-control-custom " id="BaseUrl" name="BaseUrl" placeholder="Base Url" value="@Model.BaseUrl">
+
                 </div>
             </div>
-            <small class="control-label">You will have to restart after changing the url base.</small>
+            <small class="control-label">You will have to restart after changing the base url.</small>
 
             <div class="form-group">
                 <label for="ApiKey" class="control-label">Api Key</label>
@@ -60,35 +61,12 @@
             
             @Html.Checkbox(Model.SearchForMovies,"SearchForMovies","Search for Movies")
 
+            @Html.Checkbox(Model.SearchForActors,"SearchForActors","Search for Movies by Actor")
 
-            <div class="form-group">
-                <div class="checkbox">
+            @Html.Checkbox(Model.SearchForTvShows, "SearchForTvShows", "Search for TV Shows")
 
-                    @if (Model.SearchForTvShows)
-                    {
-                        <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows" checked="checked"><label for="SearchForTvShows">Search for TV Shows</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SearchForTvShows" name="SearchForTvShows"><label for="SearchForTvShows">Search for TV Shows</label>
-                    }
+            @Html.Checkbox(Model.SearchForMusic, "SearchForMusic", "Search for Music")
 
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    @if (Model.SearchForMusic)
-                    {
-                        <input type="checkbox" id="SearchForMusic" name="SearchForMusic" checked="checked"><label for="SearchForMusic">Search for Music</label>
-                    }
-                    else
-                    {
-                        <input type="checkbox" id="SearchForMusic" name="SearchForMusic"><label for="SearchForMusic">Search for Music</label>
-                    }
-
-                </div>
-            </div>
 
             <div class="form-group">
                 <div class="checkbox">
@@ -218,7 +196,9 @@
 <script>
     $(function () {
 
-
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
         new Clipboard('.fa-clipboard');
 
 

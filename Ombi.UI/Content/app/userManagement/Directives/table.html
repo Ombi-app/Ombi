@@ -75,7 +75,9 @@
                 {{u.permissionsFormattedString}}
             </td>
             <td ng-hide="hideColumns">
-                {{u.type === 1 ? 'Local User' : 'Plex User'}}
+                <span ng-if="u.type === 1">Local User</span>
+                <span ng-if="u.type === 0">Plex User</span>
+                <span ng-if="u.type === 2">Emby User</span>
             </td>
             <td ng-hide="hideColumns" ng-bind="u.lastLoggedIn === minDate ? 'Never' : formatDate(u.lastLoggedIn)"></td>
             <td>

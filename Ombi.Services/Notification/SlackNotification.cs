@@ -31,116 +31,24 @@ using NLog;
 using Ombi.Api.Interfaces;
 using Ombi.Api.Models.Notifications;
 using Ombi.Core;
-using Ombi.Core.Models;
 using Ombi.Core.SettingModels;
-using Ombi.Services.Interfaces;
 
 namespace Ombi.Services.Notification
 {
-    public class SlackNotification : INotification
+    public class SlackNotification : BaseNotification<SlackNotificationSettings>
     {
-        public SlackNotification(ISlackApi api, ISettingsService<SlackNotificationSettings> sn)
+        public SlackNotification(ISlackApi api, ISettingsService<SlackNotificationSettings> sn) : base(sn)
         {
             Api = api;
-            Settings = sn;
         }
 
-        public string NotificationName => "SlackNotification";
+        public override string NotificationName => "SlackNotification";
 
         private ISlackApi Api { get; }
-        private ISettingsService<SlackNotificationSettings> Settings { get; }
-        private static Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
 
 
-        public async Task NotifyAsync(NotificationModel model)
-        {
-            var settings = Settings.GetSettings();
-
-            await NotifyAsync(model, settings);
-        }
-
-        public async Task NotifyAsync(NotificationModel model, Settings settings)
-        {
-            if (settings == null) await NotifyAsync(model);
-
-            var pushSettings = (SlackNotificationSettings)settings;
-            if (!ValidateConfiguration(pushSettings))
-            {
-                Log.Error("Settings for Slack was not correct, we cannot push a notification");
-                return;
-            }
-
-            switch (model.NotificationType)
-            {
-                case NotificationType.NewRequest:
-                    await PushNewRequestAsync(model, pushSettings);
-                    break;
-                case NotificationType.Issue:
-                    await PushIssueAsync(model, pushSettings);
-                    break;
-                case NotificationType.RequestAvailable:
-                    break;
-                case NotificationType.RequestApproved:
-                    break;
-                case NotificationType.AdminNote:
-                    break;
-                case NotificationType.Test:
-                    await PushTest(pushSettings);
-                    break;
-                case NotificationType.RequestDeclined:
-                    break;
-                case NotificationType.ItemAddedToFaultQueue:
-                    await PushFaultQueue(model, pushSettings);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private async Task PushNewRequestAsync(NotificationModel model, SlackNotificationSettings settings)
-        {
-            var message = $"{model.Title} has been requested by user: {model.User}";
-            await Push(settings, message);
-        }
-
-        private async Task PushIssueAsync(NotificationModel model, SlackNotificationSettings settings)
-        {
-            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
-            await Push(settings, message);
-        }
-
-        private async Task PushTest(SlackNotificationSettings settings)
-        {
-            var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
-            await Push(settings, message);
-        }
-
-        private async Task PushFaultQueue(NotificationModel model, SlackNotificationSettings settings)
-        {
-            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
-            await Push(settings, message);
-        }
-
-        private async Task Push(SlackNotificationSettings config, string message)
-        {
-            try
-            {
-                var notification = new SlackNotificationBody { username = config.Username, channel = config.Channel ?? string.Empty, text = message };
-
-                var result = await Api.PushAsync(config.Team, config.Token, config.Service, notification);
-                if (!result.Equals("ok"))
-                {
-                    Log.Error("Slack returned a message that was not 'ok', the notification did not get pushed");
-                    Log.Error($"Message that slack returned: {result}");
-                }
-            }
-            catch (Exception e)
-            {
-                Log.Error(e);
-            }
-        }
-
-        private bool ValidateConfiguration(SlackNotificationSettings settings)
+        protected override bool ValidateConfiguration(SlackNotificationSettings settings)
         {
             if (!settings.Enabled)
             {
@@ -161,6 +69,81 @@ namespace Ombi.Services.Notification
                 return false;
             }
             return true;
+        }
+
+        protected override async Task NewRequest(NotificationModel model, SlackNotificationSettings settings)
+        {
+            var message = $"{model.Title} has been requested by user: {model.User}";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task Issue(NotificationModel model, SlackNotificationSettings settings)
+        {
+            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override async Task AddedToRequestQueue(NotificationModel model, SlackNotificationSettings settings)
+        {
+            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
+
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
+        }
+
+        protected override Task RequestDeclined(NotificationModel model, SlackNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task RequestApproved(NotificationModel model, SlackNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override Task AvailableRequest(NotificationModel model, SlackNotificationSettings settings)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override async Task Send(NotificationMessage model, SlackNotificationSettings config)
+        {
+            try
+            {
+                var notification = new SlackNotificationBody { username = config.Username, channel = config.Channel ?? string.Empty, text = model.Message };
+
+                var result = await Api.PushAsync(config.Team, config.Token, config.Service, notification);
+                if (!result.Equals("ok"))
+                {
+                    Log.Error("Slack returned a message that was not 'ok', the notification did not get pushed");
+                    Log.Error($"Message that slack returned: {result}");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+            }
+        }
+
+        protected override async Task Test(NotificationModel model, SlackNotificationSettings settings)
+        {
+            var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
+            var notification = new NotificationMessage
+            {
+                Message = message,
+            };
+            await Send(notification, settings);
         }
     }
 }

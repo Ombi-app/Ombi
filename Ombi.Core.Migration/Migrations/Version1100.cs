@@ -37,6 +37,7 @@ using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Migration.Migrations
@@ -46,7 +47,7 @@ namespace Ombi.Core.Migration.Migrations
     {
         public Version1100(IUserRepository userRepo, IRequestService requestService, ISettingsService<LogSettings> log,
             IPlexApi plexApi, ISettingsService<PlexSettings> plexService,
-            IPlexUserRepository plexusers, ISettingsService<PlexRequestSettings> prSettings,
+            IExternalUserRepository<PlexUsers> plexusers, ISettingsService<PlexRequestSettings> prSettings,
             ISettingsService<UserManagementSettings> umSettings,
             ISettingsService<ScheduledJobsSettings> sjs, IRepository<UsersToNotify> usersToNotify)
         {
@@ -69,7 +70,7 @@ namespace Ombi.Core.Migration.Migrations
         private ISettingsService<LogSettings> Log { get; }
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
-        private IPlexUserRepository PlexUsers { get; }
+        private IExternalUserRepository<PlexUsers> PlexUsers { get; }
         private ISettingsService<PlexRequestSettings> PlexRequestSettings { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
@@ -180,7 +181,7 @@ namespace Ombi.Core.Migration.Migrations
             try
             {
                 var settings = PlexSettings.GetSettings();
-                if (string.IsNullOrEmpty(settings.PlexAuthToken))
+                if (string.IsNullOrEmpty(settings.PlexAuthToken) || !settings.Enable)
                 {
                     return;
                 }

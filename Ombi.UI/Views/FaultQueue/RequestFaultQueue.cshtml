@@ -22,6 +22,9 @@
                     <th>
                         Error Description
                     </th>
+                    <th>
+                        Delete
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -44,6 +47,7 @@
                         <td>
                             @m.Message
                         </td>
+                        <td class="delete" id="@m.Id"><i class="fa fa-times"></i></td>
                     </tr>
                 }
             </tbody>
@@ -52,57 +56,42 @@
     </fieldset>
 </div>
 
-@*<script>
+<script>
 
-        var base = '@Html.GetBaseUrl()';
-        $('#autoUpdate')
-            .click(function (e) {
-                e.preventDefault();
-                $('body').append("<i class=\"fa fa-spinner fa-spin fa-5x fa-fw\" style=\"position: absolute; top: 20%; left: 50%;\"></i>");
-                $('#autoUpdate').prop("disabled", "disabled");
-                document.getElementById("lightbox").style.display = "";
-                var count = 0;
-                setInterval(function () {
-                    count++;
-                    var dots = new Array(count % 10).join('.');
-                    document.getElementById('autoUpdate').innerHTML = "Updating" + dots;
-                }, 1000);
+    $(function () {
 
-                $.ajax({
-                    type: "Post",
-                    url: "autoupdate",
-                    data: { url: "@Model.Status.DownloadUri" },
-                    dataType: "json",
-                    error: function () {
-                        setTimeout(
-                             function () {
-                                 location.reload();
-                             }, 30000);
-                    }
-                });
-            });
+        $('.refresh').click(function (e) {
+            var id = e.currentTarget.id;
 
-        $('#saveSettings').click(function (e) {
-            e.preventDefault();
-            var $form = $("#mainForm");
+            var ev = $(e.currentTarget.children[0]);
+            ev.addClass("fa-spin");
 
-            var branches = $("#branches option:selected").val();
-
-            var data = $form.serialize();
-            data = data + "&branch=" + branches;
+            var url = createLocalUrl("/admin/deleteFault");
             $.ajax({
-                type: $form.prop("method"),
-                url: $form.prop("action"),
-                data: data,
+                type: 'POST',
+                data: { key: id },
+                url: url,
                 dataType: "json",
                 success: function (response) {
                     if (response.result === true) {
-                        generateNotify(response.message, "success");
-
+                        generateNotify("Success!", "success");
+                        ev.removeClass("fa-spin");
+                        ev.addClass("fa-check");
                     } else {
                         generateNotify(response.message, "warning");
+                        ev.removeClass("fa-spin");
+                        ev.addClass("fa-exclamation");
                     }
+                },
+                error: function (e) {
+                    console.log(e);
+                    generateNotify("Something went wrong!", "danger");
+                    ev.removeClass("fa-spin");
+                    ev.addClass("fa-exclamation");
                 }
             });
+
         });
-    </script>*@
+
+    });
+</script>

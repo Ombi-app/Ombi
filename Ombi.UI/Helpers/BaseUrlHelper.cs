@@ -283,11 +283,30 @@ namespace Ombi.UI.Helpers
 
             var assetLocation = GetBaseUrl();
             var content = GetContentUrl(assetLocation);
+            var sb = new StringBuilder();
 
-            var asset = $"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon.ico\" />";
-            asset += $"<link rel=\"icon\" href=\"{content}/Content/favicon.ico\" type=\"image/ico\" />";
+            sb.Append($"<link rel=\"SHORTCUT ICON\" href=\"{content}/Content/favicon/favicon.ico\" />");
+            sb.Append($"<link rel=\"icon\" href=\"{content}/Content/favicon/favicon.ico?v2\" type=\"image/ico\" />");
 
-            return helper.Raw(asset);
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"{content}/Content/favicon/apple-icon-57x57.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"{content}/Content/favicon/apple-icon-60x60.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"{content}/Content/favicon/apple-icon-72x72.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"{content}/Content/favicon/apple-icon-76x76.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"{content}/Content/favicon/apple-icon-114x114.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"{content}/Content/favicon/apple-icon-120x120.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"{content}/Content/favicon/apple-icon-144x144.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"{content}/Content/favicon/apple-icon-152x152.png?v2\">");
+            sb.Append($"<link rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"{content}/Content/favicon/apple-icon-180x180.png?v2\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"192x192\"  href=\"{content}/Content/favicon/android-icon-192x192.png?v2\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"32x32\" href=\"{content}/Content/favicon/favicon-32x32.png?v2\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"96x96\" href=\"{content}/Content/favicon/favicon-96x96.png?v2\">");
+            sb.Append($"<link rel=\"icon\" type=\"image/png\" sizes=\"16x16\" href=\"{content}/Content/favicon/favicon-16x16.png?v2\">");
+            sb.Append($"<link rel=\"manifest\" href=\"{content}/Content/favicon/manifest.json?v2\">");
+            sb.Append($"<meta name=\"msapplication-TileColor\" content=\"#ffffff\">");
+            sb.Append($"<meta name=\"msapplication-TileImage\" content=\"{content}/Content/favicon/ms-icon-144x144.png?v2\">");
+            sb.Append($"<meta name=\"theme-color\" content=\"#ffffff\">");
+
+            return helper.Raw(sb.ToString());
         }
 
         public static IHtmlString GetSidebarUrl(this HtmlHelpers helper, NancyContext context, string url, string title, string icon = null)
@@ -314,6 +333,7 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
+
             var returnString = context.Request.Path == url ?
                                       $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>"
                                       : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title}</a></li>";
@@ -328,12 +348,27 @@ namespace Ombi.UI.Helpers
             {
                 url = $"/{content}{url}";
             }
-
+            if (url.Contains("issues"))
+            {
+                var custom = GetCustomizationSettings();
+                if (!custom.EnableIssues)
+                {
+                    return helper.Raw(string.Empty);
+                }
+            }
             var returnString = context.Request.Path == url
                 ? $"<li class=\"active\"><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>"
                 : $"<li><a href=\"{url}\"><i class=\"fa fa-{fontIcon}\"></i> {title} {extraHtml}</a></li>";
 
             return helper.Raw(returnString);
+        }
+
+        public static IHtmlString ToolTip(this HtmlHelpers helper, string tooltipText)
+        {
+            //< span class="customTooltip" title="It also requires users to have the Newsletter feature"><i class="fa fa-info-circle"></i></span>
+            return
+                helper.Raw(
+                    $"<span class=\"customTooltip\" title=\"{tooltipText}\"><i class=\"fa fa-info-circle\"></i></span>");
         }
 
         public static IHtmlString GetBaseUrl(this HtmlHelpers helper)
@@ -344,6 +379,12 @@ namespace Ombi.UI.Helpers
         public static IHtmlString GetApplicationName(this HtmlHelpers helper)
         {
             return helper.Raw(GetCustomizationSettings().ApplicationName);
+        }
+
+        public static IHtmlString GetMediaServerName(this HtmlHelpers helper)
+        {
+            var s = GetEmbySettings();
+            return helper.Raw(s.Enable ? "Emby" : "Plex");
         }
 
         private static string GetBaseUrl()
@@ -363,9 +404,19 @@ namespace Ombi.UI.Helpers
 
         private static CustomizationSettings GetCustomizationSettings()
         {
-            var returnValue = Cache.GetOrSet(CacheKeys.GetPlexRequestSettings, () =>
+            var returnValue = Cache.GetOrSet(CacheKeys.GetCustomizationSettings, () =>
             {
                 var settings = Locator.Resolve<ISettingsService<CustomizationSettings>>().GetSettings();
+                return settings;
+            });
+            return returnValue;
+        }
+
+        private static EmbySettings GetEmbySettings()
+        {
+            var returnValue = Cache.GetOrSet(CacheKeys.GetEmbySettings, () =>
+            {
+                var settings = Locator.Resolve<ISettingsService<EmbySettings>>().GetSettings();
                 return settings;
             });
             return returnValue;
