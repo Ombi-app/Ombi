@@ -63,7 +63,9 @@ namespace Ombi.Core.Users
                     Username = localUsers.UserName,
                     UserAlias = props.UserAlias,
                     EmailAddress = props.EmailAddress,
-                    Permissions = (Permissions) localUsers.Permissions
+                    Permissions = (Permissions) localUsers.Permissions,
+                    UserId = localUsers.UserGuid,
+                    Features = (Features)localUsers.Features
                 };
             }
 
@@ -76,7 +78,10 @@ namespace Ombi.Core.Users
                     Username = plexUsers.Username,
                     UserAlias = plexUsers.UserAlias,
                     EmailAddress = plexUsers.EmailAddress,
-                    Permissions = (Permissions)plexUsers.Permissions
+                    Permissions = (Permissions)plexUsers.Permissions,
+                    UserId = plexUsers.PlexUserId,
+
+                    Features = (Features)plexUsers.Features
                 };
             }
 
@@ -89,7 +94,9 @@ namespace Ombi.Core.Users
                     Username = embyUsers.Username,
                     UserAlias = embyUsers.UserAlias,
                     EmailAddress = embyUsers.EmailAddress,
-                    Permissions = (Permissions)embyUsers.Permissions
+                    Permissions = (Permissions)embyUsers.Permissions,
+                    UserId = embyUsers.EmbyUserId,
+                    Features = (Features)embyUsers.Features
                 };
             }
             return null;

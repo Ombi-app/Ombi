@@ -49,7 +49,7 @@ using PlexMediaType = Ombi.Store.Models.Plex.PlexMediaType;
 
 namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 {
-    public class 
+    public class
         PlexRecentlyAddedNewsletter : HtmlTemplateGenerator, IPlexNewsletter
     {
         public PlexRecentlyAddedNewsletter(IPlexApi api, ISettingsService<PlexSettings> plexSettings,
@@ -168,7 +168,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                         recentlyAddedModel.Add(new PlexRecentlyAddedModel
                         {
                             Metadata = i,
-                            EpisodeMetadata = new List<PlexEpisodeMetadata>() {episodeInfo},
+                            EpisodeMetadata = new List<PlexEpisodeMetadata>() { episodeInfo },
                             Content = relatedSeries
                         });
                     }
@@ -186,33 +186,12 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                         continue;
 
                     }
-                    //var ep = filteredEp.Where(x => x.ShowTitle == t.Title);
 
-                    if (filteredEp.Any())
+                    info.Add(new PlexRecentlyAddedModel
                     {
-                        var episodeList = new List<PlexEpisodeMetadata>();
-                        foreach (var ep in filteredEp)
-                        {
-                            var epInfo = Api.GetEpisodeMetaData(plexSettings.PlexAuthToken, plexSettings.FullUri,
-                                ep.RatingKey);
-                            episodeList.Add(epInfo);
-                        }
-
-                        info.Add(new PlexRecentlyAddedModel
-                        {
-                            Metadata = i,
-                            Content = t,
-                            EpisodeMetadata = episodeList
-                        });
-                    }
-                    else
-                    {
-                        info.Add(new PlexRecentlyAddedModel
-                        {
-                            Metadata = i,
-                            Content = t
-                        });
-                    }
+                        Metadata = i,
+                        Content = t
+                    });
                 }
             }
             GenerateTvHtml(info, sb);

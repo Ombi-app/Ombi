@@ -76,7 +76,7 @@
             </td>
             <td ng-hide="hideColumns">
                 <span ng-if="u.type === 1">Local User</span>
-                <span ng-if="u.type === 3">Plex User</span>
+                <span ng-if="u.type === 0">Plex User</span>
                 <span ng-if="u.type === 2">Emby User</span>
             </td>
             <td ng-hide="hideColumns" ng-bind="u.lastLoggedIn === minDate ? 'Never' : formatDate(u.lastLoggedIn)"></td>
