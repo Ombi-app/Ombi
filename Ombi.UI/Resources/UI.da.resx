@@ -486,4 +486,7 @@
   <data name="Layout_CacherRunning" xml:space="preserve">
     <value>En baggrund proces kører i øjeblikket, så der kan være nogle uventede problemer. Dette bør ikke tage for lang tid.</value>
   </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Beklager, men denne funktionalitet er i øjeblikket kun for brugere med Plex konti!</value>
+  </data>
 </root>
