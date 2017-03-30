@@ -159,9 +159,11 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                         var i = Api.GetInformation(relatedSeries.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
                             embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
 
+                        Thread.Sleep(200);
                         var episodeInfo = Api.GetInformation(embyEpisodes.EmbyId,
                             Ombi.Api.Models.Emby.EmbyMediaType.Episode,
                             embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+                        
                         // Check if we already have this series
                         var existingSeries = recentlyAddedModel.FirstOrDefault(x =>
                             x.EmbyInformation.SeriesInformation.Id.Equals(i.SeriesInformation.Id,
@@ -197,35 +199,11 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
                         embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                    var ep = filteredEp.Where(x => x.ParentId == t.EmbyId).ToList();
                     var item = new EmbyRecentlyAddedModel
                     {
                         EmbyContent = t,
                         EmbyInformation = i,
                     };
-                    if (ep.Any() && embySettings.EnableEpisodeSearching)
-                    {
-                        try
-                        {
-                            var episodeList = new List<EmbyEpisodeInformation>();
-                            foreach (var embyEpisodese in ep)
-                            {
-                                var epInfo = Api.GetInformation(embyEpisodese.EmbyId,
-                                    Ombi.Api.Models.Emby.EmbyMediaType.Episode,
-                                    embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                                episodeList.Add(epInfo.EpisodeInformation);
-                                Thread.Sleep(600); // Let's not try and overload the server
-                            }
-                            item.EpisodeInformation = episodeList;
-                        }
-                        catch (JsonReaderException)
-                        {
-                            Log.Error(
-                                "Failed getting episode information, we may have overloaded Emby's api... Waiting and we will skip this one and go to the next");
-                            Thread.Sleep(1000);
-                        }
-                    }
-
                     info.Add(item);
                 }
             }

@@ -826,6 +826,15 @@ namespace Ombi.UI.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorry, but this functionality is currently only for users with Plex accounts.
+        /// </summary>
+        public static string Search_ErrorPlexAccountOnly {
+            get {
+                return ResourceManager.GetString("Search_ErrorPlexAccountOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to First Season.
         /// </summary>
         public static string Search_FirstSeason {

@@ -499,4 +499,7 @@
   <data name="Search_Actors" xml:space="preserve">
     <value>Actors</value>
   </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Sorry, but this functionality is currently only for users with Plex accounts</value>
+  </data>
 </root>
