@@ -121,10 +121,10 @@
     <value>Anmelden</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Möchten Sie einen Film oder eine Serie schauen, die momentan noch nicht auf {0}ist? Dann loggen Sie sich unten ein und fordern Sie das Material an!</value>
+    <value>Möchten Sie einen Film oder eine Serie schauen, die momentan noch nicht in {0} verfügbar ist? Dann melden Sie sich an und erstellen eine Anfrage!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
-    <value>Deine Login-Daten werden nur zur Authorisierung deines Plex-Konto verwendet.</value>
+    <value>Deine Anmeldedaten werden nur zur Authorisierung deines Plex-Konto verwendet.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
     <value>Benutzername</value>
@@ -139,7 +139,7 @@
     <value>Anmelden</value>
   </data>
   <data name="Javascript_SomethingWentWrong" xml:space="preserve">
-    <value>Irgendetwas ist falsch gelaufen</value>
+    <value>Irgendetwas ist schief gelaufen</value>
   </data>
   <data name="Javascript_Success" xml:space="preserve">
     <value>Erfolg</value>
@@ -169,10 +169,10 @@
     <value>Passwort ändern</value>
   </data>
   <data name="Layout_Logout" xml:space="preserve">
-    <value>Ausloggen</value>
+    <value>Abmelden</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Es ist ein neues Update verfügbar! Klicke</value>
+    <value>Aktualisierung verfügbar! Hier klicken</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
     <value>Englisch</value>
@@ -211,7 +211,7 @@
     <value>Alben</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Möchtest Du etwas schauen, das derzeit nicht auf {0} ist?! Kein Problem! Suche einfach unten danach und frage es an!</value>
+    <value>Möchtest du etwas schauen, das derzeit nicht in {0} verfügbar ist?! Kein Problem! Suche unten einfach danach und frage es an!</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Suche</value>
@@ -226,7 +226,7 @@
     <value>Momentan im Kino</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Sende mir eine Benachrichtigung, wenn die Serien oder die Filme, die ich angefordert habe, hinzugefügt wurden.</value>
+    <value>Sende mir eine Benachrichtigung, wenn eine eigene Anfrage erfüllt wurde..</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
     <value>Speichern</value>
@@ -235,10 +235,10 @@
     <value>Verfügbar</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
-    <value>angefordert</value>
+    <value>angefragt</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
-    <value>Anfordern</value>
+    <value>Anfragen</value>
   </data>
   <data name="Search_AllSeasons" xml:space="preserve">
     <value>Alle Staffeln</value>
@@ -250,7 +250,7 @@
     <value>Neueste Staffel</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>Auswählen</value>
+    <value>Staffel auswählen</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
     <value>Problem melden</value>
@@ -265,7 +265,7 @@
     <value>Falscher Inhalt</value>
   </data>
   <data name="Issues_Playback" xml:space="preserve">
-    <value>Wiedergabe-Probleme</value>
+    <value>Wiedergabeprobleme</value>
   </data>
   <data name="Issues_Other" xml:space="preserve">
     <value>Sonstiges</value>
@@ -283,7 +283,7 @@
     <value>Schliessen</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Fügen ein Problem hinzu</value>
+    <value>Füge ein Problem hinzu</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
     <value>Änderungen speichern</value>
@@ -292,13 +292,13 @@
     <value>Staffel</value>
   </data>
   <data name="Layout_Welcome" xml:space="preserve">
-    <value>Herzlich willkommen</value>
+    <value>Willkommen</value>
   </data>
   <data name="Requests_Title" xml:space="preserve">
     <value>Anfragen</value>
   </data>
   <data name="Requests_Paragraph" xml:space="preserve">
-    <value>Unten befinden sich alle Anfragen aller Benutzer. Hier ist auch der aktuelle Status des beantragten Titels ersichtlich.</value>
+    <value>Unten befinden sich alle Anfragen aller Benutzer und der Status zu jeder Anfrage..</value>
   </data>
   <data name="Requests_MoviesTabTitle" xml:space="preserve">
     <value>Filme</value>
@@ -370,13 +370,13 @@
     <value>Veröffentlichung</value>
   </data>
   <data name="Requests_SeasonsRequested" xml:space="preserve">
-    <value>Staffeln angefragt</value>
+    <value>angefragte Staffeln</value>
   </data>
   <data name="Requests_RequestedBy" xml:space="preserve">
-    <value>Beantragt von</value>
+    <value>Angefragt von</value>
   </data>
   <data name="Requests_RequestedDate" xml:space="preserve">
-    <value>Angefragt vor</value>
+    <value>Angefragt am</value>
   </data>
   <data name="Requests_ToggleDropdown" xml:space="preserve">
     <value>Toggle Dropdown</value>
@@ -406,37 +406,37 @@
     <value>wurde erfolgreich hinzugefügt!</value>
   </data>
   <data name="Search_AlreadyRequested" xml:space="preserve">
-    <value>wurde schon angefragt</value>
+    <value>wurde bereits angefragt!</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>Wir konnten nicht prüfen ob {0} bereits auf {1}ist. Bist du sicher dass alles richtig installiert ist?</value>
+    <value>Wir konnten nicht prüfen ob {0} bereits in {1} verfügbar ist. Bist du sicher, dass alles richtig eingerichtet ist?</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
-    <value>Etwas ging etwas schief beim Hinzufügen des Filmes zu CouchPotato! Bitte überprüfe deine Einstellungen.</value>
+    <value>Etwas ging etwas schief beim hinzufügen des Filmes zu CouchPotato! Bitte überprüfe deine Einstellungen.</value>
   </data>
   <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
-    <value>Du hast dein wöchentliches Anfragekontingent für neue Filme erreicht. Bitte kontaktiere den Administrator.</value>
+    <value>Limit für wöchentliche Filmanfragen erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>ist bereits auf {0}!</value>
+    <value>Bereits verfügbar in Plex!</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
-    <value>Etwas ging etwas schief beim Hinzufügen des Filmes zu SickRage! Bitte überprüfe deine Einstellungen.</value>
+    <value>Etwas ging etwas schief beim hinzufügen des Filmes zu SickRage! Bitte überprüfe deine Einstellungen.</value>
   </data>
   <data name="Search_TvNotSetUp" xml:space="preserve">
-    <value>Das Anfragen für Serien ist momentan nicht richtig konfiguriert. Bitte kontaktiere den Administrator.</value>
+    <value>Die Anfrage für Serien ist momentan nicht richtig eingerichtet. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
-    <value>Du hast dein wöchentliches Anfragekontingent für neue Alben erreicht. Bitte kontaktiere den Administrator.</value>
+    <value>Limit für wöchentliche Albumanfragen erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_MusicBrainzError" xml:space="preserve">
     <value>Wir konnten den Interpreten auf MusicBrainz leider nicht finden. Bitte versuche es später erneut oder kontaktiere den Administrator.</value>
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
-    <value>Du hast dein wöchentliches Anfragekontingent für neue Serien erreicht. Bitte kontaktiere den Administrator.</value>
+    <value>Limit für wöchentliche Serienanfragen erreicht. Bitte kontaktiere den Administrator.</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
-    <value>Entschuldige, aber dein Administrator hat diese Funktion noch nicht freigeschaltet.</value>
+    <value>Entschuldige, der Administrator hat diese Funktion noch nicht freigeschaltet.</value>
   </data>
   <data name="Search_NotificationError" xml:space="preserve">
     <value>Wir konnten diese Meldung nicht entfernen.</value>
@@ -448,42 +448,51 @@
     <value>Französisch</value>
   </data>
   <data name="Search_SelectEpisode" xml:space="preserve">
-    <value>Wähle Episode</value>
+    <value>Wählen Sie ihre Episode</value>
   </data>
   <data name="UserLogin_IncorrectUserPass" xml:space="preserve">
-    <value>Falscher Benutzername oder Passwort</value>
+    <value>Falscher Benutzer oder Passwort</value>
   </data>
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
-    <value>Es gibt noch keinen Release-Termin.</value>
+    <value>Es gibt noch keine Informationen zum Veröffentlichsdatum</value>
   </data>
   <data name="Search_ViewInPlex" xml:space="preserve">
     <value>Zeige in Plex</value>
   </data>
   <data name="Custom_Donation_Default" xml:space="preserve">
-    <value>Spende zum Serveradministrator</value>
+    <value>Spenden an Bibliothek Inhaber</value>
   </data>
   <data name="Search_Available_on_plex" xml:space="preserve">
-    <value>Verfügbar auf Plex</value>
+    <value>Verfügbar in Plex</value>
   </data>
   <data name="Search_Movie_Status" xml:space="preserve">
-    <value>Filmstatus</value>
+    <value>Film Status</value>
   </data>
   <data name="Search_Not_Requested_Yet" xml:space="preserve">
-    <value>Noch nicht angefragt</value>
+    <value>Noch nicht veröffentlicht</value>
   </data>
   <data name="Search_Pending_approval" xml:space="preserve">
     <value>Genehmigung ausstehend</value>
   </data>
   <data name="Search_Processing_Request" xml:space="preserve">
-    <value>Anfrage wird bearbeitet.</value>
+    <value>In Bearbeitung</value>
   </data>
   <data name="Search_Request_denied" xml:space="preserve">
-    <value>Anfrage verweigert.</value>
+    <value>Anfrage abgelehnt.</value>
   </data>
   <data name="Search_TV_Show_Status" xml:space="preserve">
-    <value>TV-Show-Status</value>
+    <value>Serien Status</value>
   </data>
   <data name="Layout_CacherRunning" xml:space="preserve">
-    <value>Ein Hintergrundprozess läuft gerade, der zu unerwartetem Verhalten führen könnte. Dies sollte nicht allzu lange dauern.</value>
+    <value>Aufgrund der Indexierung aller verfügbaren Filme und Serien auf dem Plex Server kann es zu unerwarteten Problemen kommen. Dies sollte nicht zu lange dauern.</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Entschuldige, diese Funktion ist momentan nur für Plex Benutzer freigeschaltet.</value>
+  </data>
+  <data name="Layout_Usermanagement" xml:space="preserve">
+    <value>Benutzerverwaltung</value>
+  </data>
+  <data name="UserLogin_AdminUsePassword" xml:space="preserve">
+    <value>Benutze die andere Anmeldeseite, wenn du ein Adminstrator bist</value>
   </data>
 </root>
