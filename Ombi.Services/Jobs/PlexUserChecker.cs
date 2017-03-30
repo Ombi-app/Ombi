@@ -31,6 +31,7 @@ using System;
 using System.Linq;
 using NLog;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Plex;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
 using Ombi.Core.Users;
@@ -89,7 +90,7 @@ namespace Ombi.Services.Jobs
                 var localUsers = LocalUserRepository.GetAll().ToList();
 
                 // Regular users
-                foreach (var user in plexUsers.User)
+                foreach (var user in plexUsers?.User ?? new UserFriends[]{})
                 {
                     var dbUser = dbUsers.FirstOrDefault(x => x.PlexUserId == user.Id);
                     if (dbUser != null)
