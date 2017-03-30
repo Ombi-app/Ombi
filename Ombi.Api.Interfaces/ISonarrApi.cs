@@ -56,5 +56,8 @@ namespace Ombi.Api.Interfaces
         Series UpdateSeries(Series series, string apiKey, Uri baseUrl);
         SonarrSeasonSearchResult SearchForSeason(int seriesId, int seasonNumber, string apiKey, Uri baseUrl);
         SonarrSeriesSearchResult SearchForSeries(int seriesId, string apiKey, Uri baseUrl);
+
+
+        SonarrAddSeries AddSeries(SonarrAddSeries series, string apiKey, Uri baseUrl);
     }
 }
