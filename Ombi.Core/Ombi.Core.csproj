@@ -155,8 +155,9 @@
     <Compile Include="StatusChecker\AppveyorArtifactResult.cs" />
     <Compile Include="StatusChecker\StatusChecker.cs" />
     <Compile Include="StatusChecker\AppveyorBranchResult.cs" />
-    <Compile Include="TvSender.cs" />
-    <Compile Include="TvSenderOld.cs" />
+    <Compile Include="Tv\TvSender.cs" />
+    <Compile Include="Tv\TvSenderOld.cs" />
+    <Compile Include="Tv\TvSenderV2.cs" />
     <Compile Include="Users\IUserHelper.cs" />
     <Compile Include="Users\UserHelper.cs" />
     <Compile Include="UserIdentity.cs" />

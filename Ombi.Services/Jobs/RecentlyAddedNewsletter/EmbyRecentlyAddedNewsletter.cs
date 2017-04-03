@@ -45,6 +45,7 @@ using Ombi.Store.Models.Emby;
 using Ombi.Store.Repository;
 using TMDbLib.Objects.Exceptions;
 using EmbyMediaType = Ombi.Store.Models.Plex.EmbyMediaType;
+using Polly;
 
 namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 {
@@ -121,14 +122,20 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
             {
-
-                var i = Api.GetInformation(m.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Movie,
-                    embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                info.Add(new EmbyRecentlyAddedModel
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                    Log.Error(exception, "Exception thrown when processing an emby movie for the newsletter, Retrying {0}", timespan));
+                var result = policy.Execute(() =>
                 {
-                    EmbyInformation = i,
-                    EmbyContent = m
+                    var i = Api.GetInformation(m.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Movie,
+                        embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+
+                    return new EmbyRecentlyAddedModel
+                    {
+                        EmbyInformation = i,
+                        EmbyContent = m
+                    };
                 });
+                info.Add(result);
             }
             GenerateMovieHtml(info, sb);
             newsletter.MovieCount = info.Count;
@@ -142,44 +149,49 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 var recentlyAddedModel = new List<EmbyRecentlyAddedModel>();
                 foreach (var embyEpisodes in filteredEp)
                 {
-                    // Let's sleep, Emby can't keep up with us.
-                    Thread.Sleep(1000);
                     try
                     {
+                        var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                            Log.Error(exception, "Exception thrown when processing an emby episode for the newsletter, Retrying {0}", timespan));
 
-                        // Find related series item
-                        var relatedSeries = series.FirstOrDefault(x => x.EmbyId == embyEpisodes.ParentId);
-
-                        if (relatedSeries == null)
+                        policy.Execute(() =>
                         {
-                            continue;
-                        }
+                            // Find related series item
+                            var relatedSeries = series.FirstOrDefault(x => x.EmbyId == embyEpisodes.ParentId);
 
-                        // Get series information
-                        var i = Api.GetInformation(relatedSeries.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
-                            embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-
-                        var episodeInfo = Api.GetInformation(embyEpisodes.EmbyId,
-                            Ombi.Api.Models.Emby.EmbyMediaType.Episode,
-                            embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                        // Check if we already have this series
-                        var existingSeries = recentlyAddedModel.FirstOrDefault(x =>
-                            x.EmbyInformation.SeriesInformation.Id.Equals(i.SeriesInformation.Id,
-                                StringComparison.CurrentCultureIgnoreCase));
-
-                        if (existingSeries != null)
-                        {
-                            existingSeries.EpisodeInformation.Add(episodeInfo.EpisodeInformation);
-                        }
-                        else
-                        {
-                            recentlyAddedModel.Add(new EmbyRecentlyAddedModel
+                            if (relatedSeries == null)
                             {
-                                EmbyInformation = i,
-                                EpisodeInformation = new List<EmbyEpisodeInformation>() { episodeInfo.EpisodeInformation },
-                                EmbyContent = relatedSeries
-                            });
-                        }
+                                return;
+                            }
+
+                            // Get series information
+                            var i = Api.GetInformation(relatedSeries.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
+                                    embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+
+                            Thread.Sleep(200);
+                            var episodeInfo = Api.GetInformation(embyEpisodes.EmbyId,
+                                Ombi.Api.Models.Emby.EmbyMediaType.Episode,
+                                embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+
+                            // Check if we already have this series
+                            var existingSeries = recentlyAddedModel.FirstOrDefault(x =>
+                                    x.EmbyInformation.SeriesInformation.Id.Equals(i.SeriesInformation.Id,
+                                        StringComparison.CurrentCultureIgnoreCase));
+
+                            if (existingSeries != null)
+                            {
+                                existingSeries.EpisodeInformation.Add(episodeInfo.EpisodeInformation);
+                            }
+                            else
+                            {
+                                recentlyAddedModel.Add(new EmbyRecentlyAddedModel
+                                {
+                                    EmbyInformation = i,
+                                    EpisodeInformation = new List<EmbyEpisodeInformation>() { episodeInfo.EpisodeInformation },
+                                    EmbyContent = relatedSeries
+                                });
+                            }
+                        });
 
                     }
                     catch (JsonReaderException)
@@ -195,37 +207,21 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             {
                 foreach (var t in filteredSeries)
                 {
-                    var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
-                        embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                    var ep = filteredEp.Where(x => x.ParentId == t.EmbyId).ToList();
-                    var item = new EmbyRecentlyAddedModel
-                    {
-                        EmbyContent = t,
-                        EmbyInformation = i,
-                    };
-                    if (ep.Any() && embySettings.EnableEpisodeSearching)
-                    {
-                        try
-                        {
-                            var episodeList = new List<EmbyEpisodeInformation>();
-                            foreach (var embyEpisodese in ep)
-                            {
-                                var epInfo = Api.GetInformation(embyEpisodese.EmbyId,
-                                    Ombi.Api.Models.Emby.EmbyMediaType.Episode,
-                                    embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
-                                episodeList.Add(epInfo.EpisodeInformation);
-                                Thread.Sleep(600); // Let's not try and overload the server
-                            }
-                            item.EpisodeInformation = episodeList;
-                        }
-                        catch (JsonReaderException)
-                        {
-                            Log.Error(
-                                "Failed getting episode information, we may have overloaded Emby's api... Waiting and we will skip this one and go to the next");
-                            Thread.Sleep(1000);
-                        }
-                    }
 
+
+                    var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
+                        Log.Error(exception, "Exception thrown when processing an emby series for the newsletter, Retrying {0}", timespan));
+                    var item = policy.Execute(() =>
+                    {
+                        var i = Api.GetInformation(t.EmbyId, Ombi.Api.Models.Emby.EmbyMediaType.Series,
+                            embySettings.ApiKey, embySettings.AdministratorId, embySettings.FullUri);
+                        var model = new EmbyRecentlyAddedModel
+                        {
+                            EmbyContent = t,
+                            EmbyInformation = i,
+                        };
+                        return model;
+                    });
                     info.Add(item);
                 }
             }
@@ -252,6 +248,14 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
                         ProviderId = a.ProviderId,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
+                foreach (var s in filteredSeries)
+                {
+                    RecentlyAddedLog.Insert(new RecentlyAddedLog
+                    {
+                        ProviderId = s.ProviderId,
                         AddedAt = DateTime.UtcNow
                     });
                 }

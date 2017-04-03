@@ -48,6 +48,7 @@
       <HintPath>..\packages\NLog.4.3.6\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Polly, Version=4.3.0.0, Culture=neutral, PublicKeyToken=c8a3ffc3f8f825cc" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Security" />

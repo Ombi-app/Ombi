@@ -148,6 +148,42 @@ namespace Ombi.Api
             return result;
         }
 
+        public SonarrAddSeries AddSeries(SonarrAddSeries series,string apiKey, Uri baseUrl)
+        {
+            
+            var request = new RestRequest
+            {
+                Resource = "/api/Series?",
+                Method = Method.POST
+            };
+            
+            Log.Debug("Sonarr API Options:");
+            Log.Debug(series.DumpJson());
+
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(series);
+
+            SonarrAddSeries result;
+            try
+            {
+                var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) => Log.Error(exception, "Exception when calling AddSeries for Sonarr, Retrying {0}", timespan), new TimeSpan[] {
+                    TimeSpan.FromSeconds (2)
+                });
+
+                result = policy.Execute(() => Api.ExecuteJson<SonarrAddSeries>(request, baseUrl));
+            }
+            catch (JsonSerializationException jse)
+            {
+                Log.Error(jse);
+                var error = Api.ExecuteJson<List<SonarrError>>(request, baseUrl);
+                var messages = error?.Select(x => x.errorMessage).ToList();
+                messages?.ForEach(x => Log.Error(x));
+                result = new SonarrAddSeries { ErrorMessages = messages };
+            }
+
+            return result;
+        }
+
         public SonarrAddSeries AddSeriesNew(int tvdbId, string title, int qualityId, bool seasonFolders, string rootPath, int[] seasons, string apiKey, Uri baseUrl, bool monitor = true, bool searchForMissingEpisodes = false)
         {
             var request = new RestRequest
@@ -244,7 +280,18 @@ namespace Ombi.Api
                     TimeSpan.FromSeconds(5)
                 });
 
-                return policy.Execute(() => Api.ExecuteJson<List<Series>>(request, baseUrl));
+                var series =  policy.Execute(() => Api.ExecuteJson<List<Series>>(request, baseUrl));
+
+                // Remove the 'specials from the object'
+                foreach (var s in series)
+                {
+                    var seasonToRemove = s.seasons.FirstOrDefault(x => x.seasonNumber == 0);
+                    if (seasonToRemove != null)
+                    {
+                        s.seasons.Remove(seasonToRemove);
+                    }
+                }
+                return series;
             }
             catch (Exception e)
             {
@@ -266,7 +313,15 @@ namespace Ombi.Api
                             Log.Error(exception, "Exception when calling GetSeries by ID for Sonarr, Retrying {0}",
                                 timespan));
 
-                return policy.Execute(() => Api.ExecuteJson<Series>(request, baseUrl));
+                var series = policy.Execute(() => Api.ExecuteJson<Series>(request, baseUrl));
+
+                // Remove the specials season
+                var toRemove = series.seasons.FirstOrDefault(x => x.seasonNumber == 0);
+                if (toRemove != null)
+                {
+                    series.seasons.Remove(toRemove);
+                }
+                return series;
             }
             catch (Exception e)
             {

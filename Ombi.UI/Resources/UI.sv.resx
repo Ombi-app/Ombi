@@ -121,13 +121,13 @@
     <value>Logga in</value>
   </data>
   <data name="UserLogin_Paragraph" xml:space="preserve">
-    <value>Vill du titta på en film eller TV-show, men det är inte närvarande på {0}? Logga in nedan med användarnamn och lösenord !!</value>
+    <value>Vill du se en film eller serie som för närvarande inte finns på  {0}? Logga in här!</value>
   </data>
   <data name="UserLogin_Paragraph_SpanHover" xml:space="preserve">
     <value>Dina inloggningsuppgifter används endast för att autentisera ditt Plex-konto.</value>
   </data>
   <data name="UserLogin_Username" xml:space="preserve">
-    <value>Användarnamn</value>
+    <value>användarnamn</value>
   </data>
   <data name="UserLogin_Username_Placeholder" xml:space="preserve">
     <value>Användarnamn</value>
@@ -151,16 +151,16 @@
     <value>Sök</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Begäran</value>
+    <value>Önsningar</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
-    <value>Frågor</value>
+    <value>Problem</value>
   </data>
   <data name="Layout_Donate" xml:space="preserve">
     <value>Donera</value>
   </data>
   <data name="Layout_Admin" xml:space="preserve">
-    <value>admin</value>
+    <value>Admin</value>
   </data>
   <data name="Layout_Settings" xml:space="preserve">
     <value>Inställningar</value>
@@ -172,10 +172,10 @@
     <value>Logga ut</value>
   </data>
   <data name="Layout_UpdateAvailablePart1" xml:space="preserve">
-    <value>Det finns en ny uppdatering tillgänglig! Klick</value>
+    <value>Det finns en uppdatering! Klicka</value>
   </data>
   <data name="Layout_English" xml:space="preserve">
-    <value>Svenska</value>
+    <value>Engelska</value>
   </data>
   <data name="Layout_Spanish" xml:space="preserve">
     <value>Spanska</value>
@@ -196,25 +196,25 @@
     <value>Italienska</value>
   </data>
   <data name="Layout_UpdateAvailablePart2" xml:space="preserve">
-    <value>Här</value>
+    <value>här!</value>
   </data>
   <data name="Layout_Dutch" xml:space="preserve">
-    <value>dutch</value>
+    <value>Nederländska</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
-    <value>Fråga</value>
+    <value>Problem</value>
   </data>
   <data name="Search_Movies" xml:space="preserve">
     <value>Filmer</value>
   </data>
   <data name="Search_TvShows" xml:space="preserve">
-    <value>Tv program</value>
+    <value>Serier</value>
   </data>
   <data name="Search_Albums" xml:space="preserve">
     <value>Album</value>
   </data>
   <data name="Search_Paragraph" xml:space="preserve">
-    <value>Vill titta på något som inte är närvarande på {0}?! Inga problem! Bara söka efter den nedan och begär det !</value>
+    <value>Vill du se en film eller serie som för närvarande inte finns på {0}? Inga problem, önska den nedan!</value>
   </data>
   <data name="Search_Title" xml:space="preserve">
     <value>Sök</value>
@@ -226,10 +226,10 @@
     <value>Kommer snart</value>
   </data>
   <data name="Search_InTheaters" xml:space="preserve">
-    <value>Teater</value>
+    <value>På bio</value>
   </data>
   <data name="Search_SendNotificationText" xml:space="preserve">
-    <value>Skicka mig ett meddelande när objekt jag har begärt har lagts till!</value>
+    <value>Skicka mig ett meddelande när mina önskade objekt finns tillgängliga</value>
   </data>
   <data name="Common_Save" xml:space="preserve">
     <value>Spara</value>
@@ -238,7 +238,7 @@
     <value>Tillgänglig</value>
   </data>
   <data name="Search_Requested" xml:space="preserve">
-    <value>Begärd</value>
+    <value>Önskad</value>
   </data>
   <data name="Search_AllSeasons" xml:space="preserve">
     <value>Alla säsonger</value>
@@ -250,10 +250,10 @@
     <value>Senaste säsongen</value>
   </data>
   <data name="Search_SelectSeason" xml:space="preserve">
-    <value>Välj</value>
+    <value>Välj säsong</value>
   </data>
   <data name="Search_ReportIssue" xml:space="preserve">
-    <value>Rapporten fråga</value>
+    <value>Rapportera problem</value>
   </data>
   <data name="Issues_WrongAudio" xml:space="preserve">
     <value>Fel ljud</value>
@@ -271,7 +271,7 @@
     <value>Annat</value>
   </data>
   <data name="Search_TrackCount" xml:space="preserve">
-    <value>Spår räknas</value>
+    <value>Antal spår</value>
   </data>
   <data name="Search_Country" xml:space="preserve">
     <value>Land</value>
@@ -283,28 +283,28 @@
     <value>Stäng</value>
   </data>
   <data name="Issues_Modal_Title" xml:space="preserve">
-    <value>Lägg till en fråga</value>
+    <value>Rapportera problem</value>
   </data>
   <data name="Issues_Modal_Save" xml:space="preserve">
-    <value>Spara Ändringar</value>
+    <value>Spara ändringar</value>
   </data>
   <data name="Search_Season" xml:space="preserve">
-    <value>Årstid</value>
+    <value>Säsong</value>
   </data>
   <data name="Layout_Welcome" xml:space="preserve">
     <value>Välkommen</value>
   </data>
   <data name="Requests_Title" xml:space="preserve">
-    <value>Begäran</value>
+    <value>Önskning</value>
   </data>
   <data name="Requests_Paragraph" xml:space="preserve">
-    <value>Nedan kan du se din och alla andra förfrågningar, liksom deras nedladdning och godkännandestatus.</value>
+    <value>Nedan kan du se alla önskningar och följa deras status.</value>
   </data>
   <data name="Requests_MoviesTabTitle" xml:space="preserve">
     <value>Filmer</value>
   </data>
   <data name="Requests_TvShowTabTitle" xml:space="preserve">
-    <value>Tv program</value>
+    <value>Serier</value>
   </data>
   <data name="Requests_AlbumsTabTitle" xml:space="preserve">
     <value>Album</value>
@@ -316,10 +316,10 @@
     <value>Godkänn filmer</value>
   </data>
   <data name="Requests_DeleteTVShows" xml:space="preserve">
-    <value>Radera TV-program</value>
+    <value>Radera serier</value>
   </data>
   <data name="Requests_ApproveTvShows" xml:space="preserve">
-    <value>Godkänna TV-program</value>
+    <value>Godkänn serier</value>
   </data>
   <data name="Requests_DeleteMusic" xml:space="preserve">
     <value>Radera musik</value>
@@ -334,46 +334,46 @@
     <value>Godkänd</value>
   </data>
   <data name="Requests_Filter_NotApproved" xml:space="preserve">
-    <value>Ej Godkänd</value>
+    <value>Ej godkänd</value>
   </data>
   <data name="Requests_Filter_Available" xml:space="preserve">
     <value>Tillgänglig</value>
   </data>
   <data name="Requests_Filter_NotAvailable" xml:space="preserve">
-    <value>Inte tillgängligt</value>
+    <value>Ej tillgänglig</value>
   </data>
   <data name="Requests_Filter_Released" xml:space="preserve">
-    <value>Släppte ut</value>
+    <value>Släppt</value>
   </data>
   <data name="Requests_Filter_NotReleased" xml:space="preserve">
-    <value>Inte släppt</value>
+    <value>Ej släppt</value>
   </data>
   <data name="Requests_Order" xml:space="preserve">
-    <value>Beställning</value>
+    <value>Sortera</value>
   </data>
   <data name="Requests_Filter" xml:space="preserve">
     <value>Filter</value>
   </data>
   <data name="Requests_Order_LatestRequests" xml:space="preserve">
-    <value>Senaste förfrågningar</value>
+    <value>Senaste önskningar</value>
   </data>
   <data name="Requests_Order_OldestRequests" xml:space="preserve">
-    <value>Äldsta önskemål</value>
+    <value>Äldsta önskningar</value>
   </data>
   <data name="Requests_Order_LatestReleases" xml:space="preserve">
-    <value>Senaste versionerna</value>
+    <value>Senaste releaser</value>
   </data>
   <data name="Requests_Order_OldestReleases" xml:space="preserve">
-    <value>Äldsta meddelanden</value>
+    <value>Äldsta releaser</value>
   </data>
   <data name="Requests_ReleaseDate" xml:space="preserve">
-    <value>Släpptes</value>
+    <value>Utgivningsdatum</value>
   </data>
   <data name="Requests_SeasonsRequested" xml:space="preserve">
-    <value>Säsonger Requested</value>
+    <value>Säsonger önskade</value>
   </data>
   <data name="Requests_RequestedBy" xml:space="preserve">
-    <value>Begärd av</value>
+    <value>Önskat av</value>
   </data>
   <data name="Requests_RequestedDate" xml:space="preserve">
     <value>Önskat datum</value>
@@ -385,13 +385,13 @@
     <value>Godkänn</value>
   </data>
   <data name="Common_Remove" xml:space="preserve">
-    <value>ta bort</value>
+    <value>Radera</value>
   </data>
   <data name="Requests_MarkUnavailable" xml:space="preserve">
-    <value>Ej tillgänglig</value>
+    <value>Markera som ej tillgänglig</value>
   </data>
   <data name="Requests_MarkAvailable" xml:space="preserve">
-    <value>Tillgänglig</value>
+    <value>Markera som tillgänglig</value>
   </data>
   <data name="Common_Approved" xml:space="preserve">
     <value>Godkänd</value>
@@ -403,46 +403,46 @@
     <value>Problem</value>
   </data>
   <data name="Search_SuccessfullyAdded" xml:space="preserve">
-    <value>Pall är tillagd korrekt</value>
+    <value>lades till</value>
   </data>
   <data name="Search_AlreadyRequested" xml:space="preserve">
-    <value>har redan begärts</value>
+    <value>har redan önskats</value>
   </data>
   <data name="Search_CouldNotCheckPlex" xml:space="preserve">
-    <value>Vi kunde inte kontrollera om {0} är i {1}, är du säker det är korrekt installation?</value>
+    <value>Vi kunde inte kontrollera om {0} finns på {1}. Kontrollera att inställningarna är korrekta.</value>
   </data>
   <data name="Search_CouchPotatoError" xml:space="preserve">
-    <value>Något gick fel att lägga till filmen i CouchPotato! Kontrollera inställningarna.</value>
+    <value>Kunde inte lägga till filmen i CouchPotato. Kontrollera att inställningarna är korrekta.</value>
   </data>
   <data name="Search_WeeklyRequestLimitMovie" xml:space="preserve">
-    <value>Du har nått din weekly begäran gräns för filmer! Kontakta din admin.</value>
+    <value>Du har nått din veckoönskningsgräns för filmer. Kontakta din administratör.</value>
   </data>
   <data name="Search_AlreadyInPlex" xml:space="preserve">
-    <value>är redan i {0}</value>
+    <value>finns redan på {0}.</value>
   </data>
   <data name="Search_SickrageError" xml:space="preserve">
-    <value>Något gick fel att lägga till filmen i SickRage! Kontrollera inställningarna.</value>
+    <value>Kunde inte lägga till filmen i SickRage. Kontrollera att inställningarna är korrekta.</value>
   </data>
   <data name="Search_TvNotSetUp" xml:space="preserve">
-    <value>Begäran av TV-program är inte korrekt inställd. Kontakta din admin.</value>
+    <value>Det går för närvarande inte att önska serier. Kontakta din administratör.</value>
   </data>
   <data name="Search_WeeklyRequestLimitAlbums" xml:space="preserve">
-    <value>Du har nått din weekly begäran gräns för album! Kontakta din admin.</value>
+    <value>Du har nått din veckoönskningsgräns för album. Kontakta din administratör.</value>
   </data>
   <data name="Search_MusicBrainzError" xml:space="preserve">
-    <value>Vi kunde inte hitta artisten på MusicBrainz. Försök igen senare eller kontakta din admin</value>
+    <value>Vi kunde inte hitta artisten på MusicBrainz. Kontakta din administratör.</value>
   </data>
   <data name="Search_WeeklyRequestLimitTVShow" xml:space="preserve">
-    <value>Du har nått din weekly begäran gräns för TV-program! Kontakta din admin.</value>
+    <value>Du har nått din veckoönskningsgräns för serier. Kontakta din administratör.</value>
   </data>
   <data name="Search_ErrorNotEnabled" xml:space="preserve">
-    <value>Ledsen, men administratören har ännu inte aktiverat denna funktion.</value>
+    <value>Denna funktion är inte aktiverad.</value>
   </data>
   <data name="Search_NotificationError" xml:space="preserve">
-    <value>Vi kunde inte ta bort denna anmälan eftersom du aldrig haft det</value>
+    <value>Notisen kunde inte tas bort eftersom den inte varit aktiverad.</value>
   </data>
   <data name="Common_CouldNotSave" xml:space="preserve">
-    <value>Kunde inte spara, försök igen</value>
+    <value>Kunde inte spara, försök igen.</value>
   </data>
   <data name="Layout_French" xml:space="preserve">
     <value>Franska</value>
@@ -454,36 +454,45 @@
     <value>Felaktig användare eller lösenord</value>
   </data>
   <data name="Requests_ReleaseDate_Unavailable" xml:space="preserve">
-    <value>Det finns ingen information tillgänglig för release datum</value>
+    <value>Ingen information om utgivningsdatum finns.</value>
   </data>
   <data name="Search_ViewInPlex" xml:space="preserve">
-    <value>Vy I Plex</value>
+    <value>Visa på Plex</value>
   </data>
   <data name="Custom_Donation_Default" xml:space="preserve">
-    <value>Donera till bibliotek Ansvarig</value>
+    <value>Donera till biblioteksansvarig</value>
   </data>
   <data name="Search_Available_on_plex" xml:space="preserve">
-    <value>Tillgänglig den</value>
+    <value>Tillgänglig på</value>
   </data>
   <data name="Search_Movie_Status" xml:space="preserve">
-    <value>Film status</value>
+    <value>Filmstatus</value>
   </data>
   <data name="Search_Not_Requested_Yet" xml:space="preserve">
-    <value>Inte Begärd ännu</value>
+    <value>Ej önskad ännu</value>
   </data>
   <data name="Search_Pending_approval" xml:space="preserve">
     <value>Väntar på godkännande</value>
   </data>
   <data name="Search_Processing_Request" xml:space="preserve">
-    <value>Bearbetning förfrågan</value>
+    <value>Behandlar önskning</value>
   </data>
   <data name="Search_Request_denied" xml:space="preserve">
-    <value>Förfrågan nekad</value>
+    <value>Önskning nekad</value>
   </data>
   <data name="Search_TV_Show_Status" xml:space="preserve">
-    <value>Visa status</value>
+    <value>Seriestatus</value>
   </data>
   <data name="Layout_CacherRunning" xml:space="preserve">
-    <value>En bakgrundsprocess är igång, så det kan finnas några oväntade beteende. Detta bör inte ta alltför lång tid.</value>
+    <value>För närvarande körs bakgrundsindexeringar av innehåller på Plex. Detta kan medföra vissa störningar, men funktionaliteten bör vara återställd inom kort!</value>
+  </data>
+  <data name="Search_ErrorPlexAccountOnly" xml:space="preserve">
+    <value>Denna funktion är tyvärr endast tillgänglig för Plex-användare.</value>
+  </data>
+  <data name="Layout_Usermanagement" xml:space="preserve">
+    <value>Användarhantering</value>
+  </data>
+  <data name="UserLogin_AdminUsePassword" xml:space="preserve">
+    <value>Om du är administratör, vänligen använd den andra inloggningssidan.</value>
   </data>
 </root>

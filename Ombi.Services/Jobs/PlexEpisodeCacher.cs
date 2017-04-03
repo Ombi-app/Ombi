@@ -109,7 +109,7 @@ namespace Ombi.Services.Jobs
                 var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, video.RatingKey);
 
                 // Loop through the metadata and create the model to insert into the DB
-                foreach (var metadataVideo in metadata.Video)
+                foreach (var metadataVideo in metadata?.Video ?? new List<Video>())
                 {
                     if(string.IsNullOrEmpty(metadataVideo.GrandparentTitle))
                     {
@@ -119,11 +119,11 @@ namespace Ombi.Services.Jobs
                     entities.TryAdd(
                         new PlexEpisodes
                         {
-                            EpisodeNumber = epInfo.EpisodeNumber,
+                            EpisodeNumber = epInfo?.EpisodeNumber ?? 0,
                             EpisodeTitle = metadataVideo.Title,
-                            ProviderId = epInfo.ProviderId,
+                            ProviderId = epInfo?.ProviderId ?? "",
                             RatingKey = metadataVideo.RatingKey,
-                            SeasonNumber = epInfo.SeasonNumber,
+                            SeasonNumber = epInfo?.SeasonNumber ?? 0,
                             ShowTitle = metadataVideo.GrandparentTitle
                         },
                         1);
@@ -152,15 +152,7 @@ namespace Ombi.Services.Jobs
                     return;
                 }
 
-                var jobs = Job.GetJobs();
-                var job = jobs.FirstOrDefault(x => x.Name.Equals(JobNames.EpisodeCacher, StringComparison.CurrentCultureIgnoreCase));
-                if (job != null)
-                {
-                    if (job.LastRun > DateTime.Now.AddHours(-11)) // If it's been run in the last 11 hours
-                    {
-                        return;
-                    }
-                }
+               
                 Job.SetRunning(true, JobNames.EpisodeCacher);
                 CacheEpisodes(s);
             }
