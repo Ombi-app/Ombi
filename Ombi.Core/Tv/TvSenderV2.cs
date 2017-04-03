@@ -87,41 +87,65 @@ namespace Ombi.Core.Tv
 
             if (requestAll ?? false)
             {
-                return await ProcessSonarrRequestAll(sonarrSettings, model, qualityProfile, rootFolderPath);
+                return await ProcessSonarrRequestSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
             }
 
             if (first ?? false)
             {
-                return await ProcessSonarrRequestFirstSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
+                return await ProcessSonarrRequestSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
             }
 
             if (latest ?? false)
             {
-                return await ProcessSonarrRequestLatestSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
+                return await ProcessSonarrRequestSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
             }
 
             if (specificSeasonRequest ?? false)
             {
-                return await ProcessSonarrRequestSpecificSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
+                return await ProcessSonarrRequestSeason(sonarrSettings, model, qualityProfile, rootFolderPath);
             }
 
             return null;
         }
 
-        private async Task<SonarrAddSeries> ProcessSonarrRequestSpecificSeason(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
+
+
+        private async Task<SonarrAddSeries> ProcessSonarrRequestSeason(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
         {
-            throw new NotImplementedException();
+            // Does the series exist?
+            var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
+            if (series == null)
+            {
+                //WORKS
+                // Add the series
+                return AddSeries(sonarrSettings, model, rootFolderPath, qualityId);
+            }
+            
+            // Also make sure the series is now monitored otherwise we won't search for it
+            series.monitored = true;
+            foreach (var seasons in series.seasons)
+            {
+                if (model.SeasonList.Any(x => x == seasons.seasonNumber))
+                {
+                    seasons.monitored = true;
+                }
+            }
+
+            // Send the update command
+            series = SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            return new SonarrAddSeries{title =  series.title};
         }
 
-        private async Task<SonarrAddSeries> ProcessSonarrRequestLatestSeason(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
+        
+
+        private async Task<SonarrAddSeries> ProcessSonarrEpisodeRequest(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
         {
             // Does the series exist?
 
             var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
             if (series == null)
             {
-                //WORKS
-                // Add the series
                 var seriesToAdd = new SonarrAddSeries
                 {
                     seasonFolder = sonarrSettings.SeasonFolders,
@@ -136,8 +160,8 @@ namespace Ombi.Core.Tv
                     addOptions = new AddOptions
                     {
                         ignoreEpisodesWithFiles = true, // We don't really care about these
-                        ignoreEpisodesWithoutFiles = false, // We want to get the whole season
-                        searchForMissingEpisodes = true // we want to search for missing
+                        ignoreEpisodesWithoutFiles = true, // We do not want to grab random episodes missing
+                        searchForMissingEpisodes = false // we want don't want to search for the missing episodes either
                     }
                 };
 
@@ -146,55 +170,91 @@ namespace Ombi.Core.Tv
                     var season = new Season
                     {
                         seasonNumber = i,
-                        // ReSharper disable once SimplifyConditionalTernaryExpression
-                        monitored = true ? model.SeasonList.Length == 0 || model.SeasonList.Any(x => x == i) : false
+                        monitored = false // Do not monitor any seasons
                     };
                     seriesToAdd.seasons.Add(season);
                 }
 
-                return SonarrApi.AddSeries(seriesToAdd, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+                // Add the series now
+                var result = SonarrApi.AddSeries(seriesToAdd, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+
+                await RequestEpisodesForSonarr(model, result.id, sonarrSettings);
+
             }
             else
             {
-                // Mark the latest as monitored and search
-                // Also make sure the series is now monitored otherwise we won't search for it
-                series.monitored = true;
-                foreach (var seasons in series.seasons)
-                {
-                    if (model.SeasonList.Any(x => x == seasons.seasonNumber))
-                    {
-                        seasons.monitored = true;
-                    }
-                }
-
-                // Send the update command
-                series = SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-                return new SonarrAddSeries{title =  series.title};
+                await RequestEpisodesForSonarr(model, series.id, sonarrSettings);
             }
+
+            return new SonarrAddSeries(){title = model.Title};
         }
 
-        private async Task<SonarrAddSeries> ProcessSonarrRequestFirstSeason(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
+        public SonarrAddSeries AddSeries(SonarrSettings sonarrSettings, RequestedModel model, string rootFolderPath, int qualityId)
         {
-            throw new NotImplementedException();
-        }
-
-        private async Task<SonarrAddSeries> ProcessSonarrRequestAll(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
-        {
-            throw new NotImplementedException();
-        }
-
-        private async Task<SonarrAddSeries> ProcessSonarrEpisodeRequest(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
-        {
-            // Does the series exist?
-
-            var series = await GetSonarrSeries(sonarrSettings, model.ProviderId);
-            if (series == null)
+            //WORKS
+            // Add the series
+            var seriesToAdd = new SonarrAddSeries
             {
-                // Add the series
+                seasonFolder = sonarrSettings.SeasonFolders,
+                title = model.Title,
+                qualityProfileId = qualityId,
+                tvdbId = model.ProviderId,
+                titleSlug = model.Title,
+                seasons = new List<Season>(),
+                rootFolderPath = rootFolderPath,
+                monitored = true, // Montior the series
+                images = new List<SonarrImage>(),
+                addOptions = new AddOptions
+                {
+                    ignoreEpisodesWithFiles = true, // We don't really care about these
+                    ignoreEpisodesWithoutFiles = false, // We want to get the whole season
+                    searchForMissingEpisodes = true // we want to search for missing
+                }
+            };
+
+            for (var i = 1; i <= model.SeasonCount; i++)
+            {
+                var season = new Season
+                {
+                    seasonNumber = i,
+                    monitored = model.SeasonList.Length == 0 || model.SeasonList.Any(x => x == i)
+                };
+                seriesToAdd.seasons.Add(season);
             }
 
-            return null;
+            return SonarrApi.AddSeries(seriesToAdd, sonarrSettings.ApiKey, sonarrSettings.FullUri);
+        }
+
+        private async Task RequestEpisodesForSonarr(RequestedModel model, int showId, SonarrSettings sonarrSettings)
+        {
+            // Now lookup all episodes
+            var ep = SonarrApi.GetEpisodes(showId.ToString(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
+            var episodes = ep?.ToList() ?? new List<SonarrEpisodes>();
+
+            var internalEpisodeIds = new List<int>();
+            var tasks = new List<Task>();
+            foreach (var r in model.Episodes)
+            {
+                // Match the episode and season number.
+                // If the episode is monitored we might not be searching for it.
+                var episode =
+                    episodes.FirstOrDefault(
+                        x => x.episodeNumber == r.EpisodeNumber && x.seasonNumber == r.SeasonNumber);
+                if (episode == null)
+                {
+                    continue;
+                }
+                var episodeInfo = SonarrApi.GetEpisode(episode.id.ToString(), sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri);
+                episodeInfo.monitored = true; // Set the episode to monitored
+                tasks.Add(Task.Run(() => SonarrApi.UpdateEpisode(episodeInfo, sonarrSettings.ApiKey,
+                    sonarrSettings.FullUri)));
+                internalEpisodeIds.Add(episode.id);
+            }
+
+            await Task.WhenAll(tasks.ToArray());
+
+            SonarrApi.SearchForEpisodes(internalEpisodeIds.ToArray(), sonarrSettings.ApiKey, sonarrSettings.FullUri);
         }
 
         public SickRageTvAdd SendToSickRage(SickRageSettings sickRageSettings, RequestedModel model)
