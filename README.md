@@ -18,7 +18,7 @@ ___
 | Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)             |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |
 # Features
 Here some of the features Ombi has:
-* All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
+* All your users to Request Movies, TV Shows (Whole series, whole seasons or even single episodes!) and Albums
 * Easily manage your requests
 * User management system (supports plex.tv accounts and local accounts)
 * Sending newsletters
@@ -89,7 +89,7 @@ If you feel like donating you can donate with the below buttons!
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
-### A massive thanks to everyone for all their helps!
+### A massive thanks to everyone for all their help!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
