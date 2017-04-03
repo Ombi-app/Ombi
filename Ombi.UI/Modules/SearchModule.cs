@@ -1120,7 +1120,8 @@ namespace Ombi.UI.Modules
                 RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                TvDbId = showId.ToString()
+                TvDbId = showId.ToString(),
+                ProviderId = showId
             };
 
             var totalSeasons = showInfo.Season.GroupBy(x => x.SeasonNumber);
@@ -1886,8 +1887,8 @@ namespace Ombi.UI.Modules
         {
             model.Approved = true;
             var s = await sonarrSettings;
-            //var sender = new TvSenderV2(SonarrApi, SickrageApi, Cache);
-            var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache);
+            var sender = new TvSenderV2(SonarrApi, SickrageApi, Cache);
+            //var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache);
             if (s.Enabled)
             {
                 var result = await sender.SendToSonarr(s, model);

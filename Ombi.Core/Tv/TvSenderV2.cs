@@ -120,24 +120,21 @@ namespace Ombi.Core.Tv
                 // Add the series
                 return AddSeries(sonarrSettings, model, rootFolderPath, qualityId);
             }
-            
+
             // Also make sure the series is now monitored otherwise we won't search for it
             series.monitored = true;
             foreach (var seasons in series.seasons)
             {
-                if (model.SeasonList.Any(x => x == seasons.seasonNumber))
-                {
-                    seasons.monitored = true;
-                }
+                seasons.monitored = true;
             }
 
             // Send the update command
             series = SonarrApi.UpdateSeries(series, sonarrSettings.ApiKey, sonarrSettings.FullUri);
             SonarrApi.SearchForSeries(series.id, sonarrSettings.ApiKey, sonarrSettings.FullUri);
-            return new SonarrAddSeries{title =  series.title};
+            return new SonarrAddSeries { title = series.title };
         }
 
-        
+
 
         private async Task<SonarrAddSeries> ProcessSonarrEpisodeRequest(SonarrSettings sonarrSettings, RequestedModel model, int qualityId, string rootFolderPath)
         {
@@ -186,7 +183,7 @@ namespace Ombi.Core.Tv
                 await RequestEpisodesForSonarr(model, series.id, sonarrSettings);
             }
 
-            return new SonarrAddSeries(){title = model.Title};
+            return new SonarrAddSeries() { title = model.Title };
         }
 
         public SonarrAddSeries AddSeries(SonarrSettings sonarrSettings, RequestedModel model, string rootFolderPath, int qualityId)
@@ -217,6 +214,7 @@ namespace Ombi.Core.Tv
                 var season = new Season
                 {
                     seasonNumber = i,
+                    // The model.SeasonList.Lenth is 0 when this is a "request all" 
                     monitored = model.SeasonList.Length == 0 || model.SeasonList.Any(x => x == i)
                 };
                 seriesToAdd.seasons.Add(season);

@@ -109,7 +109,7 @@ namespace Ombi.Services.Jobs
                 var metadata = PlexApi.GetEpisodeMetaData(settings.PlexAuthToken, settings.FullUri, video.RatingKey);
 
                 // Loop through the metadata and create the model to insert into the DB
-                foreach (var metadataVideo in metadata.Video)
+                foreach (var metadataVideo in metadata?.Video ?? new List<Video>())
                 {
                     if(string.IsNullOrEmpty(metadataVideo.GrandparentTitle))
                     {
@@ -119,11 +119,11 @@ namespace Ombi.Services.Jobs
                     entities.TryAdd(
                         new PlexEpisodes
                         {
-                            EpisodeNumber = epInfo.EpisodeNumber,
+                            EpisodeNumber = epInfo?.EpisodeNumber ?? 0,
                             EpisodeTitle = metadataVideo.Title,
-                            ProviderId = epInfo.ProviderId,
+                            ProviderId = epInfo?.ProviderId ?? "",
                             RatingKey = metadataVideo.RatingKey,
-                            SeasonNumber = epInfo.SeasonNumber,
+                            SeasonNumber = epInfo?.SeasonNumber ?? 0,
                             ShowTitle = metadataVideo.GrandparentTitle
                         },
                         1);
