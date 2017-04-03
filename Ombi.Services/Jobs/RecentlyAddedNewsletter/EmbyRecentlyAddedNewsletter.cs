@@ -251,6 +251,14 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                         AddedAt = DateTime.UtcNow
                     });
                 }
+                foreach (var s in filteredSeries)
+                {
+                    RecentlyAddedLog.Insert(new RecentlyAddedLog
+                    {
+                        ProviderId = s.ProviderId,
+                        AddedAt = DateTime.UtcNow
+                    });
+                }
             }
 
 

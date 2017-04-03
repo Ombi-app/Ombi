@@ -121,6 +121,12 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var filteredSeries = series.Where(x => recentlyAdded.All(c => c.ProviderId != x.ProviderId)).ToList();
 
             var info = new List<PlexRecentlyAddedModel>();
+
+            if (test && !filteredMovies.Any())
+            {
+                // if this is a test make sure we show something
+                filteredMovies = movie.Take(5).ToList();
+            }
             foreach (var m in filteredMovies)
             {
                 var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, m.ItemId);
@@ -178,6 +184,11 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             }
             else
             {
+                if (test && !filteredSeries.Any())
+                {
+                    // if this is a test make sure we show something
+                    filteredSeries = series.Take(5).ToList();
+                }
                 foreach (var t in filteredSeries)
                 {
                     var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
