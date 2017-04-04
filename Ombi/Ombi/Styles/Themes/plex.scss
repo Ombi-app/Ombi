@@ -121,10 +121,15 @@ legend {
 
 .navbar-default {
     background-color: #0a0a0a;
+    border-color: #0a0a0a;
 }
 
 .navbar-default .navbar-brand {
     color: #DF691A;
+}
+
+.nav-tabs {
+    border-bottom: 1px solid $bg-colour-disabled;
 }
 
 .navbar-default .navbar-nav > li > a:hover,

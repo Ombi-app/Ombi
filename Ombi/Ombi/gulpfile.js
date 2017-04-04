@@ -62,7 +62,6 @@ var paths = {
         {
             src: [
                 './bower_components/PACE/themes/purple/pace-theme-minimal.css',
-                './node_modules/bootstrap/dist/css/bootstrap.css',
                 './bower_components/font-awesome/css/font-awesome.css',
                 './node_modules/primeng/resources/primeng.css',
                 './node_modules/tether/dist/css/tether.css'

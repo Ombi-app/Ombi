@@ -679,7 +679,6 @@ $border-radius: 10px;
 
 .navbar-brand {
     float: left;
-    padding: 4.5px 15px;
     font-size: 19px;
     line-height: 21px;
     height: 40px;
@@ -687,4 +686,19 @@ $border-radius: 10px;
 
 .gravatar{
     border-radius:1em;
+}
+
+
+// Bootstrap overrides
+
+html {
+    font-size: 10px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
 }

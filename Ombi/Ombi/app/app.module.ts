@@ -10,6 +10,7 @@ import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 
+import { ButtonModule } from 'primeng/primeng';
 import { MenubarModule } from 'primeng/components/menubar/menubar';
 import { GrowlModule } from 'primeng/components/growl/growl';
 
@@ -26,7 +27,7 @@ const routes: Routes = [
         HttpModule,
         MenubarModule,
         GrowlModule,
-        //ITAdminModule
+        ButtonModule
     ],
     declarations: [
         AppComponent,
@@ -34,8 +35,7 @@ const routes: Routes = [
         SearchComponent
     ],
     providers: [
-        //MessageService,
-        //UtilService
+        //Services
     ],
     bootstrap: [AppComponent]
 })
