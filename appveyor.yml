@@ -21,14 +21,29 @@ after_build:
 - dotnet publish -c Release -r debian.8-x64
 - cmd: >-
     7z a Ombi_windows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
+    
+    
     7z a Ombi_osx.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\osx.10.12-x64\publish
+    
+    
     7z a Ombi_ubuntu.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\ubuntu.16.10-x64\publish
+    
+    
     7z a Ombi_debian.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\debian.8-x64\publish
 
+    
     appveyor PushArtifact Ombi_windows.zip
+    
+    
     appveyor PushArtifact Ombi_osx.zip
+    
+    
     appveyor PushArtifact Ombi_ubuntu.zip
+    
+    
     appveyor PushArtifact Ombi_debian.zip
+    
+    
 
 cache:
 - '%USERPROFILE%\.nuget\packages'
