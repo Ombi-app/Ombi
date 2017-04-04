@@ -9,6 +9,7 @@ assembly_info:
 
 
 before_build:
+- cmd: cd ombi/ombi
 - cmd: dotnet restore
 - cmd: npm install
 - cmd: dotnet publish -c Release -r win10-x64
