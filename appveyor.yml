@@ -12,6 +12,7 @@ before_build:
 - cmd: cd ombi/ombi
 - appveyor-retry dotnet restore
 - appveyor-retry npm install
+- appveyor-retry bower install
 build_script:
 - dotnet build
 after_build:

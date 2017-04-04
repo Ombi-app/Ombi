@@ -1,15 +1,21 @@
-﻿<!DOCTYPE html>
+﻿@*<!DOCTYPE html>*@
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Ombi</title>
     <base href="@Url.Content("~/")" />
-    <link href="@Url.Content("~/css/lib/pace-theme-center-simple.css")" rel="stylesheet" />
-    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="@Url.Content("~/lib/system.js")?v=@ViewBag.AssemblyVersion"></script>
-    <script src="@Url.Content("~/lib/jquery.js")?v=@ViewBag.AssemblyVersion"></script>
-    <script src="@Url.Content("~/lib/systemjs.config.js")?v=@ViewBag.AssemblyVersion"></script>
+    <script src="@Url.Content("~/lib/pace.js")?v=@ViewBag.AssemblyVersion"></script>
+    <link href="@Url.Content("~/css/lib/pace-theme-minimal.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/css/base.css")" rel="stylesheet" type="text/css"/>
+    <link href="@Url.Content("~/css/Themes/plex.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/css/lib/primeng.css")" rel="stylesheet" />*@
+
+    <script src="@Url.Content("~/lib/system.js")?v="></script>
+    <script src="@Url.Content("~/lib/jquery.js")?v="></script>
+    <script src="@Url.Content("~/lib/tether.js")?v="></script>
+    <script src="@Url.Content("~/lib/bootstrap.js")?v="></script>
+    <script src="@Url.Content("~/lib/systemjs.config.js")?v="></script>
 
 </head>
 <body>

@@ -47,10 +47,13 @@ var paths = {
                 file: './node_modules/systemjs/dist/system-polyfills.src.js',
                 rename: 'system-polyfills'
             },
-            './bower_components/jquery/dist/jquery.js',
+            {
+                file: './node_modules/jquery/dist/jquery.min.js',
+                rename: 'jquery'
+            },
             './bower_components/PACE/pace.js',
-            './primeng/ripple.js',
-            './node_modules/nanoscroller/bin/javascripts/jquery.nanoscroller.js',
+            './node_modules/bootstrap/dist/js/bootstrap.js',
+            './node_modules/tether/dist/js/tether.js',
             './systemjs.config.js'
         ],
         dest: './lib/'
@@ -58,9 +61,11 @@ var paths = {
     libcss: [ // Normal css files to be copied
         {
             src: [
-                './bower_components/PACE/themes/purple/pace-theme-center-simple.css',
+                './bower_components/PACE/themes/purple/pace-theme-minimal.css',
+                './node_modules/bootstrap/dist/css/bootstrap.css',
+                './bower_components/font-awesome/css/font-awesome.css',
                 './node_modules/primeng/resources/primeng.css',
-                './node_modules/nanoscroller/bin/css/nanoscroller.css'
+                './node_modules/tether/dist/css/tether.css'
             ],
             dest: './css/lib/'
         },
@@ -76,6 +81,20 @@ var paths = {
                 './bower_components/font-awesome/fonts/*'
             ],
             dest: './fonts/lib/'
+        },
+        {
+            src: [
+                './node_modules/primeng/resources/themes/omega/fonts/*'
+            ],
+            dest: './fonts/'
+        }
+    ],
+    libimages: [ // Library images
+        {
+            src: [
+                './node_modules/primeng/resources/themes/omega/images/*'
+            ],
+            dest: './images/'
         }
     ],
     modules: [ // This is for modules with multiple files that require each other, used when npm can't be used
@@ -176,6 +195,18 @@ gulp.task('libfonts', function () {
     return merge(streams);
 })
 
+
+gulp.task('libimages', function () {
+    var streams = []
+    for (let module of paths.libimages) {
+        streams.push(
+            gulp.src(module.src)
+            .pipe(gulp.dest(path.join(paths.wwwroot, module.dest)))
+        );
+    }
+    return merge(streams);
+})
+
 gulp.task('modules', function () {
     var streams = []
     for (let module of paths.modules) {
@@ -237,7 +268,7 @@ gulp.task('typescript', function () {
 
 gulp.task('fullvar', () => { global.full = true });
 gulp.task('libs')
-gulp.task('copy', ['lib', 'libcss', 'libfonts', 'npm', 'modules']);
+gulp.task('copy', ['lib', 'libcss', 'libfonts', 'libimages', 'npm', 'modules']);
 gulp.task('compile', ['sass']);
 gulp.task('build', callback => runSequence('copy', 'compile', callback));
 gulp.task('full', callback => runSequence('clean', 'build', callback));

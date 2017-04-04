@@ -1,10 +1,9 @@
 // Config
 
 enum envs {
-    local,
-    test,
-    next,
-    live
+    local = 0,
+    next = 1,
+    live = 2
 }
 
 var envVar = "#{Environment}";
@@ -19,7 +18,6 @@ export var config = {
     systemJS: {
         bundle: <boolean>{
             [envs.local]: false,
-            [envs.test]: true,
             [envs.next]: true,
             [envs.live]: true
         }[env]

@@ -16,6 +16,7 @@
     "@angular/router": "^4.0.0",
     "@types/jquery": "^2.0.33",
     "@types/systemjs": "^0.20.2",
+    "bootstrap": "4.0.0-alpha.6",
     "core-js": "^2.4.1",
     "del": "^2.2.2",
     "gulp": "~3.9.1",
@@ -29,6 +30,7 @@
     "gulp-sourcemaps": "^1.9.0",
     "gulp-systemjs-builder": "^0.15.0",
     "gulp-uglify": "^1.5.4",
+    "jquery": "3.2.1",
     "merge-stream": "^1.0.1",
     "nanoscroller": "^0.8.7",
     "primeng": "^2.0.5",
@@ -36,6 +38,7 @@
     "rxjs": "^5.0.3",
     "systemjs": "^0.19.41",
     "systemjs-builder": "^0.15.34",
+    "tether": "^1.4.0",
     "typescript": "^2.2.1",
     "zone.js": "^0.8.5"
   }

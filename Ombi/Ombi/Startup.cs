@@ -51,7 +51,14 @@ namespace Ombi
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseStaticFiles();
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".map"] = "application/octet-stream";
+
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                ContentTypeProvider = provider
+            });
+
             app.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = new PhysicalFileProvider(
@@ -65,10 +72,9 @@ namespace Ombi
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
 
-                routes.MapRoute(
-        name: "spa-fallback",
-        template: "{*url}",
-        defaults: new { controller = "Home", action = "Index" });
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new { controller = "Home", action = "Index" });
             });
         }
     }
