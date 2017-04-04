@@ -6,15 +6,25 @@ assembly_info:
   assembly_version: '2.2.0'
   assembly_file_version: '{version}'
   assembly_informational_version: '2.2.0'
+
+project: Ombi/Ombi.sln
 before_build:
+- cmd: dotnet restore
+- cmd: npm install
 - cmd: appveyor-retry nuget restore
 build:
   verbosity: minimal
 after_build:
 - cmd: >-
-    7z a Ombi.zip %APPVEYOR_BUILD_FOLDER%\Ombi.UI\bin\Release\
+    7z a OmbiWidnows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
+    7z a OmbiUbuntu.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\ubuntu.16.10-x64\publish
+    7z a OmbiOsx.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\osx.10.12-x64\publish
+    7z a OmbiDebian.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\debian.8-x64\publish
 
-    appveyor PushArtifact Ombi.zip
+    appveyor PushArtifact OmbiWindows.zip
+    appveyor PushArtifact OmbiUbuntu.zip
+    appveyor PushArtifact OmbiOsx.zip
+    appveyor PushArtifact OmbiDebian.zip
     
 deploy:
 - provider: GitHub
@@ -24,7 +34,3 @@ deploy:
   draft: true
   on:
     branch: master
-- provider: Environment
-  name: Microserver
-  on:
-    branch: dev
