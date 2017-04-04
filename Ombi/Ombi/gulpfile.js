@@ -248,7 +248,6 @@ gulp.task('bundle', function () {
         sourceMaps: true
     })
 })
-})
 
 gulp.task('typescript', function () {
     return run('tsc').exec();
