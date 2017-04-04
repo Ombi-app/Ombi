@@ -11,6 +11,7 @@ assembly_info:
 before_build:
 - cmd: cd ombi/ombi
 - appveyor-retry dotnet restore
+- appveyor-retry npm install bower -g
 - appveyor-retry npm install
 - appveyor-retry bower install
 build_script:
