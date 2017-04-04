@@ -17,8 +17,6 @@ before_build:
 - cmd: dotnet publish -c Release -r ubuntu.16.10-x64
 - cmd: dotnet publish -c Release -r debian.8-x64
 
-build:
-  verbosity: minimal
 after_build:
 - cmd: >-
     7z a OmbiWidnows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
