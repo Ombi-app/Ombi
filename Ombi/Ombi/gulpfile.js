@@ -152,7 +152,7 @@ gulp.task('lib', function () {
         streams.push(
             gulp.src(typeof module === "string" ? module : module.file)
                 .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(gulpif(global.full, uglify({ source_map: true })))
+                //.pipe(gulpif(global.full, uglify({ source_map: true })))
                 .pipe(rename(function (path) {
                     if (typeof module !== "string" && module.rename) {
                         path.basename = module.rename;
