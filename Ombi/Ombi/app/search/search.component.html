@@ -1,5 +1,5 @@
 ﻿ <h1 id="searchTitle">Search</h1>
-<h4>Search Para</h4>
+<h4>Search Paragraph</h4>
 <br />
 <!-- Nav tabs -->
 
@@ -20,9 +20,99 @@
         <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> TV Shows</a>
 
     </li>
-   
+   <!--
     <li role="presentation">
         <a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-music"></i> Albums</a>
-    </li>
+    </li>-->
    
 </ul>
+
+ <!-- Tab panes -->
+<div class="tab-content">
+
+    <!-- Movie tab -->
+    <div role="tabpanel" class="tab-pane active" id="MoviesTab">
+        <div class="input-group">
+            <input id="movieSearchContent" [ngModel]="searchText" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+            <div class="input-group-addon">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @UI.Search_Suggestions
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="moviesComingSoon" href="#">@UI.Search_ComingSoon</a></li>
+                        <li><a id="moviesInTheaters" href="#">@UI.Search_InTheaters</a></li>
+                    </ul>
+                </div>
+                <i id="movieSearchButton" class="fa fa-search"></i>
+            </div>
+        </div>
+        <br />
+        <br />
+        <!-- Movie content -->
+        <div id="movieList">
+        </div>
+    </div>
+
+    <!-- Actors tab -->
+    <div role="tabpanel" class="tab-pane" id="ActorsTab">
+        <div class="input-group">
+            <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+            <div class="input-group-addon">
+                <i id="actorSearchButton" class="fa fa-search"></i>
+            </div>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="actorsSearchNew" name="actorsSearchNew"><label for="actorsSearchNew">@UI.Search_NewOnly</label>
+        </div>
+
+        <br />
+        <br />
+        <!-- Movie content -->
+        <div id="actorMovieList">
+        </div>
+    </div>
+
+    <!-- TV tab -->
+    <div role="tabpanel" class="tab-pane" id="TvShowTab">
+        <div class="input-group">
+            <input id="tvSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+            <div class="input-group-addon">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        @UI.Search_Suggestions
+                        <i class="fa fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a id="popularShows" href="#">Popular Shows</a></li>
+                        <li><a id="trendingShows" href="#">Trending Shows</a></li>
+                        <li><a id="mostWatchedShows" href="#">Most Watched Shows</a></li>
+                        <li><a id="anticipatedShows" href="#">Most Anticipated Shows</a></li>
+                    </ul>
+                </div><i id="tvSearchButton" class="fa fa-search"></i>
+            </div>
+        </div>
+        <br />
+        <br />
+        <!-- TV content -->
+        <div id="tvList">
+        </div>
+    </div>
+
+    <!-- Music tab -->
+<!--    <div role="tabpanel" class="tab-pane" id="MusicTab">
+        <div class="input-group">
+            <input id="musicSearchContent" type="text" class="form-control form-control-custom form-control-search">
+            <div class="input-group-addon">
+                <i id="musicSearchButton" class="fa fa-search"></i>
+            </div>
+        </div>
+        <br />
+        <br />
+        <!-- Music content -->
+        <div id="musicList">
+        </div>
+    </div>
+    -->
+

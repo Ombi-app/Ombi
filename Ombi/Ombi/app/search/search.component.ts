@@ -1,10 +1,14 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 
 @Component({
     selector: 'ombi',
     moduleId: module.id,
     templateUrl: './search.component.html'
 })
-export class SearchComponent {
-    
+export class SearchComponent implements OnInit{
+    ngOnInit(): void {
+        this.searchText = "sadaa";
+    }
+
+    searchText : string;
 }
