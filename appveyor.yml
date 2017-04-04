@@ -15,7 +15,7 @@ before_build:
 - appveyor-retry npm install -g gulp 
 - appveyor-retry npm install
 - appveyor-retry bower install
-- gulp build
+- gulp publish
 build_script:
 - dotnet build
 after_build:
