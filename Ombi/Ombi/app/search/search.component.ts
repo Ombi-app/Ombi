@@ -7,7 +7,7 @@
 })
 export class SearchComponent implements OnInit{
     ngOnInit(): void {
-        this.searchText = "sadaa";
+        this.searchText = "";
     }
 
     searchText : string;
