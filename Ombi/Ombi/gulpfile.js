@@ -270,7 +270,7 @@ gulp.task('libs')
 gulp.task('copy', ['lib', 'libcss', 'libfonts', 'libimages', 'npm', 'modules']);
 gulp.task('compile', ['sass']);
 gulp.task('build', callback => runSequence('copy', 'compile', callback));
-gulp.task('full', callback => runSequence('clean', 'build', callback));
+gulp.task('full', callback => runSequence('build', callback));
 
 // Use this in a build server environment to compile and bundle everything
 gulp.task('publish', callback => runSequence('fullvar', 'full', 'typescript', 'bundle', callback));
