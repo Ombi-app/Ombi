@@ -19,7 +19,6 @@ before_build:
 
 build:
   verbosity: minimal
-  project: Ombi.sln
 after_build:
 - cmd: >-
     7z a OmbiWidnows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
