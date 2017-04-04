@@ -39,6 +39,7 @@
     "systemjs-builder": "^0.15.34",
     "tether": "^1.4.0",
     "typescript": "^2.2.1",
-    "zone.js": "^0.8.5"
+    "zone.js": "^0.8.5",
+    "bootstrap": "3.3.6"
   }
 }

@@ -4,7 +4,7 @@ var gulp = require('gulp');
 var sass = require('gulp-sass');
 var changed = require('gulp-changed');
 var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
+//var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var path = require('path');
 var del = require('del');
@@ -137,7 +137,7 @@ gulp.task('npm', function () {
         streams.push(
             gulp.src(file)
                 .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(gulpif(global.full, uglify({ source_map: true })))
+                //.pipe(gulpif(global.full, uglify({ source_map: true })))
                 .pipe(rename((path => { path.basename = module })))
                 .pipe(gulpif(global.full, sourcemaps.write('../maps')))
                 .pipe(gulp.dest(path.join(paths.wwwroot, paths.npm.dest)))
@@ -152,7 +152,7 @@ gulp.task('lib', function () {
         streams.push(
             gulp.src(typeof module === "string" ? module : module.file)
                 .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(gulpif(global.full, uglify({ source_map: true })))
+                //.pipe(gulpif(global.full, uglify({ source_map: true })))
                 .pipe(rename(function (path) {
                     if (typeof module !== "string" && module.rename) {
                         path.basename = module.rename;
@@ -212,7 +212,7 @@ gulp.task('modules', function () {
         streams.push(
             gulp.src(module.src)
                 .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(gulpif(global.full, uglify({ source_map: true })))
+               // .pipe(gulpif(global.full, uglify({ source_map: true })))
                 .pipe(gulpif(global.full, sourcemaps.write(`${module.name ? '.' : ''}./maps/${module.name ? module.name : ''}`)))
                 .pipe(gulp.dest(path.join(paths.wwwroot, module.dest)))
         );
