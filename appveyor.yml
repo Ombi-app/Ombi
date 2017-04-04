@@ -10,21 +10,22 @@ assembly_info:
 
 before_build:
 - cmd: cd ombi/ombi
-- cmd: dotnet restore
-- cmd: appveyor-retry npm install
-- cmd: dotnet publish -c Release -r win10-x64
-- cmd: dotnet publish -c Release -r osx.10.12-x64
-- cmd: dotnet publish -c Release -r ubuntu.16.10-x64
-- cmd: dotnet publish -c Release -r debian.8-x64
-
-build:
-  verbosity: minimal
+- appveyor-retry dotnet restore
+- appveyor-retry npm install
+build_script:
+- dotnet build
 after_build:
+- dotnet publish -c Release -r win10-x64
+- dotnet publish -c Release -r osx.10.12-x64
+- dotnet publish -c Release -r ubuntu.16.10-x64
+- dotnet publish -c Release -r debian.8-x64
 - cmd: >-
     7z a OmbiWidnows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
 
     appveyor PushArtifact OmbiWindows.zip
-    
+
+cache:
+- '%USERPROFILE%\.nuget\packages'
 deploy:
 - provider: GitHub
   release: Ombi v$(appveyor_build_version)
