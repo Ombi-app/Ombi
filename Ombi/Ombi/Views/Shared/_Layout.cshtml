@@ -1,0 +1,20 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Ombi</title>
+    <base href="@Url.Content("~/")" />
+    <link href="@Url.Content("~/css/lib/pace-theme-center-simple.css")" rel="stylesheet" />
+    <link href="//fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="@Url.Content("~/lib/system.js")?v=@ViewBag.AssemblyVersion"></script>
+    <script src="@Url.Content("~/lib/jquery.js")?v=@ViewBag.AssemblyVersion"></script>
+    <script src="@Url.Content("~/lib/systemjs.config.js")?v=@ViewBag.AssemblyVersion"></script>
+
+</head>
+<body>
+
+    @RenderBody()
+    <ombi></ombi>
+</body>
+</html>
