@@ -137,7 +137,7 @@ gulp.task('npm', function () {
         streams.push(
             gulp.src(file)
                 .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(gulpif(global.full, uglify({ source_map: true })))
+                //.pipe(gulpif(global.full, uglify({ source_map: true })))
                 .pipe(rename((path => { path.basename = module })))
                 .pipe(gulpif(global.full, sourcemaps.write('../maps')))
                 .pipe(gulp.dest(path.join(paths.wwwroot, paths.npm.dest)))
