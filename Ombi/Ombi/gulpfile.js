@@ -1,4 +1,4 @@
-﻿/// <binding BeforeBuild='build' Clean='clean' ProjectOpened='watch' />
+﻿/// <binding BeforeBuild='build' ProjectOpened='watch' />
 'use strict';
 var gulp = require('gulp');
 var sass = require('gulp-sass');
@@ -248,17 +248,6 @@ gulp.task('bundle', function () {
         sourceMaps: true
     })
 })
-
-gulp.task('clean', function () {
-    return del([
-        ...paths.npm.src.map(x => path.join(paths.npm.dest, x + "**")),
-        paths.sass.dest + paths.sass.filter,
-        paths.lib.dest,
-        paths.bundle.dest,
-        ...paths.modules.map(m => m.dest),
-        ...paths.libcss.map(m => m.dest + (m.filter ? m.filter : '')),
-        ...paths.libfonts.map(m => m.dest)
-    ].map(x => path.join(paths.wwwroot, x)), { force: true });
 })
 
 gulp.task('typescript', function () {
