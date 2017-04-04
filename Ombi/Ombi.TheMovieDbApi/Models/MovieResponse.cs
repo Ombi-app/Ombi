@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: BaseApiController.cs
+//    File: MovieResponse.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,35 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Microsoft.AspNetCore.Mvc;
-
-namespace Ombi.Controllers
+namespace Ombi.TheMovieDbApi.Models
 {
-    [Route("api/[controller]")]
-    public class BaseApiController : Controller
+
+    public class MovieResponse
     {
+        public bool adult { get; set; }
+        public string backdrop_path { get; set; }
+        public BelongsToCollection belongs_to_collection { get; set; }
+        public int budget { get; set; }
+        public Genre[] genres { get; set; }
+        public string homepage { get; set; }
+        public int id { get; set; }
+        public string imdb_id { get; set; }
+        public string original_language { get; set; }
+        public string original_title { get; set; }
+        public string overview { get; set; }
+        public float popularity { get; set; }
+        public string poster_path { get; set; }
+        public ProductionCompanies[] production_companies { get; set; }
+        public ProductionCountries[] production_countries { get; set; }
+        public string release_date { get; set; }
+        public int revenue { get; set; }
+        public int runtime { get; set; }
+        public SpokenLanguages[] spoken_languages { get; set; }
+        public string status { get; set; }
+        public string tagline { get; set; }
+        public string title { get; set; }
+        public bool video { get; set; }
+        public float vote_average { get; set; }
+        public int vote_count { get; set; }
     }
 }

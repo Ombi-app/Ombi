@@ -19,4 +19,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj" />
+  </ItemGroup>
 </Project>

@@ -11,6 +11,8 @@ import { HttpModule } from '@angular/http';
 import { SearchComponent } from './search/search.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
+// Services
+import { SearchService } from './services/search.service';
 
 import { ButtonModule } from 'primeng/primeng';
 import { MenubarModule } from 'primeng/components/menubar/menubar';
@@ -38,7 +40,7 @@ const routes: Routes = [
         SearchComponent
     ],
     providers: [
-        //Services
+        SearchService
     ],
     bootstrap: [AppComponent]
 })

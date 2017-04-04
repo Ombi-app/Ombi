@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: BaseApiController.cs
+//    File: TheMovieDbContainer.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,12 +25,15 @@
 //  ************************************************************************/
 #endregion
 
-using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
-namespace Ombi.Controllers
+namespace Ombi.TheMovieDbApi.Models
 {
-    [Route("api/[controller]")]
-    public class BaseApiController : Controller
+    public class TheMovieDbContainer<T>
     {
+        public int page { get; set; }
+        public List<T> results { get; set; }
+        public int total_results { get; set; }
+        public int total_pages { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: BaseApiController.cs
+//    File: IMovieDbApi.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,10 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Microsoft.AspNetCore.Mvc;
-
-namespace Ombi.Controllers
+namespace Ombi.TheMovieDbApi
 {
-    [Route("api/[controller]")]
-    public class BaseApiController : Controller
+    public interface IMovieDbApi
     {
+        
     }
 }

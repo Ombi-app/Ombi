@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: BaseApiController.cs
+//    File: SearchResult.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,13 +24,23 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-
-using Microsoft.AspNetCore.Mvc;
-
-namespace Ombi.Controllers
+namespace Ombi.TheMovieDbApi.Models
 {
-    [Route("api/[controller]")]
-    public class BaseApiController : Controller
+    public class SearchResult
     {
+        public string poster_path { get; set; }
+        public bool adult { get; set; }
+        public string overview { get; set; }
+        public string release_date { get; set; }
+        public int?[] genre_ids { get; set; }
+        public int id { get; set; }
+        public string original_title { get; set; }
+        public string original_language { get; set; }
+        public string title { get; set; }
+        public string backdrop_path { get; set; }
+        public float popularity { get; set; }
+        public int vote_count { get; set; }
+        public bool video { get; set; }
+        public float vote_average { get; set; }
     }
 }

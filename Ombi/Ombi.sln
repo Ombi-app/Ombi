@@ -12,6 +12,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Build\publish.bat = Build\publish.bat
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{9293CA11-360A-4C20-A674-B9E794431BF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.TheMovieDbApi", "Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj", "{132DA282-5894-4570-8916-D8C18ED2CE84}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "Ombi.Api\Ombi.Api.csproj", "{EA31F915-31F9-4318-B521-1500CDF40DDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,8 +30,24 @@ Global
 		{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{132DA282-5894-4570-8916-D8C18ED2CE84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{132DA282-5894-4570-8916-D8C18ED2CE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{132DA282-5894-4570-8916-D8C18ED2CE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{132DA282-5894-4570-8916-D8C18ED2CE84}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA31F915-31F9-4318-B521-1500CDF40DDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA31F915-31F9-4318-B521-1500CDF40DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA31F915-31F9-4318-B521-1500CDF40DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA31F915-31F9-4318-B521-1500CDF40DDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{132DA282-5894-4570-8916-D8C18ED2CE84} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{EA31F915-31F9-4318-B521-1500CDF40DDF} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 EndGlobal
