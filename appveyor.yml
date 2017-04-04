@@ -19,18 +19,11 @@ before_build:
 
 build:
   verbosity: minimal
-  project: Ombi/Ombi.sln
 after_build:
 - cmd: >-
     7z a OmbiWidnows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\win10-x64\publish
-    7z a OmbiUbuntu.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\ubuntu.16.10-x64\publish
-    7z a OmbiOsx.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\osx.10.12-x64\publish
-    7z a OmbiDebian.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.0\debian.8-x64\publish
 
     appveyor PushArtifact OmbiWindows.zip
-    appveyor PushArtifact OmbiUbuntu.zip
-    appveyor PushArtifact OmbiOsx.zip
-    appveyor PushArtifact OmbiDebian.zip
     
 deploy:
 - provider: GitHub
