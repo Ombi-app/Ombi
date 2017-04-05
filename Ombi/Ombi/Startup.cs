@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Ombi.Core;
 
 namespace Ombi
 {
@@ -33,6 +34,7 @@ namespace Ombi
         {
             // Add framework services.
             services.AddMvc();
+            services.AddTransient<IMovieEngine, MovieEngine>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

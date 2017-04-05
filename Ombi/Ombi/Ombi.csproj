@@ -17,10 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj" />
   </ItemGroup>
 </Project>
