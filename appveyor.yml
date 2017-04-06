@@ -1,21 +1,56 @@
-version: 2.2.{build}
+version: 3.0.{build}
 configuration: Release
+os: Visual Studio 2015 Preview
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
-  assembly_version: '2.2.1'
+  assembly_version: '3.0.0'
   assembly_file_version: '{version}'
-  assembly_informational_version: '2.2.1'
+  assembly_informational_version: '3.0.0'
 before_build:
-- cmd: appveyor-retry nuget restore
-build:
-  verbosity: minimal
+- cmd: cd ombi/ombi
+- appveyor-retry dotnet restore
+- appveyor-retry npm install bower -g
+- appveyor-retry npm install -g gulp 
+- appveyor-retry npm install -g typescript
+- appveyor-retry npm install
+- appveyor-retry bower install
+- gulp publish
+build_script:
+- dotnet build
 after_build:
+- dotnet publish -c Release /p:AppRuntimeIdentifier=win10-x64
+- dotnet publish -c Release /p:AppRuntimeIdentifier=osx.10.12-x64
+- dotnet publish -c Release /p:AppRuntimeIdentifier=ubuntu.16.10-x64
+- dotnet publish -c Release /p:AppRuntimeIdentifier=debian.8-x64
 - cmd: >-
-    7z a Ombi.zip %APPVEYOR_BUILD_FOLDER%\Ombi.UI\bin\Release\
-
-    appveyor PushArtifact Ombi.zip
+    7z a Ombi_windows.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
     
+    
+    7z a Ombi_osx.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish
+    
+    
+    7z a Ombi_ubuntu.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.10-x64\publish
+    
+    
+    7z a Ombi_debian.zip %APPVEYOR_BUILD_FOLDER%\Ombi\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish
+
+    
+    appveyor PushArtifact Ombi_windows.zip
+    
+    
+    appveyor PushArtifact Ombi_osx.zip
+    
+    
+    appveyor PushArtifact Ombi_ubuntu.zip
+    
+    
+    appveyor PushArtifact Ombi_debian.zip
+    
+    
+
+cache:
+- '%USERPROFILE%\.nuget\packages'
 deploy:
 - provider: GitHub
   release: Ombi v$(appveyor_build_version)
@@ -24,7 +59,3 @@ deploy:
   draft: true
   on:
     branch: master
-- provider: Environment
-  name: Microserver
-  on:
-    branch: dev
