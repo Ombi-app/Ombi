@@ -127,7 +127,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 // if this is a test make sure we show something
                 filteredMovies = movie.Take(5).ToList();
             }
-            foreach (var m in filteredMovies)
+            foreach (var m in filteredMovies.OrderByDescending(x => x.AddedAt))
             {
                 var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, m.ItemId);
                 if (i.Video == null)
@@ -194,7 +194,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                     // if this is a test make sure we show something
                     filteredSeries = series.Take(5).ToList();
                 }
-                foreach (var t in filteredSeries)
+                foreach (var t in filteredSeries.OrderByDescending(x => x.AddedAt))
                 {
                     var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
                     if (i.Directory == null)

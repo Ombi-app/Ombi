@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26228.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -25,10 +25,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Store", "Ombi.Store\Ombi.Store.csproj", "{68086581-1EFD-4390-8100-47F87D1CB628}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.DependencyInjection", "Ombi.DependencyInjection\Ombi.DependencyInjection.csproj", "{B39E4558-C557-48E7-AA74-19C5CD809617}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Helpers.Tests", "Ombi.Helpers.Tests\Ombi.Helpers.Tests.csproj", "{0E74C637-F5DE-42CF-AF5C-98440676D9F6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2DA84300-4B25-42E0-BB9C-4A32A984C87E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,10 +60,6 @@ Global
 		{B39E4558-C557-48E7-AA74-19C5CD809617}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B39E4558-C557-48E7-AA74-19C5CD809617}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B39E4558-C557-48E7-AA74-19C5CD809617}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0E74C637-F5DE-42CF-AF5C-98440676D9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0E74C637-F5DE-42CF-AF5C-98440676D9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0E74C637-F5DE-42CF-AF5C-98440676D9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0E74C637-F5DE-42CF-AF5C-98440676D9F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -75,6 +67,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{132DA282-5894-4570-8916-D8C18ED2CE84} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{EA31F915-31F9-4318-B521-1500CDF40DDF} = {9293CA11-360A-4C20-A674-B9E794431BF5}
-		{0E74C637-F5DE-42CF-AF5C-98440676D9F6} = {2DA84300-4B25-42E0-BB9C-4A32A984C87E}
 	EndGlobalSection
 EndGlobal

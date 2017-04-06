@@ -53,7 +53,7 @@ namespace Ombi.Core.Migration.Migrations
             EmbyEpisodes = embyEp;
         }
 
-        public int Version => 22000;
+        public int Version => 22100;
         private IRepository<RecentlyAddedLog> Log { get; }
         private IRepository<PlexContent> PlexContent { get; }
         private IRepository<PlexEpisodes> PlexEpisodes { get; }
