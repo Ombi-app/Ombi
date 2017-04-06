@@ -1,0 +1,57 @@
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.DependencyInjection;
+using Ombi.Core;
+using Ombi.Core.Engine;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Requests.Models;
+using Ombi.Core.Settings;
+using Ombi.Store.Context;
+using Ombi.Store.Repository;
+using Ombi.TheMovieDbApi;
+
+namespace Ombi.DependencyInjection
+{
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    public static class IocExtensions
+    {
+        public static IServiceCollection RegisterDependencies(this IServiceCollection services)
+        {
+            services.RegisterEngines();
+            services.RegisterApi();
+            services.RegisterServices();
+            services.RegisterStore();
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterEngines(this IServiceCollection services)
+        {
+            services.AddTransient<IMovieEngine, MovieEngine>();
+            services.AddTransient<IRequestEngine, RequestEngine>();
+            return services;
+        }
+
+        public static IServiceCollection RegisterApi(this IServiceCollection services)
+        {
+            services.AddTransient<IMovieDbApi, TheMovieDbApi.TheMovieDbApi>();
+            return services;
+        }
+
+        public static IServiceCollection RegisterStore(this IServiceCollection services)
+        {
+            services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
+
+            services.AddTransient<IOmbiContext, OmbiContext>();
+            services.AddTransient<IRequestRepository, RequestJsonRepository>();
+            services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
+            services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
+            return services;
+        }
+        public static IServiceCollection RegisterServices(this IServiceCollection services)
+        {
+            services.AddTransient<IRequestService, JsonRequestService>();
+            return services;
+        }
+    }
+}

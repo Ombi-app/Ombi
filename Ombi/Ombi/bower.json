@@ -1,0 +1,9 @@
+{
+  "name": "ombi",
+  "private": true,
+  "dependencies": {
+    "PACE": "pace#^1.0.2",
+    "font-awesome": "^4.7.0" 
+  } 
+}
+ 
