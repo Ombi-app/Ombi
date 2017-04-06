@@ -120,7 +120,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
 
             var info = new List<EmbyRecentlyAddedModel>();
-            foreach (var m in filteredMovies)
+            foreach (var m in filteredMovies.OrderByDescending(x => x.AddedAt))
             {
                 var policy = RetryHandler.RetryAndWaitPolicy((exception, timespan) =>
                     Log.Error(exception, "Exception thrown when processing an emby movie for the newsletter, Retrying {0}", timespan));
@@ -210,7 +210,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             }
             else
             {
-                foreach (var t in filteredSeries)
+                foreach (var t in filteredSeries.OrderByDescending(x => x.AddedAt))
                 {
 
 
