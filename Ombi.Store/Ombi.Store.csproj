@@ -68,7 +68,7 @@
     <Compile Include="Models\Emby\EmbyContent.cs" />
     <Compile Include="Models\Emby\EmbyEpisodes.cs" />
     <Compile Include="Models\IssueBlobs.cs" />
-    <Compile Include="Models\RecenetlyAddedLog.cs" />
+    <Compile Include="Models\RecentlyAddedLog.cs" />
     <Compile Include="Models\Plex\PlexEpisodes.cs" />
     <Compile Include="Models\Emby\EmbyUsers.cs" />
     <Compile Include="Models\Plex\PlexUsers.cs" />
