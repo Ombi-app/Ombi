@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Ombi.Helpers
 {
-    public class StringCipher
+    public static class StringCipher
     {
         /// <summary>
         /// Decrypts the specified cipher text.

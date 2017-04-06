@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Nunit" Version="3.6.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
   </ItemGroup>
 
 </Project>
