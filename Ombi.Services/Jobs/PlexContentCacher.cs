@@ -276,7 +276,8 @@ namespace Ombi.Services.Jobs
                                 Title = m.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Movie,
                                 Url = m.Url,
-                                ItemId = m.ItemId
+                                ItemId = m.ItemId,
+                                AddedAt = DateTime.UtcNow,
                             });
                         }
                     }
@@ -318,7 +319,8 @@ namespace Ombi.Services.Jobs
                                 Type = Store.Models.Plex.PlexMediaType.Show,
                                 Url = t.Url,
                                 Seasons = ByteConverterHelper.ReturnBytes(t.Seasons),
-                                ItemId = t.ItemId
+                                ItemId = t.ItemId,
+                                AddedAt = DateTime.UtcNow,
                             });
                         }
                     }
@@ -360,7 +362,8 @@ namespace Ombi.Services.Jobs
                                 Title = a.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Artist,
                                 Url = a.Url,
-                                ItemId = "album"
+                                ItemId = "album",
+                                AddedAt = DateTime.UtcNow,
                             });
                         }
                     }
