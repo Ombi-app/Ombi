@@ -115,9 +115,9 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var firstRun = !recentlyAdded.Any();
 
-            var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
             var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
-            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
 
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
@@ -244,7 +244,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = a.ProviderId,
+                        ProviderId = a.EmbyId,
                         AddedAt = DateTime.UtcNow
                     });
                 }
@@ -260,7 +260,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = s.ProviderId,
+                        ProviderId = s.EmbyId,
                         AddedAt = DateTime.UtcNow
                     });
                 }
