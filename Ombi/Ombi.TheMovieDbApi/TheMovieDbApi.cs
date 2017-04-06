@@ -6,7 +6,7 @@ using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.TheMovieDbApi
 {
-    public class TheMovieDbApi
+    public class TheMovieDbApi : IMovieDbApi
     {
         public TheMovieDbApi()
         {
@@ -19,7 +19,7 @@ namespace Ombi.TheMovieDbApi
         public async Task<MovieResponse> GetMovieInformation(int movieId)
         {
             var url = BaseUri.ChangePath("movie/{0}", movieId.ToString());
-            AddHeaders(url);
+            url = AddHeaders(url);
             return await Api.Get<MovieResponse>(url);
         }
 

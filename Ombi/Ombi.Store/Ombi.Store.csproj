@@ -10,11 +10,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.1" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
-    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
-    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.0.0" />
   </ItemGroup>
-
 </Project>

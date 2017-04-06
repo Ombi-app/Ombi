@@ -3,7 +3,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceHelpers } from './service.helpers';
-import { ISearchMovieResult } from '../search/interfaces/ISearchMovieResult';
+import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 
 @Injectable()
 export class SearchService {

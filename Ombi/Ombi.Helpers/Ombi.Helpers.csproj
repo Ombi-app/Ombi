@@ -2,11 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.4</TargetFramework>
-    <!--<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
   </ItemGroup>
 
 </Project>

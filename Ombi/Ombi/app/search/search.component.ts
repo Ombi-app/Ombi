@@ -5,22 +5,25 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { SearchService } from '../services/search.service';
+import { RequestService } from '../services/request.service';
 
-import { ISearchMovieResult } from './interfaces/ISearchMovieResult';
+import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
+import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 
 @Component({
     selector: 'ombi',
     moduleId: module.id,
     templateUrl: './search.component.html',
-    providers: [SearchService]
+    providers: [SearchService, RequestService]
 })
 export class SearchComponent implements OnInit {
 
     searchText: string;
     searchChanged: Subject<string> = new Subject<string>();
     movieResults: ISearchMovieResult[];
+    result: IRequestEngineResult;
 
-    constructor(private searchService: SearchService) {
+    constructor(private searchService: SearchService, private requestService: RequestService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -37,6 +40,10 @@ export class SearchComponent implements OnInit {
     ngOnInit(): void {
         this.searchText = "";
         this.movieResults = [];
+        this.result = {
+            message: "",
+            requestAdded:false
+        }
     }
 
     search(text: any) {
@@ -44,7 +51,7 @@ export class SearchComponent implements OnInit {
     }
 
     request(searchResult: ISearchMovieResult) {
-        console.log(searchResult);
+        this.requestService.requestMovie(searchResult).subscribe(x => this.result = x);
     }
 
     popularMovies() {

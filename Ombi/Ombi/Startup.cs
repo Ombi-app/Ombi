@@ -7,11 +7,18 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Ombi.Core;
+using Ombi.Core.Engine;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Requests.Models;
+using Ombi.Store.Context;
+using Ombi.Store.Repository;
+using Ombi.TheMovieDbApi;
 
 namespace Ombi
 {
@@ -25,6 +32,13 @@ namespace Ombi
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
+
+            using (var ctx = new OmbiContext())
+            {
+                ctx.Database.EnsureCreated();
+                ctx.Database.Migrate();
+            }
+
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -34,7 +48,13 @@ namespace Ombi
         {
             // Add framework services.
             services.AddMvc();
+            services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
             services.AddTransient<IMovieEngine, MovieEngine>();
+            services.AddTransient<IRequestEngine, RequestEngine>();
+            services.AddTransient<IMovieDbApi, TheMovieDbApi.TheMovieDbApi>();
+            services.AddTransient<IRequestService, JsonRequestService>();
+            services.AddTransient<IOmbiContext, OmbiContext>();
+            services.AddTransient<IRequestRepository, RequestJsonRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

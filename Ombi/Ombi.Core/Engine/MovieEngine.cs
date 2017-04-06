@@ -1,14 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Requests.Models;
+using Ombi.Helpers;
+using Ombi.Store.Entities;
 using Ombi.TheMovieDbApi.Models;
 
-namespace Ombi.Core
+namespace Ombi.Core.Engine
 {
     public class MovieEngine : IMovieEngine
     {
 
+        public MovieEngine(IRequestService service)
+        {
+            RequestService = service;
+        }
+        private IRequestService RequestService { get; }
         public async Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search)
         {
             var api = new TheMovieDbApi.TheMovieDbApi();
@@ -67,8 +77,8 @@ namespace Ombi.Core
         {
             await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
-            var counter = 0;
-            //Dictionary<int, RequestedModel> dbMovies = await RequestedMovies();
+            //var counter = 0;
+            Dictionary<int, RequestModel> dbMovies = await RequestedMovies();
             foreach (var movie in movies)
             {
                 var viewMovie = new SearchMovieViewModel
@@ -138,14 +148,14 @@ namespace Ombi.Core
                 //            viewMovie.Available = true;
                 //        }
                 //    }
-                //    if (dbMovies.ContainsKey(movie.Id) && canSee) // compare to the requests db
-                //    {
-                //        var dbm = dbMovies[movie.Id];
+                if (dbMovies.ContainsKey(movie.id) /*&& canSee*/) // compare to the requests db
+                {
+                    var dbm = dbMovies[movie.id];
 
-                //        viewMovie.Requested = true;
-                //        viewMovie.Approved = dbm.Approved;
-                //        viewMovie.Available = dbm.Available;
-                //    }
+                    viewMovie.Requested = true;
+                    viewMovie.Approved = dbm.Approved;
+                    viewMovie.Available = dbm.Available;
+                }
                 //    else if (canSee)
                 //    {
                 //        bool exists = IsMovieInCache(movie, viewMovie.ImdbId);
@@ -158,6 +168,24 @@ namespace Ombi.Core
 
             }
             return viewMovies;
+        }
+
+
+        private long _dbMovieCacheTime = 0;
+        private Dictionary<int, RequestModel> _dbMovies;
+        private async Task<Dictionary<int, RequestModel>> RequestedMovies()
+        {
+            long now = DateTime.Now.Ticks;
+            if (_dbMovies == null || (now - _dbMovieCacheTime) > 10000)
+            {
+                var allResults = await RequestService.GetAllAsync();
+                allResults = allResults.Where(x => x.Type == RequestType.Movie);
+
+                var distinctResults = allResults.DistinctBy(x => x.ProviderId);
+                _dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
+                _dbMovieCacheTime = now;
+            }
+            return _dbMovies;
         }
     }
 }

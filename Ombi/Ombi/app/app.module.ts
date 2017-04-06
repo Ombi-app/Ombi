@@ -13,6 +13,7 @@ import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services
 import { SearchService } from './services/search.service';
+import { RequestService } from './services/request.service';
 
 import { ButtonModule } from 'primeng/primeng';
 import { MenubarModule } from 'primeng/components/menubar/menubar';
@@ -40,7 +41,8 @@ const routes: Routes = [
         SearchComponent
     ],
     providers: [
-        SearchService
+        SearchService,
+        RequestService
     ],
     bootstrap: [AppComponent]
 })
