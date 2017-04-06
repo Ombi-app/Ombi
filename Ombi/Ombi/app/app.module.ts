@@ -15,8 +15,10 @@ import { PageNotFoundComponent } from './errors/not-found.component';
 import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
 
+// Modules
+import { SettingsModule } from './settings/settings.module';
+
 import { ButtonModule } from 'primeng/primeng';
-import { MenubarModule } from 'primeng/components/menubar/menubar';
 import { GrowlModule } from 'primeng/components/growl/growl';
 
 const routes: Routes = [
@@ -30,10 +32,10 @@ const routes: Routes = [
         BrowserModule,
         BrowserAnimationsModule,
         HttpModule,
-        MenubarModule,
         GrowlModule,
         ButtonModule,
-        FormsModule
+        FormsModule,
+        SettingsModule
     ],
     declarations: [
         AppComponent,

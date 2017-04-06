@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,13 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
-using Ombi.Core;
-using Ombi.Core.Engine;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Requests.Models;
+using Ombi.DependencyInjection;
 using Ombi.Store.Context;
-using Ombi.Store.Repository;
-using Ombi.TheMovieDbApi;
 
 namespace Ombi
 {
@@ -28,16 +19,10 @@ namespace Ombi
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("appsettings.json", false, true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", true)
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
-
-            using (var ctx = new OmbiContext())
-            {
-                ctx.Database.EnsureCreated();
-                ctx.Database.Migrate();
-            }
 
         }
 
@@ -48,13 +33,7 @@ namespace Ombi
         {
             // Add framework services.
             services.AddMvc();
-            services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
-            services.AddTransient<IMovieEngine, MovieEngine>();
-            services.AddTransient<IRequestEngine, RequestEngine>();
-            services.AddTransient<IMovieDbApi, TheMovieDbApi.TheMovieDbApi>();
-            services.AddTransient<IRequestService, JsonRequestService>();
-            services.AddTransient<IOmbiContext, OmbiContext>();
-            services.AddTransient<IRequestRepository, RequestJsonRepository>();
+            services.RegisterDependencies(); // Ioc and EF
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -66,7 +45,6 @@ namespace Ombi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {

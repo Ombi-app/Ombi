@@ -5,17 +5,17 @@ namespace Ombi.Store.Context
 {
     public class OmbiContext : DbContext, IOmbiContext
     {
-        private static bool _created = false;
+        private static bool _created;
         public OmbiContext()
         {
-            if(!_created)
-            {
-                _created = true;
-                //Database.EnsureDeleted();
-                Database.EnsureCreated();
-            }
+            if (_created) return;
+
+            _created = true;
+            Database.EnsureCreated();
+            Database.Migrate();
         }
         public DbSet<RequestBlobs> Requests { get; set; }
+        public DbSet<GlobalSettings> Settings { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

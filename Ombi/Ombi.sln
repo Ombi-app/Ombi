@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Helpers", "Ombi.Helper
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Store", "Ombi.Store\Ombi.Store.csproj", "{68086581-1EFD-4390-8100-47F87D1CB628}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.DependencyInjection", "Ombi.DependencyInjection\Ombi.DependencyInjection.csproj", "{B39E4558-C557-48E7-AA74-19C5CD809617}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{68086581-1EFD-4390-8100-47F87D1CB628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68086581-1EFD-4390-8100-47F87D1CB628}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68086581-1EFD-4390-8100-47F87D1CB628}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B39E4558-C557-48E7-AA74-19C5CD809617}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B39E4558-C557-48E7-AA74-19C5CD809617}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B39E4558-C557-48E7-AA74-19C5CD809617}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B39E4558-C557-48E7-AA74-19C5CD809617}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

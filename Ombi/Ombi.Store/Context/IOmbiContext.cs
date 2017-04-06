@@ -11,5 +11,6 @@ namespace Ombi.Store.Context
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         DbSet<RequestBlobs> Requests { get; set; }
+        DbSet<GlobalSettings> Settings { get; set; }
     }
 }
