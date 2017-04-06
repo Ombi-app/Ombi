@@ -34,6 +34,9 @@ namespace Ombi.Store.Models
     [Table("RecentlyAddedLog")]
     public class RecentlyAddedLog : Entity
     {
+        /// <summary>
+        /// This is actually a unique id for that content...
+        /// </summary>
         public string ProviderId { get; set; }
         public DateTime AddedAt { get; set; }
     }
