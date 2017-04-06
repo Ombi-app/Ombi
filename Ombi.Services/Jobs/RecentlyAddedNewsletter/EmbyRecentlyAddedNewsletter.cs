@@ -115,9 +115,9 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             var firstRun = !recentlyAdded.Any();
 
-            var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
-            var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
-            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
+            var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
+            var filteredSeries = series.Where(m => recentlyAdded.All(x => x.ProviderId != m.EmbyId)).ToList();
 
             var info = new List<EmbyRecentlyAddedModel>();
             foreach (var m in filteredMovies)
@@ -144,6 +144,11 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
             // Check if there are any epiosdes, then get the series info.
             // Otherwise then just add the series to the newsletter
+            if (test && !filteredEp.Any() && episodes.Any())
+            {
+                // if this is a test make sure we show something
+                filteredEp = episodes.Take(5).ToList();
+            }
             if (filteredEp.Any())
             {
                 var recentlyAddedModel = new List<EmbyRecentlyAddedModel>();
@@ -239,7 +244,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = a.ProviderId,
+                        ProviderId = a.EmbyId,
                         AddedAt = DateTime.UtcNow
                     });
                 }
@@ -247,7 +252,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = a.ProviderId,
+                        ProviderId = a.EmbyId,
                         AddedAt = DateTime.UtcNow
                     });
                 }
@@ -255,7 +260,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = s.ProviderId,
+                        ProviderId = s.EmbyId,
                         AddedAt = DateTime.UtcNow
                     });
                 }
