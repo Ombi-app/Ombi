@@ -59,13 +59,6 @@ namespace Ombi
                 ContentTypeProvider = provider
             });
 
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider(
-         Path.Combine(Directory.GetCurrentDirectory(), @"app")),
-                RequestPath = new PathString("/app"),
-            });
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
