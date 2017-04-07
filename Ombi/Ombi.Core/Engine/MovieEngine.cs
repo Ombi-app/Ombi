@@ -7,6 +7,7 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
+using Ombi.TheMovieDbApi;
 using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Core.Engine
@@ -14,11 +15,14 @@ namespace Ombi.Core.Engine
     public class MovieEngine : IMovieEngine
     {
 
-        public MovieEngine(IRequestService service)
+        public MovieEngine(IRequestService service, IMovieDbApi movApi)
         {
             RequestService = service;
+            MovieApi = movApi;
         }
         private IRequestService RequestService { get; }
+        private IMovieDbApi MovieApi { get; }
+
         public async Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search)
         {
             var api = new TheMovieDbApi.TheMovieDbApi();
@@ -99,24 +103,25 @@ namespace Ombi.Core.Engine
                 };
                 viewMovies.Add(viewMovie);
 
-                //if (counter <= 5) // Let's only do it for the first 5 items
-                //{
-                //    var movieInfo = MovieApi.GetMovieInformationWithVideos(movie.Id);
+                var counter = 0;
+                if (counter <= 5) // Let's only do it for the first 5 items
+                {
+                    var movieInfo = await MovieApi.GetMovieInformationWithVideo(movie.id);
 
-                //    // TODO needs to be careful about this, it's adding extra time to search...
-                //    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                //    viewMovie.ImdbId = movieInfo?.imdb_id;
-                //    viewMovie.Homepage = movieInfo?.homepage;
-                //    var videoId = movieInfo?.video ?? false
-                //        ? movieInfo?.videos?.results?.FirstOrDefault()?.key
-                //        : string.Empty;
+                    // TODO needs to be careful about this, it's adding extra time to search...
+                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                    viewMovie.ImdbId = movieInfo?.imdb_id;
+                    viewMovie.Homepage = movieInfo?.homepage;
+                    //var videoId = movieInfo?.video ?? false
+                    //    ? movieInfo?.videos?.results?.FirstOrDefault()?.key
+                    //    : string.Empty;
 
-                //    viewMovie.Trailer = string.IsNullOrEmpty(videoId)
-                //        ? string.Empty
-                //        : $"https://www.youtube.com/watch?v={videoId}";
+                    //viewMovie.Trailer = string.IsNullOrEmpty(videoId)
+                    //    ? string.Empty
+                    //    : $"https://www.youtube.com/watch?v={videoId}";
 
-                //    counter++;
-                //}
+                    counter++;
+                }
 
                 //    var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
 

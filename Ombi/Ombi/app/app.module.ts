@@ -9,21 +9,25 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 import { SearchComponent } from './search/search.component';
+import { RequestComponent } from './requests/request.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services
 import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
+import { NotificationService } from './services/notification.service';
 
 // Modules
 import { SettingsModule } from './settings/settings.module';
 
 import { ButtonModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
+import { DataTableModule, SharedModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
-    { path: 'search', component: SearchComponent }
+    { path: 'search', component: SearchComponent },
+    { path: 'requests', component: RequestComponent },
 ];
 
 @NgModule({
@@ -35,16 +39,20 @@ const routes: Routes = [
         GrowlModule,
         ButtonModule,
         FormsModule,
-        SettingsModule
+        SettingsModule,
+        DataTableModule,
+        SharedModule
     ],
     declarations: [
         AppComponent,
         PageNotFoundComponent,
-        SearchComponent
+        SearchComponent,
+        RequestComponent
     ],
     providers: [
         SearchService,
-        RequestService
+        RequestService,
+        NotificationService
     ],
     bootstrap: [AppComponent]
 })

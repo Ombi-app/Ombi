@@ -702,3 +702,15 @@ body {
     color: #333;
     background-color: #fff;
 }
+
+.ui-datatable-odd {
+    background-color: $form-color $i;
+}
+.ui-datatable-even {
+    background-color: $form-color-lighter $i;
+}
+
+.ui-widget-content {
+    border: 1px solid $form-color-lighter $i;
+    background: $form-color $i;
+}

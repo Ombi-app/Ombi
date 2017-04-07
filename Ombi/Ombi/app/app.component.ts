@@ -1,4 +1,5 @@
 ﻿import { Component } from '@angular/core';
+import { NotificationService } from './services/notification.service';
 
 @Component({
     selector: 'ombi',
@@ -7,4 +8,5 @@
 })
 export class AppComponent {
 
+    constructor(public notificationService: NotificationService) { };
 }

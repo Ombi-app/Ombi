@@ -16,5 +16,9 @@
     alreadyInCp: boolean,
     trailer: string,
     homepage: string,
-    imdbId:string
+    imdbId: string,
+    approved: boolean,
+    requested: boolean,
+    available: boolean,
+    plexUrl: string
 }

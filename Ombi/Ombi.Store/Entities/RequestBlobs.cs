@@ -13,8 +13,7 @@ namespace Ombi.Store.Entities
     }
     public enum RequestType
     {
-        Movie,
-        TvShow,
-        Album
+        Movie = 1,
+        TvShow = 2
     }
 }

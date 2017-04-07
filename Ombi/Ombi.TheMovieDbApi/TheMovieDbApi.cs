@@ -23,6 +23,14 @@ namespace Ombi.TheMovieDbApi
             return await Api.Get<MovieResponse>(url);
         }
 
+        public async Task<MovieResponse> GetMovieInformationWithVideo(int movieId)
+        {
+            var url = BaseUri.ChangePath("movie/{0}", movieId.ToString());
+            url = AddHeaders(url);
+            url = url.AddQueryParameter("append_to_response", "videos");
+            return await Api.Get<MovieResponse>(url);
+        }
+
         public async Task<TheMovieDbContainer<SearchResult>> SearchMovie(string searchTerm)
         {
             var url = BaseUri.ChangePath("search/movie/");

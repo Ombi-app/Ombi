@@ -1,0 +1,46 @@
+﻿<h1 id="searchTitle">Requests</h1>
+
+
+<input #gb type="text" pInputText size="50" placeholder="Search">
+<p-dataTable [value]="requests" expandableRows="true" [rows]="15" [paginator]="true" [pageLinks]="3" [rowsPerPageOptions]="[5,10,20,50]" [globalFilter]="gb">
+    <p-column expander="true" styleClass="col-icon"></p-column>
+    <p-column field="title" header="Title" [sortable]="true"></p-column>
+    <p-column field="requestedDate" header="Requested Date" [sortable]="true"></p-column>
+    <p-column field="approved" header="Approved"  [sortable]="true">
+        <ng-template let-col let-request="rowData" pTemplate="body">
+            <span *ngIf="requests[col]" class="fa fa-check"></span>
+            <span *ngIf="!requests[col]" class="fa fa-times"></span>
+        </ng-template>
+    </p-column>
+    <ng-template let-request pTemplate="rowexpansion">
+        <div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px">
+            <div class="ui-grid-row">
+                <div class="ui-grid-col-3" style="text-align:center">
+                    <i class="fa fa-search" (click)="showCar(car)" style="cursor:pointer;float:left;margin-top:40px"></i>
+                    <img  src="https://image.tmdb.org/t/p/w150/{{request.posterPath}}">
+                    <img *ngIf="request.type === 2" src="{{request.posterPath}}">
+                </div>
+                <div class="ui-grid-col-9">
+                    <div class="ui-grid ui-grid-responsive ui-grid-pad">
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-2 label">Type: </div>
+                            <div class="ui-grid-col-10">{{request.type}}</div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-2 label">Status: </div>
+                            <div class="ui-grid-col-10">{{request.status}}</div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-2 label">Approved: </div>
+                            <div class="ui-grid-col-10">{{request.approved}}</div>
+                        </div>
+                        <div class="ui-grid-row">
+                            <div class="ui-grid-col-2 label">Available: </div>
+                            <div class="ui-grid-col-10">{{request.available}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</p-dataTable>

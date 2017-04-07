@@ -33,10 +33,7 @@ namespace Ombi.Core.Models.Requests
         public int[] SeasonList { get; set; }
         public int SeasonCount { get; set; }
         public string SeasonsRequested { get; set; }
-        public string MusicBrainzId { get; set; }
         public List<string> RequestedUsers { get; set; }
-        public string ArtistName { get; set; }
-        public string ArtistId { get; set; }
         public int IssueId { get; set; }
         public List<EpisodesModel> Episodes { get; set; }
         public bool Denied { get; set; }
@@ -86,8 +83,6 @@ namespace Ombi.Core.Models.Requests
                     return "Movie";
                 case RequestType.TvShow:
                     return "TV Show";
-                case RequestType.Album:
-                    return "Album";
                 default:
                     return string.Empty;
             }

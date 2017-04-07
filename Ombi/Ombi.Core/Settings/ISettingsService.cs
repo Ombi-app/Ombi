@@ -8,7 +8,7 @@ namespace Ombi.Core.Settings
         Task<T> GetSettingsAsync();
         bool SaveSettings(T model);
         Task<bool> SaveSettingsAsync(T model);
-        bool Delete(T model);
-        Task<bool> DeleteAsync(T model);
+        void Delete(T model);
+        Task DeleteAsync(T model);
     }
 }

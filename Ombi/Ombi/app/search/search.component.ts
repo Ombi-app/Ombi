@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 
 import { SearchService } from '../services/search.service';
 import { RequestService } from '../services/request.service';
+import { NotificationService } from '../services/notification.service';
 
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
@@ -14,7 +15,6 @@ import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
     selector: 'ombi',
     moduleId: module.id,
     templateUrl: './search.component.html',
-    providers: [SearchService, RequestService]
 })
 export class SearchComponent implements OnInit {
 
@@ -23,7 +23,7 @@ export class SearchComponent implements OnInit {
     movieResults: ISearchMovieResult[];
     result: IRequestEngineResult;
 
-    constructor(private searchService: SearchService, private requestService: RequestService) {
+    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService : NotificationService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -51,7 +51,17 @@ export class SearchComponent implements OnInit {
     }
 
     request(searchResult: ISearchMovieResult) {
-        this.requestService.requestMovie(searchResult).subscribe(x => this.result = x);
+        searchResult.requested = true;
+        this.requestService.requestMovie(searchResult).subscribe(x => {
+            this.result = x;
+
+            if (this.result.requestAdded) {
+                this.notificationService.success("Request Added",
+                    `Request for ${searchResult.title} has been added successfully`);
+            } else {
+                this.notificationService.warning("Request Added", this.result.message);
+            }
+        });
     }
 
     popularMovies() {

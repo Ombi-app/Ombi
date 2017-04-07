@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
@@ -228,5 +229,38 @@ namespace Ombi.Core.Engine
 
             return new RequestEngineResult{RequestAdded = true};
         }
+
+        public async Task<IEnumerable<RequestViewModel>> GetRequests()
+        {
+            var allRequests = await RequestService.GetAllAsync();
+            var viewModel = allRequests.Select(movie => new RequestViewModel
+            {
+                ProviderId = movie.ProviderId,
+                Type = movie.Type,
+                Status = movie.Status,
+                ImdbId = movie.ImdbId,
+                Id = movie.Id,
+                PosterPath = movie.PosterPath,
+                ReleaseDate = movie.ReleaseDate,
+                RequestedDate = movie.RequestedDate,
+                Released = DateTime.Now > movie.ReleaseDate,
+                Approved = movie.Available || movie.Approved,
+                Title = movie.Title,
+                Overview = movie.Overview,
+                RequestedUsers = movie.AllUsers.ToArray(),
+                ReleaseYear = movie.ReleaseDate.Year.ToString(),
+                Available = movie.Available,
+                Admin = false,
+                IssueId = movie.IssueId,
+                Denied = movie.Denied,
+                DeniedReason = movie.DeniedReason,
+                //Qualities = qualities.ToArray(),
+                //HasRootFolders = rootFolders.Any(),
+                //RootFolders = rootFolders.ToArray(),
+                //CurrentRootPath = radarr.Enabled ? GetRootPath(movie.RootFolderSelected, radarr).Result : null
+            }).ToList();
+            return viewModel;
+        }
+        
     }
 }
