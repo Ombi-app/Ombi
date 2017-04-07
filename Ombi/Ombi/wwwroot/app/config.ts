@@ -14,14 +14,7 @@ if (envs[envVar]) {
 
 export var config = {
     envs: envs,
-    env: env,
-    systemJS: {
-        bundle: <boolean>{
-            [envs.local]: false,
-            [envs.next]: true,
-            [envs.live]: true
-        }[env]
-    }
+    env: env
 }
 
 export default config;
