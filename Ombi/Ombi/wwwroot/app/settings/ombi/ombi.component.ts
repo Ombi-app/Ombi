@@ -6,6 +6,6 @@
 })
 export class OmbiComponent {
 
-  
-
+  enabled:boolean;
+    host:string;
 }

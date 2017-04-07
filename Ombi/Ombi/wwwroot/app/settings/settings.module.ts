@@ -5,6 +5,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { OmbiComponent } from './ombi/ombi.component'
 
+import { SettingsMenuComponent } from './settingsmenu.component';
+
+import { MenuModule, InputSwitchModule, InputTextModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: 'Settings/Ombi', component: OmbiComponent }
@@ -15,15 +18,20 @@ const routes: Routes = [
         CommonModule,
         FormsModule,
         RouterModule.forChild(routes),
+        MenuModule,
+        InputSwitchModule,
+        InputTextModule,
 
     ],
     declarations: [
+        SettingsMenuComponent,
         OmbiComponent
     ],
     exports: [
         RouterModule
     ],
     providers: [
-    ]
+    ],
+   
 })
 export class SettingsModule { }
