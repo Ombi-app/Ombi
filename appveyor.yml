@@ -10,6 +10,8 @@ assembly_info:
 before_build:
 - cmd: cd ombi/ombi
 - node --version
+- Update-NodeJsInstallation 7.8.0
+- node --version
 - appveyor-retry dotnet restore
 - appveyor-retry npm install bower -g
 - appveyor-retry npm install -g gulp 
