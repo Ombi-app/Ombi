@@ -10,11 +10,7 @@
         map: { app: '../app' }
     })
 
-    if (config.bundle) {
-        System.import('bundle').then(() => {
-            System.import('/app/main');
-        })
-    } else {
-        System.import('/app/main')
-    }
+    System.import(config.bundle ? 'bundles/full' : 'bundles/lib').then(() => {
+        System.import('/app/main');
+    })
 });
