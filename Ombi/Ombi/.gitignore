@@ -1,6 +1,10 @@
-/app/**/*.js
-/app/**/*.js.map
-/wwwroot/**
+/wwwroot/css/**
+/wwwroot/fonts/**
+/wwwroot/images/**
+/wwwroot/lib/**
+/wwwroot/maps/**
+/wwwroot/app/**/*.js
+/wwwroot/app/**/*.js.map
 
 # dependencies
 /node_modules
