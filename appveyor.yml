@@ -9,6 +9,7 @@ assembly_info:
   assembly_informational_version: '3.0.0'
 before_build:
 - cmd: cd ombi/ombi
+- node --version
 - appveyor-retry dotnet restore
 - appveyor-retry npm install bower -g
 - appveyor-retry npm install -g gulp 
@@ -16,7 +17,6 @@ before_build:
 - appveyor-retry npm install
 - appveyor-retry bower install
 - gulp publish
-- node --version
 build_script:
 - dotnet build
 after_build:
