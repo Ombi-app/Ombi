@@ -8,9 +8,8 @@ assembly_info:
   assembly_file_version: '{version}'
   assembly_informational_version: '3.0.0'
 before_build:
+- ps: Update-NodeJsInstallation 7.8.0
 - cmd: cd ombi/ombi
-- node --version
-- Update-NodeJsInstallation 7.8.0
 - node --version
 - appveyor-retry dotnet restore
 - appveyor-retry npm install bower -g
