@@ -7,17 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\app\settings\settingsapp.component.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\settings\app.component.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\settings\settingsapp.component.js" />
-    <Content Include="wwwroot\app\settings\settingsapp.component.js.map" />
-    <Content Include="wwwroot\app\settings\settingsapp.component.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\app\settings\settingsmenu.component.html" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
