@@ -6,6 +6,10 @@ ____
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Percentage of issues still open")
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+___
+  
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
 
 | Service  | Master                      | Early Access                 | Dev                          |
@@ -18,7 +22,7 @@ Check it out: [https://forums.ombi.io/](https://forums.ombi.io)
 
 # Features
 Here some of the features Ombi has:
-* All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
+* All your users to Request Movies, TV Shows (Whole series, whole seasons or even single episodes!) and Albums
 * Easily manage your requests
 * User management system (supports plex.tv accounts and local accounts)
 * Sending newsletters
@@ -84,9 +88,12 @@ We are looking for any contributions to the project! Just pick up a task, if you
 Please feel free to submit a pull request!
 
 # Donation
-If you feel like donating you can donate [here](https://paypal.me/PlexRequestsNet)!
+If you feel like donating you can donate with the below buttons!
 
-### A massive thanks to everyone for all their helps!
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
+
+### A massive thanks to everyone for all their help!
 
 ## Stats
 [![Throughput Graph](https://graphs.waffle.io/tidusjar/PlexRequests.Net/throughput.svg)](https://waffle.io/tidusjar/PlexRequests.Net/metrics/throughput)
