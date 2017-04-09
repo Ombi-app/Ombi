@@ -117,11 +117,17 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             var firstRun = !recentlyAdded.Any();
 
             var filteredMovies = movie.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
-            var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.ProviderId)).ToList();
+            var filteredEp = episodes.Where(m => recentlyAdded.All(x => x.ProviderId != m.RatingKey)).ToList();
             var filteredSeries = series.Where(x => recentlyAdded.All(c => c.ProviderId != x.ProviderId)).ToList();
 
             var info = new List<PlexRecentlyAddedModel>();
-            foreach (var m in filteredMovies)
+
+            if (test && !filteredMovies.Any())
+            {
+                // if this is a test make sure we show something
+                filteredMovies = movie.Take(5).ToList();
+            }
+            foreach (var m in filteredMovies.OrderByDescending(x => x.AddedAt))
             {
                 var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, m.ItemId);
                 if (i.Video == null)
@@ -138,6 +144,11 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             newsletter.MovieCount = info.Count;
 
             info.Clear();
+            if (test && !filteredEp.Any() && episodes.Any())
+            {
+                // if this is a test make sure we show something
+                filteredEp = episodes.Take(5).ToList();
+            }
             if (filteredEp.Any())
             {
                 var recentlyAddedModel = new List<PlexRecentlyAddedModel>();
@@ -178,7 +189,12 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
             }
             else
             {
-                foreach (var t in filteredSeries)
+                if (test && !filteredSeries.Any())
+                {
+                    // if this is a test make sure we show something
+                    filteredSeries = series.Take(5).ToList();
+                }
+                foreach (var t in filteredSeries.OrderByDescending(x => x.AddedAt))
                 {
                     var i = Api.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri, t.ItemId);
                     if (i.Directory == null)
@@ -215,7 +231,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                 {
                     RecentlyAddedLog.Insert(new RecentlyAddedLog
                     {
-                        ProviderId = a.ProviderId,
+                        ProviderId = a.RatingKey,
                         AddedAt = DateTime.UtcNow
                     });
                 }
@@ -324,7 +340,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
 
                 try
                 {
-                    var info = TvApi.ShowLookupByTheTvDbId(int.Parse(PlexHelper.GetProviderIdFromPlexGuid(t.Metadata.Directory.Guid)));
+                    var info = TvApi.ShowLookupByTheTvDbId(int.Parse(PlexHelper.GetProviderIdFromPlexGuid(t?.Metadata?.Directory?.Guid ?? string.Empty)));
 
                     var banner = info.image?.original;
                     if (!string.IsNullOrEmpty(banner))
@@ -359,7 +375,7 @@ namespace Ombi.Services.Jobs.RecentlyAddedNewsletter
                         for (var i = 0; i < orderedEpisodes.Count; i++)
                         {
                             var ep = orderedEpisodes[i];
-                            if (i <= orderedEpisodes.Count - 1)
+                            if (i < orderedEpisodes.Count - 1)
                             {
                                 epSb.Append($"{ep.Video.FirstOrDefault().Index},");
                             }

@@ -33,63 +33,65 @@ using NLog;
 using Ombi.Core.SettingModels;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
 using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Quartz.Collection;
 
 namespace Ombi.Core.Migration.Migrations
 {
-    [Migration(22000, "v2.20.0.0")]
-    public class Version2200 : BaseMigration, IMigration
+    [Migration(22100, "v2.21.0.0")]
+    public class Version2210 : BaseMigration, IMigration
     {
-        public Version2200(ISettingsService<CustomizationSettings> custom, ISettingsService<PlexSettings> ps, IRepository<RecentlyAddedLog> log,
-            IRepository<PlexContent> content, IRepository<PlexEpisodes> plexEp)
+        public Version2210(IRepository<RecentlyAddedLog> log,
+            IRepository<PlexContent> content, IRepository<PlexEpisodes> plexEp, IRepository<EmbyContent> embyContent, IRepository<EmbyEpisodes> embyEp)
         {
-            Customization = custom;
-            PlexSettings = ps;
             Log = log;
             PlexContent = content;
             PlexEpisodes = plexEp;
+            EmbyContent = embyContent;
+            EmbyEpisodes = embyEp;
         }
 
-        public int Version => 22000;
-        private ISettingsService<CustomizationSettings> Customization { get; }
-        private ISettingsService<PlexSettings> PlexSettings { get; }
+        public int Version => 22100;
         private IRepository<RecentlyAddedLog> Log { get; }
         private IRepository<PlexContent> PlexContent { get; }
         private IRepository<PlexEpisodes> PlexEpisodes { get; }
-
-        private static Logger Logger = LogManager.GetCurrentClassLogger();
-
+        private IRepository<EmbyContent> EmbyContent { get; }
+        private IRepository<EmbyEpisodes> EmbyEpisodes { get; }
+        
         public void Start(IDbConnection con)
         {
-            UpdatePlexSettings();
-            UpdateCustomSettings();
-            AddNewColumns(con);
-            UpdateSchema(con, Version);
             UpdateRecentlyAdded(con);
+            UpdateSchema(con, Version);
 
         }
 
         private void UpdateRecentlyAdded(IDbConnection con)
         {
-            var allContent = PlexContent.GetAll();
 
+            //Delete the recently added table, lets start again
+            Log.DeleteAll("RecentlyAddedLog");
+
+
+
+            // Plex 
+            var plexAllContent = PlexContent.GetAll();
             var content = new HashSet<RecentlyAddedLog>();
-            foreach (var plexContent in allContent)
+            foreach (var plexContent in plexAllContent)
             {
+                if(plexContent.Type == PlexMediaType.Artist) continue;
                 content.Add(new RecentlyAddedLog
                 {
                     AddedAt = DateTime.UtcNow,
                     ProviderId = plexContent.ProviderId
                 });
             }
-
             Log.BatchInsert(content, "RecentlyAddedLog");
 
-            var allEp = PlexEpisodes.GetAll();
+            var plexEpisodeses = PlexEpisodes.GetAll();
             content.Clear();
-            foreach (var ep in allEp)
+            foreach (var ep in plexEpisodeses)
             {
                 content.Add(new RecentlyAddedLog
                 {
@@ -97,37 +99,36 @@ namespace Ombi.Core.Migration.Migrations
                     ProviderId = ep.RatingKey
                 });
             }
-
             Log.BatchInsert(content, "RecentlyAddedLog");
-        }
 
-        private void AddNewColumns(IDbConnection con)
-        {
-            con.AlterTable("EmbyContent", "ADD", "AddedAt", true, "VARCHAR(50)");
-            con.AlterTable("EmbyEpisodes", "ADD", "AddedAt", true, "VARCHAR(50)");
-
-            con.AlterTable("PlexContent", "ADD", "ItemId", true, "VARCHAR(100)");
-            con.AlterTable("PlexContent", "ADD", "AddedAt", true, "VARCHAR(100)");
-        }
-
-        private void UpdatePlexSettings()
-        {
-#if !DEBUG
-            var s = PlexSettings.GetSettings();
-            if (!string.IsNullOrEmpty(s.Ip))
+            // Emby 
+            content.Clear();
+            var embyContent = EmbyContent.GetAll();
+            foreach (var plexContent in embyContent)
             {
-                s.Enable = true;
-                PlexSettings.SaveSettings(s);
+                content.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.UtcNow,
+                    ProviderId = plexContent.EmbyId
+                });
             }
-#endif
-        }
-        private void UpdateCustomSettings()
-        {
+            Log.BatchInsert(content, "RecentlyAddedLog");
 
-            var settings = Customization.GetSettings();
-            settings.EnableIssues = true;
-            settings.EnableNetflixResults = true;
-            Customization.SaveSettings(settings);
+            var embyEpisodes = EmbyEpisodes.GetAll();
+            content.Clear();
+            foreach (var ep in embyEpisodes)
+            {
+                content.Add(new RecentlyAddedLog
+                {
+                    AddedAt = DateTime.UtcNow,
+                    ProviderId = ep.EmbyId
+                });
+            }
+            Log.BatchInsert(content, "RecentlyAddedLog");
+
+
         }
+
+     
     }
 }

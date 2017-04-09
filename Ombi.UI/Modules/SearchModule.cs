@@ -46,6 +46,7 @@ using Ombi.Core;
 using Ombi.Core.Models;
 using Ombi.Core.Queue;
 using Ombi.Core.SettingModels;
+using Ombi.Core.Tv;
 using Ombi.Helpers;
 using Ombi.Helpers.Analytics;
 using Ombi.Helpers.Permissions;
@@ -1119,10 +1120,12 @@ namespace Ombi.UI.Modules
                 RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                SeasonCount = showInfo.Season.Count,
-                TvDbId = showId.ToString()
+                TvDbId = showId.ToString(),
+                ProviderId = showId
             };
 
+            var totalSeasons = showInfo.Season.GroupBy(x => x.SeasonNumber);
+            model.SeasonCount = totalSeasons.Count();
             var seasonsList = new List<int>();
             switch (seasons)
             {
@@ -1884,7 +1887,8 @@ namespace Ombi.UI.Modules
         {
             model.Approved = true;
             var s = await sonarrSettings;
-            var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache); // TODO put back
+            var sender = new TvSenderV2(SonarrApi, SickrageApi, Cache);
+            //var sender = new TvSenderOld(SonarrApi, SickrageApi, Cache);
             if (s.Enabled)
             {
                 var result = await sender.SendToSonarr(s, model);

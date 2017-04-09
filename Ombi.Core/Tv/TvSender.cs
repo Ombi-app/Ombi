@@ -87,6 +87,8 @@ namespace Ombi.Core
 
             var rootFolderPath = model.RootFolderSelected <= 0 ? sonarrSettings.FullRootPath : await GetRootPath(model.RootFolderSelected, sonarrSettings);
 
+
+
             if (episodeRequest)
             {
                 // Does series exist?
