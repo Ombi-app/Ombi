@@ -41,7 +41,7 @@ namespace Ombi
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -60,7 +60,7 @@ namespace Ombi
             });
 
             app.UseMvc(routes =>
-            {
+            { 
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: BaseApiController.cs
+//    File: BaseV1ApiController.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -29,8 +29,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Ombi.Controllers
 {
-    [Route("api/[controller]")]
-    public class BaseApiController : Controller
+    [Route(ApiBase)]
+    public class BaseV1ApiController : Controller
     {
+        protected const string ApiBase = "api/v1/[controller]";
     }
 }

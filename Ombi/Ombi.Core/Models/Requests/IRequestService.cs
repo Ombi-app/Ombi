@@ -16,11 +16,13 @@ namespace Ombi.Core.Requests.Models
         Task<RequestModel> CheckRequestAsync(int providerId);
         Task<RequestModel> CheckRequestAsync(string musicId);
         void DeleteRequest(RequestModel request);
+        Task DeleteRequestAsync(int request);
         Task DeleteRequestAsync(RequestModel request);
         RequestModel Get(int id);
         IEnumerable<RequestModel> GetAll();
         Task<IEnumerable<RequestModel>> GetAllAsync();
+        Task<IEnumerable<RequestModel>> GetAllAsync(int count, int position);
         Task<RequestModel> GetAsync(int id);
-        RequestBlobs UpdateRequest(RequestModel model);
+        RequestModel UpdateRequest(RequestModel model);
     }
 }

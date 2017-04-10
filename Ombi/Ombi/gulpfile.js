@@ -31,7 +31,7 @@ var paths = {
             '@angular/platform-browser-dynamic',
             '@angular/http',
             '@angular/router',
-            '@angular/forms'
+            '@angular/forms',
         ],
         dest: './lib'
     },
@@ -56,7 +56,7 @@ var paths = {
             './bower_components/PACE/pace.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/tether/dist/js/tether.js',
-            './systemjs.config.js'
+            './systemjs.config.js',
         ],
         dest: './lib/'
     },
@@ -118,7 +118,12 @@ var paths = {
             name: 'primeng',
             src: './node_modules/primeng/**/*.js',
             dest: './lib/primeng/'
-        }
+        },
+        {
+            name: "angular2-infinite-scroll",
+            src: ['./node_modules/angular2-infinite-scroll/**/*.js', '!./node_modules/angular2-infinite-scroll/bundles/**/*.js'],
+            dest:"./lib/angular2-infinite-scroll/"
+        },
     ],
     sass: { // Simple sass->css compilation
         src: ['./Styles/**/*.scss', '!./Styles/primeng/**'],

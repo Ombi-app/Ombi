@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -61,6 +62,18 @@ namespace Ombi.Store.Repository
             //}, 5);
             //return item;
         }
+        public async Task<IEnumerable<RequestBlobs>> GetAllAsync(int count, int position)
+        {
+            //var key = "GetAll";
+            //var item = await Cache.GetOrSetAsync(key, async () =>
+            //{
+
+            var page = await Db.Requests.ToListAsync().ConfigureAwait(false);
+            return page.Skip(position).Take(count);
+
+            //}, 5);
+            //return item;
+        }
 
         public RequestBlobs Get(int id)
         {
@@ -99,9 +112,17 @@ namespace Ombi.Store.Repository
 
         public RequestBlobs Update(RequestBlobs entity)
         {
+            try
+            {
+                Db.SaveChanges();
 
-            return Db.Requests.Update(entity).Entity;
-            Db.SaveChanges();
+                return entity;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
         }
 

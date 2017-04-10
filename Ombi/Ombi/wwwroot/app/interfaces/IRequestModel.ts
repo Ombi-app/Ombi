@@ -25,3 +25,8 @@ export enum RequestType {
     movie = 1,
     tvShow = 2
 }
+
+export interface IRequestsPageScroll {
+    count: number,
+    position:number
+}

@@ -92,11 +92,19 @@ namespace Ombi.Core.Models.Requests
             var blob = await Repo.GetAsync(request.Id).ConfigureAwait(false);
             Repo.Delete(blob);
         }
-
-        public RequestBlobs UpdateRequest(RequestModel model)
+        public async Task DeleteRequestAsync(int request)
         {
-            var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId, Id = model.Id };
-            return Repo.Update(entity);
+            var blob = await Repo.GetAsync(request).ConfigureAwait(false);
+            Repo.Delete(blob);
+        }
+
+        public RequestModel UpdateRequest(RequestModel model)
+        {
+            var b = Repo.Get(model.Id);
+            b.Content = ByteConverterHelper.ReturnBytes(model);
+            var blob = Repo.Update(b);
+            return model;
+
         }
 
         public RequestModel Get(int id)
@@ -144,6 +152,24 @@ namespace Ombi.Core.Models.Requests
         public async Task<IEnumerable<RequestModel>> GetAllAsync()
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
+            var retVal = new List<RequestModel>();
+
+            foreach (var b in blobs)
+            {
+                if (b == null)
+                {
+                    continue;
+                }
+                var model = ByteConverterHelper.ReturnObject<RequestModel>(b.Content);
+                model.Id = b.Id;
+                retVal.Add(model);
+            }
+            return retVal;
+        }
+
+        public async Task<IEnumerable<RequestModel>> GetAllAsync(int count, int position)
+        {
+            var blobs = await Repo.GetAllAsync(count, position).ConfigureAwait(false);
             var retVal = new List<RequestModel>();
 
             foreach (var b in blobs)
