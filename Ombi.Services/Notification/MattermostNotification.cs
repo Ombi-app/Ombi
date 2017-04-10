@@ -2,7 +2,7 @@
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: MattermostNotification.cs
-//    Created By: Jamie Rees
+//    Created By: Michel Zaleski
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the

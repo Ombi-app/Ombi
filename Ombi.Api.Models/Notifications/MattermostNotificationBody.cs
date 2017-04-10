@@ -2,7 +2,7 @@
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
 //    File: MattermostNotificationBody.cs
-//    Created By: Jamie Rees
+//    Created By: Michel Zaleski
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -37,17 +37,7 @@ namespace Ombi.Api.Models.Notifications
             username = "Ombi";
         }
 
-        [JsonIgnore]
-        private string _username;
-        public string username
-        {
-            get { return _username; }
-            set
-            {
-                if (!string.IsNullOrEmpty(value))
-                    _username = value;
-            }
-        }
+        public string username { get; set; } = "Ombi"; 
         public string channel { get; set; }
         public string text { get; set; }
         public string icon_url { get; set; }
