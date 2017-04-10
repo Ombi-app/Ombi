@@ -1,5 +1,5 @@
 ﻿<h1 id="searchTitle">Search</h1>
-<h4>Search Paragraph</h4>
+<h4>Want to watch something that is not currently available?! No problem! Just search for it below and request it!</h4>
 <br />
 <!-- Nav tabs -->
 
@@ -137,17 +137,15 @@
 
                     <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
 
-                    <span *ngIf="result.available" class="label label-success">@UI.Search_Available</span>
-
-                    <span *ngIf="result.approved" class="label label-info">@UI.Search_Processing_Request</span>
-
-                    <div *ngIf="result.requested; then requested else notRequested"></div>
+                    <span *ngIf="result.available" class="label label-success">Available</span>
+                    <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
+                    <div *ngIf="result.requested && !result.available; then requested else notRequested"></div>
                     <template #requested>
-                        <span class="label label-warning">Pending Approval</span>
+                        <span *ngIf="!result.available"  class="label label-warning">Pending Approval</span>
                     </template>
 
                     <template #notRequested>
-                        <span class="label label-danger">Not Yet Requested</span>
+                        <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
                     </template>
 
 

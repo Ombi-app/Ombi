@@ -257,6 +257,22 @@ namespace Ombi.Core.Engine
             var allRequests = await RequestService.GetAllAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
 
+            results.Approved = request.Approved;
+            results.Available = request.Available;
+            results.Denied = request.Denied;
+            results.DeniedReason = request.DeniedReason;
+            //results.AdminNote = request.AdminNote;
+            results.ImdbId = request.ImdbId;
+            results.Episodes = request.Episodes?.ToList() ?? new List<EpisodesModel>();
+            results.IssueId = request.IssueId;
+            //results.Issues = request.Issues;
+            //results.OtherMessage = request.OtherMessage;
+            results.Overview = request.Overview;
+            results.PosterPath = request.PosterPath;
+            results.RequestedUsers = request.RequestedUsers?.ToList() ?? new List<string>();
+            //results.RootFolderSelected = request.RootFolderSelected; 
+
+
             var model = RequestService.UpdateRequest(results);
             return MapToVm(new List<RequestModel>{model}).FirstOrDefault();
         }

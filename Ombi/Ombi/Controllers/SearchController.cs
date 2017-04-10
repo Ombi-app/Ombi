@@ -23,6 +23,12 @@ namespace Ombi.Controllers
             return await MovieEngine.ProcessMovieSearch(searchTerm);
         }
 
+        [HttpPost("movie/extrainfo")]
+        public async Task<IEnumerable<SearchMovieViewModel>> GetImdbInfo([FromBody]IEnumerable<SearchMovieViewModel> model)
+        {
+            return await MovieEngine.LookupImdbInformation(model);
+        }
+
         [HttpGet("movie/popular")]
         public async Task<IEnumerable<SearchMovieViewModel>> Popular()
         {

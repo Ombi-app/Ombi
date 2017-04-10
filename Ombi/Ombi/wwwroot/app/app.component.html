@@ -14,13 +14,13 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li><a [routerLink]="['/search']"><i class="fa fa-search"></i> Search</a></li>
+                <li><a [routerLinkActive]="['active']" [routerLink]="['/search']"><i class="fa fa-search"></i> Search</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
+                <li><a [routerLinkActive]="['active']" [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li><a [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
+                <li><a [routerLinkActive]="['active']" [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
             </ul>
         </div>
     </div>

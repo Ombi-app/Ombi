@@ -23,6 +23,57 @@ namespace Ombi.Core.Engine
         private IRequestService RequestService { get; }
         private IMovieDbApi MovieApi { get; }
 
+        public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
+        {
+            var retVal = new List<SearchMovieViewModel>();
+            Dictionary<int, RequestModel> dbMovies = await RequestedMovies();
+            foreach (var m in movies)
+            {
+
+                var movieInfo = await MovieApi.GetMovieInformationWithVideo(m.Id);
+                var viewMovie = new SearchMovieViewModel
+                {
+                    Adult = movieInfo.adult,
+                    BackdropPath = movieInfo.backdrop_path,
+                    Id = movieInfo.id,
+                    OriginalLanguage = movieInfo.original_language,
+                    OriginalTitle = movieInfo.original_title,
+                    Overview = movieInfo.overview,
+                    Popularity = movieInfo.popularity,
+                    PosterPath = movieInfo.poster_path,
+                    ReleaseDate =
+                        string.IsNullOrEmpty(movieInfo.release_date)
+                            ? DateTime.MinValue
+                            : DateTime.Parse(movieInfo.release_date),
+                    Title = movieInfo.title,
+                    Video = movieInfo.video,
+                    VoteAverage = movieInfo.vote_average,
+                    VoteCount = movieInfo.vote_count,
+                    ImdbId = movieInfo?.imdb_id,
+                    Homepage = movieInfo?.homepage
+                };
+                retVal.Add(viewMovie);
+                // TODO needs to be careful about this, it's adding extra time to search...
+                // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
+                //var videoId = movieInfo?.video ?? false
+                //    ? movieInfo?.videos?.results?.FirstOrDefault()?.key
+                //    : string.Empty;
+
+                //viewMovie.Trailer = string.IsNullOrEmpty(videoId)
+                //    ? string.Empty
+                //    : $"https://www.youtube.com/watch?v={videoId}";
+                if (dbMovies.ContainsKey(movieInfo.id) /*&& canSee*/) // compare to the requests db
+                {
+                    var dbm = dbMovies[movieInfo.id];
+
+                    viewMovie.Requested = true;
+                    viewMovie.Approved = dbm.Approved;
+                    viewMovie.Available = dbm.Available;
+                }
+            }
+            return retVal;
+        }
+
         public async Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search)
         {
             var api = new TheMovieDbApi.TheMovieDbApi();
@@ -103,25 +154,7 @@ namespace Ombi.Core.Engine
                 };
                 viewMovies.Add(viewMovie);
 
-                var counter = 0;
-                if (counter <= 5) // Let's only do it for the first 5 items
-                {
-                    var movieInfo = await MovieApi.GetMovieInformationWithVideo(movie.id);
 
-                    // TODO needs to be careful about this, it's adding extra time to search...
-                    // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                    viewMovie.ImdbId = movieInfo?.imdb_id;
-                    viewMovie.Homepage = movieInfo?.homepage;
-                    //var videoId = movieInfo?.video ?? false
-                    //    ? movieInfo?.videos?.results?.FirstOrDefault()?.key
-                    //    : string.Empty;
-
-                    //viewMovie.Trailer = string.IsNullOrEmpty(videoId)
-                    //    ? string.Empty
-                    //    : $"https://www.youtube.com/watch?v={videoId}";
-
-                    counter++;
-                }
 
                 //    var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
 

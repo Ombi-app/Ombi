@@ -1,5 +1,5 @@
 ﻿<h1 id="searchTitle">Requests</h1>
-
+<h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
 <div class="form-group">
   <div>
         <input type="text" class="form-control form-control-custom" placeholder="Search" (keyup)="search($event)">
@@ -26,8 +26,8 @@
 
                 <div class="col-sm-5 ">
                     <div>
-                        <a href="http://www.imdb.com/title/{{request.imdb}}/" target="_blank">
-                            <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: yyyy}})</h4>
+                        <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
+                            <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: 'yyyy'}})</h4>
                         </a>
                     </div>
                     <br />
@@ -38,11 +38,11 @@
 
                     <div>
                         <span>Request status: </span>
-                        <span *ngIf="request.available" class="label label-success">Request Available</span>
-                        <span *ngIf="request.approved" class="label label-info">Processing Request</span>
+                        <span *ngIf="request.available" class="label label-success">Available</span>
+                        <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
                         <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
                         <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                        <span *ngIf="!request.approved && !request.availble" class="label label-warning">Pending Approval</span>
+                        <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
 
                     </div>
                     <div *ngIf="request.denied">
@@ -51,8 +51,8 @@
                     </div>
 
 
-                    <div>Release Date: {{request.releaseDate}}</div>
-
+                    <div>Release Date: {{request.releaseDate | date}}</div>
+                    <br/>
 
                     <!--{{#if_eq type "tv"}}
                     {{#if episodes}}
@@ -64,7 +64,7 @@
                     {{/if_eq}}-->
                     <div *ngIf="request.requestedUsers">Requested By: {{request.requestedUsers}}</div>
 
-                    <div>Requested Date: {{request.requestedDate}}</div>
+                    <div>Requested Date: {{request.requestedDate | date}}</div>
                     <!--{{#if admin}}
                     {{#if currentRootPath}}
                     <div class="{{requestId}}rootPathMain">Root Path: <span id="{{requestId}}currentRootPath">{{currentRootPath}}</span></div>
@@ -88,72 +88,77 @@
                 <div class="col-sm-3 col-sm-push-3">
                     <div *ngIf="!request.admin">
                         <div *ngIf="!request.approved">
-                            <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
-                            <div *ngIf="request.hasQualities" class="btn-group btn-split">
-                                <button type="button" (click)="approve(request)" class="btn btn-sm btn-success-outline approve"><i class="fa fa-plus"></i> Approve</button>
-                                <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <!--<ul class="dropdown-menu">
+                            <form>
+                                <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
+                                <div *ngIf="request.hasQualities" class="btn-group btn-split">
+                                    <button type="button" (click)="approve(request)" class="btn btn-sm btn-success-outline approve"><i class="fa fa-plus"></i> Approve</button>
+                                    <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span class="caret"></span>
+                                        <span class="sr-only">Toggle Dropdown</span>
+                                    </button>
+                                    <!--<ul class="dropdown-menu">
                 {{#each qualities}}
                 <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
                 {{/each}}
             </ul>-->
-                            </div>
+                                </div>
 
 
-                            <button *ngIf="!request.hasQualities" (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
-
+                                <button *ngIf="!request.hasQualities" (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                            </form>
 
 
 
                             <!--<form method="POST" action="@formAction/requests/changeRootFolder{{#if_eq type "tv"}}tv{{else}}movie{{/if_eq}}" id="changeFolder{{requestId}}">
-            <input name="requestId" type="text" value="{{requestId}}" hidden="hidden" />
-            {{#if_eq hasRootFolders true}}
-            <div class="btn-group btn-split">
-                <button type="button" class="btn btn-sm btn-success-outline" id="changeRootFolderBtn{{requestId}}" custom-button="{{requestId}}">@*<i class="fa fa-plus"></i>*@ Change Root Folder</button>
-                <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="caret"></span>
-                    <span class="sr-only">@UI.Requests_ToggleDropdown</span>
-                </button>
-                <ul class="dropdown-menu">
-                    {{#each rootFolders}}
-                    <li><a href="#" class="change-root-folder" id="{{id}}" requestId="{{requestId}}">{{path}}</a></li>
-                    {{/each}}
-                </ul>
-            </div>
-            {{/if_eq}}
-        </form>-->
-
-
-
-                            <div *ngIf="!request.denied">
-                                <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
-                                <input name="reason" type="text" hidden="hidden" />
+                                <input name="requestId" type="text" value="{{requestId}}" hidden="hidden"/>
+                                {{#if_eq hasRootFolders true}}
                                 <div class="btn-group btn-split">
-                                    <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
-                                    <button type="button" class="btn btn-danger-outline dropdown-toggle"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button type="button" class="btn btn-sm btn-success-outline" id="changeRootFolderBtn{{requestId}}" custom-button="{{requestId}}">@*<i class="fa fa-plus"></i>*@ Change Root Folder</button>
+                                    <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <span class="caret"></span>
                                         <span class="sr-only">@UI.Requests_ToggleDropdown</span>
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li><a class="deny-with-reason" id="denyReason{{request.requestId}}" href="#" data-toggle="modal" data-target="#denyReasonModal">Deny with a reason</a></li>
+                                        {{#each rootFolders}}
+                                        <li><a href="#" class="change-root-folder" id="{{id}}" requestId="{{requestId}}">{{path}}</a></li>
+                                        {{/each}}
                                     </ul>
                                 </div>
+                                {{/if_eq}}
+                            </form>-->
+
+
+
+                            <div *ngIf="!request.denied">
+                                <form>
+                                    <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden"/>
+                                    <input name="reason" type="text" hidden="hidden"/>
+                                    <div class="btn-group btn-split">
+                                        <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                                        <button type="button" class="btn btn-danger-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">@UI.Requests_ToggleDropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="deny-with-reason" id="denyReason{{request.requestId}}" href="#" data-toggle="modal" data-target="#denyReasonModal">Deny with a reason</a></li>
+                                        </ul>
+                                    </div>
+                                </form>
                             </div>
                         </div>
+                        <form>
+                            <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete"><i class="fa fa-minus"></i> Remove</button>
+                        </form>
+            
+                        <form>
+                            <button *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
+                            <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
+                            </form>
 
-                        <button (click)="removeRequest(request)" style="text-align: right" class="btn btn-sm btn-danger-outline delete"><i class="fa fa-minus"></i> Remove</button>
-
-                        <button *ngIf="request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
-                        <button *ngIf="!request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
 
 
 
-
-
-                    </div>
+</div>
 
 
                     <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
@@ -163,11 +168,11 @@
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a id="{{request.requestId}}" issue-select="0" class="dropdownIssue" href="#">@UI.Issues_WrongAudio</a></li>
-                            <li><a id="{{request.requestId}}" issue-select="1" class="dropdownIssue" href="#">@UI.Issues_NoSubs</a></li>
-                            <li><a id="{{request.requestId}}" issue-select="2" class="dropdownIssue" href="#">@UI.Issues_WrongContent</a></li>
-                            <li><a id="{{request.requestId}}" issue-select="3" class="dropdownIssue" href="#">@UI.Issues_Playback</a></li>
-                            <li><a id="{{request.requestId}}" issue-select="4" class="dropdownIssue" href="#" data-toggle="modal" data-target="#myModal">@UI.Issues_Other</a></li>
+                            <li><a issue-select="0">@UI.Issues_WrongAudio</a></li>
+                            <li><a issue-select="1">@UI.Issues_NoSubs</a></li>
+                            <li><a issue-select="2">@UI.Issues_WrongContent</a></li>
+                            <li><a issue-select="3">@UI.Issues_Playback</a></li>
+                            <li><a issue-select="4" data-toggle="modal" data-target="#myModal">@UI.Issues_Other</a></li>
                         </ul>
                     </div>
 

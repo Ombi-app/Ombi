@@ -66,11 +66,13 @@ export class RequestComponent implements OnInit {
 
     changeAvailability(request: IRequestModel, available: boolean) {
         request.available = available;
+        
         this.updateRequest(request);
     }
 
     approve(request: IRequestModel) {
         request.approved = true;
+        request.denied = false;
         this.updateRequest(request);
     }
 

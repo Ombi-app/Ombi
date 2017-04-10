@@ -32,6 +32,7 @@ var paths = {
             '@angular/http',
             '@angular/router',
             '@angular/forms',
+            
         ],
         dest: './lib'
     },
@@ -122,7 +123,7 @@ var paths = {
         {
             name: "angular2-infinite-scroll",
             src: ['./node_modules/angular2-infinite-scroll/**/*.js', '!./node_modules/angular2-infinite-scroll/bundles/**/*.js'],
-            dest:"./lib/angular2-infinite-scroll/"
+            dest: "./lib/angular2-infinite-scroll/"
         },
     ],
     sass: { // Simple sass->css compilation
@@ -273,11 +274,17 @@ gulp.task('typescript', function () {
     return run('tsc').exec();
 });
 
+uglify().on('error',
+    function(err) {
+        gutil.log(gutil.colors.red('[Error]'), err.toString());
+        this.emit('end');
+    });
+
 gulp.task('fullvar', () => { global.full = true });
 gulp.task('copy', ['lib', 'libcss', 'libfonts', 'libimages', 'npm', 'modules']);
 gulp.task('compile', callback => runSequence('copy', 'sass', callback));
 gulp.task('build', callback => runSequence('compile', 'bundle', callback));
-gulp.task('full', callback => runSequence('clean', 'compile', callback));
+gulp.task('full', callback => runSequence(/*'clean',*/ 'compile', callback));
 
 // Use this in a build server environment to compile and bundle everything
 gulp.task('publish', callback => runSequence('fullvar', 'full', 'typescript', 'bundle', callback));

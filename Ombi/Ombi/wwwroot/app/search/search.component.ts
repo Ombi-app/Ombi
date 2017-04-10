@@ -33,7 +33,13 @@ export class SearchComponent implements OnInit {
                     this.clearResults();
                     return;
                 }
-                this.searchService.searchMovie(this.searchText).subscribe(x => this.movieResults = x);
+                this.searchService.searchMovie(this.searchText).subscribe(x => {
+                    this.movieResults = x;
+
+                    // Now let's load some exta info including IMDBId
+                    // This way the search is fast at displaying results.
+                    this.getExtaInfo();
+                });
             });
     }
 
@@ -66,19 +72,35 @@ export class SearchComponent implements OnInit {
 
     popularMovies() {
         this.clearResults();
-        this.searchService.popularMovies().subscribe(x => this.movieResults = x);
+        this.searchService.popularMovies().subscribe(x => {
+            this.movieResults = x;
+            this.getExtaInfo();
+        });
     }
     nowPlayingMovies() {
         this.clearResults();
-        this.searchService.nowPlayingMovies().subscribe(x => this.movieResults = x);
+        this.searchService.nowPlayingMovies().subscribe(x => {
+            this.movieResults = x;
+            this.getExtaInfo();
+        });
     }
     topRatedMovies() {
         this.clearResults();
-        this.searchService.topRatedMovies().subscribe(x => this.movieResults = x);
+        this.searchService.topRatedMovies().subscribe(x => {
+            this.movieResults = x;
+            this.getExtaInfo();
+        });
     }
     upcomingMovies() {
         this.clearResults();
-        this.searchService.upcomignMovies().subscribe(x => this.movieResults = x);
+        this.searchService.upcomignMovies().subscribe(x => {
+            this.movieResults = x;
+            this.getExtaInfo();
+        });
+    }
+
+    private getExtaInfo() {
+        this.searchService.extraInfo(this.movieResults).subscribe(m => this.movieResults = m);
     }
 
     private clearResults() {
