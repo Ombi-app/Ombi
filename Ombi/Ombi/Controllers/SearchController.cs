@@ -8,7 +8,7 @@ using Ombi.Core.Models.Search;
 
 namespace Ombi.Controllers
 {
-    public class SearchController : BaseApiController
+    public class SearchController : BaseV1ApiController
     {
         public SearchController(IMovieEngine movie)
         {

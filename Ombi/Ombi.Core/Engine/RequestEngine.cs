@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
@@ -7,6 +8,7 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Store.Entities;
 using Ombi.TheMovieDbApi;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine
 {
@@ -233,7 +235,41 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<RequestViewModel>> GetRequests()
         {
             var allRequests = await RequestService.GetAllAsync();
-            var viewModel = allRequests.Select(movie => new RequestViewModel
+            var viewModel = MapToVm(allRequests);
+            return viewModel;
+        }
+
+        public async Task<IEnumerable<RequestViewModel>> GetRequests(int count, int position)
+        {
+            var allRequests = await RequestService.GetAllAsync(count, position);
+            var viewModel = MapToVm(allRequests);
+            return viewModel;
+        }
+        public async Task<IEnumerable<RequestViewModel>> SearchRequest(string search)
+        {
+            var allRequests = await RequestService.GetAllAsync();
+            var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
+            var viewModel = MapToVm(results);
+            return viewModel;
+        }
+        public async Task<RequestViewModel> UpdateRequest(RequestViewModel request)
+        {
+            var allRequests = await RequestService.GetAllAsync();
+            var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
+
+            var model = RequestService.UpdateRequest(results);
+            return MapToVm(new List<RequestModel>{model}).FirstOrDefault();
+        }
+
+        public async Task RemoveRequest(int requestId)
+        {
+            await RequestService.DeleteRequestAsync(requestId);
+        }
+
+
+        private IEnumerable<RequestViewModel> MapToVm(IEnumerable<RequestModel> model)
+        {
+            return model.Select(movie => new RequestViewModel
             {
                 ProviderId = movie.ProviderId,
                 Type = movie.Type,
@@ -259,8 +295,6 @@ namespace Ombi.Core.Engine
                 //RootFolders = rootFolders.ToArray(),
                 //CurrentRootPath = radarr.Enabled ? GetRootPath(movie.RootFolderSelected, radarr).Result : null
             }).ToList();
-            return viewModel;
         }
-        
     }
 }
