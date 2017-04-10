@@ -1,8 +1,8 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
-//    Created By: Jamie Rees
+//    File: MattermostNotificationBody.cs
+//    Created By: Michel Zaleski
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -25,34 +25,21 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using Newtonsoft.Json;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Models.Notifications
 {
-    public class ApiModule : NinjectModule
+    public class MattermostNotificationBody
     {
-        public override void Load()
+        [JsonConstructor]
+        public MattermostNotificationBody()
         {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IMattermostApi>().To<MattermostApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
-            Bind<IEmbyApi>().To<EmbyApi>();
-            Bind<IAppveyorApi>().To<AppveyorApi>();
+            username = "Ombi";
         }
+
+        public string username { get; set; } = "Ombi"; 
+        public string channel { get; set; }
+        public string text { get; set; }
+        public string icon_url { get; set; }
     }
 }

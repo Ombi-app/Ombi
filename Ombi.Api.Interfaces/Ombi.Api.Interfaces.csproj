@@ -65,6 +65,7 @@
     <Compile Include="IPushbulletApi.cs" />
     <Compile Include="IRadarrApi.cs" />
     <Compile Include="ISlackApi.cs" />
+    <Compile Include="IMattermostApi.cs" />
     <Compile Include="IPushoverApi.cs" />
     <Compile Include="ISickRageApi.cs" />
     <Compile Include="ISonarrApi.cs" />
