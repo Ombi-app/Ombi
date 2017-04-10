@@ -48,6 +48,7 @@ using Ombi.UI.Modules.Admin;
 namespace Ombi.UI.Tests
 {
     [TestFixture]
+    [Ignore("Needs rework")]
     public class AdminModuleTests
     {
         private Mock<ISettingsService<PlexRequestSettings>> PlexRequestMock { get; set; }

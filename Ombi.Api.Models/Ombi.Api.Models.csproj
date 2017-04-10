@@ -49,6 +49,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Appveyor\AppveyorProject.cs" />
+    <Compile Include="Emby\EmbyChapter.cs" />
+    <Compile Include="Emby\EmbyConfiguration.cs" />
+    <Compile Include="Emby\EmbyEpisodeInformation.cs" />
+    <Compile Include="Emby\EmbyEpisodeItem.cs" />
+    <Compile Include="Emby\EmbyExternalurl.cs" />
+    <Compile Include="Emby\EmbyImagetags.cs" />
+    <Compile Include="Emby\EmbyInformation.cs" />
+    <Compile Include="Emby\EmbyItem.cs" />
+    <Compile Include="Emby\EmbyItemContainer.cs" />
+    <Compile Include="Emby\EmbyMediasource.cs" />
+    <Compile Include="Emby\EmbyMediastream.cs" />
+    <Compile Include="Emby\EmbyMediaType.cs" />
+    <Compile Include="Emby\EmbyMovieItem.cs" />
+    <Compile Include="Emby\EmbyPerson.cs" />
+    <Compile Include="Emby\EmbyPolicy.cs" />
+    <Compile Include="Emby\EmbyProviderids.cs" />
+    <Compile Include="Emby\EmbyRemotetrailer.cs" />
+    <Compile Include="Emby\EmbyRequiredhttpheaders.cs" />
+    <Compile Include="Emby\EmbySeriesInformation.cs" />
+    <Compile Include="Emby\EmbySeriesItem.cs" />
+    <Compile Include="Emby\EmbySeriesstudioinfo.cs" />
+    <Compile Include="Emby\EmbyStudio.cs" />
+    <Compile Include="Emby\EmbySystemInfo.cs" />
+    <Compile Include="Emby\EmbyUser.cs" />
+    <Compile Include="Emby\EmbyUserdata.cs" />
+    <Compile Include="Emby\EmbyMovieInformation.cs" />
     <Compile Include="Movie\CouchPotatoAdd.cs" />
     <Compile Include="Movie\CouchPotatoMovies.cs" />
     <Compile Include="Movie\CouchPotatoProfiles.cs" />
@@ -87,6 +114,7 @@
     <Compile Include="Radarr\RadarrAddMovie.cs" />
     <Compile Include="Radarr\RadarrAddOptions.cs" />
     <Compile Include="Radarr\RadarrError.cs" />
+    <Compile Include="Radarr\RadarrMovieContainer.cs" />
     <Compile Include="Radarr\RadarrMovieResponse.cs" />
     <Compile Include="SickRage\SickRageBase.cs" />
     <Compile Include="SickRage\SickrageShows.cs" />

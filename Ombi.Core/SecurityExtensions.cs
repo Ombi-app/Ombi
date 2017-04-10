@@ -36,23 +36,28 @@ using Ombi.Core.SettingModels;
 using Ombi.Core.Users;
 using Ombi.Helpers;
 using Ombi.Helpers.Permissions;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core
 {
     public class SecurityExtensions : ISecurityExtensions
     {
-        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IPlexUserRepository plexUsers, ISettingsService<UserManagementSettings> umSettings)
+        public SecurityExtensions(IUserRepository userRepository, IResourceLinker linker, IExternalUserRepository<PlexUsers> plexUsers, ISettingsService<UserManagementSettings> umSettings,
+            IExternalUserRepository<EmbyUsers> embyUsers)
         {
             UserRepository = userRepository;
             Linker = linker;
             PlexUsers = plexUsers;
             UserManagementSettings = umSettings;
+            EmbyUsers = embyUsers;
         }
 
         private IUserRepository UserRepository { get; }
         private IResourceLinker Linker { get; }
-        private IPlexUserRepository PlexUsers { get; }
+        private IExternalUserRepository<PlexUsers> PlexUsers { get; }
+        private IExternalUserRepository<EmbyUsers> EmbyUsers { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
         public bool IsLoggedIn(NancyContext context)
@@ -69,16 +74,18 @@ namespace Ombi.Core
             return realUser || plexUser;
         }
 
-        public bool IsPlexUser(IUserIdentity user)
+        public bool IsExternalUser(IUserIdentity user)
         {
             if (user == null)
             {
                 return false;
             }
             var plexUser = PlexUsers.GetUserByUsername(user.UserName);
-            return plexUser != null;
-        }
+            var embyUser = EmbyUsers.GetUserByUsername(user.UserName);
 
+            return plexUser != null || embyUser != null;
+        }
+        
         public bool IsNormalUser(IUserIdentity user)
         {
             if (user == null)
@@ -104,6 +111,12 @@ namespace Ombi.Core
             if (plexUser != null)
             {
                 return !string.IsNullOrEmpty(plexUser.UserAlias) ? plexUser.UserAlias : plexUser.Username;
+            }
+
+            var embyUser = EmbyUsers.GetUserByUsername(username);
+            if (embyUser != null)
+            {
+                return !string.IsNullOrEmpty(embyUser.UserAlias) ? embyUser.UserAlias : embyUser.Username;
             }
 
             var dbUser = UserRepository.GetUserByUsername(username);
@@ -300,6 +313,12 @@ namespace Ombi.Core
             {
                 var permissions = (Permissions)plexUser.Permissions;
                 return permissions;
+            }
+
+            var embyUsers = EmbyUsers.GetUserByUsername(userName);
+            if (embyUsers != null)
+            {
+                return (Permissions) embyUsers.Permissions;
             }
 
             return 0;

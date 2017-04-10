@@ -168,7 +168,7 @@ namespace Ombi.Core.StatusChecker
             var model = new StatusModel
             {
                 DownloadUri = downloadLink,
-                ReleaseNotes = $"{branchDisplay} (See recent commits for details)",
+                ReleaseNotes = $"{branchDisplay} (See Recent Changes tab for more details)",
                 ReleaseTitle = $"Ombi {branchDisplay}",
                 NewVersion = branchResult.build.version,
                 UpdateUri = downloadLink,
@@ -202,6 +202,7 @@ namespace Ombi.Core.StatusChecker
 
         public async Task<Uri> OAuth(string url, ISession session)
         {
+            await Task.Yield();
 
             var csrf = StringCipher.Encrypt(Guid.NewGuid().ToString("N"), "CSRF");
             session[SessionKeys.CSRF] = csrf;

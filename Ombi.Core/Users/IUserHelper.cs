@@ -8,5 +8,6 @@ namespace Ombi.Core.Users
         IEnumerable<UserHelperModel> GetUsers();
         IEnumerable<UserHelperModel> GetUsersWithPermission(Permissions permission);
         IEnumerable<UserHelperModel> GetUsersWithFeature(Features feature);
+        UserHelperModel GetUser(string username);
     }
 }

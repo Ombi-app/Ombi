@@ -47,6 +47,8 @@ namespace Ombi.UI.Modules
 
         public async Task<Response> Netflix(string title)
         {
+            await Task.Yield();
+
             var result = NetflixApi.CheckNetflix(title);
 
             if (!string.IsNullOrEmpty(result.Message))

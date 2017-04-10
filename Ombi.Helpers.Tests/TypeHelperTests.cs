@@ -48,7 +48,7 @@ namespace Ombi.Helpers.Tests
             var consts = typeof(UserClaims).GetConstantsValues<string>();
             Assert.That(consts.Contains("Admin"),Is.True);
             Assert.That(consts.Contains("PowerUser"),Is.True);
-            Assert.That(consts.Contains("User"),Is.True);
+            Assert.That(consts.Contains("RegularUser"),Is.True);
         }
 
         private static IEnumerable<TestCaseData> TypeData
@@ -59,14 +59,7 @@ namespace Ombi.Helpers.Tests
                 yield return new TestCaseData(typeof(int)).Returns(new string[0]).SetName("NoPropeties Class");
                 yield return new TestCaseData(typeof(IEnumerable<>)).Returns(new string[0]).SetName("Interface");
                 yield return new TestCaseData(typeof(string)).Returns(new[] { "Chars", "Length" }).SetName("String");
-                yield return new TestCaseData(typeof(RequestedModel)).Returns(
-                    new[]
-                    {
-                        "ProviderId", "ImdbId", "TvDbId", "Overview", "Title", "PosterPath", "ReleaseDate", "Type",
-                         "Status", "Approved", "RequestedBy", "RequestedDate", "Available", "Issues", "OtherMessage", "AdminNote",
-                         "SeasonList", "SeasonCount", "SeasonsRequested", "MusicBrainzId", "RequestedUsers","ArtistName",
-                         "ArtistId","IssueId","Episodes", "Denied", "DeniedReason", "AllUsers","CanApprove","Id",
-                    }).SetName("Requested Model");
+
             }
         }
 

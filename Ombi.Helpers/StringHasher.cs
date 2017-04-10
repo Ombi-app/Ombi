@@ -25,6 +25,7 @@
 //  ************************************************************************/
 #endregion
 
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -34,6 +35,10 @@ namespace Ombi.Helpers
     {
         public static string CalcuateMd5Hash(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
             using (var md5 = MD5.Create())
             {
                 var inputBytes = Encoding.UTF8.GetBytes(input);
@@ -48,6 +53,11 @@ namespace Ombi.Helpers
 
                 return sb.ToString();
             }
+        }
+
+        public static string GetSha1Hash(string input)
+        {
+            return string.Join("", (new SHA1Managed().ComputeHash(Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
         }
     }
 }

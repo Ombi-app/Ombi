@@ -48,7 +48,7 @@ namespace Ombi.Services.Jobs
     public class PlexContentCacher : IJob, IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plexSettings, IRequestService request, IPlexApi plex, ICacheProvider cache,
-            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, INotificationEngine e, IRepository<PlexContent> content)
+            INotificationService notify, IJobRecord rec, IRepository<UsersToNotify> users, IRepository<PlexEpisodes> repo, IPlexNotificationEngine e, IRepository<PlexContent> content)
         {
             Plex = plexSettings;
             RequestService = request;
@@ -77,7 +77,10 @@ namespace Ombi.Services.Jobs
         public void CacheContent()
         {
             var plexSettings = Plex.GetSettings();
-
+            if (!plexSettings.Enable)
+            {
+                return;
+            }
             if (!ValidateSettings(plexSettings))
             {
                 Log.Debug("Validation of the plex settings failed.");
@@ -112,7 +115,8 @@ namespace Ombi.Services.Jobs
                         ReleaseYear = video.Year,
                         Title = video.Title,
                         ProviderId = video.ProviderId,
-                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, video.RatingKey)
+                        Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, video.RatingKey),
+                        ItemId =  video.RatingKey
                     }));
                 }
             }
@@ -142,6 +146,7 @@ namespace Ombi.Services.Jobs
                         ProviderId = x.ProviderId,
                         Seasons = x.Seasons?.Select(d => PlexHelper.GetSeasonNumberFromTitle(d.Title)).ToArray(),
                         Url = PlexHelper.GetPlexMediaUrl(settings.MachineIdentifier, x.RatingKey),
+                        ItemId= x.RatingKey
 
                     }));
                 }
@@ -234,13 +239,13 @@ namespace Ombi.Services.Jobs
 
                     var movies = GetPlexMovies(results);
 
-                    //// Time to destroy the plex movies from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 0 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 0 });
+                        return new List<PlexContent>();
+                    });
 
                     foreach (var m in movies)
                     {
@@ -259,7 +264,7 @@ namespace Ombi.Services.Jobs
                             return media;
                         });
 
-                        if (item == null)
+                        if (item == null && !string.IsNullOrEmpty(m.ItemId))
                         { 
                             // Doesn't exist, insert it
                             PlexContent.Insert(new PlexContent
@@ -268,19 +273,20 @@ namespace Ombi.Services.Jobs
                                 ReleaseYear = m.ReleaseYear ?? string.Empty,
                                 Title = m.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Movie,
-                                Url = m.Url
+                                Url = m.Url,
+                                ItemId = m.ItemId
                             });
                         }
                     }
 
                     var tv = GetPlexTvShows(results);
-                    //// Time to destroy the plex tv from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 1 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex tv from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 1 });
+                        return new List<PlexContent>();
+                    });
                     foreach (var t in tv)
                     {
                         if (string.IsNullOrEmpty(t.ProviderId))
@@ -299,7 +305,7 @@ namespace Ombi.Services.Jobs
                             return media;
                         });
 
-                        if (item == null)
+                        if (item == null && !string.IsNullOrEmpty(t.ItemId))
                         {
                             PlexContent.Insert(new PlexContent
                             {
@@ -308,19 +314,20 @@ namespace Ombi.Services.Jobs
                                 Title = t.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Show,
                                 Url = t.Url,
-                                Seasons = ByteConverterHelper.ReturnBytes(t.Seasons)
+                                Seasons = ByteConverterHelper.ReturnBytes(t.Seasons),
+                                ItemId = t.ItemId
                             });
                         }
                     }
 
                     var albums = GetPlexAlbums(results);
-                    //// Time to destroy the plex movies from the DB
-                    //PlexContent.Custom(connection =>
-                    //{
-                    //    connection.Open();
-                    //    connection.Query("delete from PlexContent where type = @type", new { type = 2 });
-                    //    return new List<PlexContent>();
-                    //});
+                    // Time to destroy the plex movies from the DB
+                    PlexContent.Custom(connection =>
+                    {
+                        connection.Open();
+                        connection.Query("delete from PlexContent where type = @type", new { type = 2 });
+                        return new List<PlexContent>();
+                    });
 
                     foreach (var a in albums)
                     {
@@ -349,7 +356,7 @@ namespace Ombi.Services.Jobs
                                 ReleaseYear = a.ReleaseYear ?? string.Empty,
                                 Title = a.Title,
                                 Type = Store.Models.Plex.PlexMediaType.Artist,
-                                Url = a.Url
+                                Url = a.Url,
                             });
                         }
                     }
@@ -385,12 +392,15 @@ namespace Ombi.Services.Jobs
 
         private bool ValidateSettings(PlexSettings plex)
         {
-            if (plex?.Ip == null || plex?.PlexAuthToken == null)
+            if (plex.Enable)
             {
-                Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
-                return false;
+                if (plex?.Ip == null || plex?.PlexAuthToken == null)
+                {
+                    Log.Warn("A setting is null, Ensure Plex is configured correctly, and we have a Plex Auth token.");
+                    return false;
+                }
             }
-            return true;
+            return plex.Enable;
         }
 
         public void Execute(IJobExecutionContext context)

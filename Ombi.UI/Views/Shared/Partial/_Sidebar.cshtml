@@ -9,6 +9,7 @@
         @Html.GetSidebarUrl(Context, "/admin/authentication", "Authentication", "glyphicon glyphicon-lock")
         @Html.GetSidebarUrl(Context, "/admin/usermanagementsettings", "User Management Settings", "glyphicon glyphicon-user")
         @Html.GetSidebarUrl(Context, "/admin/plex", "Plex", "glyphicon glyphicon-play-circle")
+        @Html.GetSidebarUrl(Context, "/admin/emby", "Emby", "glyphicon glyphicon-play-circle")
         @Html.GetSidebarUrl(Context, "/admin/couchpotato", "CouchPotato", "glyphicon glyphicon-film")
         @Html.GetSidebarUrl(Context, "/admin/watcher", "Watcher (beta)", "glyphicon glyphicon-film")
         @Html.GetSidebarUrl(Context, "/admin/radarr", "Radarr (beta)", "glyphicon glyphicon-film")
@@ -16,6 +17,7 @@
         @Html.GetSidebarUrl(Context, "/admin/sickrage", "SickRage", "fa fa-tv")
         @Html.GetSidebarUrl(Context, "/admin/headphones", "Headphones (beta)", "glyphicon glyphicon-headphones")
         @Html.GetSidebarUrl(Context, "/admin/newsletter", "Newsletter Settings", "fa fa-newspaper-o")
+        @Html.GetSidebarUrl(Context, "/admin/massemail", "Mass Email", "fa fa-reply-all")
         <div id="sidebar" >
 
             <a href="#notifications" class="list-group-item" data-parent="#sidebar">
@@ -39,7 +41,7 @@
 
 
         @Html.GetSidebarUrl(Context, "/admin/logs", "Logs", "fa fa-edit")
-        @Html.GetSidebarUrl(Context, "/admin/status", "Status", "fa fa-dashboard")
+        @Html.GetSidebarUrl(Context, "/admin/status", "Updates", "fa fa-dashboard")
         @Html.GetSidebarUrl(Context, "/admin/scheduledjobs", "Scheduled Jobs", "fa fa-hand-spock-o")
         @Html.GetSidebarUrl(Context, "/admin/faultqueue", "Request Fault Queue", "fa fa-history")
     </div>
@@ -48,8 +50,12 @@
 </div>
 
 <script>
+
     $('#sidebar > a').on('click', function (e) {
         e.preventDefault();
+        $('.customTooltip').tooltipster({
+            contentCloning: true
+        });
 
         if (!$(this).hasClass("active")) {
             var lastActive = $(this).closest("#sidebar").children(".active");

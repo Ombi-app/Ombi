@@ -266,13 +266,13 @@
     <Compile Include="Modules\Admin\UserManagementSettingsModule.cs" />
     <Compile Include="Modules\Admin\FaultQueueModule.cs" />
     <Compile Include="Modules\Admin\SystemStatusModule.cs" />
-    <Compile Include="Modules\ApiDocsModule.cs" />
-    <Compile Include="Modules\ApiSettingsMetadataModule.cs" />
-    <Compile Include="Modules\ApiUserMetadataModule.cs" />
-    <Compile Include="Modules\ApiRequestMetadataModule.cs" />
-    <Compile Include="Modules\ApiSettingsModule.cs" />
-    <Compile Include="Modules\ApiUserModule.cs" />
-    <Compile Include="Modules\BaseApiModule.cs" />
+    <Compile Include="Modules\Api\ApiDocsModule.cs" />
+    <Compile Include="Modules\Api\ApiSettingsMetadataModule.cs" />
+    <Compile Include="Modules\Api\ApiUserMetadataModule.cs" />
+    <Compile Include="Modules\Api\ApiRequestMetadataModule.cs" />
+    <Compile Include="Modules\Api\ApiSettingsModule.cs" />
+    <Compile Include="Modules\Api\ApiUserModule.cs" />
+    <Compile Include="Modules\Api\BaseApiModule.cs" />
     <Compile Include="Modules\BaseModule.cs" />
     <Compile Include="Modules\BetaModule.cs" />
     <Compile Include="Modules\CultureModule.cs" />
@@ -295,6 +295,7 @@
     </Compile>
     <Compile Include="Start\StartupOptions.cs" />
     <Compile Include="Start\UpdateValue.cs" />
+    <Compile Include="Validators\EmbyValidator.cs" />
     <Compile Include="Validators\RadarrValidator.cs" />
     <Compile Include="Validators\WatcherValidator.cs" />
     <Compile Include="Validators\SlackSettingsValidator.cs" />
@@ -390,7 +391,103 @@
       <DependentUpon>datepicker.css</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\favicon\android-icon-144x144.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\android-icon-192x192.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\android-icon-36x36.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\android-icon-48x48.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\android-icon-72x72.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\android-icon-96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-114x114.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-120x120.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-144x144.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-152x152.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-180x180.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-57x57.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-60x60.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-72x72.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-76x76.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon-precomposed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\apple-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\browserconfig.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\favicon-16x16.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\favicon-32x32.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\favicon-96x96.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\ms-icon-144x144.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\ms-icon-150x150.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\ms-icon-310x310.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\favicon\ms-icon-70x70.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Content\helpers\bootbox.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\emby-logo-dark.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\emby-logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\logo original.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\plex-logo-reversed.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Content\images\plex-logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\issue-details.js">
@@ -484,9 +581,6 @@
     <Content Include="Content\bootstrap-datetimepicker.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\images\logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Content\tooltip\plugins\tooltipster\sideTip\themes\tooltipster-sideTip-borderless.min.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -548,7 +642,7 @@
     <Content Include="Views\UserManagement\Index.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Compile Include="Modules\ApiRequestModule.cs" />
+    <Compile Include="Modules\Api\ApiRequestModule.cs" />
     <Compile Include="Models\ApiModel.cs" />
     <Compile Include="Models\UserManagement\UserManagementUsersViewModel.cs" />
   </ItemGroup>
@@ -624,6 +718,9 @@
     </None>
     <None Include="Content\base.scss" />
     <None Include="Content\bootstrap-datetimepicker-build.less" />
+    <None Include="Content\favicon\manifest.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Content\Themes\original.scss" />
     <None Include="Content\Themes\plex.scss" />
     <Content Include="Content\pace.min.js">
@@ -783,6 +880,9 @@
     <Content Include="Views\Integration\Watcher.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Views\Admin\MassEmail.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Views\Admin\NewsletterSettings.cshtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -805,6 +905,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Views\Integration\Radarr.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Views\Admin\Emby.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Web.Debug.config">
@@ -841,6 +944,10 @@
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj">
       <Project>{8CB8D235-2674-442D-9C6A-35FCAEEB160D}</Project>
       <Name>Ombi.Api</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ombi.Common\Ombi.Common.csproj">
+      <Project>{BFD45569-90CF-47CA-B575-C7B0FF97F67B}</Project>
+      <Name>Ombi.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\Ombi.Core.Migration\Ombi.Core.Migration.csproj">
       <Project>{8406EE57-D533-47C0-9302-C6B5F8C31E55}</Project>

@@ -52,6 +52,9 @@
                 <li id="customDonate" style="display: none"><a id="customDonateHref" href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color: yellow;"></i> <span id="donationText">@UI.Custom_Donation_Default</span></a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                <a id="gravatarImg" class="navbar-brand" href="#">
+                    
+                </a>
                 @if (Html.IsAdmin())
                 {
                     <li><a>@UI.Layout_Welcome @Context.CurrentUser.UserName</a></li>
@@ -77,7 +80,7 @@
                     </li>
 
                 }
-                else if (Html.IsPlexUser()) // Logged in but not admin
+                else if (Html.IsExternalUser()) // Logged in but not admin
                 {
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> @UI.Layout_Welcome @Context.CurrentUser.UserName <span class="caret"></span></a>
@@ -101,19 +104,19 @@
 
                 <li class="dropdown">
 
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
-                        <li><a href="@url/culture?l=fr&u=@Context.Request.Path">@UI.Layout_French</a></li>
-                        <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
-                        <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
-                        <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
-                        <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
-                        <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
-                        <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
-                        <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
-                    </ul>
-                <li />
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-language" aria-hidden="true"><span class="caret"></span></i></a>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="@url/culture?l=en&u=@Context.Request.Path">@UI.Layout_English</a></li>
+                    <li><a href="@url/culture?l=fr&u=@Context.Request.Path">@UI.Layout_French</a></li>
+                    <li><a href="@url/culture?l=nl&u=@Context.Request.Path">@UI.Layout_Dutch</a></li>
+                    <li><a href="@url/culture?l=es&u=@Context.Request.Path">@UI.Layout_Spanish</a></li>
+                    <li><a href="@url/culture?l=de&u=@Context.Request.Path">@UI.Layout_German</a></li>
+                    <li><a href="@url/culture?l=da&u=@Context.Request.Path">@UI.Layout_Danish</a></li>
+                    <li><a href="@url/culture?l=pt&u=@Context.Request.Path">@UI.Layout_Portuguese</a></li>
+                    <li><a href="@url/culture?l=sv&u=@Context.Request.Path">@UI.Layout_Swedish</a></li>
+                    <li><a href="@url/culture?l=it&u=@Context.Request.Path">@UI.Layout_Italian</a></li>
+                </ul>
+                <li/>
             </ul>
         </div>
     </div>
@@ -129,7 +132,7 @@
                     var donationText = $("#donationText");
                     donateLink.attr("href", result.url);
                     if (result.message) {
-                        donationText.text(result.message);  
+                        donationText.text(result.message);
                     }
                 }
             },
@@ -138,6 +141,8 @@
                 $("#customDonate").hide();
             }
         });
+
+
     </script>
     <div id="updateAvailable" hidden="hidden"></div>
 

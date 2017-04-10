@@ -34,7 +34,9 @@ using Nancy;
 using Nancy.Extensions;
 using Nancy.Linker;
 using NLog;
+using Ombi.Api;
 using Ombi.Api.Interfaces;
+using Ombi.Api.Models.Emby;
 using Ombi.Api.Models.Plex;
 using Ombi.Core;
 using Ombi.Core.SettingModels;
@@ -44,6 +46,8 @@ using Ombi.Helpers.Analytics;
 using Ombi.Helpers.Permissions;
 using Ombi.Store;
 using Ombi.Store.Models;
+using Ombi.Store.Models.Emby;
+using Ombi.Store.Models.Plex;
 using Ombi.Store.Repository;
 using Ombi.UI.Authentication;
 using ISecurityExtensions = Ombi.Core.ISecurityExtensions;
@@ -54,59 +58,23 @@ namespace Ombi.UI.Modules
     public class UserLoginModule : BaseModule
     {
         public UserLoginModule(ISettingsService<AuthenticationSettings> auth, IPlexApi api, ISettingsService<PlexSettings> plexSettings, ISettingsService<PlexRequestSettings> pr,
-            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IPlexUserRepository plexUsers, ICustomUserMapper custom,
-             ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings)
+            ISettingsService<LandingPageSettings> lp, IAnalytics a, IResourceLinker linker, IRepository<UserLogins> userLogins, IExternalUserRepository<PlexUsers> plexUsers, ICustomUserMapper custom,
+             ISecurityExtensions security, ISettingsService<UserManagementSettings> userManagementSettings, IEmbyApi embyApi, ISettingsService<EmbySettings> emby, IExternalUserRepository<EmbyUsers> embyU)
             : base("userlogin", pr, security)
         {
             AuthService = auth;
             LandingPageSettings = lp;
             Analytics = a;
-            Api = api;
+            PlexApi = api;
             PlexSettings = plexSettings;
             Linker = linker;
             UserLogins = userLogins;
             PlexUserRepository = plexUsers;
             CustomUserMapper = custom;
             UserManagementSettings = userManagementSettings;
-
-            //Get["UserLoginIndex", "/", true] = async (x, ct) =>
-            //{
-            //    if (Request.Query["landing"] == null)
-            //    {
-            //        var s = await LandingPageSettings.GetSettingsAsync();
-            //        if (s.Enabled)
-            //        {
-            //            if (s.BeforeLogin) // Before login
-            //            {
-            //                if (string.IsNullOrEmpty(Username))
-            //                {
-            //                    // They are not logged in
-            //                    return
-            //                        Context.GetRedirect(Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString());
-            //                }
-            //                return Context.GetRedirect(Linker.BuildRelativeUri(Context, "SearchIndex").ToString());
-            //            }
-
-            //            // After login
-            //            if (string.IsNullOrEmpty(Username))
-            //            {
-            //                // Not logged in yet
-            //                return Context.GetRedirect(Linker.BuildRelativeUri(Context, "UserLoginIndex").ToString() + "?landing");
-            //            }
-            //            // Send them to landing
-            //            var landingUrl = Linker.BuildRelativeUri(Context, "LandingPageIndex").ToString();
-            //            return Context.GetRedirect(landingUrl);
-            //        }
-            //    }
-
-            //    if (!string.IsNullOrEmpty(Username) || IsAdmin)
-            //    {
-            //        var url = Linker.BuildRelativeUri(Context, "SearchIndex").ToString();
-            //        return Response.AsRedirect(url);
-            //    }
-            //    var settings = await AuthService.GetSettingsAsync();
-            //    return View["Index", settings];
-            //};
+            EmbySettings = emby;
+            EmbyApi = embyApi;
+            EmbyUserRepository = embyU;
 
             Post["/", true] = async (x, ct) => await LoginUser();
             Get["/logout"] = x => Logout();
@@ -157,11 +125,14 @@ namespace Ombi.UI.Modules
         private ISettingsService<AuthenticationSettings> AuthService { get; }
         private ISettingsService<LandingPageSettings> LandingPageSettings { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
-        private IPlexApi Api { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
+        private IPlexApi PlexApi { get; }
+        private IEmbyApi EmbyApi { get; }
         private IResourceLinker Linker { get; }
         private IAnalytics Analytics { get; }
         private IRepository<UserLogins> UserLogins { get; }
-        private IPlexUserRepository PlexUserRepository { get; }
+        private IExternalUserRepository<PlexUsers> PlexUserRepository { get; }
+        private IExternalUserRepository<EmbyUsers> EmbyUserRepository { get; }
         private ICustomUserMapper CustomUserMapper { get; }
         private ISettingsService<UserManagementSettings> UserManagementSettings { get; }
 
@@ -180,41 +151,77 @@ namespace Ombi.UI.Modules
             }
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
 
             var authenticated = false;
             var isOwner = false;
             var userId = string.Empty;
+            EmbyUser embyUser = null;
 
-            if (settings.UserAuthentication) // Check against the users in Plex
+            if (plexSettings.Enable)
             {
-                Log.Debug("Need to auth");
-                authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
-                if (authenticated)
+                if (settings.UserAuthentication) // Check against the users in Plex
                 {
-                    userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                    Log.Debug("Need to auth");
+                    authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                    if (authenticated)
+                    {
+                        userId = GetUserIdIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                    }
+                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
+                    {
+                        Log.Debug("User is the account owner");
+                        authenticated = true;
+                        isOwner = true;
+                        userId = GetOwnerId(plexSettings.PlexAuthToken, username);
+                    }
+                    UsersModel dbUser = await IsDbuser(username);
+                    if (dbUser != null) // in the db?
+                    {
+                        var perms = (Permissions) dbUser.Permissions;
+                        authenticated = true;
+                        isOwner = perms.HasFlag(Permissions.Administrator);
+                        userId = dbUser.UserGuid;
+                    }
+                    Log.Debug("Friends list result = {0}", authenticated);
                 }
-                if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, username))
+                else if (!settings.UserAuthentication) // No auth, let them pass!
                 {
-                    Log.Debug("User is the account owner");
                     authenticated = true;
-                    isOwner = true;
-                    userId = GetOwnerId(plexSettings.PlexAuthToken, username);
                 }
-                UsersModel dbUser = await IsDbuser(username);
-                if (dbUser != null) // in the db?
-                {
-                    var perms = (Permissions)dbUser.Permissions;
-                    authenticated = true;
-                    isOwner = perms.HasFlag(Permissions.Administrator);
-                    userId = dbUser.UserGuid;
-                }
-                Log.Debug("Friends list result = {0}", authenticated);
             }
-            else if (!settings.UserAuthentication) // No auth, let them pass!
+            if (embySettings.Enable)
             {
-                authenticated = true;
+                if (settings.UserAuthentication) // Check against the users in Plex
+                {
+                    Log.Debug("Need to auth");
+                    authenticated = CheckIfEmbyUser(username, embySettings);
+                    if (authenticated)
+                    {
+                        embyUser = GetEmbyUser(username, embySettings);
+                        userId = embyUser?.Id;
+                    }
+                    if (embyUser?.Policy?.IsAdministrator ?? false)
+                    {
+                        Log.Debug("User is the account owner");
+                        authenticated = true;
+                        isOwner = true;
+                    }
+                    UsersModel dbUser = await IsDbuser(username);
+                    if (dbUser != null) // in the db?
+                    {
+                        var perms = (Permissions)dbUser.Permissions;
+                        authenticated = true;
+                        isOwner = perms.HasFlag(Permissions.Administrator);
+                        userId = dbUser.UserGuid;
+                    }
+                    Log.Debug("Friends list result = {0}", authenticated);
+                }
+                else if (!settings.UserAuthentication) // No auth, let them pass!
+                {
+                    authenticated = true;
+                }
             }
-
             if (settings.UsePassword || isOwner || Security.HasPermissions(username, Permissions.Administrator))
             {
                 Session[SessionKeys.UserLoginName] = username;
@@ -230,7 +237,7 @@ namespace Ombi.UI.Modules
             {
                 return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
             }
-            var result = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
+            var result = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner, plexSettings.Enable, embySettings.Enable);
 
 
             var landingSettings = await LandingPageSettings.GetSettingsAsync();
@@ -292,36 +299,68 @@ namespace Ombi.UI.Modules
             var userId = string.Empty;
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
 
-            if (settings.UserAuthentication) // Authenticate with Plex
+            // attempt local login first as it has the least amount of overhead
+            userId = CustomUserMapper.ValidateUser(username, password)?.ToString();
+            if (userId != null)
             {
-                Log.Debug("Need to auth and also provide pass");
-                var signedIn = (PlexAuthentication)Api.SignIn(username, password);
-                if (signedIn.user?.authentication_token != null)
+                authenticated = true;
+            }
+            else if (userId == null && plexSettings.Enable)
+            {
+                if (settings.UserAuthentication) // Authenticate with Plex
                 {
-                    Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
-                    if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, signedIn.user?.username))
+                    Log.Debug("Need to auth and also provide pass");
+                    var signedIn = (PlexAuthentication) PlexApi.SignIn(username, password);
+                    if (signedIn.user?.authentication_token != null)
                     {
-                        Log.Debug("User is the account owner");
-                        authenticated = true;
-                        isOwner = true;
+                        Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
+                        if (CheckIfUserIsOwner(plexSettings.PlexAuthToken, signedIn.user?.username))
+                        {
+                            Log.Debug("User is the account owner");
+                            authenticated = true;
+                            isOwner = true;
+                        }
+                        else
+                        {
+                            authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
+                            Log.Debug("Friends list result = {0}", authenticated);
+                        }
+                        userId = signedIn.user.uuid;
                     }
-                    else
-                    {
-                        authenticated = CheckIfUserIsInPlexFriends(username, plexSettings.PlexAuthToken);
-                        Log.Debug("Friends list result = {0}", authenticated);
-                    }
-                    userId = signedIn.user.uuid;
                 }
             }
-
-            if (string.IsNullOrEmpty(userId))
+            else if (userId == null && embySettings.Enable)
             {
-                // Local user?
-                userId = CustomUserMapper.ValidateUser(username, password)?.ToString();
-                if (userId != null)
+                if (settings.UserAuthentication) // Authenticate with Emby
                 {
-                    authenticated = true;
+                    Log.Debug("Need to auth and also provide pass");
+                    EmbyUser signedIn = null;
+                    try
+                    {
+                        signedIn = (EmbyUser)EmbyApi.LogIn(username, password, embySettings.ApiKey, embySettings.FullUri);
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error(e);
+                    }
+                    if (signedIn != null)
+                    {
+                        Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
+                        if (signedIn?.Policy?.IsAdministrator ?? false)
+                        {
+                            Log.Debug("User is the account owner");
+                            authenticated = true;
+                            isOwner = true;
+                        }
+                        else
+                        {
+                            authenticated = CheckIfEmbyUser(username, embySettings);
+                            Log.Debug("Friends list result = {0}", authenticated);
+                        }
+                        userId = signedIn?.Id;
+                    }
                 }
             }
 
@@ -330,8 +369,7 @@ namespace Ombi.UI.Modules
                 return Response.AsJson(new { result = false, message = Resources.UI.UserLogin_IncorrectUserPass });
             }
 
-
-            var m = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner);
+            var m = await AuthenticationSetup(userId, username, dateTimeOffset, loginGuid, isOwner, plexSettings.Enable, embySettings.Enable);
 
             var landingSettings = await LandingPageSettings.GetSettingsAsync();
 
@@ -354,7 +392,6 @@ namespace Ombi.UI.Modules
                 return CustomModuleExtensions.LoginAndRedirect(this, m.LoginGuid, null, retVal.ToString());
             }
             return Response.AsJson(new { result = true, url = retVal.ToString() });
-
         }
 
         private async Task<Response> LoginUser()
@@ -399,7 +436,7 @@ namespace Ombi.UI.Modules
             if (settings.UserAuthentication && settings.UsePassword) // Authenticate with Plex
             {
                 Log.Debug("Need to auth and also provide pass");
-                var signedIn = (PlexAuthentication)Api.SignIn(username, password);
+                var signedIn = (PlexAuthentication)PlexApi.SignIn(username, password);
                 if (signedIn.user?.authentication_token != null)
                 {
                     Log.Debug("Correct credentials, checking if the user is account owner or in the friends list");
@@ -553,58 +590,46 @@ namespace Ombi.UI.Modules
             public string UserId { get; set; }
         }
 
-        private async Task<LoginModel> AuthenticationSetup(string userId, string username, int dateTimeOffset, Guid loginGuid, bool isOwner)
+        private async Task<LoginModel> AuthenticationSetup(string userId, string username, int dateTimeOffset, Guid loginGuid, bool isOwner, bool plex, bool emby)
         {
             var m = new LoginModel();
             var settings = await AuthService.GetSettingsAsync();
 
             var localUsers = await CustomUserMapper.GetUsersAsync();
             var plexLocalUsers = await PlexUserRepository.GetAllAsync();
+            var embyLocalUsers = await EmbyUserRepository.GetAllAsync();
 
-            UserLogins.Insert(new UserLogins { UserId = userId, Type = UserType.PlexUser, LastLoggedIn = DateTime.UtcNow });
+            var localUser = false;
+
+
             Log.Debug("We are authenticated! Setting session.");
             // Add to the session (Used in the BaseModules)
             Session[SessionKeys.UsernameKey] = username;
             Session[SessionKeys.ClientDateTimeOffsetKey] = dateTimeOffset;
 
-            var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);
-            if (plexLocal != null)
+            if (plex)
             {
-                loginGuid = Guid.Parse(plexLocal.LoginId);
+                var plexLocal = plexLocalUsers.FirstOrDefault(x => x.Username == username);
+                if (plexLocal != null)
+                {
+                    loginGuid = Guid.Parse(plexLocal.LoginId);
+                }
+            }
+            if (emby)
+            {
+                var embyLocal = embyLocalUsers.FirstOrDefault(x => x.Username == username);
+                if (embyLocal != null)
+                {
+                    loginGuid = Guid.Parse(embyLocal.LoginId);
+                }
             }
 
             var dbUser = localUsers.FirstOrDefault(x => x.UserName == username);
             if (dbUser != null)
             {
                 loginGuid = Guid.Parse(dbUser.UserGuid);
+                localUser = true;
             }
-
-            //if (loginGuid != Guid.Empty)
-            //{
-            //    if (!settings.UserAuthentication)// Do not need to auth make admin use login screen for now TODO remove this
-            //    {
-            //        if (dbUser != null)
-            //        {
-            //            var perms = (Permissions)dbUser.Permissions;
-            //            if (perms.HasFlag(Permissions.Administrator))
-            //            {
-            //                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-            //                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
-            //                //return Response.AsRedirect(uri.ToString());
-            //            }
-            //        }
-            //        if (plexLocal != null)
-            //        {
-            //            var perms = (Permissions)plexLocal.Permissions;
-            //            if (perms.HasFlag(Permissions.Administrator))
-            //            {
-            //                var uri = Linker.BuildRelativeUri(Context, "UserLoginIndex");
-            //                Session["TempMessage"] = Resources.UI.UserLogin_AdminUsePassword;
-            //                //return Response.AsRedirect(uri.ToString());
-            //            }
-            //        }
-            //    }
-            //}
 
             if (loginGuid == Guid.Empty && settings.UserAuthentication)
             {
@@ -620,21 +645,52 @@ namespace Ombi.UI.Modules
                         defaultPermissions += (int)Permissions.Administrator;
                     }
                 }
-
-                // Looks like we still don't have an entry, so this user does not exist
-                await PlexUserRepository.InsertAsync(new PlexUsers
+                if (plex)
                 {
-                    PlexUserId = userId,
-                    UserAlias = string.Empty,
-                    Permissions = (int)defaultPermissions,
-                    Features = UserManagementHelper.GetPermissions(defaultSettings),
-                    Username = username,
-                    EmailAddress = string.Empty, // We don't have it, we will  get it on the next scheduled job run (in 30 mins)
-                    LoginId = loginGuid.ToString()
-                });
+                    // Looks like we still don't have an entry, so this user does not exist
+                    await PlexUserRepository.InsertAsync(new PlexUsers
+                    {
+                        PlexUserId = userId,
+                        UserAlias = string.Empty,
+                        Permissions = (int) defaultPermissions,
+                        Features = UserManagementHelper.GetPermissions(defaultSettings),
+                        Username = username,
+                        EmailAddress = string.Empty,
+                        // We don't have it, we will  get it on the next scheduled job run (in 30 mins)
+                        LoginId = loginGuid.ToString()
+                    });
+                }
+                if (emby)
+                {
+                    await EmbyUserRepository.InsertAsync(new EmbyUsers
+                    {
+                        EmbyUserId = userId,
+                        UserAlias = string.Empty,
+                        Permissions = (int)defaultPermissions,
+                        Features = UserManagementHelper.GetPermissions(defaultSettings),
+                        Username = username,
+                        EmailAddress = string.Empty,
+                        LoginId = loginGuid.ToString()
+                    });
+                }
             }
             m.LoginGuid = loginGuid;
             m.UserId = userId;
+            var type = UserType.LocalUser;
+            if (localUser)
+            {
+                type = UserType.LocalUser;
+            }
+            else if (plex)
+            {
+                type = UserType.PlexUser;
+            }
+            else if (emby)
+            {
+                type = UserType.EmbyUser;;
+            }
+            UserLogins.Insert(new UserLogins { UserId = userId, Type = type, LastLoggedIn = DateTime.UtcNow });
+
             return m;
         }
 
@@ -651,7 +707,7 @@ namespace Ombi.UI.Modules
 
         private bool CheckIfUserIsOwner(string authToken, string userName)
         {
-            var userAccount = Api.GetAccount(authToken);
+            var userAccount = PlexApi.GetAccount(authToken);
             if (userAccount == null)
             {
                 return false;
@@ -661,7 +717,7 @@ namespace Ombi.UI.Modules
 
         private string GetOwnerId(string authToken, string userName)
         {
-            var userAccount = Api.GetAccount(authToken);
+            var userAccount = PlexApi.GetAccount(authToken);
             if (userAccount == null)
             {
                 return string.Empty;
@@ -671,15 +727,45 @@ namespace Ombi.UI.Modules
 
         private bool CheckIfUserIsInPlexFriends(string username, string authToken)
         {
-            var users = Api.GetUsers(authToken);
+            var users = PlexApi.GetUsers(authToken);
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers != null && allUsers.Any(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+        }
+
+        private bool CheckIfEmbyUser(string username, EmbySettings s)
+        {
+            try
+            {
+                var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
+                var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
+                return allUsers != null && allUsers.Any(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return false;
+            }
+        }
+        private EmbyUser GetEmbyUser(string username, EmbySettings s)
+        {
+            try
+            {
+
+                var users = EmbyApi.GetUsers(s.FullUri, s.ApiKey);
+                var allUsers = users?.Where(x => !string.IsNullOrEmpty(x.Name));
+                return allUsers?.FirstOrDefault(x => x.Name.Equals(username, StringComparison.CurrentCultureIgnoreCase));
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                return null;
+            }
         }
 
 
         private string GetUserIdIsInPlexFriends(string username, string authToken)
         {
-            var users = Api.GetUsers(authToken);
+            var users = PlexApi.GetUsers(authToken);
             var allUsers = users?.User?.Where(x => !string.IsNullOrEmpty(x.Title));
             return allUsers?.Where(x => x.Title.Equals(username, StringComparison.CurrentCultureIgnoreCase)).Select(x => x.Id).FirstOrDefault();
         }

@@ -56,7 +56,8 @@ namespace Ombi.UI.NinjectModules
             Bind<ICustomUserMapper>().To<UserMapper>();
 
             Bind<INotificationService>().To<NotificationService>().InSingletonScope();
-            Bind<INotificationEngine>().To<NotificationEngine>();
+            Bind<IPlexNotificationEngine>().To<PlexNotificationEngine>();
+            Bind<IEmbyNotificationEngine>().To<EmbyNotificationEngine>();
 
             Bind<IStatusChecker>().To<StatusChecker>();
 

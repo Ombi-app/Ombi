@@ -27,6 +27,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
 using NLog;
@@ -55,72 +56,46 @@ namespace Ombi.Api
         public T Execute<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute<T>(request);
-            Log.Trace("Api Content Response:");
-            Log.Trace(response.Content);
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                return response.Data;
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
 
-            if (response.ErrorException != null)
-            {
-                var message = "Error retrieving response. Check inner details for more info.";
-                Log.Error(response.ErrorException);
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-
-            return response.Data;
         }
 
         public IRestResponse Execute(IRestRequest request, Uri baseUri)
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
-
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
-
             return response;
         }
 
         public T ExecuteXml<T>(IRestRequest request, Uri baseUri) where T : class
         {
             var client = new RestClient { BaseUrl = baseUri };
-
             var response = client.Execute(request);
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                return DeserializeXml<T>(response.Content);
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
 
-            var result = DeserializeXml<T>(response.Content);
-            return result;}
+        }
 
         public T ExecuteJson<T>(IRestRequest request, Uri baseUri) where T : new()
         {
             var client = new RestClient { BaseUrl = baseUri };
             var response = client.Execute(request);
-            Log.Trace("Api Content Response:");
-            Log.Trace(response.Content);
-            if (response.ErrorException != null)
-            {
-                Log.Error(response.ErrorException);
-                var message = "Error retrieving response. Check inner details for more info.";
-                throw new ApiRequestException(message, response.ErrorException);
-            }
+            Log.Trace($"Request made to {response.ResponseUri} with status code {response.StatusCode}. The response was {response.Content}");
 
-            Log.Trace("Deserialzing Object");
-            var json = JsonConvert.DeserializeObject<T>(response.Content, _settings);
-            Log.Trace("Finished Deserialzing Object");
-
-            return json;
+            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Created)
+                return JsonConvert.DeserializeObject<T>(response.Content, _settings);
+            else
+                throw new ApiRequestException($"Got StatusCode={response.StatusCode} for {response.ResponseUri}.");
         }
 
         private T DeserializeXml<T>(string input)

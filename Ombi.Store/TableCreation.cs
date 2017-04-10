@@ -25,6 +25,7 @@
 //  ***********************************************************************
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -61,7 +62,7 @@ namespace Ombi.Store
         {
             connection.Open();
             var result = connection.Query<TableInfo>($"PRAGMA table_info({tableName});");
-            if (result.Any(x => x.name == newColumn))
+            if (result.Any(x => x.name.Equals(newColumn, StringComparison.CurrentCultureIgnoreCase)))
             {
                 connection.Close();
                 return;

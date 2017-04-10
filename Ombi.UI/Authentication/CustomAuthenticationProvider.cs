@@ -208,10 +208,16 @@ namespace Ombi.UI.Authentication
 
                     var plexUsers = configuration.PlexUserRepository.GetAll();
                     var plexUser = plexUsers.FirstOrDefault(x => Guid.Parse(x.LoginId) == userGuid);
+                    var embyUsers = configuration.EmbyUserRepository.GetAll();
+                    var embyUser = embyUsers.FirstOrDefault(x => Guid.Parse(x.LoginId) == userGuid);
 
                     if (plexUser != null)
                     {
                         identity.UserName = plexUser.Username;
+                    }
+                    if (embyUser != null)
+                    {
+                        identity.UserName = embyUser.Username;
                     }
 
                     var localUsers = configuration.LocalUserRepository.GetAll();

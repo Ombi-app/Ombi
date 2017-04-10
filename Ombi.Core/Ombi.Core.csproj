@@ -99,6 +99,7 @@
     <Compile Include="IPlexReadOnlyDatabase.cs" />
     <Compile Include="ISecurityExtensions.cs" />
     <Compile Include="IStatusChecker.cs" />
+    <Compile Include="Models\RecentUpdatesModel.cs" />
     <Compile Include="MovieSender.cs" />
     <Compile Include="MovieSenderResult.cs" />
     <Compile Include="Notification\NotificationMessage.cs" />
@@ -123,6 +124,8 @@
     <Compile Include="SecurityExtensions.cs" />
     <Compile Include="SettingModels\AuthenticationSettings.cs" />
     <Compile Include="SettingModels\DiscordNotificationSettings.cs" />
+    <Compile Include="SettingModels\EmbySettings.cs" />
+    <Compile Include="SettingModels\MassEmailSettings.cs" />
     <Compile Include="SettingModels\RadarrSettings.cs" />
     <Compile Include="SettingModels\WatcherSettings.cs" />
     <Compile Include="SettingModels\ExternalSettings.cs" />
