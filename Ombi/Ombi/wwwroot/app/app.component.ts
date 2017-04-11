@@ -1,5 +1,6 @@
 ﻿import { Component } from '@angular/core';
 import { NotificationService } from './services/notification.service';
+import { AuthService } from './auth/auth.service';
 
 @Component({
     selector: 'ombi',
@@ -8,5 +9,5 @@ import { NotificationService } from './services/notification.service';
 })
 export class AppComponent {
 
-    constructor(public notificationService: NotificationService) { };
+    constructor(public notificationService: NotificationService, public authService : AuthService) { };
 }

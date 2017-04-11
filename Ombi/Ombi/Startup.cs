@@ -1,5 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using IdentityServer4.EntityFramework.DbContexts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
@@ -8,12 +13,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Ombi.Auth;
 using Ombi.DependencyInjection;
+using Ombi.Models;
 using Ombi.Store.Context;
 
 namespace Ombi
 {
-    public class Startup
+    public partial class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -51,6 +60,10 @@ namespace Ombi
                 app.UseExceptionHandler("/Home/Error");
             }
 
+
+
+            ConfigureAuth(app);
+
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".map"] = "application/octet-stream";
 
@@ -70,5 +83,8 @@ namespace Ombi
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
+        
+        
+
     }
 }

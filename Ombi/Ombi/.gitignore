@@ -17,5 +17,5 @@
 /libpeerconnection.log
 npm-debug.log
 testem.log
-/typings
+#/typings
 /systemjs.config.js*

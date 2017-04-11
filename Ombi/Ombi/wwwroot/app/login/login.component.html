@@ -1,0 +1,32 @@
+﻿<div class="home">
+    <h1>Login</h1>
+    <div>
+        <p>
+            @UI.UserLogin_Paragraph <span title="@UI.UserLogin_Paragraph_SpanHover"><i class="fa fa-question-circle"></i></span>
+        </p>
+    </div>
+    <form method="POST" id="loginForm">
+        <div>
+            <div>
+                <label>Username</label>
+            </div>
+            <div>
+                <input  [(ngModel)]="username" class="form-control form-control-custom" type="text" name="Username" />
+            </div>
+        </div>
+        <br />
+
+        <div>
+            <div>
+                <label> Password </label>
+            </div>
+            <div>
+                <input [(ngModel)]="password" class="form-control form-control-custom" name="Password" type="password" />
+            </div>
+        </div>
+        <br />
+        
+
+        <button (click)="login()" class="btn btn-success-outline" type="submit"><i class="fa fa-user fa-fw"></i> Sign In</button>
+    </form>
+</div>

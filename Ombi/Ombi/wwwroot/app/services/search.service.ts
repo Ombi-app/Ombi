@@ -1,13 +1,13 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
-import { ServiceHelpers } from './service.helpers';
+import { ServiceAuthHelpers } from './service.helpers';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 
 @Injectable()
-export class SearchService extends ServiceHelpers {
-    constructor(http: Http) {
+export class SearchService extends ServiceAuthHelpers {
+    constructor(http: AuthHttp) {
         super(http, "/api/v1/search");
     }
 

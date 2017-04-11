@@ -12,12 +12,16 @@ import { InfiniteScrollModule } from 'angular2-infinite-scroll/angular2-infinite
 
 import { SearchComponent } from './search/search.component';
 import { RequestComponent } from './requests/request.component';
+import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services
 import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
 import { NotificationService } from './services/notification.service';
+import { AuthService } from './auth/auth.service';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthModule } from './auth/auth.module';
 
 // Modules
 import { SettingsModule } from './settings/settings.module';
@@ -28,8 +32,10 @@ import { DataTableModule, SharedModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
-    { path: 'search', component: SearchComponent },
-    { path: 'requests', component: RequestComponent },
+    { path: '', redirectTo: '/search', pathMatch: 'full' },
+    { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+    { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
+    { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
@@ -44,18 +50,22 @@ const routes: Routes = [
         SettingsModule,
         DataTableModule,
         SharedModule,
-        InfiniteScrollModule
+        InfiniteScrollModule,
+        AuthModule
     ],
     declarations: [
         AppComponent,
         PageNotFoundComponent,
         SearchComponent,
-        RequestComponent
+        RequestComponent,
+        LoginComponent
     ],
     providers: [
         SearchService,
         RequestService,
-        NotificationService
+        NotificationService,
+        AuthService,
+        AuthGuard,
     ],
     bootstrap: [AppComponent]
 })

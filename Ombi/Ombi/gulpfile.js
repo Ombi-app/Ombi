@@ -57,6 +57,7 @@ var paths = {
             './bower_components/PACE/pace.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/tether/dist/js/tether.js',
+            './node_modules/angular2-jwt/angular2-jwt.js',
             './systemjs.config.js',
         ],
         dest: './lib/'

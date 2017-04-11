@@ -3,24 +3,48 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.10-x64;debian.8-x64;</RuntimeIdentifiers>
+    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
 
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\app\auth\auth - Copy.module.js.map">
+      <DependentUpon>auth - Copy.module.js</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\auth\auth.guard.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\auth\auth.module.ts" />
+    <Content Include="wwwroot\app\auth\auth.service.ts" />
+    <Content Include="wwwroot\app\auth\AuthModule.ts" />
+    <Content Include="wwwroot\app\auth\IUserLogin.ts" />
+    <Content Include="wwwroot\app\login\login.component.html" />
+    <Content Include="wwwroot\app\login\login.component.ts" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.html" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.ts" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Startup.Auth.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
+    <PackageReference Include="IdentityServer4" Version="1.4.2" />
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="1.0.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="1.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
   </ItemGroup>
@@ -29,5 +53,14 @@
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Configuration">
+      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Csp">
+      <HintPath>..\..\..\..\..\.nuget\packages\system.security.cryptography.csp\4.3.0\ref\netstandard1.3\System.Security.Cryptography.Csp.dll</HintPath>
+    </Reference>
   </ItemGroup>
 </Project>

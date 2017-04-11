@@ -11,6 +11,7 @@ namespace Ombi
     {
         public static void Main(string[] args)
         {
+            Console.Title = "Ombi";
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
