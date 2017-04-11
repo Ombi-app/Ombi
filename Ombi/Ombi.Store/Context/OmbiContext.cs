@@ -16,6 +16,7 @@ namespace Ombi.Store.Context
         }
         public DbSet<RequestBlobs> Requests { get; set; }
         public DbSet<GlobalSettings> Settings { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

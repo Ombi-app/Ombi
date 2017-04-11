@@ -8,7 +8,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
+using Ombi.Core.IdentityResolver;
 using Ombi.Models;
+using Ombi.Store.Context;
+using Ombi.Store.Repository;
 
 namespace Ombi.Auth
 {
@@ -23,7 +26,6 @@ namespace Ombi.Auth
             IOptions<TokenProviderOptions> options)
         {
             _next = next;
-
             _options = options.Value;
             ThrowIfInvalidOptions(_options);
 
@@ -64,7 +66,7 @@ namespace Ombi.Auth
                 userInfo = JsonConvert.DeserializeObject<UserAuthModel>(body);
             }
 
-            var identity = await _options.IdentityResolver(userInfo.Username, userInfo.Password);
+            var identity = await _options.IdentityResolver(userInfo.Username, userInfo.Password, new UserIdentityManager(new UserRepository(new OmbiContext())));
             if (identity == null)
             {
                 context.Response.StatusCode = 400;

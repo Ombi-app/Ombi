@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Auth;
+using Ombi.Core.IdentityResolver;
 
 namespace Ombi
 {
     public partial class Startup
     {
+
         public SymmetricSecurityKey signingKey;
         private void ConfigureAuth(IApplicationBuilder app)
         {
@@ -66,32 +68,17 @@ namespace Ombi
         }
 
 
-        private Task<ClaimsIdentity> GetIdentity(string username, string password)
+        private async Task<ClaimsIdentity> GetIdentity(string username, string password, IUserIdentityManager userIdentityManager)
         {
-            // DEMO CODE, DON NOT USE IN PRODUCTION!!!
-            if (username == "TEST" && password == "TEST123")
+            var validLogin = await userIdentityManager.CredentialsValid(username, password);
+            if (!validLogin)
             {
-                var claim = new ClaimsIdentity(new GenericIdentity(username, "Token"),
-                    new[]
-                    {
-                        //new Claim(ClaimTypes.Role, "Admin"),
-                        new Claim(ClaimTypes.Name, "Test"),
-
-                    });
-
-				claim.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, "Admin", ClaimValueTypes.String));
-                return Task.FromResult(claim);
-            }
-            if (username == "TEST2" && password == "TEST123")
-            {
-                return Task.FromResult(new ClaimsIdentity(new GenericIdentity(username, "Token"), new Claim[] {
-                    new Claim(ClaimTypes.Role, "User"),
-                    new Claim(ClaimTypes.Name, "Test2"), }));
+                return null;
             }
 
-            // Account doesn't exists
-            return Task.FromResult<ClaimsIdentity>(null);
+            var user = await userIdentityManager.GetUser(username);
+            var claim = new ClaimsIdentity(new GenericIdentity(user.Username, "Token"), user.Claims);
+            return claim;
         }
-
     }
 }

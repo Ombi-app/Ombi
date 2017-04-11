@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Core;
 using Ombi.Core.Engine;
+using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;
@@ -48,6 +49,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IOmbiContext, OmbiContext>();
             services.AddTransient<IRequestRepository, RequestJsonRepository>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
             return services;
         }
@@ -59,6 +61,7 @@ namespace Ombi.DependencyInjection
 
         public static IServiceCollection RegisterIdentity(this IServiceCollection services)
         {
+            services.AddTransient<IUserIdentityManager, UserIdentityManager>();
             services.AddAuthorization(auth =>
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()

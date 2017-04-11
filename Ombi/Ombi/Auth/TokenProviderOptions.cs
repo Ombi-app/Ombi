@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
+using Ombi.Core.IdentityResolver;
 
 namespace Ombi.Auth
 {
@@ -40,7 +41,7 @@ namespace Ombi.Auth
         /// <summary>
         /// Resolves a user identity given a username and password.
         /// </summary>
-        public Func<string, string, Task<ClaimsIdentity>> IdentityResolver { get; set; }
+        public Func<string, string, IUserIdentityManager, Task<ClaimsIdentity>> IdentityResolver { get; set; }
 
         /// <summary>
         /// Generates a random value (nonce) for each generated token.
