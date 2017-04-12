@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Auth;
 using Ombi.Core.IdentityResolver;
+using Ombi.Core.Models;
 
 namespace Ombi
 {
@@ -53,23 +55,20 @@ namespace Ombi
                 TokenValidationParameters = tokenValidationParameters
             });
 
-            app.UseCookieAuthentication(new CookieAuthenticationOptions
-            {
-                AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                AuthenticationScheme = "Cookie",
-                CookieName = Configuration.GetSection("TokenAuthentication:CookieName").Value,
-                TicketDataFormat = new CustomJwtDataFormat(
-                    SecurityAlgorithms.HmacSha256,
-                    tokenValidationParameters)
-            });
-
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(tokenProviderOptions));
         }
 
 
         private async Task<ClaimsIdentity> GetIdentity(string username, string password, IUserIdentityManager userIdentityManager)
         {
+            //await userIdentityManager.CreateUser(new UserDto
+            //{
+            //    Username = "a",
+            //    Password = "a",
+            //    Claims = new List<Claim>() { new Claim(ClaimTypes.Role, "Admin")},
+            //    UserType = UserType.LocalUser,
+            //});
+
             var validLogin = await userIdentityManager.CredentialsValid(username, password);
             if (!validLogin)
             {

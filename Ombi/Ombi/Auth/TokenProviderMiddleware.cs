@@ -20,10 +20,11 @@ namespace Ombi.Auth
         private readonly RequestDelegate _next;
         private readonly TokenProviderOptions _options;
         private readonly JsonSerializerSettings _serializerSettings;
+        private readonly IUserIdentityManager _identityManager;
 
         public TokenProviderMiddleware(
             RequestDelegate next,
-            IOptions<TokenProviderOptions> options)
+            IOptions<TokenProviderOptions> options, IUserIdentityManager manager)
         {
             _next = next;
             _options = options.Value;
@@ -33,6 +34,7 @@ namespace Ombi.Auth
             {
                 Formatting = Formatting.Indented
             };
+            _identityManager = manager;
         }
 
         public Task Invoke(HttpContext context)
@@ -66,7 +68,7 @@ namespace Ombi.Auth
                 userInfo = JsonConvert.DeserializeObject<UserAuthModel>(body);
             }
 
-            var identity = await _options.IdentityResolver(userInfo.Username, userInfo.Password, new UserIdentityManager(new UserRepository(new OmbiContext())));
+            var identity = await _options.IdentityResolver(userInfo.Username, userInfo.Password, _identityManager);
             if (identity == null)
             {
                 context.Response.StatusCode = 400;

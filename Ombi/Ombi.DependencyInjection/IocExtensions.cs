@@ -25,6 +25,7 @@ namespace Ombi.DependencyInjection
             services.RegisterApi();
             services.RegisterServices();
             services.RegisterStore();
+            services.RegisterIdentity();
 
             return services;
         }
@@ -56,6 +57,7 @@ namespace Ombi.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestService, JsonRequestService>();
+
             return services;
         }
 

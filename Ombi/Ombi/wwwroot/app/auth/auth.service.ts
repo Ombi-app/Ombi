@@ -13,7 +13,7 @@ import { Http } from '@angular/http';
 @Injectable()
 export class AuthService extends ServiceHelpers {
     constructor(http: Http) {
-        super(http, '/api/token');
+        super(http, '/api/v1/token');
     }
 
     login(login:IUserLogin) : Observable<any> {

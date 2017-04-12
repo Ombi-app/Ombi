@@ -25,7 +25,12 @@
 //  ************************************************************************/
 #endregion
 
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
+using Newtonsoft.Json;
+using Ombi.Helpers;
+
 
 namespace Ombi.Store.Entities
 {
@@ -33,10 +38,17 @@ namespace Ombi.Store.Entities
     {
         public string Username { get; set; }
         public string Alias { get; set; }
-        public Claim[] Claims { get; set; }
+        public string ClaimsSerialized { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
+        public byte[] Salt { get; set; }
         public UserType UserType { get; set; }
+
+        [NotMapped]
+        public List<Claim> Claims {
+            get => JsonConvert.DeserializeObject<List<Claim>>(ClaimsSerialized, new ClaimConverter());
+            set => ClaimsSerialized = JsonConvert.SerializeObject(value, new ClaimConverter());
+        }
     }
 
     public enum UserType
