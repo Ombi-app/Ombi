@@ -71,7 +71,7 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)  
+[Windows Guide!](https://forums.ombi.io/viewtopic.php?f=6&t=4)  
 [Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
