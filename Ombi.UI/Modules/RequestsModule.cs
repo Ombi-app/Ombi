@@ -526,18 +526,21 @@ namespace Ombi.UI.Modules
             var result = await Service.UpdateRequestAsync(originalRequest);
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
-            if (plexSettings.Enable)
+            if (available)
             {
-                await
-                    PlexNotificationEngine.NotifyUsers(originalRequest,
-                        available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
-            }
+                if (plexSettings.Enable)
+                {
+                    await
+                        PlexNotificationEngine.NotifyUsers(originalRequest,
+                            NotificationType.RequestAvailable);
+                }
 
-            var embySettings = await EmbySettings.GetSettingsAsync();
-            if (embySettings.Enable)
-            {
-                await EmbyNotificationEngine.NotifyUsers(originalRequest,
-                        available ? NotificationType.RequestAvailable : NotificationType.RequestDeclined);
+                var embySettings = await EmbySettings.GetSettingsAsync();
+                if (embySettings.Enable)
+                {
+                    await EmbyNotificationEngine.NotifyUsers(originalRequest,
+                        NotificationType.RequestAvailable);
+                }
             }
             return Response.AsJson(result
                                        ? new { Result = true, Available = available, Message = string.Empty }
