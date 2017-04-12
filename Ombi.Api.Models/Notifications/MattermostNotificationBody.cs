@@ -1,8 +1,8 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: LogEntity.cs
-//    Created By: Jamie Rees
+//    File: MattermostNotificationBody.cs
+//    Created By: Michel Zaleski
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -25,16 +25,21 @@
 //  ************************************************************************/
 #endregion
 
-using System;
-using Dapper.Contrib.Extensions;
 using Newtonsoft.Json;
 
-namespace Ombi.Store.Models
+namespace Ombi.Api.Models.Notifications
 {
-    [Table("RecentlyAddedLog")]
-    public class RecentlyAddedLog : Entity
+    public class MattermostNotificationBody
     {
-        public string ProviderId { get; set; }
-        public DateTime AddedAt { get; set; }
+        [JsonConstructor]
+        public MattermostNotificationBody()
+        {
+            username = "Ombi";
+        }
+
+        public string username { get; set; } = "Ombi"; 
+        public string channel { get; set; }
+        public string text { get; set; }
+        public string icon_url { get; set; }
     }
 }

@@ -85,6 +85,7 @@
     <Compile Include="WatcherApi.cs" />
     <Compile Include="MusicBrainzApi.cs" />
     <Compile Include="SlackApi.cs" />
+    <Compile Include="MattermostApi.cs" />
     <Compile Include="PushoverApi.cs" />
     <Compile Include="PushbulletApi.cs" />
     <Compile Include="SickrageApi.cs" />

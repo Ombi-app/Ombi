@@ -51,11 +51,13 @@ namespace Ombi.Core.SettingModels
                 }
             };
             SlackNotification = new List<NotificationMessage>();
+            MattermostNotification = new List<NotificationMessage>();
             PushoverNotification = new List<NotificationMessage>();
             PushbulletNotification = new List<NotificationMessage>();
         }
         public List<NotificationMessage> EmailNotification { get; set; }
         public List<NotificationMessage> SlackNotification { get; set; }
+        public List<NotificationMessage> MattermostNotification { get; set; }
         public List<NotificationMessage> PushbulletNotification { get; set; }
         public List<NotificationMessage> PushoverNotification { get; set; }
     }

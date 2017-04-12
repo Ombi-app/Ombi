@@ -70,6 +70,9 @@ namespace Ombi.Core.Notification
                 case TransportType.Slack:
                     content = notification.SlackNotification;
                     break;
+                case TransportType.Mattermost:
+                    content = notification.MattermostNotification;
+                    break;    
                 default:
                     throw new ArgumentOutOfRangeException(nameof(transportType), transportType, null);
             }

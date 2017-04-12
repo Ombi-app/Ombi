@@ -1,8 +1,8 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2016 Jamie Rees
-//    File: ApiModule.cs
-//    Created By: Jamie Rees
+//    File: IMattermostApi.cs
+//    Created By: Michel Zaleski
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
 //    a copy of this software and associated documentation files (the
@@ -25,34 +25,13 @@
 //  ************************************************************************/
 #endregion
 
-using Ninject.Modules;
-using Ombi.Api;
-using Ombi.Api.Interfaces;
+using System.Threading.Tasks;
+using Ombi.Api.Models.Notifications;
 
-namespace Ombi.UI.NinjectModules
+namespace Ombi.Api.Interfaces
 {
-    public class ApiModule : NinjectModule
+    public interface IMattermostApi
     {
-        public override void Load()
-        {
-            Bind<ICouchPotatoApi>().To<CouchPotatoApi>();
-            Bind<IPushbulletApi>().To<PushbulletApi>();
-            Bind<IPushoverApi>().To<PushoverApi>();
-            Bind<ISickRageApi>().To<SickrageApi>();
-            Bind<ISonarrApi>().To<SonarrApi>();
-            Bind<IPlexApi>().To<PlexApi>();
-            Bind<IMusicBrainzApi>().To<MusicBrainzApi>();
-            Bind<IHeadphonesApi>().To<HeadphonesApi>();
-            Bind<ISlackApi>().To<SlackApi>();
-            Bind<IMattermostApi>().To<MattermostApi>();
-            Bind<IApiRequest>().To<ApiRequest>();
-            Bind<IWatcherApi>().To<WatcherApi>();
-            Bind<INetflixApi>().To<NetflixRouletteApi>();
-            Bind<IDiscordApi>().To<DiscordApi>();
-            Bind<IRadarrApi>().To<RadarrApi>();
-            Bind<ITraktApi>().To<TraktApi>();
-            Bind<IEmbyApi>().To<EmbyApi>();
-            Bind<IAppveyorApi>().To<AppveyorApi>();
-        }
+        Task<string> PushAsync(string webhook, MattermostNotificationBody message);
     }
 }
