@@ -152,7 +152,7 @@ namespace Ombi.UI.Modules.Admin
             }
             if (key.Equals(JobNames.PlexUserChecker, StringComparison.CurrentCultureIgnoreCase))
             {
-                RequestLimit.Start();
+                PlexUserChecker.Start();
             }
             if (key.Equals(JobNames.EmbyEpisodeCacher, StringComparison.CurrentCultureIgnoreCase))
             {

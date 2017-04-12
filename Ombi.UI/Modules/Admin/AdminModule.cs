@@ -87,9 +87,11 @@ namespace Ombi.UI.Modules.Admin
         private INotificationService NotificationService { get; }
         private ICacheProvider Cache { get; }
         private ISettingsService<SlackNotificationSettings> SlackSettings { get; }
+		private ISettingsService<MattermostNotificationSettings> MattermostSettings { get; }
         private ISettingsService<LandingPageSettings> LandingSettings { get; }
         private ISettingsService<ScheduledJobsSettings> ScheduledJobSettings { get; }
         private ISlackApi SlackApi { get; }
+		private IMattermostApi MattermostApi { get; }
         private IJobRecord JobRecorder { get; }
         private IAnalytics Analytics { get; }
         private IRecentlyAdded RecentlyAdded { get; }
@@ -123,7 +125,8 @@ namespace Ombi.UI.Modules.Admin
             ISettingsService<HeadphonesSettings> headphones,
             ISettingsService<LogSettings> logs,
             ICacheProvider cache, ISettingsService<SlackNotificationSettings> slackSettings,
-            ISlackApi slackApi, ISettingsService<LandingPageSettings> lp,
+            ISlackApi slackApi, ISettingsService<MattermostNotificationSettings> mattermostSettings,
+            IMattermostApi mattermostApi, ISettingsService<LandingPageSettings> lp,
             ISettingsService<ScheduledJobsSettings> scheduler, IJobRecord rec, IAnalytics analytics,
              ISettingsService<NotificationSettingsV2> notifyService, IRecentlyAdded recentlyAdded, IMassEmail massEmail,
              ISettingsService<WatcherSettings> watcherSettings,
@@ -154,6 +157,8 @@ namespace Ombi.UI.Modules.Admin
             Cache = cache;
             SlackSettings = slackSettings;
             SlackApi = slackApi;
+            MattermostSettings = mattermostSettings;
+            MattermostApi = mattermostApi;
             LandingSettings = lp;
             ScheduledJobSettings = scheduler;
             JobRecorder = rec;
@@ -238,6 +243,10 @@ namespace Ombi.UI.Modules.Admin
             Post["/testslacknotification", true] = async (x, ct) => await TestSlackNotification();
             Get["/slacknotification"] = _ => SlackNotifications();
             Post["/slacknotification"] = _ => SaveSlackNotifications();
+
+            Post["/testmattermostnotification", true] = async (x, ct) => await TestMattermostNotification();
+            Get["/mattermostnotification"] = _ => MattermostNotifications();
+            Post["/mattermostnotification"] = _ => SaveMattermostNotifications();
 
             Post["/testdiscordnotification", true] = async (x, ct) => await TestDiscordNotification();
             Get["/discordnotification", true] = async (x, ct) => await DiscordNotification();
@@ -1048,6 +1057,71 @@ namespace Ombi.UI.Modules.Admin
             Log.Info("Saved slack settings, result: {0}", result);
             return Response.AsJson(result
                 ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Slack Notifications!" }
+                : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
+        }
+
+        private async Task<Response> TestMattermostNotification()
+        {
+            var settings = this.BindAndValidate<MattermostNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+            var notificationModel = new NotificationModel
+            {
+                NotificationType = NotificationType.Test,
+                DateTime = DateTime.Now
+            };
+
+            var currentMattermostSettings = await MattermostSettings.GetSettingsAsync();
+            try
+            {
+                NotificationService.Subscribe(new MattermostNotification(MattermostApi, MattermostSettings));
+                settings.Enabled = true;
+                await NotificationService.Publish(notificationModel, settings);
+                Log.Info("Sent mattermost notification test");
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Failed to subscribe and publish test Mattermost Notification");
+            }
+            finally
+            {
+                if (!currentMattermostSettings.Enabled)
+                {
+                    NotificationService.UnSubscribe(new MattermostNotification(MattermostApi, MattermostSettings));
+                }
+            }
+            return Response.AsJson(new JsonResponseModel { Result = true, Message = "Successfully sent a test Mattermost Notification! If you do not receive it please check the logs." });
+        }
+
+        private Negotiator MattermostNotifications()
+        {
+            var settings = MattermostSettings.GetSettings();
+            return View["MattermostNotifications", settings];
+        }
+
+        private Response SaveMattermostNotifications()
+        {
+            var settings = this.BindAndValidate<MattermostNotificationSettings>();
+            if (!ModelValidationResult.IsValid)
+            {
+                return Response.AsJson(ModelValidationResult.SendJsonError());
+            }
+
+            var result = MattermostSettings.SaveSettings(settings);
+            if (settings.Enabled)
+            {
+                NotificationService.Subscribe(new MattermostNotification(MattermostApi, MattermostSettings));
+            }
+            else
+            {
+                NotificationService.UnSubscribe(new MattermostNotification(MattermostApi, MattermostSettings));
+            }
+
+            Log.Info("Saved mattermost settings, result: {0}", result);
+            return Response.AsJson(result
+                ? new JsonResponseModel { Result = true, Message = "Successfully Updated the Settings for Mattermost Notifications!" }
                 : new JsonResponseModel { Result = false, Message = "Could not update the settings, take a look at the logs." });
         }
 

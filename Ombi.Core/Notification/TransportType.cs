@@ -31,6 +31,7 @@ namespace Ombi.Core.Notification
         Email,
         Pushbullet,
         Pushover,
-        Slack
+        Slack,
+        Mattermost
     }
 }

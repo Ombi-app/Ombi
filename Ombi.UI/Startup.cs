@@ -127,6 +127,10 @@ namespace Ombi.UI
             var slackSettings = slackService.GetSettings();
             SubScribeOvserver(slackSettings, notificationService, new SlackNotification(container.Get<ISlackApi>(), slackService));
 
+            var mattermostService = container.Get<ISettingsService<MattermostNotificationSettings>>();
+            var mattermostSettings = mattermostService.GetSettings();
+            SubScribeOvserver(mattermostSettings, notificationService, new MattermostNotification(container.Get<IMattermostApi>(), mattermostService));
+
             var discordSettings = container.Get<ISettingsService<DiscordNotificationSettings>>();
             var discordService = discordSettings.GetSettings();
             SubScribeOvserver(discordService, notificationService, new DiscordNotification(container.Get<IDiscordApi>(), discordSettings));
