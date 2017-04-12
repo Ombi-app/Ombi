@@ -190,9 +190,21 @@ namespace Ombi.Services.Jobs
                         LoginId = Guid.NewGuid().ToString()
                     };
 
-                    a.Permissions += (int)Permissions.Administrator; // Make admin
+                    a.Permissions += (int) Permissions.Administrator; // Make admin
 
                     Repo.Insert(a);
+                }
+                else
+                {
+                    // does the account need updating?
+                    if (dbMainAcc != null)
+                    {
+                        dbMainAcc.PlexUserId = mainPlexAccount.Id;
+                        dbMainAcc.EmailAddress = mainPlexAccount.Email;
+                        dbMainAcc.Username = mainPlexAccount.Username;
+
+                        Repo.Update(dbMainAcc);
+                    }
                 }
 
 
