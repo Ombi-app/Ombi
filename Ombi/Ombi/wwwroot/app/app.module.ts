@@ -19,6 +19,7 @@ import { PageNotFoundComponent } from './errors/not-found.component';
 import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
 import { NotificationService } from './services/notification.service';
+import { SettingsService } from './services/settings.service';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
@@ -66,6 +67,7 @@ const routes: Routes = [
         NotificationService,
         AuthService,
         AuthGuard,
+        SettingsService
     ],
     bootstrap: [AppComponent]
 })

@@ -1,7 +1,50 @@
-﻿<settings-menu></settings-menu>
-Settings
+﻿<div class="col-sm-8 col-sm-push-1">
+    <fieldset>
+        <legend>Ombi Configuration</legend>
+        <div class="form-group">
+            <label for="portNumber" class="control-label">Port</label>
+            <div>
+                <input type="text" [(ngModel="settings.port" )] class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{settings.port}}">
+            </div>
+        </div>
+        <small class="control-label">You will have to restart after changing the port.</small>
 
+        <!--<div class="form-group">
+            <label for="BaseUrl" class="control-label">Base Url @Html.ToolTip("This will make Ombi run with a base url, usually used in reverse proxy scenarios")</label>
 
-Enabled: <p-inputSwitch [(ngModel)]="enabled"></p-inputSwitch>
+            <div>
+                <input type="text" class="form-control form-control-custom " id="BaseUrl" name="BaseUrl" placeholder="Base Url" value="@Model.BaseUrl">
 
-HostName:<input type="text" pInputText [(ngModel)]="host" />
+            </div>
+        </div>
+        <small class="control-label">You will have to restart after changing the base url.</small>-->
+
+        <div class="form-group">
+            <label for="ApiKey" class="control-label">Api Key</label>
+            <div class="input-group">
+                <input [(ngModel="settings.apiKey" )]] type="text" [readonly]="true" class="form-control form-control-custom" id="ApiKey" name="ApiKey" value="{{settings.apiKey}}">
+
+                <div class="input-group-addon">
+                    <div (click)="refreshApiKey()" id="refreshKey" class="fa fa-refresh" title="Reset API Key"></div>
+                </div>
+
+                <div class="input-group-addon">
+                    <div class="fa fa-clipboard" data-clipboard-action="copy"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="CollectAnalyticData" name="CollectAnalyticData" [(ngModel="settings.collectAnalyticData" )]] ng-checked="settings.collectAnalyticData">
+                <label for="CollectAnalyticData">Allow us to collect anonymous analytical data e.g. browser used</label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <button type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+            </div>
+        </div>
+    </fieldset>
+</div>

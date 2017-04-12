@@ -51,6 +51,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRequestRepository, RequestJsonRepository>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
             return services;
         }

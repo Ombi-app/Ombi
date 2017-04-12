@@ -16,6 +16,15 @@
     <Content Include="wwwroot\app\auth\IUserLogin.ts" />
     <Content Include="wwwroot\app\login\login.component.html" />
     <Content Include="wwwroot\app\login\login.component.ts" />
+    <Content Include="wwwroot\app\services\setting.service.js" />
+    <Content Include="wwwroot\app\services\setting.service.js.map" />
+    <Content Include="wwwroot\app\services\setting.service.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\services\settings.service.js" />
+    <Content Include="wwwroot\app\services\settings.service.js.map" />
+    <Content Include="wwwroot\app\services\settings.service.ts" />
+    <Content Include="wwwroot\app\settings\interfaces\ISettings.ts" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.html" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
