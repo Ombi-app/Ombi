@@ -16,19 +16,82 @@
     <Content Include="wwwroot\app\auth\IUserLogin.ts" />
     <Content Include="wwwroot\app\login\login.component.html" />
     <Content Include="wwwroot\app\login\login.component.ts" />
-    <Content Include="wwwroot\app\services\setting.service.js" />
-    <Content Include="wwwroot\app\services\setting.service.js.map" />
-    <Content Include="wwwroot\app\services\setting.service.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
     <Content Include="wwwroot\app\services\settings.service.js" />
     <Content Include="wwwroot\app\services\settings.service.js.map" />
     <Content Include="wwwroot\app\services\settings.service.ts" />
+    <Content Include="wwwroot\app\settings\emby\emby.component.html" />
+    <Content Include="wwwroot\app\settings\emby\emby.component.js" />
+    <Content Include="wwwroot\app\settings\emby\emby.component.js.map" />
+    <Content Include="wwwroot\app\settings\emby\emby.component.ts" />
+    <Content Include="wwwroot\app\settings\emby\plex.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\settings\emby\plex.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\settings\emby\plex.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="wwwroot\app\settings\interfaces\ISettings.ts" />
+    <Content Include="wwwroot\app\settings\plex\plex.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\settings\plex\ombi.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\settings\plex\plex.component.js" />
+    <Content Include="wwwroot\app\settings\plex\plex.component.js.map" />
+    <Content Include="wwwroot\app\settings\plex\plex.component.ts" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.html" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.ts" />
+    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js" />
+    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js.map" />
+    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.ts" />
+    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\settings.module.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\settings.module.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\settings.module.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\welcome\weclome.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\welcome\emby.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\welcome\emby.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\welcome\emby.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\welcome\weclome.component.js" />
+    <Content Include="wwwroot\app\wizard\welcome\weclome.component.js.map" />
+    <Content Include="wwwroot\app\wizard\welcome\weclome.component.ts" />
+    <Content Include="wwwroot\app\wizard\welcome\welcome.component.html" />
+    <Content Include="wwwroot\app\wizard\welcome\welcome.component.js" />
+    <Content Include="wwwroot\app\wizard\welcome\welcome.component.js.map" />
+    <Content Include="wwwroot\app\wizard\welcome\welcome.component.ts" />
+    <Content Include="wwwroot\app\wizard\wizard.module.js" />
+    <Content Include="wwwroot\app\wizard\wizard.module.js.map" />
+    <Content Include="wwwroot\app\wizard\wizard.module.ts" />
   </ItemGroup>
 
   <ItemGroup>

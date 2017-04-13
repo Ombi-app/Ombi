@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Ombi.Api;
 using Ombi.TheMovieDbApi.Models;
@@ -13,63 +12,62 @@ namespace Ombi.TheMovieDbApi
             Api = new Api.Api();
         }
         private const string ApiToken = "b8eabaf5608b88d0298aa189dd90bf00";
-        private static readonly Uri BaseUri = new Uri("http://api.themoviedb.org/3/");
-        public Api.Api Api { get; }
+        private static readonly string BaseUri ="http://api.themoviedb.org/3/";
+        private Api.Api Api { get; }
 
         public async Task<MovieResponse> GetMovieInformation(int movieId)
         {
-            var url = BaseUri.ChangePath("movie/{0}", movieId.ToString());
-            url = AddHeaders(url);
-            return await Api.Get<MovieResponse>(url);
+            var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            
+            return await Api.Request<MovieResponse>(request);
         }
 
         public async Task<MovieResponse> GetMovieInformationWithVideo(int movieId)
         {
-            var url = BaseUri.ChangePath("movie/{0}", movieId.ToString());
-            url = AddHeaders(url);
-            url = url.AddQueryParameter("append_to_response", "videos");
-            return await Api.Get<MovieResponse>(url);
+            var request = new Request($"movie/{movieId}", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("append_to_response", "videos");
+            return await Api.Request<MovieResponse>(request);
         }
 
         public async Task<TheMovieDbContainer<SearchResult>> SearchMovie(string searchTerm)
         {
-            var url = BaseUri.ChangePath("search/movie/");
-            url = AddHeaders(url);
-            url = url.AddQueryParameter("query", searchTerm);
-            return await Api.Get<TheMovieDbContainer<SearchResult>>(url);
+            var request = new Request($"search/movie", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            request.FullUri = request.FullUri.AddQueryParameter("query", searchTerm);
+
+            return await Api.Request<TheMovieDbContainer<SearchResult>>(request);
         }
 
         public async Task<TheMovieDbContainer<SearchResult>> PopularMovies()
         {
-            var url = BaseUri.ChangePath("movie/popular");
-            url = AddHeaders(url);
-            return await Api.Get<TheMovieDbContainer<SearchResult>>(url);
+            var request = new Request($"movie/popular", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+           
+            return await Api.Request<TheMovieDbContainer<SearchResult>>(request);
         }
 
         public async Task<TheMovieDbContainer<SearchResult>> TopRated()
         {
-            var url = BaseUri.ChangePath("movie/top_rated");
-            url = AddHeaders(url);
-            return await Api.Get<TheMovieDbContainer<SearchResult>>(url);
+            var request = new Request($"movie/top_rated", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            return await Api.Request<TheMovieDbContainer<SearchResult>>(request);
         }
 
         public async Task<TheMovieDbContainer<SearchResult>> Upcoming()
         {
-            var url = BaseUri.ChangePath("movie/upcoming");
-            url = AddHeaders(url);
-            return await Api.Get<TheMovieDbContainer<SearchResult>>(url);
+            var request = new Request($"movie/upcoming", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            return await Api.Request<TheMovieDbContainer<SearchResult>>(request);
         }
 
         public async Task<TheMovieDbContainer<SearchResult>> NowPlaying()
         {
-            var url = BaseUri.ChangePath("movie/now_playing");
-            url = AddHeaders(url);
-            return await Api.Get<TheMovieDbContainer<SearchResult>>(url);
+            var request = new Request($"movie/now_playing", BaseUri, HttpMethod.Get);
+            request.FullUri = request.FullUri.AddQueryParameter("api_key", ApiToken);
+            return await Api.Request<TheMovieDbContainer<SearchResult>>(request);
         }
 
-        private Uri AddHeaders(Uri url)
-        {
-            return url.AddQueryParameter("api_key", ApiToken);
-        }
     }
 }

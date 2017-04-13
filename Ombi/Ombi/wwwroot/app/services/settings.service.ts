@@ -3,7 +3,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings } from '../settings/interfaces/ISettings';
+import { IOmbiSettings, IEmbySettings, IPlexSettings } from '../settings/interfaces/ISettings';
 
 
 @Injectable()
@@ -13,11 +13,27 @@ export class SettingsService extends ServiceAuthHelpers {
     }
     
     getOmbi(): Observable<IOmbiSettings> {
-        return this.http.get(this.url).map(this.extractData);
+        return this.http.get(`${this.url}/Ombi/`).map(this.extractData);
     }
 
     saveOmbi(settings: IOmbiSettings): Observable<boolean> {
         return this.http.post(`${this.url}/Ombi/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    getEmby(): Observable<IEmbySettings> {
+        return this.http.get(`${this.url}/Emby/`).map(this.extractData);
+    }
+
+    saveEmby(settings: IEmbySettings): Observable<boolean> {
+        return this.http.post(`${this.url}/Emby/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    getPlex(): Observable<IPlexSettings> {
+        return this.http.get(`${this.url}/Plex/`).map(this.extractData);
+    }
+
+    savePlex(settings: IPlexSettings): Observable<boolean> {
+        return this.http.post(`${this.url}/Plex/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 
 }

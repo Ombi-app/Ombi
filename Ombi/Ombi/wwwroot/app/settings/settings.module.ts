@@ -8,13 +8,17 @@ import { AuthGuard } from '../auth/auth.guard';
 import { AuthModule } from '../auth/auth.module';
 
 import { OmbiComponent } from './ombi/ombi.component'
+import { PlexComponent } from './plex/plex.component'
+import { EmbyComponent } from './emby/emby.component'
 
 import { SettingsMenuComponent } from './settingsmenu.component';
 
 import { MenuModule, InputSwitchModule, InputTextModule } from 'primeng/primeng';
 
 const routes: Routes = [
-    { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] }
+    { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Plex', component: PlexComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Emby', component: EmbyComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -29,7 +33,9 @@ const routes: Routes = [
     ],
     declarations: [
         SettingsMenuComponent,
-        OmbiComponent
+        OmbiComponent,
+        PlexComponent,
+        EmbyComponent,
     ],
     exports: [
         RouterModule

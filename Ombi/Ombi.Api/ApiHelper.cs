@@ -71,8 +71,5 @@ namespace Ombi.Api
                 : $"{startingTag}{parameter}={value}";
             return builder.Uri;
         }
-
-
-    
     }
 }

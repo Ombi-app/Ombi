@@ -65,7 +65,6 @@ namespace Ombi.Store.Repository
 
         public async Task UpdateAsync(GlobalSettings entity)
         {
-            Db.Settings.Update(entity);
             await Db.SaveChangesAsync();
         }
 
@@ -77,7 +76,6 @@ namespace Ombi.Store.Repository
 
         public void Update(GlobalSettings entity)
         {
-            Db.Settings.Update(entity);
             Db.SaveChanges();
         }
     }

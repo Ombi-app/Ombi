@@ -1,8 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
@@ -10,7 +7,7 @@ namespace Ombi.Api
 {
     public class Api
     {
-        public static JsonSerializerSettings Settings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
         };
@@ -26,6 +23,40 @@ namespace Ombi.Api
             }
             var receiveString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(receiveString, Settings);
+        }
+
+        public async Task<T> Request<T>(Request request)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+                {
+                    // Add the Json Body
+                    if (request.JsonBody != null)
+                    {
+                        httpRequestMessage.Content = new JsonContent(request.JsonBody);
+                    }
+
+                    // Add headers
+                    foreach (var header in request.Headers)
+                    {
+                        httpRequestMessage.Headers.Add(header.Key, header.Value);
+                    }
+                    using (var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage))
+                    {
+                        if (!httpResponseMessage.IsSuccessStatusCode)
+                        {
+                            // Logging
+                        }
+                        // do something with the response
+                        var data = httpResponseMessage.Content;
+
+
+                        var receivedString = await data.ReadAsStringAsync();
+                        return JsonConvert.DeserializeObject<T>(receivedString, Settings);
+                    }
+                }
+            }
         }
     }
 }

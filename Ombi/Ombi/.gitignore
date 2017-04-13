@@ -1,6 +1,5 @@
 /wwwroot/css/**
 /wwwroot/fonts/**
-/wwwroot/images/**
 /wwwroot/lib/**
 /wwwroot/maps/**
 /wwwroot/app/**/*.js

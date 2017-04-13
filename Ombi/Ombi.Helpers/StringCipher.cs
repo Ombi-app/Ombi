@@ -1,3 +1,4 @@
+using EasyCrypto;
 using System;
 using System.IO;
 using System.Security.Cryptography;
@@ -80,6 +81,19 @@ namespace Ombi.Helpers
                     }
                 }
             }
+        }
+
+
+        public static string EncryptString(string text, string keyString)
+        {
+            var result = AesEncryption.EncryptWithPassword(text, keyString);
+            return result;
+        }
+
+        public static string DecryptString(string cipherText, string keyString)
+        {
+            var result = AesEncryption.DecryptWithPassword(cipherText, keyString);
+            return result;
         }
     }
 }

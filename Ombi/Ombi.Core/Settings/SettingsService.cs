@@ -118,12 +118,12 @@ namespace Ombi.Core.Settings
 
         private string EncryptSettings(GlobalSettings settings)
         {
-            return StringCipher.Encrypt(settings.Content, settings.SettingsName);
+            return StringCipher.EncryptString(settings.Content, $"Ombiv3SettingsEncryptionPassword");
         }
 
         private string DecryptSettings(GlobalSettings settings)
         {
-            return StringCipher.Decrypt(settings.Content, settings.SettingsName);
+            return StringCipher.DecryptString(settings.Content, $"Ombiv3SettingsEncryptionPassword");
         }
     }
 }

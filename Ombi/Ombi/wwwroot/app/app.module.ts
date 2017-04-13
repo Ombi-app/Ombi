@@ -26,6 +26,7 @@ import { AuthModule } from './auth/auth.module';
 
 // Modules
 import { SettingsModule } from './settings/settings.module';
+import { WizardModule } from './wizard/wizard.module';
 
 import { ButtonModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
@@ -52,7 +53,8 @@ const routes: Routes = [
         DataTableModule,
         SharedModule,
         InfiniteScrollModule,
-        AuthModule
+        AuthModule,
+        WizardModule
     ],
     declarations: [
         AppComponent,
