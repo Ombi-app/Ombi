@@ -714,3 +714,9 @@ body {
     border: 1px solid $form-color-lighter $i;
     background: $form-color $i;
 }
+
+// PrimeNg Overide
+
+.ui-growl-item{
+    margin-top:35px $i;
+}

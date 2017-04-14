@@ -1,0 +1,17 @@
+﻿<h4 class="media-heading landing-title">Plex Authentication</h4>
+<div class="form-group">
+    <label for="username" class="control-label">Username and Password</label>
+    <div>
+        <input type="text" [(ngModel)]="login" class="form-control form-control-custom" id="username"  placeholder="Username">
+    </div>
+    <br />
+    <div>
+        <input type="password" [(ngModel)]="password" class="form-control form-control-custom" placeholder="Password">
+    </div>
+</div>
+<small>Please note we do not store this information, we only store your Plex Authorization Token that will allow Ombi to view your media and friends</small>
+<div class="form-group">
+    <div style="text-align: center; margin-top: 20px">
+        <button (click)="requestAuthToken()" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
+    </div>
+</div>

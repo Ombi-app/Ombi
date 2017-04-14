@@ -9,13 +9,15 @@ namespace Ombi.Api
 {
     public class Request
     {
-        public Request(string endpoint, string baseUrl, HttpMethod http)
+        public Request(string endpoint, string baseUrl, HttpMethod http, ContentType contentType = ContentType.Json)
         {
             Endpoint = endpoint;
             BaseUrl = baseUrl;
             HttpMethod = http;
+            ContentType = contentType;
         }
 
+        public ContentType ContentType { get; }
         public string Endpoint { get; }
         public string BaseUrl { get; }
         public HttpMethod HttpMethod { get; }
@@ -25,7 +27,10 @@ namespace Ombi.Api
             get
             {
                 var sb = new StringBuilder();
-                sb.Append(!BaseUrl.EndsWith("/") ? string.Format("{0}/", BaseUrl) : BaseUrl);
+                if (!string.IsNullOrEmpty(BaseUrl))
+                {
+                    sb.Append(!BaseUrl.EndsWith("/") ? string.Format("{0}/", BaseUrl) : BaseUrl);
+                }
                 sb.Append(Endpoint.StartsWith("/") ? Endpoint.Remove(0, 1) : Endpoint);
                 return sb.ToString();
             }
@@ -40,6 +45,7 @@ namespace Ombi.Api
         }
 
         public List<KeyValuePair<string, string>> Headers { get; } = new List<KeyValuePair<string, string>>();
+        public List<KeyValuePair<string, string>> ContentHeaders { get; } = new List<KeyValuePair<string, string>>();
 
         public object JsonBody { get; set; }
 
@@ -64,10 +70,15 @@ namespace Ombi.Api
         {
             Headers.Add(new KeyValuePair<string, string>(key, value));
         }
+        public void AddContentHeader(string key, string value)
+        {
+            ContentHeaders.Add(new KeyValuePair<string, string>(key, value));
+        }
 
         public void AddJsonBody(object obj)
         {
             JsonBody = obj;
         }
     }
+
 }

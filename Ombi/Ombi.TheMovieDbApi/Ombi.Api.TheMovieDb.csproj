@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
+    <AssemblyName>Ombi.Api.TheMovieDb</AssemblyName>
     <!--<NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>-->
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.2" />
-    <PackageReference Include="System.Xml.XmlSerializer" Version="4.3.0" />
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
   </ItemGroup>
 
 </Project>

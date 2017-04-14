@@ -21,7 +21,7 @@ export class NotificationService {
     }
 
     public error(title: string, body: string) {
-        this.addMessage({ severity: 'danger', detail: body, summary: title });
+        this.addMessage({ severity: 'error', detail: body, summary: title });
     }
 
     public clearMessages() {

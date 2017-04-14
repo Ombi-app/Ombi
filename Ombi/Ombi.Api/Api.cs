@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Newtonsoft.Json;
 
 namespace Ombi.Api
@@ -41,6 +43,7 @@ namespace Ombi.Api
                     foreach (var header in request.Headers)
                     {
                         httpRequestMessage.Headers.Add(header.Key, header.Value);
+                        
                     }
                     using (var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage))
                     {
@@ -53,10 +56,23 @@ namespace Ombi.Api
 
 
                         var receivedString = await data.ReadAsStringAsync();
-                        return JsonConvert.DeserializeObject<T>(receivedString, Settings);
+                        if (request.ContentType == ContentType.Json)
+                        {
+                            return JsonConvert.DeserializeObject<T>(receivedString, Settings);
+                        }
+                        else
+                        {
+                            // XML
+                            XmlSerializer serializer = new XmlSerializer(typeof(T));
+                            StringReader reader = new StringReader(receivedString);
+                            var value = (T)serializer.Deserialize(reader);
+                            return value;
+                        }
                     }
                 }
             }
         }
+
+
     }
 }

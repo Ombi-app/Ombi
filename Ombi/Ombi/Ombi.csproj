@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot/app\wizard\plex\plex.component.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Include="wwwroot\app\auth\auth.guard.ts">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -16,6 +20,11 @@
     <Content Include="wwwroot\app\auth\IUserLogin.ts" />
     <Content Include="wwwroot\app\login\login.component.html" />
     <Content Include="wwwroot\app\login\login.component.ts" />
+    <Content Include="wwwroot\app\services\plex.service.js" />
+    <Content Include="wwwroot\app\services\plex.service.js.map" />
+    <Content Include="wwwroot\app\services\plex.service.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Include="wwwroot\app\services\settings.service.js" />
     <Content Include="wwwroot\app\services\settings.service.js.map" />
     <Content Include="wwwroot\app\services\settings.service.ts" />
@@ -52,39 +61,13 @@
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js" />
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js.map" />
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.ts" />
-    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\mediaserver\welcome.component.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\settings.module.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\settings.module.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\settings.module.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\welcome\weclome.component.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\welcome\emby.component.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\welcome\emby.component.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\welcome\emby.component.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\welcome\weclome.component.js" />
-    <Content Include="wwwroot\app\wizard\welcome\weclome.component.js.map" />
-    <Content Include="wwwroot\app\wizard\welcome\weclome.component.ts" />
+    <Content Include="wwwroot\app\wizard\plex\plex.component.html" />
+    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.js" />
+    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.js.map" />
+    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.ts" />
+    <Content Include="wwwroot\app\wizard\plex\plex.component.js" />
+    <Content Include="wwwroot\app\wizard\plex\plex.component.js.map" />
+    <Content Include="wwwroot\app\wizard\plex\plex.component.ts" />
     <Content Include="wwwroot\app\wizard\welcome\welcome.component.html" />
     <Content Include="wwwroot\app\wizard\welcome\welcome.component.js" />
     <Content Include="wwwroot\app\wizard\welcome\welcome.component.js.map" />
@@ -113,21 +96,23 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+    <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
-    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj" />
+    <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="System.Configuration">
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.Csp">
-      <HintPath>..\..\..\..\..\.nuget\packages\system.security.cryptography.csp\4.3.0\ref\netstandard1.3\System.Security.Cryptography.Csp.dll</HintPath>
-    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Plex\" />
   </ItemGroup>
 </Project>

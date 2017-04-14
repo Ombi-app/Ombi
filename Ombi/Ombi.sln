@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core", "Ombi.Core\Ombi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{9293CA11-360A-4C20-A674-B9E794431BF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.TheMovieDbApi", "Ombi.TheMovieDbApi\Ombi.TheMovieDbApi.csproj", "{132DA282-5894-4570-8916-D8C18ED2CE84}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.TheMovieDb", "Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj", "{132DA282-5894-4570-8916-D8C18ED2CE84}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "Ombi.Api\Ombi.Api.csproj", "{EA31F915-31F9-4318-B521-1500CDF40DDF}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mappers", "Mappers", "{025FB189-2FFB-4F43-A64B-6F1B5A0D2065}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DI", "DI", "{410F36CF-9C60-428A-B191-6FD90610991A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Plex", "Ombi.Api.Plex\Ombi.Api.Plex.csproj", "{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +72,10 @@ Global
 		{63E63511-1C7F-4162-8F92-8F7391B3C8A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63E63511-1C7F-4162-8F92-8F7391B3C8A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63E63511-1C7F-4162-8F92-8F7391B3C8A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,5 +85,6 @@ Global
 		{EA31F915-31F9-4318-B521-1500CDF40DDF} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{B39E4558-C557-48E7-AA74-19C5CD809617} = {410F36CF-9C60-428A-B191-6FD90610991A}
 		{63E63511-1C7F-4162-8F92-8F7391B3C8A3} = {025FB189-2FFB-4F43-A64B-6F1B5A0D2065}
+		{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 EndGlobal
