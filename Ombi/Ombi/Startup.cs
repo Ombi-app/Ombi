@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Hangfire;
+using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -12,6 +14,16 @@ namespace Ombi
 {
     public partial class Startup
     {
+
+        //public void ConfigureServices(IServiceCollection services)
+        //{
+        //}
+
+        //public void Configure(IApplicationBuilder app)
+        //{
+        //    app.UseHangfireServer();
+        //    app.UseHangfireDashboard();
+        //}
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -33,6 +45,8 @@ namespace Ombi
             services.AddOmbiMappingProfile();
             services.AddAutoMapper();
             services.RegisterDependencies(); // Ioc and EF
+
+            services.AddHangfire(x => x.UseMemoryStorage(new MemoryStorageOptions()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,7 +64,8 @@ namespace Ombi
                 app.UseExceptionHandler("/Home/Error");
             }
 
-
+            app.UseHangfireServer();
+            app.UseHangfireDashboard();
 
             ConfigureAuth(app);
 
@@ -73,8 +88,5 @@ namespace Ombi
                     defaults: new { controller = "Home", action = "Index" });
             });
         }
-        
-        
-
     }
 }
