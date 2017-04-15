@@ -55,6 +55,15 @@
     <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
     <Content Include="wwwroot\app\settings\settingsmenu.component.ts" />
+    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.html" />
+    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js" />
+    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js.map" />
+    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.ts" />
+    <Content Include="wwwroot\app\wizard\createadmin\plex.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\wizard\createadmin\plex.component.js.map" />
+    <Content Include="wwwroot\app\wizard\createadmin\plex.component.ts" />
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.html">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
@@ -62,9 +71,6 @@
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js.map" />
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.ts" />
     <Content Include="wwwroot\app\wizard\plex\plex.component.html" />
-    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.js" />
-    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.js.map" />
-    <Content Include="wwwroot\app\wizard\plex\plex - Copy.component.ts" />
     <Content Include="wwwroot\app\wizard\plex\plex.component.js" />
     <Content Include="wwwroot\app\wizard\plex\plex.component.js.map" />
     <Content Include="wwwroot\app\wizard\plex\plex.component.ts" />
