@@ -19,10 +19,19 @@
             <ul class="nav navbar-nav">
                 <li><a [routerLinkActive]="['active']" [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
             </ul>
-            <ul class="nav navbar-nav">
-                <li><a [routerLinkActive]="['active']" [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
+
+            
+            <ul class="nav navbar-nav navbar-right">
+                    <li><a [routerLinkActive]="['active']" [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Welcome {{username}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        <li><a [routerLink]="['/user/changepassword']"><i class="fa fa-key"></i> Change Password</a></li>
+                        <li><a (click)="logOut()"><i class="fa fa-sign-out"></i> Logout</a></li>
+                    </ul>
+                </li>
             </ul>
-        </div>
+</div>
     </div>
 </nav>
 

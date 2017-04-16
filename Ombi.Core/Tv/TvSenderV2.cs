@@ -164,11 +164,24 @@ namespace Ombi.Core.Tv
 
                 for (var i = 1; i <= model.SeasonCount; i++)
                 {
-                    var season = new Season
+                    Season season;
+                    if (model.Episodes.Any(x => x.SeasonNumber == i))
                     {
-                        seasonNumber = i,
-                        monitored = false // Do not monitor any seasons
-                    };
+                        season = new Season
+                        {
+                            seasonNumber = i,
+                            monitored = true // Do not monitor any seasons
+                        };
+                    }
+                    else
+                    {
+                        season = new Season
+                        {
+                            seasonNumber = i,
+                            monitored = false // Do not monitor any seasons
+                        };
+
+                    }
                     seriesToAdd.seasons.Add(season);
                 }
 

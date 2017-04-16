@@ -28,6 +28,8 @@ export class LoginComponent {
             this.authService.login({ password: this.password, username: this.username })
                 .subscribe(x => {
                     localStorage.setItem("id_token", x.access_token);
+                    localStorage.setItem('currentUser', this.username);
+                    
                     if (this.authService.loggedIn()) {
                         this.router.navigate(['search']);
                     } else {

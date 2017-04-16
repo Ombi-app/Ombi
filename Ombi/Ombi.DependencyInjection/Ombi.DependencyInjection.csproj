@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
   </ItemGroup>

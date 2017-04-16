@@ -3,8 +3,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings, IEmbySettings, IPlexSettings } from '../settings/interfaces/ISettings';
-
+import { IOmbiSettings, IEmbySettings, IPlexSettings } from '../interfaces/ISettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {

@@ -28,6 +28,7 @@ export class AuthService extends ServiceHelpers {
 
     logout() {
         localStorage.removeItem('id_token');
+        localStorage.removeItem('currentUser');
     }
 }
 

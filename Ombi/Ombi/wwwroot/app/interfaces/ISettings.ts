@@ -4,14 +4,14 @@
 
 export interface IExternalSettings extends ISettings {
     ssl: boolean,
-    subDir: boolean,
+    subDir: string,
     ip: string,
     port:number
 }
 
 export interface IOmbiSettings extends ISettings {
     port: number,
-//baseUrl:string,
+//baseUrl:string, 
     collectAnalyticData: boolean,
     wizard: boolean,
     apiKey:string

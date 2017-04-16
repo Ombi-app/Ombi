@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
@@ -12,6 +13,7 @@ using Ombi.Core.Settings.Models.External;
 
 namespace Ombi.Controllers
 {
+    [Authorize]
     public class PlexController : BaseV1ApiController
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings)
@@ -24,8 +26,13 @@ namespace Ombi.Controllers
         private ISettingsService<PlexSettings> PlexSettings { get; }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<PlexAuthentication> SignIn([FromBody] UserRequest request)
         {
+            // Do we already have settings?
+            var settings = await PlexSettings.GetSettingsAsync();
+            if (settings != null && !string.IsNullOrEmpty(settings.PlexAuthToken)) return null;
+
             var result = await PlexApi.SignIn(request);
             if (!string.IsNullOrEmpty(result.user?.authentication_token))
             {

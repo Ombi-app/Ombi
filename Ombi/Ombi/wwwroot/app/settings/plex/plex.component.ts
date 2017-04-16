@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { IPlexSettings } from '../interfaces/ISettings'
+import { IPlexSettings } from '../../interfaces/ISettings'
 import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 

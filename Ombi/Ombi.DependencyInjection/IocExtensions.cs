@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Core;
 using Ombi.Core.Engine;
@@ -42,6 +43,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IMovieDbApi, TheMovieDbApi.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
+            services.AddTransient<IEmbyApi, EmbyApi>();
             return services;
         }
 

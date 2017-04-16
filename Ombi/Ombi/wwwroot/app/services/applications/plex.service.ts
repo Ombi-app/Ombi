@@ -2,9 +2,9 @@
 import {  Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
-import { ServiceHelpers } from './service.helpers';
+import { ServiceHelpers } from '../service.helpers';
 
-import { IPlexAuthentication } from '../interfaces/IPlex'
+import { IPlexAuthentication } from '../../interfaces/IPlex'
 
 
 @Injectable()

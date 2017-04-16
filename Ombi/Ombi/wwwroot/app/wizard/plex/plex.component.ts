@@ -1,7 +1,7 @@
 ﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { PlexService } from '../../services/plex.service';
+import { PlexService } from '../../services/applications/plex.service';
 import { NotificationService } from '../../services/notification.service';
 
 import { IPlexAuthentication } from '../../interfaces/IPlex';
