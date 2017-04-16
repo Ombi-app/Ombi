@@ -20,6 +20,20 @@
     <Content Include="wwwroot\app\auth\IUserLogin.ts" />
     <Content Include="wwwroot\app\login\login.component.html" />
     <Content Include="wwwroot\app\login\login.component.ts" />
+    <Content Include="wwwroot\app\services\identity - Copy.service.js">
+      <DependentUpon>identity - Copy.service.ts</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\services\identity - Copy.service.js.map">
+      <DependentUpon>identity - Copy.service.js</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\services\identity - Copy.service.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="wwwroot\app\services\identity.service.js" />
+    <Content Include="wwwroot\app\services\identity.service.js.map" />
+    <Content Include="wwwroot\app\services\identity.service.ts" />
     <Content Include="wwwroot\app\services\plex.service.js" />
     <Content Include="wwwroot\app\services\plex.service.js.map" />
     <Content Include="wwwroot\app\services\plex.service.ts">
@@ -28,6 +42,10 @@
     <Content Include="wwwroot\app\services\settings.service.js" />
     <Content Include="wwwroot\app\services\settings.service.js.map" />
     <Content Include="wwwroot\app\services\settings.service.ts" />
+    <Content Include="wwwroot\app\services\status.service.js" />
+    <Content Include="wwwroot\app\services\status.service.js.map" />
+    <Content Include="wwwroot\app\services\status.service.ts" />
+    <Content Include="wwwroot\app\services\useridentity.service.ts" />
     <Content Include="wwwroot\app\settings\emby\emby.component.html" />
     <Content Include="wwwroot\app\settings\emby\emby.component.js" />
     <Content Include="wwwroot\app\settings\emby\emby.component.js.map" />
@@ -59,11 +77,6 @@
     <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js" />
     <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js.map" />
     <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.ts" />
-    <Content Include="wwwroot\app\wizard\createadmin\plex.component.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\createadmin\plex.component.js.map" />
-    <Content Include="wwwroot\app\wizard\createadmin\plex.component.ts" />
     <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.html">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

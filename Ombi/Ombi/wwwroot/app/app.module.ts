@@ -23,6 +23,9 @@ import { SettingsService } from './services/settings.service';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
+import { IdentityService } from './services/identity.service';
+import { StatusService } from './services/status.service';
+
 
 // Modules
 import { SettingsModule } from './settings/settings.module';
@@ -69,7 +72,9 @@ const routes: Routes = [
         NotificationService,
         AuthService,
         AuthGuard,
-        SettingsService
+        SettingsService,
+        IdentityService,
+        StatusService
     ],
     bootstrap: [AppComponent]
 })

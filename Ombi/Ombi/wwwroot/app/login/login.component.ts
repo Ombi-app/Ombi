@@ -1,8 +1,8 @@
 ﻿import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-
 import { AuthService } from '../auth/auth.service';
+import { StatusService } from '../services/status.service';
 import { NotificationService } from '../services/notification.service';
 
 @Component({
@@ -11,7 +11,13 @@ import { NotificationService } from '../services/notification.service';
     templateUrl: './login.component.html',
 })
 export class LoginComponent {
-    constructor(private authService: AuthService, private router: Router, private notify: NotificationService) {  }
+    constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService) {
+        this.status.getWizardStatus().subscribe(x => {
+            if (!x.result) {
+                this.router.navigate(['Wizard']);
+            }
+        });
+    }
 
 
     username: string;

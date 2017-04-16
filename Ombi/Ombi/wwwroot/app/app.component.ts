@@ -9,5 +9,13 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
 
-    constructor(public notificationService: NotificationService, public authService : AuthService) { };
+    constructor(public notificationService: NotificationService, public authService: AuthService) {
+        this.showNav = true;
+        //console.log(this.route);
+        //if (this.route.("/Wizard/*") !== -1) {
+        //    this.showNav = false;
+        //}
+    }
+
+    showNav :boolean;
 }

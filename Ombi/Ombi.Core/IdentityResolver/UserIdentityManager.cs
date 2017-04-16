@@ -51,6 +51,8 @@ namespace Ombi.Core.IdentityResolver
         public async Task<bool> CredentialsValid(string username, string password)
         {
             var user = await UserRepository.GetUser(username);
+            if (user == null) return false;
+
             var hash = HashPassword(password, user.Salt);
 
             return hash.HashedPass.Equals(user.Password);
