@@ -3,7 +3,7 @@ title: Ombi
 email: tidusjar@gmail.com
 description: Ombi the request system
 
-baseurl: "" # the subpath of your site, e.g. /blog/ (If you use organization leave empty)
+baseurl: "/ombiwebtest" # the subpath of your site, e.g. /blog/ (If you use organization leave empty)
 url: "http://www.ombi.io" # the base hostname & protocol for your site
 
 #Google Ad Words Data from scripts code (using Google responsive options) and ad client
