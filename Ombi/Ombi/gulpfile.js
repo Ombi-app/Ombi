@@ -15,6 +15,7 @@ var cleancss = require('gulp-clean-css');
 var filter = require('gulp-filter');
 var systemJSBuilder = require('systemjs-builder');
 var run = require('gulp-run');
+var fs = require('fs');
 
 var wwwroot = './wwwroot';
 
@@ -32,16 +33,13 @@ var paths = {
             '@angular/http',
             '@angular/router',
             '@angular/forms',
-            
+            '@angular/platform-browser/animations',
+            'ngx-infinite-scroll'
         ],
         dest: './lib'
     },
     lib: { // These are simple single-file dependencies with optional rename, for more files or folders use modules
         src: [
-            {
-                file: './node_modules/@angular/platform-browser/bundles/platform-browser-animations.umd.js',
-                rename: '@angular/platform-browser/animations'
-            },
             {
                 file: './node_modules/systemjs/dist/system.src.js',
                 rename: 'system'
@@ -57,8 +55,7 @@ var paths = {
             './bower_components/PACE/pace.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/tether/dist/js/tether.js',
-            './node_modules/angular2-jwt/angular2-jwt.js',
-            './systemjs.config.js',
+            './node_modules/angular2-jwt/angular2-jwt.js'
         ],
         dest: './lib/'
     },
@@ -89,7 +86,7 @@ var paths = {
             src: [
                 './node_modules/primeng/resources/themes/omega/fonts/*'
             ],
-            dest: './fonts/'
+            dest: './css/fonts/'
         }
     ],
     libimages: [ // Library images
@@ -120,12 +117,7 @@ var paths = {
             name: 'primeng',
             src: './node_modules/primeng/**/*.js',
             dest: './lib/primeng/'
-        },
-        {
-            name: "angular2-infinite-scroll",
-            src: ['./node_modules/angular2-infinite-scroll/**/*.js', '!./node_modules/angular2-infinite-scroll/bundles/**/*.js'],
-            dest: "./lib/angular2-infinite-scroll/"
-        },
+        }
     ],
     sass: { // Simple sass->css compilation
         src: ['./Styles/**/*.scss', '!./Styles/primeng/**'],
@@ -252,7 +244,7 @@ gulp.task('sass', function () {
 });
 
 
-gulp.task('bundle', function () {
+gulp.task('bundle', ['typescript_firstrun'], function () {
     var builder = new systemJSBuilder(paths.bundle.root);
     builder.config(paths.bundle.config);
 
@@ -264,15 +256,32 @@ gulp.task('bundle', function () {
 
 gulp.task('clean', function () {
     return del([
-        paths.sass.dest,
+        paths.sass.dest + paths.sass.filter,
         paths.lib.dest,
         paths.bundle.dest,
-        ...paths.modules.map(m => m.dest)
+        ...paths.modules.map(m => m.dest),
+        ...paths.libcss.map(m => m.dest + (m.filter ? m.filter : '')),
+        ...paths.libfonts.map(m => m.dest)
     ].map(x => path.join(paths.wwwroot, x)), { force: true });
 })
 
-gulp.task('typescript', function () {
+// Runs the TypeScript compiler
+function runTSC() {
     return run('tsc').exec();
+}
+
+// Allows app to bundle libs on first run by compiling the app first, only compiles if entry point doesn't exist
+gulp.task('typescript_firstrun', function () {
+    var bundle = path.join(paths.wwwroot, paths.bundle.bundle);
+    var exists = fs.existsSync(bundle);
+    if (!exists) {
+        console.log(`'${bundle}' doesn't exist - compiling TypeScript`);
+        return runTSC();
+    }
+})
+
+gulp.task('typescript', function () {
+    return runTSC();
 });
 
 uglify().on('error',
@@ -285,7 +294,7 @@ gulp.task('fullvar', () => { global.full = true });
 gulp.task('copy', ['lib', 'libcss', 'libfonts', 'libimages', 'npm', 'modules']);
 gulp.task('compile', callback => runSequence('copy', 'sass', callback));
 gulp.task('build', callback => runSequence('compile', 'bundle', callback));
-gulp.task('full', callback => runSequence(/*'clean',*/ 'compile', callback));
+gulp.task('full', callback => runSequence('clean', 'compile', callback));
 
 // Use this in a build server environment to compile and bundle everything
 gulp.task('publish', callback => runSequence('fullvar', 'full', 'typescript', 'bundle', callback));
