@@ -14,7 +14,18 @@ section#why,section#download {
 .donatebg {
     background-color:#df691a !important;
 }
-.btn-outline:hover, .btn-outline:focus, {
+.donate-title {
+    font-weight: 500 !important;
+    font-size: 2.3em;
+    color: black;
+}
+.btn-outline-donate {
+    color:black !important;
+    text-color: black;
+    font-size: 15px !important;
+    font-weight:500px;
+}
+.btn-outline:hover, .btn-outline:focus, .btn-outline-donate:hover, .btn-outline-donate:focus {
     color: black !important;
 }
 .img-center {
