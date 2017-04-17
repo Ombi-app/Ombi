@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-import { InfiniteScrollModule } from 'angular2-infinite-scroll/angular2-infinite-scroll'
+import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 
 import { SearchComponent } from './search/search.component';
 import { RequestComponent } from './requests/request.component';

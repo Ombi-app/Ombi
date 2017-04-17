@@ -8,90 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot/app\wizard\plex\plex.component.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="wwwroot\app\auth\auth.guard.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\auth\auth.module.ts" />
-    <Content Include="wwwroot\app\auth\auth.service.ts" />
-    <Content Include="wwwroot\app\auth\IUserLogin.ts" />
-    <Content Include="wwwroot\app\interfaces\IEmby.ts" />
-    <Content Include="wwwroot\app\interfaces\ISettings.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\interfaces\ISettings.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\interfaces\ISettings.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\login\login.component.html" />
-    <Content Include="wwwroot\app\login\login.component.ts" />
-    <Content Include="wwwroot\app\services\applications\emby.service.js" />
-    <Content Include="wwwroot\app\services\applications\emby.service.js.map" />
-    <Content Include="wwwroot\app\services\applications\emby.service.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\services\applications\plex.service.js" />
-    <Content Include="wwwroot\app\services\applications\plex.service.js.map" />
-    <Content Include="wwwroot\app\services\applications\plex.service.ts" />
-    <Content Include="wwwroot\app\services\identity.service.js" />
-    <Content Include="wwwroot\app\services\identity.service.js.map" />
-    <Content Include="wwwroot\app\services\identity.service.ts" />
-    <Content Include="wwwroot\app\services\plex.service.js" />
-    <Content Include="wwwroot\app\services\plex.service.js.map" />
-    <Content Include="wwwroot\app\services\plex.service.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\services\settings.service.js" />
-    <Content Include="wwwroot\app\services\settings.service.js.map" />
-    <Content Include="wwwroot\app\services\settings.service.ts" />
-    <Content Include="wwwroot\app\services\status.service.js" />
-    <Content Include="wwwroot\app\services\status.service.js.map" />
-    <Content Include="wwwroot\app\services\status.service.ts" />
-    <Content Include="wwwroot\app\settings\emby\emby.component.html" />
-    <Content Include="wwwroot\app\settings\emby\emby.component.js" />
-    <Content Include="wwwroot\app\settings\emby\emby.component.js.map" />
-    <Content Include="wwwroot\app\settings\emby\emby.component.ts" />
-    <Content Include="wwwroot\app\settings\interfaces\ISettings.ts" />
-    <Content Include="wwwroot\app\settings\plex\plex.component.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\settings\plex\plex.component.js" />
-    <Content Include="wwwroot\app\settings\plex\plex.component.js.map" />
-    <Content Include="wwwroot\app\settings\plex\plex.component.ts" />
-    <Content Include="wwwroot\app\settings\settingsmenu.component.html" />
-    <Content Include="wwwroot\app\settings\settingsmenu.component.js" />
-    <Content Include="wwwroot\app\settings\settingsmenu.component.js.map" />
-    <Content Include="wwwroot\app\settings\settingsmenu.component.ts" />
-    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.html" />
-    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js" />
-    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.js.map" />
-    <Content Include="wwwroot\app\wizard\createadmin\createadmin.component.ts" />
-    <Content Include="wwwroot\app\wizard\emby\emby.component.html" />
-    <Content Include="wwwroot\app\wizard\emby\emby.component.js" />
-    <Content Include="wwwroot\app\wizard\emby\emby.component.js.map" />
-    <Content Include="wwwroot\app\wizard\emby\emby.component.ts" />
-    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js" />
-    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.js.map" />
-    <Content Include="wwwroot\app\wizard\mediaserver\mediaserver.component.ts" />
-    <Content Include="wwwroot\app\wizard\plex\plex.component.html" />
-    <Content Include="wwwroot\app\wizard\plex\plex.component.js" />
-    <Content Include="wwwroot\app\wizard\plex\plex.component.js.map" />
-    <Content Include="wwwroot\app\wizard\plex\plex.component.ts" />
-    <Content Include="wwwroot\app\wizard\welcome\welcome.component.html" />
-    <Content Include="wwwroot\app\wizard\welcome\welcome.component.js" />
-    <Content Include="wwwroot\app\wizard\welcome\welcome.component.js.map" />
-    <Content Include="wwwroot\app\wizard\welcome\welcome.component.ts" />
-    <Content Include="wwwroot\app\wizard\wizard.module.js" />
-    <Content Include="wwwroot\app\wizard\wizard.module.js.map" />
-    <Content Include="wwwroot\app\wizard\wizard.module.ts" />
+    <Content Include="wwwroot\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -134,5 +51,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Plex\" />
+    <Folder Include="wwwroot\css\fonts\" />
   </ItemGroup>
 </Project>
