@@ -21,9 +21,9 @@ namespace Ombi.Api.Emby
         /// </summary>
         /// <param name="baseUri"></param>
         /// <param name="apiKey"></param>
-        public async Task<List<EmbyUser>> GetUsers(Uri baseUri, string apiKey)
+        public async Task<List<EmbyUser>> GetUsers(string baseUri, string apiKey)
         {
-            var request = new Request("emby/users", baseUri.ToString(), HttpMethod.Get);
+            var request = new Request("emby/users", baseUri, HttpMethod.Get);
  
             AddHeaders(request, apiKey);
             var obj = await Api.Request<List<EmbyUser>>(request);
@@ -31,9 +31,9 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
-        public async Task<EmbySystemInfo> GetSystemInformation(string apiKey, Uri baseUrl)
+        public async Task<EmbySystemInfo> GetSystemInformation(string apiKey, string baseUrl)
         {
-            var request = new Request("emby/System/Info", baseUrl.ToString(), HttpMethod.Get);
+            var request = new Request("emby/System/Info", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
 
@@ -42,9 +42,9 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
-        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, Uri baseUri)
+        public async Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri)
         {
-            var request = new Request("emby/users/authenticatebyname", baseUri.ToString(), HttpMethod.Post);
+            var request = new Request("emby/users/authenticatebyname", baseUri, HttpMethod.Post);
 
 
             var body = new

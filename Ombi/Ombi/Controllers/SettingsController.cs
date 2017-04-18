@@ -2,13 +2,14 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 
 namespace Ombi.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Admin]
     public class SettingsController : BaseV1ApiController
     {
         public SettingsController(ISettingsResolver resolver)
@@ -30,7 +31,7 @@ namespace Ombi.Controllers
             return await Save(ombi);
 
         }
-        
+
         [HttpGet("plex")]
         public async Task<PlexSettings> PlexSettings()
         {

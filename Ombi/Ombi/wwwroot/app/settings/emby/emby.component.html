@@ -1,6 +1,13 @@
 ﻿<div class="col-sm-8 col-sm-push-1">
     <fieldset>
         <legend>Emby Configuration</legend>
+        
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                <label for="enable">Enable</label>
+            </div>
+        </div>
 
         <div class="form-group">
             <label for="Ip" class="control-label">Hostname or IP</label>

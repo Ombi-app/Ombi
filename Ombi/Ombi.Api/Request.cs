@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
 
 namespace Ombi.Api
 {
     public class Request
     {
+        public Request()
+        {
+            
+        }
+
         public Request(string endpoint, string baseUrl, HttpMethod http, ContentType contentType = ContentType.Json)
         {
             Endpoint = endpoint;

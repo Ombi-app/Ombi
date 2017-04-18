@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '../auth/auth.guard';
 import { AuthModule } from '../auth/auth.module';
+import { SonarrService } from '../services/applications/sonarr.service';
 
 import { OmbiComponent } from './ombi/ombi.component'
 import { PlexComponent } from './plex/plex.component'
@@ -41,7 +42,7 @@ const routes: Routes = [
         RouterModule
     ],
     providers: [
-
+        SonarrService,
         AuthService,
         AuthGuard,
     ],

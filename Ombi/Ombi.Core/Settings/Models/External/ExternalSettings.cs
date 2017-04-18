@@ -12,17 +12,17 @@ namespace Ombi.Core.Settings.Models.External
         public int Port { get; set; }
 
         [JsonIgnore]
-        public virtual Uri FullUri
+        public virtual string FullUri
         {
             get
             {
                 if (!string.IsNullOrEmpty(SubDir))
                 {
                     var formattedSubDir = Ip.ReturnUriWithSubDir(Port, Ssl, SubDir);
-                    return formattedSubDir;
+                    return formattedSubDir.ToString();
                 }
                 var formatted = Ip.ReturnUri(Port, Ssl);
-                return formatted;
+                return formatted.ToString();
             }
         }
     }

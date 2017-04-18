@@ -7,8 +7,8 @@ namespace Ombi.Api.Emby
 {
     public interface IEmbyApi
     {
-        Task<EmbySystemInfo> GetSystemInformation(string apiKey, Uri baseUrl);
-        Task<List<EmbyUser>> GetUsers(Uri baseUri, string apiKey);
-        Task<EmbyUser> LogIn(string username, string password, string apiKey, Uri baseUri);
+        Task<EmbySystemInfo> GetSystemInformation(string apiKey, string baseUrl);
+        Task<List<EmbyUser>> GetUsers(string baseUri, string apiKey);
+        Task<EmbyUser> LogIn(string username, string password, string apiKey, string baseUri);
     }
 }

@@ -4,6 +4,7 @@
 
 export interface IExternalSettings extends ISettings {
     ssl: boolean,
+    enable:boolean,
     subDir: string,
     ip: string,
     port:number
@@ -18,15 +19,21 @@ export interface IOmbiSettings extends ISettings {
 }
 
 export interface IEmbySettings extends IExternalSettings {
-    enable: boolean,
     apiKey: string,
     administratorId: string,
     enableEpisodeSearching:boolean
 }
 
 export interface IPlexSettings extends IExternalSettings {
-    enable: boolean,
     enableEpisodeSearching: boolean,
     plexAuthToken: string,
     machineIdentifier: string
+}
+
+export interface ISonarrSettings extends IExternalSettings {
+    apiKey: string,
+    qualityProfile: string,
+    seasonFolders: boolean,
+    rootPath: string,
+    fullRootPath:string
 }

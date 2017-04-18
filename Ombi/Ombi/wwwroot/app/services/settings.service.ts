@@ -3,7 +3,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings, IEmbySettings, IPlexSettings } from '../interfaces/ISettings';
+import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings } from '../interfaces/ISettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -33,6 +33,14 @@ export class SettingsService extends ServiceAuthHelpers {
 
     savePlex(settings: IPlexSettings): Observable<boolean> {
         return this.http.post(`${this.url}/Plex/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    getSonarr(): Observable<ISonarrSettings> {
+        return this.http.get(`${this.url}/Sonarr`).map(this.extractData);
+    }
+
+    saveSonarr(settings: ISonarrSettings): Observable<boolean> {
+        return this.http.post(`${this.url}/Sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 
 }

@@ -53,4 +53,10 @@
     <Folder Include="Models\Plex\" />
     <Folder Include="wwwroot\css\fonts\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\app\services\request - Copy.service.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

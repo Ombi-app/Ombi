@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Controllers
 {
+    [Authorize]
     public class SearchController : BaseV1ApiController
     {
         public SearchController(IMovieEngine movie)

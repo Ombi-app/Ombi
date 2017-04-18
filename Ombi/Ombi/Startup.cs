@@ -14,16 +14,6 @@ namespace Ombi
 {
     public partial class Startup
     {
-
-        //public void ConfigureServices(IServiceCollection services)
-        //{
-        //}
-
-        //public void Configure(IApplicationBuilder app)
-        //{
-        //    app.UseHangfireServer();
-        //    app.UseHangfireDashboard();
-        //}
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()

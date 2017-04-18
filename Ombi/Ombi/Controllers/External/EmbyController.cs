@@ -3,12 +3,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
+using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 
-namespace Ombi.Controllers
+namespace Ombi.Controllers.External
 {
-    [Authorize]
+    [Admin]
     public class EmbyController : BaseV1ApiController
     {
         public EmbyController(IEmbyApi emby, ISettingsService<EmbySettings> embySettings)

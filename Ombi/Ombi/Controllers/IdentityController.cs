@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ombi.Attributes;
 using Ombi.Core.Claims;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models;
@@ -11,7 +12,7 @@ using Ombi.Models;
 
 namespace Ombi.Controllers
 {
-    [Authorize]
+    [PowerUser]
     public class IdentityController : BaseV1ApiController
     {
         public IdentityController(IUserIdentityManager identity)
