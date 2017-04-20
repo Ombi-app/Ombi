@@ -7,12 +7,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Sonarr;
+using Ombi.Api.TheMovieDb;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;
+using Ombi.Schedule;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
 using Ombi.TheMovieDbApi;
@@ -29,6 +31,7 @@ namespace Ombi.DependencyInjection
             services.RegisterServices();
             services.RegisterStore();
             services.RegisterIdentity();
+            services.RegisterJobs();
 
             return services;
         }
@@ -42,7 +45,7 @@ namespace Ombi.DependencyInjection
 
         public static IServiceCollection RegisterApi(this IServiceCollection services)
         {
-            services.AddTransient<IMovieDbApi, TheMovieDbApi.TheMovieDbApi>();
+            services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
             services.AddTransient<ISonarrApi, SonarrApi>();
@@ -64,6 +67,13 @@ namespace Ombi.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestService, JsonRequestService>();
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterJobs(this IServiceCollection services)
+        {
+            services.AddTransient<ITestJob, TestJob>();
 
             return services;
         }

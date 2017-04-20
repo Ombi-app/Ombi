@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Ombi.Api.TheMovieDb;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
@@ -15,13 +18,15 @@ namespace Ombi.Core.Engine
     public class MovieEngine : IMovieEngine
     {
 
-        public MovieEngine(IRequestService service, IMovieDbApi movApi)
+        public MovieEngine(IRequestService service, IMovieDbApi movApi, IMapper mapper)
         {
             RequestService = service;
             MovieApi = movApi;
+            Mapper = mapper;
         }
         private IRequestService RequestService { get; }
         private IMovieDbApi MovieApi { get; }
+        private IMapper Mapper { get; }
 
         public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
         {
@@ -31,27 +36,8 @@ namespace Ombi.Core.Engine
             {
 
                 var movieInfo = await MovieApi.GetMovieInformationWithVideo(m.Id);
-                var viewMovie = new SearchMovieViewModel
-                {
-                    Adult = movieInfo.adult,
-                    BackdropPath = movieInfo.backdrop_path,
-                    Id = movieInfo.id,
-                    OriginalLanguage = movieInfo.original_language,
-                    OriginalTitle = movieInfo.original_title,
-                    Overview = movieInfo.overview,
-                    Popularity = movieInfo.popularity,
-                    PosterPath = movieInfo.poster_path,
-                    ReleaseDate =
-                        string.IsNullOrEmpty(movieInfo.release_date)
-                            ? DateTime.MinValue
-                            : DateTime.Parse(movieInfo.release_date),
-                    Title = movieInfo.title,
-                    Video = movieInfo.video,
-                    VoteAverage = movieInfo.vote_average,
-                    VoteCount = movieInfo.vote_count,
-                    ImdbId = movieInfo?.imdb_id,
-                    Homepage = movieInfo?.homepage
-                };
+                var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
+               
                 retVal.Add(viewMovie);
                 // TODO needs to be careful about this, it's adding extra time to search...
                 // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
@@ -62,9 +48,9 @@ namespace Ombi.Core.Engine
                 //viewMovie.Trailer = string.IsNullOrEmpty(videoId)
                 //    ? string.Empty
                 //    : $"https://www.youtube.com/watch?v={videoId}";
-                if (dbMovies.ContainsKey(movieInfo.id) /*&& canSee*/) // compare to the requests db
+                if (dbMovies.ContainsKey(movieInfo.Id) /*&& canSee*/) // compare to the requests db
                 {
-                    var dbm = dbMovies[movieInfo.id];
+                    var dbm = dbMovies[movieInfo.Id];
 
                     viewMovie.Requested = true;
                     viewMovie.Approved = dbm.Approved;
@@ -76,59 +62,54 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search)
         {
-            var api = new TheMovieDbApi.TheMovieDbApi();
-            var result = await api.SearchMovie(search);
+            var result = await MovieApi.SearchMovie(search);
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.results);
+                return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-            var api = new TheMovieDbApi.TheMovieDbApi();
-            var result = await api.PopularMovies();
+            var result = await MovieApi.PopularMovies();
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.results);
+                return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
 
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            var api = new TheMovieDbApi.TheMovieDbApi();
-            var result = await api.TopRated();
+            var result = await MovieApi.TopRated();
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.results);
+                return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
 
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            var api = new TheMovieDbApi.TheMovieDbApi();
-            var result = await api.Upcoming();
+            var result = await MovieApi.Upcoming();
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.results);
+                return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            var api = new TheMovieDbApi.TheMovieDbApi();
-            var result = await api.NowPlaying();
+            var result = await MovieApi.NowPlaying();
             if (result != null)
             {
-                return await TransformMovieResultsToResponse(result.results);
+                return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
 
 
-        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(IEnumerable<SearchResult> movies)
+        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(IEnumerable<MovieSearchResult> movies)
         {
             await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
@@ -136,22 +117,8 @@ namespace Ombi.Core.Engine
             Dictionary<int, RequestModel> dbMovies = await RequestedMovies();
             foreach (var movie in movies)
             {
-                var viewMovie = new SearchMovieViewModel
-                {
-                    Adult = movie.adult,
-                    BackdropPath = movie.backdrop_path,
-                    Id = movie.id,
-                    OriginalLanguage = movie.original_language,
-                    OriginalTitle = movie.original_title,
-                    Overview = movie.overview,
-                    Popularity = movie.popularity,
-                    PosterPath = movie.poster_path,
-                    ReleaseDate = string.IsNullOrEmpty(movie.release_date) ? DateTime.MinValue : DateTime.Parse(movie.release_date),
-                    Title = movie.title,
-                    Video = movie.video,
-                    VoteAverage = movie.vote_average,
-                    VoteCount = movie.vote_count
-                };
+                var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
+              
                 viewMovies.Add(viewMovie);
 
 
@@ -186,9 +153,9 @@ namespace Ombi.Core.Engine
                 //            viewMovie.Available = true;
                 //        }
                 //    }
-                if (dbMovies.ContainsKey(movie.id) /*&& canSee*/) // compare to the requests db
+                if (dbMovies.ContainsKey(movie.Id) /*&& canSee*/) // compare to the requests db
                 {
-                    var dbm = dbMovies[movie.id];
+                    var dbm = dbMovies[movie.Id];
 
                     viewMovie.Requested = true;
                     viewMovie.Approved = dbm.Approved;

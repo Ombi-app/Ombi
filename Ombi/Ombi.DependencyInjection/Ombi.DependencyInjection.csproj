@@ -15,6 +15,7 @@
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
   </ItemGroup>
 
 </Project>

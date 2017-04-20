@@ -1,17 +1,18 @@
-﻿using System.Threading.Tasks;
-using Ombi.Api;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Ombi.Api.TheMovieDb.Models;
 using Ombi.TheMovieDbApi.Models;
 
-namespace Ombi.TheMovieDbApi
+namespace Ombi.Api.TheMovieDb
 {
     public interface IMovieDbApi
     {
-        Task<MovieResponse> GetMovieInformation(int movieId);
-        Task<MovieResponse> GetMovieInformationWithVideo(int movieId);
-        Task<TheMovieDbContainer<SearchResult>> NowPlaying();
-        Task<TheMovieDbContainer<SearchResult>> PopularMovies();
-        Task<TheMovieDbContainer<SearchResult>> SearchMovie(string searchTerm);
-        Task<TheMovieDbContainer<SearchResult>> TopRated();
-        Task<TheMovieDbContainer<SearchResult>> Upcoming();
+        Task<MovieResponseDto> GetMovieInformation(int movieId);
+        Task<MovieResponseDto> GetMovieInformationWithVideo(int movieId);
+        Task<List<MovieSearchResult>> NowPlaying();
+        Task<List<MovieSearchResult>> PopularMovies();
+        Task<List<MovieSearchResult>> SearchMovie(string searchTerm);
+        Task<List<MovieSearchResult>> TopRated();
+        Task<List<MovieSearchResult>> Upcoming();
     }
 }

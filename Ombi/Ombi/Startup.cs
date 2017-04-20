@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.StaticFiles;
@@ -9,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
+using Ombi.Schedule;
 
 namespace Ombi
 {
@@ -33,10 +36,20 @@ namespace Ombi
             // Add framework services.
             services.AddMvc();
             services.AddOmbiMappingProfile();
-            services.AddAutoMapper();
+            services.AddAutoMapper(expression =>
+            {
+                expression.AddCollectionMappers();
+            });
             services.RegisterDependencies(); // Ioc and EF
 
-            services.AddHangfire(x => x.UseMemoryStorage(new MemoryStorageOptions()));
+
+            services.AddHangfire(x =>
+            {
+                x.UseMemoryStorage(new MemoryStorageOptions());
+                //using RecurringJobAttribute to build RecurringJob automatically.
+                x.UseRecurringJob(typeof(ITestJob));
+                //x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,6 +67,7 @@ namespace Ombi
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            
             app.UseHangfireServer();
             app.UseHangfireDashboard();
 

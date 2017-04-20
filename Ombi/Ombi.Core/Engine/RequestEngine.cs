@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
@@ -38,7 +39,7 @@ namespace Ombi.Core.Engine
                 //});
             }
             var fullMovieName =
-                $"{movieInfo.title}{(!string.IsNullOrEmpty(movieInfo.release_date) ? $" ({DateTime.Parse(movieInfo.release_date).Year})" : string.Empty)}";
+                $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
             var existingRequest = await RequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
@@ -95,14 +96,14 @@ namespace Ombi.Core.Engine
 
             var requestModel = new RequestModel
             {
-                ProviderId = movieInfo.id,
+                ProviderId = movieInfo.Id,
                 Type = RequestType.Movie,
-                Overview = movieInfo.overview,
-                ImdbId = movieInfo.imdb_id,
-                PosterPath = movieInfo.poster_path,
-                Title = movieInfo.title,
-                ReleaseDate = !string.IsNullOrEmpty(movieInfo.release_date) ? DateTime.Parse(movieInfo.release_date) : DateTime.MinValue,
-                Status = movieInfo.status,
+                Overview = movieInfo.Overview,
+                ImdbId = movieInfo.ImdbId,
+                PosterPath = movieInfo.PosterPath,
+                Title = movieInfo.Title,
+                ReleaseDate = !string.IsNullOrEmpty(movieInfo.ReleaseDate) ? DateTime.Parse(movieInfo.ReleaseDate) : DateTime.MinValue,
+                Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 //RequestedUsers = new List<string> { Username },
