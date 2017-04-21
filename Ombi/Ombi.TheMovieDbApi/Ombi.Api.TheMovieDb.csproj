@@ -7,13 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <PackageReference Include="AutoMapper" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="AutoMapper">
-      <HintPath>..\..\..\..\..\.nuget\packages\automapper\6.0.2\lib\netstandard1.3\AutoMapper.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
   </ItemGroup>
 
 </Project>
