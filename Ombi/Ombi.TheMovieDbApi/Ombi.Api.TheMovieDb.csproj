@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api\Ombi.Api.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

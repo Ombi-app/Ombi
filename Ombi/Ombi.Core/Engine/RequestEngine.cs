@@ -32,11 +32,6 @@ namespace Ombi.Core.Engine
                     RequestAdded = false,
                     Message = "There was an issue adding this movie!"
                 };
-                //Response.AsJson(new JsonResponseModel
-                //{
-                //    Result = false,
-                //    Message = "There was an issue adding this movie!"
-                //});
             }
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
@@ -44,26 +39,11 @@ namespace Ombi.Core.Engine
             var existingRequest = await RequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
             {
-                // check if the current user is already marked as a requester for this movie, if not, add them
-                //if (!existingRequest.UserHasRequested(Username))
-                //{
-                //    existingRequest.RequestedUsers.Add(Username);
-                //    await RequestService.UpdateRequestAsync(existingRequest);
-                //}
-
                 return new RequestEngineResult
                 {
-                    RequestAdded = true,
-
+                    RequestAdded = false,
+                    Message = "This has already been requested"
                 };
-                //Response.AsJson(new JsonResponseModel
-                //{
-                //    Result = true,
-                //    Message =
-                //        Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests)
-                //            ? $"{fullMovieName} {Ombi.UI.Resources.UI.Search_SuccessfullyAdded}"
-                //            : $"{fullMovieName} {Resources.UI.Search_AlreadyRequested}"
-                //});
             }
 
 

@@ -1,61 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
+using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
-using Ombi.Helpers;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities;
-using Ombi.TheMovieDbApi;
-using Ombi.TheMovieDbApi.Models;
 
 namespace Ombi.Core.Engine
 {
-    public class MovieEngine : IMovieEngine
+    public class MovieEngine : BaseMediaEngine, IMovieEngine
     {
 
-        public MovieEngine(IRequestService service, IMovieDbApi movApi, IMapper mapper)
+        public MovieEngine(IUserIdentityManager identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings) 
+            : base(identity, service)
         {
-            RequestService = service;
             MovieApi = movApi;
             Mapper = mapper;
+            PlexSettings = plexSettings;
+            EmbySettings = embySettings;
         }
-        private IRequestService RequestService { get; }
+
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
+        private ISettingsService<PlexSettings> PlexSettings { get; }
+        private ISettingsService<EmbySettings> EmbySettings { get; }
 
         public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
         {
             var retVal = new List<SearchMovieViewModel>();
-            Dictionary<int, RequestModel> dbMovies = await RequestedMovies();
+            Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
             foreach (var m in movies)
             {
-
                 var movieInfo = await MovieApi.GetMovieInformationWithVideo(m.Id);
                 var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
-               
-                retVal.Add(viewMovie);
-                // TODO needs to be careful about this, it's adding extra time to search...
-                // https://www.themoviedb.org/talk/5807f4cdc3a36812160041f2
-                //var videoId = movieInfo?.video ?? false
-                //    ? movieInfo?.videos?.results?.FirstOrDefault()?.key
-                //    : string.Empty;
 
-                //viewMovie.Trailer = string.IsNullOrEmpty(videoId)
-                //    ? string.Empty
-                //    : $"https://www.youtube.com/watch?v={videoId}";
-                if (dbMovies.ContainsKey(movieInfo.Id) /*&& canSee*/) // compare to the requests db
-                {
-                    var dbm = dbMovies[movieInfo.Id];
-
-                    viewMovie.Requested = true;
-                    viewMovie.Approved = dbm.Approved;
-                    viewMovie.Available = dbm.Available;
-                }
+                retVal.Add(await ProcessSingleMovie(viewMovie, dbMovies));
             }
             return retVal;
         }
@@ -111,24 +95,25 @@ namespace Ombi.Core.Engine
 
         private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(IEnumerable<MovieSearchResult> movies)
         {
-            await Task.Yield();
             var viewMovies = new List<SearchMovieViewModel>();
-            //var counter = 0;
-            Dictionary<int, RequestModel> dbMovies = await RequestedMovies();
+            Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
             foreach (var movie in movies)
             {
-                var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
-              
-                viewMovies.Add(viewMovie);
 
+                viewMovies.Add(await ProcessSingleMovie(movie, dbMovies));
 
+            }
+            return viewMovies;
+        }
 
-                //    var canSee = CanUserSeeThisRequest(viewMovie.Id, Security.HasPermissions(User, Permissions.UsersCanViewOnlyOwnRequests), dbMovies);
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
+            Dictionary<int, RequestModel> existingRequests)
+        {
 
-                //    var plexSettings = await PlexService.GetSettingsAsync();
-                //    var embySettings = await EmbySettings.GetSettingsAsync();
-                //    if (plexSettings.Enable)
-                //    {
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            if (plexSettings.Enable)
+            {
                 //        var content = PlexContentRepository.GetAll();
                 //        var plexMovies = PlexChecker.GetPlexMovies(content);
 
@@ -140,9 +125,9 @@ namespace Ombi.Core.Engine
                 //            viewMovie.Available = true;
                 //            viewMovie.PlexUrl = plexMovie.Url;
                 //        }
-                //    }
-                //    if (embySettings.Enable)
-                //    {
+            }
+            if (embySettings.Enable)
+            {
                 //        var embyContent = EmbyContentRepository.GetAll();
                 //        var embyMovies = EmbyChecker.GetEmbyMovies(embyContent);
 
@@ -152,45 +137,25 @@ namespace Ombi.Core.Engine
                 //        {
                 //            viewMovie.Available = true;
                 //        }
-                //    }
-                if (dbMovies.ContainsKey(movie.Id) /*&& canSee*/) // compare to the requests db
-                {
-                    var dbm = dbMovies[movie.Id];
-
-                    viewMovie.Requested = true;
-                    viewMovie.Approved = dbm.Approved;
-                    viewMovie.Available = dbm.Available;
-                }
-                //    else if (canSee)
-                //    {
-                //        bool exists = IsMovieInCache(movie, viewMovie.ImdbId);
-                //        viewMovie.Approved = exists;
-                //        viewMovie.Requested = exists;
-                //    }
-                //    viewMovies.Add(viewMovie);
-                //}
-
-
             }
-            return viewMovies;
+
+            if (existingRequests.ContainsKey(viewMovie.Id)) // Do we already have a request for this?
+            {
+                var requestedMovie = existingRequests[viewMovie.Id];
+
+                viewMovie.Requested = true;
+                viewMovie.Approved = requestedMovie.Approved;
+                viewMovie.Available = requestedMovie.Available;
+            }
+
+
+            return viewMovie;
         }
 
-
-        private long _dbMovieCacheTime = 0;
-        private Dictionary<int, RequestModel> _dbMovies;
-        private async Task<Dictionary<int, RequestModel>> RequestedMovies()
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, RequestModel> existingRequests)
         {
-            long now = DateTime.Now.Ticks;
-            if (_dbMovies == null || (now - _dbMovieCacheTime) > 10000)
-            {
-                var allResults = await RequestService.GetAllAsync();
-                allResults = allResults.Where(x => x.Type == RequestType.Movie);
-
-                var distinctResults = allResults.DistinctBy(x => x.ProviderId);
-                _dbMovies = distinctResults.ToDictionary(x => x.ProviderId);
-                _dbMovieCacheTime = now;
-            }
-            return _dbMovies;
+            var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
+            return await ProcessSingleMovie(viewMovie, existingRequests);
         }
     }
 }

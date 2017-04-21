@@ -23,7 +23,6 @@ namespace Ombi.Mapping
             }
             var config = new AutoMapper.MapperConfiguration(cfg =>
             {
-                //cfg.AddProfile(new OmbiProfile());
                 cfg.AddProfiles(assemblies);
             });
 
