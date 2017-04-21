@@ -1,23 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Ombi.Api.TheMovieDb.Models;
-using Ombi.Core.Models;
 using Ombi.Core.Models.Search;
-using Ombi.Store.Entities;
 using Ombi.TheMovieDbApi.Models;
 
-namespace Ombi.Mapping
+namespace Ombi.Mapping.Profiles
 {
-    public class OmbiProfile : Profile
+    public class MovieProfile : Profile
     {
-        public OmbiProfile()
+        public MovieProfile()
         {
-            
-            CreateMap<User, UserDto>().ReverseMap();
-
-            CreateMap<string, DateTime>().ConvertUsing<StringToDateTimeConverter>();
-
             CreateMap<SearchResult, MovieSearchResult>()
                 .ForMember(dest => dest.Adult, opts => opts.MapFrom(src => src.adult))
                 .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.backdrop_path))
@@ -32,7 +23,7 @@ namespace Ombi.Mapping
                 .ForMember(dest => dest.Video, opts => opts.MapFrom(src => src.video))
                 .ForMember(dest => dest.VoteAverage, opts => opts.MapFrom(src => src.vote_average))
                 .ForMember(dest => dest.VoteCount, opts => opts.MapFrom(src => src.vote_count));
-            
+
             CreateMap<MovieResponse, MovieResponseDto>()
                 .ForMember(dest => dest.Adult, opts => opts.MapFrom(src => src.adult))
                 .ForMember(dest => dest.BackdropPath, opts => opts.MapFrom(src => src.backdrop_path))
@@ -55,7 +46,7 @@ namespace Ombi.Mapping
             CreateMap<Genre, GenreDto>();
 
             CreateMap<MovieSearchResult, SearchMovieViewModel>().ReverseMap();
-
+            CreateMap<MovieResponseDto, SearchMovieViewModel>().ReverseMap();
         }
     }
 }
