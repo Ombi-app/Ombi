@@ -29,6 +29,8 @@ namespace Ombi.Core.Claims
     public static class OmbiClaims
     {
         public const string Admin = nameof(Admin);
+        public const string AutoApproveMovie = nameof(AutoApproveMovie);
+        public const string AutoApproveTv = nameof(AutoApproveTv);
 
     }
 }

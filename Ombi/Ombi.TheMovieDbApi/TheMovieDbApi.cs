@@ -17,7 +17,7 @@ namespace Ombi.Api.TheMovieDb
         }
 
         private IMapper Mapper { get; }
-        private readonly string ApiToken = StringCipher.DecryptString("bqCrDAQABAC/mJT6JXNdlQ1boOjsHeQgyk7gcNv7tUFtwxoVEnYvqS+UdgfgoyXnBz2F6LJnKX8xGtXbzLsf6pbxDkxna6zvunivxAcAHewo2zTPjoUB5igeMB8d93fx0WO9IhGtq8oGXv++xfaXfTY3aN5NV7JmF6ziAAAAAD1e5VjRPSLOYTyJ3Hbw9bDsE/4FGxYIrvxVkqDMl1vAosOeTi+0kKPFloF6k2ptTw==", "Ombiv3SettingsEncryptionPassword");
+        private readonly string ApiToken = "b8eabaf5608b88d0298aa189dd90bf00";
         private static readonly string BaseUri ="http://api.themoviedb.org/3/";
         private Ombi.Api.Api Api { get; }
 

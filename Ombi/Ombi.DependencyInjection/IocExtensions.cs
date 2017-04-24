@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Security.Principal;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Sonarr;
 using Ombi.Api.TheMovieDb;
+using Ombi.Api.TvMaze;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.IdentityResolver;
@@ -38,7 +41,7 @@ namespace Ombi.DependencyInjection
 
         public static IServiceCollection RegisterEngines(this IServiceCollection services)
         {
-            services.AddTransient<IMovieEngine, MovieEngine>();
+            services.AddTransient<IMovieEngine, MovieSearchEngine>();
             services.AddTransient<IRequestEngine, RequestEngine>();
             return services;
         }
@@ -49,6 +52,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
             services.AddTransient<ISonarrApi, SonarrApi>();
+            services.AddTransient<ITvMazeApi, TvMazeApi>();
             return services;
         }
 
@@ -80,6 +84,7 @@ namespace Ombi.DependencyInjection
 
         public static IServiceCollection RegisterIdentity(this IServiceCollection services)
         {
+
             services.AddTransient<IUserIdentityManager, UserIdentityManager>();
             services.AddAuthorization(auth =>
             {

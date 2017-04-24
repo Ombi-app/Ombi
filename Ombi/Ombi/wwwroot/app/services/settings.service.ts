@@ -3,7 +3,7 @@ import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings } from '../interfaces/ISettings';
+import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings,ILandingPageSettings } from '../interfaces/ISettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -41,6 +41,13 @@ export class SettingsService extends ServiceAuthHelpers {
 
     saveSonarr(settings: ISonarrSettings): Observable<boolean> {
         return this.http.post(`${this.url}/Sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+    getLandingPage(): Observable<ILandingPageSettings> {
+        return this.http.get(`${this.url}/LandingPage`).map(this.extractData);
+    }
+
+    saveLandingPage(settings: ILandingPageSettings): Observable<boolean> {
+        return this.http.post(`${this.url}/LandingPage`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 
 }

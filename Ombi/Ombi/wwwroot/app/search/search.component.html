@@ -30,32 +30,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
 
-    <!-- Movie tab -->
-    <div role="tabpanel" class="tab-pane active" id="MoviesTab">
-        <div class="input-group">
-            <input id="movieSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons" (keyup)="search($event)">
-            <div class="input-group-addon">
-                <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        Suggestions
-                        <i class="fa fa-chevron-down"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a (click)="popularMovies()">Popular Movies</a></li>
-                        <li><a (click)="upcomingMovies()">Upcoming Movies</a></li>
-                        <li><a (click)="topRatedMovies()">Top Rated Movies</a></li>
-                        <li><a (click)="nowPlayingMovies()">Now Playing Movies</a></li>
-                    </ul>
-                </div>
-                <i id="movieSearchButton" class="fa fa-search"></i>
-            </div>
-        </div>
-        <br />
-        <br />
-        <!-- Movie content -->
-        <div id="movieList">
-        </div>
-    </div>
+    <movie-search></movie-search>
 
     <!-- Actors tab -->
     <div role="tabpanel" class="tab-pane" id="ActorsTab">
@@ -87,7 +62,7 @@
                         <i class="fa fa-chevron-down"></i>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a id="popularShows" >Popular Shows</a></li>
+                        <li><a id="popularShows">Popular Shows</a></li>
                         <li><a id="trendingShows" href="#">Trending Shows</a></li>
                         <li><a id="mostWatchedShows" href="#">Most Watched Shows</a></li>
                         <li><a id="anticipatedShows" href="#">Most Anticipated Shows</a></li>
@@ -101,146 +76,6 @@
         <div id="tvList">
         </div>
     </div>
-
-    <!-- Music tab -->
-    <!--    <div role="tabpanel" class="tab-pane" id="MusicTab">
-            <div class="input-group">
-                <input id="musicSearchContent" type="text" class="form-control form-control-custom form-control-search">
-                <div class="input-group-addon">
-                    <i id="musicSearchButton" class="fa fa-search"></i>
-                </div>
-            </div>
-            <br />
-            <br />
-            <div id="musicList">
-            </div>
-        </div>
-        -->
-
-    <div *ngFor="let result of movieResults">
-        <div class="row">
-            <div id="{{id}}imgDiv" class="col-sm-2">
+</div>
 
 
-                <img *ngIf="result.posterPath" class="img-responsive" src="https://image.tmdb.org/t/p/w150/{{result.posterPath}}" alt="poster">
-
-            </div>
-            <div class="col-sm-8">
-                <div>
-                    <a href="https://www.themoviedb.org/movie/{{result.id}}/" target="_blank">
-                        <h4>{{result.title}} ({{result.releaseDate | date: 'yyyy'}})</h4>
-                    </a>
-
-
-                    <span *ngIf="result.firstAired" class="label label-info" target="_blank">Air Date: {{result.firstAired | date: 'dd/MM/yyyy'}}</span>
-
-
-                    <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
-
-                    <span *ngIf="result.available" class="label label-success">Available</span>
-                    <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
-                    <div *ngIf="result.requested && !result.available; then requested else notRequested"></div>
-                    <template #requested>
-                        <span *ngIf="!result.available"  class="label label-warning">Pending Approval</span>
-                    </template>
-
-                    <template #notRequested>
-                        <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
-                    </template>
-
-
-                    <span id="{{id}}netflixTab"></span>
-
-                    <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
-
-                    <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
-
-
-                    <br />
-                    <br />
-                </div>
-                <p style="font-size:0.9rem !important">{{result.overview}}</p>
-            </div>
-
-
-            <div class="col-sm-2">
-                <input name="{{type}}Id" type="text" value="{{result.id}}" hidden="hidden" />
-
-                <div *ngIf="result.available">
-                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
-
-                    <div *ngIf="result.url">
-                        <br />
-                        <br />
-                        <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{result.url}}" target="_blank"><i class="fa fa-eye"></i> View In Plex</a>
-
-                    </div>
-                </div>
-                <div *ngIf="result.requested; then requestedBtn else notRequestedBtn"></div>
-                <template #requestedBtn>
-                    <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
-                </template>
-                <template #notRequestedBtn>
-                    <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)"><i class="fa fa-plus"></i> Request</button>
-                </template>
-
-                <!--{{#if_eq type "tv"}}
-                {{#if_eq tvFullyAvailable true}}
-                @*//TODO Not used yet*@
-                <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
-                {{else}}
-                {{#if_eq enableTvRequestsForOnlySeries true}}
-                <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}} disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
-                {{else}}
-                <div class="dropdown">
-                    <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">@UI.Search_AllSeasons</a></li>
-                        {{#if_eq disableTvRequestsBySeason false}}
-                        <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">@UI.Search_FirstSeason</a></li>
-                        <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">@UI.Search_LatestSeason</a></li>
-                        <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">@UI.Search_SelectSeason...</a></li>
-                        {{/if_eq}}
-                        {{#if_eq disableTvRequestsByEpisode false}}
-                        <li><a id="EpisodeSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#episodesModal" href="#">@UI.Search_SelectEpisode...</a></li>
-                        {{/if_eq}}
-                    </ul>
-                </div>
-                {{/if_eq}}
-                {{#if available}}
-                {{#if url}}
-                <br />
-                <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                {{/if}}
-                {{/if}}
-                {{/if_eq}}
-                {{/if_eq}}-->
-
-
-                <br />
-                <div *ngIf="result.available">
-                    <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
-                    <input name="type" type="text" value="{{type}}" hidden="hidden" />
-                    <div class="dropdown">
-                        <button  class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-exclamation"></i> @UI.Search_ReportIssue
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a  issue-select="0" class="dropdownIssue" href="#">@UI.Issues_WrongAudio</a></li>
-                            <li><a  issue-select="1" class="dropdownIssue" href="#">@UI.Issues_NoSubs</a></li>
-                            <li><a  issue-select="2" class="dropdownIssue" href="#">@UI.Issues_WrongContent</a></li>
-                            <li><a  issue-select="3" class="dropdownIssue" href="#">@UI.Issues_Playback</a></li>
-                            <li><a  issue-select="4" class="dropdownIssue" href="#" data-toggle="modal" data-target="#issuesModal">@UI.Issues_Other</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-        <hr />
-    </div>

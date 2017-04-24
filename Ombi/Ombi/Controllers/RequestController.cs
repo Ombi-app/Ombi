@@ -39,6 +39,7 @@ namespace Ombi.Controllers
         [HttpGet("search/{searchTerm}")]
         public async Task<IEnumerable<RequestViewModel>> Search(string searchTerm)
         {
+            
             return await RequestEngine.SearchRequest(searchTerm);
         }
 

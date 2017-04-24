@@ -11,6 +11,7 @@ import { HttpModule } from '@angular/http';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 
 import { SearchComponent } from './search/search.component';
+import { MovieSearchComponent } from './search/moviesearch.component';
 import { RequestComponent } from './requests/request.component';
 import { LoginComponent } from './login/login.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
@@ -64,7 +65,8 @@ const routes: Routes = [
         PageNotFoundComponent,
         SearchComponent,
         RequestComponent,
-        LoginComponent
+        LoginComponent,
+        MovieSearchComponent
     ],
     providers: [
         SearchService,

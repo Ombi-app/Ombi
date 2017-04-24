@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Configuration;
+using System.Security.Principal;
+using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -41,6 +45,10 @@ namespace Ombi
                 expression.AddCollectionMappers();
             });
             services.RegisterDependencies(); // Ioc and EF
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddTransient<IPrincipal>(new InjectionFactory(u => HttpContext.Current.User));
+            services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
 
             services.AddHangfire(x =>

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />

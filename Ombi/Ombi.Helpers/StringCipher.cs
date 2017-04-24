@@ -86,13 +86,15 @@ namespace Ombi.Helpers
 
         public static string EncryptString(string text, string keyString)
         {
-            var result = AesEncryption.EncryptWithPassword(text, keyString);
+            var t = Encoding.UTF8.GetBytes(text);
+            var result = Convert.ToBase64String(t);
             return result;
         }
 
         public static string DecryptString(string cipherText, string keyString)
         {
-            var result = AesEncryption.DecryptWithPassword(cipherText, keyString);
+            var textAsBytes = Convert.FromBase64String(cipherText);
+            var result = Encoding.UTF8.GetString(textAsBytes);
             return result;
         }
     }

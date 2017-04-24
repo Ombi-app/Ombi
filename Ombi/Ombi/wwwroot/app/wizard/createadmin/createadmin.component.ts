@@ -32,9 +32,11 @@ export class CreateAdminComponent {
                     this.settings.getOmbi().subscribe(ombi => {
                         ombi.wizard = true;
 
-                        this.settings.saveOmbi(ombi).subscribe();
+                        this.settings.saveOmbi(ombi).subscribe(x => {
+                            
+                            this.router.navigate(['search']);
+                        });
 
-                        this.router.navigate(['search']);
                     });
 
                 });

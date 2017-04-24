@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoMapper;
 using Ombi.Api.TheMovieDb;
@@ -13,10 +15,10 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine
 {
-    public class MovieEngine : BaseMediaEngine, IMovieEngine
+    public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
 
-        public MovieEngine(IUserIdentityManager identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings) 
+        public MovieSearchEngine(IPrincipal identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings) 
             : base(identity, service)
         {
             MovieApi = movApi;
@@ -32,14 +34,26 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
         {
+            var searchMovieViewModels
+                = movies as IList<SearchMovieViewModel> ?? movies.ToList();
+            if (searchMovieViewModels == null || !searchMovieViewModels.Any())
+            {
+                return new List<SearchMovieViewModel>();
+            }
+
             var retVal = new List<SearchMovieViewModel>();
             Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
-            foreach (var m in movies)
+
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+
+            foreach (var m in searchMovieViewModels)
             {
                 var movieInfo = await MovieApi.GetMovieInformationWithVideo(m.Id);
                 var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
 
-                retVal.Add(await ProcessSingleMovie(viewMovie, dbMovies));
+                retVal.Add(await ProcessSingleMovie(viewMovie, dbMovies, plexSettings, embySettings));
             }
             return retVal;
         }
@@ -97,21 +111,21 @@ namespace Ombi.Core.Engine
         {
             var viewMovies = new List<SearchMovieViewModel>();
             Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
             foreach (var movie in movies)
             {
 
-                viewMovies.Add(await ProcessSingleMovie(movie, dbMovies));
+                viewMovies.Add(await ProcessSingleMovie(movie, dbMovies, plexSettings, embySettings));
 
             }
             return viewMovies;
         }
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
-            Dictionary<int, RequestModel> existingRequests)
-        {
-
-            var plexSettings = await PlexSettings.GetSettingsAsync();
-            var embySettings = await EmbySettings.GetSettingsAsync();
+            Dictionary<int, RequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+        { 
             if (plexSettings.Enable)
             {
                 //        var content = PlexContentRepository.GetAll();
@@ -152,10 +166,10 @@ namespace Ombi.Core.Engine
             return viewMovie;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, RequestModel> existingRequests)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, RequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
-            return await ProcessSingleMovie(viewMovie, existingRequests);
+            return await ProcessSingleMovie(viewMovie, existingRequests, plexSettings, embySettings);
         }
     }
 }

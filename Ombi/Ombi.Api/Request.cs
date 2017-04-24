@@ -78,6 +78,29 @@ namespace Ombi.Api
             ContentHeaders.Add(new KeyValuePair<string, string>(key, value));
         }
 
+        public void AddQueryString(string key, string value)
+        {
+            if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) return;
+
+            var builder = new UriBuilder(_modified);
+            var startingTag = string.Empty;
+            var hasQuery = false;
+            if (string.IsNullOrEmpty(builder.Query))
+            {
+                startingTag = "?";
+            }
+            else
+            {
+                hasQuery = true;
+                startingTag = builder.Query.Contains("?") ? "&" : "?";
+            }
+
+            builder.Query = hasQuery
+                ? $"{builder.Query}{startingTag}{key}={value}"
+                : $"{startingTag}{key}={value}";
+            _modified = builder.Uri;
+        }
+
         public void AddJsonBody(object obj)
         {
             JsonBody = obj;

@@ -11,6 +11,7 @@ import { SonarrService } from '../services/applications/sonarr.service';
 import { OmbiComponent } from './ombi/ombi.component'
 import { PlexComponent } from './plex/plex.component'
 import { EmbyComponent } from './emby/emby.component'
+import { LandingPageComponent } from './landingpage/landingpage.component'
 
 import { SettingsMenuComponent } from './settingsmenu.component';
 
@@ -20,6 +21,7 @@ const routes: Routes = [
     { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Plex', component: PlexComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Emby', component: EmbyComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/LandingPage', component: LandingPageComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -37,6 +39,7 @@ const routes: Routes = [
         OmbiComponent,
         PlexComponent,
         EmbyComponent,
+        LandingPageComponent,
     ],
     exports: [
         RouterModule

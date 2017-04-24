@@ -29,7 +29,6 @@ namespace Ombi.Controllers
         public async Task<bool> OmbiSettings([FromBody]OmbiSettings ombi)
         {
             return await Save(ombi);
-
         }
 
         [HttpGet("plex")]
@@ -54,6 +53,18 @@ namespace Ombi.Controllers
         public async Task<bool> EmbySettings([FromBody]EmbySettings emby)
         {
             return await Save(emby);
+        }
+
+        [HttpGet("landingpage")]
+        public async Task<LandingPageSettings> LandingPageSettings()
+        {
+            return await Get<LandingPageSettings>();
+        }
+
+        [HttpPost("landingpage")]
+        public async Task<bool> LandingPageSettings([FromBody]LandingPageSettings settings)
+        {
+            return await Save(settings);
         }
 
 

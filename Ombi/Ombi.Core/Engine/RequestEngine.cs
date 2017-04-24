@@ -2,26 +2,24 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Store.Entities;
-using Ombi.TheMovieDbApi;
 using Ombi.Helpers;
 
 namespace Ombi.Core.Engine
 {
-    public class RequestEngine : IRequestEngine
+    public class RequestEngine : BaseMediaEngine, IRequestEngine
     {
-        public RequestEngine(IMovieDbApi movieApi, IRequestService requestService)
+        public RequestEngine(IMovieDbApi movieApi, IRequestService requestService, IPrincipal user) : base(user, requestService)
         {
             MovieApi = movieApi;
-            RequestService = requestService;
         }
         private IMovieDbApi MovieApi { get; }
-        private IRequestService RequestService { get; }
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
@@ -30,7 +28,8 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     RequestAdded = false,
-                    Message = "There was an issue adding this movie!"
+                    Message = "There was an issue adding this movie!",
+                    ErrorMessage = $"TheMovieDb didn't have any information for ID {model.Id}"
                 };
             }
             var fullMovieName =
@@ -42,7 +41,7 @@ namespace Ombi.Core.Engine
                 return new RequestEngineResult
                 {
                     RequestAdded = false,
-                    Message = "This has already been requested"
+                    Message = $"{fullMovieName} has already been requested"
                 };
             }
 
@@ -86,7 +85,7 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                //RequestedUsers = new List<string> { Username },
+                RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
             };
 
@@ -94,7 +93,7 @@ namespace Ombi.Core.Engine
             {
                 if (ShouldAutoApprove(RequestType.Movie))
                 {
-                    //    model.Approved = true;
+                    model.Approved = true;
 
                     //    var result = await MovieSender.Send(model);
                     //    if (result.Result)
@@ -154,43 +153,24 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public bool ShouldAutoApprove(RequestType requestType)
-        {
-            //var admin = Security.HasPermissions(Context.CurrentUser, Permissions.Administrator);
-            //// if the user is an admin, they go ahead and allow auto-approval
-            //if (admin) return true;
 
-            //// check by request type if the category requires approval or not
-            //switch (requestType)
-            //{
-            //    case RequestType.Movie:
-            //        return Security.HasPermissions(User, Permissions.AutoApproveMovie);
-            //    case RequestType.TvShow:
-            //        return Security.HasPermissions(User, Permissions.AutoApproveTv);
-            //    case RequestType.Album:
-            //        return Security.HasPermissions(User, Permissions.AutoApproveAlbum);
-            //    default:
-            //        return false;
-            return false;
-        }
-
-        private async Task<RequestEngineResult> AddRequest(RequestModel model, /*PlexRequestSettings settings,*/ string message)
+        private async Task<RequestEngineResult> AddRequest(RequestModel model, string message)
         {
             await RequestService.AddRequestAsync(model);
 
-            //if (ShouldSendNotification(model.Type, settings))
-            //{
-            //    var notificationModel = new NotificationModel
-            //    {
-            //        Title = model.Title,
-            //        User = Username,
-            //        DateTime = DateTime.Now,
-            //        NotificationType = NotificationType.NewRequest,
-            //        RequestType = model.Type,
-            //        ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
-            //    };
-            //    await NotificationService.Publish(notificationModel);
-            //}
+            if (ShouldSendNotification(model.Type))
+            {
+                //    var notificationModel = new NotificationModel
+                //    {
+                //        Title = model.Title,
+                //        User = Username,
+                //        DateTime = DateTime.Now,
+                //        NotificationType = NotificationType.NewRequest,
+                //        RequestType = model.Type,
+                //        ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
+                //    };
+                //    await NotificationService.Publish(notificationModel);
+            }
 
             //var limit = await RequestLimitRepo.GetAllAsync();
             //var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
@@ -211,13 +191,6 @@ namespace Ombi.Core.Engine
             //}
 
             return new RequestEngineResult{RequestAdded = true};
-        }
-
-        public async Task<IEnumerable<RequestViewModel>> GetRequests()
-        {
-            var allRequests = await RequestService.GetAllAsync();
-            var viewModel = MapToVm(allRequests);
-            return viewModel;
         }
 
         public async Task<IEnumerable<RequestViewModel>> GetRequests(int count, int position)
@@ -264,34 +237,6 @@ namespace Ombi.Core.Engine
         }
 
 
-        private IEnumerable<RequestViewModel> MapToVm(IEnumerable<RequestModel> model)
-        {
-            return model.Select(movie => new RequestViewModel
-            {
-                ProviderId = movie.ProviderId,
-                Type = movie.Type,
-                Status = movie.Status,
-                ImdbId = movie.ImdbId,
-                Id = movie.Id,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate,
-                RequestedDate = movie.RequestedDate,
-                Released = DateTime.Now > movie.ReleaseDate,
-                Approved = movie.Available || movie.Approved,
-                Title = movie.Title,
-                Overview = movie.Overview,
-                RequestedUsers = movie.AllUsers.ToArray(),
-                ReleaseYear = movie.ReleaseDate.Year.ToString(),
-                Available = movie.Available,
-                Admin = false,
-                IssueId = movie.IssueId,
-                Denied = movie.Denied,
-                DeniedReason = movie.DeniedReason,
-                //Qualities = qualities.ToArray(),
-                //HasRootFolders = rootFolders.Any(),
-                //RootFolders = rootFolders.ToArray(),
-                //CurrentRootPath = radarr.Enabled ? GetRootPath(movie.RootFolderSelected, radarr).Result : null
-            }).ToList();
-        }
+       
     }
 }

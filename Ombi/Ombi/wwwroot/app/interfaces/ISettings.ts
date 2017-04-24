@@ -37,3 +37,14 @@ export interface ISonarrSettings extends IExternalSettings {
     rootPath: string,
     fullRootPath:string
 }
+
+export interface ILandingPageSettings extends ISettings {
+    enabled: boolean,
+    beforeLogin: boolean,
+    afterLogin: boolean,
+    noticeText: string,
+    noticeBackgroundColor: string,
+    timeLimit: boolean,
+    startDateTime: Date,
+    endDateTime:Date,
+}
