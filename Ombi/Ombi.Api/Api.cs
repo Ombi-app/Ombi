@@ -13,20 +13,7 @@ namespace Ombi.Api
         {
             NullValueHandling = NullValueHandling.Ignore
         };
-        public async Task<T> Get<T>(Uri uri)
-        {
-            var h = new HttpClient();
-            //h.DefaultRequestHeaders.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("application/json"));
-            var response = await h.GetAsync(uri);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                // Logging
-            }
-            var receiveString = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<T>(receiveString, Settings);
-        }
-
+        
         public async Task<T> Request<T>(Request request)
         {
             using (var httpClient = new HttpClient())

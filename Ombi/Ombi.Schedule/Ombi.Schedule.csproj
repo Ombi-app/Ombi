@@ -11,4 +11,9 @@
     <PackageReference Include="Hangfire.RecurringJobExtensions" Version="1.1.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -212,7 +212,7 @@ namespace Ombi.Api
         public PlexEpisodeMetadata GetEpisodeMetaData(string authToken, Uri host, string ratingKey)
         {
 
-            //192.168.1.69:32400/library/metadata/3662/allLeaves
+            // 192.168.1.69:32400/library/metadata/3662/allLeaves
             // The metadata ratingkey should be in the Cache
             // Search for it and then call the above with the Directory.RatingKey
             // THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")

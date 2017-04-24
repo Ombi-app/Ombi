@@ -79,7 +79,7 @@
                     </div>-->
                 </div>
                 <div class="col-sm-3 col-sm-push-3">
-                    <div *ngIf="!request.admin">
+                    <div *ngIf="request.admin">
                         <div *ngIf="!request.approved">
                             <form>
                                 <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />

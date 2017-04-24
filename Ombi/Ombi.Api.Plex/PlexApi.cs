@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
@@ -61,6 +62,52 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexServer>(request);
         }
 
+        public async Task<PlexLibraries> GetLibrarySections(string authToken, string plexFullHost)
+        {
+            var request = new Request(plexFullHost, "library/sections", HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexLibraries>(request);
+        }
+
+        public async Task<PlexLibraries> GetLibrary(string authToken, string plexFullHost, string libraryId)
+        {
+            var request = new Request(plexFullHost, $"library/sections/{libraryId}/all", HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexLibraries>(request);
+        }
+
+        /// <summary>
+        // 192.168.1.69:32400/library/metadata/3662/allLeaves
+        // The metadata ratingkey should be in the Cache
+        // Search for it and then call the above with the Directory.RatingKey
+        // THEN! We need the episode metadata using result.Vide.Key ("/library/metadata/3664")
+        // We then have the GUID which contains the TVDB ID plus the season and episode number: guid="com.plexapp.agents.thetvdb://269586/2/8?lang=en"
+        /// </summary>
+        /// <param name="authToken"></param>
+        /// <param name="plexFullHost"></param>
+        /// <param name="ratingKey"></param>
+        /// <returns></returns>
+        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, string ratingKey)
+        {
+            var request = new Request(plexFullHost, $"/library/metadata/{ratingKey}", HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexMetadata>(request);
+        }
+
+        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId)
+        {
+            var request = new Request(plexFullHost, $"library/metadata/{itemId}", HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexMetadata>(request);
+        }
+
+        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey)
+        {
+            var request = new Request(plexFullHost, $"library/metadata/{ratingKey}/children", HttpMethod.Get);
+            AddHeaders(request, authToken);
+            return await Api.Request<PlexMetadata>(request);
+        }
+
         /// <summary>
         /// Adds the required headers and also the authorization header
         /// </summary>
@@ -81,8 +128,8 @@ namespace Ombi.Api.Plex
             request.AddHeader("X-Plex-Client-Identifier", $"OmbiV3");
             request.AddHeader("X-Plex-Product", "Ombi");
             request.AddHeader("X-Plex-Version", "3");
-            request.AddContentHeader("Content-Type", "application/json" );
-            request.AddHeader("Accept","application/json");
+            request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");
+            request.AddHeader("Accept", "application/json");
         }
     }
 }
