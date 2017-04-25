@@ -14,12 +14,12 @@ before_build:
 - appveyor-retry dotnet restore
 - appveyor-retry npm install bower -g
 - appveyor-retry npm install -g gulp 
-#- appveyor-retry npm install -g typescript
 - appveyor-retry npm install
 - appveyor-retry bower install
 - gulp publish
 build_script:
 - dotnet build
+- dotnet xunit
 after_build:
 - dotnet publish -c Release -r win10-x64
 - dotnet publish -c Release -r osx.10.12-x64

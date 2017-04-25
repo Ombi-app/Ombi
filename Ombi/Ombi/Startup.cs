@@ -47,17 +47,15 @@ namespace Ombi
             services.RegisterDependencies(); // Ioc and EF
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            //services.AddTransient<IPrincipal>(new InjectionFactory(u => HttpContext.Current.User));
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
 
             services.AddHangfire(x =>
             {
                 x.UseMemoryStorage(new MemoryStorageOptions());
-                //using RecurringJobAttribute to build RecurringJob automatically.
-                x.UseRecurringJob(typeof(ITestJob));
                 //x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,6 +76,11 @@ namespace Ombi
             
             app.UseHangfireServer();
             app.UseHangfireDashboard();
+
+
+            // Setup the scheduler
+            var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
+            jobSetup.Setup();
 
             ConfigureAuth(app);
 

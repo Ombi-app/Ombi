@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Context
@@ -13,5 +14,6 @@ namespace Ombi.Store.Context
         DbSet<RequestBlobs> Requests { get; set; }
         DbSet<GlobalSettings> Settings { get; set; }
         DbSet<User> Users { get; set; }
+        EntityEntry<GlobalSettings> Entry(GlobalSettings settings);
     }
 }

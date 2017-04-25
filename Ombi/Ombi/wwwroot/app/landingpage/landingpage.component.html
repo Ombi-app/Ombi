@@ -1,0 +1,26 @@
+﻿<div *ngIf="landingPageSettings">
+
+    <h1>Hey! Welcome back to {{websiteName}}</h1>
+    
+    <h3 *ngIf="settings.noticeEnabled" style="background-color: {{settings.noticeBackgroundColor}}">{{settings.noticeText}}</h3>
+    <div class="col-md-3 landing-box">
+        <div>
+            Request Something
+        </div>
+    </div>
+
+    <div class="col-md-3 col-md-offset-1 landing-box">
+        <div>
+            View all your requests
+        </div>
+    </div>
+
+    <div class="col-md-3 col-md-offset-1 landing-box">
+        <div>
+            Report an issue
+        </div>
+    </div>
+
+
+
+</div>

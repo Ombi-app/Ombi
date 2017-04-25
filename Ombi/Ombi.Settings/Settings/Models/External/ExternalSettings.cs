@@ -4,7 +4,7 @@ using Ombi.Helpers;
 
 namespace Ombi.Core.Settings.Models.External
 {
-    public abstract class ExternalSettings : Settings
+    public abstract class ExternalSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Ssl { get; set; }
         public string SubDir { get; set; }

@@ -32,11 +32,10 @@ using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
-using Ombi.Helpers;
 
 namespace Ombi.Schedule.Jobs
 {
-    public partial class PlexContentCacher
+    public partial class PlexContentCacher : IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi)
         {
@@ -132,7 +131,7 @@ namespace Ombi.Schedule.Jobs
         {
             if (plex.Enable)
             {
-                if (plex?.Ip == null || plex?.PlexAuthToken == null)
+                if (string.IsNullOrEmpty(plex?.Ip) || string.IsNullOrEmpty(plex?.PlexAuthToken))
                 {
                     return false;
                 }

@@ -16,7 +16,9 @@
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
+    <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
   </ItemGroup>
 
 </Project>

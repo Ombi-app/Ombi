@@ -1,6 +1,5 @@
 ﻿using System.Security.Principal;
 using Ombi.Core.Claims;
-using Ombi.Core.Settings.Models;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine.Interfaces

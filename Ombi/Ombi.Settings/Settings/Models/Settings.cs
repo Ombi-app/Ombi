@@ -1,4 +1,4 @@
-﻿namespace Ombi.Core.Settings.Models
+﻿namespace Ombi.Settings.Settings.Models
 {
     public class Settings
     {

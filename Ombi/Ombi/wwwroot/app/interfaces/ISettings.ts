@@ -42,6 +42,7 @@ export interface ILandingPageSettings extends ISettings {
     enabled: boolean,
     beforeLogin: boolean,
     afterLogin: boolean,
+    noticeEnabled: boolean,
     noticeText: string,
     noticeBackgroundColor: string,
     timeLimit: boolean,

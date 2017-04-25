@@ -17,7 +17,10 @@ using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;
+using Ombi.Notifications;
 using Ombi.Schedule;
+using Ombi.Schedule.Jobs;
+using Ombi.Settings.Settings;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
 using Ombi.TheMovieDbApi;
@@ -71,13 +74,15 @@ namespace Ombi.DependencyInjection
         public static IServiceCollection RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestService, JsonRequestService>();
+            services.AddSingleton<INotificationService, NotificationService>();
 
             return services;
         }
 
         public static IServiceCollection RegisterJobs(this IServiceCollection services)
         {
-            services.AddTransient<ITestJob, TestJob>();
+            services.AddTransient<IPlexContentCacher, PlexContentCacher>();
+            services.AddTransient<IJobSetup, JobSetup>();
 
             return services;
         }

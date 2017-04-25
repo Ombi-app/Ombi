@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Ombi.Core.Settings.Models
 {
-    public class LandingPageSettings : Settings
+    public class LandingPageSettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enabled { get; set; }
         public bool BeforeLogin { get; set; }

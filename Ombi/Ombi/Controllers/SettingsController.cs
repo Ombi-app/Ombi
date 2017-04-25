@@ -56,6 +56,7 @@ namespace Ombi.Controllers
         }
 
         [HttpGet("landingpage")]
+        [AllowAnonymous]
         public async Task<LandingPageSettings> LandingPageSettings()
         {
             return await Get<LandingPageSettings>();

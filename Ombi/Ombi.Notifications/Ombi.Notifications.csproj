@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
+    <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
+  </ItemGroup>
+
+</Project>

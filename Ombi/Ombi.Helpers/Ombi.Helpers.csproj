@@ -10,10 +10,4 @@
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="System.IdentityModel">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.6.1\System.IdentityModel.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project>

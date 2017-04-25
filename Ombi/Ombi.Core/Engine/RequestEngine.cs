@@ -4,22 +4,27 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Hangfire;
 using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Store.Entities;
 using Ombi.Helpers;
+using Ombi.Notifications;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Core.Engine
 {
     public class RequestEngine : BaseMediaEngine, IRequestEngine
     {
-        public RequestEngine(IMovieDbApi movieApi, IRequestService requestService, IPrincipal user) : base(user, requestService)
+        public RequestEngine(IMovieDbApi movieApi, IRequestService requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
         {
             MovieApi = movieApi;
+            NotificationService = notificationService;
         }
         private IMovieDbApi MovieApi { get; }
+        private INotificationService NotificationService { get; }
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
@@ -133,16 +138,16 @@ namespace Ombi.Core.Engine
             {
                 //Log.Fatal(e);
                 //await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault, e.Message);
-
-                //await NotificationService.Publish(new NotificationModel
-                //{
-                //    DateTime = DateTime.Now,
-                //    User = Username,
-                //    RequestType = RequestType.Movie,
-                //    Title = model.Title,
-                //    NotificationType = NotificationType.ItemAddedToFaultQueue
-                //});
-
+                var notification = new NotificationModel
+                {
+                    DateTime = DateTime.Now,
+                    User = Username,
+                    RequestType = RequestType.Movie,
+                    Title = model.Title,
+                    NotificationType = NotificationType.ItemAddedToFaultQueue
+                };
+                BackgroundJob.Enqueue(() => NotificationService.Publish(notification).Wait());
+                
                 //return Response.AsJson(new JsonResponseModel
                 //{
                 //    Result = true,
@@ -160,16 +165,17 @@ namespace Ombi.Core.Engine
 
             if (ShouldSendNotification(model.Type))
             {
-                //    var notificationModel = new NotificationModel
-                //    {
-                //        Title = model.Title,
-                //        User = Username,
-                //        DateTime = DateTime.Now,
-                //        NotificationType = NotificationType.NewRequest,
-                //        RequestType = model.Type,
-                //        ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
-                //    };
-                //    await NotificationService.Publish(notificationModel);
+                var notificationModel = new NotificationModel
+                {
+                    Title = model.Title,
+                    User = Username,
+                    DateTime = DateTime.Now,
+                    NotificationType = NotificationType.NewRequest,
+                    RequestType = model.Type,
+                    ImgSrc = model.Type == RequestType.Movie ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}" : model.PosterPath
+                };
+
+                BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel).Wait());
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();

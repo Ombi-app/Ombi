@@ -42,6 +42,7 @@
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
+    <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
@@ -57,6 +58,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\app\landingpage\landingpage.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\app\services\request - Copy.service.js.map">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

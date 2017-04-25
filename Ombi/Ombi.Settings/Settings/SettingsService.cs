@@ -1,13 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
-namespace Ombi.Core.Settings
+namespace Ombi.Settings.Settings
 {
     public class SettingsServiceV2<T> : ISettingsService<T>
-        where T : Models.Settings, new()
+        where T : Ombi.Settings.Settings.Models.Settings, new()
     {
 
         public SettingsServiceV2(ISettingsRepository repo)

@@ -14,6 +14,7 @@ import { SearchComponent } from './search/search.component';
 import { MovieSearchComponent } from './search/moviesearch.component';
 import { RequestComponent } from './requests/request.component';
 import { LoginComponent } from './login/login.component';
+import { LandingPageComponent } from './landingpage/landingpage.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services
@@ -42,6 +43,7 @@ const routes: Routes = [
     { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
+    { path: 'landingpage', component: LandingPageComponent },
 ];
 
 @NgModule({
@@ -66,7 +68,8 @@ const routes: Routes = [
         SearchComponent,
         RequestComponent,
         LoginComponent,
-        MovieSearchComponent
+        MovieSearchComponent,
+        LandingPageComponent
     ],
     providers: [
         SearchService,

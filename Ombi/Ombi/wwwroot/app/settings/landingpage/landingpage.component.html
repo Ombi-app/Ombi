@@ -1,11 +1,11 @@
-﻿<div class="col-sm-8 col-sm-push-1">
+﻿<div class="col-sm-8 col-sm-push-1" *ngIf="settings">
     <fieldset>
         <legend>Landing Page Configuration</legend>
 
 
         <div class="form-group">
             <div class="checkbox">
-                <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
                 <label for="enable">Enable</label>
             </div>
         </div>
