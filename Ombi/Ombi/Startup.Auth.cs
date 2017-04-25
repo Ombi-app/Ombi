@@ -20,13 +20,13 @@ namespace Ombi
         private void ConfigureAuth(IApplicationBuilder app)
         {
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetSection("TokenAuthentication:SecretKey").Value));
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("secretkey_secretkey123!"));
 
             var tokenProviderOptions = new TokenProviderOptions
             {
-                Path = Configuration.GetSection("TokenAuthentication:TokenPath").Value,
-                Audience = Configuration.GetSection("TokenAuthentication:Audience").Value,
-                Issuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
+                Path = "/api/v1/token/",
+                Audience = "DemoAudience",
+                Issuer = "DemoIssuer",
                 SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 IdentityResolver = GetIdentity
             };
@@ -38,10 +38,10 @@ namespace Ombi
                 IssuerSigningKey = signingKey,
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = Configuration.GetSection("TokenAuthentication:Issuer").Value,
+                ValidIssuer = "DemoIssuer",
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = Configuration.GetSection("TokenAuthentication:Audience").Value,
+                ValidAudience = "DemoAudience",
                 // Validate the token expiry
                 ValidateLifetime = true,
                 // If you want to allow a certain amount of clock drift, set that here:
@@ -61,14 +61,6 @@ namespace Ombi
 
         private async Task<ClaimsIdentity> GetIdentity(string username, string password, IUserIdentityManager userIdentityManager)
         {
-            //await userIdentityManager.CreateUser(new UserDto
-            //{
-            //    Username = "a",
-            //    Password = "a",
-            //    Claims = new List<Claim>() { new Claim(ClaimTypes.Role, "Admin")},
-            //    UserType = UserType.LocalUser,
-            //});
-
             var validLogin = await userIdentityManager.CredentialsValid(username, password);
             if (!validLogin)
             {

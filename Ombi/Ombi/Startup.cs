@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.Security.Principal;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
@@ -23,6 +22,7 @@ namespace Ombi
     {
         public Startup(IHostingEnvironment env)
         {
+            Console.WriteLine(env.ContentRootPath);
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", false, true)
@@ -68,11 +68,6 @@ namespace Ombi
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
-            }
-
             
             app.UseHangfireServer();
             app.UseHangfireDashboard();
@@ -84,13 +79,13 @@ namespace Ombi
 
             ConfigureAuth(app);
 
-            var provider = new FileExtensionContentTypeProvider();
-            provider.Mappings[".map"] = "application/octet-stream";
+            //var provider = new FileExtensionContentTypeProvider();
+            //provider.Mappings[".map"] = "application/octet-stream";
 
-            app.UseStaticFiles(new StaticFileOptions()
-            {
-                ContentTypeProvider = provider
-            });
+            //app.UseStaticFiles(new StaticFileOptions()
+            //{
+            //    ContentTypeProvider = provider
+            //});
 
             app.UseMvc(routes =>
             { 
