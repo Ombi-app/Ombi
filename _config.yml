@@ -7,9 +7,9 @@ baseurl: "" # the subpath of your site, e.g. /blog/ (If you use organization lea
 url: "https://www.ombi.io/" # the base hostname & protocol for your site
 
 #Google Ad Words Data from scripts code (using Google responsive options) and ad client
-data-ad-slot: 2973388149
+data-ad-slot: #2973388149
 data-ad-client: #ca-pub-9204963049240271
-google_ad_client: ca-pub-9204963049240271
+google_ad_client: #ca-pub-9204963049240271
 
 google_analytics: "UA-"
 
