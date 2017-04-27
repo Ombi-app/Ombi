@@ -3,3 +3,9 @@
     background: #333333 !important;
     border-radius: 2%
 }
+
+.landing-logo {
+    position: relative;
+    right: 20%;
+    width: 300px
+}

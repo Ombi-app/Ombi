@@ -7,17 +7,16 @@
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
 
     <li role="presentation" class="active">
-        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab"><i class="fa fa-film"></i> Movies</a>
-
+        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectTab('movies')"><i class="fa fa-film"></i> Movies</a>
     </li>
 
-    <li role="presentation">
+    <!--<li role="presentation">
         <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Actors</a>
 
-    </li>
+    </li>-->
 
     <li role="presentation">
-        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-television"></i> TV Shows</a>
+        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTab('tv')"><i class="fa fa-television"></i> TV Shows</a>
 
     </li>
     <!--
@@ -30,9 +29,11 @@
 <!-- Tab panes -->
 <div class="tab-content">
 
-    <movie-search></movie-search>
+    <div *ngIf="showMovie">
+        <movie-search></movie-search>
+    </div>
 
-    <!-- Actors tab -->
+    <!--
     <div role="tabpanel" class="tab-pane" id="ActorsTab">
         <div class="input-group">
             <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
@@ -46,35 +47,14 @@
 
         <br />
         <br />
-        <!-- Movie content -->
         <div id="actorMovieList">
         </div>
-    </div>
+    </div>-->
 
-    <!-- TV tab -->
-    <div role="tabpanel" class="tab-pane" id="TvShowTab">
-        <div class="input-group">
-            <input id="tvSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
-            <div class="input-group-addon">
-                <div class="btn-group">
-                    <a href="#" class="btn btn-sm btn-primary-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                        @UI.Search_Suggestions
-                        <i class="fa fa-chevron-down"></i>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a id="popularShows">Popular Shows</a></li>
-                        <li><a id="trendingShows" href="#">Trending Shows</a></li>
-                        <li><a id="mostWatchedShows" href="#">Most Watched Shows</a></li>
-                        <li><a id="anticipatedShows" href="#">Most Anticipated Shows</a></li>
-                    </ul>
-                </div><i id="tvSearchButton" class="fa fa-search"></i>
-            </div>
-        </div>
-        <br />
-        <br />
-        <!-- TV content -->
-        <div id="tvList">
-        </div>
+
+    <div *ngIf="showTv">
+        <tv-search></tv-search>
+
     </div>
 </div>
 

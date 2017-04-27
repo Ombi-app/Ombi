@@ -68,13 +68,20 @@ namespace Ombi.Core.IdentityResolver
             return Mapper.Map<List<UserDto>>(await UserRepository.GetUsers());
         }
 
-        public async Task CreateUser(UserDto userDto)
+        public async Task<UserDto> CreateUser(UserDto userDto)
         {
             var user = Mapper.Map<User>(userDto);
             var result = HashPassword(user.Password);
             user.Password = result.HashedPass;
             user.Salt = result.Salt;
             await UserRepository.CreateUser(user);
+
+            return Mapper.Map<UserDto>(user);
+        }
+
+        public async Task DeleteUser(UserDto user)
+        {
+            await UserRepository.DeleteUser(Mapper.Map<User>(user));
         }
 
         private UserHash HashPassword(string password)

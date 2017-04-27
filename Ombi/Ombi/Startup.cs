@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security.Principal;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
@@ -15,6 +16,8 @@ using Microsoft.Extensions.Logging;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
 using Ombi.Schedule;
+using Serilog;
+using Serilog.Events;
 
 namespace Ombi
 {
@@ -30,6 +33,22 @@ namespace Ombi
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
+            if (env.IsDevelopment())
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
+                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
+                    .CreateLogger();
+            }
+            if (env.IsProduction())
+            {
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Information()
+                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
+                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
+                    .CreateLogger();
+            }
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -45,15 +64,16 @@ namespace Ombi
                 expression.AddCollectionMappers();
             });
             services.RegisterDependencies(); // Ioc and EF
-
+            
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
+
 
 
             services.AddHangfire(x =>
             {
                 x.UseMemoryStorage(new MemoryStorageOptions());
-                //x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
+                x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
         }
@@ -61,9 +81,11 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-            
+            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            //loggerFactory.AddDebug();
+
+            loggerFactory.AddSerilog();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -79,13 +101,13 @@ namespace Ombi
 
             ConfigureAuth(app);
 
-            //var provider = new FileExtensionContentTypeProvider();
-            //provider.Mappings[".map"] = "application/octet-stream";
+            var provider = new FileExtensionContentTypeProvider();
+            provider.Mappings[".map"] = "application/octet-stream";
 
-            //app.UseStaticFiles(new StaticFileOptions()
-            //{
-            //    ContentTypeProvider = provider
-            //});
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                ContentTypeProvider = provider
+            });
 
             app.UseMvc(routes =>
             { 

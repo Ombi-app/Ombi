@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Attributes;
 using Ombi.Core.Claims;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models;
+using Ombi.Core.Models.UI;
 using Ombi.Models;
 
 namespace Ombi.Controllers
@@ -15,12 +17,14 @@ namespace Ombi.Controllers
     [PowerUser]
     public class IdentityController : BaseV1ApiController
     {
-        public IdentityController(IUserIdentityManager identity)
+        public IdentityController(IUserIdentityManager identity, IMapper mapper)
         {
             IdentityManager = identity;
+            Mapper = mapper;
         }
         
         private IUserIdentityManager IdentityManager { get; }
+        private IMapper Mapper { get; }
 
         [HttpGet]
         public async Task<UserDto> GetUser()
@@ -57,6 +61,26 @@ namespace Ombi.Controllers
             });
 
             return true;
+        }
+
+        [HttpGet("Users")]
+        public async Task<IEnumerable<UserViewModel>> GetAllUsers()
+        {
+            return Mapper.Map<IEnumerable<UserViewModel>>(await IdentityManager.GetUsers());
+        }
+
+        [HttpPost]
+        public async Task<UserViewModel> CreateUser([FromBody] UserViewModel user)
+        {
+            var userResult = await IdentityManager.CreateUser(Mapper.Map<UserDto>(user));
+            return Mapper.Map<UserViewModel>(userResult);
+        }
+
+        [HttpDelete]
+        public async Task<StatusCodeResult> DeleteUser([FromBody] UserViewModel user)
+        {
+            await IdentityManager.DeleteUser(Mapper.Map<UserDto>(user));
+            return Ok();
         }
         
     }

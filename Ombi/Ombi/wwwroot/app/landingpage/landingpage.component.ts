@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { SettingsService } from '../services/settings.service';
-import { ILandingPageSettings } from '../interfaces/ISettings';
+import { ILandingPageSettings, ICustomizationSettings } from '../interfaces/ISettings';
 
 @Component({
     selector: 'ombi',
@@ -12,16 +12,11 @@ export class LandingPageComponent implements OnInit {
 
     constructor(private settingsService: SettingsService) { }
 
-    websiteName: string;
+    customizationSettings : ICustomizationSettings;
     landingPageSettings: ILandingPageSettings;
 
     ngOnInit(): void {
-        this.settingsService.getLandingPage().subscribe(x => {
-            this.landingPageSettings = x;
-            console.log(x);
-        });
-        this.websiteName = "Ombi";
+        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
     }
-
-
 }

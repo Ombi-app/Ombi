@@ -6,9 +6,10 @@ namespace Ombi.Core.IdentityResolver
 {
     public interface IUserIdentityManager
     {
-        Task CreateUser(UserDto user);
+        Task<UserDto> CreateUser(UserDto user);
         Task<bool> CredentialsValid(string username, string password);
         Task<UserDto> GetUser(string username);
         Task<IEnumerable<UserDto>> GetUsers();
+        Task DeleteUser(UserDto user);
     }
 }

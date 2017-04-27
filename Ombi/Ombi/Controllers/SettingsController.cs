@@ -1,11 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Controllers
 {
@@ -64,6 +64,19 @@ namespace Ombi.Controllers
 
         [HttpPost("landingpage")]
         public async Task<bool> LandingPageSettings([FromBody]LandingPageSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        [HttpGet("customization")]
+        [AllowAnonymous]
+        public async Task<CustomizationSettings> CustomizationSettings()
+        {
+            return await Get<CustomizationSettings>();
+        }
+
+        [HttpPost("customization")]
+        public async Task<bool> CustomizationSettings([FromBody]CustomizationSettings settings)
         {
             return await Save(settings);
         }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.10-x64;debian.8-x64;</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.10-x64;debian.8-x64;centos.7-x64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 
   </PropertyGroup>
@@ -30,6 +30,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer.Design" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+    <PackageReference Include="Serilog" Version="2.4.0" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="1.4.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="3.2.0" />
+    <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
+    <PackageReference Include="Serilog.Sinks.SQLite" Version="3.8.3" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 
@@ -41,5 +46,35 @@
     <ProjectReference Include="..\Ombi.Schedule\Ombi.Schedule.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\app\interfaces\ISearchMovieResult - Copy.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\interfaces\ISearchTvResult.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\search\moviesearch - Copy.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\search\moviesearch - Copy.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\search\moviesearch - Copy.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\search\moviesearch - Copy.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\usermanagement\request.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\usermanagement\request.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\usermanagement\request.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
 </Project>

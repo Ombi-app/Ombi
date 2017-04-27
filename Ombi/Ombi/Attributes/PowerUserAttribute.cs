@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Ombi.Core.Claims;
 
 namespace Ombi.Attributes
 {
@@ -6,7 +7,12 @@ namespace Ombi.Attributes
     {
         public PowerUserAttribute()
         {
-            Roles = "Admin, PowerUser";
+            var roles = new []
+            {
+                OmbiClaims.Admin,
+                OmbiClaims.PowerUser
+            };
+            Roles = string.Join(",",roles);
         }
     }
 }

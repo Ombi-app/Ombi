@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using Hangfire;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +16,8 @@ namespace Ombi.Schedule
 
         public override object ActivateJob(Type type)
         {
-            return _container.GetService(type);
+            var i = type.GetTypeInfo().ImplementedInterfaces.FirstOrDefault();
+            return _container.GetService(i);
         }
     }
 }

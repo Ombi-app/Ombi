@@ -28,6 +28,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Core.Settings;
@@ -37,14 +38,16 @@ namespace Ombi.Schedule.Jobs
 {
     public partial class PlexContentCacher : IPlexContentCacher
     {
-        public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi)
+        public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentCacher> logger)
         {
             Plex = plex;
             PlexApi = plexApi;
+            Logger = logger;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
         private IPlexApi PlexApi { get; }
+        private ILogger<PlexContentCacher> Logger { get; }
 
         public void CacheContent()
         {
@@ -57,6 +60,8 @@ namespace Ombi.Schedule.Jobs
             {
                 return;
             }
+
+            Logger.LogInformation("Starting Plex Content Cacher");
             //TODO
             //var libraries = CachedLibraries(plexSettings);
 

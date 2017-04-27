@@ -10,11 +10,14 @@ import { HttpModule } from '@angular/http';
 
 import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 
+// Components
 import { SearchComponent } from './search/search.component';
 import { MovieSearchComponent } from './search/moviesearch.component';
+import { TvSearchComponent } from './search/tvsearch.component';
 import { RequestComponent } from './requests/request.component';
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
+import { UserManagementComponent } from './usermanagement/usermanagement.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services
@@ -44,6 +47,7 @@ const routes: Routes = [
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent },
+    { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -69,7 +73,9 @@ const routes: Routes = [
         RequestComponent,
         LoginComponent,
         MovieSearchComponent,
-        LandingPageComponent
+        TvSearchComponent,
+        LandingPageComponent,
+        UserManagementComponent
     ],
     providers: [
         SearchService,

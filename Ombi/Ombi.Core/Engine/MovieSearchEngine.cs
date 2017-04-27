@@ -3,6 +3,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.IdentityResolver;
@@ -18,19 +19,22 @@ namespace Ombi.Core.Engine
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
 
-        public MovieSearchEngine(IPrincipal identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings) 
+        public MovieSearchEngine(IPrincipal identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings,
+            ILogger<MovieSearchEngine> logger)
             : base(identity, service)
         {
             MovieApi = movApi;
             Mapper = mapper;
             PlexSettings = plexSettings;
             EmbySettings = embySettings;
+            Logger = logger;
         }
 
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
+        private ILogger<MovieSearchEngine> Logger { get; }
 
         public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
         {
@@ -58,11 +62,12 @@ namespace Ombi.Core.Engine
             return retVal;
         }
 
-        public async Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search)
+        public async Task<IEnumerable<SearchMovieViewModel>> Search(string search)
         {
             var result = await MovieApi.SearchMovie(search);
             if (result != null)
             {
+                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
@@ -72,6 +77,7 @@ namespace Ombi.Core.Engine
             var result = await MovieApi.PopularMovies();
             if (result != null)
             {
+                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
@@ -82,6 +88,7 @@ namespace Ombi.Core.Engine
             var result = await MovieApi.TopRated();
             if (result != null)
             {
+                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
@@ -92,6 +99,7 @@ namespace Ombi.Core.Engine
             var result = await MovieApi.Upcoming();
             if (result != null)
             {
+                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
@@ -101,6 +109,8 @@ namespace Ombi.Core.Engine
             var result = await MovieApi.NowPlaying();
             if (result != null)
             {
+                
+                Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
@@ -125,7 +135,7 @@ namespace Ombi.Core.Engine
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
             Dictionary<int, RequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
-        { 
+        {
             if (plexSettings.Enable)
             {
                 //        var content = PlexContentRepository.GetAll();

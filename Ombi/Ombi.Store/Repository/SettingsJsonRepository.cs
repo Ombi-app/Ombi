@@ -76,7 +76,6 @@ namespace Ombi.Store.Repository
 
         public void Update(GlobalSettings entity)
         {
-            Db.Entry(entity).State = EntityState.Modified;
             Db.SaveChanges();
         }
     }

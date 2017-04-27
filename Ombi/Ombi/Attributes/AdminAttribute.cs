@@ -6,7 +6,7 @@ namespace Ombi.Attributes
     {
         public AdminAttribute()
         {
-            base.Roles = "Admin";
+            Roles = "Admin";
         }
         
     }

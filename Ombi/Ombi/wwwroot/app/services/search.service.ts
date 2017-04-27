@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
+import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 
 @Injectable()
 export class SearchService extends ServiceAuthHelpers {
@@ -29,5 +30,9 @@ export class SearchService extends ServiceAuthHelpers {
     }
     extraInfo(movies: ISearchMovieResult[]): Observable<ISearchMovieResult[]> {
         return this.http.post(`${this.url}/Movie/extrainfo`, JSON.stringify(movies), { headers: this.headers }).map(this.extractData);
+    }
+
+    searchTv(searchTerm: string): Observable<ISearchTvResult[]> {
+        return this.http.get(`${this.url}/Tv/` + searchTerm).map(this.extractData);
     }
 }

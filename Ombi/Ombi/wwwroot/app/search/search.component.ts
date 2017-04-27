@@ -23,6 +23,10 @@ export class SearchComponent implements OnInit {
     movieResults: ISearchMovieResult[];
     result: IRequestEngineResult;
 
+    tabSelected: string;
+    showTv: boolean;
+    showMovie:boolean;
+
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService : NotificationService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
@@ -44,6 +48,8 @@ export class SearchComponent implements OnInit {
     }
 
     ngOnInit(): void {
+
+        this.selectTab("movies");
         this.searchText = "";
         this.movieResults = [];
         this.result = {
@@ -51,6 +57,8 @@ export class SearchComponent implements OnInit {
             requestAdded:false
         }
     }
+
+
 
     search(text: any) {
         this.searchChanged.next(text.target.value);
@@ -68,6 +76,19 @@ export class SearchComponent implements OnInit {
                 this.notificationService.warning("Request Added", this.result.message);
             }
         });
+    }
+
+    selectTab(tabName: string) {
+        console.log(tabName);
+        this.tabSelected = tabName;
+
+        if (tabName === 'movies') {
+            this.showMovie = true;
+            this.showTv = false;
+        } else {
+            this.showMovie = false;
+            this.showTv = true;
+        }
     }
 
     popularMovies() {

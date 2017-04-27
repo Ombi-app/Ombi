@@ -9,5 +9,6 @@ namespace Ombi.Store.Repository
         Task CreateUser(User user);
         Task<User> GetUser(string username);
         Task<IEnumerable<User>> GetUsers();
+        Task DeleteUser(User user);
     }
 }

@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings,ILandingPageSettings } from '../interfaces/ISettings';
+import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings,ILandingPageSettings, ICustomizationSettings } from '../interfaces/ISettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -52,5 +52,16 @@ export class SettingsService extends ServiceAuthHelpers {
     saveLandingPage(settings: ILandingPageSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/LandingPage`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+
+    // Using http since we need it not to be authenticated to get the customization settings
+    getCustomization(): Observable<ICustomizationSettings> {
+        return this.nonAuthHttp.get(`${this.url}/customization`).map(this.extractData);
+    }
+
+    saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/customization`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+
 
 }

@@ -46,6 +46,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IMovieEngine, MovieSearchEngine>();
             services.AddTransient<IRequestEngine, RequestEngine>();
+            services.AddTransient<ITvSearchEngine, TvSearchEngine>();
             return services;
         }
 

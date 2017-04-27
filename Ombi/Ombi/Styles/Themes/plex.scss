@@ -240,3 +240,10 @@ button.list-group-item:focus {
     font-size: 15px;
     padding: 3px 0;
 }
+
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
+    background-color: $bg-colour;
+    border-color: $bg-colour-disabled;
+}

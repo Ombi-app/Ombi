@@ -31,6 +31,6 @@ namespace Ombi.Core.Claims
         public const string Admin = nameof(Admin);
         public const string AutoApproveMovie = nameof(AutoApproveMovie);
         public const string AutoApproveTv = nameof(AutoApproveTv);
-
+        public const string PowerUser = nameof(PowerUser);
     }
 }

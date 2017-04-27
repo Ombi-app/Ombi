@@ -45,14 +45,14 @@ namespace Ombi
                 // Validate the token expiry
                 ValidateLifetime = true,
                 // If you want to allow a certain amount of clock drift, set that here:
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero, 
             };
 
             app.UseJwtBearerAuthentication(new JwtBearerOptions
             {
                 AutomaticAuthenticate = true,
                 AutomaticChallenge = true,
-                TokenValidationParameters = tokenValidationParameters
+                TokenValidationParameters = tokenValidationParameters,
             });
 
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(tokenProviderOptions));

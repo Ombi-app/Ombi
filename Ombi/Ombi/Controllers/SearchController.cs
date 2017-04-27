@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+
 using Ombi.Core;
+using Ombi.Core.Engine;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Controllers
@@ -12,17 +14,22 @@ namespace Ombi.Controllers
     [Authorize]
     public class SearchController : BaseV1ApiController
     {
-        public SearchController(IMovieEngine movie)
+        public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger)
         {
             MovieEngine = movie;
+            TvEngine = tvEngine;
+            Logger = logger;
         }
+        private ILogger<SearchController> Logger { get; }
 
         private IMovieEngine MovieEngine { get; }
+        private ITvSearchEngine TvEngine { get; }
 
         [HttpGet("movie/{searchTerm}")]
         public async Task<IEnumerable<SearchMovieViewModel>> SearchMovie(string searchTerm)
         {
-            return await MovieEngine.ProcessMovieSearch(searchTerm);
+            Logger.LogDebug("Searching : {searchTerm}", searchTerm);
+            return await MovieEngine.Search(searchTerm);
         }
 
         [HttpPost("movie/extrainfo")]
@@ -52,7 +59,10 @@ namespace Ombi.Controllers
             return await MovieEngine.UpcomingMovies();
         }
 
-
-
+        [HttpGet("tv/{searchTerm}")]
+        public async Task<IEnumerable<SearchTvShowViewModel>> SearchTv(string searchTerm)
+        {
+            return await TvEngine.Search(searchTerm);
+        }
     }
 }

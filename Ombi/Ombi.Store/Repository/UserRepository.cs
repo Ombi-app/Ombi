@@ -58,5 +58,11 @@ namespace Ombi.Store.Repository
         {
             return await Db.Users.ToListAsync();
         }
+
+        public async Task DeleteUser(User user)
+        {
+            Db.Users.Remove(user);
+            await Db.SaveChangesAsync();
+        }
     }
 }

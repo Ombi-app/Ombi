@@ -1,8 +1,12 @@
-﻿<div *ngIf="landingPageSettings">
-
-    <h1>Hey! Welcome back to {{websiteName}}</h1>
+﻿<div *ngIf="landingPageSettings && customizationSettings">
     
-    <h3 *ngIf="settings.noticeEnabled" style="background-color: {{settings.noticeBackgroundColor}}">{{settings.noticeText}}</h3>
+    <div *ngIf="customizationSettings.logo" class="landing-logo">
+        <img [src]="customizationSettings.logo" />
+    </div>
+
+    <h1>Hey! Welcome back to {{customizationSettings.applicationName}}</h1>
+
+    <h3 *ngIf="landingPageSettings.noticeEnabled" [innerHtml]="landingPageSettings.noticeText" style="background-color: {{landingPageSettings.noticeBackgroundColor}}"></h3>
     <div class="col-md-3 landing-box">
         <div>
             Request Something

@@ -82,7 +82,7 @@ namespace Ombi.Api
         {
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) return;
 
-            var builder = new UriBuilder(_modified);
+            var builder = new UriBuilder(FullUri);
             var startingTag = string.Empty;
             var hasQuery = false;
             if (string.IsNullOrEmpty(builder.Query))

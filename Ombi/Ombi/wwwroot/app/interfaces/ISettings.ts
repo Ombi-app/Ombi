@@ -49,3 +49,8 @@ export interface ILandingPageSettings extends ISettings {
     startDateTime: Date,
     endDateTime:Date,
 }
+
+export interface ICustomizationSettings extends ISettings {
+    applicationName: string,
+    logo:string
+}

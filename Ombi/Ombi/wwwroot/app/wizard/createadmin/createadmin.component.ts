@@ -21,7 +21,7 @@ export class CreateAdminComponent {
     password: string;
 
     createUser() {
-        this.identityService.createUser(this.username, this.password).subscribe(x => {
+        this.identityService.createWizardUser(this.username, this.password).subscribe(x => {
             if (x) {
                 // Log me in.
                 this.auth.login({ username: this.username, password: this.password }).subscribe(c => {

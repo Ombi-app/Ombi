@@ -14,7 +14,7 @@ namespace Ombi.Schedule
         private IPlexContentCacher Cacher { get; }
         public void Setup()
         {
-            RecurringJob.AddOrUpdate(() => Cacher.CacheContent(), Cron.Hourly, TimeZoneInfo.Utc, "cacher");
+            RecurringJob.AddOrUpdate(() => Cacher.CacheContent(), Cron.Minutely);
         }
     }
 }

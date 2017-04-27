@@ -15,5 +15,6 @@ namespace Ombi.Store.Context
         DbSet<GlobalSettings> Settings { get; set; }
         DbSet<User> Users { get; set; }
         EntityEntry<GlobalSettings> Entry(GlobalSettings settings);
+        EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
     }
 }

@@ -16,8 +16,7 @@ import { IRequestModel } from '../interfaces/IRequestModel';
 @Component({
     selector: 'ombi',
     moduleId: module.id,
-    templateUrl: './request.component.html',
-    providers: [RequestService]
+    templateUrl: './request.component.html'
 })
 export class RequestComponent implements OnInit {
     constructor(private requestService: RequestService) {

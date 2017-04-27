@@ -8,7 +8,7 @@ namespace Ombi.Core
     {
         Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies();
         Task<IEnumerable<SearchMovieViewModel>> PopularMovies();
-        Task<IEnumerable<SearchMovieViewModel>> ProcessMovieSearch(string search);
+        Task<IEnumerable<SearchMovieViewModel>> Search(string search);
         Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies();
         Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies();
         Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies);

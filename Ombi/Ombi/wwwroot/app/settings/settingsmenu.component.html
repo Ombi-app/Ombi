@@ -1,1 +1,64 @@
-﻿<p-menu [model]="menu"></p-menu>
+﻿<ul class="nav nav-tabs">
+    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']">Ombi</a></li>
+    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Customization']">Customization</a></li>
+    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/LandingPage']">Landing Page</a></li>
+
+    <li class="dropdown" [routerLinkActive]="['active']">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            Media Server <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Plex']">Plex</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Emby']">Emby</a></li>
+        </ul>
+    </li>
+    
+    <li class="dropdown"  [routerLinkActive]="['active']">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            TV <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Sonarr']" >Sonarr</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/SickRage']" >SickRage</a></li>
+        </ul>
+    </li>
+    
+    <li class="dropdown" [routerLinkActive]="['active']">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            Movies <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/CouchPotato']">CouchPotato</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Radarr']">Radarr</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Watcher']">Watcher</a></li>
+        </ul>
+    </li>
+    
+    
+    <li class="dropdown" [routerLinkActive]="['active']">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            Notifications <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Email']">Email</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Newsletter']">Newsletter</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Pushbullet']">Pushbullet</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Pushover']">Pushover</a></li>
+        </ul>
+    </li>
+    
+    
+    <li class="dropdown"  [routerLinkActive]="['active']">
+        <a class="dropdown-toggle" data-toggle="dropdown">
+            System <span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Update']">Update</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Logs']">Logs</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/ScheduledJobs']">Scheduled Jobs</a></li>
+        </ul>
+    </li>
+
+</ul>
+
+<hr/>

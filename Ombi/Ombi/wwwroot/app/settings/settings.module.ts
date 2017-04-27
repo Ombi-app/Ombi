@@ -12,6 +12,7 @@ import { OmbiComponent } from './ombi/ombi.component'
 import { PlexComponent } from './plex/plex.component'
 import { EmbyComponent } from './emby/emby.component'
 import { LandingPageComponent } from './landingpage/landingpage.component'
+import { CustomizationComponent } from './customization/customization.component'
 
 import { SettingsMenuComponent } from './settingsmenu.component';
 
@@ -22,6 +23,7 @@ const routes: Routes = [
     { path: 'Settings/Plex', component: PlexComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Emby', component: EmbyComponent, canActivate: [AuthGuard] },
     { path: 'Settings/LandingPage', component: LandingPageComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Customization', component: CustomizationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -40,6 +42,7 @@ const routes: Routes = [
         PlexComponent,
         EmbyComponent,
         LandingPageComponent,
+        CustomizationComponent,
     ],
     exports: [
         RouterModule

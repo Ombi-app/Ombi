@@ -91,8 +91,8 @@ namespace Ombi.Settings.Settings
             modified.Id = entity.Id;
 
             var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
-            globalSettings.Content = EncryptSettings(globalSettings);
-             await Repo.UpdateAsync(globalSettings).ConfigureAwait(false);
+            entity.Content = EncryptSettings(globalSettings);
+             await Repo.UpdateAsync(entity).ConfigureAwait(false);
 
             return true;
         }
