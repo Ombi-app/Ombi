@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Rx';
 import { ServiceAuthHelpers } from './service.helpers';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
-import { IRequestModel } from '../interfaces/IRequestModel';
+import { ISearchTvResult } from '../interfaces/ISearchTvResult';
+import { IMovieRequestModel } from '../interfaces/IRequestModel';
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
@@ -17,23 +18,23 @@ export class RequestService extends ServiceAuthHelpers {
         return this.http.post(`${this.url}/Movie/`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 
-    getAllRequests(): Observable<IRequestModel[]> {
-        return this.http.get(this.url).map(this.extractData);
+    requestTv(tv: ISearchTvResult): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}/TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
     }
 
-    getRequests(count: number, position: number): Observable<IRequestModel[]> {
-        return this.http.get(`${this.url}/${count}/${position}`).map(this.extractData);
+    getRequests(count: number, position: number): Observable<IMovieRequestModel[]> {
+        return this.http.get(`${this.url}/movie/${count}/${position}`).map(this.extractData);
     }
 
-    searchRequests(search: string): Observable<IRequestModel[]> {
-        return this.http.get(`${this.url}/search/${search}`).map(this.extractData);
+    searchRequests(search: string): Observable<IMovieRequestModel[]> {
+        return this.http.get(`${this.url}/movie/search/${search}`).map(this.extractData);
     }
 
-    removeRequest(request: IRequestModel): Observable<void> {
-        return this.http.delete(`${this.url}/${request.id}`).map(this.extractData);
+    removeMovieRequest(request: IMovieRequestModel) {
+        this.http.delete(`${this.url}/movie/${request.id}`).map(this.extractData).subscribe();
     }
 
-    updateRequest(request: IRequestModel) : Observable<IRequestModel> {
-        return this.http.post(`${this.url}/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
+    updateRequest(request: IMovieRequestModel): Observable<IMovieRequestModel> {
+        return this.http.post(`${this.url}/movie/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
 }

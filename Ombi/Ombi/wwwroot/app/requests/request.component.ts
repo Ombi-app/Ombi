@@ -10,8 +10,9 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
+import { IdentityService } from '../services/identity.service';
 
-import { IRequestModel } from '../interfaces/IRequestModel';
+import { IMovieRequestModel, ITvRequestModel } from '../interfaces/IRequestModel';
 
 @Component({
     selector: 'ombi',
@@ -19,7 +20,7 @@ import { IRequestModel } from '../interfaces/IRequestModel';
     templateUrl: './request.component.html'
 })
 export class RequestComponent implements OnInit {
-    constructor(private requestService: RequestService) {
+    constructor(private requestService: RequestService, private identityService: IdentityService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -29,14 +30,17 @@ export class RequestComponent implements OnInit {
                     this.resetSearch();
                     return;
                 }
-                this.requestService.searchRequests(this.searchText).subscribe(x => this.requests = x);
+                this.requestService.searchRequests(this.searchText).subscribe(x => this.movieRequests = x);
             });
     }
 
-    requests: IRequestModel[];
+    movieRequests: IMovieRequestModel[];
+    tvRequests: ITvRequestModel[];
 
     searchChanged: Subject<string> = new Subject<string>();
     searchText: string;
+
+    isAdmin : boolean;
 
     private currentlyLoaded: number;
     private amountToLoad : number;
@@ -47,9 +51,11 @@ export class RequestComponent implements OnInit {
         this.loadInit();
     }
 
+  
+
     loadMore() {
         this.requestService.getRequests(this.amountToLoad, this.currentlyLoaded + 1).subscribe(x => {
-            this.requests.push.apply(this.requests, x);
+            this.movieRequests.push.apply(this.movieRequests, x);
             this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
         });
     }
@@ -58,35 +64,36 @@ export class RequestComponent implements OnInit {
         this.searchChanged.next(text.target.value);
     }
 
-    removeRequest(request: IRequestModel) {
-        this.requestService.removeRequest(request).subscribe();
+    removeRequest(request: IMovieRequestModel) {
+        this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
     }
 
-    changeAvailability(request: IRequestModel, available: boolean) {
+    changeAvailability(request: IMovieRequestModel, available: boolean) {
         request.available = available;
         
         this.updateRequest(request);
     }
 
-    approve(request: IRequestModel) {
+    approve(request: IMovieRequestModel) {
         request.approved = true;
         request.denied = false;
         this.updateRequest(request);
     }
 
-    deny(request: IRequestModel) {
+    deny(request: IMovieRequestModel) {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
     }
 
-    private updateRequest(request: IRequestModel) {
+    private updateRequest(request: IMovieRequestModel) {
         this.requestService.updateRequest(request).subscribe(x => request = x);
     }
 
     private loadInit() {
-        this.requestService.getRequests(this.amountToLoad, 0).subscribe(x => this.requests = x);
+        this.requestService.getRequests(this.amountToLoad, 0).subscribe(x => this.movieRequests = x);
+        this.isAdmin = this.identityService.hasRole("Admin");
     }
 
     private resetSearch() {
@@ -94,10 +101,10 @@ export class RequestComponent implements OnInit {
         this.loadInit();
     }
 
-    private removeRequestFromUi(key : IRequestModel) {
-        var index = this.requests.indexOf(key, 0);
+    private removeRequestFromUi(key: IMovieRequestModel) {
+        var index = this.movieRequests.indexOf(key, 0);
         if (index > -1) {
-            this.requests.splice(index, 1);
+            this.movieRequests.splice(index, 1);
         }
     }
 }

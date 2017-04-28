@@ -31,7 +31,7 @@ namespace Ombi.Auth
         /// The expiration time for the generated tokens.
         /// </summary>
         /// <remarks>The default is 7 Days.</remarks>
-        public TimeSpan Expiration { get; set; } = TimeSpan.FromDays(7);
+        public TimeSpan Expiration { get; set; } = TimeSpan.FromDays(1);
 
         /// <summary>
         /// The signing key to use when generating tokens.

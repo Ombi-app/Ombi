@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { NotificationService } from './services/notification.service';
 import { SettingsService } from './services/settings.service';
 import { AuthService } from './auth/auth.service';
+import { IdentityService } from './services/identity.service';
 
 import { ICustomizationSettings } from './interfaces/ISettings';
 
@@ -13,7 +14,8 @@ import { ICustomizationSettings } from './interfaces/ISettings';
 })
 export class AppComponent implements OnInit {
 
-    constructor(public notificationService: NotificationService, public authService: AuthService, private router: Router, private settingsService : SettingsService) {
+    constructor(public notificationService: NotificationService, public authService: AuthService, private router: Router, private settingsService: SettingsService
+    , private identityService: IdentityService) {
     }
     customizationSettings: ICustomizationSettings;
 
@@ -26,7 +28,8 @@ export class AppComponent implements OnInit {
             this.showNav = this.authService.loggedIn();
         });
 
-
+        this.isAdmin = this.identityService.hasRole("Admin");
+        this.isPowerUser = this.identityService.hasRole("PowerUser");
     }
 
     
@@ -36,5 +39,7 @@ export class AppComponent implements OnInit {
     }
 
     username:string;
-    showNav :boolean;
+    showNav: boolean;
+    isAdmin: boolean;
+    isPowerUser:boolean;
 }

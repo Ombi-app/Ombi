@@ -17,7 +17,7 @@ namespace Ombi.Api
     {
         private TraktClient Client { get; }
 
-        private static readonly string Encrypted = "z/56wM/oEkkCWEvSIZCrzQyUvvqmafQ3njqf0UNK5xuKbNYh5Wz8ocoG2QDa5y1DBkozLaKsGxORmAB1XUvwbnom8DVNo9gE++9GTuwxmGlLDD318PXpRmYmpKqNwFSKRZgF6ewiY9qR4t3iG0pGQwPA08FK3+H7kpOKAGJNR9RMDP9wwB6Vl4DuOiZb9/DETjzZ+/zId0ZqimrbN+PLrg==";
+        private static readonly string Encrypted = "134e568350f7427511e257a6534026660480cf9b93c77f7378f340603b67381d";
         private readonly string _apiKey = StringCipher.Decrypt(Encrypted, "ApiKey");
         public TraktApi()
         {

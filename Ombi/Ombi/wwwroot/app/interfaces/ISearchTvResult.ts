@@ -19,7 +19,14 @@
     siteRating: number,
     trailer: string,
     homepage:string,
-    episodes:IEpisodeModel[],
+    episodesRequested: IEpisodeModel[],
+    seasonNumbersRequested: number[],
+    requestAll:boolean,
+    approved: boolean,
+    requested: boolean,
+    available: boolean,
+    plexUrl: string,
+
 }
 
 export interface IEpisodeModel {

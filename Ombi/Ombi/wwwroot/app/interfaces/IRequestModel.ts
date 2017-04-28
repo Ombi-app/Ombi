@@ -1,24 +1,41 @@
-﻿export interface IRequestModel {
+﻿import { IEpisodeModel }from "./ISearchTvResult";
+
+export interface IMediaBase {
     id: number,
     providerId: number,
-    imdbId: string,
-    overview: string,
     title: string,
+    overview: string,
     posterPath: string,
     releaseDate: Date,
-    released: boolean,
-    type: RequestType,
     status: string,
-    approved: boolean,
-    requestedUsers: string[],
     requestedDate: Date,
-    releaseYear: string,
+    approved: boolean,
+    type: RequestType,
+    requested: boolean,
     available: boolean,
+    otherMessage: string,
+    adminNote: string,
+    requestedUser: string[],
     issueId: number,
     denied: boolean,
     deniedReason: string,
+    released:boolean
+}
 
+export interface IMovieRequestModel extends IMediaBase {
+    imdbId: string,
+}
 
+export interface ITvRequestModel extends IMediaBase {
+    imdbId: string,
+    tvDbId: string,
+    requestAll: boolean,
+    seasonNumbersRequested: number[],
+    episodes: IEpisodeModel[],
+    childRequests: ITvRequestModel[],
+    hasChildRequests: boolean,
+    rootFolderSelected: number,
+    firstAired:string,
 }
 
 export enum RequestType {

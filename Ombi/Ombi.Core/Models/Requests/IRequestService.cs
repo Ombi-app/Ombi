@@ -5,24 +5,24 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Core.Requests.Models
 {
-    public interface IRequestService
+    public interface IRequestService<T> where T : BaseRequestModel
     {
-        int AddRequest(RequestModel model);
-        Task<int> AddRequestAsync(RequestModel model);
-        void BatchDelete(IEnumerable<RequestModel> model);
-        void BatchUpdate(IEnumerable<RequestModel> model);
-        RequestModel CheckRequest(int providerId);
-        RequestModel CheckRequest(string musicId);
-        Task<RequestModel> CheckRequestAsync(int providerId);
-        Task<RequestModel> CheckRequestAsync(string musicId);
-        void DeleteRequest(RequestModel request);
+        int AddRequest(T model);
+        Task<int> AddRequestAsync(T model);
+        void BatchDelete(IEnumerable<T> model);
+        void BatchUpdate(IEnumerable<T> model);
+        T CheckRequest(int providerId);
+        T CheckRequest(string musicId);
+        Task<T> CheckRequestAsync(int providerId);
+        Task<T> CheckRequestAsync(string musicId);
+        void DeleteRequest(T request);
         Task DeleteRequestAsync(int request);
-        Task DeleteRequestAsync(RequestModel request);
-        RequestModel Get(int id);
-        IEnumerable<RequestModel> GetAll();
-        Task<IEnumerable<RequestModel>> GetAllAsync();
-        Task<IEnumerable<RequestModel>> GetAllAsync(int count, int position);
-        Task<RequestModel> GetAsync(int id);
-        RequestModel UpdateRequest(RequestModel model);
+        Task DeleteRequestAsync(T request);
+        T Get(int id);
+        IEnumerable<T> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAllAsync(int count, int position);
+        Task<T> GetAsync(int id);
+        T UpdateRequest(T model);
     }
 }

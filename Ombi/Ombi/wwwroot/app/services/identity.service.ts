@@ -4,19 +4,34 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import {IUser} from '../interfaces/IUser';
+import { IUser } from '../interfaces/IUser';
 
 
 @Injectable()
 export class IdentityService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private regularHttp : Http) {
+    constructor(http: AuthHttp, private regularHttp: Http) {
         super(http, '/api/v1/Identity/');
     }
-    createWizardUser(username:string,password:string): Observable<boolean> {
-        return this.regularHttp.post(`${this.url}/Wizard/`, JSON.stringify({username:username, password:password}), { headers: this.headers }).map(this.extractData);
+    createWizardUser(username: string, password: string): Observable<boolean> {
+        return this.regularHttp.post(`${this.url}/Wizard/`, JSON.stringify({ username: username, password: password }), { headers: this.headers }).map(this.extractData);
+    }
+
+    getUser(): Observable<IUser> {
+        return this.http.get(this.url).map(this.extractData);
     }
 
     getUsers(): Observable<IUser[]> {
         return this.http.get(`${this.url}/Users`).map(this.extractData);
+    }
+
+    hasRole(role: string): boolean {
+        var roles = localStorage.getItem("roles") as string[];
+        if (roles) {
+            if (roles.indexOf(role) > -1) {
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 }

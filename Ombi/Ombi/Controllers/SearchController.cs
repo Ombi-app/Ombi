@@ -64,5 +64,26 @@ namespace Ombi.Controllers
         {
             return await TvEngine.Search(searchTerm);
         }
+
+        //[HttpGet("tv/popular")]
+        //public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
+        //{
+        //    return await TvEngine.Popular();
+        //}
+        //[HttpGet("tv/anticiplated")]
+        //public async Task<IEnumerable<SearchTvShowViewModel>> AnticiplatedTv()
+        //{
+        //    return await TvEngine.Anticipated();
+        //}
+        //[HttpGet("tv/mostwatched")]
+        //public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
+        //{
+        //    return await TvEngine.MostWatches();
+        //}
+        //[HttpGet("tv/trending")]
+        //public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        //{
+        //    return await TvEngine.Trending();
+        //}
     }
 }

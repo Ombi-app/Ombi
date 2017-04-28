@@ -9,10 +9,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-
-            <div *ngIf="customizationSettings.applicationName; then aplicationNameBlock; else ombiBlock"></div>
-            <ng-template #aplicationNameBlock><a class="navbar-brand" [routerLink]="['/']">{{customizationSettings.applicationName}}</a></ng-template>
-            <ng-template #ombiBlock><a class="navbar-brand" [routerLink]="['/']">Ombi</a></ng-template>
+            <div *ngIf="customizationSettings">
+                <div *ngIf="customizationSettings.applicationName; then aplicationNameBlock; else ombiBlock"></div>
+                <ng-template #aplicationNameBlock><a class="navbar-brand" [routerLink]="['/']">{{customizationSettings.applicationName}}</a></ng-template>
+                <ng-template #ombiBlock><a class="navbar-brand" [routerLink]="['/']">Ombi</a></ng-template>
+            </div>
             
         </div>
 
@@ -26,7 +27,7 @@
 
             
             <ul class="nav navbar-nav navbar-right">
-                    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
+                    <li *ngIf="isAdmin" [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
                 <li  [routerLinkActive]="['active']" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Welcome {{username}} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">

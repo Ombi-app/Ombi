@@ -23,7 +23,7 @@ export class AuthService extends ServiceHelpers {
     }
 
     loggedIn() {
-        return tokenNotExpired();
+        return tokenNotExpired('id_token');
     }
 
     logout() {

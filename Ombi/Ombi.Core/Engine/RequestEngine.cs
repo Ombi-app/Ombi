@@ -6,6 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Hangfire;
 using Ombi.Api.TheMovieDb;
+using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
@@ -18,13 +19,15 @@ namespace Ombi.Core.Engine
 {
     public class RequestEngine : BaseMediaEngine, IRequestEngine
     {
-        public RequestEngine(IMovieDbApi movieApi, IRequestService requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
+        public RequestEngine(IMovieDbApi movieApi, ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
         {
             MovieApi = movieApi;
+            TvApi = tvApi;
             NotificationService = notificationService;
         }
         private IMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
+        private ITvMazeApi TvApi { get; }
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
@@ -40,7 +43,7 @@ namespace Ombi.Core.Engine
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
-            var existingRequest = await RequestService.CheckRequestAsync(model.Id);
+            var existingRequest = await MovieRequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
             {
                 return new RequestEngineResult
@@ -78,7 +81,7 @@ namespace Ombi.Core.Engine
             //        });
             //}
 
-            var requestModel = new RequestModel
+            var requestModel = new MovieRequestModel
             {
                 ProviderId = movieInfo.Id,
                 Type = RequestType.Movie,
@@ -130,9 +133,9 @@ namespace Ombi.Core.Engine
                 }
 
 
-                return await AddRequest(requestModel, /*settings,*/
+                return await AddMovieRequest(requestModel, /*settings,*/
                         $"{fullMovieName} has been successfully added!");
-                
+
             }
             catch (Exception e)
             {
@@ -147,7 +150,7 @@ namespace Ombi.Core.Engine
                     NotificationType = NotificationType.ItemAddedToFaultQueue
                 };
                 BackgroundJob.Enqueue(() => NotificationService.Publish(notification).Wait());
-                
+
                 //return Response.AsJson(new JsonResponseModel
                 //{
                 //    Result = true,
@@ -158,10 +161,58 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-
-        private async Task<RequestEngineResult> AddRequest(RequestModel model, string message)
+        public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-            await RequestService.AddRequestAsync(model);
+
+            var showInfo = await TvApi.ShowLookupByTheTvDbId(tv.Id);
+            DateTime.TryParse(showInfo.premiered, out DateTime firstAir);
+
+            string fullShowName = $"{showInfo.name} ({firstAir.Year})";
+            // For some reason the poster path is always http
+            var posterPath = showInfo.image?.medium.Replace("http:", "https:");
+            var model = new TvRequestModel
+            {
+                Type = RequestType.TvShow,
+                Overview = showInfo.summary.RemoveHtml(),
+                PosterPath = posterPath,
+                Title = showInfo.name,
+                ReleaseDate = firstAir,
+                Status = showInfo.status,
+                RequestedDate = DateTime.UtcNow,
+                Approved = false,
+                RequestedUsers = new List<string> { Username },
+                Issues = IssueState.None,
+                ImdbId = showInfo.externals?.imdb ?? string.Empty,
+                TvDbId = tv.Id.ToString(),
+                ProviderId = tv.Id,
+                SeasonsNumbersRequested = tv.SeasonNumbersRequested,
+                RequestAll = tv.RequestAll
+            };
+
+
+            var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
+            existingRequest?.ChildRequests.Add(model);
+
+            return null;
+        }
+
+        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<EpisodesModel> request)
+        {
+            var newRequest = request
+                .Select(r =>
+                    new EpisodesModel
+                    {
+                        SeasonNumber = r.SeasonNumber,
+                        EpisodeNumber = r.EpisodeNumber
+                    }).ToList();
+
+            return newRequest.Except(existing);
+        }
+
+
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequestModel model, string message)
+        {
+            await MovieRequestService.AddRequestAsync(model);
 
             if (ShouldSendNotification(model.Type))
             {
@@ -196,53 +247,46 @@ namespace Ombi.Core.Engine
             //    await RequestLimitRepo.UpdateAsync(usersLimit);
             //}
 
-            return new RequestEngineResult{RequestAdded = true};
+            return new RequestEngineResult { RequestAdded = true };
         }
 
-        public async Task<IEnumerable<RequestViewModel>> GetRequests(int count, int position)
+        public async Task<IEnumerable<MovieRequestModel>> GetMovieRequests(int count, int position)
         {
-            var allRequests = await RequestService.GetAllAsync(count, position);
-            var viewModel = MapToVm(allRequests);
-            return viewModel;
+            var allRequests = await MovieRequestService.GetAllAsync(count, position);
+            return allRequests;
         }
-        public async Task<IEnumerable<RequestViewModel>> SearchRequest(string search)
+        public async Task<IEnumerable<MovieRequestModel>> SearchMovieRequest(string search)
         {
-            var allRequests = await RequestService.GetAllAsync();
+            var allRequests = await MovieRequestService.GetAllAsync();
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
-            var viewModel = MapToVm(results);
-            return viewModel;
+            return results;
         }
-        public async Task<RequestViewModel> UpdateRequest(RequestViewModel request)
+        public async Task<MovieRequestModel> UpdateMovieRequest(MovieRequestModel request)
         {
-            var allRequests = await RequestService.GetAllAsync();
+            var allRequests = await MovieRequestService.GetAllAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
 
             results.Approved = request.Approved;
             results.Available = request.Available;
             results.Denied = request.Denied;
             results.DeniedReason = request.DeniedReason;
-            //results.AdminNote = request.AdminNote;
+            results.AdminNote = request.AdminNote;
             results.ImdbId = request.ImdbId;
-            results.Episodes = request.Episodes?.ToList() ?? new List<EpisodesModel>();
             results.IssueId = request.IssueId;
-            //results.Issues = request.Issues;
-            //results.OtherMessage = request.OtherMessage;
+            results.Issues = request.Issues;
+            results.OtherMessage = request.OtherMessage;
             results.Overview = request.Overview;
             results.PosterPath = request.PosterPath;
             results.RequestedUsers = request.RequestedUsers?.ToList() ?? new List<string>();
-            //results.RootFolderSelected = request.RootFolderSelected; 
 
 
-            var model = RequestService.UpdateRequest(results);
-            return MapToVm(new List<RequestModel>{model}).FirstOrDefault();
+            var model = MovieRequestService.UpdateRequest(results);
+            return model;
         }
 
-        public async Task RemoveRequest(int requestId)
+        public async Task RemoveMovieRequest(int requestId)
         {
-            await RequestService.DeleteRequestAsync(requestId);
+            await MovieRequestService.DeleteRequestAsync(requestId);
         }
-
-
-       
     }
 }

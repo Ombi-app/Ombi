@@ -20,7 +20,6 @@ namespace Ombi.Api.TvMaze
             var request = new Request("search/shows", Uri, HttpMethod.Get);
 
             request.AddQueryString("q", searchTerm);
-            //request.ContentHeaders.Add("Content-Type", "application/json");
             request.ContentHeaders.Add(new KeyValuePair<string, string>("Content-Type","application/json"));
 
             return await Api.Request<List<TvMazeSearch>>(request);

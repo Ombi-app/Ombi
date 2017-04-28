@@ -27,9 +27,9 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
 
         [HttpGet]
-        public async Task<UserDto> GetUser()
+        public async Task<UserViewModel> GetUser()
         {
-            return await IdentityManager.GetUser(this.HttpContext.User.Identity.Name);
+            return  Mapper.Map<UserViewModel>(await IdentityManager.GetUser(this.HttpContext.User.Identity.Name));
         }
 
 

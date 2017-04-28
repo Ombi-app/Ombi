@@ -13,7 +13,7 @@
          (scrolled)="loadMore()">
 
 
-        <div *ngFor="let request of requests">
+        <div *ngFor="let request of movieRequests">
 
 
             <div class="row">
@@ -62,7 +62,7 @@
 
                     {{/if}}
                     {{/if_eq}}-->
-                    <div *ngIf="request.requestedUsers">Requested By: {{request.requestedUsers}}</div>
+                    <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span></div>
 
                     <div>Requested Date: {{request.requestedDate | date}}</div>
                     <!--{{#if admin}}
@@ -79,7 +79,7 @@
                     </div>-->
                 </div>
                 <div class="col-sm-3 col-sm-push-3">
-                    <div *ngIf="request.admin">
+                    <div *ngIf="isAdmin">
                         <div *ngIf="!request.approved">
                             <form>
                                 <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />

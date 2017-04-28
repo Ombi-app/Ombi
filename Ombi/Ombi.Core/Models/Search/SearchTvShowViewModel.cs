@@ -5,10 +5,6 @@ namespace Ombi.Core.Models.Search
 {
     public class SearchTvShowViewModel : SearchViewModel
     {
-        public SearchTvShowViewModel()
-        {
-            Episodes = new List<EpisodesModel>();
-        }
         public int Id { get; set; }
         public string SeriesName { get; set; }
         public List<string> Aliases { get; set; }
@@ -27,7 +23,6 @@ namespace Ombi.Core.Models.Search
         public string Rating { get; set; }
         public string ImdbId { get; set; }
         public int SiteRating { get; set; }
-        public List<EpisodesModel> Episodes { get; set; }
 
         /// <summary>
         /// This is used from the Trakt API
@@ -43,5 +38,23 @@ namespace Ombi.Core.Models.Search
         /// The trailer.
         /// </value>
         public string Homepage { get; set; }
+
+        /// <summary>
+        /// This is for when the users requests multiple seasons or a single season
+        /// </summary>
+        public List<int> SeasonNumbersRequested { get; set; } = new List<int>();
+
+        /// <summary>
+        /// If we have requested some episodes
+        /// </summary>
+        public List<EpisodesModel> EpisodesRequested { get; set; } = new List<EpisodesModel>();
+
+        /// <summary>
+        /// If we are requesting the entire series
+        /// </summary>
+        public bool RequestAll { get; set; }
+
+        public bool SpecificSeasonsRequested => SeasonNumbersRequested.Count > 0;
+        public bool SpecificEpisodesRequested => EpisodesRequested.Count > 0;
     }
 }

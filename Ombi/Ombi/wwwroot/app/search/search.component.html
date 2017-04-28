@@ -7,7 +7,7 @@
 <ul id="nav-tabs" class="nav nav-tabs" role="tablist">
 
     <li role="presentation" class="active">
-        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectTab('movies')"><i class="fa fa-film"></i> Movies</a>
+        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-film"></i> Movies</a>
     </li>
 
     <!--<li role="presentation">
@@ -16,7 +16,7 @@
     </li>-->
 
     <li role="presentation">
-        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTab('tv')"><i class="fa fa-television"></i> TV Shows</a>
+        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-television"></i> TV Shows</a>
 
     </li>
     <!--
@@ -29,7 +29,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
 
-    <div *ngIf="showMovie">
+    <div [hidden]="!showMovie">
         <movie-search></movie-search>
     </div>
 
@@ -52,7 +52,7 @@
     </div>-->
 
 
-    <div *ngIf="showTv">
+    <div [hidden]="!showTv">
         <tv-search></tv-search>
 
     </div>

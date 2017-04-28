@@ -17,17 +17,12 @@ namespace Ombi.Controllers
         }
 
         private IRequestEngine RequestEngine { get; }
+        
 
-        [HttpGet]
-        public async Task<IEnumerable<RequestViewModel>> GetRequests()
+        [HttpGet("movie/{count:int}/{position:int}", Name = "GetRequestsByCount")]
+        public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
         {
-            return await RequestEngine.GetRequests();
-        }
-
-        [HttpGet("{count:int}/{position:int}", Name = "GetRequestsByCount")]
-        public async Task<IEnumerable<RequestViewModel>> GetRequests(int count, int position)
-        {
-            return await RequestEngine.GetRequests(count, position);
+            return await RequestEngine.GetMovieRequests(count, position);
         }
 
         [HttpPost("movie")]
@@ -36,23 +31,29 @@ namespace Ombi.Controllers
             return await RequestEngine.RequestMovie(movie);
         }
 
-        [HttpGet("search/{searchTerm}")]
-        public async Task<IEnumerable<RequestViewModel>> Search(string searchTerm)
+        //[HttpPost("tv")]
+        //public async Task<RequestEngineResult> RequestTv([FromBody]SearchTvShowViewModel tv)
+        //{
+        //    return await RequestEngine.RequestMovie();
+        //}
+
+        [HttpGet("movie/search/{searchTerm}")]
+        public async Task<IEnumerable<MovieRequestModel>> Search(string searchTerm)
         {
             
-            return await RequestEngine.SearchRequest(searchTerm);
+            return await RequestEngine.SearchMovieRequest(searchTerm);
         }
 
-        [HttpDelete("{requestId:int}")]
+        [HttpDelete("movie/{requestId:int}")]
         public async Task DeleteRequest(int requestId)
         {
-            await RequestEngine.RemoveRequest(requestId);
+            await RequestEngine.RemoveMovieRequest(requestId);
         }
 
-        [HttpPost]
-        public async Task<RequestViewModel> UpdateRequest([FromBody]RequestViewModel model)
+        [HttpPut("movie")]
+        public async Task<MovieRequestModel> UpdateRequest([FromBody]MovieRequestModel model)
         {
-            return await RequestEngine.UpdateRequest(model);
+            return await RequestEngine.UpdateMovieRequest(model);
         }
     }
 }

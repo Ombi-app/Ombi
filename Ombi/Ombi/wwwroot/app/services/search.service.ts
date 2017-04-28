@@ -12,6 +12,7 @@ export class SearchService extends ServiceAuthHelpers {
         super(http, "/api/v1/search");
     }
 
+    // Movies
     searchMovie(searchTerm: string): Observable<ISearchMovieResult[]> {
         return this.http.get(`${this.url}/Movie/` + searchTerm).map(this.extractData);
     }
@@ -32,7 +33,20 @@ export class SearchService extends ServiceAuthHelpers {
         return this.http.post(`${this.url}/Movie/extrainfo`, JSON.stringify(movies), { headers: this.headers }).map(this.extractData);
     }
 
+    // TV
     searchTv(searchTerm: string): Observable<ISearchTvResult[]> {
         return this.http.get(`${this.url}/Tv/` + searchTerm).map(this.extractData);
+    } 
+    popularTv(): Observable<ISearchTvResult[]> {
+        return this.http.get(`${this.url}/Tv/popular`).map(this.extractData);
+    }
+    mostWatchedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get(`${this.url}/Tv/mostwatched`).map(this.extractData);
+    }
+    anticiplatedTv(): Observable<ISearchTvResult[]> {
+        return this.http.get(`${this.url}/Tv/anticipated`).map(this.extractData);
+    }
+    trendingTv(): Observable<ISearchTvResult[]> {
+        return this.http.get(`${this.url}/Tv/trending`).map(this.extractData);
     }
 }

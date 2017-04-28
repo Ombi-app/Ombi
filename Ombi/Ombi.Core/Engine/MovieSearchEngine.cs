@@ -19,7 +19,7 @@ namespace Ombi.Core.Engine
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
 
-        public MovieSearchEngine(IPrincipal identity, IRequestService service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings,
+        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings,
             ILogger<MovieSearchEngine> logger)
             : base(identity, service)
         {
@@ -46,7 +46,7 @@ namespace Ombi.Core.Engine
             }
 
             var retVal = new List<SearchMovieViewModel>();
-            Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
+            Dictionary<int, MovieRequestModel> dbMovies = await GetMovieRequests();
 
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
@@ -120,7 +120,7 @@ namespace Ombi.Core.Engine
         private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(IEnumerable<MovieSearchResult> movies)
         {
             var viewMovies = new List<SearchMovieViewModel>();
-            Dictionary<int, RequestModel> dbMovies = await GetRequests(RequestType.Movie);
+            Dictionary<int, MovieRequestModel> dbMovies = await GetMovieRequests();
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
@@ -134,7 +134,7 @@ namespace Ombi.Core.Engine
         }
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
-            Dictionary<int, RequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+            Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             if (plexSettings.Enable)
             {
@@ -176,7 +176,7 @@ namespace Ombi.Core.Engine
             return viewMovie;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, RequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             return await ProcessSingleMovie(viewMovie, existingRequests, plexSettings, embySettings);
