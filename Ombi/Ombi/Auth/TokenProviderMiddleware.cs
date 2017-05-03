@@ -60,7 +60,7 @@ namespace Ombi.Auth
         private async Task GenerateToken(HttpContext context)
         {
             var request = context.Request;
-            UserAuthModel userInfo; // TODO use a stong type
+            UserAuthModel userInfo;
 
             using (var bodyReader = new StreamReader(request.Body))
             {

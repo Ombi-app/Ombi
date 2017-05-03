@@ -10,5 +10,6 @@ namespace Ombi.Store.Repository
         Task<User> GetUser(string username);
         Task<IEnumerable<User>> GetUsers();
         Task DeleteUser(User user);
+        Task<User> UpdateUser(User user);
     }
 }

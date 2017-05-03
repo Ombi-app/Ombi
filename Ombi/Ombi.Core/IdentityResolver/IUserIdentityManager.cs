@@ -11,5 +11,6 @@ namespace Ombi.Core.IdentityResolver
         Task<UserDto> GetUser(string username);
         Task<IEnumerable<UserDto>> GetUsers();
         Task DeleteUser(UserDto user);
+        Task<UserDto> UpdateUser(UserDto userDto);
     }
 }

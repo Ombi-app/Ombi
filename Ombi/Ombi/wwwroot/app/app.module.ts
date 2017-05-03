@@ -36,7 +36,7 @@ import { StatusService } from './services/status.service';
 import { SettingsModule } from './settings/settings.module';
 import { WizardModule } from './wizard/wizard.module';
 
-import { ButtonModule } from 'primeng/primeng';
+import { ButtonModule, DialogModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
 
@@ -64,7 +64,8 @@ const routes: Routes = [
         SharedModule,
         InfiniteScrollModule,
         AuthModule,
-        WizardModule
+        WizardModule,
+        DialogModule
     ],
     declarations: [
         AppComponent,

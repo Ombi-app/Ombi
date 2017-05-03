@@ -22,7 +22,10 @@
                 <li [routerLinkActive]="['active']"><a  [routerLink]="['/search']"><i class="fa fa-search"></i> Search</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li [routerLinkActive]="['active']"><a  [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
+            </ul>
+            <ul *ngIf="isAdmin || isPowerUser" class="nav navbar-nav">
+                <li [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
             </ul>
 
             

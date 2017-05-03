@@ -16,11 +16,13 @@ namespace Ombi.Mapping.Profiles
             CreateMap<User, UserDto>().ReverseMap();
 
 
-            CreateMap<UserDto, UserViewModel>()
-                .ForMember(dest => dest.Claims, opts => opts.MapFrom(src => src.Claims.Select(x => x.Value).ToList())); // Map the claims to a List<string>
+            CreateMap<Claim, ClaimCheckboxes>().ConvertUsing<ClaimsConverter>();
 
-            CreateMap<string, Claim>()
-                .ConstructUsing(str => new Claim(ClaimTypes.Role, str)); // This is used for the UserViewModel List<string> claims => UserDto List<claim>
+            CreateMap<UserDto, UserViewModel>().ForMember(x => x.Password, opt => opt.Ignore());
+
+            CreateMap<ClaimCheckboxes, Claim>()
+                .ConstructUsing(checkbox => checkbox.Enabled ? new Claim(ClaimTypes.Role, checkbox.Value) : null);
+                // This is used for the UserViewModel List<string> claims => UserDto List<claim>
             CreateMap<UserViewModel, UserDto>();
 
             CreateMap<string, DateTime>().ConvertUsing<StringToDateTimeConverter>();

@@ -84,6 +84,12 @@ namespace Ombi.Core.IdentityResolver
             await UserRepository.DeleteUser(Mapper.Map<User>(user));
         }
 
+        public async Task<UserDto> UpdateUser(UserDto userDto)
+        {
+            var user = Mapper.Map<User>(userDto);
+            return Mapper.Map<UserDto>(await UserRepository.UpdateUser(user));
+        }
+
         private UserHash HashPassword(string password)
         {
             // generate a 128-bit salt using a secure PRNG

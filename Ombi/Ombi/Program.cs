@@ -20,6 +20,7 @@ namespace Ombi
                 .UseStartup<Startup>()
                 .Build();
 
+
             host.Run();
         }
     }

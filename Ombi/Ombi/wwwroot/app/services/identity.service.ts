@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IUser } from '../interfaces/IUser';
+import { IUser, ICheckbox } from '../interfaces/IUser';
 
 
 @Injectable()
@@ -22,6 +22,18 @@ export class IdentityService extends ServiceAuthHelpers {
 
     getUsers(): Observable<IUser[]> {
         return this.http.get(`${this.url}/Users`).map(this.extractData);
+    }
+
+    getAllAvailableClaims(): Observable<ICheckbox[]> {
+        return this.http.get(`${this.url}/Claims`).map(this.extractData);
+    }
+
+    createUser(user: IUser): Observable<IUser> {
+        return this.http.post(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+    }
+
+    updateUser(user: IUser): Observable<IUser> {
+        return this.http.put(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
     }
 
     hasRole(role: string): boolean {
