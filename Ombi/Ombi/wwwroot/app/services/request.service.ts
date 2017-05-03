@@ -6,7 +6,7 @@ import { ServiceAuthHelpers } from './service.helpers';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IMovieRequestModel } from '../interfaces/IRequestModel';
+import { IMovieRequestModel, ITvRequestModel } from '../interfaces/IRequestModel';
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
@@ -22,11 +22,11 @@ export class RequestService extends ServiceAuthHelpers {
         return this.http.post(`${this.url}/TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
     }
 
-    getRequests(count: number, position: number): Observable<IMovieRequestModel[]> {
+    getMovieRequests(count: number, position: number): Observable<IMovieRequestModel[]> {
         return this.http.get(`${this.url}/movie/${count}/${position}`).map(this.extractData);
     }
 
-    searchRequests(search: string): Observable<IMovieRequestModel[]> {
+    searchMovieRequests(search: string): Observable<IMovieRequestModel[]> {
         return this.http.get(`${this.url}/movie/search/${search}`).map(this.extractData);
     }
 
@@ -34,7 +34,23 @@ export class RequestService extends ServiceAuthHelpers {
         this.http.delete(`${this.url}/movie/${request.id}`).map(this.extractData).subscribe();
     }
 
-    updateRequest(request: IMovieRequestModel): Observable<IMovieRequestModel> {
+    updateMovieRequest(request: IMovieRequestModel): Observable<IMovieRequestModel> {
         return this.http.post(`${this.url}/movie/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
+    }
+
+    getTvRequests(count: number, position: number): Observable<ITvRequestModel[]> {
+        return this.http.get(`${this.url}/tv/${count}/${position}`).map(this.extractData);
+    }
+
+    searchTvRequests(search: string): Observable<ITvRequestModel[]> {
+        return this.http.get(`${this.url}/tv/search/${search}`).map(this.extractData);
+    }
+
+    removeTvRequest(request: ITvRequestModel) {
+        this.http.delete(`${this.url}/tv/${request.id}`).map(this.extractData).subscribe();
+    }
+
+    updateTvRequest(request: ITvRequestModel): Observable<ITvRequestModel> {
+        return this.http.post(`${this.url}/tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
 }

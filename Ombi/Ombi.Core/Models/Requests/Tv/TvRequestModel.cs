@@ -12,7 +12,7 @@ namespace Ombi.Core.Models.Requests
         
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
-       public bool RequestAll { get; set; }
+        public bool RequestAll { get; set; }
         public List<int> SeasonsNumbersRequested { get; set; }
         public List<EpisodesModel> Episodes { get; set; }
 

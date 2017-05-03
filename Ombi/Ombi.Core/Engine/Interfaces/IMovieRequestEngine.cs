@@ -6,7 +6,7 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Core.Engine
 {
-    public interface IRequestEngine
+    public interface IMovieRequestEngine
     {
         Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model);
         bool ShouldAutoApprove(RequestType requestType);

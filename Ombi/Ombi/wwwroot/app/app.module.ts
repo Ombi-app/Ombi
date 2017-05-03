@@ -11,10 +11,16 @@ import { HttpModule } from '@angular/http';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 
 // Components
+// Search
 import { SearchComponent } from './search/search.component';
 import { MovieSearchComponent } from './search/moviesearch.component';
 import { TvSearchComponent } from './search/tvsearch.component';
+
+// Request
 import { RequestComponent } from './requests/request.component';
+import { MovieRequestsComponent } from './requests/movierequests.component';
+import { TvRequestsComponent } from './requests/tvrequests.component';
+
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { UserManagementComponent } from './usermanagement/usermanagement.component';
@@ -76,7 +82,9 @@ const routes: Routes = [
         MovieSearchComponent,
         TvSearchComponent,
         LandingPageComponent,
-        UserManagementComponent
+        UserManagementComponent,
+        MovieRequestsComponent,
+        TvRequestsComponent
     ],
     providers: [
         SearchService,

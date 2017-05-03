@@ -46,7 +46,8 @@ namespace Ombi.DependencyInjection
         public static IServiceCollection RegisterEngines(this IServiceCollection services)
         {
             services.AddTransient<IMovieEngine, MovieSearchEngine>();
-            services.AddTransient<IRequestEngine, RequestEngine>();
+            services.AddTransient<IMovieRequestEngine, MovieRequestEngine>();
+            services.AddTransient<ITvRequestEngine, TvRequestEngine>();
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
             return services;
         }
