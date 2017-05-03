@@ -17,17 +17,15 @@ using Ombi.Notifications.Models;
 
 namespace Ombi.Core.Engine
 {
-    public class RequestEngine : BaseMediaEngine, IRequestEngine
+    public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
-        public RequestEngine(IMovieDbApi movieApi, ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
+        public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
         {
             MovieApi = movieApi;
-            TvApi = tvApi;
             NotificationService = notificationService;
         }
         private IMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
-        private ITvMazeApi TvApi { get; }
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
@@ -161,41 +159,7 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
-        {
-
-            var showInfo = await TvApi.ShowLookupByTheTvDbId(tv.Id);
-            DateTime.TryParse(showInfo.premiered, out DateTime firstAir);
-
-            string fullShowName = $"{showInfo.name} ({firstAir.Year})";
-            // For some reason the poster path is always http
-            var posterPath = showInfo.image?.medium.Replace("http:", "https:");
-            var model = new TvRequestModel
-            {
-                Type = RequestType.TvShow,
-                Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = posterPath,
-                Title = showInfo.name,
-                ReleaseDate = firstAir,
-                Status = showInfo.status,
-                RequestedDate = DateTime.UtcNow,
-                Approved = false,
-                RequestedUsers = new List<string> { Username },
-                Issues = IssueState.None,
-                ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                TvDbId = tv.Id.ToString(),
-                ProviderId = tv.Id,
-                SeasonsNumbersRequested = tv.SeasonNumbersRequested,
-                RequestAll = tv.RequestAll
-            };
-
-
-            var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
-            existingRequest?.ChildRequests.Add(model);
-
-            return null;
-        }
-
+        
         private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<EpisodesModel> request)
         {
             var newRequest = request

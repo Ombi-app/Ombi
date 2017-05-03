@@ -11,49 +11,77 @@ namespace Ombi.Controllers
     [Authorize]
     public class RequestController : BaseV1ApiController
     {
-        public RequestController(IRequestEngine engine)
+        public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine)
         {
-            RequestEngine = engine;
+            MovieRequestEngine = engine;
+            TvRequestEngine = tvRequestEngine;
         }
 
-        private IRequestEngine RequestEngine { get; }
-        
+        private IMovieRequestEngine MovieRequestEngine { get; }
+        private ITvRequestEngine TvRequestEngine { get; }
 
-        [HttpGet("movie/{count:int}/{position:int}", Name = "GetRequestsByCount")]
+
+        [HttpGet("movie/{count:int}/{position:int}")]
         public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
         {
-            return await RequestEngine.GetMovieRequests(count, position);
+            return await MovieRequestEngine.GetMovieRequests(count, position);
         }
 
         [HttpPost("movie")]
         public async Task<RequestEngineResult> RequestMovie([FromBody]SearchMovieViewModel movie)
         {
-            return await RequestEngine.RequestMovie(movie);
+            return await MovieRequestEngine.RequestMovie(movie);
         }
-
-        //[HttpPost("tv")]
-        //public async Task<RequestEngineResult> RequestTv([FromBody]SearchTvShowViewModel tv)
-        //{
-        //    return await RequestEngine.RequestMovie();
-        //}
 
         [HttpGet("movie/search/{searchTerm}")]
         public async Task<IEnumerable<MovieRequestModel>> Search(string searchTerm)
         {
-            
-            return await RequestEngine.SearchMovieRequest(searchTerm);
+
+            return await MovieRequestEngine.SearchMovieRequest(searchTerm);
         }
 
         [HttpDelete("movie/{requestId:int}")]
         public async Task DeleteRequest(int requestId)
         {
-            await RequestEngine.RemoveMovieRequest(requestId);
+            await MovieRequestEngine.RemoveMovieRequest(requestId);
         }
 
         [HttpPut("movie")]
         public async Task<MovieRequestModel> UpdateRequest([FromBody]MovieRequestModel model)
         {
-            return await RequestEngine.UpdateMovieRequest(model);
+            return await MovieRequestEngine.UpdateMovieRequest(model);
+        }
+
+        [HttpGet("tv/{count:int}/{position:int}")]
+        public async Task<IEnumerable<TvRequestModel>> GetTvRequests(int count, int position)
+        {
+            return await TvRequestEngine.GetTvRequests(count, position);
+        }
+
+        [HttpPost("tv")]
+        public async Task<RequestEngineResult> RequestTv([FromBody]SearchTvShowViewModel tv)
+        {
+            return await TvRequestEngine.RequestTvShow(tv);
+        }
+
+
+        [HttpGet("tv/search/{searchTerm}")]
+        public async Task<IEnumerable<TvRequestModel>> SearchTv(string searchTerm)
+        {
+
+            return await TvRequestEngine.SearchTvRequest(searchTerm);
+        }
+
+        [HttpDelete("tv/{requestId:int}")]
+        public async Task DeleteTvRequest(int requestId)
+        {
+            await TvRequestEngine.RemoveTvRequest(requestId);
+        }
+
+        [HttpPut("tv")]
+        public async Task<TvRequestModel> UpdateRequest([FromBody]TvRequestModel model)
+        {
+            return await TvRequestEngine.UpdateTvRequest(model);
         }
     }
 }
