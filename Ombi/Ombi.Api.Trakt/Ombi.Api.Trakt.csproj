@@ -9,4 +9,10 @@
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="TraktApiSharp">
+      <HintPath>..\Assemblies\TraktApiSharp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

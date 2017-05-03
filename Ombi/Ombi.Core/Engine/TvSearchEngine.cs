@@ -3,7 +3,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using AutoMapper;
-//using Ombi.Api.Trakt;
+using Ombi.Api.Trakt;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
@@ -18,21 +18,21 @@ namespace Ombi.Core.Engine
     {
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings/*, ITraktApi trakt*/) 
+            ISettingsService<EmbySettings> embySettings, ITraktApi trakt) 
             : base(identity, service)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
             PlexSettings = plexSettings;
             EmbySettings = embySettings;
-            //TraktApi = trakt;
+            TraktApi = trakt;
         }
 
         private ITvMazeApi TvMazeApi { get; }
         private IMapper Mapper { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
-        //private ITraktApi TraktApi { get; }
+        private ITraktApi TraktApi { get; }
 
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
@@ -46,27 +46,27 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
-        //{
-        //    var result = await TraktApi.GetPopularShows();
-        //    return await ProcessResults(result);
-        //}
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
+        {
+            var result = await TraktApi.GetPopularShows();
+            return await ProcessResults(result);
+        }
 
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
-        //{
-        //    var result = await TraktApi.GetAnticipatedShows();
-        //    return await ProcessResults(result);
-        //}
-        //public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
-        //{
-        //    var result = await TraktApi.GetMostWatchesShows();
-        //    return await ProcessResults(result);
-        //}
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
-        //{
-        //    var result = await TraktApi.GetTrendingShows();
-        //    return await ProcessResults(result);
-        //}
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
+        {
+            var result = await TraktApi.GetAnticipatedShows();
+            return await ProcessResults(result);
+        }
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
+        {
+            var result = await TraktApi.GetMostWatchesShows();
+            return await ProcessResults(result);
+        }
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        {
+            var result = await TraktApi.GetTrendingShows();
+            return await ProcessResults(result);
+        }
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {

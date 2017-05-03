@@ -7,9 +7,9 @@ namespace Ombi.Core.Engine
     public interface ITvSearchEngine
     {
         Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm);
-        //Task<IEnumerable<SearchTvShowViewModel>> Popular();
-        //Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
-        //Task<IEnumerable<SearchTvShowViewModel>> MostWatches();
-        //Task<IEnumerable<SearchTvShowViewModel>> Trending();
+        Task<IEnumerable<SearchTvShowViewModel>> Popular();
+        Task<IEnumerable<SearchTvShowViewModel>> Anticipated();
+        Task<IEnumerable<SearchTvShowViewModel>> MostWatches();
+        Task<IEnumerable<SearchTvShowViewModel>> Trending();
     }
 }
