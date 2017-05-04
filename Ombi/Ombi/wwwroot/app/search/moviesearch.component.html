@@ -22,6 +22,10 @@
     <br />
     <!-- Movie content -->
     <div id="movieList">
+        <div *ngIf="searchApplied && movieResults?.length <= 0" class='no-search-results'>
+            <i class='fa fa-film no-search-results-icon'></i><div class='no-search-results-text'>Sorry, we didn't find any results!</div>
+        </div>
+
         <div *ngFor="let result of movieResults">
             <div class="row">
                 <div id="{{id}}imgDiv" class="col-sm-2">
@@ -61,22 +65,22 @@
                         <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
 
 
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
                     </div>
-                    <p style="font-size:0.9rem !important">{{result.overview}}</p>
+                    <p style="font-size: 0.9rem !important">{{result.overview}}</p>
                 </div>
 
 
                 <div class="col-sm-2">
-                    <input name="{{type}}Id" type="text" value="{{result.id}}" hidden="hidden" />
+                    <input name="{{type}}Id" type="text" value="{{result.id}}" hidden="hidden"/>
 
                     <div *ngIf="result.available">
                         <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
 
                         <div *ngIf="result.url">
-                            <br />
-                            <br />
+                            <br/>
+                            <br/>
                             <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{result.url}}" target="_blank"><i class="fa fa-eye"></i> View In Plex</a>
 
                         </div>
@@ -92,7 +96,7 @@
                     <!--{{#if_eq type "tv"}}
                     {{#if_eq tvFullyAvailable true}}
                     @*//TODO Not used yet*@
-                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br />
+                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br/>
                     {{else}}
                     {{#if_eq enableTvRequestsForOnlySeries true}}
                     <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}} disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
@@ -117,7 +121,7 @@
                     {{/if_eq}}
                     {{#if available}}
                     {{#if url}}
-                    <br />
+                    <br/>
                     <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
                     {{/if}}
                     {{/if}}
@@ -125,10 +129,10 @@
                     {{/if_eq}}-->
 
 
-                    <br />
+                    <br/>
                     <div *ngIf="result.available">
-                        <input name="providerId" type="text" value="{{id}}" hidden="hidden" />
-                        <input name="type" type="text" value="{{type}}" hidden="hidden" />
+                        <input name="providerId" type="text" value="{{id}}" hidden="hidden"/>
+                        <input name="type" type="text" value="{{type}}" hidden="hidden"/>
                         <div class="dropdown">
                             <button class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                 <i class="fa fa-exclamation"></i> @UI.Search_ReportIssue
@@ -147,7 +151,7 @@
                 </div>
 
             </div>
-            <hr />
+            <hr/>
         </div>
 
     </div>

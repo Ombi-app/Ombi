@@ -91,7 +91,9 @@ export class TvRequestsComponent implements OnInit {
     }
 
     private loadInit() {
-        this.requestService.getTvRequests(this.amountToLoad, 0).subscribe(x => this.tvRequests = x);
+        this.requestService.getTvRequests(this.amountToLoad, 0).subscribe(x => {
+            this.tvRequests = x;
+        });
         this.isAdmin = this.identityService.hasRole("Admin");
     }
 

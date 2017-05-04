@@ -35,6 +35,7 @@ namespace Ombi.Core.Engine
             var posterPath = showInfo.image?.medium.Replace("http:", "https:");
             var model = new TvRequestModel
             {
+                Id = tv.Id,
                 Type = RequestType.TvShow,
                 Overview = showInfo.summary.RemoveHtml(),
                 PosterPath = posterPath,

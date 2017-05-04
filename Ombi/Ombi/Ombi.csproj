@@ -49,12 +49,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="TraktApiSharp">
-      <HintPath>..\Assemblies\TraktApiSharp.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="wwwroot\app\interfaces\ISearchMovieResult - Copy.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

@@ -22,6 +22,7 @@ export class MovieSearchComponent implements OnInit {
     searchChanged: Subject<string> = new Subject<string>();
     movieResults: ISearchMovieResult[];
     result: IRequestEngineResult;
+    searchApplied  = false;
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
         this.searchChanged
@@ -35,7 +36,7 @@ export class MovieSearchComponent implements OnInit {
                 }
                 this.searchService.searchMovie(this.searchText).subscribe(x => {
                     this.movieResults = x;
-
+                    this.searchApplied = true;
                     // Now let's load some exta info including IMDBId
                     // This way the search is fast at displaying results.
                     this.getExtaInfo();
@@ -105,6 +106,7 @@ export class MovieSearchComponent implements OnInit {
 
     private clearResults() {
         this.movieResults = [];
+        this.searchApplied = false;
     }
 
 }

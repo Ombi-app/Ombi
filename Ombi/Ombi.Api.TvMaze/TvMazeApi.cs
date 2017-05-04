@@ -2,19 +2,24 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.TvMaze.Models;
+using Ombi.Helpers;
 
 namespace Ombi.Api.TvMaze
 {
     public class TvMazeApi : ITvMazeApi
     {
-        public TvMazeApi()
+        public TvMazeApi(ILogger<TvMazeApi> logger)
         {
             Api = new Ombi.Api.Api();
+            Logger = logger;
             //Mapper = mapper;
         }
         private string Uri = "http://api.tvmaze.com";
         private Api Api { get; }
+        private ILogger<TvMazeApi> Logger { get; }
+
         public async Task<List<TvMazeSearch>> Search(string searchTerm)
         {
             var request = new Request("search/shows", Uri, HttpMethod.Get);
@@ -28,7 +33,7 @@ namespace Ombi.Api.TvMaze
         public async Task<TvMazeShow> ShowLookup(int showId)
         {
             var request = new Request($"shows/{showId}", Uri, HttpMethod.Get);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddContentHeader("Content-Type", "application/json");
 
             return await Api.Request<TvMazeShow>(request);
         }
@@ -38,7 +43,7 @@ namespace Ombi.Api.TvMaze
 
             var request = new Request($"shows/{showId}/episodes", Uri, HttpMethod.Get);
 
-            request.AddHeader("Content-Type", "application/json");
+            request.AddContentHeader("Content-Type", "application/json");
 
             return await Api.Request<List<TvMazeEpisodes>>(request);
         }
@@ -46,7 +51,7 @@ namespace Ombi.Api.TvMaze
         public async Task<TvMazeShow> ShowLookupByTheTvDbId(int theTvDbId)
         {
             var request = new Request($"lookup/shows?thetvdb={theTvDbId}", Uri, HttpMethod.Get);
-            request.AddHeader("Content-Type", "application/json");
+            request.AddContentHeader("Content-Type", "application/json");
             try
             {
                 var obj = await Api.Request<TvMazeShow>(request);
@@ -66,7 +71,7 @@ namespace Ombi.Api.TvMaze
             }
             catch (Exception e)
             {
-                // TODO
+                Logger.LogError(LoggingEvents.ApiException, e, "Exception when calling ShowLookupByTheTvDbId with id:{0}",theTvDbId);
                 return null;
             }
         }
@@ -75,7 +80,7 @@ namespace Ombi.Api.TvMaze
         {
             var request = new Request($"shows/{id}/seasons", Uri, HttpMethod.Get);
 
-            request.AddHeader("Content-Type", "application/json");
+            request.AddContentHeader("Content-Type", "application/json");
 
             return await Api.Request<List<TvMazeSeasons>>(request);
         }

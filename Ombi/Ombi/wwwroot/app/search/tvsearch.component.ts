@@ -22,6 +22,7 @@ export class TvSearchComponent implements OnInit {
     searchChanged = new Subject<string>();
     tvResults: ISearchTvResult[];
     result: IRequestEngineResult;
+    searchApplied = false;
 
     constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
         this.searchChanged
@@ -35,6 +36,7 @@ export class TvSearchComponent implements OnInit {
                 }
                 this.searchService.searchTv(this.searchText).subscribe(x => {
                     this.tvResults = x;
+                    this.searchApplied = true;
                 });
             });
     }
@@ -98,6 +100,7 @@ export class TvSearchComponent implements OnInit {
 
     private clearResults() {
         this.tvResults = [];
+        this.searchApplied = false;
     }
 
 }

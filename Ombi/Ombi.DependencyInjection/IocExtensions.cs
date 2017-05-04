@@ -10,7 +10,6 @@ using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Sonarr;
 using Ombi.Api.TheMovieDb;
-//using Ombi.Api.Trakt;
 using Ombi.Api.TvMaze;
 using Ombi.Core;
 using Ombi.Core.Engine;
@@ -59,7 +58,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmbyApi, EmbyApi>();
             services.AddTransient<ISonarrApi, SonarrApi>();
             services.AddTransient<ITvMazeApi, TvMazeApi>();
-            //services.AddTransient<ITraktApi, TraktApi>();
             return services;
         }
 

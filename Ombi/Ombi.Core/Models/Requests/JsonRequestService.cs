@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Ombi.Core.Requests.Models;
 using Ombi.Helpers;
@@ -8,12 +9,14 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Models.Requests
 {
-    public class JsonRequestService<T> : IRequestService<T> where T:BaseRequestModel
+    public class JsonRequestService<T> : IRequestService<T> where T : BaseRequestModel
     {
         public JsonRequestService(IRequestRepository repo)
         {
             Repo = repo;
+            RequestType = typeof(T) == typeof(TvRequestModel) ? RequestType.TvShow : RequestType.Movie;
         }
+        private RequestType RequestType { get; }
         private IRequestRepository Repo { get; }
         public int AddRequest(T model)
         {
@@ -28,13 +31,15 @@ namespace Ombi.Core.Models.Requests
             var entity = new RequestBlobs { Type = model.Type, Content = ByteConverterHelper.ReturnBytes(model), ProviderId = model.ProviderId };
             var id = await Repo.InsertAsync(entity).ConfigureAwait(false);
 
-        return id.Id;
+            return id.Id;
         }
 
         public T CheckRequest(int providerId)
         {
             var blobs = Repo.GetAll();
-            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId); if (blob == null)
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId && x.Type == RequestType);
+
+            if (blob == null)
             {
                 return null;
             }
@@ -46,33 +51,7 @@ namespace Ombi.Core.Models.Requests
         public async Task<T> CheckRequestAsync(int providerId)
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
-            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId); if (blob == null)
-            {
-                return null;
-            }
-            var model = ByteConverterHelper.ReturnObject<T>(blob.Content);
-            model.Id = blob.Id;
-            return model;
-        }
-
-        public T CheckRequest(string musicId)
-        {
-            var blobs = Repo.GetAll();
-            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId); if (blob == null)
-            {
-                return null;
-            }
-            var model = ByteConverterHelper.ReturnObject<T>(blob.Content);
-            model.Id = blob.Id;
-            return model;
-        }
-
-        public async Task<T> CheckRequestAsync(string musicId)
-        {
-            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
-            var blob = blobs.FirstOrDefault(x => x.MusicId == musicId);
-
-            if (blob == null)
+            var blob = blobs.FirstOrDefault(x => x.ProviderId == providerId && x.Type == RequestType); if (blob == null)
             {
                 return null;
             }
@@ -133,7 +112,7 @@ namespace Ombi.Core.Models.Requests
 
         public IEnumerable<T> GetAll()
         {
-            var blobs = Repo.GetAll().ToList();
+            var blobs = Repo.GetAll().Where(x => x.Type == RequestType).ToList();
             var retVal = new List<T>();
 
             foreach (var b in blobs)
@@ -154,7 +133,7 @@ namespace Ombi.Core.Models.Requests
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
             var retVal = new List<T>();
 
-            foreach (var b in blobs)
+            foreach (var b in blobs.Where(x => x.Type == RequestType))
             {
                 if (b == null)
                 {
@@ -172,7 +151,7 @@ namespace Ombi.Core.Models.Requests
             var blobs = await Repo.GetAllAsync(count, position).ConfigureAwait(false);
             var retVal = new List<T>();
 
-            foreach (var b in blobs)
+            foreach (var b in blobs.Where(x => x.Type == RequestType))
             {
                 if (b == null)
                 {

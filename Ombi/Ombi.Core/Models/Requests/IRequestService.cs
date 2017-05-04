@@ -12,9 +12,7 @@ namespace Ombi.Core.Requests.Models
         void BatchDelete(IEnumerable<T> model);
         void BatchUpdate(IEnumerable<T> model);
         T CheckRequest(int providerId);
-        T CheckRequest(string musicId);
         Task<T> CheckRequestAsync(int providerId);
-        Task<T> CheckRequestAsync(string musicId);
         void DeleteRequest(T request);
         Task DeleteRequestAsync(int request);
         Task DeleteRequestAsync(T request);
