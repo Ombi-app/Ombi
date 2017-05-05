@@ -64,14 +64,14 @@ namespace Ombi.Api.Plex
 
         public async Task<PlexLibraries> GetLibrarySections(string authToken, string plexFullHost)
         {
-            var request = new Request(plexFullHost, "library/sections", HttpMethod.Get);
+            var request = new Request("library/sections", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexLibraries>(request);
         }
 
         public async Task<PlexLibraries> GetLibrary(string authToken, string plexFullHost, string libraryId)
         {
-            var request = new Request(plexFullHost, $"library/sections/{libraryId}/all", HttpMethod.Get);
+            var request = new Request($"library/sections/{libraryId}/all", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexLibraries>(request);
         }
@@ -89,21 +89,21 @@ namespace Ombi.Api.Plex
         /// <returns></returns>
         public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, string ratingKey)
         {
-            var request = new Request(plexFullHost, $"/library/metadata/{ratingKey}", HttpMethod.Get);
+            var request = new Request($"/library/metadata/{ratingKey}", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
         public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId)
         {
-            var request = new Request(plexFullHost, $"library/metadata/{itemId}", HttpMethod.Get);
+            var request = new Request($"library/metadata/{itemId}", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
         public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey)
         {
-            var request = new Request(plexFullHost, $"library/metadata/{ratingKey}/children", HttpMethod.Get);
+            var request = new Request($"library/metadata/{ratingKey}/children", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }

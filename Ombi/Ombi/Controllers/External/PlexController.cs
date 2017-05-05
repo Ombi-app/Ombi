@@ -49,6 +49,14 @@ namespace Ombi.Controllers.External
             return result;
         }
 
+        [HttpPost("Libraries")]
+        public async Task<PlexLibraries> GetPlexLibraries([FromBody] PlexSettings settings)
+        {
+            var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
+
+            return libs;
+        }
+
         
     }
 }

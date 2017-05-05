@@ -1,20 +1,27 @@
 ﻿import { Injectable } from '@angular/core';
-import {  Http } from '@angular/http';
+import { Http } from '@angular/http'
+
+import { AuthHttp } from 'angular2-jwt';;
 import { Observable } from 'rxjs/Rx';
 
-import { ServiceHelpers } from '../service.helpers';
+import { ServiceAuthHelpers } from '../service.helpers';
 
-import { IPlexAuthentication } from '../../interfaces/IPlex'
+import { IPlexAuthentication, IPlexLibraries} from '../../interfaces/IPlex';
+import { IPlexSettings } from '../../interfaces/ISettings';
 
 
 @Injectable()
-export class PlexService extends ServiceHelpers {
-    constructor(http: Http) {
+export class PlexService extends ServiceAuthHelpers {
+    constructor(http: AuthHttp, private regularHttp: Http) {
         super(http, '/api/v1/Plex/');
     }
 
     logIn(login: string, password: string): Observable<IPlexAuthentication> {
-        return this.http.post(`${this.url}/`, JSON.stringify({ login: login, password:password}), { headers: this.headers }).map(this.extractData);
+        return this.regularHttp.post(`${this.url}`, JSON.stringify({ login: login, password:password}), { headers: this.headers }).map(this.extractData);
+    }
+
+    getLibraries(plexSettings: IPlexSettings): Observable<IPlexLibraries> {
+        return this.http.post(`${this.url}Libraries`, JSON.stringify(plexSettings), { headers: this.headers }).map(this.extractData);
     }
     
 }

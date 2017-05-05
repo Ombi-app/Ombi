@@ -7,7 +7,7 @@ export interface IExternalSettings extends ISettings {
     enable:boolean,
     subDir: string,
     ip: string,
-    port:number
+    port:number,
 }
 
 export interface IOmbiSettings extends ISettings {
@@ -21,13 +21,20 @@ export interface IOmbiSettings extends ISettings {
 export interface IEmbySettings extends IExternalSettings {
     apiKey: string,
     administratorId: string,
-    enableEpisodeSearching:boolean
+    enableEpisodeSearching:boolean,
 }
 
 export interface IPlexSettings extends IExternalSettings {
     enableEpisodeSearching: boolean,
     plexAuthToken: string,
-    machineIdentifier: string
+    machineIdentifier: string,
+    plexSelectedLibraries : IPlexLibraries[],
+}
+
+export interface IPlexLibraries {
+    key: string,
+    title: string,
+    enabled:boolean,
 }
 
 export interface ISonarrSettings extends IExternalSettings {
@@ -35,7 +42,7 @@ export interface ISonarrSettings extends IExternalSettings {
     qualityProfile: string,
     seasonFolders: boolean,
     rootPath: string,
-    fullRootPath:string
+    fullRootPath:string,
 }
 
 export interface ILandingPageSettings extends ISettings {
@@ -52,5 +59,5 @@ export interface ILandingPageSettings extends ISettings {
 
 export interface ICustomizationSettings extends ISettings {
     applicationName: string,
-    logo:string
+    logo:string,
 }

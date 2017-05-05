@@ -59,10 +59,10 @@ namespace Ombi
             // Add framework services.
             services.AddMvc();
             services.AddOmbiMappingProfile();
-            //services.AddAutoMapper(expression =>
-            //{
-            //    expression.AddCollectionMappers();
-            //});
+            services.AddAutoMapper(expression =>
+            {
+                expression.AddCollectionMappers();
+            });
             services.RegisterDependencies(); // Ioc and EF
             
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

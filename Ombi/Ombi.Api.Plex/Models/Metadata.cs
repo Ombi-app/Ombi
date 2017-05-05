@@ -18,7 +18,7 @@ namespace Ombi.Api.Plex.Models
         public string art { get; set; }
         public string banner { get; set; }
         public string theme { get; set; }
-        public int duration { get; set; }
+        public string duration { get; set; }
         public string originallyAvailableAt { get; set; }
         public int leafCount { get; set; }
         public int viewedLeafCount { get; set; }

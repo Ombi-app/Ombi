@@ -13,6 +13,7 @@ namespace Ombi.Store.Context
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         DbSet<RequestBlobs> Requests { get; set; }
         DbSet<GlobalSettings> Settings { get; set; }
+        DbSet<PlexContent> PlexContent { get; set; }
         DbSet<User> Users { get; set; }
         EntityEntry<GlobalSettings> Entry(GlobalSettings settings);
         EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;

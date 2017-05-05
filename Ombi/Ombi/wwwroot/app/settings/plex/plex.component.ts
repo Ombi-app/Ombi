@@ -1,7 +1,10 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { IPlexSettings } from '../../interfaces/ISettings'
+import { IPlexSettings, IPlexLibraries } from '../../interfaces/ISettings'
+
+
 import { SettingsService } from '../../services/settings.service';
+import { PlexService } from '../../services/applications/plex.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
@@ -11,11 +14,11 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class PlexComponent implements OnInit {
 
-    constructor(private settingsService: SettingsService, private notificationService: NotificationService) {  }
+    constructor(private settingsService: SettingsService, private notificationService: NotificationService, private plexService: PlexService) { }
 
     settings: IPlexSettings;
     username: string;
-    password:string;
+    password: string;
 
     ngOnInit(): void {
         this.settingsService.getPlex().subscribe(x => this.settings = x);
@@ -27,6 +30,22 @@ export class PlexComponent implements OnInit {
 
     testPlex() {
         // TODO Plex Service
+    }
+
+    loadLibraries() {
+        this.plexService.getLibraries(this.settings).subscribe(x => {
+
+            this.settings.plexSelectedLibraries = [];
+            x.mediaContainer.directory.forEach((item, index) => {
+                var lib: IPlexLibraries = {
+                    key: item.key,
+                    title: item.title,
+                    enabled: false
+                };
+                this.settings.plexSelectedLibraries.push(lib);
+
+            });
+        });
     }
 
     save() {

@@ -70,6 +70,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
+            services.AddTransient<IPlexContentRepository, PlexContentRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
             return services;
         }

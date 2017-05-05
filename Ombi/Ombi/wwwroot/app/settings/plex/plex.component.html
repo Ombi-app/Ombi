@@ -3,36 +3,36 @@
 <div *ngIf="settings">
     <fieldset>
         <legend>Plex Configuration</legend>
-        
+
         <div class="form-group">
             <div class="checkbox">
                 <input type="checkbox" [(ngModel)]="settings.enable" ng-checked="settings.enable">
                 <label for="enable">Enable</label>
             </div>
         </div>
-        
+
 
         <div class="form-group">
             <label for="Ip" class="control-label">Hostname or IP</label>
             <div>
-                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost"  [(ngModel)]="settings.ip" value="{{settings.ip}}">
+                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="settings.ip" value="{{settings.ip}}">
             </div>
         </div>
- 
+
         <div class="form-group">
             <label for="portNumber" class="control-label">Port</label>
             <div>
                 <input type="text" [(ngModel)]="settings.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{settings.port}}">
             </div>
-            </div>
-       
+        </div>
+
         <div class="form-group">
             <div class="checkbox">
                 <input type="checkbox" id="ssl" [(ngModel)]="settings.ssl" ng-checked="settings.ssl">
                 <label for="ssl">SSL</label>
             </div>
         </div>
-        
+
         <div class="form-group">
             <div class="checkbox">
 
@@ -46,22 +46,22 @@
                 Please be aware that this is a very resource intensive process and while the Plex Episode Cacher job is running the application may appear slow (Depending on the size of your Plex library).
             </small>
         </div>
-        
-        
+
+
         <div class="form-group">
             <label for="authToken" class="control-label">Plex Authorization Token</label>
             <div class="">
-                <input type="text" class="form-control-custom form-control" id="authToken"  [(ngModel)]="settings.plexAuthToken" placeholder="Plex Auth Token" value="{{settings.plexAuthToken}}">
+                <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="settings.plexAuthToken" placeholder="Plex Auth Token" value="{{settings.plexAuthToken}}">
             </div>
         </div>
-            
+
         <div class="form-group">
             <label for="MachineIdentifier" class="control-label">Machine Identifier</label>
             <div class="">
-                <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier"  [(ngModel)]="settings.machineIdentifier"  value="{{settings.machineIdentifier}}">
+                <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier" [(ngModel)]="settings.machineIdentifier" value="{{settings.machineIdentifier}}">
             </div>
         </div>
-        
+
         <div class="form-group">
             <label for="username" class="control-label">Username and Password</label>
             <div>
@@ -69,12 +69,30 @@
             </div>
             <br />
             <div>
-                <input type="password" class="form-control form-control-custom" id="password"  [(ngModel)]="password" placeholder="Password">
+                <input type="password" class="form-control form-control-custom" id="password" [(ngModel)]="password" placeholder="Password">
             </div>
         </div>
         <div class="form-group">
             <div class="">
                 <button id="requestToken" (click)="requestToken()" class="btn btn-primary-outline">Request Token <i class="fa fa-key"></i></button>
+            </div>
+        </div>
+        
+        <label>Please select the libraries you want Ombi to look in for content</label>
+        <div class="form-group">
+            <div>
+                <button (click)="loadLibraries()" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
+            </div>
+        </div>
+        <div *ngIf="settings.plexSelectedLibraries">
+            <div *ngFor="let lib of settings.plexSelectedLibraries">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" ng-checked="lib.enabled">
+                        <label for="{{lib.title}}">{{lib.title}}</label>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -84,7 +102,7 @@
             </div>
         </div>
 
-      
+
 
         <div class="form-group">
             <div>

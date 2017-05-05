@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: PlexContentCacher.cs
+//    File: PlexContent.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,15 +25,44 @@
 //  ************************************************************************/
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ombi.Schedule.Jobs
+namespace Ombi.Store.Entities
 {
-    public partial class PlexContentCacher
+    [Table("PlexContent")]
+    public class PlexContent : Entity
     {
-        public enum PlexMediaType
-        {
-            Movie = 0,
-            Show = 1
-        }
+        public string Title { get; set; }
+        public string ReleaseYear { get; set; }
+        public string ProviderId { get; set; }
+        public PlexMediaTypeEntity Type { get; set; }
+
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Only used for TV Shows
+        /// </summary>
+        public List<SeasonsContent> Seasons { get; set; }
+
+        /// <summary>
+        /// Plex's internal ID for this item
+        /// </summary>
+        public string Key { get; set; }
+        public DateTime AddedAt { get; set; }
+    }
+
+    public class SeasonsContent : Entity
+    {
+        public int SeasonNumber { get; set; }
+        public int SeasonKey { get; set; }
+        public int ParentKey { get; set; }
+    }
+
+    public enum PlexMediaTypeEntity
+    {
+        Movie = 0,
+        Show = 1
     }
 }
