@@ -7,6 +7,7 @@ namespace Ombi.Store.Repository
     public interface IPlexContentRepository
     {
         Task<PlexContent> Add(PlexContent content);
+        Task AddRange(IEnumerable<PlexContent> content);
         Task<bool> ContentExists(string providerId);
         Task<IEnumerable<PlexContent>> GetAll();
         Task<PlexContent> Get(string providerId);

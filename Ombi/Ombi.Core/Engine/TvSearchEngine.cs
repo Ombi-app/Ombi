@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Ombi.Api.Trakt;
 using Ombi.Api.TvMaze;
+using Ombi.Api.TvMaze.Models;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
@@ -44,6 +46,12 @@ namespace Ombi.Core.Engine
                 return await ProcessResults(searchResult);
             }
             return null;
+        }
+
+        public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbId)
+        {
+            var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbId);
+            return Mapper.Map<SearchTvShowViewModel>(show);
         }
 
         //public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
@@ -113,7 +121,7 @@ namespace Ombi.Core.Engine
                     var dbt = existingRequests[tvdbid];
 
                     item.Requested = true;
-                    item.EpisodesRequested = dbt.Episodes.ToList();
+                    item.SeasonRequests = dbt.SeasonRequests.ToList();
                     item.Approved = dbt.Approved;
                 }
                 //if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid))

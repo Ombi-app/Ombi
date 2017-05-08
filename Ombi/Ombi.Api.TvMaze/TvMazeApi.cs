@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -60,11 +61,25 @@ namespace Ombi.Api.TvMaze
 
                 foreach (var e in episodes)
                 {
-                    obj.Season.Add(new TvMazeCustomSeason
+                    // Check if the season exists
+                    var currentSeason = obj.Season.FirstOrDefault(x => x.SeasonNumber == e.season);
+
+                    if (currentSeason == null)
                     {
-                        SeasonNumber = e.season,
-                        EpisodeNumber = e.number
-                    });
+                        // Create the season
+                        obj.Season.Add(new TvMazeCustomSeason
+                        {
+                            SeasonNumber = e.season,
+                            EpisodeNumber = new List<int> {e.number}
+                        });
+                    }
+                    else
+                    {
+                        // Just add a new episode into that season
+                        currentSeason.EpisodeNumber.Add(e.number);
+                    }
+
+
                 }
 
                 return obj;

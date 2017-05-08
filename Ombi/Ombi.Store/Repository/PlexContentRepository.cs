@@ -48,6 +48,12 @@ namespace Ombi.Store.Repository
             return await Db.PlexContent.ToListAsync();
         }
 
+        public async Task AddRange(IEnumerable<PlexContent> content)
+        {
+            await Db.PlexContent.AddRangeAsync(content);
+            await Db.SaveChangesAsync();
+        }
+
         public async Task<bool> ContentExists(string providerId)
         {
             return await Db.PlexContent.AnyAsync(x => x.ProviderId == providerId);

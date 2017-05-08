@@ -48,7 +48,7 @@
 
                         </a>
 
-                        <span *ngIf="result.status" class="label label-primary" style="font-size: 60%" target="_blank">{{result.status}}</span>
+                        <span *ngIf="result.status" class="label label-primary" target="_blank">{{result.status}}</span>
 
 
                         <span *ngIf="result.firstAired" class="label label-info" target="_blank">Air Date: {{result.firstAired}}</span>
@@ -95,13 +95,13 @@
 
                         </div>
                     </div>
-                    <div *ngIf="result.requested; then requestedBtn else notRequestedBtn"></div>
+                    <!--<div *ngIf="result.requested; then requestedBtn else notRequestedBtn"></div>
                     <template #requestedBtn>
                         <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
                     </template>
                     <template #notRequestedBtn>
                         <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)"><i class="fa fa-plus"></i> Request</button>
-                    </template>
+                    </template>-->
 
                     <!--{{#if_eq type "tv"}}
                     {{#if_eq tvFullyAvailable true}}
@@ -111,32 +111,26 @@
                     {{#if_eq enableTvRequestsForOnlySeries true}}
                     <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}} disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
                     {{else}}
+                    -->
                     <div class="dropdown">
-                        <button id="{{id}}" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline{{/if}} dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                            <i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request {{/if}}
+                        <button class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <i class="fa fa-plus"></i> Request
                             <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                            <li><a id="{{id}}" season-select="0" class="dropdownTv " href="#">@UI.Search_AllSeasons</a></li>
-                            {{#if_eq disableTvRequestsBySeason false}}
-                            <li><a id="{{id}}" season-select="1" class="dropdownTv" href="#">@UI.Search_FirstSeason</a></li>
-                            <li><a id="{{id}}" season-select="2" class="dropdownTv" href="#">@UI.Search_LatestSeason</a></li>
-                            <li><a id="SeasonSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#seasonsModal" href="#">@UI.Search_SelectSeason...</a></li>
-                            {{/if_eq}}
-                            {{#if_eq disableTvRequestsByEpisode false}}
-                            <li><a id="EpisodeSelect" data-identifier="{{id}}" data-toggle="modal" data-target="#episodesModal" href="#">@UI.Search_SelectEpisode...</a></li>
-                            {{/if_eq}}
+                            <li><a (click)="allSeasons(result)">All Seasons</a></li>
+                            <li><a (click)="firstSeason(result)">First Season</a></li>
+                            <li><a (click)="latestSeason(result)">Latest Season</a></li>
+                            <li><a>Select Season...</a></li>
+                            <li><a>Select Episode...</a></li>
                         </ul>
                     </div>
-                    {{/if_eq}}
-                    {{#if available}}
-                    {{#if url}}
+              
+                    <!--
                     <br/>
                     <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-                    {{/if}}
-                    {{/if}}
-                    {{/if_eq}}
-                    {{/if_eq}}-->
+
+                    -->
 
 
                     <br/>

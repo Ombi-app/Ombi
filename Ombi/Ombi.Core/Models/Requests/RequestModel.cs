@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Requests
@@ -54,4 +55,11 @@ namespace Ombi.Core.Models.Requests
             return hashSeason + hashEp;
         }
     }
+
+    public class SeasonRequestModel
+    {
+        public int SeasonNumber { get; set; }
+        public List<int> Episodes { get; set; }
+    }
+
 }

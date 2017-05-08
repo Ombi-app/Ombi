@@ -68,13 +68,14 @@ namespace Ombi.Schedule.Jobs
             }
 
             Logger.LogInformation("Starting Plex Content Cacher");
-            //TODO
-            StartTheCache(plexSettings).Wait();
+            try
+            {
 
-            //if (libraries == null || !libraries.Any())
-            //{
-            //    return;
-            //}
+                StartTheCache(plexSettings).Wait();
+            }
+            catch (Exception e) { 
+                Logger.LogWarning(LoggingEvents.CacherException, e, "Exception thrown when attempting to cache the Plex Content");
+            }
         }
         //private List<PlexLibraries> CachedLibraries(PlexSettings plexSettings)
         //{
@@ -122,9 +123,9 @@ namespace Ombi.Schedule.Jobs
 
             // Let's now process this.
 
+            var contentToAdd = new List<PlexContent>();
             foreach (var content in allContent)
             {
-                var contentToAdd = new List<PlexContent>();
                 if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                 {
                     // Process Shows
@@ -187,6 +188,11 @@ namespace Ombi.Schedule.Jobs
                         contentToAdd.Add(item);
                     }
                 }
+            }
+
+            if (contentToAdd.Any())
+            {
+                await Repo.AddRange(contentToAdd);
             }
         }
 

@@ -1,6 +1,5 @@
-﻿import { IEpisodeModel }from "./ISearchTvResult";
-
-export interface IMediaBase {
+﻿export interface IMediaBase {
+    imdbId: string,
     id: number,
     providerId: number,
     title: string,
@@ -23,20 +22,26 @@ export interface IMediaBase {
 }
 
 export interface IMovieRequestModel extends IMediaBase {
-    imdbId: string,
+
 }
 
 export interface ITvRequestModel extends IMediaBase {
     imdbId: string,
     tvDbId: string,
     requestAll: boolean,
-    seasonNumbersRequested: number[],
-    episodes: IEpisodeModel[],
+    seasonRequests: ISeasonRequests[],
     childRequests: ITvRequestModel[],
     hasChildRequests: boolean,
     rootFolderSelected: number,
     firstAired:string,
 }
+
+export interface ISeasonRequests
+{
+    seasonNumber: number,
+    episodes:number[],
+}
+
 
 export enum RequestType {
     movie = 1,

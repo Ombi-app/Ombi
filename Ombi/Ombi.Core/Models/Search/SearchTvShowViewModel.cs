@@ -39,22 +39,14 @@ namespace Ombi.Core.Models.Search
         /// </value>
         public string Homepage { get; set; }
 
-        /// <summary>
-        /// This is for when the users requests multiple seasons or a single season
-        /// </summary>
-        public List<int> SeasonNumbersRequested { get; set; } = new List<int>();
-
-        /// <summary>
-        /// If we have requested some episodes
-        /// </summary>
-        public List<EpisodesModel> EpisodesRequested { get; set; } = new List<EpisodesModel>();
+        public List<SeasonRequestModel> SeasonRequests { get; set; } = new List<SeasonRequestModel>();
 
         /// <summary>
         /// If we are requesting the entire series
         /// </summary>
         public bool RequestAll { get; set; }
 
-        public bool SpecificSeasonsRequested => SeasonNumbersRequested.Count > 0;
-        public bool SpecificEpisodesRequested => EpisodesRequested.Count > 0;
+        public bool FirstSeason { get; set; }
+        public bool LatestSeason { get; set; }
     }
 }

@@ -84,6 +84,7 @@
                             <div *ngFor="let child of request.childRequests">
                                 <hr/>
                                 <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span></div>
+                                <div>Seasons Requested: <span *ngFor="let s of request.seasonNumbersRequested">{{s}} </span> </div>
                                 <div>
                                     <span>Request status: </span>
                                     <span *ngIf="request.available" class="label label-success">Available</span>

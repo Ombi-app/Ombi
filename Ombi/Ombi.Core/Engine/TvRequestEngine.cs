@@ -49,9 +49,31 @@ namespace Ombi.Core.Engine
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.Id.ToString(),
                 ProviderId = tv.Id,
-                SeasonsNumbersRequested = tv.SeasonNumbersRequested,
                 RequestAll = tv.RequestAll
             };
+
+            if (tv.LatestSeason)
+            {
+                var latest = showInfo.Season.OrderBy(x => x).FirstOrDefault();
+                model.SeasonRequests = showInfo.Season.Any()
+                    ? new List<SeasonRequestModel> {new SeasonRequestModel
+                    {
+                        SeasonNumber = latest.SeasonNumber,
+                        Episodes = latest.EpisodeNumber
+                    }}
+                    : new List<SeasonRequestModel>();
+            }
+            if (tv.FirstSeason)
+            {
+                var first = showInfo.Season.OrderByDescending(x => x).FirstOrDefault();
+                model.SeasonRequests = showInfo.Season.Any()
+                    ? new List<SeasonRequestModel> {new SeasonRequestModel
+                    {
+                        SeasonNumber = first.SeasonNumber,
+                        Episodes = first.EpisodeNumber
+                    }}
+                    : new List<SeasonRequestModel>();
+            }
 
 
             var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
@@ -104,13 +126,13 @@ namespace Ombi.Core.Engine
 
         private async Task<RequestEngineResult> AddExistingRequest(TvRequestModel newRequest, TvRequestModel existingRequest)
         {
-            var episodeDifference = new List<EpisodesModel>();
+            var episodeDifference = new List<SeasonRequestModel>();
             if (existingRequest.HasChildRequests)
             {
                 // Let's check if this has already been requested as a child!
                 foreach (var children in existingRequest.ChildRequests)
                 {
-                    var difference = GetListDifferences(children.Episodes, newRequest.Episodes).ToList();
+                    var difference = GetListDifferences(children.SeasonRequests, newRequest.SeasonRequests).ToList();
                     if (difference.Any())
                     {
                         episodeDifference = difference;
@@ -121,7 +143,7 @@ namespace Ombi.Core.Engine
             if (episodeDifference.Any())
             {
                 // This is where there are some episodes that have been requested, but this list contains the 'new' requests
-                newRequest.Episodes = episodeDifference;
+                newRequest.SeasonRequests = episodeDifference;
             }
 
             existingRequest.ChildRequests.Add(newRequest);
@@ -132,17 +154,17 @@ namespace Ombi.Core.Engine
             {
                 // TODO Auto Approval Code
             }
-            return await AddRequest(newRequest);
+            return await AfterRequest(newRequest);
         }
 
-        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing, IEnumerable<EpisodesModel> request)
+        private IEnumerable<SeasonRequestModel> GetListDifferences(IEnumerable<SeasonRequestModel> existing, IEnumerable<SeasonRequestModel> request)
         {
             var newRequest = request
                 .Select(r =>
-                    new EpisodesModel
+                    new SeasonRequestModel
                     {
                         SeasonNumber = r.SeasonNumber,
-                        EpisodeNumber = r.EpisodeNumber
+                        Episodes = r.Episodes
                     }).ToList();
 
             return newRequest.Except(existing);
@@ -152,6 +174,11 @@ namespace Ombi.Core.Engine
         {
             await TvRequestService.AddRequestAsync(model);
 
+           return await AfterRequest(model);
+        }
+
+        private async Task<RequestEngineResult> AfterRequest(BaseRequestModel model)
+        {
             if (ShouldSendNotification(model.Type))
             {
                 var notificationModel = new NotificationModel

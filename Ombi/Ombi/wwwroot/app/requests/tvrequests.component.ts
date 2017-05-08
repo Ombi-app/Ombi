@@ -1,8 +1,9 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
+import "rxjs/add/operator/takeUntil";
 
 
 import 'rxjs/add/operator/debounceTime';
@@ -19,30 +20,37 @@ import { ITvRequestModel } from '../interfaces/IRequestModel';
     moduleId: module.id,
     templateUrl: './tvrequests.component.html'
 })
-export class TvRequestsComponent implements OnInit {
+export class TvRequestsComponent implements OnInit, OnDestroy {
     constructor(private requestService: RequestService, private identityService: IdentityService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
+            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.searchText = x as string;
                 if (this.searchText === "") {
                     this.resetSearch();
                     return;
                 }
-                this.requestService.searchTvRequests(this.searchText).subscribe(m => this.tvRequests = m);
+                this.requestService.searchTvRequests(this.searchText)
+                    .takeUntil(this.subscriptions)
+                    .subscribe(m => this.tvRequests = m);
             });
     }
+
+
+    private subscriptions = new Subject<void>();
 
     tvRequests: ITvRequestModel[];
 
     searchChanged = new Subject<string>();
     searchText: string;
 
-    isAdmin : boolean;
+    isAdmin: boolean;
 
     private currentlyLoaded: number;
-    private amountToLoad : number;
+    private amountToLoad: number;
+
 
     ngOnInit() {
         this.amountToLoad = 5;
@@ -50,13 +58,15 @@ export class TvRequestsComponent implements OnInit {
         this.loadInit();
     }
 
-  
+
 
     loadMore() {
-        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1).subscribe(x => {
-            this.tvRequests.push.apply(this.tvRequests, x);
-            this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
-        });
+        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
+                this.tvRequests.push.apply(this.tvRequests, x);
+                this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
+            });
     }
 
     search(text: any) {
@@ -70,7 +80,7 @@ export class TvRequestsComponent implements OnInit {
 
     changeAvailability(request: ITvRequestModel, available: boolean) {
         request.available = available;
-        
+
         this.updateRequest(request);
     }
 
@@ -87,13 +97,17 @@ export class TvRequestsComponent implements OnInit {
     }
 
     private updateRequest(request: ITvRequestModel) {
-        this.requestService.updateTvRequest(request).subscribe(x => request = x);
+        this.requestService.updateTvRequest(request)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => request = x);
     }
 
     private loadInit() {
-        this.requestService.getTvRequests(this.amountToLoad, 0).subscribe(x => {
-            this.tvRequests = x;
-        });
+        this.requestService.getTvRequests(this.amountToLoad, 0)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
+                this.tvRequests = x;
+            });
         this.isAdmin = this.identityService.hasRole("Admin");
     }
 
@@ -107,5 +121,10 @@ export class TvRequestsComponent implements OnInit {
         if (index > -1) {
             this.tvRequests.splice(index, 1);
         }
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.next();
+        this.subscriptions.complete();
     }
 }

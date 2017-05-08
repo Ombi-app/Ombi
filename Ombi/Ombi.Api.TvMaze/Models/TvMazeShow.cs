@@ -34,7 +34,7 @@ namespace Ombi.Api.TvMaze.Models
     public class TvMazeCustomSeason
     {
         public int SeasonNumber { get; set; }
-        public int EpisodeNumber { get; set; }
+        public List<int> EpisodeNumber { get; set; }
     }
 
     public class Season

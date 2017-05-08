@@ -1,4 +1,6 @@
-﻿export interface ISearchTvResult {
+﻿import { ISeasonRequests } from "./IRequestModel";
+
+export interface ISearchTvResult {
     id: number,
     seriesName: string,
     aliases: string[],
@@ -19,17 +21,12 @@
     siteRating: number,
     trailer: string,
     homepage:string,
-    episodesRequested: IEpisodeModel[],
-    seasonNumbersRequested: number[],
+    seasonsRequested: ISeasonRequests[],
     requestAll:boolean,
     approved: boolean,
     requested: boolean,
     available: boolean,
     plexUrl: string,
-
-}
-
-export interface IEpisodeModel {
-    seasonNumber: number,
-    episodeNumber:number,
+    firstSeason: boolean,
+    latestSeason:boolean,
 }

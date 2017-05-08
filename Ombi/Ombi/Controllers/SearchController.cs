@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 
 using Ombi.Core;
 using Ombi.Core.Engine;
+using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Controllers
@@ -63,6 +64,12 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<SearchTvShowViewModel>> SearchTv(string searchTerm)
         {
             return await TvEngine.Search(searchTerm);
+        }
+
+        [HttpGet("tv/seasons/{tvdbId}")]
+        public async Task<IEnumerable<int>> GetSeasons(int tvdbId)
+        {
+            return await TvEngine.GetSeasons(tvdbId);
         }
 
         //[HttpGet("tv/popular")]
