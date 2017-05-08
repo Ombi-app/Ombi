@@ -17,4 +17,17 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Sql.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Sql.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Sql.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Sql.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

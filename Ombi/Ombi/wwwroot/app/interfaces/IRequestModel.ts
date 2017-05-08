@@ -39,7 +39,17 @@ export interface ITvRequestModel extends IMediaBase {
 export interface ISeasonRequests
 {
     seasonNumber: number,
-    episodes:number[],
+    episodes: IEpisodesRequested[],
+}
+
+export interface IEpisodesRequested {
+    episodeNumber: number,
+    title: string,
+    airDate: Date,
+    url: string,
+    requested: boolean,
+    status: string,
+    available:boolean
 }
 
 

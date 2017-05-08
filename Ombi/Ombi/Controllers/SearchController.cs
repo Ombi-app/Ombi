@@ -66,10 +66,10 @@ namespace Ombi.Controllers
             return await TvEngine.Search(searchTerm);
         }
 
-        [HttpGet("tv/seasons/{tvdbId}")]
-        public async Task<IEnumerable<int>> GetSeasons(int tvdbId)
+        [HttpGet("tv/info/{tvdbId}")]
+        public async Task<SearchTvShowViewModel> GetShowInfo(int tvdbId)
         {
-            return await TvEngine.GetSeasons(tvdbId);
+            return await TvEngine.GetShowInformation(tvdbId);
         }
 
         //[HttpGet("tv/popular")]

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -48,10 +49,30 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbId)
+        public async Task<SearchTvShowViewModel> GetShowInformation(int tvmazeId)
         {
-            var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbId);
-            return Mapper.Map<SearchTvShowViewModel>(show);
+            var show = await TvMazeApi.ShowLookup(tvmazeId);
+            var episodes = await TvMazeApi.EpisodeLookup(show.id);
+
+            var mapped = Mapper.Map<SearchTvShowViewModel>(show);
+
+            foreach (var e in episodes)
+            {
+                var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+                season?.Episodes.Add(new EpisodesRequested
+                {
+                    Url = e.url,
+                    Title = e.name,
+                    AirDate = DateTime.Parse(e.airstamp),
+                    EpisodeNumber = e.number,
+                    
+                });
+            }
+
+            var existingRequests = await GetTvRequests();
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+            return ProcessResult(mapped, existingRequests, plexSettings, embySettings);
         }
 
         //public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
@@ -118,11 +139,28 @@ namespace Ombi.Core.Engine
                 var tvdbid = item.Id;
                 if (existingRequests.ContainsKey(tvdbid))
                 {
-                    var dbt = existingRequests[tvdbid];
+                    var existingRequest = existingRequests[tvdbid];
 
                     item.Requested = true;
-                    item.SeasonRequests = dbt.SeasonRequests.ToList();
-                    item.Approved = dbt.Approved;
+                    item.Approved = existingRequest.Approved;
+
+                    // Let's modify the seasonsrequested to reflect what we have requested...
+                    foreach (var season in item.SeasonRequests)
+                    {
+                        // Find the existing request season
+                        var existingSeason =
+                            existingRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
+
+                        foreach (var ep in existingSeason.Episodes)
+                        {
+                           // Find the episode from what we are searching
+                            var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
+                            episodeSearching.Requested = ep.Requested;
+                            episodeSearching.Available = ep.Available;
+                            episodeSearching.Approved = ep.Approved;
+                        }
+                        
+                    }
                 }
                 //if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid))
                 //    // compare to the sonarr/sickrage db

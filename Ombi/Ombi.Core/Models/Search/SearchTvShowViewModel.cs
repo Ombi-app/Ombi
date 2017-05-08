@@ -6,7 +6,7 @@ namespace Ombi.Core.Models.Search
     public class SearchTvShowViewModel : SearchViewModel
     {
         public int Id { get; set; }
-        public string SeriesName { get; set; }
+        public string Title { get; set; }
         public List<string> Aliases { get; set; }
         public string Banner { get; set; }
         public int SeriesId { get; set; }
@@ -48,5 +48,6 @@ namespace Ombi.Core.Models.Search
 
         public bool FirstSeason { get; set; }
         public bool LatestSeason { get; set; }
+
     }
 }

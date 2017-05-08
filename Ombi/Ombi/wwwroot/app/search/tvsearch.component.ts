@@ -1,4 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Router} from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
@@ -26,7 +27,8 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     result: IRequestEngineResult;
     searchApplied = false;
 
-    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
+    constructor(private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private route : Router) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -126,6 +128,10 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     latestSeason(searchResult: ISearchTvResult) {
         searchResult.latestSeason = true;
         this.request(searchResult);
+    }
+
+    selectSeason(searchResult: ISearchTvResult) {
+        this.route.navigate(['/search/show', searchResult.seriesId]);
     }
 
 

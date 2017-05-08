@@ -59,7 +59,19 @@ namespace Ombi.Core.Models.Requests
     public class SeasonRequestModel
     {
         public int SeasonNumber { get; set; }
-        public List<int> Episodes { get; set; }
+        public List<EpisodesRequested> Episodes { get; set; } = new List<EpisodesRequested>();
+    }
+
+    public class EpisodesRequested
+    {
+        public int EpisodeNumber { get; set; }
+        public string Title { get; set; }
+        public DateTime AirDate { get; set; }
+        public string Url { get; set; }
+        public bool Requested { get; set; }
+        public string Status { get; set; }
+        public bool Available { get; set; }
+        public bool Approved { get; set; }
     }
 
 }

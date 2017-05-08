@@ -14,8 +14,10 @@ namespace Ombi.Store.Context
             _created = true;
             Database.EnsureCreated();
             Database.Migrate();
-            
- 
+
+            // Run Script
+
+            Database.ExecuteSqlCommand(Sql.SqlTables, 0);
         }
 
         public DbSet<RequestBlobs> Requests { get; set; }

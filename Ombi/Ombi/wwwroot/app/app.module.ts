@@ -15,6 +15,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll'
 import { SearchComponent } from './search/search.component';
 import { MovieSearchComponent } from './search/moviesearch.component';
 import { TvSearchComponent } from './search/tvsearch.component';
+import { SeriesInformationComponent } from './search/seriesinformation.component';
 
 // Request
 import { RequestComponent } from './requests/request.component';
@@ -50,6 +51,7 @@ const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
     { path: '', redirectTo: '/search', pathMatch: 'full' },
     { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
+    { path: 'search/show/:id', component: SeriesInformationComponent, canActivate: [AuthGuard] },
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent },
@@ -84,7 +86,8 @@ const routes: Routes = [
         LandingPageComponent,
         UserManagementComponent,
         MovieRequestsComponent,
-        TvRequestsComponent
+        TvRequestsComponent,
+        SeriesInformationComponent
     ],
     providers: [
         SearchService,

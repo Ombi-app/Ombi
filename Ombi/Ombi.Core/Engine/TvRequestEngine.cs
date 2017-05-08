@@ -52,27 +52,47 @@ namespace Ombi.Core.Engine
                 RequestAll = tv.RequestAll
             };
 
+            var episodes = await TvApi.EpisodeLookup(showInfo.id);
+
+            foreach (var e in episodes)
+            {
+                var season = model.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+                season?.Episodes.Add(new EpisodesRequested
+                {
+                    Url = e.url,
+                    Title = e.name,
+                    AirDate = DateTime.Parse(e.airstamp),
+                    EpisodeNumber = e.number,
+                });
+            }
+
             if (tv.LatestSeason)
             {
                 var latest = showInfo.Season.OrderBy(x => x).FirstOrDefault();
-                model.SeasonRequests = showInfo.Season.Any()
-                    ? new List<SeasonRequestModel> {new SeasonRequestModel
+                foreach (var modelSeasonRequest in model.SeasonRequests)
+                {
+                    if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
                     {
-                        SeasonNumber = latest.SeasonNumber,
-                        Episodes = latest.EpisodeNumber
-                    }}
-                    : new List<SeasonRequestModel>();
+                        foreach (var episodesRequested in modelSeasonRequest.Episodes)
+                        {
+                            episodesRequested.Requested = true;
+                        }
+                    }
+                }
             }
             if (tv.FirstSeason)
             {
                 var first = showInfo.Season.OrderByDescending(x => x).FirstOrDefault();
-                model.SeasonRequests = showInfo.Season.Any()
-                    ? new List<SeasonRequestModel> {new SeasonRequestModel
+                foreach (var modelSeasonRequest in model.SeasonRequests)
+                {
+                    if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)
                     {
-                        SeasonNumber = first.SeasonNumber,
-                        Episodes = first.EpisodeNumber
-                    }}
-                    : new List<SeasonRequestModel>();
+                        foreach (var episodesRequested in modelSeasonRequest.Episodes)
+                        {
+                            episodesRequested.Requested = true;
+                        }
+                    }
+                }
             }
 
 

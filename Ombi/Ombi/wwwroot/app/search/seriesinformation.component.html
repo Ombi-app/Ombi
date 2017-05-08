@@ -1,0 +1,64 @@
+﻿<div *ngIf="series">
+
+    <div *ngFor="let season of series.seasonsRequested">
+        <h2>Season: {{season.seasonNumber}}</h2>
+
+        <table class="table table-striped table-hover table-responsive table-condensed">
+            <thead>
+                <tr>
+                    <th>
+                        <a>
+                            #
+                        </a>
+                    </th>
+                    <th>
+                        <a>
+                            Title
+                        </a>
+                    </th>
+                    <th>
+                        <a>
+                            Air Date
+                        </a>
+                    </th>
+                    <th>
+                        <a>
+                            Status
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let ep of season.episodes">
+                    <td>
+                        {{ep.episodeNumber}}
+                    </td>
+                    <td>
+                       {{ep.title}}
+                    </td>
+                    <td>
+                        {{ep.airDate  | date: 'dd/MM/yyyy' }}
+                    </td>
+                    <td>
+                        <span *ngIf="result.available" class="label label-success">Available</span>
+                        <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
+                        <div *ngIf="result.requested && !result.available; then requested else notRequested"></div>
+                        <template #requested>
+                            <span *ngIf="!result.available" class="label label-warning">Pending Approval</span>
+                        </template>
+
+                        <template #notRequested>
+                            <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
+                        </template>
+                    </td>
+                    
+                    <td>
+                        <a (click)="edit(u)" class="btn btn-sm btn-info-outline">Details/Edit</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+</div>

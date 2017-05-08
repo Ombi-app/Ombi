@@ -36,7 +36,12 @@ export class SearchService extends ServiceAuthHelpers {
     // TV
     searchTv(searchTerm: string): Observable<ISearchTvResult[]> {
         return this.http.get(`${this.url}/Tv/` + searchTerm).map(this.extractData);
-    } 
+    }
+
+    getShowInformation(theTvDbId: number): Observable<ISearchTvResult> {
+        return this.http.get(`${this.url}/Tv/info/${theTvDbId}`).map(this.extractData);
+    }
+
     popularTv(): Observable<ISearchTvResult[]> {
         return this.http.get(`${this.url}/Tv/popular`).map(this.extractData);
     }
