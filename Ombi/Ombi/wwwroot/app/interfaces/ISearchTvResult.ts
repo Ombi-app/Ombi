@@ -21,7 +21,7 @@ export interface ISearchTvResult {
     siteRating: number,
     trailer: string,
     homepage:string,
-    seasonsRequested: ISeasonRequests[],
+    seasonsRequests: ISeasonRequests[],
     requestAll:boolean,
     approved: boolean,
     requested: boolean,

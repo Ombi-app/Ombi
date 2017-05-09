@@ -34,6 +34,7 @@ var paths = {
             '@angular/router',
             '@angular/forms',
             '@angular/platform-browser/animations',
+            '@angular/material',
             'ngx-infinite-scroll'
         ],
         dest: './lib'
@@ -62,8 +63,13 @@ var paths = {
     libcss: [ // Normal css files to be copied
         {
             src: [
-                './bower_components/PACE/themes/purple/pace-theme-minimal.css',
                 './bower_components/font-awesome/css/font-awesome.css',
+                './bower_components/PACE/themes/orange/pace-theme-barber-shop.css',
+                './bower_components/PACE/themes/orange/pace-theme-big-counter.css',
+                './bower_components/PACE/themes/orange/pace-theme-fill-left.css',
+                './bower_components/PACE/themes/orange/pace-theme-flash.css',
+                './bower_components/PACE/themes/orange/pace-theme-flat-top.css',
+                './bower_components/PACE/themes/orange/pace-theme-loading-bar.css',
                 './node_modules/primeng/resources/primeng.css',
                 './node_modules/tether/dist/css/tether.css'
             ],

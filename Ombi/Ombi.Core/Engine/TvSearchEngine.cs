@@ -59,14 +59,33 @@ namespace Ombi.Core.Engine
             foreach (var e in episodes)
             {
                 var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-                season?.Episodes.Add(new EpisodesRequested
+                if (season == null)
                 {
-                    Url = e.url,
-                    Title = e.name,
-                    AirDate = DateTime.Parse(e.airstamp),
-                    EpisodeNumber = e.number,
+                    var newSeason = new SeasonRequestModel
+                    {
+                        SeasonNumber = e.season,
+                    };
+                    newSeason.Episodes.Add(new EpisodesRequested
+                    {
+                        Url = e.url,
+                        Title = e.name,
+                        AirDate = DateTime.Parse(e.airstamp),
+                        EpisodeNumber = e.number,
+                    });
+                    mapped.SeasonRequests.Add(newSeason);
                     
-                });
+                }
+                else
+                {
+                    season.Episodes.Add(new EpisodesRequested
+                    {
+                        Url = e.url,
+                        Title = e.name,
+                        AirDate = DateTime.Parse(e.airstamp),
+                        EpisodeNumber = e.number,
+
+                    });
+                }
             }
 
             var existingRequests = await GetTvRequests();

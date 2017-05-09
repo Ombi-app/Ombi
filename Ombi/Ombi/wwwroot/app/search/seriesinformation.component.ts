@@ -10,7 +10,7 @@ import { NotificationService } from '../services/notification.service';
 
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-
+import { IEpisodesRequested } from"../interfaces/IRequestModel";
 @Component({
     selector: 'ombi',
     moduleId: module.id,
@@ -33,12 +33,14 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
     seriesId: number;
     series: ISearchTvResult;
 
+    requestedEpisodes: IEpisodesRequested[] = [];
+
 
     ngOnInit(): void {
         this.searchService.getShowInformation(this.seriesId)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.series = x;
+                this.series = x as ISearchTvResult;
             });
     }
 
@@ -48,7 +50,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         this.requestService.requestTv(this.series)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.result = x;
+                this.result = x as IRequestEngineResult;
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
                         `Request for ${this.series.seriesName} has been added successfully`);
@@ -58,6 +60,11 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
             });
     }
 
+    addRequest(episode: IEpisodesRequested) {
+        this.requestedEpisodes.push(episode);
+        episode.requested = true;
+
+    }
 
 
     ngOnDestroy(): void {

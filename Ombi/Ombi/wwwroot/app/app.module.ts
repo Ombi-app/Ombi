@@ -2,6 +2,7 @@ import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { MdButtonModule} from '@angular/material';
 
 import { AppComponent } from './app.component';
 
@@ -73,7 +74,8 @@ const routes: Routes = [
         InfiniteScrollModule,
         AuthModule,
         WizardModule,
-        DialogModule
+        DialogModule,
+        MdButtonModule
     ],
     declarations: [
         AppComponent,
