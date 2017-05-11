@@ -7,10 +7,13 @@ import { IdentityService } from './services/identity.service';
 
 import { ICustomizationSettings } from './interfaces/ISettings';
 
+
+import template from './app.component.html';
+
 @Component({
     selector: 'ombi',
     moduleId: module.id,
-    templateUrl: './app.component.html'
+    templateUrl: template
 })
 export class AppComponent implements OnInit {
 
