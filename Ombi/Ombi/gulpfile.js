@@ -276,8 +276,7 @@ gulp.task('bundle', ['typescript_firstrun'], function () {
 
 gulp.task('clean', function () {
     return del([
-        ...paths.npm.src.map(x => path.join(paths.npm.dest, x + "**")),
-        ...paths.sass.map(m => m.filter ? path.join(m.dest, m.filter) : m.dest),
+        paths.sass.dest + paths.sass.filter,
         paths.lib.dest,
         paths.bundle.dest,
         ...paths.modules.map(m => m.dest),
@@ -322,6 +321,6 @@ gulp.task('publish', callback => runSequence('fullvar', 'full', 'typescript', 'b
 
 // Auto compiles sass files on change, note that this doesn't seem to pick up new files at the moment
 gulp.task('watch', function () {
-    gulp.watch([].concat(...paths.sass.map(x => typeof (x.src) === "string" ? [x.src] : x.src)), ['sass']);
+    gulp.watch(paths.sass.src, ['sass']);
     gulp.watch('./Styles/**/*.css', ['libcss']); // legacy css
 });
