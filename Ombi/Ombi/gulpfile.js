@@ -125,18 +125,14 @@ var paths = {
             dest: './lib/primeng/'
         }
     ],
-    sass: [ // Simple sass->css compilation
+    sass:  // Simple sass->css compilation
         {
             src: ['./Styles/**/*.scss', '!./Styles/primeng/**'],
             dest: './css/',
             filter: '**/*.css'
         },
-        {
-            src: path.join(wwwroot, 'app/**/*.scss'),
-            dest: './app/',
-            filter: '**/*.css'
-        }
-    ],
+
+    
     bundle: { // This is the config for the bundler, you shouldn't need to change this
         root: './',
         dest: './lib/bundle.js',
@@ -259,18 +255,12 @@ gulp.task('modules', function () {
 })
 
 gulp.task('sass', function () {
-    var streams = []
-    for (let module of paths.sass) {
-        streams.push(
-            gulp.src(module.src)
-                .pipe(changed(module.dest, { extension: '.css' }))
-                .pipe(gulpif(global.full, sourcemaps.init()))
-                .pipe(sass({ outputStyle: global.full ? 'compressed' : 'nested' }).on('error', sass.logError))
-                .pipe(gulpif(global.full, sourcemaps.write('maps')))
-                .pipe(gulp.dest(path.join(paths.wwwroot, module.dest)))
-        );
-    }
-    return merge(streams);
+    return gulp.src(paths.sass.src)
+        .pipe(changed(paths.sass.dest))
+        .pipe(gulpif(global.full, sourcemaps.init()))
+        .pipe(sass({ outputStyle: global.full ? 'compressed' : 'nested' }).on('error', sass.logError))
+        .pipe(gulpif(global.full, sourcemaps.write('maps')))
+        .pipe(gulp.dest(path.join(paths.wwwroot, paths.sass.dest)))
 });
 
 

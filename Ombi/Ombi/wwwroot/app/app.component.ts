@@ -8,12 +8,11 @@ import { IdentityService } from './services/identity.service';
 import { ICustomizationSettings } from './interfaces/ISettings';
 
 
-import template from './app.component.html';
 
 @Component({
     selector: 'ombi',
     moduleId: module.id,
-    templateUrl: template
+    templateUrl: './app.component.html'
 })
 export class AppComponent implements OnInit {
 

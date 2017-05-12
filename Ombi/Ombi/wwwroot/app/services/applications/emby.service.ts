@@ -14,7 +14,7 @@ export class EmbyService extends ServiceHelpers {
     }
 
     logIn(settings: IEmbySettings): Observable<IEmbySettings> {
-        return this.http.post(`${this.url}/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+        return this.http.post(`${this.url}`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
     
 }

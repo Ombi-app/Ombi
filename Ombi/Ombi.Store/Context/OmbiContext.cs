@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO;
+using System.Resources;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Ombi.Store.Entities;
 
@@ -15,9 +17,15 @@ namespace Ombi.Store.Context
             Database.EnsureCreated();
             Database.Migrate();
 
+//#if DEBUG
+//            var file = File.ReadAllText();
+//#else
+            
+            var file = File.ReadAllText("SqlTables.sql");
+//#endif
             // Run Script
 
-            Database.ExecuteSqlCommand(Sql.SqlTables, 0);
+            Database.ExecuteSqlCommand(file, 0);
         }
 
         public DbSet<RequestBlobs> Requests { get; set; }

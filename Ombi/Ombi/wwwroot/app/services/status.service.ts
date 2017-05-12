@@ -11,6 +11,6 @@ export class StatusService extends ServiceHelpers {
         super(http, '/api/v1/status/');
     }
     getWizardStatus(): Observable<any> {
-        return this.http.get(`${this.url}/Wizard/`, { headers: this.headers }).map(this.extractData);
+        return this.http.get(`${this.url}Wizard/`, { headers: this.headers }).map(this.extractData);
     }
 }

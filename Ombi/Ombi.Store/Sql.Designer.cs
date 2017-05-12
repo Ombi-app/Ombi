@@ -23,7 +23,7 @@ namespace Ombi.Store {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Sql {
+    public class Sql {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -37,7 +37,7 @@ namespace Ombi.Store {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ombi.Store.Sql", typeof(Sql).GetTypeInfo().Assembly);
@@ -52,7 +52,7 @@ namespace Ombi.Store {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -80,7 +80,7 @@ namespace Ombi.Store {
         ///    Type						INTEGER NOT NULL,
         ///    Relea [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string SqlTables {
+        public static string SqlTables {
             get {
                 return ResourceManager.GetString("SqlTables", resourceCulture);
             }

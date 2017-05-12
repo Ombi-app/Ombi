@@ -21,11 +21,11 @@ export class IdentityService extends ServiceAuthHelpers {
     }
 
     getUsers(): Observable<IUser[]> {
-        return this.http.get(`${this.url}/Users`).map(this.extractData);
+        return this.http.get(`${this.url}Users`).map(this.extractData);
     }
 
     getAllAvailableClaims(): Observable<ICheckbox[]> {
-        return this.http.get(`${this.url}/Claims`).map(this.extractData);
+        return this.http.get(`${this.url}Claims`).map(this.extractData);
     }
 
     createUser(user: IUser): Observable<IUser> {

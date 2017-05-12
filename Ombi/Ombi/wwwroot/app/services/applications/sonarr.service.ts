@@ -9,7 +9,7 @@ import { ISonarrRootFolder, ISonarrProfile } from '../../interfaces/ISonarr';
 @Injectable()
 export class SonarrService extends ServiceAuthHelpers {
     constructor(http: AuthHttp) {
-        super(http, '/api/v1/Sonarr/');
+        super(http, '/api/v1/Sonarr');
     }
 
     getRootFolders(settings: ISonarrSettings): Observable<ISonarrRootFolder[]> {
