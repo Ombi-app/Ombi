@@ -17,12 +17,14 @@ namespace Ombi.Store.Context
             Database.EnsureCreated();
             Database.Migrate();
 
-//#if DEBUG
-//            var file = File.ReadAllText();
-//#else
-            
+#if DEBUG
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var directory = System.IO.Path.GetDirectoryName(location);
+            var file = File.ReadAllText(Path.Combine(directory,"SqlTables.sql"));
+#else
+
             var file = File.ReadAllText("SqlTables.sql");
-//#endif
+#endif
             // Run Script
 
             Database.ExecuteSqlCommand(file, 0);

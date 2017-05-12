@@ -78,7 +78,7 @@
                     
                     <!--Child Requests-->
                     <div *ngIf="request.hasChildRequests">
-                        <button type="button" class="btn btn-info" data-toggle="collapse" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
+                        <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
                         <div id="{{request.id}}childRequests" class="collapse">
 
                             <div *ngFor="let child of request.childRequests">

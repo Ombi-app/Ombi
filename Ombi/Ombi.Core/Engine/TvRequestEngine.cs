@@ -68,7 +68,7 @@ namespace Ombi.Core.Engine
 
             if (tv.LatestSeason)
             {
-                var latest = showInfo.Season.OrderBy(x => x).FirstOrDefault();
+                var latest = showInfo.Season.OrderBy(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in model.SeasonRequests)
                 {
                     if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
@@ -82,7 +82,7 @@ namespace Ombi.Core.Engine
             }
             if (tv.FirstSeason)
             {
-                var first = showInfo.Season.OrderByDescending(x => x).FirstOrDefault();
+                var first = showInfo.Season.OrderByDescending(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in model.SeasonRequests)
                 {
                     if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)

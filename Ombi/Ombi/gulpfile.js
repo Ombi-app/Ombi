@@ -71,7 +71,8 @@ var paths = {
                 './bower_components/PACE/themes/orange/pace-theme-flat-top.css',
                 './bower_components/PACE/themes/orange/pace-theme-loading-bar.css',
                 './node_modules/primeng/resources/primeng.css',
-                './node_modules/tether/dist/css/tether.css'
+                './node_modules/tether/dist/css/tether.css',
+                './node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css',
             ],
             dest: './css/lib/'
         },
