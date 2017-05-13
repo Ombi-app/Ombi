@@ -27,7 +27,7 @@
     "gulp-clean-css": "^3.0.4",
     "gulp-filter": "^5.0.0",
     "gulp-if": "^2.0.2",
-    "gulp-rename": "^1.2.2",
+    "gulp-rename": "^1.2.2", 
     "gulp-run": "^1.7.1",
     "gulp-sass": "^2.3.2",
     "gulp-sourcemaps": "^1.9.0",

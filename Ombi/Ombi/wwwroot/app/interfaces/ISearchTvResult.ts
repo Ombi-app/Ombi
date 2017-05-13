@@ -2,7 +2,7 @@
 
 export interface ISearchTvResult {
     id: number,
-    title: string,
+    title: string, // used in the request
     aliases: string[],
     banner: string,
     seriesId: number,

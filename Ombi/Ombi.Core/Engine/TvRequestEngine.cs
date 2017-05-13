@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using AutoMapper;
 using Hangfire;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
@@ -17,13 +18,15 @@ namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService) : base(user, requestService)
+        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService, IMapper map) : base(user, requestService)
         {
             TvApi = tvApi;
             NotificationService = notificationService;
+            Mapper = map;
         }
         private INotificationService NotificationService { get; }
         private ITvMazeApi TvApi { get; }
+        private IMapper Mapper { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -164,6 +167,16 @@ namespace Ombi.Core.Engine
             {
                 // This is where there are some episodes that have been requested, but this list contains the 'new' requests
                 newRequest.SeasonRequests = episodeDifference;
+            }
+
+            if (!existingRequest.HasChildRequests)
+            {
+                // So this is the first child request, we will want to convert the original request to a child
+                var originalRequest = Mapper.Map<TvRequestModel>(existingRequest);
+                existingRequest.ChildRequests.Add(originalRequest);
+                existingRequest.RequestedUsers.Clear();
+                existingRequest.Approved = false;
+                existingRequest.Available = false;
             }
 
             existingRequest.ChildRequests.Add(newRequest);

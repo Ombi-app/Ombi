@@ -13,10 +13,12 @@ import { NotificationService } from '../services/notification.service';
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 
+import  template  from './tvsearch.component.html';
+
 @Component({
     selector: 'tv-search',
     moduleId: module.id,
-    templateUrl: './tvsearch.component.html',
+    template: template,
 })
 export class TvSearchComponent implements OnInit, OnDestroy {
 

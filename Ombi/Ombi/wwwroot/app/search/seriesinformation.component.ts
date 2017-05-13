@@ -53,7 +53,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
                 this.result = x as IRequestEngineResult;
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
-                        `Request for ${this.series.seriesName} has been added successfully`);
+                        `Request for ${this.series.title} has been added successfully`);
                 } else {
                     this.notificationService.warning("Request Added", this.result.message);
                 }
