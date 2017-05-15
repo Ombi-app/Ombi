@@ -73,7 +73,8 @@ namespace Ombi.Schedule.Jobs
 
                 StartTheCache(plexSettings).Wait();
             }
-            catch (Exception e) { 
+            catch (Exception e)
+            {
                 Logger.LogWarning(LoggingEvents.CacherException, e, "Exception thrown when attempting to cache the Plex Content");
             }
         }
@@ -119,87 +120,92 @@ namespace Ombi.Schedule.Jobs
 
         private async Task StartTheCache(PlexSettings plexSettings)
         {
-            var allContent = GetAllContent(plexSettings);
-
-            // Let's now process this.
-
-            var contentToAdd = new List<PlexContent>();
-            foreach (var content in allContent)
+            foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
             {
-                if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+
+                var allContent = GetAllContent(servers);
+
+                // Let's now process this.
+
+                var contentToAdd = new List<PlexContent>();
+                foreach (var content in allContent)
                 {
-                    // Process Shows
-                    foreach (var metadata in content.Metadata)
+                    if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
-                        var seasonList = await PlexApi.GetSeasons(plexSettings.PlexAuthToken, plexSettings.FullUri,
-                            metadata.ratingKey);
-                        var seasonsContent = new List<SeasonsContent>();
-                        foreach (var season in seasonList.MediaContainer.Metadata)
+                        // Process Shows
+                        foreach (var metadata in content.Metadata)
                         {
-                            seasonsContent.Add(new SeasonsContent
+                            var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
+                                metadata.ratingKey);
+                            var seasonsContent = new List<SeasonsContent>();
+                            foreach (var season in seasonList.MediaContainer.Metadata)
                             {
-                                ParentKey = int.Parse(season.parentRatingKey),
-                                SeasonKey = int.Parse(season.ratingKey),
-                                SeasonNumber = season.index
-                            });
-                        }
-
-                        // Do we already have this item?
-                        var existingContent = await Repo.GetByKey(metadata.key);
-                        if (existingContent != null)
-                        {
-                            // Ok so we have it, let's check if there are any new seasons
-                            var seasonDifference = seasonsContent.Except(existingContent.Seasons).ToList();
-                            if (seasonDifference.Any())
-                            {
-                                // We have new seasons on Plex, let's add them back into the entity
-                                existingContent.Seasons.AddRange(seasonDifference);
-                                await Repo.Update(existingContent);
-                                continue;
+                                seasonsContent.Add(new SeasonsContent
+                                {
+                                    ParentKey = int.Parse(season.parentRatingKey),
+                                    SeasonKey = int.Parse(season.ratingKey),
+                                    SeasonNumber = season.index
+                                });
                             }
-                            else
+
+                            // Do we already have this item?
+                            var existingContent = await Repo.GetByKey(metadata.key);
+                            if (existingContent != null)
                             {
-                                // No changes, no need to do anything
-                                continue;
+                                // Ok so we have it, let's check if there are any new seasons
+                                var seasonDifference = seasonsContent.Except(existingContent.Seasons).ToList();
+                                if (seasonDifference.Any())
+                                {
+                                    // We have new seasons on Plex, let's add them back into the entity
+                                    existingContent.Seasons.AddRange(seasonDifference);
+                                    await Repo.Update(existingContent);
+                                    continue;
+                                }
+                                else
+                                {
+                                    // No changes, no need to do anything
+                                    continue;
+                                }
                             }
+
+                            // Get the show metadata... This sucks since the `metadata` var contains all information about the show
+                            // But it does not contain the `guid` property that we need to pull out thetvdb id...
+                            var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                metadata.ratingKey);
+                            var item = new PlexContent
+                            {
+                                AddedAt = DateTime.Now,
+                                Key = metadata.ratingKey,
+                                ProviderId = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata
+                                    .FirstOrDefault()
+                                    .guid),
+                                ReleaseYear = metadata.year.ToString(),
+                                Type = PlexMediaTypeEntity.Show,
+                                Title = metadata.title,
+                                Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, metadata.ratingKey),
+                                Seasons = new List<SeasonsContent>()
+                            };
+
+
+                            item.Seasons.AddRange(seasonsContent);
+
+                            contentToAdd.Add(item);
                         }
-
-                        // Get the show metadata... This sucks since the `metadata` var contains all information about the show
-                        // But it does not contain the `guid` property that we need to pull out thetvdb id...
-                        var showMetadata = await PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
-                            metadata.ratingKey);
-                        var item = new PlexContent
-                        {
-                            AddedAt = DateTime.Now,
-                            Key = metadata.ratingKey,
-                            ProviderId = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata
-                                .FirstOrDefault()
-                                .guid),
-                            ReleaseYear = metadata.year.ToString(),
-                            Type = PlexMediaTypeEntity.Show,
-                            Title = metadata.title,
-                            Url = PlexHelper.GetPlexMediaUrl(plexSettings.MachineIdentifier, metadata.ratingKey),
-                            Seasons = new List<SeasonsContent>()
-                        };
-
-                       
-                        item.Seasons.AddRange(seasonsContent);
-
-                        contentToAdd.Add(item);
                     }
                 }
-            }
 
-            if (contentToAdd.Any())
-            {
-                await Repo.AddRange(contentToAdd);
+                if (contentToAdd.Any())
+                {
+                    await Repo.AddRange(contentToAdd);
+                }
+
             }
         }
 
-        private List<Mediacontainer> GetAllContent(PlexSettings plexSettings)
+        private List<Mediacontainer> GetAllContent(PlexServers plexSettings)
         {
             var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri).Result;
-            
+
             var libs = new List<Mediacontainer>();
             if (sections != null)
             {
@@ -232,9 +238,12 @@ namespace Ombi.Schedule.Jobs
         {
             if (plex.Enable)
             {
-                if (string.IsNullOrEmpty(plex?.Ip) || string.IsNullOrEmpty(plex?.PlexAuthToken))
+                foreach (var server in plex.Servers ?? new List<PlexServers>())
                 {
-                    return false;
+                    if (string.IsNullOrEmpty(server?.Ip) || string.IsNullOrEmpty(server?.PlexAuthToken))
+                    {
+                        return false;
+                    }
                 }
             }
             return plex.Enable;

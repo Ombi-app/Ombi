@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { IPlexSettings, IPlexLibraries } from '../../interfaces/ISettings'
+import { IPlexSettings, IPlexLibraries, IPlexServer } from '../../interfaces/ISettings'
 
 
 import { SettingsService } from '../../services/settings.service';
@@ -21,7 +21,10 @@ export class PlexComponent implements OnInit {
     password: string;
 
     ngOnInit(): void {
-        this.settingsService.getPlex().subscribe(x => this.settings = x);
+        this.settingsService.getPlex().subscribe(x => {
+            this.settings = x;
+        }
+        );
     }
 
     requestToken() {
@@ -32,23 +35,40 @@ export class PlexComponent implements OnInit {
         // TODO Plex Service
     }
 
-    loadLibraries() {
+    addTab() {
+        //this.settings.servers.push(<IPlexServer>{ name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1) });
+
+        this.notificationService.warning("Disabled", "This feature is currently disabled");
+    }
+
+    removeServer(server: IPlexServer) {
+
+        this.notificationService.warning("Disabled", "This feature is currently disabled");
+        //var index = this.settings.servers.indexOf(server, 0);
+        //if (index > -1) {
+        //    this.settings.servers.splice(index, 1);
+        //}
+    }
+
+    loadLibraries(server:IPlexServer) {
         this.plexService.getLibraries(this.settings).subscribe(x => {
 
-            this.settings.plexSelectedLibraries = [];
+            server.plexSelectedLibraries = [];
             x.mediaContainer.directory.forEach((item, index) => {
                 var lib: IPlexLibraries = {
                     key: item.key,
                     title: item.title,
                     enabled: false
                 };
-                this.settings.plexSelectedLibraries.push(lib);
+                server.plexSelectedLibraries.push(lib);
 
             });
         });
     }
 
     save() {
+        var filtered = this.settings.servers.filter(x => x.name !== "");
+        this.settings.servers = filtered;
         this.settingsService.savePlex(this.settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Plex settings");

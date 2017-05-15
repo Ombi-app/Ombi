@@ -35,6 +35,7 @@ var paths = {
             '@angular/forms',
             '@angular/platform-browser/animations',
             '@angular/material',
+            '@ng-bootstrap/ng-bootstrap',
             'ngx-infinite-scroll'
         ],
         dest: './lib'

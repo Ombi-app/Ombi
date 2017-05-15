@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '../auth/auth.guard';
@@ -34,7 +35,8 @@ const routes: Routes = [
         MenuModule,
         InputSwitchModule,
         InputTextModule,
-        AuthModule
+        AuthModule,
+        NgbModule
     ],
     declarations: [
         SettingsMenuComponent,

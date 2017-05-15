@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,29 +30,42 @@ namespace Ombi.Controllers.External
         {
             // Do we already have settings?
             var settings = await PlexSettings.GetSettingsAsync();
-            if (!string.IsNullOrEmpty(settings?.PlexAuthToken)) return null;
+            if (!settings.Servers?.Any() ?? false) return null;
 
             var result = await PlexApi.SignIn(request);
             if (!string.IsNullOrEmpty(result.user?.authentication_token))
             {
                 var server = await PlexApi.GetServer(result.user.authentication_token);
-                var firstServer = server.Server.FirstOrDefault();
-                await PlexSettings.SaveSettingsAsync(new PlexSettings
+                var servers = server.Server;
+
+                settings.Servers = new List<PlexServers>();
+                var serverNumber = 0;
+                foreach (var s in servers)
                 {
-                    Enable = true,
-                    PlexAuthToken = result.user.authentication_token,
-                    Ip = firstServer.LocalAddresses,
-                    MachineIdentifier = firstServer.MachineIdentifier,
-                    Port = int.Parse(firstServer.Port),
-                    Ssl = firstServer.Scheme != "http",
-                });
+                    if (string.IsNullOrEmpty(s.LocalAddresses) || string.IsNullOrEmpty(s.Port))
+                    {
+                        continue;
+                    }
+                    settings.Servers.Add(new PlexServers
+                    {
+                        PlexAuthToken = result.user.authentication_token,
+                        Id = new Random().Next(),
+                        Ip = s.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
+                        MachineIdentifier = s.MachineIdentifier,
+                        Port = int.Parse(s.Port),
+                        Ssl = s.Scheme != "http",
+                        Name = $"Server{serverNumber++}"
+                    });
+                }
+
+                await PlexSettings.SaveSettingsAsync(settings);
             }
 
             return result;
         }
 
         [HttpPost("Libraries")]
-        public async Task<PlexLibraries> GetPlexLibraries([FromBody] PlexSettings settings)
+        public async Task<PlexLibraries> GetPlexLibraries([FromBody] PlexServers settings)
         {
             var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
