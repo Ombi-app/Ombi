@@ -21,7 +21,7 @@ namespace Ombi.Mapping.Profiles
             CreateMap<UserDto, UserViewModel>().ForMember(x => x.Password, opt => opt.Ignore());
 
             CreateMap<ClaimCheckboxes, Claim>()
-                .ConstructUsing(checkbox => checkbox.Enabled ? new Claim(ClaimTypes.Role, checkbox.Value) : null);
+                .ConstructUsing(checkbox => checkbox.Enabled ? new Claim(ClaimTypes.Role, checkbox.Value) : new Claim(ClaimTypes.Country, ""));
                 // This is used for the UserViewModel List<string> claims => UserDto List<claim>
             CreateMap<UserViewModel, UserDto>();
 

@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -71,6 +72,7 @@ namespace Ombi.Core.IdentityResolver
         public async Task<UserDto> CreateUser(UserDto userDto)
         {
             var user = Mapper.Map<User>(userDto);
+            user.Claims.RemoveAll(x => x.Type == ClaimTypes.Country); // This is a hack around the Mapping Profile
             var result = HashPassword(user.Password);
             user.Password = result.HashedPass;
             user.Salt = result.Salt;

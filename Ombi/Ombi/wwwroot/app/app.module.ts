@@ -1,4 +1,4 @@
-import { NgModule }      from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +28,7 @@ import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { UserManagementComponent } from './usermanagement/usermanagement.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
+import { UserModalComponent } from './usermanagement/usermodal.component';
 
 // Services
 import { SearchService } from './services/search.service';
@@ -91,7 +92,8 @@ const routes: Routes = [
         UserManagementComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
-        SeriesInformationComponent
+        SeriesInformationComponent,
+        UserModalComponent,
     ],
     providers: [
         SearchService,

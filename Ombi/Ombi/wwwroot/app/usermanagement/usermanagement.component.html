@@ -109,8 +109,8 @@
                 <div *ngFor="let c of selectedUser.claims">
                     <div class="form-group">
                         <div class="checkbox">
-                            <label for="claim{{c.value}}">{{c.value}}</label>
-                            <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" [checked]="c.value" id="claim{{c.value}}" name="claim{{c.value}}" ng-checked="c.enabled">
+                            <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                            <label for="create{{c.value}}">{{c.value}}</label>
 
                         </div>
                     </div>
@@ -126,6 +126,8 @@
         </div>
     </div>
 </div>
+
+
 
 <div>
     <div class="modal fade in " *ngIf="showCreateDialogue" style="display: block;">
@@ -167,9 +169,8 @@
                     <div *ngFor="let c of availableClaims">
                         <div class="form-group">
                             <div class="checkbox">
+                                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
                                 <label for="create{{c.value}}">{{c.value}}</label>
-                                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" [checked]="c.value" id="create{{c.value}}" name="create{{c.value}}" ng-checked="c.enabled">
-
                             </div>
                         </div>
                     </div>
