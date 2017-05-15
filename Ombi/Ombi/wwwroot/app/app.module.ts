@@ -28,7 +28,6 @@ import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { UserManagementComponent } from './usermanagement/usermanagement.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
-import { UserModalComponent } from './usermanagement/usermodal.component';
 
 // Services
 import { SearchService } from './services/search.service';
@@ -93,7 +92,6 @@ const routes: Routes = [
         MovieRequestsComponent,
         TvRequestsComponent,
         SeriesInformationComponent,
-        UserModalComponent,
     ],
     providers: [
         SearchService,
