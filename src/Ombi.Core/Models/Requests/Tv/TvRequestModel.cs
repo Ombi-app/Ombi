@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Requests
 {
@@ -6,23 +8,13 @@ namespace Ombi.Core.Models.Requests
     {
         public TvRequestModel()
         {
-            SeasonRequests = new List<SeasonRequestModel>();
-            ChildRequests = new List<TvRequestModel>();
+            ChildRequests = new List<ChildTvRequest>();
         }
-        
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
-        public bool RequestAll { get; set; }
-        public List<SeasonRequestModel> SeasonRequests { get; set; }
 
-        /// <summary>
-        /// This is for TV requests, If there is more than 1 request for a show then it should be a child
-        /// e.g. Request 1 is for Season 1, Request 2 is for season 5. There should be two child items.
-        /// </summary>
-        public List<TvRequestModel> ChildRequests { get; set; }
-
-        public bool HasChildRequests => ChildRequests.Count > 0;
-
+        public List<ChildTvRequest> ChildRequests { get; set; }
+        
         /// <summary>
         /// For TV Shows with a custom root folder
         /// </summary>
@@ -30,5 +22,12 @@ namespace Ombi.Core.Models.Requests
         /// The root folder selected.
         /// </value>
         public int RootFolderSelected { get; set; }
+    }
+
+    public class ChildTvRequest : BaseRequestModel
+    {
+        public bool RequestAll { get; set; }
+        public List<SeasonRequestModel> SeasonRequests { get; set; } = new List<SeasonRequestModel>();
+
     }
 }

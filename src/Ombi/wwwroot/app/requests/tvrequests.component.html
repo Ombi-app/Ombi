@@ -77,29 +77,29 @@
 
                 </div>
                 <!--Child Requests-->
-                <div *ngIf="request.hasChildRequests">
-                    
-                    <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
-                    <div id="{{request.id}}childRequests" class="collapse">
 
-                        <div *ngFor="let child of request.childRequests">
-                            <hr/>
-                            <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span>
-                            </div>
-                            <div>Seasons Requested: <span *ngFor="let s of request.seasonNumbersRequested">{{s}} </span>
-                            </div>
-                            <div>
-                                <span>Request status: </span>
-                                <span *ngIf="request.available" class="label label-success">Available</span>
-                                <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
-                                <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
-                                <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                                <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
+                <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
+                <div id="{{request.id}}childRequests" class="collapse">
 
-                            </div>
+                    <div *ngFor="let child of request.childRequests">
+                        <hr />
+                        <div *ngIf="request.requestedUsers">
+                            Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span>
                         </div>
+                        <div *ngIf="child.seasonRequests">
+                            Seasons Requested: <span *ngFor="let s of child.seasonRequests">{{s.seasonNumber}} </span>
+                        </div>
+                        <div>
+                            <span>Request status: </span>
+                            <span *ngIf="request.available" class="label label-success">Available</span>
+                            <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
+                            <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
+                            <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                            <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
 
+                        </div>
                     </div>
+
                 </div>
 
             </div>
@@ -114,6 +114,7 @@
                                     <span class="caret"></span>
                                     <span class="sr-only">Toggle Dropdown</span>
                                 </button>
+
                                 <!--<ul class="dropdown-menu">
                                     {{#each qualities}}
                                     <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
@@ -124,6 +125,10 @@
 
                             <button *ngIf="!request.hasQualities" (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                         </form>
+
+
+
+
 
 
 

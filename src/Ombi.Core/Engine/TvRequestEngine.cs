@@ -33,10 +33,11 @@ namespace Ombi.Core.Engine
 
             var showInfo = await TvApi.ShowLookupByTheTvDbId(tv.Id);
             DateTime.TryParse(showInfo.premiered, out DateTime firstAir);
-            
+
             // For some reason the poster path is always http
             var posterPath = showInfo.image?.medium.Replace("http:", "https:");
-            var model = new TvRequestModel
+
+            var childRequest = new ChildTvRequest
             {
                 Id = tv.Id,
                 Type = RequestType.TvShow,
@@ -49,30 +50,50 @@ namespace Ombi.Core.Engine
                 Approved = false,
                 RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
+                ProviderId = tv.Id,
+                RequestAll = tv.RequestAll,
+                SeasonRequests = tv.SeasonRequests,
+            };
+
+            var model = new TvRequestModel
+            {
+                Id = tv.Id,
+                Type = RequestType.TvShow,
+                Overview = showInfo.summary.RemoveHtml(),
+                PosterPath = posterPath,
+                Title = showInfo.name,
+                ReleaseDate = firstAir,
+                Status = showInfo.status,
+                Approved = false,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.Id.ToString(),
                 ProviderId = tv.Id,
-                RequestAll = tv.RequestAll
+                
             };
 
-            var episodes = await TvApi.EpisodeLookup(showInfo.id);
+            model.ChildRequests.Add(childRequest);
 
-            foreach (var e in episodes)
+            if (childRequest.SeasonRequests.Any())
             {
-                var season = model.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-                season?.Episodes.Add(new EpisodesRequested
+                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+
+                foreach (var e in episodes)
                 {
-                    Url = e.url,
-                    Title = e.name,
-                    AirDate = DateTime.Parse(e.airstamp),
-                    EpisodeNumber = e.number,
-                });
+                    var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+                    season?.Episodes.Add(new EpisodesRequested
+                    {
+                        Url = e.url,
+                        Title = e.name,
+                        AirDate = DateTime.Parse(e.airstamp),
+                        EpisodeNumber = e.number,
+                    });
+                }
             }
 
             if (tv.LatestSeason)
             {
                 var latest = showInfo.Season.OrderBy(x => x.SeasonNumber).FirstOrDefault();
-                foreach (var modelSeasonRequest in model.SeasonRequests)
+                foreach (var modelSeasonRequest in childRequest.SeasonRequests)
                 {
                     if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
                     {
@@ -86,7 +107,7 @@ namespace Ombi.Core.Engine
             if (tv.FirstSeason)
             {
                 var first = showInfo.Season.OrderByDescending(x => x.SeasonNumber).FirstOrDefault();
-                foreach (var modelSeasonRequest in model.SeasonRequests)
+                foreach (var modelSeasonRequest in childRequest.SeasonRequests)
                 {
                     if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)
                     {
@@ -124,20 +145,8 @@ namespace Ombi.Core.Engine
         {
             var allRequests = await TvRequestService.GetAllAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
-
-            results.Approved = request.Approved;
-            results.Available = request.Available;
-            results.Denied = request.Denied;
-            results.DeniedReason = request.DeniedReason;
-            results.AdminNote = request.AdminNote;
-            results.ImdbId = request.ImdbId;
-            results.IssueId = request.IssueId;
-            results.Issues = request.Issues;
-            results.OtherMessage = request.OtherMessage;
-            results.Overview = request.Overview;
-            results.PosterPath = request.PosterPath;
-            results.RequestedUsers = request.RequestedUsers?.ToList() ?? new List<string>();
-
+            results = Mapper.Map<TvRequestModel>(request);
+            
             var model = TvRequestService.UpdateRequest(results);
             return model;
         }
@@ -149,38 +158,25 @@ namespace Ombi.Core.Engine
 
         private async Task<RequestEngineResult> AddExistingRequest(TvRequestModel newRequest, TvRequestModel existingRequest)
         {
-            var episodeDifference = new List<SeasonRequestModel>();
-            if (existingRequest.HasChildRequests)
+
+            var child = newRequest.ChildRequests.FirstOrDefault(); // There will only be 1
+            var episodeDiff = new List<SeasonRequestModel>();
+            foreach (var existingChild in existingRequest.ChildRequests)
             {
-                // Let's check if this has already been requested as a child!
-                foreach (var children in existingRequest.ChildRequests)
+                var difference = GetListDifferences(existingChild.SeasonRequests, child.SeasonRequests).ToList();
+                if (difference.Any())
                 {
-                    var difference = GetListDifferences(children.SeasonRequests, newRequest.SeasonRequests).ToList();
-                    if (difference.Any())
-                    {
-                        episodeDifference = difference;
-                    }
+                    episodeDiff = difference;
                 }
             }
 
-            if (episodeDifference.Any())
+            if (episodeDiff.Any())
             {
                 // This is where there are some episodes that have been requested, but this list contains the 'new' requests
-                newRequest.SeasonRequests = episodeDifference;
+                child.SeasonRequests = episodeDiff;
             }
 
-            if (!existingRequest.HasChildRequests)
-            {
-                // So this is the first child request, we will want to convert the original request to a child
-                var originalRequest = Mapper.Map<TvRequestModel>(existingRequest);
-                existingRequest.ChildRequests.Add(originalRequest);
-                existingRequest.RequestedUsers.Clear();
-                existingRequest.Approved = false;
-                existingRequest.Available = false;
-            }
-
-            existingRequest.ChildRequests.Add(newRequest);
-
+            existingRequest.ChildRequests.AddRange(newRequest.ChildRequests);
             TvRequestService.UpdateRequest(existingRequest);
 
             if (ShouldAutoApprove(RequestType.TvShow))
@@ -207,10 +203,10 @@ namespace Ombi.Core.Engine
         {
             await TvRequestService.AddRequestAsync(model);
 
-           return await AfterRequest(model);
+            return await AfterRequest(model);
         }
 
-        private async Task<RequestEngineResult> AfterRequest(BaseRequestModel model)
+        private async Task<RequestEngineResult> AfterRequest(TvRequestModel model)
         {
             if (ShouldSendNotification(model.Type))
             {

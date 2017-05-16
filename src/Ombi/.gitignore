@@ -4,6 +4,8 @@
 /wwwroot/maps/**
 /wwwroot/app/**/*.js
 /wwwroot/app/**/*.js.map
+/wwwroot/*.js.map
+/wwwroot/*.js
 
 # dependencies
 /node_modules

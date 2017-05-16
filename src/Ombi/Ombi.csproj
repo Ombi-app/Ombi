@@ -12,6 +12,11 @@
     <Content Include="wwwroot\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="wwwroot/systemjs.config.js.map" />
+    <Content Remove="wwwroot\systemjs.config.js" />
+  </ItemGroup>
+
 
 
   <ItemGroup>

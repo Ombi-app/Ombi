@@ -17,4 +17,4 @@
 
 System.import('bundle').then(() => {
     System.import('/app/main');
-})
+}) 

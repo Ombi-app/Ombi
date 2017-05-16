@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -55,7 +56,16 @@ namespace Ombi.Controllers
         [HttpGet("tv/{count:int}/{position:int}")]
         public async Task<IEnumerable<TvRequestModel>> GetTvRequests(int count, int position)
         {
-            return await TvRequestEngine.GetTvRequests(count, position);
+            try
+            {
+
+                return await TvRequestEngine.GetTvRequests(count, position);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
 
         [HttpPost("tv")]

@@ -18,7 +18,7 @@
     issueId: number,
     denied: boolean,
     deniedReason: string,
-    released:boolean
+    released: boolean
 }
 
 export interface IMovieRequestModel extends IMediaBase {
@@ -28,16 +28,17 @@ export interface IMovieRequestModel extends IMediaBase {
 export interface ITvRequestModel extends IMediaBase {
     imdbId: string,
     tvDbId: string,
-    requestAll: boolean,
-    seasonRequests: ISeasonRequests[],
-    childRequests: ITvRequestModel[],
-    hasChildRequests: boolean,
+    childRequests: IChildTvRequest[]
     rootFolderSelected: number,
-    firstAired:string,
+    firstAired: string,
 }
 
-export interface ISeasonRequests
-{
+export interface IChildTvRequest extends IMediaBase {
+        requestAll: boolean,
+    seasonRequests: ISeasonRequests[],
+}
+
+export interface ISeasonRequests {
     seasonNumber: number,
     episodes: IEpisodesRequested[],
 }
@@ -49,7 +50,7 @@ export interface IEpisodesRequested {
     url: string,
     requested: boolean,
     status: string,
-    available:boolean
+    available: boolean
 }
 
 
@@ -60,5 +61,5 @@ export enum RequestType {
 
 export interface IRequestsPageScroll {
     count: number,
-    position:number
+    position: number
 }

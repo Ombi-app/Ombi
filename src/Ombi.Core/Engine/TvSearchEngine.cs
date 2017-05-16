@@ -21,7 +21,7 @@ namespace Ombi.Core.Engine
     {
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings) 
+            ISettingsService<EmbySettings> embySettings)
             : base(identity, service)
         {
             TvMazeApi = tvMaze;
@@ -41,7 +41,7 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
             var searchResult = await TvMazeApi.Search(searchTerm);
-            
+
             if (searchResult != null)
             {
                 return await ProcessResults(searchResult);
@@ -73,7 +73,7 @@ namespace Ombi.Core.Engine
                         EpisodeNumber = e.number,
                     });
                     mapped.SeasonRequests.Add(newSeason);
-                    
+
                 }
                 else
                 {
@@ -166,19 +166,23 @@ namespace Ombi.Core.Engine
                     // Let's modify the seasonsrequested to reflect what we have requested...
                     foreach (var season in item.SeasonRequests)
                     {
-                        // Find the existing request season
-                        var existingSeason =
-                            existingRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
-
-                        foreach (var ep in existingSeason.Episodes)
+                        foreach (var existingRequestChildRequest in existingRequest.ChildRequests)
                         {
-                           // Find the episode from what we are searching
-                            var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
-                            episodeSearching.Requested = ep.Requested;
-                            episodeSearching.Available = ep.Available;
-                            episodeSearching.Approved = ep.Approved;
+                            
+                            // Find the existing request season
+                            var existingSeason =
+                                existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
+
+                            foreach (var ep in existingSeason.Episodes)
+                            {
+                                // Find the episode from what we are searching
+                                var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
+                                episodeSearching.Requested = ep.Requested;
+                                episodeSearching.Available = ep.Available;
+                                episodeSearching.Approved = ep.Approved;
+                            }
                         }
-                        
+
                     }
                 }
                 //if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid))
