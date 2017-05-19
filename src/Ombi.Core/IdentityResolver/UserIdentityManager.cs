@@ -88,6 +88,7 @@ namespace Ombi.Core.IdentityResolver
 
         public async Task<UserDto> UpdateUser(UserDto userDto)
         {
+            userDto.Claims.RemoveAll(x => x.Type == ClaimTypes.Country); // This is a hack around the Mapping Profile
             var user = Mapper.Map<User>(userDto);
             return Mapper.Map<UserDto>(await UserRepository.UpdateUser(user));
         }

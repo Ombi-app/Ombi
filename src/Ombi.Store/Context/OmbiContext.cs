@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Resources;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -38,7 +39,12 @@ namespace Ombi.Store.Context
 
         public EntityEntry<GlobalSettings> Entry(GlobalSettings settings)
         {
-            return Entry(settings);
+            return base.Entry(settings);
+        }
+
+        public EntityEntry<User> Entry(User settings)
+        {
+            return base.Entry(settings);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

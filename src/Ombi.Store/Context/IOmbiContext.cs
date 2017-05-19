@@ -16,6 +16,7 @@ namespace Ombi.Store.Context
         DbSet<PlexContent> PlexContent { get; set; }
         DbSet<User> Users { get; set; }
         EntityEntry<GlobalSettings> Entry(GlobalSettings settings);
+        EntityEntry<User> Entry(User settings);
         EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
     }
 }

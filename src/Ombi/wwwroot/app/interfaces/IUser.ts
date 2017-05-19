@@ -5,7 +5,7 @@
     claims: ICheckbox[],
     emailAddress: string,
     password: string,
-    userType : UserType,
+    userType: UserType,
 }
 
 
@@ -18,5 +18,6 @@ export enum UserType {
 
 export interface ICheckbox {
     value: string,
-    enabled:boolean,
+    enabled: boolean,
 }
+

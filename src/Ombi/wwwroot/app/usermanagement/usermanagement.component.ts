@@ -37,6 +37,7 @@ export class UserManagementComponent implements OnInit {
 
     updateUser() {
         this.showEditDialog = false;
+        this.identityService.updateUser(this.selectedUser).subscribe(x => this.selectedUser = x);
     }
 
     create() {
@@ -64,7 +65,8 @@ export class UserManagementComponent implements OnInit {
             emailAddress: "",
             password: "",
             userType: 1,
-            username: ""
+            username: "",
+
         }
         this.resetClaims();
     }

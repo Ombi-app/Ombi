@@ -24,15 +24,15 @@
             <ul class="nav navbar-nav">
                 <li [routerLinkActive]="['active']"><a [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
             </ul>
-            <ul *ngIf="isAdmin || isPowerUser" class="nav navbar-nav">
+            <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
                 <li [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
             </ul>
 
             
             <ul class="nav navbar-nav navbar-right">
-                    <li *ngIf="isAdmin" [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
+                    <li *ngIf="hasRole('Admin') " [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']"><i class="fa fa-cog"></i> Settings</a></li>
                 <li  [routerLinkActive]="['active']" class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Welcome {{username}} <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Welcome {{user.name}} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <li [routerLinkActive]="['active']"><a [routerLink]="['/user/changepassword']"><i class="fa fa-key"></i> Change Password</a></li>
                         <li [routerLinkActive]="['active']"><a (click)="logOut()"><i class="fa fa-sign-out"></i> Logout</a></li>
@@ -44,7 +44,7 @@
 </nav>
 
 
-<div class="container" style="padding-top: 5%">
+<div class="container top-spacing">
     <router-outlet></router-outlet>
 </div>
 

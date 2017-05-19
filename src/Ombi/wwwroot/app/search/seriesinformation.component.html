@@ -1,66 +1,75 @@
 ﻿<div *ngIf="series">
     
+    <ngb-tabset>
+             
+        <div *ngFor="let season of series.seasonRequests">
+            <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
+                <ng-template ngbTabContent>
+                    <h2>Season: {{season.seasonNumber}}</h2>
+
+                    <table class="table table-striped table-hover table-responsive table-condensed">
+                        <thead>
+                        <tr>
+                            <th>
+                                <a>
+                                    #
+                                </a>
+                            </th>
+                            <th>
+                                <a>
+                                    Title
+                                </a>
+                            </th>
+                            <th>
+                                <a>
+                                    Air Date
+                                </a>
+                            </th>
+                            <th>
+                                <a>
+                                    Status
+                                </a>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let ep of season.episodes">
+                            <td>
+                                {{ep.episodeNumber}}
+                            </td>
+                            <td>
+                                {{ep.title}}
+                            </td>
+                            <td>
+                                {{ep.airDate | date: 'dd/MM/yyyy' }}
+                            </td>
+                            <td>
+                                <span *ngIf="ep.available" class="label label-success">Available</span>
+                                <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
+                                <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
+                                <template #requested>
+                                    <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
+                                </template>
+
+                                <template #notRequested>
+                                    <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
+                                </template>
+                            </td>
+
+                            <td>
+
+                                <button (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-primary-outline">Request</button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+            </ngb-tab>
+        </div>
+    </ngb-tabset>
+
+   
     
-
-    <div *ngFor="let season of series.seasonRequests;">
-        <h2>Season: {{season.seasonNumber}}</h2>
-
-        <table class="table table-striped table-hover table-responsive table-condensed">
-            <thead>
-            <tr>
-                <th>
-                    <a>
-                        #
-                    </a>
-                </th>
-                <th>
-                    <a>
-                        Title
-                    </a>
-                </th>
-                <th>
-                    <a>
-                        Air Date
-                    </a>
-                </th>
-                <th>
-                    <a>
-                        Status
-                    </a>
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let ep of season.episodes">
-                <td>
-                    {{ep.episodeNumber}}
-                </td>
-                <td>
-                    {{ep.title}}
-                </td>
-                <td>
-                    {{ep.airDate | date: 'dd/MM/yyyy' }}
-                </td>
-                <td>
-                    <span *ngIf="ep.available" class="label label-success">Available</span>
-                    <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
-                    <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
-                    <template #requested>
-                        <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
-                    </template>
-
-                    <template #notRequested>
-                        <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
-                    </template>
-                </td>
-
-                <td>
-
-                    <button (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-info-outline">Request</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
+    
+    <button id="requestFloatingBtn" class="btn btn-sm btn-success" title="Go to top">Request</button>
 </div>

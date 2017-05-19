@@ -67,7 +67,9 @@ namespace Ombi.Store.Repository
 
         public async Task<User> UpdateUser(User user)
         {
-            Db.Users.Update(user);
+            Db.Entry(user).State = EntityState.Modified;
+            Db.Entry(user).Property(x => x.Salt).IsModified = false;
+            Db.Entry(user).Property(x => x.Password).IsModified = false;
             await Db.SaveChangesAsync();
             return user;
         }
