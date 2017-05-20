@@ -126,17 +126,16 @@ namespace Ombi.Schedule.Jobs
                 var allContent = GetAllContent(servers);
 
                 // Let's now process this.
-
                 var contentToAdd = new List<PlexContent>();
                 foreach (var content in allContent)
                 {
                     if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Process Shows
-                        foreach (var metadata in content.Metadata)
+                        foreach (var show in content.Metadata)
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
-                                metadata.ratingKey);
+                                show.ratingKey);
                             var seasonsContent = new List<SeasonsContent>();
                             foreach (var season in seasonList.MediaContainer.Metadata)
                             {
@@ -149,45 +148,82 @@ namespace Ombi.Schedule.Jobs
                             }
 
                             // Do we already have this item?
-                            var existingContent = await Repo.GetByKey(metadata.key);
+                            var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
                             {
                                 // Ok so we have it, let's check if there are any new seasons
-                                var seasonDifference = seasonsContent.Except(existingContent.Seasons).ToList();
-                                if (seasonDifference.Any())
+                                var itemAdded = false;
+                                foreach (var season in seasonsContent)
                                 {
-                                    // We have new seasons on Plex, let's add them back into the entity
-                                    existingContent.Seasons.AddRange(seasonDifference);
-                                    await Repo.Update(existingContent);
-                                    continue;
+                                    var seasonExists = existingContent.Seasons.Where(x => x.SeasonKey == season.SeasonKey);
+
+                                    if (seasonExists != null)
+                                    {
+                                        // We already have this season
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        existingContent.Seasons.Add(season);
+                                        itemAdded = true;
+                                    }
                                 }
-                                else
+
+                                if (itemAdded) await Repo.Update(existingContent);
+                            }
+                            else
+                            {
+
+                                // Get the show metadata... This sucks since the `metadata` var contains all information about the show
+                                // But it does not contain the `guid` property that we need to pull out thetvdb id...
+                                var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                    show.ratingKey);
+                                var item = new PlexContent
                                 {
-                                    // No changes, no need to do anything
-                                    continue;
-                                }
+                                    AddedAt = DateTime.Now,
+                                    Key = show.ratingKey,
+                                    ProviderId = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata
+                                        .FirstOrDefault()
+                                        .guid),
+                                    ReleaseYear = show.year.ToString(),
+                                    Type = PlexMediaTypeEntity.Show,
+                                    Title = show.title,
+                                    Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
+                                    Seasons = new List<SeasonsContent>()
+                                };
+
+                                item.Seasons.ToList().AddRange(seasonsContent);
+
+                                contentToAdd.Add(item);
+                            }
+                        }
+                    }
+                    if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        foreach (var movie in content.Metadata)
+                        {
+                            // Let's check if we have this movie
+                            var existing = await Repo.GetByKey(movie.ratingKey);
+                            if(existing != null)
+                            {
+                                continue;
                             }
 
-                            // Get the show metadata... This sucks since the `metadata` var contains all information about the show
-                            // But it does not contain the `guid` property that we need to pull out thetvdb id...
-                            var showMetadata = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
-                                metadata.ratingKey);
+                            var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
+                                movie.ratingKey);
                             var item = new PlexContent
                             {
                                 AddedAt = DateTime.Now,
-                                Key = metadata.ratingKey,
-                                ProviderId = PlexHelper.GetProviderIdFromPlexGuid(showMetadata.MediaContainer.Metadata
-                                    .FirstOrDefault()
-                                    .guid),
-                                ReleaseYear = metadata.year.ToString(),
-                                Type = PlexMediaTypeEntity.Show,
-                                Title = metadata.title,
-                                Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, metadata.ratingKey),
+                                Key = movie.ratingKey,
+                                ProviderId = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer.Metadata
+                                .FirstOrDefault()
+                                .guid),
+                                ReleaseYear = movie.year.ToString(),
+                                Type = PlexMediaTypeEntity.Movie,
+                                Title = movie.title,
+                                Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
                                 Seasons = new List<SeasonsContent>()
                             };
-
-
-                            item.Seasons.AddRange(seasonsContent);
 
                             contentToAdd.Add(item);
                         }
@@ -196,7 +232,8 @@ namespace Ombi.Schedule.Jobs
 
                 if (contentToAdd.Any())
                 {
-                    await Repo.AddRange(contentToAdd);
+                    
+                    contentToAdd.ForEach(async x => await Repo.Add(x));
                 }
 
             }

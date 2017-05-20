@@ -13,13 +13,15 @@ using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
 
-        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings, ISettingsService<EmbySettings> embySettings,
+        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo,
             ILogger<MovieSearchEngine> logger)
             : base(identity, service)
         {
@@ -28,6 +30,7 @@ namespace Ombi.Core.Engine
             PlexSettings = plexSettings;
             EmbySettings = embySettings;
             Logger = logger;
+            PlexContentRepo = repo;
         }
 
         private IMovieDbApi MovieApi { get; }
@@ -35,6 +38,7 @@ namespace Ombi.Core.Engine
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
+        private IPlexContentRepository PlexContentRepo { get; }
 
         public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
         {
@@ -136,8 +140,17 @@ namespace Ombi.Core.Engine
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
             Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
+            var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
             if (plexSettings.Enable)
             {
+
+                var item = await PlexContentRepo.Get(showInfo.ImdbId.ToString());
+                if(item != null)
+                {
+                    viewMovie.Available = true;
+                    viewMovie.PlexUrl = item.Url;
+                }
+
                 //        var content = PlexContentRepository.GetAll();
                 //        var plexMovies = PlexChecker.GetPlexMovies(content);
 

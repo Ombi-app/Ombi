@@ -14,6 +14,7 @@ using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
@@ -21,13 +22,14 @@ namespace Ombi.Core.Engine
     {
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo)
             : base(identity, service)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
             PlexSettings = plexSettings;
             EmbySettings = embySettings;
+            PlexContentRepo = repo;
             //TraktApi = trakt;
         }
 
@@ -35,6 +37,7 @@ namespace Ombi.Core.Engine
         private IMapper Mapper { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
+        private IPlexContentRepository PlexContentRepo { get; }
         //private ITraktApi TraktApi { get; }
 
 
@@ -91,7 +94,7 @@ namespace Ombi.Core.Engine
             var existingRequests = await GetTvRequests();
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
-            return ProcessResult(mapped, existingRequests, plexSettings, embySettings);
+            return await ProcessResult(mapped, existingRequests, plexSettings, embySettings);
         }
 
         //public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
@@ -127,12 +130,12 @@ namespace Ombi.Core.Engine
             foreach (var tvMazeSearch in items)
             {
                 var viewT = Mapper.Map<SearchTvShowViewModel>(tvMazeSearch);
-                retVal.Add(ProcessResult(viewT, existingRequests, plexSettings, embySettings));
+                retVal.Add(await ProcessResult(viewT, existingRequests, plexSettings, embySettings));
             }
             return retVal;
         }
 
-        private SearchTvShowViewModel ProcessResult(SearchTvShowViewModel item, Dictionary<int, TvRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+        private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item, Dictionary<int, TvRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             if (embySettings.Enable)
             {
@@ -144,6 +147,13 @@ namespace Ombi.Core.Engine
             }
             if (plexSettings.Enable)
             {
+                var content = await PlexContentRepo.Get(item.Id.ToString());
+
+                if (content != null)
+                {
+                    item.Available = true;
+                    item.PlexUrl = content.Url;
+                }
                 //var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
                 //    providerId);
                 //if (plexShow != null)
@@ -155,6 +165,8 @@ namespace Ombi.Core.Engine
 
             if (item.Id > 0 && item.Available)
             {
+
+                // TODO need to check if the episodes are available
                 var tvdbid = item.Id;
                 if (existingRequests.ContainsKey(tvdbid))
                 {
@@ -168,7 +180,7 @@ namespace Ombi.Core.Engine
                     {
                         foreach (var existingRequestChildRequest in existingRequest.ChildRequests)
                         {
-                            
+
                             // Find the existing request season
                             var existingSeason =
                                 existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);

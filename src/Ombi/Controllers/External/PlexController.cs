@@ -36,27 +36,37 @@ namespace Ombi.Controllers.External
             if (!string.IsNullOrEmpty(result.user?.authentication_token))
             {
                 var server = await PlexApi.GetServer(result.user.authentication_token);
-                var servers = server.Server;
+                var servers = server.Server.FirstOrDefault();
 
-                settings.Servers = new List<PlexServers>();
-                var serverNumber = 0;
-                foreach (var s in servers)
-                {
-                    if (string.IsNullOrEmpty(s.LocalAddresses) || string.IsNullOrEmpty(s.Port))
-                    {
-                        continue;
-                    }
-                    settings.Servers.Add(new PlexServers
-                    {
-                        PlexAuthToken = result.user.authentication_token,
+                settings.Enable = true;
+                settings.Servers = new List<PlexServers> { new PlexServers{
+PlexAuthToken = result.user.authentication_token,
                         Id = new Random().Next(),
-                        Ip = s.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
-                        MachineIdentifier = s.MachineIdentifier,
-                        Port = int.Parse(s.Port),
-                        Ssl = s.Scheme != "http",
-                        Name = $"Server{serverNumber++}"
-                    });
+                        Ip = servers.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
+                        MachineIdentifier = servers.MachineIdentifier,
+                        Port = int.Parse(servers.Port),
+                        Ssl = servers.Scheme != "http",
+                        Name = $"Server 1",
                 }
+                };
+                //var serverNumber = 0;
+                //foreach (var s in servers)
+                //{
+                //    if (string.IsNullOrEmpty(s.LocalAddresses) || string.IsNullOrEmpty(s.Port))
+                //    {
+                //        continue;
+                //    }
+                //    settings.Servers.Add(new PlexServers
+                //    {
+                //        PlexAuthToken = result.user.authentication_token,
+                //        Id = new Random().Next(),
+                //        Ip = s.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
+                //        MachineIdentifier = s.MachineIdentifier,
+                //        Port = int.Parse(s.Port),
+                //        Ssl = s.Scheme != "http",
+                //        Name = $"Server{serverNumber++}"
+                //    });
+                //}
 
                 await PlexSettings.SaveSettingsAsync(settings);
             }
@@ -72,6 +82,6 @@ namespace Ombi.Controllers.External
             return libs;
         }
 
-        
+
     }
 }

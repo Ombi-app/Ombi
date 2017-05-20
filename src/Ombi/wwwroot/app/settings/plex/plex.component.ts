@@ -51,7 +51,7 @@ export class PlexComponent implements OnInit {
     }
 
     loadLibraries(server:IPlexServer) {
-        this.plexService.getLibraries(this.settings).subscribe(x => {
+        this.plexService.getLibraries(server).subscribe(x => {
 
             server.plexSelectedLibraries = [];
             x.mediaContainer.directory.forEach((item, index) => {
