@@ -37,14 +37,9 @@ namespace Ombi.Store.Context
         public DbSet<PlexContent> PlexContent { get; set; }
 
 
-        public EntityEntry<GlobalSettings> Entry(GlobalSettings settings)
+        public EntityEntry<T> Entry<T>(T entry) where T : class
         {
-            return base.Entry(settings);
-        }
-
-        public EntityEntry<User> Entry(User settings)
-        {
-            return base.Entry(settings);
+            return base.Entry(entry);
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

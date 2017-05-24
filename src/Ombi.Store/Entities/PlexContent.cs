@@ -44,7 +44,7 @@ namespace Ombi.Store.Entities
         /// <summary>
         /// Only used for TV Shows
         /// </summary>
-        public List<SeasonsContent> Seasons { get; set; }
+        public virtual ICollection<SeasonsContent> Seasons { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
@@ -55,6 +55,7 @@ namespace Ombi.Store.Entities
 
     public class SeasonsContent : Entity
     {
+        public int PlexContentId { get; set; }
         public int SeasonNumber { get; set; }
         public int SeasonKey { get; set; }
         public int ParentKey { get; set; }

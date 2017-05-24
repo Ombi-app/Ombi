@@ -85,6 +85,7 @@
 
                         </div>
                     </div>
+                    <div *ngIf="!result.available">
                     <div *ngIf="result.requested; then requestedBtn else notRequestedBtn"></div>
                     <template #requestedBtn>
                         <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
@@ -92,7 +93,7 @@
                     <template #notRequestedBtn>
                         <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)"><i class="fa fa-plus"></i> Request</button>
                     </template>
-
+                        </div>
                     <!--{{#if_eq type "tv"}}
                     {{#if_eq tvFullyAvailable true}}
                     @*//TODO Not used yet*@

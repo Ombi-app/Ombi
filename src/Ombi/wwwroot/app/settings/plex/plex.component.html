@@ -44,7 +44,7 @@
                         <div class="form-group">
                             <label for="portNumber" class="control-label">Port</label>
                             <div>
-                                <input type="text" [(ngModel)]="settings.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
+                                <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
                             </div>
                         </div>
 
@@ -103,7 +103,7 @@
                         <label>Please select the libraries you want Ombi to look in for content</label>
                         <div class="form-group">
                             <div>
-                                <button (click)="loadLibraries()" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
+                                <button (click)="loadLibraries(server)" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
                             </div>
                         </div>
                         <div *ngIf="server.plexSelectedLibraries">

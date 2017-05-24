@@ -50,7 +50,7 @@ namespace Ombi.Store.Repository
 
         public async Task AddRange(IEnumerable<PlexContent> content)
         {
-            await Db.PlexContent.AddRangeAsync(content);
+            Db.PlexContent.AddRange(content);
             await Db.SaveChangesAsync();
         }
 
@@ -73,7 +73,7 @@ namespace Ombi.Store.Repository
 
         public async Task<PlexContent> GetByKey(string key)
         {
-            return await Db.PlexContent.FirstOrDefaultAsync(x => x.Key == key);
+            return await Db.PlexContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
         }
 
         public async Task Update(PlexContent existingContent)
