@@ -26,25 +26,17 @@ export class LoginComponent {
 
 
     login(): void {
-            this.authService.login({ password: this.password, username: this.username })
-                .subscribe(x => {
-                    localStorage.setItem("id_token", x.access_token);
-                    localStorage.setItem('currentUser', this.username);
+        this.authService.login({ password: this.password, username: this.username })
+            .subscribe(x => {
+                localStorage.setItem("id_token", x.access_token);
 
-                    this.identityService.getUser().subscribe(r => {
-                        localStorage.setItem("roles", JSON.stringify(r.claims));
-                        localStorage.setItem("user", JSON.stringify(r));
+                if (this.authService.loggedIn()) {
+                    this.router.navigate(['search']);
+                } else {
+                    this.notify.error("Could not log in", "Incorrect username or password");
+                }
 
-                    if (this.authService.loggedIn()) {
-                        this.router.navigate(['search']);
-                    } else {
-                        this.notify.error("Could not log in", "Incorrect username or password");
-                        }
 
-                    });
-
-                }, err => this.notify.error("Could not log in", "Incorrect username or password"));
-
-        
+            }, err => this.notify.error("Could not log in", "Incorrect username or password"));
     }
 }

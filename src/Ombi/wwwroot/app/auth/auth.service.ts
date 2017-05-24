@@ -40,7 +40,7 @@ export class AuthService extends ServiceHelpers {
             var u = { name: name, roles: [] as string[] };
             if (roles instanceof Array) {
 
-                u.roles.concat(roles);
+                u.roles  = roles;
             } else {
                 u.roles.push(roles);
             }

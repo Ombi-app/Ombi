@@ -34,6 +34,8 @@ export class AppComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.router.events.subscribe(() => {
+
+            this.user = this.authService.claims();
             this.showNav = this.authService.loggedIn();
         });
 
