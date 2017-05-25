@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
 using Ombi.Store.Entities;
@@ -22,5 +23,6 @@ namespace Ombi.Core.Requests.Models
         Task<IEnumerable<T>> GetAllAsync(int count, int position);
         Task<T> GetAsync(int id);
         T UpdateRequest(T model);
+        IQueryable<T> GetAllQueryable();
     }
 }

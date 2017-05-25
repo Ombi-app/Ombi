@@ -33,8 +33,14 @@ export interface ITvRequestModel extends IMediaBase {
     firstAired: string,
 }
 
+export interface IRequestCountModel {
+    pending: number,
+    approved: number,
+    available: number
+}
+
 export interface IChildTvRequest extends IMediaBase {
-        requestAll: boolean,
+    requestAll: boolean,
     seasonRequests: ISeasonRequests[],
 }
 

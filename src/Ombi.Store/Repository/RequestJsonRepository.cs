@@ -143,5 +143,10 @@ namespace Ombi.Store.Repository
             Db.SaveChanges();
 
         }
+
+        public IQueryable<RequestBlobs> GetAllQueryable()
+        {
+            return Db.Requests.AsQueryable();
+        }
     }
 }

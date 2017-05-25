@@ -22,7 +22,7 @@ namespace Ombi.Core.Engine
     {
 
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt)
             : base(identity, service)
         {
             TvMazeApi = tvMaze;
@@ -30,7 +30,7 @@ namespace Ombi.Core.Engine
             PlexSettings = plexSettings;
             EmbySettings = embySettings;
             PlexContentRepo = repo;
-            //TraktApi = trakt;
+            TraktApi = trakt;
         }
 
         private ITvMazeApi TvMazeApi { get; }
@@ -38,7 +38,7 @@ namespace Ombi.Core.Engine
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexContentRepository PlexContentRepo { get; }
-        //private ITraktApi TraktApi { get; }
+        private ITraktApi TraktApi { get; }
 
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
@@ -97,27 +97,27 @@ namespace Ombi.Core.Engine
             return await ProcessResult(mapped, existingRequests, plexSettings, embySettings);
         }
 
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
-        //{
-        //    var result = await TraktApi.GetPopularShows();
-        //    return await ProcessResults(result);
-        //}
+        public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
+        {
+            var result = await TraktApi.GetPopularShows();
+            return await ProcessResults(result);
+        }
 
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
-        //{
-        //    var result = await TraktApi.GetAnticipatedShows();
-        //    return await ProcessResults(result);
-        //}
-        //public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
-        //{
-        //    var result = await TraktApi.GetMostWatchesShows();
-        //    return await ProcessResults(result);
-        //}
-        //public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
-        //{
-        //    var result = await TraktApi.GetTrendingShows();
-        //    return await ProcessResults(result);
-        //}
+        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
+        {
+            var result = await TraktApi.GetAnticipatedShows();
+            return await ProcessResults(result);
+        }
+        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
+        {
+            var result = await TraktApi.GetMostWatchesShows();
+            return await ProcessResults(result);
+        }
+        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        {
+            var result = await TraktApi.GetTrendingShows();
+            return await ProcessResults(result);
+        }
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
@@ -154,13 +154,6 @@ namespace Ombi.Core.Engine
                     item.Available = true;
                     item.PlexUrl = content.Url;
                 }
-                //var plexShow = PlexChecker.GetTvShow(plexTvShows.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4),
-                //    providerId);
-                //if (plexShow != null)
-                //{
-                //    viewT.Available = true;
-                //    viewT.PlexUrl = plexShow.Url;
-                //}
             }
 
             if (item.Id > 0 && item.Available)

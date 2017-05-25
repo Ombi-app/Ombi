@@ -1,4 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
+import { Http } from '@angular/http';
 import { AuthHttp } from 'angular2-jwt';
 import { Observable } from 'rxjs/Rx';
 
@@ -6,11 +7,11 @@ import { ServiceAuthHelpers } from './service.helpers';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IMovieRequestModel, ITvRequestModel } from '../interfaces/IRequestModel';
+import { IMovieRequestModel, ITvRequestModel, IRequestCountModel } from '../interfaces/IRequestModel';
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp) {
+    constructor(http: AuthHttp, private basicHttp : Http) {
         super(http, '/api/v1/Request/');
     }
 
@@ -52,5 +53,9 @@ export class RequestService extends ServiceAuthHelpers {
 
     updateTvRequest(request: ITvRequestModel): Observable<ITvRequestModel> {
         return this.http.post(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
+    }
+
+    getRequestsCount(): Observable<IRequestCountModel> {
+        return this.basicHttp.get(`${this.url}count`).map(this.extractData);
     }
 }

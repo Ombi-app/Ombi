@@ -52,5 +52,26 @@ namespace Ombi.Core.Engine
             }
             return _dbTv;
         }
+
+        public RequestCountModel RequestCount()
+        {
+            var movieQuery = MovieRequestService.GetAllQueryable();
+            var tvQuery = MovieRequestService.GetAllQueryable();
+
+            var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available);
+            var approvedMovies = movieQuery.Count(x => x.Approved && !x.Available);
+            var availableMovies = movieQuery.Count(x => x.Available);
+
+            var pendingTv = tvQuery.Count(x => !x.Approved && !x.Available);
+            var approvedTv = tvQuery.Count(x => x.Approved && !x.Available);
+            var availableTv = tvQuery.Count(x => x.Available);
+
+            return new RequestCountModel
+            {
+                Approved = approvedTv + approvedMovies,
+                Available = availableTv + availableMovies,
+                Pending = pendingMovies + pendingTv
+            };
+        }
     }
 }

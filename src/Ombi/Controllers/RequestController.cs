@@ -58,7 +58,6 @@ namespace Ombi.Controllers
         {
             try
             {
-
                 return await TvRequestEngine.GetTvRequests(count, position);
             }
             catch (Exception e)
@@ -92,6 +91,14 @@ namespace Ombi.Controllers
         public async Task<TvRequestModel> UpdateRequest([FromBody]TvRequestModel model)
         {
             return await TvRequestEngine.UpdateTvRequest(model);
+        }
+
+        [HttpGet("count")]
+        [AllowAnonymous]
+        public RequestCountModel GetCountOfRequests()
+        {
+            // Doesn't matter if we use the TvEngine or MovieEngine, this method is in the base class
+            return TvRequestEngine.RequestCount();
         }
     }
 }

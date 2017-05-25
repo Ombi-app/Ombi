@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Store.Entities;
 
@@ -17,5 +18,6 @@ namespace Ombi.Store.Repository
         Task<RequestBlobs> InsertAsync(RequestBlobs entity);
         RequestBlobs Update(RequestBlobs entity);
         void UpdateAll(IEnumerable<RequestBlobs> entity);
+        IQueryable<RequestBlobs> GetAllQueryable();
     }
 }

@@ -128,6 +128,23 @@ namespace Ombi.Core.Models.Requests
             return retVal;
         }
 
+        public IQueryable<T> GetAllQueryable()
+        {
+            var retVal = new List<T>();
+            var blobs = Repo.GetAllQueryable();
+            foreach (var b in blobs)
+            {
+                if (b == null)
+                {
+                    continue;
+                }
+                var model = ByteConverterHelper.ReturnObject<T>(b.Content);
+                model.Id = b.Id;
+                retVal.Add(model);
+            }
+            return retVal.AsQueryable();
+        }
+
         public async Task<IEnumerable<T>> GetAllAsync()
         {
             var blobs = await Repo.GetAllAsync().ConfigureAwait(false);

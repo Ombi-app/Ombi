@@ -14,5 +14,6 @@ namespace Ombi.Core.Engine
         Task<IEnumerable<MovieRequestModel>> SearchMovieRequest(string search);
         Task RemoveMovieRequest(int requestId);
         Task<MovieRequestModel> UpdateMovieRequest(MovieRequestModel request);
+        RequestCountModel RequestCount();
     }
 }

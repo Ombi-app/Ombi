@@ -12,5 +12,6 @@ namespace Ombi.Core.Engine
         Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv);
         Task<IEnumerable<TvRequestModel>> SearchTvRequest(string search);
         Task<TvRequestModel> UpdateTvRequest(TvRequestModel request);
+        RequestCountModel RequestCount();
     }
 }

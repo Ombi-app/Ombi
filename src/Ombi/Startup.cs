@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Ombi.Auth;
+using Ombi.Config;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
 using Ombi.Schedule;
@@ -72,6 +73,7 @@ namespace Ombi
 
 
             services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
 
             services.AddHangfire(x =>
             {
