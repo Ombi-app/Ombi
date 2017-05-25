@@ -5,12 +5,12 @@ param([String]$env='local')
 "Build Version: " + $env:APPVEYOR_BUILD_VERSION | Write-Output;
 "Base Path: " + $env:APPVEYOR_BUILD_FOLDER  | Write-Output;
 
-$appSettingsPath = $basePath + '\src\Ombi\appsettings.json'
+$appSettingsPath = $env:APPVEYOR_BUILD_FOLDER + '\src\Ombi\appsettings.json'
 $appSettings = Get-Content $appSettingsPath -raw
 $appSettings = $appSettings.Replace("{{VERSIONNUMBER}}",$ver);
 Set-Content -Path $appSettingsPath -Value $appSettings 
 
-$configPath = $basePath + '\src\Ombi\wwwroot\app\config.ts';
+$configPath = $env:APPVEYOR_BUILD_FOLDER + '\src\Ombi\wwwroot\app\config.ts';
 $config = Get-Content $configPath -raw 
 
 $config = $config.Replace("{{ENVIRONMENT}}",$env);
