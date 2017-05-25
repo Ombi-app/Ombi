@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Ombi.Auth;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
 using Ombi.Schedule;
@@ -69,6 +71,7 @@ namespace Ombi
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
 
+            services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
 
             services.AddHangfire(x =>
             {
@@ -99,7 +102,7 @@ namespace Ombi
             var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
             jobSetup.Setup();
 
-            ConfigureAuth(app);
+            ConfigureAuth(app, (IOptions<TokenAuthenticationOptions>)app.ApplicationServices.GetService(typeof(IOptions<TokenAuthenticationOptions>)));
 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".map"] = "application/octet-stream";

@@ -41,11 +41,13 @@ namespace Ombi.Store.Repository
             Db = ctx;
         }
 
-        private IOmbiContext Db { get; } 
+        private IOmbiContext Db { get; }
 
         public async Task<User> GetUser(string username)
         {
-            return await Db.Users.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
+            var user = await Db.Users.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
+            Db.Entry(user).Reload();
+            return user;
         }
 
         public async Task CreateUser(User user)

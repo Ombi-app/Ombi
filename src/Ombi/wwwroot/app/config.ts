@@ -6,7 +6,7 @@ enum envs {
     live = 2
 }
 
-var envVar = '{something}';
+var envVar = '{{ENVIRONMENT}}';
 var env = envs.local;
 if (envs[envVar]) {
     env = envs[envVar];

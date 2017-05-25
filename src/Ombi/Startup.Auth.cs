@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Text;
@@ -9,24 +8,23 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Auth;
 using Ombi.Core.IdentityResolver;
-using Ombi.Core.Models;
 
 namespace Ombi
 {
     public partial class Startup
     {
 
-        public SymmetricSecurityKey signingKey;
-        private void ConfigureAuth(IApplicationBuilder app)
+        public SymmetricSecurityKey SigningKey;
+        private void ConfigureAuth(IApplicationBuilder app, IOptions<TokenAuthenticationOptions> options)
         {
 
-            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("secretkey_secretkey123!"));
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(options.Value.SecretKey));
 
             var tokenProviderOptions = new TokenProviderOptions
             {
-                Path = "/api/v1/token/",
-                Audience = "DemoAudience",
-                Issuer = "DemoIssuer",
+                Path = options.Value.TokenPath,
+                Audience = options.Value.Audience,
+                Issuer = options.Value.Issuer,
                 SigningCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256),
                 IdentityResolver = GetIdentity
             };
@@ -38,10 +36,10 @@ namespace Ombi
                 IssuerSigningKey = signingKey,
                 // Validate the JWT Issuer (iss) claim
                 ValidateIssuer = true,
-                ValidIssuer = "DemoIssuer",
+                ValidIssuer = options.Value.Issuer,
                 // Validate the JWT Audience (aud) claim
                 ValidateAudience = true,
-                ValidAudience = "DemoAudience",
+                ValidAudience = options.Value.Audience,
                 // Validate the token expiry
                 ValidateLifetime = true,
                 // If you want to allow a certain amount of clock drift, set that here:

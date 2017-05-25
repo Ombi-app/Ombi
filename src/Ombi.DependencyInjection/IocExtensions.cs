@@ -57,7 +57,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
 
-            services.AddTransient<IOmbiContext, OmbiContext>();
+            services.AddScoped<IOmbiContext, OmbiContext>();
             services.AddTransient<IRequestRepository, RequestJsonRepository>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<IUserRepository, UserRepository>();

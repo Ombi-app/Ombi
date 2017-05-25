@@ -10,6 +10,7 @@ before_build:
 - appveyor-retry npm install -g gulp 
 - appveyor-retry npm install
 - appveyor-retry bower install
+- ps: %APPVEYOR_BUILD_FOLDER%\BuildTask.ps1 -env "live" -ver "%APPVEYOR_BUILD_VERSION%" -basePath "%APPVEYOR_BUILD_FOLDER%"
 - gulp publish
 build_script:
 - dotnet build
