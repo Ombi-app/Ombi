@@ -3,7 +3,7 @@ configuration: Release
 os: Visual Studio 2017
 before_build:
 - ps: Update-NodeJsInstallation 7.8.0
-- ps: .\%APPVEYOR_BUILD_FOLDER%\BuildTask.ps1 -env "live" -ver "%APPVEYOR_BUILD_VERSION%" -basePath "%APPVEYOR_BUILD_FOLDER%"
+- ps: .\BuildTask.ps1 -env "live"
 - cmd: cd src/ombi
 - node --version
 - appveyor-retry dotnet restore

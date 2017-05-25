@@ -1,11 +1,9 @@
 ﻿
-param([String]$env='local',
-[String]$ver='3.0.0',
-[String]$basePath='')
+param([String]$env='local')
 
 "Environment: " + $env | Write-Output;
-"Build Version: " + $ver | Write-Output;
-"Base Path: " + $basePath | Write-Output;
+"Build Version: " + $env:APPVEYOR_BUILD_VERSION | Write-Output;
+"Base Path: " + $env:APPVEYOR_BUILD_FOLDER  | Write-Output;
 
 $appSettingsPath = $basePath + '\src\Ombi\appsettings.json'
 $appSettings = Get-Content $appSettingsPath -raw
