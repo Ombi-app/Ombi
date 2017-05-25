@@ -15,4 +15,4 @@ $config = Get-Content $configPath -raw
 
 $config = $config.Replace("{{ENVIRONMENT}}",$env);
 $config | Write-Output
-#Set-Content -Path $configPath -Value $config
+Set-Content -Path $configPath -Value $config
