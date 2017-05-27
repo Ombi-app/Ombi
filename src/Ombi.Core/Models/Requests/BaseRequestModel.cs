@@ -7,11 +7,7 @@ using Ombi.Store.Entities;
 namespace Ombi.Core.Models.Requests
 {
     public class BaseRequestModel : Entity
-    {
-        public BaseRequestModel()
-        {
-            RequestedUsers = new List<string>();
-        }
+    { 
         public int ProviderId { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }
@@ -26,7 +22,7 @@ namespace Ombi.Core.Models.Requests
         public IssueState Issues { get; set; }
         public string OtherMessage { get; set; }
         public string AdminNote { get; set; }
-        public List<string> RequestedUsers { get; set; }
+        public List<string> RequestedUsers { get; set; } = new List<string>();
         public int IssueId { get; set; }
         public bool Denied { get; set; }
         public string DeniedReason { get; set; }

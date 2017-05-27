@@ -21,6 +21,7 @@ using Ombi.Schedule.Jobs;
 using Ombi.Settings.Settings;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
+using Ombi.Core.Rules;
 
 namespace Ombi.DependencyInjection
 {
@@ -43,6 +44,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieRequestEngine, MovieRequestEngine>();
             services.AddTransient<ITvRequestEngine, TvRequestEngine>();
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
+            services.AddTransient<IRuleEvaluator, RuleEvaluator>();
         }
 
         public static void RegisterApi(this IServiceCollection services)

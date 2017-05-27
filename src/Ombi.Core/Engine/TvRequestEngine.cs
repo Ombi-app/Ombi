@@ -13,24 +13,27 @@ using Ombi.Store.Entities;
 using Ombi.Helpers;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
+using Ombi.Core.Rules;
 
 namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService, IMapper map) : base(user, requestService)
+        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService, IMapper map,
+            IRuleEvaluator rule) : base(user, requestService)
         {
             TvApi = tvApi;
             NotificationService = notificationService;
             Mapper = map;
+            Rules = rule;
         }
         private INotificationService NotificationService { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
+        private IRuleEvaluator Rules { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-
             var showInfo = await TvApi.ShowLookupByTheTvDbId(tv.Id);
             DateTime.TryParse(showInfo.premiered, out DateTime firstAir);
 
@@ -68,7 +71,7 @@ namespace Ombi.Core.Engine
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.Id.ToString(),
                 ProviderId = tv.Id,
-                
+
             };
 
             model.ChildRequests.Add(childRequest);
@@ -120,6 +123,15 @@ namespace Ombi.Core.Engine
             }
 
 
+            var ruleResults = Rules.StartRequestRules(model);
+            if (ruleResults.Any(x => !x.Success))
+            {
+                return new RequestEngineResult()
+                {
+                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message,
+                };
+            }
+
             var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
             {
@@ -146,7 +158,7 @@ namespace Ombi.Core.Engine
             var allRequests = await TvRequestService.GetAllAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
             results = Mapper.Map<TvRequestModel>(request);
-            
+
             var model = TvRequestService.UpdateRequest(results);
             return model;
         }
