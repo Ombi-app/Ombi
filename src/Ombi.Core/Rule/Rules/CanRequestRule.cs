@@ -5,7 +5,7 @@ using System.Security.Principal;
 
 namespace Ombi.Core.Rule.Rules
 {
-    public class CanRequestRule<T> : BaseRule where T : BaseRequestModel, IRequestRules<T>
+    public class CanRequestRule : BaseRule, IRequestRules<BaseRequestModel>
     {
         public CanRequestRule(IPrincipal principal)
         {
@@ -13,8 +13,13 @@ namespace Ombi.Core.Rule.Rules
         }
 
         private IPrincipal User { get; }
-        public RuleResult Execute(T obj)
+        public RuleResult Execute(BaseRequestModel obj)
         {
+            if(User.IsInRole(OmbiClaims.Admin))
+            {
+                return Success();
+            }
+
             if (obj.Type == Store.Entities.RequestType.Movie)
             {
                 if (User.IsInRole(OmbiClaims.RequestMovie))

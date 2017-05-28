@@ -44,7 +44,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieRequestEngine, MovieRequestEngine>();
             services.AddTransient<ITvRequestEngine, TvRequestEngine>();
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
-            services.AddTransient<IRuleEvaluator, RuleEvaluator>();
+            services.AddSingleton<IRuleEvaluator, RuleEvaluator>();
         }
 
         public static void RegisterApi(this IServiceCollection services)

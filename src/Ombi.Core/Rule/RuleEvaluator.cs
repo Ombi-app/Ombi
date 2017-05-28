@@ -2,6 +2,7 @@
 using Ombi.Core.Rule;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Ombi.Core.Rules
@@ -19,8 +20,17 @@ namespace Ombi.Core.Rules
             {
                 if (ti?.BaseType?.FullName == baseType)
                 {
-                    var type = ti.GetType();
-                    var item = Activator.CreateInstance(ti.GetType(), provider.GetService(type));// ti.GetType is wrong
+                    var type = ti.AsType();
+                    var ctors = type.GetConstructors();
+                    var ctor = ctors.FirstOrDefault();
+
+                    var services = new List<object>();
+                    foreach (var param in ctor.GetParameters())
+                    {
+                        services.Add(provider.GetService(param.ParameterType));
+                    }
+
+                    var item = Activator.CreateInstance(type, services.ToArray());// ti.GetType is wrong
                     RequestRules.Add((IRequestRules<BaseRequestModel>)item);
                 }
             }
