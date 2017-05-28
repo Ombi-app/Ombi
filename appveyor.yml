@@ -1,15 +1,21 @@
 version: 3.0.{build}
 configuration: Release
 os: Visual Studio 2017
+environment:
+  nodejs_version: "7.8.0"
+# Install scripts. (runs after repo cloning)
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+  # install modules
+  - npm install bower -g
+  - npm install gulp -g
+  - npm install
 before_build:
-- ps: Update-NodeJsInstallation 7.8.0
 - ps: .\BuildTask.ps1 -env "live"
 - cmd: cd src/ombi
 - node --version
 - appveyor-retry dotnet restore
-- appveyor-retry npm install bower -g
-- appveyor-retry npm install -g gulp 
-- appveyor-retry npm install
 - appveyor-retry bower install
 - gulp publish
 build_script:
