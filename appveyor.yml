@@ -7,16 +7,14 @@ environment:
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
-  # install modules
-  - npm install
 before_build:
 - ps: .\BuildTask.ps1 -env "live"
 - cmd: cd src/ombi
 - node --version
-- appveyor-retry dotnet restore
+appveyor-retry dotnet restore
 - appveyor-retry npm install bower -g
-- appveyor-retry npm install gulp -g
-- appveyor-retry bower install
+- appveyor-retry npm install -g gulp 
+- appveyor-retry npm install
 - gulp publish
 build_script:
 - dotnet build
