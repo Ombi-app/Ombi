@@ -18,7 +18,7 @@ before_build:
 - gulp publish
 build_script:
 - dotnet build
-- dotnet test ./Ombi.Core.Tests/Ombi.Core.Tests.csproj
+#- dotnet test ./Ombi.Core.Tests/Ombi.Core.Tests.csproj
 after_build:
 - dotnet publish -c Release -r win10-x64
 - dotnet publish -c Release -r osx.10.12-x64
