@@ -9,6 +9,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
 {
@@ -80,6 +81,26 @@ PlexAuthToken = result.user.authentication_token,
             var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
             return libs;
+        }
+
+        [HttpPost("servers")]
+        public async Task<PlexServersViewModel> GetServers([FromBody] UserRequest u)
+        {
+            try
+            {
+                var signIn = await PlexApi.SignIn(u);
+                var servers = await PlexApi.GetServer(signIn?.user?.authentication_token);
+
+                return new PlexServersViewModel { Servers = servers, Success = true };
+            }
+            catch (Exception e)
+            {
+                return new PlexServersViewModel
+                {
+                    Success = false,
+                    Message = e.Message
+                };
+            }
         }
 
 

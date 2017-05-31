@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from '../service.helpers';
 
-import { IPlexAuthentication, IPlexLibraries } from '../../interfaces/IPlex';
+import { IPlexAuthentication, IPlexLibraries, IPlexServerViewModel } from '../../interfaces/IPlex';
 import { IPlexServer } from '../../interfaces/ISettings';
 
 
@@ -17,7 +17,11 @@ export class PlexService extends ServiceAuthHelpers {
     }
 
     logIn(login: string, password: string): Observable<IPlexAuthentication> {
-        return this.regularHttp.post(`${this.url}`, JSON.stringify({ login: login, password:password}), { headers: this.headers }).map(this.extractData);
+        return this.regularHttp.post(`${this.url}`, JSON.stringify({ login: login, password: password }), { headers: this.headers }).map(this.extractData);
+    }
+
+    getServers(login: string, password: string): Observable<IPlexServerViewModel> {
+        return this.http.post(`${this.url}servers`, JSON.stringify({ login: login, password: password }), { headers: this.headers }).map(this.extractData);
     }
 
     getLibraries(plexSettings: IPlexServer): Observable<IPlexLibraries> {
