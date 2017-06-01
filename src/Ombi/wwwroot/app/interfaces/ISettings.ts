@@ -53,6 +53,14 @@ export interface ISonarrSettings extends IExternalSettings {
     fullRootPath:string,
 }
 
+export interface IRadarrSettings extends IExternalSettings {
+    enabled: boolean,
+    apiKey: string,
+    defaultQualityProfile: string,
+    defaultRootPath: string,
+    fullRootPath:string,
+}
+
 export interface ILandingPageSettings extends ISettings {
     enabled: boolean,
     beforeLogin: boolean,

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
+using Ombi.Api.Radarr;
 using Ombi.Api.Sonarr;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.Trakt;
@@ -55,6 +56,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISonarrApi, SonarrApi>();
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
+            services.AddTransient<IRadarrApi, RadarrApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Ombi.Core.Claims;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Requests.Models;
 using Ombi.Helpers;
 

@@ -8,6 +8,7 @@ using Hangfire;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Store.Entities;

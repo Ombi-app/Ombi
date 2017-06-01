@@ -1,4 +1,5 @@
-﻿using Ombi.Core.Requests.Models;
+﻿using Ombi.Core.Models.Requests.Movie;
+using Ombi.Core.Requests.Models;
 
 namespace Ombi.Core.Models.Requests
 {

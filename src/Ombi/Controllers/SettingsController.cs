@@ -6,6 +6,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers
 {
@@ -81,6 +82,31 @@ namespace Ombi.Controllers
             return await Save(settings);
         }
 
+        [HttpGet("sonarr")]
+        [AllowAnonymous]
+        public async Task<SonarrSettings> SonarrSettings()
+        {
+            return await Get<SonarrSettings>();
+        }
+
+        [HttpPost("sonarr")]
+        public async Task<bool> SonarrSettings([FromBody]SonarrSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        [HttpGet("radarr")]
+        [AllowAnonymous]
+        public async Task<RadarrSettings> RadarrSettings()
+        {
+            return await Get<RadarrSettings>();
+        }
+
+        [HttpPost("radarr")]
+        public async Task<bool> RadarrSettings([FromBody]RadarrSettings settings)
+        {
+            return await Save(settings);
+        }
 
         private async Task<T> Get<T>()
         {

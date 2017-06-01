@@ -8,6 +8,7 @@ using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Settings;

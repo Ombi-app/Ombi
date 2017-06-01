@@ -1,4 +1,6 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
+import "rxjs/add/operator/takeUntil";
 
 import { ISonarrSettings } from '../../interfaces/ISettings'
 import { ISonarrProfile, ISonarrRootFolder } from '../../interfaces/ISonarr'
@@ -11,7 +13,7 @@ import { NotificationService } from "../../services/notification.service";
     moduleId: module.id,
     templateUrl: './sonarr.component.html',
 })
-export class SonarrComponent implements OnInit {
+export class SonarrComponent implements OnInit, OnDestroy {
 
     constructor(private settingsService: SettingsService, private sonarrService: SonarrService, private notificationService: NotificationService) { }
 
@@ -20,32 +22,28 @@ export class SonarrComponent implements OnInit {
     qualities: ISonarrProfile[];
     rootFolders: ISonarrRootFolder[];
 
-    selectedRootFolder:ISonarrRootFolder;
+    selectedRootFolder: ISonarrRootFolder;
     selectedQuality: ISonarrProfile;
 
     profilesRunning: boolean;
-    rootFoldersRunning:boolean;
+    rootFoldersRunning: boolean;
+    private subscriptions = new Subject<void>();
 
     ngOnInit(): void {
-        this.settings = {
-            apiKey: "",
-            port: 8081,
-            fullRootPath: "",
-            rootPath: "",
-            subDir: "",
-            ssl: false,
-            seasonFolders: false,
-            qualityProfile: "",
-            ip: "",
-            enable: false,
-            id: 0
-        };
+
+        this.settingsService.getSonarr()
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
+                this.settings = x;
+            });
     }
 
 
     getProfiles() {
         this.profilesRunning = true;
-        this.sonarrService.getQualityProfiles(this.settings).subscribe(x => {
+        this.sonarrService.getQualityProfiles(this.settings)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
             this.qualities = x;
 
             this.profilesRunning = false;
@@ -55,7 +53,9 @@ export class SonarrComponent implements OnInit {
 
     getRootFolders() {
         this.rootFoldersRunning = true;
-        this.sonarrService.getRootFolders(this.settings).subscribe(x => {
+        this.sonarrService.getRootFolders(this.settings)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
             this.rootFolders = x;
 
             this.rootFoldersRunning = false;
@@ -68,12 +68,19 @@ export class SonarrComponent implements OnInit {
     }
 
     save() {
-        this.settingsService.saveSonarr(this.settings).subscribe(x => {
+        this.settingsService.saveSonarr(this.settings)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Ombi settings");
+                this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Ombi settings");
+                this.notificationService.success("Settings Saved", "There was an error when saving the Sonarr settings");
             }
         });
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.next();
+        this.subscriptions.complete();
     }
 }

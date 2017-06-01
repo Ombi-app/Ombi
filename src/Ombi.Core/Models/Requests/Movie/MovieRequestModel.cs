@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Newtonsoft.Json;
-using Ombi.Store.Entities;
-
-namespace Ombi.Core.Models.Requests
+﻿namespace Ombi.Core.Models.Requests.Movie
 {
     public class MovieRequestModel : BaseRequestModel
     {

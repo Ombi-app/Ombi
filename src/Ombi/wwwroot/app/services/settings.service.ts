@@ -4,14 +4,22 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IOmbiSettings, IEmbySettings, IPlexSettings, ISonarrSettings,ILandingPageSettings, ICustomizationSettings } from '../interfaces/ISettings';
+import {
+    IOmbiSettings,
+    IEmbySettings,
+    IPlexSettings,
+    ISonarrSettings,
+    ILandingPageSettings,
+    ICustomizationSettings,
+    IRadarrSettings
+} from '../interfaces/ISettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
     constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http) {
         super(httpAuth, '/api/v1/Settings');
     }
-    
+
     getOmbi(): Observable<IOmbiSettings> {
         return this.httpAuth.get(`${this.url}/Ombi/`).map(this.extractData).catch(this.handleError)
     }
@@ -43,6 +51,15 @@ export class SettingsService extends ServiceAuthHelpers {
 
     saveSonarr(settings: ISonarrSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
+    }
+
+    getRadarr(): Observable<IRadarrSettings> {
+        return this.httpAuth.get(`${this.url}/Radarr`).map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    saveRadarr(settings: IRadarrSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/Radarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
     }
 
     // Using http since we need it not to be authenticated to get the landing page settings

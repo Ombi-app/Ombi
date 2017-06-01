@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Controllers
