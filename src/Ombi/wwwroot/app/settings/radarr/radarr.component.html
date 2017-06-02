@@ -3,7 +3,7 @@
 <div *ngIf="settings">
     <form class="form-horizontal" method="POST" id="mainForm">
         <fieldset>
-            <legend>Sonarr Settings</legend>
+            <legend>Radarr Settings</legend>
 
             <div class="form-group">
                 <div class="checkbox">
@@ -15,7 +15,7 @@
             <input hidden="hidden" name="FullRootPath" id="fullRootPath" value="settings.enable" />
 
             <div class="form-group">
-                <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
+                <label for="Ip" class="control-label">Hostname or IP</label>
                 <div class="">
                     <input type="text" class="form-control form-control-custom " [(ngModel)]="settings.ip" id="Ip" name="Ip" placeholder="localhost" value="{{settings.ip}}">
                 </div>
@@ -31,7 +31,7 @@
 
 
             <div class="form-group">
-                <label for="ApiKey" class="control-label">Sonarr API Key</label>
+                <label for="ApiKey" class="control-label">API Key</label>
                 <div>
                     <input type="text" class="form-control form-control-custom " [(ngModel)]="settings.apiKey" id="ApiKey" name="ApiKey" value="{{settings.apiKey}}">
                 </div>
@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="SubDir" class="control-label">Sonarr Base Url</label>
+                <label for="SubDir" class="control-label">Base Url</label>
                 <div>
                     <input type="text" class="form-control form-control-custom" [(ngModel)]="settings.subDir" id="SubDir" name="SubDir" value="@Model.SubDir">
                 </div>

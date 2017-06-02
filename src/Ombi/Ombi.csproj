@@ -55,6 +55,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\app\services\applications\sonarr - Copy.service.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
