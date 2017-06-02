@@ -21,6 +21,8 @@ ___
 We now have a forums!
 Check it out: [https://forums.ombi.io/](https://forums.ombi.io)
 
+Want to keep up to date with the rewrite? Follow [this issue](https://github.com/tidusjar/Ombi/issues/865)
+
 # Features
 Here some of the features Ombi has:
 * All your users to Request Movies, TV Shows (Whole series, whole seasons or even single episodes!) and Albums
