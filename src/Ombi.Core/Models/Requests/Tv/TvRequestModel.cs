@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Ombi.Store.Entities;
+﻿using System.Collections.Generic;
 
 namespace Ombi.Core.Models.Requests
 {
@@ -10,16 +8,17 @@ namespace Ombi.Core.Models.Requests
         {
             ChildRequests = new List<ChildTvRequest>();
         }
+
         public string ImdbId { get; set; }
         public string TvDbId { get; set; }
 
         public List<ChildTvRequest> ChildRequests { get; set; }
-        
+
         /// <summary>
-        /// For TV Shows with a custom root folder
+        ///     For TV Shows with a custom root folder
         /// </summary>
         /// <value>
-        /// The root folder selected.
+        ///     The root folder selected.
         /// </value>
         public int RootFolderSelected { get; set; }
     }
@@ -28,6 +27,5 @@ namespace Ombi.Core.Models.Requests
     {
         public bool RequestAll { get; set; }
         public List<SeasonRequestModel> SeasonRequests { get; set; } = new List<SeasonRequestModel>();
-
     }
 }

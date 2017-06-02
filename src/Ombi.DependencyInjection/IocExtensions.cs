@@ -15,6 +15,7 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Requests.Models;
+using Ombi.Core.Rule;
 using Ombi.Core.Settings;
 using Ombi.Notifications;
 using Ombi.Schedule;

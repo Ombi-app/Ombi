@@ -5,7 +5,6 @@ import "rxjs/add/operator/takeUntil";
 import { IPlexSettings, IPlexLibraries, IPlexServer } from '../../interfaces/ISettings';
 import { IPlexServerResponse, IPlexServerViewModel } from '../../interfaces/IPlex'
 
-
 import { SettingsService } from '../../services/settings.service';
 import { PlexService } from '../../services/applications/plex.service';
 import { NotificationService } from "../../services/notification.service";
@@ -16,7 +15,6 @@ import { NotificationService } from "../../services/notification.service";
     templateUrl: './plex.component.html',
 })
 export class PlexComponent implements OnInit, OnDestroy {
-
     constructor(private settingsService: SettingsService, private notificationService: NotificationService, private plexService: PlexService) { }
 
     settings: IPlexSettings;
@@ -26,7 +24,6 @@ export class PlexComponent implements OnInit, OnDestroy {
     password: string;
     advanced = false;
     serversButton = false;
-
 
     ngOnInit(): void {
         this.settingsService.getPlex().subscribe(x => {
@@ -49,8 +46,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             });
     }
 
-    selectServer(selectedServer: IPlexServerResponse, server : IPlexServer)
-    {
+    selectServer(selectedServer: IPlexServerResponse, server: IPlexServer) {
         server.ip = selectedServer.localAddresses.split(',')[0];
         server.name = selectedServer.name;
         server.machineIdentifier = selectedServer.machineIdentifier;
@@ -75,7 +71,6 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     removeServer(server: IPlexServer) {
-
         this.notificationService.warning("Disabled", "This feature is currently disabled");
         //var index = this.settings.servers.indexOf(server, 0);
         //if (index > -1) {
@@ -84,13 +79,11 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     loadLibraries(server: IPlexServer) {
-        if (server.ip == null)
-        {
+        if (server.ip == null) {
             this.notificationService.error("Not Configured", "Plex is not yet configured correctly")
             return;
         }
         this.plexService.getLibraries(server).subscribe(x => {
-
             server.plexSelectedLibraries = [];
             x.mediaContainer.directory.forEach((item, index) => {
                 var lib: IPlexLibraries = {
@@ -99,7 +92,6 @@ export class PlexComponent implements OnInit, OnDestroy {
                     enabled: false
                 };
                 server.plexSelectedLibraries.push(lib);
-
             });
         });
     }

@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-using Ombi.Core.Models.Requests;
+﻿using Ombi.Core.Models.Requests;
+using Ombi.Core.Rule;
+using System.Collections.Generic;
 
 namespace Ombi.Core.Rules
 {

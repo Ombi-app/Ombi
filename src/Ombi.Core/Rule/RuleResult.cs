@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Ombi.Core.Rules
+﻿namespace Ombi.Core.Rule
 {
     public class RuleResult
     {

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
-using System.Security.Principal;
 
 namespace Ombi.Core.Models
 {
@@ -14,16 +13,12 @@ namespace Ombi.Core.Models
         public string Password { get; set; }
         public byte[] Salt { get; set; }
         public UserType UserType { get; set; }
-
-
-
     }
+
     public enum UserType
     {
         LocalUser = 1,
         PlexUser = 2,
-        EmbyUser = 3,
+        EmbyUser = 3
     }
-
-
 }

@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Ombi.Api.Sonarr;
+using Ombi.Core.Settings.Models.External;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Ombi.Api.Sonarr;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Settings.Models.External;
 
 namespace Ombi.Core
 {
@@ -71,14 +69,10 @@ namespace Ombi.Core
         private async Task<string> GetSonarrRootPath(int pathId, SonarrSettings sonarrSettings)
         {
             var rootFoldersResult = await SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri);
-            
+
             foreach (var r in rootFoldersResult.Where(r => r.id == pathId))
-            {
                 return r.path;
-            }
             return string.Empty;
         }
-
-
     }
 }

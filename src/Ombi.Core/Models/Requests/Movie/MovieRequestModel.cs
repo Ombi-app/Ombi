@@ -2,8 +2,6 @@
 {
     public class MovieRequestModel : BaseRequestModel
     {
-       
         public string ImdbId { get; set; }
-      
     }
 }

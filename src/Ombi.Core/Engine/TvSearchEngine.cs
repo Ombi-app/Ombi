@@ -1,29 +1,28 @@
-﻿using System;
+﻿using AutoMapper;
+
+using Ombi.Api.Trakt;
+using Ombi.Api.TvMaze;
+using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Search;
+using Ombi.Core.Rules;
+using Ombi.Core.Settings;
+using Ombi.Core.Settings.Models.External;
+using Ombi.Store.Repository;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using AutoMapper;
-using Ombi.Api.Trakt;
-using Ombi.Api.TvMaze;
-using Ombi.Api.TvMaze.Models;
-using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Search;
-using Ombi.Core.Requests.Models;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
-using Ombi.Store.Entities;
-using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
-
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt)
-            : base(identity, service)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt, IRuleEvaluator r)
+            : base(identity, service, r)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;
@@ -39,7 +38,6 @@ namespace Ombi.Core.Engine
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexContentRepository PlexContentRepo { get; }
         private ITraktApi TraktApi { get; }
-
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
@@ -76,7 +74,6 @@ namespace Ombi.Core.Engine
                         EpisodeNumber = e.number,
                     });
                     mapped.SeasonRequests.Add(newSeason);
-
                 }
                 else
                 {
@@ -86,7 +83,6 @@ namespace Ombi.Core.Engine
                         Title = e.name,
                         AirDate = DateTime.Parse(e.airstamp),
                         EpisodeNumber = e.number,
-
                     });
                 }
             }
@@ -108,11 +104,13 @@ namespace Ombi.Core.Engine
             var result = await TraktApi.GetAnticipatedShows();
             return await ProcessResults(result);
         }
+
         public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
         {
             var result = await TraktApi.GetMostWatchesShows();
             return await ProcessResults(result);
         }
+
         public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
         {
             var result = await TraktApi.GetTrendingShows();
@@ -158,7 +156,6 @@ namespace Ombi.Core.Engine
 
             if (item.Id > 0 && item.Available)
             {
-
                 // TODO need to check if the episodes are available
                 var tvdbid = item.Id;
                 if (existingRequests.ContainsKey(tvdbid))
@@ -173,7 +170,6 @@ namespace Ombi.Core.Engine
                     {
                         foreach (var existingRequestChildRequest in existingRequest.ChildRequests)
                         {
-
                             // Find the existing request season
                             var existingSeason =
                                 existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
@@ -187,7 +183,6 @@ namespace Ombi.Core.Engine
                                 episodeSearching.Approved = ep.Approved;
                             }
                         }
-
                     }
                 }
                 //if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid))

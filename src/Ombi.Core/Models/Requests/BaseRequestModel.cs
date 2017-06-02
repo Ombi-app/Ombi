@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Ombi.Store.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json;
-using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Requests
 {
     public class BaseRequestModel : Entity
-    { 
+    {
         public int ProviderId { get; set; }
         public string Overview { get; set; }
         public string Title { get; set; }
@@ -29,7 +29,7 @@ namespace Ombi.Core.Models.Requests
 
         [JsonIgnore]
         public bool Released => DateTime.UtcNow > ReleaseDate;
-        
+
         [JsonIgnore]
         public IEnumerable<string> AllUsers
         {
@@ -37,16 +37,14 @@ namespace Ombi.Core.Models.Requests
             {
                 var u = new List<string>();
                 if (RequestedUsers != null && RequestedUsers.Any())
-                {
                     u.AddRange(RequestedUsers);
-                }
                 return u;
             }
         }
 
         [JsonIgnore]
         public bool CanApprove => !Approved && !Available;
-        
+
         public bool UserHasRequested(string username)
         {
             return AllUsers.Any(x => x.Equals(username, StringComparison.OrdinalIgnoreCase));

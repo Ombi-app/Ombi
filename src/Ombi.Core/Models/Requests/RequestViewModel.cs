@@ -1,5 +1,5 @@
-﻿using System;
-using Ombi.Store.Entities;
+﻿using Ombi.Store.Entities;
+using System;
 
 namespace Ombi.Core.Models.Requests
 {

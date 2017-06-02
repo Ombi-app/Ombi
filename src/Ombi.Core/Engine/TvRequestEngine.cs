@@ -1,36 +1,36 @@
-﻿using System;
+﻿using AutoMapper;
+using Hangfire;
+using Ombi.Api.TvMaze;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Search;
+using Ombi.Core.Rules;
+using Ombi.Helpers;
+using Ombi.Notifications;
+using Ombi.Notifications.Models;
+using Ombi.Store.Entities;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using AutoMapper;
-using Hangfire;
-using Ombi.Api.TvMaze;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Search;
-using Ombi.Store.Entities;
-using Ombi.Helpers;
-using Ombi.Notifications;
-using Ombi.Notifications.Models;
-using Ombi.Core.Rules;
 
 namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
-        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user, INotificationService notificationService, IMapper map,
-            IRuleEvaluator rule) : base(user, requestService)
+        public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
+            INotificationService notificationService, IMapper map,
+            IRuleEvaluator rule) : base(user, requestService, rule)
         {
             TvApi = tvApi;
             NotificationService = notificationService;
             Mapper = map;
-            Rules = rule;
         }
+
         private INotificationService NotificationService { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
-        private IRuleEvaluator Rules { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -51,11 +51,11 @@ namespace Ombi.Core.Engine
                 Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> { Username },
+                RequestedUsers = new List<string> {Username},
                 Issues = IssueState.None,
                 ProviderId = tv.Id,
                 RequestAll = tv.RequestAll,
-                SeasonRequests = tv.SeasonRequests,
+                SeasonRequests = tv.SeasonRequests
             };
 
             var model = new TvRequestModel
@@ -70,8 +70,7 @@ namespace Ombi.Core.Engine
                 Approved = false,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.Id.ToString(),
-                ProviderId = tv.Id,
-
+                ProviderId = tv.Id
             };
 
             model.ChildRequests.Add(childRequest);
@@ -88,7 +87,7 @@ namespace Ombi.Core.Engine
                         Url = e.url,
                         Title = e.name,
                         AirDate = DateTime.Parse(e.airstamp),
-                        EpisodeNumber = e.number,
+                        EpisodeNumber = e.number
                     });
                 }
             }
@@ -97,46 +96,29 @@ namespace Ombi.Core.Engine
             {
                 var latest = showInfo.Season.OrderBy(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in childRequest.SeasonRequests)
-                {
                     if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
-                    {
                         foreach (var episodesRequested in modelSeasonRequest.Episodes)
-                        {
                             episodesRequested.Requested = true;
-                        }
-                    }
-                }
             }
             if (tv.FirstSeason)
             {
                 var first = showInfo.Season.OrderByDescending(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in childRequest.SeasonRequests)
-                {
                     if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)
-                    {
                         foreach (var episodesRequested in modelSeasonRequest.Episodes)
-                        {
                             episodesRequested.Requested = true;
-                        }
-                    }
-                }
             }
 
-
-            var ruleResults = Rules.StartRequestRules(model);
+            var ruleResults = RunRules(model).ToList();
             if (ruleResults.Any(x => !x.Success))
-            {
-                return new RequestEngineResult()
+                return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message,
+                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
-            }
 
             var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
-            {
                 return await AddExistingRequest(model, existingRequest);
-            }
 
             // This is a new request
             return await AddRequest(model);
@@ -147,12 +129,14 @@ namespace Ombi.Core.Engine
             var allRequests = await TvRequestService.GetAllAsync(count, position);
             return allRequests;
         }
+
         public async Task<IEnumerable<TvRequestModel>> SearchTvRequest(string search)
         {
             var allRequests = await TvRequestService.GetAllAsync();
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
             return results;
         }
+
         public async Task<TvRequestModel> UpdateTvRequest(TvRequestModel request)
         {
             var allRequests = await TvRequestService.GetAllAsync();
@@ -168,25 +152,20 @@ namespace Ombi.Core.Engine
             await TvRequestService.DeleteRequestAsync(requestId);
         }
 
-        private async Task<RequestEngineResult> AddExistingRequest(TvRequestModel newRequest, TvRequestModel existingRequest)
+        private async Task<RequestEngineResult> AddExistingRequest(TvRequestModel newRequest,
+            TvRequestModel existingRequest)
         {
-
             var child = newRequest.ChildRequests.FirstOrDefault(); // There will only be 1
             var episodeDiff = new List<SeasonRequestModel>();
             foreach (var existingChild in existingRequest.ChildRequests)
             {
                 var difference = GetListDifferences(existingChild.SeasonRequests, child.SeasonRequests).ToList();
                 if (difference.Any())
-                {
                     episodeDiff = difference;
-                }
             }
 
             if (episodeDiff.Any())
-            {
-                // This is where there are some episodes that have been requested, but this list contains the 'new' requests
                 child.SeasonRequests = episodeDiff;
-            }
 
             existingRequest.ChildRequests.AddRange(newRequest.ChildRequests);
             TvRequestService.UpdateRequest(existingRequest);
@@ -198,7 +177,8 @@ namespace Ombi.Core.Engine
             return await AfterRequest(newRequest);
         }
 
-        private IEnumerable<SeasonRequestModel> GetListDifferences(IEnumerable<SeasonRequestModel> existing, IEnumerable<SeasonRequestModel> request)
+        private IEnumerable<SeasonRequestModel> GetListDifferences(IEnumerable<SeasonRequestModel> existing,
+            IEnumerable<SeasonRequestModel> request)
         {
             var newRequest = request
                 .Select(r =>
@@ -206,7 +186,8 @@ namespace Ombi.Core.Engine
                     {
                         SeasonNumber = r.SeasonNumber,
                         Episodes = r.Episodes
-                    }).ToList();
+                    })
+                .ToList();
 
             return newRequest.Except(existing);
         }
@@ -253,9 +234,7 @@ namespace Ombi.Core.Engine
             //    await RequestLimitRepo.UpdateAsync(usersLimit);
             //}
 
-            return new RequestEngineResult { RequestAdded = true };
+            return new RequestEngineResult {RequestAdded = true};
         }
-
-
     }
 }

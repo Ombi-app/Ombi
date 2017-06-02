@@ -1,30 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Principal;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
-using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Requests.Models;
+using Ombi.Core.Rules;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
-using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
-
-        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
+        public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
+            ISettingsService<PlexSettings> plexSettings,
             ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo,
-            ILogger<MovieSearchEngine> logger)
-            : base(identity, service)
+            ILogger<MovieSearchEngine> logger, IRuleEvaluator r)
+            : base(identity, service, r)
         {
             MovieApi = movApi;
             Mapper = mapper;
@@ -41,18 +39,16 @@ namespace Ombi.Core.Engine
         private ILogger<MovieSearchEngine> Logger { get; }
         private IPlexContentRepository PlexContentRepo { get; }
 
-        public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(IEnumerable<SearchMovieViewModel> movies)
+        public async Task<IEnumerable<SearchMovieViewModel>> LookupImdbInformation(
+            IEnumerable<SearchMovieViewModel> movies)
         {
             var searchMovieViewModels
                 = movies as IList<SearchMovieViewModel> ?? movies.ToList();
             if (searchMovieViewModels == null || !searchMovieViewModels.Any())
-            {
                 return new List<SearchMovieViewModel>();
-            }
 
             var retVal = new List<SearchMovieViewModel>();
-            Dictionary<int, MovieRequestModel> dbMovies = await GetMovieRequests();
-
+            var dbMovies = await GetMovieRequests();
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
@@ -77,6 +73,7 @@ namespace Ombi.Core.Engine
             }
             return null;
         }
+
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
             var result = await MovieApi.PopularMovies();
@@ -109,32 +106,28 @@ namespace Ombi.Core.Engine
             }
             return null;
         }
+
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
             var result = await MovieApi.NowPlaying();
             if (result != null)
             {
-                
                 Logger.LogDebug("Search Result: {result}", result);
                 return await TransformMovieResultsToResponse(result);
             }
             return null;
         }
 
-
-        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(IEnumerable<MovieSearchResult> movies)
+        private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
+            IEnumerable<MovieSearchResult> movies)
         {
             var viewMovies = new List<SearchMovieViewModel>();
-            Dictionary<int, MovieRequestModel> dbMovies = await GetMovieRequests();
+            var dbMovies = await GetMovieRequests();
 
             var plexSettings = await PlexSettings.GetSettingsAsync();
             var embySettings = await EmbySettings.GetSettingsAsync();
             foreach (var movie in movies)
-            {
-
                 viewMovies.Add(await ProcessSingleMovie(movie, dbMovies, plexSettings, embySettings));
-
-            }
             return viewMovies;
         }
 
@@ -144,9 +137,8 @@ namespace Ombi.Core.Engine
             var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
             if (plexSettings.Enable)
             {
-
-                var item = await PlexContentRepo.Get(showInfo.ImdbId.ToString());
-                if(item != null)
+                var item = await PlexContentRepo.Get(showInfo.ImdbId);
+                if (item != null)
                 {
                     viewMovie.Available = true;
                     viewMovie.PlexUrl = item.Url;
@@ -186,11 +178,11 @@ namespace Ombi.Core.Engine
                 viewMovie.Available = requestedMovie.Available;
             }
 
-
             return viewMovie;
         }
 
-        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie, Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+        private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie,
+            Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             var viewMovie = Mapper.Map<SearchMovieViewModel>(movie);
             return await ProcessSingleMovie(viewMovie, existingRequests, plexSettings, embySettings);

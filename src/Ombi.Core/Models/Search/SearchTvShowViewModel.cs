@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Ombi.Core.Models.Requests;
+﻿using Ombi.Core.Models.Requests;
+using System.Collections.Generic;
 
 namespace Ombi.Core.Models.Search
 {
@@ -25,29 +25,29 @@ namespace Ombi.Core.Models.Search
         public int SiteRating { get; set; }
 
         /// <summary>
-        /// This is used from the Trakt API
+        ///     This is used from the Trakt API
         /// </summary>
         /// <value>
-        /// The trailer.
+        ///     The trailer.
         /// </value>
         public string Trailer { get; set; }
+
         /// <summary>
-        /// This is used from the Trakt API
+        ///     This is used from the Trakt API
         /// </summary>
         /// <value>
-        /// The trailer.
+        ///     The trailer.
         /// </value>
         public string Homepage { get; set; }
 
         public List<SeasonRequestModel> SeasonRequests { get; set; } = new List<SeasonRequestModel>();
 
         /// <summary>
-        /// If we are requesting the entire series
+        ///     If we are requesting the entire series
         /// </summary>
         public bool RequestAll { get; set; }
 
         public bool FirstSeason { get; set; }
         public bool LatestSeason { get; set; }
-
     }
 }

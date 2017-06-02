@@ -1,40 +1,13 @@
-﻿#region Copyright
-// /************************************************************************
-//    Copyright (c) 2017 Jamie Rees
-//    File: UserIdentityManager.cs
-//    Created By: Jamie Rees
-//   
-//    Permission is hereby granted, free of charge, to any person obtaining
-//    a copy of this software and associated documentation files (the
-//    "Software"), to deal in the Software without restriction, including
-//    without limitation the rights to use, copy, modify, merge, publish,
-//    distribute, sublicense, and/or sell copies of the Software, and to
-//    permit persons to whom the Software is furnished to do so, subject to
-//    the following conditions:
-//   
-//    The above copyright notice and this permission notice shall be
-//    included in all copies or substantial portions of the Software.
-//   
-//    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-//    EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-//    MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-//    NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
-//    LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
-//    OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
-//    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//  ************************************************************************/
-#endregion
-
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Ombi.Core.Models;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Ombi.Core.Models;
-using Ombi.Store.Entities;
-using Ombi.Store.Repository;
 
 namespace Ombi.Core.IdentityResolver
 {
@@ -46,7 +19,7 @@ namespace Ombi.Core.IdentityResolver
             Mapper = mapper;
         }
 
-        private  IMapper Mapper { get; }
+        private IMapper Mapper { get; }
         private IUserRepository UserRepository { get; }
 
         public async Task<bool> CredentialsValid(string username, string password)
@@ -96,7 +69,7 @@ namespace Ombi.Core.IdentityResolver
         private UserHash HashPassword(string password)
         {
             // generate a 128-bit salt using a secure PRNG
-            byte[] salt = new byte[128 / 8];
+            var salt = new byte[128 / 8];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
@@ -104,18 +77,17 @@ namespace Ombi.Core.IdentityResolver
             return HashPassword(password, salt);
         }
 
-
         private UserHash HashPassword(string password, byte[] salt)
         {
             // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
             var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
+                password,
+                salt,
+                KeyDerivationPrf.HMACSHA1,
+                10000,
+                256 / 8));
 
-            return new UserHash { HashedPass = hashed, Salt = salt };
+            return new UserHash {HashedPass = hashed, Salt = salt};
         }
 
         private class UserHash

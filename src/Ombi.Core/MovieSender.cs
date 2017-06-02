@@ -1,14 +1,12 @@
-﻿using System.Threading.Tasks;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Movie;
+﻿using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models.External;
+using System.Threading.Tasks;
 
 namespace Ombi.Core
 {
     public class MovieSender
     {
-
         public MovieSender(ISettingsService<RadarrSettings> radarrSettings)
         {
             RadarrSettings = radarrSettings;
@@ -37,12 +35,17 @@ namespace Ombi.Core
                 //return SendToRadarr(model, radarrSettings, qualityId);
             }
 
-            return new MovieSenderResult { Success = false, MovieSent = false, Message = "There are no movie providers enabled!"};
+            return new MovieSenderResult
+            {
+                Success = false,
+                MovieSent = false,
+                Message = "There are no movie providers enabled!"
+            };
         }
 
-        //private MovieSenderResult SendToRadarr(MovieRequestModel model, RadarrSettings settings, string qualityId)
-        //{
         //    var qualityProfile = 0;
+        //{
+        //private MovieSenderResult SendToRadarr(MovieRequestModel model, RadarrSettings settings, string qualityId)
         //    if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
         //    {
         //        int.TryParse(qualityId, out qualityProfile);
@@ -67,6 +70,5 @@ namespace Ombi.Core
         //    }
         //    return new MovieSenderResult { Result = false, MovieSendingEnabled = true };
         //}
-
     }
 }

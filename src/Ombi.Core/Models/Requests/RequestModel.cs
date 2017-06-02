@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Ombi.Store.Entities;
+using System;
 using System.Collections.Generic;
-using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Requests
 {
@@ -12,8 +12,10 @@ namespace Ombi.Core.Models.Requests
             {
                 case RequestType.Movie:
                     return "Movie";
+
                 case RequestType.TvShow:
                     return "TV Show";
+
                 default:
                     return string.Empty;
             }
@@ -27,13 +29,14 @@ namespace Ombi.Core.Models.Requests
         NoSubtitles = 1,
         WrongContent = 2,
         PlaybackIssues = 3,
-        Other = 4, // Provide a message
+        Other = 4 // Provide a message
     }
 
     public class EpisodesModel : IEquatable<EpisodesModel>
     {
         public int SeasonNumber { get; set; }
         public int EpisodeNumber { get; set; }
+
         public bool Equals(EpisodesModel other)
         {
             // Check whether the compared object is null.
@@ -73,5 +76,4 @@ namespace Ombi.Core.Models.Requests
         public bool Available { get; set; }
         public bool Approved { get; set; }
     }
-
 }

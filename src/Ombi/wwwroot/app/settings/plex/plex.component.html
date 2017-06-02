@@ -1,14 +1,12 @@
-﻿
-<settings-menu></settings-menu>
+﻿<settings-menu></settings-menu>
 <div *ngIf="settings">
     <fieldset>
         <legend>Plex Configuration</legend>
 
-            <div class="checkbox col-md-2 " style="float: right;">
-                <input  type="checkbox" id="advanced" [(ngModel)]="advanced" ng-checked="advanced">
-                <label  for="advanced">Advanced</label>
-            </div>
-      
+        <div class="checkbox col-md-2 " style="float: right;">
+            <input type="checkbox" id="advanced" [(ngModel)]="advanced" ng-checked="advanced">
+            <label for="advanced">Advanced</label>
+        </div>
 
         <div class="form-group col-md-3">
             <div class="checkbox">
@@ -47,27 +45,26 @@
                         <div class="form-group">
                             <div>
                                 <button id="requestToken" (click)="requestServers(server)" class="btn btn-primary-outline">Load Servers <i class="fa fa-key"></i></button>
-
                             </div>
                         </div>
                         <br />
                         <br />
                         <div class="form-group">
-                                <label for="username" class="control-label">Please select the server</label><br />
+                            <label for="username" class="control-label">Please select the server</label><br />
+                            <div class="btn-group">
                                 <div class="btn-group">
-                                    <div class="btn-group">
-                                        <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                            Servers
-                                            <span class="caret"></span>
-                                        </a>
+                                    <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        Servers
+                                        <span class="caret"></span>
+                                    </a>
 
-                                
-                                        <ul *ngIf="loadedServers" class="dropdown-menu"><li  *ngFor="let s of loadedServers.servers.server"><a (click)="selectServer(s,server)">{{s.name}}</a></li>
-                                        </ul>
-                                    </div>
+                                    <ul *ngIf="loadedServers" class="dropdown-menu">
+                                        <li *ngFor="let s of loadedServers.servers.server">
+                                            <a (click)="selectServer(s,server)">{{s.name}}</a>
+                                        </li>
+                                    </ul>
                                 </div>
-                                
- 
+                            </div>
                         </div>
 
                         <div *ngIf="advanced">
@@ -102,17 +99,14 @@
                             <div class="form-group">
                                 <div class="checkbox">
 
-
                                     <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" ng-checked="server.enableEpisodeSearching">
                                     <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
-
                                 </div>
                                 <small>
                                     If enabled then we will lookup all episodes on your Plex server and store them in the local database. This will stop episode requests that already exist on Plex (that might not be in Sonarr).
                                     Please be aware that this is a very resource intensive process and while the Plex Episode Cacher job is running the application may appear slow (Depending on the size of your Plex library).
                                 </small>
                             </div>
-
 
                             <div class="form-group">
                                 <label for="authToken" class="control-label">Plex Authorization Token</label>
@@ -127,10 +121,6 @@
                                     <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier" [(ngModel)]="server.machineIdentifier" value="{{server.machineIdentifier}}">
                                 </div>
                             </div>
-
-
-
-                           
                         </div>
                         <label>Please select the libraries you want Ombi to look in for content</label>
                         <br />
@@ -148,7 +138,6 @@
                                         <label for="{{lib.title}}">{{lib.title}}</label>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
@@ -164,9 +153,6 @@
                 </ngb-tab>
             </div>
         </ngb-tabset>
-
-
-
 
         <div class="form-group">
             <div>

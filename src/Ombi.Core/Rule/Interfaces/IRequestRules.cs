@@ -1,4 +1,5 @@
 ﻿using Ombi.Core.Models.Requests;
+using Ombi.Core.Rule;
 
 namespace Ombi.Core.Rules
 {

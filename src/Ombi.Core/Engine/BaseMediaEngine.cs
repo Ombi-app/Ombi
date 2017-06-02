@@ -1,20 +1,25 @@
-﻿using System;
+﻿using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Movie;
+using Ombi.Core.Requests.Models;
+using Ombi.Core.Rules;
+using Ombi.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Ombi.Core.Claims;
-using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Movie;
-using Ombi.Core.Requests.Models;
-using Ombi.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public abstract class BaseMediaEngine : BaseEngine
     {
-        protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService) : base(identity)
+        private long _cacheTime;
+        private Dictionary<int, MovieRequestModel> _dbMovies;
+        private Dictionary<int, TvRequestModel> _dbTv;
+
+        protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
+            IRuleEvaluator rules) : base(identity, rules)
         {
             RequestService = requestService;
         }
@@ -23,13 +28,10 @@ namespace Ombi.Core.Engine
         protected IRequestService<MovieRequestModel> MovieRequestService => RequestService.MovieRequestService;
         protected IRequestService<TvRequestModel> TvRequestService => RequestService.TvRequestService;
 
-        private long _cacheTime = 0;
-        private Dictionary<int, MovieRequestModel> _dbMovies;
-        private Dictionary<int, TvRequestModel> _dbTv;
         protected async Task<Dictionary<int, MovieRequestModel>> GetMovieRequests()
         {
-            long now = DateTime.Now.Ticks;
-            if (_dbMovies == null || (now - _cacheTime) > 10000)
+            var now = DateTime.Now.Ticks;
+            if (_dbMovies == null || now - _cacheTime > 10000)
             {
                 var allResults = await MovieRequestService.GetAllAsync();
 
@@ -42,8 +44,8 @@ namespace Ombi.Core.Engine
 
         protected async Task<Dictionary<int, TvRequestModel>> GetTvRequests()
         {
-            long now = DateTime.Now.Ticks;
-            if (_dbTv == null || (now - _cacheTime) > 10000)
+            var now = DateTime.Now.Ticks;
+            if (_dbTv == null || now - _cacheTime > 10000)
             {
                 var allResults = await TvRequestService.GetAllAsync();
 
