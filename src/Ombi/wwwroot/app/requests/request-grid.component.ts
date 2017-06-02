@@ -10,13 +10,7 @@ import { ITvRequestModel, IMovieRequestModel, IRequestGrid } from '../interfaces
 export class RequestGridComponent implements OnInit {
 
     constructor(private dragulaService: DragulaService, private requestService: RequestService) {
-        this.dragulaService.setOptions('requests', {
-            removeOnSpill: false,
-
-        });
-    
         this.dragulaService.drop.subscribe((value: any) => {
-            
         });
     }
 

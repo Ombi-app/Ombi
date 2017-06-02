@@ -6,15 +6,18 @@ namespace Ombi.Schedule
 {
     public class JobSetup : IJobSetup
     {
-        public JobSetup(IPlexContentCacher cacher)
+        public JobSetup(IPlexContentCacher cacher, IRadarrCacher radarrCache)
         {
-            Cacher = cacher;
+            PlexCacher = cacher;
+            RadarrCacher = radarrCache;
         }
 
-        private IPlexContentCacher Cacher { get; }
+        private IPlexContentCacher PlexCacher { get; }
+        private IRadarrCacher RadarrCacher { get; }
         public void Setup()
         {
-            RecurringJob.AddOrUpdate(() => Cacher.CacheContent(), Cron.Hourly);
+            RecurringJob.AddOrUpdate(() => PlexCacher.CacheContent(), Cron.Hourly);
+            RecurringJob.AddOrUpdate(() => RadarrCacher.Start(), Cron.MonthInterval(61));
         }
     }
 }

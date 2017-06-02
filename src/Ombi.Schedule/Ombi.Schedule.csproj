@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Plex\Ombi.Api.Plex.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
   </ItemGroup>
