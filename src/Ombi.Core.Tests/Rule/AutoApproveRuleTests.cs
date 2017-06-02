@@ -1,11 +1,11 @@
-using Ombi.Core.Rule.Rules;
-using Xunit;
 using System.Security.Principal;
 using Moq;
-using Ombi.Core.Models.Requests;
 using Ombi.Core.Claims;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Rule.Rules;
+using Xunit;
 
-namespace Ombi.Core.Tests
+namespace Ombi.Core.Tests.Rule
 {
     public class AutoApproveRuleTests
     {

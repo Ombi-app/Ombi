@@ -1,13 +1,12 @@
-﻿using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Search;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Search;
 
-namespace Ombi.Core.Engine
+namespace Ombi.Core.Engine.Interfaces
 {
-    public interface ITvRequestEngine
+    public interface ITvRequestEngine : IRequestEngine<TvRequestModel>
     {
-        Task<IEnumerable<TvRequestModel>> GetTvRequests(int count, int position);
 
         Task RemoveTvRequest(int requestId);
 
@@ -16,7 +15,5 @@ namespace Ombi.Core.Engine
         Task<IEnumerable<TvRequestModel>> SearchTvRequest(string search);
 
         Task<TvRequestModel> UpdateTvRequest(TvRequestModel request);
-
-        RequestCountModel RequestCount();
     }
 }

@@ -69,3 +69,9 @@ export interface IRequestsPageScroll {
     count: number,
     position: number
 }
+
+export interface IRequestGrid<T> {
+    available: T[],
+    new: T[],
+    approved:T[]
+}

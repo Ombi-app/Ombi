@@ -7,7 +7,7 @@ import { ServiceAuthHelpers } from './service.helpers';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IMovieRequestModel, ITvRequestModel, IRequestCountModel } from '../interfaces/IRequestModel';
+import { IMovieRequestModel, ITvRequestModel, IRequestCountModel, IRequestGrid } from '../interfaces/IRequestModel';
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
@@ -57,5 +57,13 @@ export class RequestService extends ServiceAuthHelpers {
 
     getRequestsCount(): Observable<IRequestCountModel> {
         return this.basicHttp.get(`${this.url}count`).map(this.extractData);
+    }
+
+    getMovieGrid(): Observable<IRequestGrid<IMovieRequestModel>> {
+        return this.http.get(`${this.url}movie/grid`).map(this.extractData);
+    }
+
+    getTvGrid(): Observable<IRequestGrid<ITvRequestModel>> {
+        return this.http.get(`${this.url}tv/grid`).map(this.extractData);
     }
 }

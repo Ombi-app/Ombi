@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Core.Engine.Interfaces;
 
 namespace Ombi.Core.Engine
 {
@@ -51,7 +52,7 @@ namespace Ombi.Core.Engine
                 Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> {Username},
+                RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None,
                 ProviderId = tv.Id,
                 RequestAll = tv.RequestAll,
@@ -124,9 +125,15 @@ namespace Ombi.Core.Engine
             return await AddRequest(model);
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetTvRequests(int count, int position)
+        public async Task<IEnumerable<TvRequestModel>> GetRequests(int count, int position)
         {
             var allRequests = await TvRequestService.GetAllAsync(count, position);
+            return allRequests;
+        }
+
+        public async Task<IEnumerable<TvRequestModel>> GetRequests()
+        {
+            var allRequests = await TvRequestService.GetAllAsync();
             return allRequests;
         }
 
@@ -234,7 +241,25 @@ namespace Ombi.Core.Engine
             //    await RequestLimitRepo.UpdateAsync(usersLimit);
             //}
 
-            return new RequestEngineResult {RequestAdded = true};
+            return new RequestEngineResult { RequestAdded = true };
+        }
+
+        public async Task<IEnumerable<TvRequestModel>> GetApprovedRequests()
+        {
+            var allRequests = await TvRequestService.GetAllAsync();
+            return allRequests.Where(x => x.Approved && !x.Available);
+        }
+
+        public async Task<IEnumerable<TvRequestModel>> GetNewRequests()
+        {
+            var allRequests = await TvRequestService.GetAllAsync();
+            return allRequests.Where(x => !x.Approved && !x.Available);
+        }
+
+        public async Task<IEnumerable<TvRequestModel>> GetAvailableRequests()
+        {
+            var allRequests = await TvRequestService.GetAllAsync();
+            return allRequests.Where(x => x.Available);
         }
     }
 }

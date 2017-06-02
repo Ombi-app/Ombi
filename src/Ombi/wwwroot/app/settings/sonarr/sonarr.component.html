@@ -51,7 +51,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button type="submit" (click)="getProfiles()" class="btn btn-primary-outline">Get Quality Profiles <div *ngIf="profilesRunning" class="fa fa-spinner fa-spin" /></button>
+                    <button type="submit" (click)="getProfiles()" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
                 </div>
             </div>
             <div class="form-group">
@@ -65,7 +65,7 @@
 
             <div class="form-group">
                 <div>
-                    <button type="submit" (click)="getRootFolders()" class="btn btn-primary-outline">Get Root Folders <div *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin" /></button>
+                    <button type="submit" (click)="getRootFolders()" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin" ></span></button>
 
                 </div>
 
@@ -89,7 +89,7 @@
             </div>
             <div class="form-group">
                 <div>
-                    <button (click)="test()" type="submit" class="btn btn-primary-outline">Test Connectivity <div id="spinner" /></button>
+                    <button (click)="test()" type="submit" class="btn btn-primary-outline">Test Connectivity <span id="spinner"> </span></button>
                 </div>
             </div>
 

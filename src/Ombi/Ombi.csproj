@@ -64,6 +64,36 @@
     <Content Update="wwwroot\app\interfaces\ISonarr - Copy.ts">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+    <Content Update="wwwroot\app\requests\request - Copy.component.js">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request - Copy.component.js.map">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request - Copy.component.ts">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-grid - Copy.component.html">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-card.component.js">
+      <DependentUpon>request-card.component.ts</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-grid - Copy.component.js">
+      <DependentUpon>request-grid - Copy.component.ts</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-card.component.js.map">
+      <DependentUpon>request-card.component.js</DependentUpon>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-grid - Copy.component.js.map">
+      <DependentUpon>request-grid - Copy.component.js</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Update="wwwroot\app\requests\request-grid - Copy.component.ts">
+      <DependentUpon>request-grid - Copy.component.html</DependentUpon>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
     <Content Update="wwwroot\app\services\applications\sonarr - Copy.service.js">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

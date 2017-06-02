@@ -57,7 +57,8 @@ var paths = {
             './bower_components/PACE/pace.js',
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/tether/dist/js/tether.js',
-            './node_modules/angular2-jwt/angular2-jwt.js'
+            './node_modules/angular2-jwt/angular2-jwt.js',
+
         ],
         dest: './lib/'
     },
@@ -74,6 +75,7 @@ var paths = {
                 './node_modules/primeng/resources/primeng.css',
                 './node_modules/tether/dist/css/tether.css',
                 './node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css',
+                './node_modules/dragula/dist/dragula.css'
             ],
             dest: './css/lib/'
         },
@@ -125,6 +127,11 @@ var paths = {
             name: 'primeng',
             src: './node_modules/primeng/**/*.js',
             dest: './lib/primeng/'
+        },
+        {
+            name: 'ng2-dragula',
+            src: './node_modules/ng2-dragula/**/*.js',
+            dest: './lib/ng2-dragula/'
         }
     ],
     sass:  // Simple sass->css compilation

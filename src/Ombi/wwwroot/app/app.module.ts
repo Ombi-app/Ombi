@@ -2,17 +2,20 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { MdButtonModule } from '@angular/material';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { AppComponent } from './app.component';
-
+import { MdButtonModule, MdCardModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
-import { InfiniteScrollModule } from 'ngx-infinite-scroll'
+// Third Party
+import { ButtonModule, DialogModule } from 'primeng/primeng';
+import { GrowlModule } from 'primeng/components/growl/growl';
+import { DataTableModule, SharedModule } from 'primeng/primeng';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
+import { AppComponent } from './app.component';
 // Search
 import { SearchComponent } from './search/search.component';
 import { MovieSearchComponent } from './search/moviesearch.component';
@@ -23,6 +26,8 @@ import { SeriesInformationComponent } from './search/seriesinformation.component
 import { RequestComponent } from './requests/request.component';
 import { MovieRequestsComponent } from './requests/movierequests.component';
 import { TvRequestsComponent } from './requests/tvrequests.component';
+import { RequestGridComponent } from './requests/request-grid.component';
+import { RequestCardComponent } from './requests/request-card.component';
 
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
@@ -45,16 +50,13 @@ import { StatusService } from './services/status.service';
 import { SettingsModule } from './settings/settings.module';
 import { WizardModule } from './wizard/wizard.module';
 
-import { ButtonModule, DialogModule } from 'primeng/primeng';
-import { GrowlModule } from 'primeng/components/growl/growl';
-import { DataTableModule, SharedModule } from 'primeng/primeng';
-
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
     { path: '', redirectTo: '/search', pathMatch: 'full' },
     { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
     { path: 'search/show/:id', component: SeriesInformationComponent, canActivate: [AuthGuard] },
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
+    { path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent },
     { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -78,6 +80,8 @@ const routes: Routes = [
         DialogModule,
         MdButtonModule,
         NgbModule.forRoot(),
+        DragulaModule,
+        MdCardModule
     ],
     declarations: [
         AppComponent,
@@ -92,6 +96,8 @@ const routes: Routes = [
         MovieRequestsComponent,
         TvRequestsComponent,
         SeriesInformationComponent,
+        RequestGridComponent,
+        RequestCardComponent,
     ],
     providers: [
         SearchService,
@@ -101,7 +107,8 @@ const routes: Routes = [
         AuthGuard,
         SettingsService,
         IdentityService,
-        StatusService
+        StatusService,
+    DragulaService
     ],
     bootstrap: [AppComponent]
 })

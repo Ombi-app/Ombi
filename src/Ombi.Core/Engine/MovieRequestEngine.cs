@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Core.Engine.Interfaces;
 
 namespace Ombi.Core.Engine
 {
@@ -160,9 +161,15 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetMovieRequests(int count, int position)
+        public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
         {
             var allRequests = await MovieRequestService.GetAllAsync(count, position);
+            return allRequests;
+        }
+
+        public async Task<IEnumerable<MovieRequestModel>> GetRequests()
+        {
+            var allRequests = await MovieRequestService.GetAllAsync();
             return allRequests;
         }
 
@@ -255,6 +262,24 @@ namespace Ombi.Core.Engine
             //}
 
             return new RequestEngineResult {RequestAdded = true};
+        }
+
+        public async Task<IEnumerable<MovieRequestModel>> GetApprovedRequests()
+        {
+            var allRequests = await MovieRequestService.GetAllAsync();
+            return allRequests.Where(x => x.Approved && !x.Available);
+        }
+
+        public async Task<IEnumerable<MovieRequestModel>> GetNewRequests()
+        {
+            var allRequests = await MovieRequestService.GetAllAsync();
+            return allRequests.Where(x => !x.Approved && !x.Available);
+        }
+
+        public async Task<IEnumerable<MovieRequestModel>> GetAvailableRequests()
+        {
+            var allRequests = await MovieRequestService.GetAllAsync();
+            return allRequests.Where(x => !x.Approved && x.Available);
         }
     }
 }

@@ -1,0 +1,39 @@
+﻿
+
+
+<div *ngIf="tvRequests">
+    <div class="col-md-4">
+        <md-card>
+            <md-card-title>Title</md-card-title>
+            <div [dragula]='"requests"' [dragulaModel]="tvRequests.new">
+                <br />
+                <br />
+                <request-card *ngFor="let item of tvRequests.new" [request]="item" [attr.data.id]="item.id"></request-card>
+            </div>
+        </md-card>
+    </div>
+
+    <div class="col-md-4">
+        <md-card>
+            <md-card-title>Title</md-card-title>
+            <div [dragula]='"requests"' [dragulaModel]="tvRequests.approved">
+                <br />
+                <br />
+                <request-card *ngFor="let item of tvRequests.approved" [request]="item" [attr.data.id]="item.id"></request-card>
+            </div>
+        </md-card>
+    </div>
+
+    <div class="col-md-4">
+        <md-card>
+            <md-card-title>Title</md-card-title>
+            <div style="border: dashed">
+                <div [dragula]='"requests"' [dragulaModel]="tvRequests.available">
+                    <br />
+                    <br />
+                    <request-card *ngFor="let item of tvRequests.available" [request]="item" [attr.data.id]="item.id"></request-card>
+                </div>
+            </div>
+        </md-card>
+    </div>
+</div>
