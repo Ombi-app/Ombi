@@ -9,8 +9,9 @@ ____
 [![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
 [![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 ___
-  
-[![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
+
+
+[![Report a bug](http://i.imgur.com/xSpw482.png)](https://forums.ombi.io/viewforum.php?f=10) [![Feature request](http://i.imgur.com/mFO0OuX.png)](https://forums.ombi.io/posting.php?mode=post&f=20)
 
 | Service  | Master                      | Early Access                 | Dev                          |
 |----------|:---------------------------:|:----------------------------:|:----------------------------:|
@@ -19,6 +20,8 @@ ___
 
 We now have a forums!
 Check it out: [https://forums.ombi.io/](https://forums.ombi.io)
+
+Want to keep up to date with the rewrite? Follow [this issue](https://github.com/tidusjar/Ombi/issues/865)
 
 # Features
 Here some of the features Ombi has:
@@ -71,7 +74,7 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)  
+[Windows Guide!](https://forums.ombi.io/viewtopic.php?f=6&t=4)  
 [Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
 
 # FAQ
