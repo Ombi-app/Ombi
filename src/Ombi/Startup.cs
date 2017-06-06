@@ -5,7 +5,6 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Hangfire.RecurringJobExtensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Reflection;
 using Hangfire;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Ombi.Schedule
 {
