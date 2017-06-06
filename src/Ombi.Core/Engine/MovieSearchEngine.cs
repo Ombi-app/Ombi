@@ -135,6 +135,7 @@ namespace Ombi.Core.Engine
             Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
+            viewMovie.Id = showInfo.Id; // TheMovieDbId
             if (plexSettings.Enable)
             {
                 var item = await PlexContentRepo.Get(showInfo.ImdbId);
@@ -178,6 +179,8 @@ namespace Ombi.Core.Engine
                 viewMovie.Available = requestedMovie.Available;
             }
 
+            RunSearchRules(viewMovie);
+            
             return viewMovie;
         }
 

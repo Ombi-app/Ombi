@@ -1,7 +1,9 @@
-﻿namespace Ombi.Schedule.Jobs
+﻿using System.Threading.Tasks;
+
+namespace Ombi.Schedule.Jobs
 {
     public interface IPlexContentCacher
     {
-        void CacheContent();
+        Task CacheContent();
     }
 }

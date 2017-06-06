@@ -97,7 +97,7 @@ namespace Ombi.Core.Engine
 
             try
             {
-                var ruleResults = RunRules(requestModel).ToList();
+                var ruleResults = RunRequestRules(requestModel).ToList();
                 if (ruleResults.Any(x => !x.Success))
                     return new RequestEngineResult
                     {

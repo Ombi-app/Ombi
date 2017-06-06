@@ -17,6 +17,12 @@ CREATE TABLE IF NOT EXISTS PlexContent
     ReleaseYear								varchar(100) NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS RadarrCache
+(
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    TheMovieDbId						INTEGER NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS SeasonsContent
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,

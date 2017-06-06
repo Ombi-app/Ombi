@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Core.Rule
 {
-    public abstract class BaseRule
+    public abstract class BaseRequestRule
     {
         public RuleResult Success()
         {

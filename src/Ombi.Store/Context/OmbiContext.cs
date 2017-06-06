@@ -1,8 +1,5 @@
-﻿using System;
-using System.IO;
-using System.Resources;
+﻿using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Ombi.Store.Entities;
 
 namespace Ombi.Store.Context
@@ -35,12 +32,7 @@ namespace Ombi.Store.Context
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }
-
-
-        public EntityEntry<T> Entry<T>(T entry) where T : class
-        {
-            return base.Entry(entry);
-        }
+        public DbSet<RadarrCache> RadarrCache { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

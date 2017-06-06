@@ -6,6 +6,7 @@ using Ombi.Store.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using Ombi.Core.Models.Search;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -57,9 +58,15 @@ namespace Ombi.Core.Engine.Interfaces
             }
         }
 
-        public IEnumerable<RuleResult> RunRules(BaseRequestModel model)
+        public IEnumerable<RuleResult> RunRequestRules(BaseRequestModel model)
         {
             var ruleResults = Rules.StartRequestRules(model).ToList();
+            return ruleResults;
+        }
+
+        public IEnumerable<RuleResult> RunSearchRules(SearchViewModel model)
+        {
+            var ruleResults = Rules.StartSearchRules(model).ToList();
             return ruleResults;
         }
     }

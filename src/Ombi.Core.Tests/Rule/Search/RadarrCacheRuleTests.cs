@@ -1,0 +1,56 @@
+using Moq;  
+using Ombi.Core.Models.Search;
+using Ombi.Core.Rule.Rules.Search;
+using Ombi.Store.Context;
+using Ombi.Store.Entities;
+using Xunit;
+
+namespace Ombi.Core.Tests.Rule.Search
+{
+    public class RadarrCacheRuleTests
+    {
+        public RadarrCacheRuleTests()
+        {
+            ContextMock = new Mock<IOmbiContext>();
+            Rule = new RadarrCacheRule(ContextMock.Object);
+        }
+
+        private RadarrCacheRule Rule { get; }
+        private Mock<IOmbiContext> ContextMock { get; }
+
+        [Fact]
+        public void Should_ReturnApproved_WhenMovieIsInRadarr()
+        {
+            var list = DbHelper.GetQueryableMockDbSet(new RadarrCache
+            {
+                TheMovieDbId = 123
+            });
+
+            ContextMock.Setup(x => x.RadarrCache).Returns(list);
+
+            var request = new SearchMovieViewModel { Id = 123 };
+            var result = Rule.Execute(request);
+
+            Assert.Equal(result.Success, true);
+            Assert.Equal(request.Approved, true);
+        }
+
+
+        [Fact]
+        public void Should_ReturnNotApproved_WhenMovieIsNotInRadarr()
+        {
+            var list = DbHelper.GetQueryableMockDbSet(new RadarrCache
+            {
+                TheMovieDbId = 000012
+            });
+
+            ContextMock.Setup(x => x.RadarrCache).Returns(list);
+
+            var request = new SearchMovieViewModel { Id = 123 };
+            var result = Rule.Execute(request);
+
+            Assert.Equal(result.Success, true);
+            Assert.Equal(request.Approved, false);
+        }
+    }
+}

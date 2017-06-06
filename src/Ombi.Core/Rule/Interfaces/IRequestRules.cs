@@ -1,9 +1,8 @@
 ﻿using Ombi.Core.Models.Requests;
-using Ombi.Core.Rule;
 
-namespace Ombi.Core.Rules
+namespace Ombi.Core.Rule.Interfaces
 {
-    public interface IRequestRules<T> where T : BaseRequestModel
+    public interface IRequestRules<T> where T : new() 
     {
         RuleResult Execute(T obj);
     }

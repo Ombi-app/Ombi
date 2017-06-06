@@ -3,10 +3,11 @@ using Ombi.Core.Models.Requests;
 using Ombi.Core.Rules;
 using Ombi.Store.Entities;
 using System.Security.Principal;
+using Ombi.Core.Rule.Interfaces;
 
 namespace Ombi.Core.Rule.Rules
 {
-    public class AutoApproveRule : BaseRule, IRequestRules<BaseRequestModel>
+    public class AutoApproveRule : BaseRequestRule, IRequestRules<BaseRequestModel>
     {
         public AutoApproveRule(IPrincipal principal)
         {

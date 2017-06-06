@@ -97,30 +97,45 @@ namespace Ombi.Core.Engine
             {
                 var latest = showInfo.Season.OrderBy(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in childRequest.SeasonRequests)
+                {
                     if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
+                    {
                         foreach (var episodesRequested in modelSeasonRequest.Episodes)
+                        {
                             episodesRequested.Requested = true;
+                        }
+                    }
+                }
             }
             if (tv.FirstSeason)
             {
                 var first = showInfo.Season.OrderByDescending(x => x.SeasonNumber).FirstOrDefault();
                 foreach (var modelSeasonRequest in childRequest.SeasonRequests)
+                {
                     if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)
+                    {
                         foreach (var episodesRequested in modelSeasonRequest.Episodes)
+                        {
                             episodesRequested.Requested = true;
+                        }
+                    }
+                }
             }
 
-            var ruleResults = RunRules(model).ToList();
+            var ruleResults = RunRequestRules(model).ToList();
             if (ruleResults.Any(x => !x.Success))
+            {
                 return new RequestEngineResult
                 {
                     ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
+            }
 
             var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
+            {
                 return await AddExistingRequest(model, existingRequest);
-
+            }
             // This is a new request
             return await AddRequest(model);
         }

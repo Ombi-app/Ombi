@@ -24,6 +24,7 @@ using Ombi.Settings.Settings;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
 using Ombi.Core.Rules;
+using Ombi.Schedule.Jobs.Radarr;
 
 namespace Ombi.DependencyInjection
 {
@@ -83,6 +84,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
             services.AddTransient<IJobSetup, JobSetup>();
+            services.AddTransient<IRadarrCacher, RadarrCacher>();
         }
 
         public static void RegisterIdentity(this IServiceCollection services)

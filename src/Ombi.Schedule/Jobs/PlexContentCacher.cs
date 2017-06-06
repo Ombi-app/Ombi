@@ -55,7 +55,7 @@ namespace Ombi.Schedule.Jobs
         private ILogger<PlexContentCacher> Logger { get; }
         private IPlexContentRepository Repo { get; }
 
-        public void CacheContent()
+        public async Task CacheContent()
         {
             var plexSettings = Plex.GetSettings();
             if (!plexSettings.Enable)
@@ -70,8 +70,7 @@ namespace Ombi.Schedule.Jobs
             Logger.LogInformation("Starting Plex Content Cacher");
             try
             {
-
-                StartTheCache(plexSettings).Wait();
+                await StartTheCache(plexSettings);
             }
             catch (Exception e)
             {
