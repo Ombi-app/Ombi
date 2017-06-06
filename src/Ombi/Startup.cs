@@ -60,6 +60,7 @@ namespace Ombi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddMemoryCache();
             services.AddMvc();
             services.AddOmbiMappingProfile();
             services.AddAutoMapper(expression =>

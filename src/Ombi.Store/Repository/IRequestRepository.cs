@@ -12,7 +12,6 @@ namespace Ombi.Store.Repository
         RequestBlobs Get(int id);
         IEnumerable<RequestBlobs> GetAll();
         Task<IEnumerable<RequestBlobs>> GetAllAsync();
-        Task<IEnumerable<RequestBlobs>> GetAllAsync(int count, int position);
         Task<RequestBlobs> GetAsync(int id);
         RequestBlobs Insert(RequestBlobs entity);
         Task<RequestBlobs> InsertAsync(RequestBlobs entity);

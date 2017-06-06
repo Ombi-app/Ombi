@@ -165,10 +165,11 @@ namespace Ombi.Core.Models.Requests
 
         public async Task<IEnumerable<T>> GetAllAsync(int count, int position)
         {
-            var blobs = await Repo.GetAllAsync(count, position).ConfigureAwait(false);
+            var blobs = await Repo.GetAllAsync().ConfigureAwait(false);
+        
             var retVal = new List<T>();
 
-            foreach (var b in blobs.Where(x => x.Type == RequestType))
+            foreach (var b in blobs.Where(x => x.Type == RequestType).Skip(position).Take(count))
             {
                 if (b == null)
                     continue;

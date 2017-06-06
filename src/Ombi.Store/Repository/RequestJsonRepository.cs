@@ -62,18 +62,6 @@ namespace Ombi.Store.Repository
             //}, 5);
             //return item;
         }
-        public async Task<IEnumerable<RequestBlobs>> GetAllAsync(int count, int position)
-        {
-            //var key = "GetAll";
-            //var item = await Cache.GetOrSetAsync(key, async () =>
-            //{
-
-            var page = await Db.Requests.ToListAsync().ConfigureAwait(false);
-            return page.Skip(position).Take(count);
-
-            //}, 5);
-            //return item;
-        }
 
         public RequestBlobs Get(int id)
         {

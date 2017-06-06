@@ -58,6 +58,8 @@ var paths = {
             './node_modules/bootstrap/dist/js/bootstrap.js',
             './node_modules/tether/dist/js/tether.js',
             './node_modules/angular2-jwt/angular2-jwt.js',
+            './node_modules/dragula/dist/dragula.js'
+
 
         ],
         dest: './lib/'
@@ -75,7 +77,7 @@ var paths = {
                 './node_modules/primeng/resources/primeng.css',
                 './node_modules/tether/dist/css/tether.css',
                 './node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css',
-                './node_modules/dragula/dist/dragula.css'
+                './node_modules/dragula/dist/dragula.js'
             ],
             dest: './css/lib/'
         },
