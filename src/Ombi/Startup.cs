@@ -78,8 +78,11 @@ namespace Ombi
 
             services.AddHangfire(x =>
             {
+#if DEBUG
+                x.UseMemoryStorage(new MemoryStorageOptions());
+#else
                 x.UseSQLiteStorage("Data Source=Ombi.db;");
-                //x.UseMemoryStorage(new MemoryStorageOptions());
+#endif
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 

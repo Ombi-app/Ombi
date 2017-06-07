@@ -14,6 +14,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
 
 namespace Ombi.Core.Engine
@@ -21,14 +22,18 @@ namespace Ombi.Core.Engine
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationService notificationService, IRuleEvaluator r) : base(user, requestService, r)
+            INotificationService notificationService, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log) : base(user, requestService, r)
         {
             MovieApi = movieApi;
             NotificationService = notificationService;
+            Sender = sender;
+            Logger = log;
         }
 
         private IMovieDbApi MovieApi { get; }
         private INotificationService NotificationService { get; }
+        private IMovieSender Sender { get; }
+        private ILogger<MovieRequestEngine> Logger { get; }
 
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
@@ -91,7 +96,7 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> {Username},
+                RequestedUsers = new List<string> { Username },
                 Issues = IssueState.None
             };
 
@@ -106,32 +111,22 @@ namespace Ombi.Core.Engine
 
                 if (requestModel.Approved) // The rules have auto approved this
                 {
-                    //    var result = await MovieSender.Send(model);
-                    //    if (result.Result)
-                    //    {
-                    //        return await AddRequest(model, settings,
-                    //            $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-                    //    }
-                    //    if (result.Error)
-
-                    //    {
-                    //        return
-                    //            Response.AsJson(new JsonResponseModel
-                    //            {
-                    //                Message = "Could not add movie, please contact your administrator",
-                    //                Result = false
-                    //            });
-                    //    }
-                    //    if (!result.MovieSendingEnabled)
-                    //    {
-                    //        return await AddRequest(model, settings, $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}");
-                    //    }
-
-                    //    return Response.AsJson(new JsonResponseModel
-                    //    {
-                    //        Result = false,
-                    //        Message = Resources.UI.Search_CouchPotatoError
-                    //    });
+                    var result = await Sender.Send(requestModel);
+                    if (result.Success && result.MovieSent)
+                    {
+                        return await AddMovieRequest(requestModel, /*settings,*/
+                            $"{fullMovieName} has been successfully added!");
+                    }
+                    if (!result.Success)
+                    {
+                        Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
+                        return new RequestEngineResult
+                        {
+                            Message = result.Message,
+                            ErrorMessage = result.Message,
+                            RequestAdded = false
+                        };
+                    }
                 }
 
                 return await AddMovieRequest(requestModel, /*settings,*/
@@ -261,7 +256,7 @@ namespace Ombi.Core.Engine
             //    await RequestLimitRepo.UpdateAsync(usersLimit);
             //}
 
-            return new RequestEngineResult {RequestAdded = true};
+            return new RequestEngineResult { RequestAdded = true, Message = message };
         }
 
         public async Task<IEnumerable<MovieRequestModel>> GetApprovedRequests()
