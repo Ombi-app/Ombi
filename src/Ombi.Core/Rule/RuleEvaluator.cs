@@ -15,8 +15,8 @@ namespace Ombi.Core.Rule
         {
             RequestRules = new List<IRequestRules<BaseRequestModel>>();
             SearchRules = new List<IRequestRules<SearchViewModel>>();
-            var baseSearchType = typeof(BaseSearchRule).FullName;
-            var baseRequestType = typeof(BaseRequestRule).FullName;
+            var baseSearchType = typeof(BaseRequestRule).FullName;
+            var baseRequestType = typeof(BaseSearchRule).FullName;
 
             var ass = typeof(RuleEvaluator).GetTypeInfo().Assembly;
 

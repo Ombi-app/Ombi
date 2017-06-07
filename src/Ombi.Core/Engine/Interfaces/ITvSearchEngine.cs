@@ -8,7 +8,7 @@ namespace Ombi.Core.Engine.Interfaces
     {
         Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm);
 
-        Task<SearchTvShowViewModel> GetShowInformation(int tvdbId);
+        Task<SearchTvShowViewModel> GetShowInformation(int tvdbid);
 
         Task<IEnumerable<SearchTvShowViewModel>> Popular();
 

@@ -50,9 +50,9 @@ namespace Ombi.Core.Engine
             return null;
         }
 
-        public async Task<SearchTvShowViewModel> GetShowInformation(int tvmazeId)
+        public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbid)
         {
-            var show = await TvMazeApi.ShowLookup(tvmazeId);
+            var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbid);
             var episodes = await TvMazeApi.EpisodeLookup(show.id);
 
             var mapped = Mapper.Map<SearchTvShowViewModel>(show);
@@ -154,7 +154,7 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            if (item.Id > 0 && item.Available)
+            if (item.Id > 0)
             {
                 // TODO need to check if the episodes are available
                 var tvdbid = item.Id;

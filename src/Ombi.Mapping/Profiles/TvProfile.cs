@@ -46,10 +46,32 @@ namespace Ombi.Mapping.Profiles
                 .ForMember(dest => dest.Status, opts => opts.MapFrom(src => src.status))
                 .ForMember(dest => dest.SeasonRequests, opts => opts.MapFrom(src => src.Season));
 
+
+
+            CreateMap<TvMazeCustomSeason, SeasonRequestModel>()
+                .ConstructUsing(x =>
+                {
+                    var season = new SeasonRequestModel
+                    {
+                        SeasonNumber = x.SeasonNumber
+                    };
+                    foreach (var ep in x.EpisodeNumber)
+                    {
+                        season.Episodes.Add(new EpisodesRequested
+                        {
+                            EpisodeNumber = ep,    
+                            
+                        });
+                    }
+                    return season;
+                });
+
+
+
             CreateMap<TraktShow, SearchTvShowViewModel>()
                 .ForMember(dest => dest.Id, opts => opts.MapFrom(src => Convert.ToInt32(src.Ids.Tvdb.ToString())))
                 .ForMember(dest => dest.FirstAired, opts => opts.MapFrom(src => src.FirstAired.HasValue ? src.FirstAired.Value.ToString("yyyy-MM-ddTHH:mm:ss") : string.Empty))
-                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => src.Ids.Imdb))
+                .ForMember(dest => dest.Banner, opts => opts.MapFrom(src => src.Images.Banner.Full))
                 .ForMember(dest => dest.ImdbId, opts => opts.MapFrom(src => src.Ids.Imdb))
                 .ForMember(dest => dest.Network, opts => opts.MapFrom(src => src.Network))
                 .ForMember(dest => dest.Overview, opts => opts.MapFrom(src => src.Overview.RemoveHtml()))

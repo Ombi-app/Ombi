@@ -70,6 +70,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
+                this.getExtraInfo();
             });
     }
 
@@ -79,6 +80,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
+                this.getExtraInfo();
             });
     }
 
@@ -88,6 +90,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
+                this.getExtraInfo();
             });
     }
 
@@ -97,7 +100,19 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;
+                this.getExtraInfo();
             });
+    }
+
+    getExtraInfo() {
+        this.tvResults.forEach((val, index) => {
+            this.searchService.getShowInformation(val.id)
+                .takeUntil(this.subscriptions)
+                .subscribe(x => {
+                    this.updateItem(val,x);
+                });
+
+        });
     }
 
     request(searchResult: ISearchTvResult) {
@@ -136,6 +151,12 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         this.route.navigate(['/search/show', searchResult.seriesId]);
     }
 
+    private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {
+        var index = this.tvResults.indexOf(key, 0);
+        if (index > -1) {
+            this.tvResults[index] = updated;
+        }
+    }
 
     private clearResults() {
         this.tvResults = [];
