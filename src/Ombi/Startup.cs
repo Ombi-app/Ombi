@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
+using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -77,7 +78,8 @@ namespace Ombi
 
             services.AddHangfire(x =>
             {
-                x.UseMemoryStorage(new MemoryStorageOptions());
+                x.UseSQLiteStorage("Data Source=Ombi.db;");
+                //x.UseMemoryStorage(new MemoryStorageOptions());
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
