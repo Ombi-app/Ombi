@@ -1,6 +1,6 @@
-﻿namespace Ombi.Core.Settings.Models.Notifications
+﻿namespace Ombi.Settings.Settings.Models.Notifications
 {
-    public sealed class EmailNotificationSettings : Ombi.Settings.Settings.Models.Settings
+    public sealed class EmailNotificationSettings : Settings
     {
         public bool Enabled { get; set; }
         public string EmailHost { get; set; }

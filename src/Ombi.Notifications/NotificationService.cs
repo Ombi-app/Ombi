@@ -1,15 +1,47 @@
 ﻿using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
-using Ombi.Core.Settings.Models;
+using Microsoft.Extensions.Logging;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
 
 namespace Ombi.Notifications
 {
     public class NotificationService : INotificationService
     {
-        public ConcurrentDictionary<string, INotification> Observers { get; } = new ConcurrentDictionary<string, INotification>();
+        public NotificationService(IServiceProvider provider, ILogger<NotificationService> log)
+        {
+            Log = log;
+            NotificationAgents = new List<INotification>();
+            
+            var baseSearchType = typeof(BaseNotification<>).FullName;
+
+            var ass = typeof(NotificationService).GetTypeInfo().Assembly;
+
+            foreach (var ti in ass.DefinedTypes)
+            {
+                if (ti?.BaseType?.FullName == baseSearchType)
+                {
+                    var type = ti?.AsType();
+                    var ctors = type.GetConstructors();
+                    var ctor = ctors.FirstOrDefault();
+
+                    var services = new List<object>();
+                    foreach (var param in ctor.GetParameters())
+                    {
+                        services.Add(provider.GetService(param.ParameterType));
+                    }
+
+                    var item = Activator.CreateInstance(type, services.ToArray());
+                    NotificationAgents.Add((INotification)item);
+                }
+            }
+        }
+        
+        private List<INotification> NotificationAgents { get; }
+        private ILogger<NotificationService> Log { get; }
 
         /// <summary>
         /// Sends a notification to the user. This one is used in normal notification scenarios 
@@ -18,7 +50,7 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public async Task Publish(NotificationModel model)
         {
-            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model));
+            var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
 
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
@@ -31,21 +63,12 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public async Task Publish(NotificationModel model, Settings.Settings.Models.Settings settings)
         {
-            var notificationTasks = Observers.Values.Select(notification => NotifyAsync(notification, model, settings));
+            var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model, settings));
 
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
-        public void Subscribe(INotification notification)
-        {
-            Observers.TryAdd(notification.NotificationName, notification);
-        }
-
-        public void UnSubscribe(INotification notification)
-        {
-            Observers.TryRemove(notification.NotificationName, out notification);
-        }
-
+       
         private async Task NotifyAsync(INotification notification, NotificationModel model)
         {
             try
@@ -54,6 +77,7 @@ namespace Ombi.Notifications
             }
             catch (Exception ex)
             {
+                Log.LogError(LoggingEvents.Notification, ex, "Failed to notify for notification: {@notification}", notification);
             }
 
         }

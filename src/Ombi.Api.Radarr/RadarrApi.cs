@@ -82,7 +82,7 @@ namespace Ombi.Api.Radarr
 
             try
             {
-                var response = await Api.Request(request);
+                var response = await Api.RequestContent(request);
                 if (response.Contains("\"message\":"))
                 {
                     var error = JsonConvert.DeserializeObject<RadarrError>(response);

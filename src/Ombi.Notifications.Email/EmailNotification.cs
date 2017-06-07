@@ -4,9 +4,9 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
+using Ombi.Settings.Settings.Models.Notifications;
 
 namespace Ombi.Notifications.Email
 {
@@ -20,6 +20,10 @@ namespace Ombi.Notifications.Email
 
         protected override bool ValidateConfiguration(EmailNotificationSettings settings)
         {
+            if (!settings.Enabled)
+            {
+                return false;
+            }
             if (settings.Authentication)
             {
                 if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))

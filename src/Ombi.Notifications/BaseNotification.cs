@@ -25,7 +25,7 @@ namespace Ombi.Notifications
         public async Task NotifyAsync(NotificationModel model, Settings.Settings.Models.Settings settings)
         {
             if (settings == null) await NotifyAsync(model);
-
+            
             var notificationSettings = (T)settings;
 
             if (!ValidateConfiguration(notificationSettings))

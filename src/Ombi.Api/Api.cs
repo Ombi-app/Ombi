@@ -60,7 +60,7 @@ namespace Ombi.Api
             }
         }
 
-        public async Task<string> Request(Request request)
+        public async Task<string> RequestContent(Request request)
         {
             using (var httpClient = new HttpClient())
             {
@@ -89,6 +89,35 @@ namespace Ombi.Api
 
 
                         return await data.ReadAsStringAsync();
+                    }
+                }
+            }
+        }
+
+        public async Task Request(Request request)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
+                {
+                    // Add the Json Body
+                    if (request.JsonBody != null)
+                    {
+                        httpRequestMessage.Content = new JsonContent(request.JsonBody);
+                    }
+
+                    // Add headers
+                    foreach (var header in request.Headers)
+                    {
+                        httpRequestMessage.Headers.Add(header.Key, header.Value);
+
+                    }
+                    using (var httpResponseMessage = await httpClient.SendAsync(httpRequestMessage))
+                    {
+                        if (!httpResponseMessage.IsSuccessStatusCode)
+                        {
+                            // Logging
+                        }
                     }
                 }
             }

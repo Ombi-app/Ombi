@@ -7,12 +7,8 @@ namespace Ombi.Notifications
 {
     public interface INotificationService
     {
-        ConcurrentDictionary<string, INotification> Observers { get; }
-
         Task Publish(NotificationModel model);
         Task Publish(NotificationModel model, Settings.Settings.Models.Settings settings);
         Task PublishTest(NotificationModel model, Settings.Settings.Models.Settings settings, INotification type);
-        void Subscribe(INotification notification);
-        void UnSubscribe(INotification notification);
     }
 }

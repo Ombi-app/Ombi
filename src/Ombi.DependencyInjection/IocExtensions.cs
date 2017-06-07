@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.DependencyInjection;
+
+using Ombi.Api.Discord;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
@@ -60,6 +62,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
+            services.AddTransient<IDiscordApi, DiscordApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)

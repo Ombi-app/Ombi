@@ -50,7 +50,7 @@ namespace Ombi.Api
         public List<KeyValuePair<string, string>> Headers { get; } = new List<KeyValuePair<string, string>>();
         public List<KeyValuePair<string, string>> ContentHeaders { get; } = new List<KeyValuePair<string, string>>();
 
-        public object JsonBody { get; set; }
+        public object JsonBody { get; private set; }
 
         public bool IsValidUrl
         {
