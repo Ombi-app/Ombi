@@ -21,6 +21,11 @@ namespace Ombi.Controllers.External
         private IEmbyApi EmbyApi { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
 
+        /// <summary>
+        /// Signs into the Emby Api
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<EmbySettings> SignIn([FromBody] EmbySettings request)

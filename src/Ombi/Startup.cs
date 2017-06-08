@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.PlatformAbstractions;
 using Ombi.Auth;
 using Ombi.Config;
 using Ombi.DependencyInjection;
@@ -21,6 +22,7 @@ using Ombi.Mapping;
 using Ombi.Schedule;
 using Serilog;
 using Serilog.Events;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
 {
@@ -68,7 +70,34 @@ namespace Ombi
                 expression.AddCollectionMappers();
             });
             services.RegisterDependencies(); // Ioc and EF
+            services.AddSwaggerGen(c =>
+            {
+                c.DescribeAllEnumsAsStrings();
+                c.SwaggerDoc("v1", new Info
+                {
+                    Version = "v1",
+                    Title = "Ombi Api",
+                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"api/v1/token/\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
+                                  "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
+                    Contact = new Contact
+                    {
+                        Email = "tidusjar@gmail.com",
+                        Name = "Jamie Rees",
+                        Url = "https://www.ombi.io/"
+                    }
+                });
+                c.CustomSchemaIds(x => x.FullName);
+                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
+                var xmlPath = Path.Combine(basePath, "Swagger.xml");
+                c.IncludeXmlComments(xmlPath);
+                
+                c.AddSecurityDefinition("Authentication",new ApiKeyScheme());
+                c.OperationFilter<SwaggerOperationFilter>();
+                c.DescribeAllParametersInCamelCase();
+            });
             
+
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
@@ -103,6 +132,12 @@ namespace Ombi
             
             app.UseHangfireServer();
             app.UseHangfireDashboard();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.ShowJsonEditor();
+            });
 
 
             // Setup the scheduler

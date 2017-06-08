@@ -22,12 +22,22 @@ namespace Ombi.Controllers.External
         private ISonarrApi SonarrApi { get; }
         private ISettingsService<SonarrSettings> SonarrSettings { get; }
 
+        /// <summary>
+        /// Gets the Sonarr profiles.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
         [HttpPost("Profiles")]
         public async Task<IEnumerable<SonarrProfile>> GetProfiles([FromBody] SonarrSettings settings)
         {
             return await SonarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
         }
 
+        /// <summary>
+        /// Gets the Sonarr root folders.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
         [HttpPost("RootFolders")]
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders([FromBody] SonarrSettings settings)
         {

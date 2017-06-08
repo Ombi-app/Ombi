@@ -8,6 +8,10 @@
 
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp1.1\Swagger.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <Content Include="wwwroot\**" />
   </ItemGroup>
@@ -42,6 +46,7 @@
     <PackageReference Include="Serilog.Sinks.File" Version="3.2.0" />
     <PackageReference Include="Serilog.Sinks.RollingFile" Version="3.3.0" />
     <PackageReference Include="Serilog.Sinks.SQLite" Version="3.8.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="1.0.0" />
     <PackageReference Include="System.Security.Cryptography.Csp" Version="4.3.0" />
   </ItemGroup>
 

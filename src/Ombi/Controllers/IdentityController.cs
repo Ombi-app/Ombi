@@ -16,6 +16,10 @@ using Ombi.Models;
 
 namespace Ombi.Controllers
 {
+    /// <summary>
+    /// The Identity Controller, the API for everything Identity/User related
+    /// </summary>
+    /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [PowerUser]
     public class IdentityController : BaseV1ApiController
     {
@@ -28,6 +32,10 @@ namespace Ombi.Controllers
         private IUserIdentityManager IdentityManager { get; }
         private IMapper Mapper { get; }
 
+        /// <summary>
+        /// Gets the current user.
+        /// </summary>
+        /// <returns>Information about the current user</returns>
         [HttpGet]
         public async Task<UserViewModel> GetUser()
         {
@@ -40,11 +48,12 @@ namespace Ombi.Controllers
         /// This should never be called after this.
         /// The reason why we return false if users exists is that this method doesn't have any 
         /// authorization and could be called from anywhere.
-        /// <remarks>We have [AllowAnonymous] since when going through the wizard we do not have a JWT Token yet</remarks>
         /// </summary>
+        /// <remarks>We have [AllowAnonymous] since when going through the wizard we do not have a JWT Token yet</remarks>
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost("Wizard")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         [AllowAnonymous]
         public async Task<bool> CreateWizardUser([FromBody] UserAuthModel user)
         {
@@ -66,6 +75,10 @@ namespace Ombi.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Gets all users.
+        /// </summary>
+        /// <returns>Information about all users</returns>
         [HttpGet("Users")]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
@@ -95,6 +108,11 @@ namespace Ombi.Controllers
             return users;
         }
 
+        /// <summary>
+        /// Creates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<UserViewModel> CreateUser([FromBody] UserViewModel user)
         {
@@ -102,7 +120,12 @@ namespace Ombi.Controllers
             var userResult = await IdentityManager.CreateUser(Mapper.Map<UserDto>(user));
             return Mapper.Map<UserViewModel>(userResult);
         }
-        
+
+        /// <summary>
+        /// Updates the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         [HttpPut]
         public async Task<UserViewModel> UpdateUser([FromBody] UserViewModel user)
         {
@@ -110,6 +133,11 @@ namespace Ombi.Controllers
             return Mapper.Map<UserViewModel>(userResult);
         }
 
+        /// <summary>
+        /// Deletes the user.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <returns></returns>
         [HttpDelete]
         public async Task<StatusCodeResult> DeleteUser([FromBody] UserViewModel user)
         {
@@ -117,6 +145,10 @@ namespace Ombi.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Gets all available claims in the system.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("claims")]
         public IEnumerable<ClaimCheckboxes> GetAllClaims()
         {

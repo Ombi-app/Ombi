@@ -44,6 +44,10 @@ namespace Ombi.Controllers
 
         private ISettingsService<OmbiSettings> Ombi { get; }
 
+        /// <summary>
+        /// Gets the status of Ombi.
+        /// </summary>
+        /// <returns></returns>
         [AllowAnonymous]
         [HttpGet]
         public HttpStatusCode GetStatus()
@@ -52,6 +56,11 @@ namespace Ombi.Controllers
         }
 
 
+        /// <summary>
+        /// Checks to see if we have run through the wizard
+        /// </summary>
+        /// <returns></returns>
+        [ApiExplorerSettings(IgnoreApi = true)]
         [AllowAnonymous]
         [HttpGet("Wizard")]
         public async Task<object> WizardStatus()

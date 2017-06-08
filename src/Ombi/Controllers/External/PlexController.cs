@@ -25,6 +25,11 @@ namespace Ombi.Controllers.External
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
 
+        /// <summary>
+        /// Signs into the Plex API.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         public async Task<PlexAuthentication> SignIn([FromBody] UserRequest request)
@@ -75,6 +80,11 @@ PlexAuthToken = result.user.authentication_token,
             return result;
         }
 
+        /// <summary>
+        /// Gets the plex libraries.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
         [HttpPost("Libraries")]
         public async Task<PlexLibraries> GetPlexLibraries([FromBody] PlexServers settings)
         {
@@ -83,6 +93,11 @@ PlexAuthToken = result.user.authentication_token,
             return libs;
         }
 
+        /// <summary>
+        /// Gets the plex servers.
+        /// </summary>
+        /// <param name="u">The u.</param>
+        /// <returns></returns>
         [HttpPost("servers")]
         public async Task<PlexServersViewModel> GetServers([FromBody] UserRequest u)
         {
