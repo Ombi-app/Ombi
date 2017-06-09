@@ -12,7 +12,6 @@ before_build:
 - cmd: cd src/ombi
 - node --version
 - appveyor-retry dotnet restore
-- appveyor-retry npm install bower -g
 - appveyor-retry npm install -g gulp 
 - appveyor-retry npm install
 - gulp publish
