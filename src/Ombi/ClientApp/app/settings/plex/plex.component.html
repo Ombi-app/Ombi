@@ -1,0 +1,163 @@
+﻿<settings-menu></settings-menu>
+<div *ngIf="settings">
+    <fieldset>
+        <legend>Plex Configuration</legend>
+
+        <div class="checkbox col-md-2 " style="float: right;">
+            <input type="checkbox" id="advanced" [(ngModel)]="advanced" ng-checked="advanced">
+            <label for="advanced">Advanced</label>
+        </div>
+
+        <div class="form-group col-md-3">
+            <div class="checkbox">
+                <input type="checkbox" id="enable" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                <label for="enable">Enable</label>
+            </div>
+        </div>
+        <div style="float: right;" class="col-md-12 col-md-push-10">
+            <button type="submit" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
+        </div>
+
+        <ngb-tabset>
+
+            <div *ngFor="let server of settings.servers">
+                <ngb-tab [id]="server.id" [title]="server.name">
+                    <ng-template ngbTabContent>
+                        <br />
+                        <br />
+                        <div class="col-md-12 col-md-push-10" style="float: right;">
+                            <button type="submit" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
+                        </div>
+                        <br />
+                        <br />
+
+                        <div class="form-group">
+                            <label for="username" class="control-label">Username and Password</label>
+                            <div>
+                                <input type="text" class="form-control form-control-custom" id="username" [(ngModel)]="username" placeholder="username">
+                            </div>
+                            <br />
+                            <div>
+                                <input type="password" class="form-control form-control-custom" id="password" [(ngModel)]="password" placeholder="Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <button id="requestToken" (click)="requestServers(server)" class="btn btn-primary-outline">Load Servers <i class="fa fa-key"></i></button>
+                            </div>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group">
+                            <label for="username" class="control-label">Please select the server</label><br />
+                            <div class="btn-group">
+                                <div class="btn-group">
+                                    <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        Servers
+                                        <span class="caret"></span>
+                                    </a>
+
+                                    <ul *ngIf="loadedServers" class="dropdown-menu">
+                                        <li *ngFor="let s of loadedServers.servers.server">
+                                            <a (click)="selectServer(s,server)">{{s.name}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="advanced">
+                            <div class="form-group">
+                                <label for="name" class="control-label">Server name</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-custom " id="name" name="name" placeholder="Server" [(ngModel)]="server.name" value="{{server.name}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="Ip" class="control-label">Hostname or IP</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip" value="{{server.ip}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="portNumber" class="control-label">Port</label>
+                                <div>
+                                    <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" ng-checked="server.ssl">
+                                    <label for="ssl">SSL</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="checkbox">
+
+                                    <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" ng-checked="server.enableEpisodeSearching">
+                                    <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
+                                </div>
+                                <small>
+                                    If enabled then we will lookup all episodes on your Plex server and store them in the local database. This will stop episode requests that already exist on Plex (that might not be in Sonarr).
+                                    Please be aware that this is a very resource intensive process and while the Plex Episode Cacher job is running the application may appear slow (Depending on the size of your Plex library).
+                                </small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="authToken" class="control-label">Plex Authorization Token</label>
+                                <div class="">
+                                    <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.plexAuthToken" placeholder="Plex Auth Token" value="{{server.plexAuthToken}}">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="MachineIdentifier" class="control-label">Machine Identifier</label>
+                                <div class="">
+                                    <input type="text" class="form-control-custom form-control" id="MachineIdentifier" name="MachineIdentifier" [(ngModel)]="server.machineIdentifier" value="{{server.machineIdentifier}}">
+                                </div>
+                            </div>
+                        </div>
+                        <label>Please select the libraries you want Ombi to look in for content</label>
+                        <br />
+                        <small>Note: if nothing is selected, we will monitor all libraries</small>
+                        <div class="form-group">
+                            <div>
+                                <button (click)="loadLibraries(server)" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
+                            </div>
+                        </div>
+                        <div *ngIf="server.plexSelectedLibraries">
+                            <div *ngFor="let lib of server.plexSelectedLibraries">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" ng-checked="lib.enabled">
+                                        <label for="{{lib.title}}">{{lib.title}}</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <button id="testPlex" type="submit" (click)="testPlex()" class="btn btn-primary-outline">
+                                    Test Connectivity
+                                    <div id="spinner"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
+            </div>
+        </ngb-tabset>
+
+        <div class="form-group">
+            <div>
+                <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+            </div>
+        </div>
+    </fieldset>
+</div>

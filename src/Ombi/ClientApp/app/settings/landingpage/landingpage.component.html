@@ -1,0 +1,43 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="settings">
+    <fieldset>
+        <legend>Landing Page Configuration</legend>
+
+
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="enable" name="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
+                <label for="enable">Enable</label>
+            </div>
+        </div>
+        
+
+        
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" id="BeforeLogin" name="BeforeLogin" [(ngModel)]="settings.beforeLogin" ng-checked="settings.beforeLogin">
+                <label for="BeforeLogin">Show before the login</label>
+            </div>
+            <small>If enabled then this will show the landing page before the login page, if this is disabled the user will log in first and then see the landing page.</small>
+        </div>
+
+        <p class="form-group">Notice Message</p>
+        <div class="form-group">
+            <div>
+                <textarea rows="4" type="text" class="form-control-custom form-control " id="NoticeMessage" name="NoticeMessage" placeholder="e.g. The server will be down for maintaince (HTML is allowed)"  [(ngModel)]="settings.noticeText" >{{noticeText}}</textarea>
+            </div>
+        </div>
+
+        <p class="form-group">Notice Preview:</p>
+        <div class="form-group">
+            <div [innerHTML]="settings.noticeText"></div>
+        </div>
+
+        <div class="form-group">
+            <div>
+                <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+            </div>
+        </div>
+    </fieldset>
+</div>

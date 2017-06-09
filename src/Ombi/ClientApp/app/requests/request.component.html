@@ -1,0 +1,25 @@
+﻿<h1 id="searchTitle">Requests</h1>
+<h4>Below you can see yours and all other requests, as well as their download and approval status.</h4>
+
+
+
+<ul id="nav-tabs" class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active">
+        <a id="movieTabButton" aria-controls="home" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-film"></i> Movies</a>
+    </li>
+    <li role="presentation">
+        <a id="tvTabButton" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-television"></i> TV Shows</a>
+
+    </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+    <div [hidden]="!showMovie">
+        <movie-requests></movie-requests>
+    </div>
+    <div [hidden]="!showTv">
+        <tv-requests></tv-requests>
+    </div>
+</div>
+

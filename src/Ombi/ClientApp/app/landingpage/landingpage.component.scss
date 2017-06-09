@@ -1,0 +1,16 @@
+﻿.landing-box {
+    height: 150px;
+    background: #333333 !important;
+    border-radius: 2%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    box-shadow: 5px 3px 5px black;
+}
+
+.landing-logo {
+    position: relative;
+    right: 20%;
+    width: 300px
+}

@@ -1,0 +1,52 @@
+﻿<div *ngIf="landingPageSettings && customizationSettings">
+
+    <div *ngIf="customizationSettings.logo" class="landing-logo">
+        <img [src]="customizationSettings.logo" />
+    </div>
+
+    <h1>
+        Hey! Welcome back to
+        <span *ngIf="customizationSettings.applicationName">
+            {{customizationSettings.applicationName}}
+        </span>
+        <span *ngIf="!customizationSettings.applicationName">
+            Ombi
+        </span>
+    </h1>
+    <br />
+    <br />
+    <br />
+    <h3 *ngIf="landingPageSettings.noticeEnabled" [innerHtml]="landingPageSettings.noticeText" style="background-color: {{landingPageSettings.noticeBackgroundColor}}"></h3>
+    <div class="col-md-3 landing-box" [routerLink]="['/search']">
+        <div>
+            Search
+        </div>
+    </div>
+
+    <div class="col-md-3 col-md-offset-1 landing-box" [routerLink]="['/requests']">
+        <div>
+            View all your requests
+            <br />
+            <br />
+            <br />
+            <div *ngIf="requestCount">
+                Pending Requests: <span>{{requestCount.pending}}</span>
+                <br />
+                Approved Requests: <span>{{requestCount.approved}}</span>
+                <br />
+                Available Requests: <span>{{requestCount.available}}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 col-md-offset-1 landing-box">
+        <div>
+            Media Server Status:
+            <span *ngIf="mediaServerStatus"><i class="fa fa-check-circle" style="color: #00c853"></i></span>
+            <span *ngIf="!mediaServerStatus"><i class="fa fa-times-circle" style="color: #d50000"></i></span>
+        </div>
+    </div>
+
+
+
+</div>

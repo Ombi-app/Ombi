@@ -1,0 +1,102 @@
+﻿
+<settings-menu></settings-menu>
+<div *ngIf="settings">
+        <fieldset>
+            <legend>Radarr Settings</legend>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                    <label for="enable">Enable</label>
+                </div>
+            </div>
+
+            <input hidden="hidden" name="FullRootPath" id="fullRootPath" value="settings.enable" />
+
+            <div class="form-group">
+                <label for="Ip" class="control-label">Hostname or IP</label>
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " [(ngModel)]="settings.ip" id="Ip" name="Ip" placeholder="localhost" value="{{settings.ip}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="portNumber" class="control-label">Port</label>
+
+                <div class="">
+                    <input type="text" class="form-control form-control-custom " [(ngModel)]="settings.port" id="portNumber" name="Port" placeholder="Port Number" value="{{settings.port}}">
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <label for="ApiKey" class="control-label">API Key</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom " [(ngModel)]="settings.apiKey" id="ApiKey" name="ApiKey" value="{{settings.apiKey}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+
+                    <input type="checkbox" id="Ssl" name="Ssl" ng-checked="settings.ssl"><label for="Ssl">SSL</label>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="SubDir" class="control-label">Base Url</label>
+                <div>
+                    <input type="text" class="form-control form-control-custom" [(ngModel)]="settings.subDir" id="SubDir" name="SubDir" value="@Model.SubDir">
+                </div>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button type="submit" (click)="getProfiles()" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="select" class="control-label">Quality Profiles</label>
+                <div id="profiles">
+                    <select class="form-control form-control-custom" id="select" *ngFor='let quality of qualities'>
+                        <option [selected]="qualityProfile === quality.name" [ngValue]="selectedQuality" value='{{quality.id}}'>{{quality.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div>
+                    <button type="submit" (click)="getRootFolders()" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin" ></span></button>
+
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label for="rootFolders" class="control-label">Default Root Folders</label>
+                <div id="rootFolders">
+                    <select class="form-control form-control-custom" *ngFor='let folder of rootFolders'>
+                        <option [selected]="rootPath === folder.name" [ngValue]="selectedRootFolder" value='{{folder.id}}'>{{folder.name}}</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="SeasonFolders" name="SeasonFolders" ng-checked="settings.seasonFolders">
+                    <label for="SeasonFolders">Enable season folders</label>
+                </div>
+                <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
+            </div>
+            <div class="form-group">
+                <div>
+                    <button (click)="test()" type="submit" class="btn btn-primary-outline">Test Connectivity <span id="spinner" ></span></button>
+                </div>
+            </div>
+
+
+            <div class="form-group">
+                <div>
+                    <button (click)="save()" type="submit" class="btn btn-primary-outline ">Submit</button>
+                </div>
+            </div>
+        </fieldset>
+</div>

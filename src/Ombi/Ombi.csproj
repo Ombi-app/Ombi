@@ -11,17 +11,28 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DocumentationFile>bin\Debug\netcoreapp1.1\Swagger.xml</DocumentationFile>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Content Include="wwwroot\**" />
+    <!-- Files not to show in IDE -->
+    <Content Remove="package-lock.json" />
+    <Compile Remove="wwwroot\dist\**" />
+
+    <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
+    <Content Remove="ClientApp\**" />
+    <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="wwwroot\dist\**" />
+    <None Remove="wwwroot\dist\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot/systemjs.config.js.map" />
-    <Content Remove="wwwroot\systemjs.config.js" />
-  </ItemGroup>
-
-
+  
+  <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
@@ -59,63 +70,5 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\interfaces\ISonarr - Copy.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request - Copy.component.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request - Copy.component.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request - Copy.component.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-grid - Copy.component.html">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-card.component.js">
-      <DependentUpon>request-card.component.ts</DependentUpon>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-grid - Copy.component.js">
-      <DependentUpon>request-grid - Copy.component.ts</DependentUpon>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-card.component.js.map">
-      <DependentUpon>request-card.component.js</DependentUpon>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-grid - Copy.component.js.map">
-      <DependentUpon>request-grid - Copy.component.js</DependentUpon>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\requests\request-grid - Copy.component.ts">
-      <DependentUpon>request-grid - Copy.component.html</DependentUpon>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\services\applications\sonarr - Copy.service.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\services\applications\sonarr - Copy.service.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\settings\radarr\sonarr.component.js">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\settings\radarr\sonarr.component.js.map">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-    <Content Update="wwwroot\app\settings\radarr\sonarr.component.ts">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
  
 </Project>

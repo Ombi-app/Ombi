@@ -1,0 +1,67 @@
+﻿<h1 id="searchTitle">Search</h1>
+<h4>Want to watch something that is not currently available?! No problem! Just search for it below and request it!</h4>
+<br />
+<!-- Nav tabs -->
+
+
+<ul id="nav-tabs" class="nav nav-tabs" role="tablist">
+
+    <li role="presentation" class="active">
+        <a id="movieTabButton" href="#MoviesTab" aria-controls="home" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-film"></i> Movies</a>
+    </li>
+
+    <!--<li role="presentation">
+        <a id="actorTabButton" href="#ActorsTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-users"></i> Actors</a>
+
+    </li>-->
+
+    <li role="presentation">
+        <a id="tvTabButton" href="#TvShowTab" aria-controls="profile" role="tab" data-toggle="tab" (click)="selectTab()"><i class="fa fa-television"></i> TV Shows</a>
+
+    </li>
+    <!--
+     <li role="presentation">
+         <a href="#MusicTab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-music"></i> Albums</a>
+     </li>-->
+
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+
+    <div [hidden]="!showMovie">
+        <movie-search></movie-search>
+        <md-tab-group>
+            <md-tab label="Tab 1">
+                <input mdInput placeholder="Movie Search" value="d">
+            </md-tab>
+            <md-tab label="Tab 2">Content 2</md-tab>
+        </md-tab-group>
+    </div>
+
+    <!--
+    <div role="tabpanel" class="tab-pane" id="ActorsTab">
+        <div class="input-group">
+            <input id="actorSearchContent" type="text" class="form-control form-control-custom form-control-search form-control-withbuttons">
+            <div class="input-group-addon">
+                <i id="actorSearchButton" class="fa fa-search"></i>
+            </div>
+        </div>
+        <div class="checkbox">
+            <input type="checkbox" id="actorsSearchNew" name="actorsSearchNew"><label for="actorsSearchNew">@UI.Search_NewOnly</label>
+        </div>
+
+        <br />
+        <br />
+        <div id="actorMovieList">
+        </div>
+    </div>-->
+
+
+    <div [hidden]="!showTv">
+        <tv-search></tv-search>
+
+    </div>
+</div>
+
+

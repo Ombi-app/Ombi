@@ -1,0 +1,20 @@
+﻿
+<h4 class="media-heading landing-title">Create the Admin account</h4>
+<small>This account will be used to configure your settings and also manage all of the requests. Note: this should not be the same as your Plex/Emby account (you can change this later in the User Management Settings)</small>
+<div class="form-group">
+    <div>
+        <label for="adminUsername">Username</label>
+        <input type="text" class="form-control form-control-custom" id="adminUsername" name="Username" [(ngModel)]="username" placeholder="Username">
+    </div>
+    <br />
+    <div>
+        <label for="adminPassword">Password</label>
+        <input type="password" class="form-control form-control-custom" id="adminPassword" name="Password" [(ngModel)]="password" placeholder="Password">
+    </div>
+</div>
+
+<div class="form-group">
+    <div style="text-align: center; margin-top: 20px">
+        <button (click)="createUser()" type="submit" class="btn btn-success-outline">Finish</button>
+    </div>
+</div>
