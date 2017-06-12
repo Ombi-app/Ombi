@@ -115,11 +115,20 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
     }
 
     private getExtaInfo() {
-        this.searchService.extraInfo(this.movieResults)
-            .takeUntil(this.subscriptions)
-            .subscribe(m => this.movieResults = m);
+
+        this.movieResults.forEach((val, index) => {
+            this.searchService.getMovieInformation(val.id)
+                .takeUntil(this.subscriptions)
+                .subscribe(m => this.updateItem(val, m));
+        });
     }
 
+    private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
+        var index = this.movieResults.indexOf(key, 0);
+        if (index > -1) {
+            this.movieResults[index] = updated;
+        }
+    }
     private clearResults() {
         this.movieResults = [];
         this.searchApplied = false;

@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using StackExchange.Profiling;
 
 namespace Ombi.Core.Engine
 {
@@ -63,16 +64,40 @@ namespace Ombi.Core.Engine
             return retVal;
         }
 
+        public async Task<SearchMovieViewModel> LookupImdbInformation(int theMovieDbId)
+        {
+            var dbMovies = await GetMovieRequests();
+
+            var plexSettings = await PlexSettings.GetSettingsAsync();
+            var embySettings = await EmbySettings.GetSettingsAsync();
+
+            var movieInfo = await MovieApi.GetMovieInformationWithVideo(theMovieDbId);
+            var viewMovie = Mapper.Map<SearchMovieViewModel>(movieInfo);
+
+            return await ProcessSingleMovie(viewMovie, dbMovies, plexSettings, embySettings, true);
+        }
+
         public async Task<IEnumerable<SearchMovieViewModel>> Search(string search)
         {
-            var result = await MovieApi.SearchMovie(search);
-            if (result != null)
+            using (MiniProfiler.Current.Step("Starting Movie Search Engine"))
+            using (MiniProfiler.Current.Step("Searching Movie"))
             {
-                Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result);
+                var result = await MovieApi.SearchMovie(search);
+
+                using (MiniProfiler.Current.Step("Fin API, Transforming"))
+                {
+                    if (result != null)
+                    {
+                        Logger.LogDebug("Search Result: {result}", result);
+                        return await TransformMovieResultsToResponse(result);
+                    }
+                }
+
+
+                return null;
             }
-            return null;
         }
+
 
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
@@ -121,28 +146,41 @@ namespace Ombi.Core.Engine
         private async Task<List<SearchMovieViewModel>> TransformMovieResultsToResponse(
             IEnumerable<MovieSearchResult> movies)
         {
-            var viewMovies = new List<SearchMovieViewModel>();
-            var dbMovies = await GetMovieRequests();
 
-            var plexSettings = await PlexSettings.GetSettingsAsync();
-            var embySettings = await EmbySettings.GetSettingsAsync();
+            var viewMovies = new List<SearchMovieViewModel>();
+            Dictionary<int, MovieRequestModel> dbMovies;
+            Settings.Models.External.PlexSettings plexSettings;
+            Settings.Models.External.EmbySettings embySettings;
+            using (MiniProfiler.Current.Step("Gettings Movies and Settings"))
+            {
+                dbMovies = await GetMovieRequests();
+
+                plexSettings = await PlexSettings.GetSettingsAsync();
+                embySettings = await EmbySettings.GetSettingsAsync();
+            }
             foreach (var movie in movies)
+            {
                 viewMovies.Add(await ProcessSingleMovie(movie, dbMovies, plexSettings, embySettings));
+            }
             return viewMovies;
         }
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(SearchMovieViewModel viewMovie,
-            Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+            Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings, bool lookupExtraInfo = false)
         {
-            var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
-            viewMovie.Id = showInfo.Id; // TheMovieDbId
+
             if (plexSettings.Enable)
             {
-                var item = await PlexContentRepo.Get(showInfo.ImdbId);
-                if (item != null)
+                if (lookupExtraInfo)
                 {
-                    viewMovie.Available = true;
-                    viewMovie.PlexUrl = item.Url;
+                    var showInfo = await MovieApi.GetMovieInformation(viewMovie.Id);
+                    viewMovie.Id = showInfo.Id; // TheMovieDbId
+                    var item = await PlexContentRepo.Get(showInfo.ImdbId);
+                    if (item != null)
+                    {
+                        viewMovie.Available = true;
+                        viewMovie.PlexUrl = item.Url;
+                    }
                 }
 
                 //        var content = PlexContentRepository.GetAll();
@@ -180,9 +218,10 @@ namespace Ombi.Core.Engine
             }
 
             RunSearchRules(viewMovie);
-            
+
             return viewMovie;
         }
+
 
         private async Task<SearchMovieViewModel> ProcessSingleMovie(MovieSearchResult movie,
             Dictionary<int, MovieRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)

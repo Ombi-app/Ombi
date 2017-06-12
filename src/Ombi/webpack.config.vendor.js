@@ -36,7 +36,7 @@ module.exports = function (env) {
                 'primeng/resources/primeng.min.css',
                 'primeng/resources/themes/omega/theme.css',
                 '@angular/material/prebuilt-themes/deeppurple-amber.css',
-                'bootswatch/superhero/bootstrap.min.css',
+                //'bootswatch/superhero/bootstrap.min.css',
                 'event-source-polyfill',
                 'jquery',
                 'zone.js',

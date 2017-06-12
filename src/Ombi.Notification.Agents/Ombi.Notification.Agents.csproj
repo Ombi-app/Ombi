@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.6</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
+    <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
+    <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.Notifications\Ombi.Notifications.csproj" />
+    <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
+  </ItemGroup>
+
+</Project>

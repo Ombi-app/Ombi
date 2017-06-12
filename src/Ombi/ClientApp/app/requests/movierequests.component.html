@@ -51,14 +51,7 @@
                     <div>Release Date: {{request.releaseDate | date}}</div>
                     <br/>
 
-                    <!--{{#if_eq type "tv"}}
-                    {{#if episodes}}
-                    Episodes: <span class="customTooltip" data-tooltip-content="#{{requestId}}toolTipContent"><i class="fa fa-info-circle"></i></span>
-                    {{else}}
-                    <div>@UI.Requests_SeasonsRequested: {{seriesRequested}}</div>
-
-                    {{/if}}
-                    {{/if_eq}}-->
+                  
                     <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span></div>
 
                     <div>Requested Date: {{request.requestedDate | date}}</div>

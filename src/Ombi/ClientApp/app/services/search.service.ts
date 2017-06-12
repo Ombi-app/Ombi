@@ -32,6 +32,9 @@ export class SearchService extends ServiceAuthHelpers {
     extraInfo(movies: ISearchMovieResult[]): Observable<ISearchMovieResult[]> {
         return this.http.post(`${this.url}/Movie/extrainfo`, JSON.stringify(movies), { headers: this.headers }).map(this.extractData);
     }
+    getMovieInformation(theMovieDbId: number): Observable<ISearchMovieResult> {
+        return this.http.get(`${this.url}/Movie/info/${theMovieDbId}`).map(this.extractData);
+    }
 
     // TV
     searchTv(searchTerm: string): Observable<ISearchTvResult[]> {

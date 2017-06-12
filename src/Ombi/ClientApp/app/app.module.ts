@@ -26,8 +26,8 @@ import { SeriesInformationComponent } from './search/seriesinformation.component
 import { RequestComponent } from './requests/request.component';
 import { MovieRequestsComponent } from './requests/movierequests.component';
 import { TvRequestsComponent } from './requests/tvrequests.component';
-import { RequestGridComponent } from './requests/request-grid.component';
-import { RequestCardComponent } from './requests/request-card.component';
+import { RequestGridComponent } from './request-grid/request-grid.component';
+import { RequestCardComponent } from './request-grid/request-card.component';
 
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ using Ombi.Mapping;
 using Ombi.Schedule;
 using Serilog;
 using Serilog.Events;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Storage;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
@@ -116,10 +119,18 @@ namespace Ombi
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
+#if DEBUG
+            // Note .AddMiniProfiler() returns a IMiniProfilerBuilder for easy intellisense
+            services.AddMiniProfiler();
+
+            // Make sure you have memory cache available unless you're using another storage provider
+            services.AddMemoryCache();
+#endif
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
         {
             //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             //loggerFactory.AddDebug();
@@ -132,6 +143,20 @@ namespace Ombi
                 app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
                 {
                     HotModuleReplacement = true
+                });
+
+                app.UseMiniProfiler(new MiniProfilerOptions
+                {
+                    // Path to use for profiler URLs
+                    RouteBasePath = "~/profiler",
+
+                    // (Optional) Control which SQL formatter to use
+                    // (default is no formatter)
+                    SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter(),
+
+                    // (Optional) Control storage
+                    // (default is 30 minutes in MemoryCacheStorage)
+                    Storage = new MemoryCacheStorage(cache, TimeSpan.FromMinutes(60)),
                 });
             }
             

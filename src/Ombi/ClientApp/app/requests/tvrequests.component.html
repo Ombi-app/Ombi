@@ -153,20 +153,27 @@
 
 
                         <div *ngIf="!request.denied">
-                            <form>
                                 <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
                                 <input name="reason" type="text" hidden="hidden" />
-                                <div class="btn-group btn-split">
-                                    <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
-                                    <button type="button" class="btn btn-danger-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span class="caret"></span>
-                                        <span class="sr-only">@UI.Requests_ToggleDropdown</span>
-                                    </button>
+                                <div class="btn-group-sm btn-split">
+                                    <a (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</a>
+                                    <a class="btn btn-sm btn-danger-outline dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
                                     <ul class="dropdown-menu">
                                         <li><a class="deny-with-reason" id="denyReason{{request.requestId}}" href="#" data-toggle="modal" data-target="#denyReasonModal">Deny with a reason</a></li>
                                     </ul>
                                 </div>
-                            </form>
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-default">Default</a>
+                                <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                                <ul class="dropdown-menu btn-split">
+                                    <li><a href="#">Action</a></li>
+                                    <li><a href="#">Another action</a></li>
+                                    <li><a href="#">Something else here</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#">Separated link</a></li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                     <form>

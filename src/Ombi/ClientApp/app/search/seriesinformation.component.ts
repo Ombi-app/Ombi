@@ -13,8 +13,7 @@ import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { IEpisodesRequested } from "../interfaces/IRequestModel";
 
 @Component({
-    selector: 'ombi',
-    templateUrl: './seriesinformation.component.html',
+    templateUrl: './seriesinformation.component.html', 
     styleUrls: ['./seriesinformation.component.scss']
 })
 export class SeriesInformationComponent implements OnInit, OnDestroy {
