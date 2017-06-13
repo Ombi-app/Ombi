@@ -96,14 +96,15 @@ namespace Ombi.Schedule.Jobs
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
                                 show.ratingKey);
-                            var seasonsContent = new List<SeasonsContent>();
+                            var seasonsContent = new List<PlexSeasonsContent>();
                             foreach (var season in seasonList.MediaContainer.Metadata)
                             {
-                                seasonsContent.Add(new SeasonsContent
+                                seasonsContent.Add(new PlexSeasonsContent
                                 {
                                     ParentKey = int.Parse(season.parentRatingKey),
                                     SeasonKey = int.Parse(season.ratingKey),
-                                    SeasonNumber = season.index
+                                    SeasonNumber = season.index,
+                                    PlexContentId = int.Parse(show.ratingKey)
                                 });
                             }
 
@@ -147,7 +148,7 @@ namespace Ombi.Schedule.Jobs
                                     Type = PlexMediaTypeEntity.Show,
                                     Title = show.title,
                                     Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, show.ratingKey),
-                                    Seasons = new List<SeasonsContent>()
+                                    Seasons = new List<PlexSeasonsContent>()
                                 };
 
                                 item.Seasons.ToList().AddRange(seasonsContent);
@@ -180,7 +181,7 @@ namespace Ombi.Schedule.Jobs
                                 Type = PlexMediaTypeEntity.Movie,
                                 Title = movie.title,
                                 Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
-                                Seasons = new List<SeasonsContent>()
+                                Seasons = new List<PlexSeasonsContent>()
                             };
 
                             contentToAdd.Add(item);
