@@ -41,6 +41,25 @@ namespace Ombi.Core.Engine
             // For some reason the poster path is always http
             var posterPath = showInfo.image?.medium.Replace("http:", "https:");
 
+            var tvRequests = new List<SeasonRequestModel>();
+            // Only have the TV requests we actually requested and not everything
+            foreach (var season in tv.SeasonRequests)
+            {
+                for (int i = season.Episodes.Count - 1; i >= 0; i--)
+                {
+                    if (!season.Episodes[i].Requested)
+                    {
+                        season.Episodes.RemoveAt(i); // Remove the episode since it's not requested
+                    }
+                }
+
+                if (season.Episodes.Any())
+                {
+                    tvRequests.Add(season);
+                }
+            }
+
+            
             var childRequest = new ChildTvRequest
             {
                 Id = tv.Id,
@@ -52,11 +71,11 @@ namespace Ombi.Core.Engine
                 Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> { Username },
+                RequestedUser =  Username,
                 Issues = IssueState.None,
                 ProviderId = tv.Id,
                 RequestAll = tv.RequestAll,
-                SeasonRequests = tv.SeasonRequests
+                SeasonRequests = tvRequests
             };
 
             var model = new TvRequestModel
@@ -76,22 +95,22 @@ namespace Ombi.Core.Engine
 
             model.ChildRequests.Add(childRequest);
 
-            if (childRequest.SeasonRequests.Any())
-            {
-                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+            //if (childRequest.SeasonRequests.Any())
+            //{
+            //    var episodes = await TvApi.EpisodeLookup(showInfo.id);
 
-                foreach (var e in episodes)
-                {
-                    var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-                    season?.Episodes.Add(new EpisodesRequested
-                    {
-                        Url = e.url,
-                        Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp),
-                        EpisodeNumber = e.number
-                    });
-                }
-            }
+            //    foreach (var e in episodes)
+            //    {
+            //        var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+            //        season?.Episodes.Add(new EpisodesRequested
+            //        {
+            //            Url = e.url,
+            //            Title = e.name,
+            //            AirDate = DateTime.Parse(e.airstamp),
+            //            EpisodeNumber = e.number
+            //        });
+            //    }
+            //}
 
             if (tv.LatestSeason)
             {
@@ -165,6 +184,8 @@ namespace Ombi.Core.Engine
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
             results = Mapper.Map<TvRequestModel>(request);
 
+            // TODO need to check if we need to approve any child requests since they may have updated
+            
             var model = TvRequestService.UpdateRequest(results);
             return model;
         }
@@ -192,26 +213,52 @@ namespace Ombi.Core.Engine
             existingRequest.ChildRequests.AddRange(newRequest.ChildRequests);
             TvRequestService.UpdateRequest(existingRequest);
 
-            if (ShouldAutoApprove(RequestType.TvShow))
+            if (newRequest.Approved) // The auto approve rule
             {
                 // TODO Auto Approval Code
             }
             return await AfterRequest(newRequest);
         }
 
-        private IEnumerable<SeasonRequestModel> GetListDifferences(IEnumerable<SeasonRequestModel> existing,
-            IEnumerable<SeasonRequestModel> request)
+        private IEnumerable<SeasonRequestModel> GetListDifferences(List<SeasonRequestModel> existing,
+            List<SeasonRequestModel> request)
         {
-            var newRequest = request
-                .Select(r =>
-                    new SeasonRequestModel
-                    {
-                        SeasonNumber = r.SeasonNumber,
-                        Episodes = r.Episodes
-                    })
-                .ToList();
+            var requestsToRemove = new List<SeasonRequestModel>();
+            foreach (var r in request)
+            {
+                // Do we have an existing season?
+                var existingSeason = existing.FirstOrDefault(x => x.SeasonNumber == r.SeasonNumber);
+                if (existingSeason == null)
+                {
+                    continue;
+                }
 
-            return newRequest.Except(existing);
+                // Compare the episodes
+                for (var i = r.Episodes.Count - 1; i >= 0; i--)
+                {
+                    var existingEpisode = existingSeason.Episodes.FirstOrDefault(x => x.EpisodeNumber == r.Episodes[i].EpisodeNumber);
+                    if (existingEpisode == null)
+                    {
+                        // we are fine, we have not yet requested this
+                    }
+                    else
+                    {
+                        // We already have this request
+                        r.Episodes.RemoveAt(i);
+                    }
+                }
+
+                if (!r.Episodes.Any())
+                {
+                    requestsToRemove.Add(r);
+                }
+            }
+
+            foreach (var remove in requestsToRemove)
+            {
+                request.Remove(remove);
+            }
+            return request;
         }
 
         private async Task<RequestEngineResult> AddRequest(TvRequestModel model)

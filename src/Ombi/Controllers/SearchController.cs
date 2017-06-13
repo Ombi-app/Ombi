@@ -9,6 +9,7 @@ using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Search;
+using StackExchange.Profiling;
 
 namespace Ombi.Controllers
 {
@@ -35,8 +36,12 @@ namespace Ombi.Controllers
         [HttpGet("movie/{searchTerm}")]
         public async Task<IEnumerable<SearchMovieViewModel>> SearchMovie(string searchTerm)
         {
-            Logger.LogDebug("Searching : {searchTerm}", searchTerm);
-            return await MovieEngine.Search(searchTerm);
+            using (MiniProfiler.Current.Step("SearchingMovie"))
+            {
+                Logger.LogDebug("Searching : {searchTerm}", searchTerm);
+
+                return await MovieEngine.Search(searchTerm);
+            }
         }
 
         /// <summary>
@@ -49,6 +54,20 @@ namespace Ombi.Controllers
         public async Task<IEnumerable<SearchMovieViewModel>> GetImdbInfo([FromBody]IEnumerable<SearchMovieViewModel> model)
         {
             return await MovieEngine.LookupImdbInformation(model);
+        }
+
+        /// <summary>
+        /// Gets extra information on the movie e.g. IMDBId
+        /// </summary>
+        /// <param name="theMovieDbId">The movie database identifier.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// We use TheMovieDb as the Movie Provider
+        /// </remarks>
+        [HttpGet("movie/info/{theMovieDbId}")]
+        public async Task<SearchMovieViewModel> GetExtraMovieInfo(int theMovieDbId)
+        {
+            return await MovieEngine.LookupImdbInformation(theMovieDbId);
         }
 
         /// <summary>

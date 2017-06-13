@@ -1,8 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [ "es5", "es2015" ],
-    "module": "commonjs",
+    "lib": [ "es6", "dom" ],
     "moduleResolution": "node",
     "sourceMap": true,
     "strictNullChecks": true,
@@ -16,5 +15,5 @@
     "experimentalDecorators": true,
     "skipLibCheck": true
   },
-  "compileOnSave": true
+  "exclude": [ "bin", "node_modules" ]
 }

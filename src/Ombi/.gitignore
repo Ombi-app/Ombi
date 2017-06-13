@@ -2,8 +2,7 @@
 /wwwroot/fonts/**
 /wwwroot/lib/**
 /wwwroot/maps/**
-/wwwroot/app/**/*.js
-/wwwroot/app/**/*.js.map
+/wwwroot/dist/**
 /wwwroot/*.js.map
 /wwwroot/*.js
 

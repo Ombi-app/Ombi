@@ -96,7 +96,7 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> { Username },
+                RequestedUser =Username,
                 Issues = IssueState.None
             };
 
@@ -191,7 +191,7 @@ namespace Ombi.Core.Engine
             results.OtherMessage = request.OtherMessage;
             results.Overview = request.Overview;
             results.PosterPath = request.PosterPath;
-            results.RequestedUsers = request.RequestedUsers?.ToList() ?? new List<string>();
+            results.RequestedUser = request.RequestedUser;
 
             var model = MovieRequestService.UpdateRequest(results);
             return model;
@@ -200,21 +200,6 @@ namespace Ombi.Core.Engine
         public async Task RemoveMovieRequest(int requestId)
         {
             await MovieRequestService.DeleteRequestAsync(requestId);
-        }
-
-        private IEnumerable<EpisodesModel> GetListDifferences(IEnumerable<EpisodesModel> existing,
-            IEnumerable<EpisodesModel> request)
-        {
-            var newRequest = request
-                .Select(r =>
-                    new EpisodesModel
-                    {
-                        SeasonNumber = r.SeasonNumber,
-                        EpisodeNumber = r.EpisodeNumber
-                    })
-                .ToList();
-
-            return newRequest.Except(existing);
         }
 
         private async Task<RequestEngineResult> AddMovieRequest(MovieRequestModel model, string message)

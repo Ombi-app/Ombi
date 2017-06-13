@@ -1,8 +1,9 @@
-﻿@import "./bootstrap.css";
-//@import "./lib/tether.css";
-@import "../node_modules/primeng/resources/themes/omega/theme.scss";
-@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber";
-@import "./lib/primeng.css";
+﻿//@import "~primeng/resources/themes/omega/theme.scss";
 
-$fa-font-path: "../fonts/lib";
-@import "../bower_components/font-awesome/scss/font-awesome.scss";
+/*@import './Themes/plex.scss';*/
+
+/*$fa-font-path: "../fonts/lib";
+@import "../bower_components/font-awesome/scss/font-awesome.scss";*/
+
+@import '../bootstrap.css';
+@import './Styles.scss';

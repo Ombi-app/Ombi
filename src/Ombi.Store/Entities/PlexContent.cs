@@ -44,7 +44,7 @@ namespace Ombi.Store.Entities
         /// <summary>
         /// Only used for TV Shows
         /// </summary>
-        public virtual ICollection<SeasonsContent> Seasons { get; set; }
+        public virtual ICollection<PlexSeasonsContent> Seasons { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
@@ -53,7 +53,8 @@ namespace Ombi.Store.Entities
         public DateTime AddedAt { get; set; }
     }
 
-    public class SeasonsContent : Entity
+    [Table("PlexSeasonsContent")]
+    public class PlexSeasonsContent : Entity
     {
         public int PlexContentId { get; set; }
         public int SeasonNumber { get; set; }

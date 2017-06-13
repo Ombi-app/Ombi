@@ -1,26 +1,18 @@
 ﻿<!DOCTYPE html>
 <html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ombi</title>
-    <base href="@Url.Content("~/")" />
-    <script src="@Url.Content("~/lib/pace.js")?v=@ViewBag.AssemblyVersion"></script>
-    <link href="@Url.Content("~/css/lib/pace-theme-flash.css")" rel="stylesheet" />
-    <link href="@Url.Content("~/css/base.css")" rel="stylesheet" type="text/css"/>
-    <link href="@Url.Content("~/css/Themes/plex.css")" rel="stylesheet" type="text/css" />
-    @*<link href="@Url.Content("~/css/lib/primeng.css")" rel="stylesheet" />*@
-
-    <script src="@Url.Content("~/lib/system.js")?v="></script>
-    <script src="@Url.Content("~/lib/jquery.js")?v="></script>
-    <script src="@Url.Content("~/lib/tether.js")?v="></script>
-    <script src="@Url.Content("~/lib/bootstrap.js")?v="></script>
-    <script src="@Url.Content("~/systemjs.config.js")?v="></script>
-
-</head>
-<body>
-
-    @RenderBody()
-    <ombi></ombi>
-</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ombi</title>
+        <base href="/" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="~/dist/main.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
+        <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
+        <script src="~/dist/main.js" asp-append-version="true" defer></script>
+        <mini-profiler />
+    </head>
+    <body>
+        @RenderBody()
+    </body>
 </html>
