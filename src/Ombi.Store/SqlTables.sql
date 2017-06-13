@@ -56,11 +56,11 @@ CREATE TABLE IF NOT EXISTS Users
 );
 
 CREATE TABLE IF NOT EXISTS RequestHistory
-{
+(
 
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
     Type						INTEGER NOT NULL,
     RequestedDate						varchar(50) NOT NULL, 
 	RequestId						INTEGER NOT NULL
 
-}
+);
