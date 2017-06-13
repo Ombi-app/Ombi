@@ -13,7 +13,7 @@ export class IdentityService extends ServiceAuthHelpers {
         super(http, '/api/v1/Identity/');
     }
     createWizardUser(username: string, password: string): Observable<boolean> {
-        return this.regularHttp.post(`${this.url}/Wizard/`, JSON.stringify({ username: username, password: password }), { headers: this.headers }).map(this.extractData);
+        return this.regularHttp.post(`${this.url}Wizard/`, JSON.stringify({ username: username, password: password }), { headers: this.headers }).map(this.extractData);
     }
 
     getUser(): Observable<IUser> {
