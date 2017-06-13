@@ -8,7 +8,7 @@ using Ombi.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 
-namespace Ombi.Notification.Discord
+namespace Ombi.Notification.Agents
 {
     public class DiscordNotification : BaseNotification<DiscordNotificationSettings>
     {

@@ -3,10 +3,14 @@
 <div *ngIf="settings">
         <fieldset>
             <legend>Radarr Settings</legend>
-
+            <div style="float: right;">
+                <span style="vertical-align: top;">Advanced</span>
+                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
+            </div>
+            
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" ng-checked="settings.enable">
                     <label for="enable">Enable</label>
                 </div>
             </div>
@@ -75,6 +79,13 @@
                     <select class="form-control form-control-custom" *ngFor='let folder of rootFolders'>
                         <option [selected]="rootPath === folder.name" [ngValue]="selectedRootFolder" value='{{folder.id}}'>{{folder.name}}</option>
                     </select>
+                </div>
+            </div>
+            
+            <div class="form-group" *ngIf="advanced">
+                <div class="checkbox">
+                    <input type="checkbox" id="addOnly" [(ngModel)]="settings.addOnly" ng-checked="settings.addOnly">
+                    <label for="addOnly">Do not search</label>
                 </div>
             </div>
 

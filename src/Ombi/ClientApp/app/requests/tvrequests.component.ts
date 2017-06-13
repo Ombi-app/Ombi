@@ -50,6 +50,9 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     private currentlyLoaded: number;
     private amountToLoad: number;
 
+    public showChildDialogue = false; // This is for the child modal popup
+    public selectedSeason : ITvRequestModel;
+
 
     ngOnInit() {
         this.amountToLoad = 5;
@@ -93,6 +96,11 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
+    }
+
+    public showChildren(request: ITvRequestModel) {
+        this.selectedSeason = request;
+        this.showChildDialogue = true;
     }
 
     private updateRequest(request: ITvRequestModel) {

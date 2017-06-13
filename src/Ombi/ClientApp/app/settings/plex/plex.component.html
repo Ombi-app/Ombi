@@ -3,9 +3,10 @@
     <fieldset>
         <legend>Plex Configuration</legend>
 
-        <div class="checkbox col-md-2 " style="float: right;">
-            <input type="checkbox" id="advanced" [(ngModel)]="advanced" ng-checked="advanced">
-            <label for="advanced">Advanced</label>
+
+        <div style="float: right;">
+            <span style="vertical-align: top;">Advanced</span>
+            <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
         </div>
 
         <div class="form-group col-md-3">

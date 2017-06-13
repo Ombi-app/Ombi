@@ -41,6 +41,25 @@ namespace Ombi.Core.Engine
             // For some reason the poster path is always http
             var posterPath = showInfo.image?.medium.Replace("http:", "https:");
 
+            var tvRequests = new List<SeasonRequestModel>();
+            // Only have the TV requests we actually requested and not everything
+            foreach (var season in tv.SeasonRequests)
+            {
+                for (int i = season.Episodes.Count - 1; i >= 0; i--)
+                {
+                    if (!season.Episodes[i].Requested)
+                    {
+                        season.Episodes.RemoveAt(i); // Remove the episode since it's not requested
+                    }
+                }
+
+                if (season.Episodes.Any())
+                {
+                    tvRequests.Add(season);
+                }
+            }
+
+            
             var childRequest = new ChildTvRequest
             {
                 Id = tv.Id,
@@ -56,7 +75,7 @@ namespace Ombi.Core.Engine
                 Issues = IssueState.None,
                 ProviderId = tv.Id,
                 RequestAll = tv.RequestAll,
-                SeasonRequests = tv.SeasonRequests
+                SeasonRequests = tvRequests
             };
 
             var model = new TvRequestModel

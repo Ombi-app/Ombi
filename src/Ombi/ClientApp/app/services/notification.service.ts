@@ -6,6 +6,7 @@ export class NotificationService {
     messages: Message[] = [];
     public addMessage(message: Message) {
         this.messages.push(message);
+        this.messages = JSON.parse(JSON.stringify(this.messages)); // NOTE: THIS IS A HACK AROUND A BUG https://github.com/primefaces/primeng/issues/2943
     }
 
     public success(title: string, body: string) {

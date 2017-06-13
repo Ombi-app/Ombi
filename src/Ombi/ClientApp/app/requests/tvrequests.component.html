@@ -78,7 +78,7 @@
                 </div>
                 <!--Child Requests-->
 
-                <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
+                <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" (click)="showChildren(request)" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
                 <div id="{{request.id}}childRequests" class="collapse">
 
                     <div *ngFor="let child of request.childRequests">
@@ -150,18 +150,16 @@
                             {{/if_eq}}
                         </form>-->
 
-
-
                         <div *ngIf="!request.denied">
-                                <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
-                                <input name="reason" type="text" hidden="hidden" />
-                                <div class="btn-group-sm btn-split">
-                                    <a (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</a>
-                                    <a class="btn btn-sm btn-danger-outline dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="deny-with-reason" id="denyReason{{request.requestId}}" href="#" data-toggle="modal" data-target="#denyReasonModal">Deny with a reason</a></li>
-                                    </ul>
-                                </div>
+                            <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
+                            <input name="reason" type="text" hidden="hidden" />
+                            <div class="btn-group-sm btn-split">
+                                <a (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</a>
+                                <a class="btn btn-sm btn-danger-outline dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="deny-with-reason" id="denyReason{{request.requestId}}" href="#" data-toggle="modal" data-target="#denyReasonModal">Deny with a reason</a></li>
+                                </ul>
+                            </div>
                             <div class="btn-group">
                                 <a href="#" class="btn btn-default">Default</a>
                                 <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
@@ -173,7 +171,6 @@
                                     <li><a href="#">Separated link</a></li>
                                 </ul>
                             </div>
-
                         </div>
                     </div>
                     <form>
@@ -184,10 +181,6 @@
                         <button *ngIf="request.available" (click)="changeAvailability(request, false)" style="text-align: right" value="false" class="btn btn-sm btn-info-outline change"><i class="fa fa-minus"></i> Mark Unavailable</button>
                         <button *ngIf="!request.available" (click)="changeAvailability(request, true)" style="text-align: right" value="true" class="btn btn-sm btn-success-outline change"><i class="fa fa-plus"></i> Mark Available</button>
                     </form>
-
-
-
-
                 </div>
 
 
@@ -209,9 +202,32 @@
             </div>
         </div>
         <hr />
-
-
-
-
     </div>
 </div>
+
+
+
+
+<div class="modal fade in" *ngIf="showChildDialogue" style="display: block;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" (click)="showChildDialogue=false">&times;</button>
+                <h4 class="modal-title">{{selectedSeason?.title}}</h4>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-8">
+
+                </div>
+
+                <div class="col-md-4">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger-outline" (click)="showChildDialogue=false">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+

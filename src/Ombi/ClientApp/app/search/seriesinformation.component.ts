@@ -29,9 +29,9 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
 
     private subscriptions = new Subject<void>();
 
-    result : IRequestEngineResult;
-    seriesId: number;
-    series: ISearchTvResult;
+    public result : IRequestEngineResult;
+    private seriesId: number;
+    public series: ISearchTvResult;
 
     requestedEpisodes: IEpisodesRequested[] = [];
 
@@ -40,13 +40,14 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         this.searchService.getShowInformation(this.seriesId)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.series = x as ISearchTvResult;
+                this.series = x;
             });
     }
 
 
-    request() {
+    public submitRequests() {
         this.series.requested = true;
+        
         this.requestService.requestTv(this.series)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -60,10 +61,8 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
             });
     }
 
-    addRequest(episode: IEpisodesRequested) {
-        this.requestedEpisodes.push(episode);
+    public addRequest(episode: IEpisodesRequested) {
         episode.requested = true;
-
     }
 
 

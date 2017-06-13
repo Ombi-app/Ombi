@@ -1,37 +1,37 @@
 ﻿export interface ISettings {
-    id:number
+    id: number
 }
 
 export interface IExternalSettings extends ISettings {
     ssl: boolean,
     subDir: string,
     ip: string,
-    port:number,
+    port: number,
 }
 
 export interface IOmbiSettings extends ISettings {
     port: number,
-//baseUrl:string, 
+    //baseUrl:string, 
     collectAnalyticData: boolean,
     wizard: boolean,
-    apiKey:string
+    apiKey: string
 }
 
 export interface IEmbySettings extends IExternalSettings {
     apiKey: string,
     enable: boolean,
     administratorId: string,
-    enableEpisodeSearching:boolean,
+    enableEpisodeSearching: boolean,
 }
 
 export interface IPlexSettings extends ISettings {
 
     enable: boolean,
-    servers : IPlexServer[]
+    servers: IPlexServer[]
 }
 
 export interface IPlexServer extends IExternalSettings {
-    name:string,
+    name: string,
     enableEpisodeSearching: boolean,
     plexAuthToken: string,
     machineIdentifier: string,
@@ -41,7 +41,7 @@ export interface IPlexServer extends IExternalSettings {
 export interface IPlexLibraries {
     key: string,
     title: string,
-    enabled:boolean,
+    enabled: boolean,
 }
 
 export interface ISonarrSettings extends IExternalSettings {
@@ -50,7 +50,7 @@ export interface ISonarrSettings extends IExternalSettings {
     qualityProfile: string,
     seasonFolders: boolean,
     rootPath: string,
-    fullRootPath:string,
+    fullRootPath: string,
 }
 
 export interface IRadarrSettings extends IExternalSettings {
@@ -58,7 +58,8 @@ export interface IRadarrSettings extends IExternalSettings {
     apiKey: string,
     defaultQualityProfile: string,
     defaultRootPath: string,
-    fullRootPath:string,
+    fullRootPath: string,
+    addOnly: boolean,
 }
 
 export interface ILandingPageSettings extends ISettings {
@@ -70,10 +71,10 @@ export interface ILandingPageSettings extends ISettings {
     noticeBackgroundColor: string,
     timeLimit: boolean,
     startDateTime: Date,
-    endDateTime:Date,
+    endDateTime: Date,
 }
 
 export interface ICustomizationSettings extends ISettings {
     applicationName: string,
-    logo:string,
+    logo: string,
 }

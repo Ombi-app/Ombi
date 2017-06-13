@@ -1,2 +1,16 @@
-﻿body {
+﻿$primary-colour: #df691a;
+$primary-colour-outline: #ff761b;
+$bg-colour: #333333;
+$bg-colour-disabled: #252424;
+
+#customInputSwitch > div > .ui-inputswitch-off {
+    border: 1px solid $bg-colour !important;
+    background: $bg-colour-disabled !important;
+    color: white;
+}
+
+#customInputSwitch > div > .ui-inputswitch-on {
+    border: 1px solid $primary-colour-outline !important;
+    background: $primary-colour !important;
+    color: white;
 }

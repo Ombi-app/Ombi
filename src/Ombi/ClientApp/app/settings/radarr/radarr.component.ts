@@ -26,6 +26,8 @@ export class RadarrComponent implements OnInit {
 
     profilesRunning: boolean;
     rootFoldersRunning: boolean;
+
+    advanced = false;
     private subscriptions = new Subject<void>();
 
     ngOnInit(): void {

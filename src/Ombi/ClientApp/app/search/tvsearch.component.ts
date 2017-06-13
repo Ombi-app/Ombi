@@ -145,7 +145,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     }
 
     selectSeason(searchResult: ISearchTvResult) {
-        this.route.navigate(['/search/show', searchResult.seriesId]);
+        this.route.navigate(['/search/show', searchResult.id]);
     }
 
     private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {

@@ -77,13 +77,12 @@ namespace Ombi.Core.Engine
                 }
                 else
                 {
-                    season.Episodes.Add(new EpisodesRequested
-                    {
-                        Url = e.url,
-                        Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp),
-                        EpisodeNumber = e.number,
-                    });
+                    // Find the episode
+                    var ep = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == e.number);
+                    ep.Url = e.url;
+                    ep.Title = e.name;
+                    ep.AirDate = DateTime.Parse(e.airstamp);
+                    ep.EpisodeNumber = e.number;
                 }
             }
 

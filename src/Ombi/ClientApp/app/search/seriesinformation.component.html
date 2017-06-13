@@ -58,7 +58,7 @@
 
                             <td>
 
-                                <button (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-primary-outline">Request</button>
+                                <button (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-primary-outline">Add Request</button>
                             </td>
                         </tr>
                         </tbody>
@@ -71,5 +71,5 @@
    
     
     
-    <button id="requestFloatingBtn" class="btn btn-sm btn-success" title="Go to top">Request</button>
+    <button id="requestFloatingBtn" class="btn btn-sm btn-success" (click)="submitRequests()" title="Go to top">Submit Request</button>
 </div>
