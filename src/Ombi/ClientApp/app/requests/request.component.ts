@@ -1,7 +1,6 @@
 ﻿import { Component } from '@angular/core';
 
 @Component({
-    selector: 'ombi',
     templateUrl: './request.component.html'
 })
 export class RequestComponent  {

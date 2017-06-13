@@ -14,7 +14,7 @@
     available: boolean,
     otherMessage: string,
     adminNote: string,
-    requestedUser: string[],
+    requestedUser: string,
     issueId: number,
     denied: boolean,
     deniedReason: string,

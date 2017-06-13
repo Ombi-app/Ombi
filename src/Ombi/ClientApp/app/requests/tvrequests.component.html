@@ -78,29 +78,8 @@
                 </div>
                 <!--Child Requests-->
 
-                <button type="button" class="btn btn-sm btn-info-outline" data-toggle="collapse" (click)="showChildren(request)" [attr.data-target]="'#' + request.id +'childRequests'">Children</button>
-                <div id="{{request.id}}childRequests" class="collapse">
-
-                    <div *ngFor="let child of request.childRequests">
-                        <hr />
-                        <div *ngIf="request.requestedUsers">
-                            Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span>
-                        </div>
-                        <div *ngIf="child.seasonRequests">
-                            Seasons Requested: <span *ngFor="let s of child.seasonRequests">{{s.seasonNumber}} </span>
-                        </div>
-                        <div>
-                            <span>Request status: </span>
-                            <span *ngIf="request.available" class="label label-success">Available</span>
-                            <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
-                            <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
-                            <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                            <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
-
-                        </div>
-                    </div>
-
-                </div>
+                <button type="button" class="btn btn-sm btn-info-outline" (click)="showChildren(request)">Requests</button>
+                
 
             </div>
             <div class="col-sm-3 col-sm-push-3">
@@ -216,12 +195,36 @@
                 <h4 class="modal-title">{{selectedSeason?.title}}</h4>
             </div>
             <div class="modal-body">
-                <div class="col-md-8">
+                <div class="row" *ngFor="let child of selectedSeason.childRequests">
+                    <div class="col-md-12">
+                        <!--Child Requests-->
+                        <div class="col-md-9">
+                            <span class="col-md-12">Requested By: <b>{{child.requestedUser}}</b></span>
 
-                </div>
+                            <span class="col-md-12" *ngIf="child.requestAll">Requested All Seasons</span>
+                            <!--Seasons-->
+                            <span *ngIf="child.approved && !child.available" class="label label-info">Processing Request</span>
+                            <span *ngIf="child.denied" class="label label-danger">Request Denied</span>
+                            <span *ngIf="child.deniedReason" title="{{child.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                            <span *ngIf="!child.approved && !child.availble && !child.denied" class="label label-warning">Pending Approval</span>
+                            <div class="col-md-12" *ngFor="let seasons of child.seasonRequests">
+                       
 
-                <div class="col-md-4">
+                                <span>Season: {{seasons.seasonNumber}}</span>
+                                <span>Episodes:</span>
 
+                                <div *ngFor="let episode of seasons.episodes">
+                                    <!--Episodes-->
+                                    <span># {{episode.episodeNumber}}</span>
+                                    <span *ngIf="episode.available" class="label label-success">Available</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button *ngIf="!child.approved" type="button" (click)="approveSeasonRequest(child)" class="btn btn-sm btn-success-outline" style="text-align: right"><i class="fa fa-plus"></i> Approve</button>
+                        </div>
+                    </div>
+                    <hr />
                 </div>
             </div>
             <div class="modal-footer">

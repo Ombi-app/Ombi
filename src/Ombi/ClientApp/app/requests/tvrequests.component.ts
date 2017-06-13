@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { ITvRequestModel } from '../interfaces/IRequestModel';
+import { ITvRequestModel, IChildTvRequest } from '../interfaces/IRequestModel';
 
 @Component({
     selector: 'tv-requests',
@@ -96,6 +96,12 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
+    }
+
+    public approveSeasonRequest(request: IChildTvRequest) {
+        request.approved = true;
+        this.requestService.updateTvRequest(this.selectedSeason)
+            .subscribe();
     }
 
     public showChildren(request: ITvRequestModel) {

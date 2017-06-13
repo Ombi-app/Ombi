@@ -71,7 +71,7 @@ namespace Ombi.Core.Engine
                 Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUsers = new List<string> { Username },
+                RequestedUser =  Username,
                 Issues = IssueState.None,
                 ProviderId = tv.Id,
                 RequestAll = tv.RequestAll,
@@ -95,22 +95,22 @@ namespace Ombi.Core.Engine
 
             model.ChildRequests.Add(childRequest);
 
-            if (childRequest.SeasonRequests.Any())
-            {
-                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+            //if (childRequest.SeasonRequests.Any())
+            //{
+            //    var episodes = await TvApi.EpisodeLookup(showInfo.id);
 
-                foreach (var e in episodes)
-                {
-                    var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-                    season?.Episodes.Add(new EpisodesRequested
-                    {
-                        Url = e.url,
-                        Title = e.name,
-                        AirDate = DateTime.Parse(e.airstamp),
-                        EpisodeNumber = e.number
-                    });
-                }
-            }
+            //    foreach (var e in episodes)
+            //    {
+            //        var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
+            //        season?.Episodes.Add(new EpisodesRequested
+            //        {
+            //            Url = e.url,
+            //            Title = e.name,
+            //            AirDate = DateTime.Parse(e.airstamp),
+            //            EpisodeNumber = e.number
+            //        });
+            //    }
+            //}
 
             if (tv.LatestSeason)
             {
@@ -218,19 +218,45 @@ namespace Ombi.Core.Engine
             return await AfterRequest(newRequest);
         }
 
-        private IEnumerable<SeasonRequestModel> GetListDifferences(IEnumerable<SeasonRequestModel> existing,
-            IEnumerable<SeasonRequestModel> request)
+        private IEnumerable<SeasonRequestModel> GetListDifferences(List<SeasonRequestModel> existing,
+            List<SeasonRequestModel> request)
         {
-            var newRequest = request
-                .Select(r =>
-                    new SeasonRequestModel
-                    {
-                        SeasonNumber = r.SeasonNumber,
-                        Episodes = r.Episodes
-                    })
-                .ToList();
+            var requestsToRemove = new List<SeasonRequestModel>();
+            foreach (var r in request)
+            {
+                // Do we have an existing season?
+                var existingSeason = existing.FirstOrDefault(x => x.SeasonNumber == r.SeasonNumber);
+                if (existingSeason == null)
+                {
+                    continue;
+                }
 
-            return newRequest.Except(existing);
+                // Compare the episodes
+                for (var i = r.Episodes.Count - 1; i >= 0; i--)
+                {
+                    var existingEpisode = existingSeason.Episodes.FirstOrDefault(x => x.EpisodeNumber == r.Episodes[i].EpisodeNumber);
+                    if (existingEpisode == null)
+                    {
+                        // we are fine, we have not yet requested this
+                    }
+                    else
+                    {
+                        // We already have this request
+                        r.Episodes.RemoveAt(i);
+                    }
+                }
+
+                if (!r.Episodes.Any())
+                {
+                    requestsToRemove.Add(r);
+                }
+            }
+
+            foreach (var remove in requestsToRemove)
+            {
+                request.Remove(remove);
+            }
+            return request;
         }
 
         private async Task<RequestEngineResult> AddRequest(TvRequestModel model)

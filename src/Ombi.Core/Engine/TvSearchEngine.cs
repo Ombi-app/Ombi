@@ -172,6 +172,7 @@ namespace Ombi.Core.Engine
                             // Find the existing request season
                             var existingSeason =
                                 existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
+                            if(existingSeason == null) continue;
 
                             foreach (var ep in existingSeason.Episodes)
                             {

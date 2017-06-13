@@ -52,7 +52,7 @@ export class RequestService extends ServiceAuthHelpers {
     }
 
     updateTvRequest(request: ITvRequestModel): Observable<ITvRequestModel> {
-        return this.http.post(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
+        return this.http.put(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
 
     getRequestsCount(): Observable<IRequestCountModel> {

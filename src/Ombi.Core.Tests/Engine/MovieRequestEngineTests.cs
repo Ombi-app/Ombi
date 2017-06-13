@@ -16,7 +16,7 @@ namespace Ombi.Core.Tests.Engine
         {
             RequestService = new Mock<IRequestService<MovieRequestModel>>();
             var requestService = new RequestService(null, RequestService.Object);
-            Engine = new MovieRequestEngine(null, requestService, null, null, null);
+            Engine = new MovieRequestEngine(null, requestService, null, null, null, null, null);
         }
 
         private MovieRequestEngine Engine { get; }
