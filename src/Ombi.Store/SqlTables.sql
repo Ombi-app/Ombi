@@ -23,9 +23,10 @@ CREATE TABLE IF NOT EXISTS RadarrCache
     TheMovieDbId						INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS SeasonsContent
+CREATE TABLE IF NOT EXISTS PlexSeasonsContent
 (
     Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+	PlexContentId						integer not null,
     SeasonNumber									INTEGER NOT NULL,
     SeasonKey									INTEGER NOT NULL,
     ParentKey							INTEGER NOT NULL
@@ -53,3 +54,13 @@ CREATE TABLE IF NOT EXISTS Users
     UserType									INTEGER NOT NULL
 
 );
+
+CREATE TABLE IF NOT EXISTS RequestHistory
+{
+
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    Type						INTEGER NOT NULL,
+    RequestedDate						varchar(50) NOT NULL, 
+	RequestId						INTEGER NOT NULL
+
+}

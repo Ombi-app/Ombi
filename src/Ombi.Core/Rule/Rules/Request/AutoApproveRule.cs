@@ -1,11 +1,10 @@
-﻿using Ombi.Core.Claims;
+﻿using System.Security.Principal;
+using Ombi.Core.Claims;
 using Ombi.Core.Models.Requests;
-using Ombi.Core.Rules;
-using Ombi.Store.Entities;
-using System.Security.Principal;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Entities;
 
-namespace Ombi.Core.Rule.Rules
+namespace Ombi.Core.Rule.Rules.Request
 {
     public class AutoApproveRule : BaseRequestRule, IRequestRules<BaseRequestModel>
     {

@@ -3,6 +3,7 @@ using Moq;
 using Ombi.Core.Claims;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Rules;
+using Ombi.Core.Rule.Rules.Request;
 using Xunit;
 
 namespace Ombi.Core.Tests.Rule

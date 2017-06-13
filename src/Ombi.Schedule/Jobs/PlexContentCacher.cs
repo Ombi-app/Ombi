@@ -77,45 +77,6 @@ namespace Ombi.Schedule.Jobs
                 Logger.LogWarning(LoggingEvents.CacherException, e, "Exception thrown when attempting to cache the Plex Content");
             }
         }
-        //private List<PlexLibraries> CachedLibraries(PlexSettings plexSettings)
-        //{
-        //    var results = new List<PlexLibraries>();
-
-        //    results = GetLibraries(plexSettings);
-        //    foreach (PlexLibraries t in results)
-        //    {
-        //        foreach (var t1 in t.MediaContainer.Directory)
-        //        {
-        //            var currentItem = t1;
-        //            var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
-        //                currentItem.ratingKey).Result;
-
-        //            // Get the seasons for each show
-        //            if (currentItem.type.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
-        //            {
-        //                var seasons = PlexApi.GetSeasons(plexSettings.PlexAuthToken, plexSettings.FullUri,
-        //                    currentItem.ratingKey).Result;
-
-        //                // We do not want "all episodes" this as a season
-        //                var filtered = seasons.MediaContainer.Directory.Where(x => !x.title.Equals("All episodes", StringComparison.CurrentCultureIgnoreCase));
-
-        //                t1.seasons.AddRange(filtered);
-        //            }
-
-        //            var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.MediaContainer);
-        //            t1.providerId = providerId;
-        //        }
-        //        foreach (Video t1 in t.Video)
-        //        {
-        //            var currentItem = t1;
-        //            var metaData = PlexApi.GetMetadata(plexSettings.PlexAuthToken, plexSettings.FullUri,
-        //                currentItem.RatingKey);
-        //            var providerId = PlexHelper.GetProviderIdFromPlexGuid(metaData.Video.Guid);
-        //            t1.ProviderId = providerId;
-        //        }
-        //    }
-
-        //}
 
         private async Task StartTheCache(PlexSettings plexSettings)
         {
@@ -154,18 +115,16 @@ namespace Ombi.Schedule.Jobs
                                 var itemAdded = false;
                                 foreach (var season in seasonsContent)
                                 {
-                                    var seasonExists = existingContent.Seasons.Where(x => x.SeasonKey == season.SeasonKey);
+                                    var seasonExists = existingContent.Seasons.FirstOrDefault(x => x.SeasonKey == season.SeasonKey);
 
                                     if (seasonExists != null)
                                     {
                                         // We already have this season
                                         continue;
                                     }
-                                    else
-                                    {
-                                        existingContent.Seasons.Add(season);
-                                        itemAdded = true;
-                                    }
+                                    
+                                    existingContent.Seasons.Add(season);
+                                    itemAdded = true;
                                 }
 
                                 if (itemAdded) await Repo.Update(existingContent);

@@ -184,6 +184,8 @@ namespace Ombi.Core.Engine
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
             results = Mapper.Map<TvRequestModel>(request);
 
+            // TODO need to check if we need to approve any child requests since they may have updated
+            
             var model = TvRequestService.UpdateRequest(results);
             return model;
         }
@@ -211,7 +213,7 @@ namespace Ombi.Core.Engine
             existingRequest.ChildRequests.AddRange(newRequest.ChildRequests);
             TvRequestService.UpdateRequest(existingRequest);
 
-            if (ShouldAutoApprove(RequestType.TvShow))
+            if (newRequest.Approved) // The auto approve rule
             {
                 // TODO Auto Approval Code
             }
