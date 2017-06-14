@@ -222,6 +222,7 @@
                         </div>
                         <div class="col-md-3">
                             <button *ngIf="!child.approved" type="button" (click)="approveSeasonRequest(child)" class="btn btn-sm btn-success-outline" style="text-align: right"><i class="fa fa-plus"></i> Approve</button>
+                            <button *ngIf="!child.approved && !child.available && !child.denied" type="button" (click)="denySeasonRequest(child)" class="btn btn-sm btn-danger-outline" style="text-align: right"><i class="fa fa-plus"></i> Deny</button>
                         </div>
                     </div>
                     <hr />

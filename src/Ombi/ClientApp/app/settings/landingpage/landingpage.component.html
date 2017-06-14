@@ -16,10 +16,9 @@
         
         <div class="form-group">
             <div class="checkbox">
-                <input type="checkbox" id="BeforeLogin" name="BeforeLogin" [(ngModel)]="settings.beforeLogin" ng-checked="settings.beforeLogin">
+                <input type="checkbox" id="BeforeLogin" name="BeforeLogin" [(ngModel)]="settings.beforeLogin" ng-checked="settings.beforeLogin" tooltipPosition="top" pTooltip="If enabled then this will show the landing page before the login page, if this is disabled the user will log in first and then see the landing page.">
                 <label for="BeforeLogin">Show before the login</label>
             </div>
-            <small>If enabled then this will show the landing page before the login page, if this is disabled the user will log in first and then see the landing page.</small>
         </div>
 
         <p class="form-group">Notice Message</p>

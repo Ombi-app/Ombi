@@ -64,3 +64,14 @@ CREATE TABLE IF NOT EXISTS RequestHistory
 	RequestId						INTEGER NOT NULL
 
 );
+
+CREATE TABLE IF NOT EXISTS NotificationTemplates
+(
+
+    Id									INTEGER PRIMARY KEY AUTOINCREMENT,
+    NotificationType						INTEGER NOT NULL,
+    Agent						INTEGER NOT NULL,
+    Subject						BLOB NULL, 
+    Message						BLOB  NULL
+
+);

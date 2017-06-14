@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
     <ProjectReference Include="..\Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />

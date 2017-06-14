@@ -15,6 +15,8 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Notifications;
+using Ombi.Store;
 
 namespace Ombi.Core.Engine
 {
@@ -272,17 +274,20 @@ namespace Ombi.Core.Engine
         {
             if (ShouldSendNotification(model.Type))
             {
-                var notificationModel = new NotificationModel
-                {
-                    Title = model.Title,
-                    User = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type,
-                    ImgSrc = model.PosterPath
-                };
+                var n = new NotificationOptions();
 
-                BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel).Wait());
+                n.Title = model.Title;
+                n.RequestedUser = Username;
+                n.DateTime = DateTime.Now;
+                n.NotificationType = NotificationType.NewRequest;
+                n.RequestType = model.Type;
+                n.ImgSrc = model.PosterPath;
+                
+
+                BackgroundJob.Enqueue(() =>
+                
+                    NotificationService.Publish(n).Wait()
+                );
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();

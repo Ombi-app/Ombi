@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Store;
+using Ombi.Store.Repository;
 
 namespace Ombi.Notifications
 {
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
-        protected BaseNotification(ISettingsService<T> settings)
+        protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo)
         {
             Settings = settings;
+            TemplateRepository = templateRepo;
         }
         
         protected ISettingsService<T> Settings { get; }
+        protected INotificationTemplatesRepository TemplateRepository { get; }
         public abstract string NotificationName { get; }
 
-        public async Task NotifyAsync(NotificationModel model)
+        public async Task NotifyAsync(NotificationOptions model)
         {
             var configuration = GetConfiguration();
             await NotifyAsync(model, configuration);
         }
 
-        public async Task NotifyAsync(NotificationModel model, Settings.Settings.Models.Settings settings)
+        public async Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings)
         {
             if (settings == null) await NotifyAsync(model);
             
@@ -79,13 +83,13 @@ namespace Ombi.Notifications
 
 
         protected abstract bool ValidateConfiguration(T settings);
-        protected abstract Task NewRequest(NotificationModel model, T settings);
-        protected abstract Task Issue(NotificationModel model, T settings);
-        protected abstract Task AddedToRequestQueue(NotificationModel model, T settings);
-        protected abstract Task RequestDeclined(NotificationModel model, T settings);
-        protected abstract Task RequestApproved(NotificationModel model, T settings);
-        protected abstract Task AvailableRequest(NotificationModel model, T settings);
+        protected abstract Task NewRequest(NotificationOptions model, T settings);
+        protected abstract Task Issue(NotificationOptions model, T settings);
+        protected abstract Task AddedToRequestQueue(NotificationOptions model, T settings);
+        protected abstract Task RequestDeclined(NotificationOptions model, T settings);
+        protected abstract Task RequestApproved(NotificationOptions model, T settings);
+        protected abstract Task AvailableRequest(NotificationOptions model, T settings);
         protected abstract Task Send(NotificationMessage model, T settings);
-        protected abstract Task Test(NotificationModel model, T settings);
+        protected abstract Task Test(NotificationOptions model, T settings);
     }
 }

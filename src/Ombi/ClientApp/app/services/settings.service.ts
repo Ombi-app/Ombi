@@ -13,6 +13,7 @@ import {
     ICustomizationSettings,
     IRadarrSettings
 } from '../interfaces/ISettings';
+import { IEmailNotificationSettings } from '../interfaces/INotifcationSettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -80,6 +81,11 @@ export class SettingsService extends ServiceAuthHelpers {
         return this.httpAuth.post(`${this.url}/customization`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
     }
 
+    getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/email`).map(this.extractData).catch(this.handleError)
+    }
 
-
+    saveEmailNotificationSettings(settings: IEmailNotificationSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/notifications/email`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
+    }
 }

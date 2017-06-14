@@ -4,15 +4,15 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Discord;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Notifications;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Repository;
 
-namespace Ombi.Notification.Agents
+namespace Ombi.Notifications.Agents
 {
     public class DiscordNotification : BaseNotification<DiscordNotificationSettings>
     {
-        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log) : base(sn)
+        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log, INotificationTemplatesRepository r) : base(sn, r)
         {
             Api = api;
             Logger = log;
@@ -45,9 +45,9 @@ namespace Ombi.Notification.Agents
             return true;
         }
 
-        protected override async Task NewRequest(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task NewRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"{model.Title} has been requested by user: {model.User}";
+            var message = $"{model.Title} has been requested by user: {model.RequestedUser}";
 
             var notification = new NotificationMessage
             {
@@ -56,9 +56,9 @@ namespace Ombi.Notification.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task Issue(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task Issue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"A new issue: {model.Body} has been reported by user: {model.User} for the title: {model.Title}";
+            var message = $"A new issue: {model.Body} has been reported by user: {model.RequestedUser} for the title: {model.Title}";
             var notification = new NotificationMessage
             {
                 Message = message,
@@ -66,9 +66,9 @@ namespace Ombi.Notification.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task AddedToRequestQueue(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var message = $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
                 Message = message,
@@ -76,7 +76,7 @@ namespace Ombi.Notification.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task RequestDeclined(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task RequestDeclined(NotificationOptions model, DiscordNotificationSettings settings)
         {
             var message = $"Hello! Your request for {model.Title} has been declined, Sorry!";
             var notification = new NotificationMessage
@@ -86,7 +86,7 @@ namespace Ombi.Notification.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task RequestApproved(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task RequestApproved(NotificationOptions model, DiscordNotificationSettings settings)
         {
             var message = $"Hello! The request for {model.Title} has now been approved!";
             var notification = new NotificationMessage
@@ -96,7 +96,7 @@ namespace Ombi.Notification.Agents
             await Send(notification, settings);
         }
 
-        protected override async Task AvailableRequest(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task AvailableRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
             var message = $"Hello! The request for {model.Title} is now available!";
             var notification = new NotificationMessage
@@ -118,7 +118,7 @@ namespace Ombi.Notification.Agents
             }
         }
 
-        protected override async Task Test(NotificationModel model, DiscordNotificationSettings settings)
+        protected override async Task Test(NotificationOptions model, DiscordNotificationSettings settings)
         {
             var message = $"This is a test from Ombi, if you can see this then we have successfully pushed a notification!";
             var notification = new NotificationMessage

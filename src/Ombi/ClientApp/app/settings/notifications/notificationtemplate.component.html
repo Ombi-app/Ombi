@@ -1,0 +1,25 @@
+﻿
+<ngb-accordion [closeOthers]="true" activeIds="0-header">
+    <ngb-panel *ngFor="let template of templates" id="{{template.notificationType}}" title="{{NotificationType[template.notificationType] | humanize}}">
+        <ng-template ngbPanelContent>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="form-group">
+                        <label for="password" class="control-label">Subject</label>
+                        <div>
+                            <input type="text" class="form-control form-control-custom" [(ngModel)]="template.subject" value="{{template.subject}}">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password" class="control-label">Message</label>
+                        <div>
+                            <textarea type="text" class="form-control form-control-custom" [(ngModel)]="template.message" value="{{template.message}}"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>

@@ -4,24 +4,6 @@ using System.Collections.Generic;
 
 namespace Ombi.Core.Models.Requests
 {
-    public static class RequestTypeDisplay
-    {
-        public static string GetString(this RequestType type)
-        {
-            switch (type)
-            {
-                case RequestType.Movie:
-                    return "Movie";
-
-                case RequestType.TvShow:
-                    return "TV Show";
-
-                default:
-                    return string.Empty;
-            }
-        }
-    }
-
     public enum IssueState
     {
         None = 99,

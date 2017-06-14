@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ombi.Notifications
+﻿namespace Ombi.Helpers
 {
     public enum NotificationType
     {

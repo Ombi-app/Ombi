@@ -248,3 +248,28 @@ button.list-group-item:focus {
     background-color: $bg-colour;
     border-color: $bg-colour-disabled;
 }
+
+
+
+.card-header {
+    background-color: $bg-colour;
+    color: #ebebeb;
+    padding: 10px 15px;
+    border-bottom: 1px solid #1f1f1f;
+}
+.card-header > a {
+    color: white;
+}
+
+.card-block {
+    background: $bg-colour-disabled;
+}
+
+.panel {
+    margin-bottom: 21px;
+    background-color: $bg-colour-disabled;
+    border: 1px solid transparent;
+    border-radius: 0;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}

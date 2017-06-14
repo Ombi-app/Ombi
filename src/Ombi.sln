@@ -61,8 +61,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Radarr", "Ombi.Api
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Discord", "Ombi.Api.Discord\Ombi.Api.Discord.csproj", "{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Notification.Agents", "Ombi.Notification.Agents\Ombi.Notification.Agents.csproj", "{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -149,10 +147,6 @@ Global
 		{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,6 +166,5 @@ Global
 		{FC6A8F7C-9722-4AE4-960D-277ACB0E81CB} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{94D04C1F-E35A-499C-B0A0-9FADEBDF8336} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194} = {9293CA11-360A-4C20-A674-B9E794431BF5}
-		{DC9E3E44-802A-4D9B-A70F-D198CFE4C73D} = {EA30DD15-6280-4687-B370-2956EC2E54E5}
 	EndGlobalSection
 EndGlobal

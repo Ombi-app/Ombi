@@ -68,6 +68,15 @@ hr {
     box-shadow: 0 0 0 !important;
 }
 
+.form-small {
+    width: 25%;
+}
+
+
+.form-half {
+    width: 50%;
+}
+
 
 h1 {
     font-size: 3.5rem $i;
@@ -234,14 +243,6 @@ label {
     color: #fff $i;
     background-color: $success-colour $i;
     border-color: $success-colour $i;
-}
-
-#movieList .mix {
-    display: none;
-}
-
-#tvList .mix {
-    display: none;
 }
 
 $border-radius: 10px;
@@ -715,9 +716,22 @@ body {
     background: $form-color $i;
 }
 
-// PrimeNg Overide
-
-.ui-growl-item{
-    margin-top:35px $i;
+.card-header {
+    color: #ebebeb;
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    background: $form-color;
+}
+.card-header > a{
+    color:white;
 }
 
+
+// PrimeNg Overide
+.ui-growl-item {
+    margin-top: 35px $i;
+}
+
+textarea {
+    resize: vertical;
+}

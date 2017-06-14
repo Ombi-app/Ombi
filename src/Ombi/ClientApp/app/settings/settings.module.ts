@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '../auth/auth.guard';
@@ -17,10 +17,13 @@ import { SonarrComponent } from './sonarr/sonarr.component';
 import { RadarrComponent } from './radarr/radarr.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { CustomizationComponent } from './customization/customization.component';
+import { EmailNotificationComponent } from './notifications/emailnotification.component';
+import { NotificationTemplate } from './notifications/notificationtemplate.component';
 
 import { SettingsMenuComponent } from './settingsmenu.component';
+import { HumanizePipe } from '../pipes/HumanizePipe';
 
-import { MenuModule, InputSwitchModule, InputTextModule } from 'primeng/primeng';
+import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] },
@@ -30,6 +33,7 @@ const routes: Routes = [
     { path: 'Settings/Radarr', component: RadarrComponent, canActivate: [AuthGuard] },
     { path: 'Settings/LandingPage', component: LandingPageComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Customization', component: CustomizationComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Email', component: EmailNotificationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -41,7 +45,9 @@ const routes: Routes = [
         InputSwitchModule,
         InputTextModule,
         AuthModule,
-        NgbModule
+        NgbModule,
+        TooltipModule,
+        NgbAccordionModule
     ],
     declarations: [
         SettingsMenuComponent,
@@ -51,7 +57,10 @@ const routes: Routes = [
         LandingPageComponent,
         CustomizationComponent,
         SonarrComponent,
-        RadarrComponent
+        RadarrComponent,
+        EmailNotificationComponent,
+        HumanizePipe,
+        NotificationTemplate
     ],
     exports: [
         RouterModule

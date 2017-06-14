@@ -5,7 +5,6 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 import "rxjs/add/operator/takeUntil";
 
-
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
@@ -62,7 +61,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
 
 
 
-    loadMore() {
+    public loadMore() {
         this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -71,28 +70,28 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             });
     }
 
-    search(text: any) {
+    public search(text: any) {
         this.searchChanged.next(text.target.value);
     }
 
-    removeRequest(request: ITvRequestModel) {
+    public removeRequest(request: ITvRequestModel) {
         this.requestService.removeTvRequest(request);
         this.removeRequestFromUi(request);
     }
 
-    changeAvailability(request: ITvRequestModel, available: boolean) {
+    public changeAvailability(request: ITvRequestModel, available: boolean) {
         request.available = available;
 
         this.updateRequest(request);
     }
 
-    approve(request: ITvRequestModel) {
+    public approve(request: ITvRequestModel) {
         request.approved = true;
         request.denied = false;
         this.updateRequest(request);
     }
 
-    deny(request: ITvRequestModel) {
+    public deny(request: ITvRequestModel) {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
@@ -100,6 +99,14 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
 
     public approveSeasonRequest(request: IChildTvRequest) {
         request.approved = true;
+        request.denied = false;
+        this.requestService.updateTvRequest(this.selectedSeason)
+            .subscribe();
+    }
+
+    public denySeasonRequest(request: IChildTvRequest) {
+        request.approved = false;
+        request.denied = true;
         this.requestService.updateTvRequest(this.selectedSeason)
             .subscribe();
     }

@@ -8,7 +8,7 @@ namespace Ombi.Notifications
     {
         string NotificationName { get; }
 
-        Task NotifyAsync(NotificationModel model);
+        Task NotifyAsync(NotificationOptions model);
 
         /// <summary>
         /// Sends a notification to the user, this is usually for testing the settings.
@@ -16,6 +16,6 @@ namespace Ombi.Notifications
         /// <param name="model">The model.</param>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        Task NotifyAsync(NotificationModel model, Settings.Settings.Models.Settings settings);
+        Task NotifyAsync(NotificationOptions model, Settings.Settings.Models.Settings settings);
     }
 }

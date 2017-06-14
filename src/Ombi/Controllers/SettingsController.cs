@@ -1,24 +1,46 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
+using Ombi.Models.Notifications;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
+using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Controllers
 {
+    /// <summary>
+    /// The Settings Controller
+    /// </summary>
+    /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
     public class SettingsController : BaseV1ApiController
     {
-        public SettingsController(ISettingsResolver resolver)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SettingsController" /> class.
+        /// </summary>
+        /// <param name="resolver">The resolver.</param>
+        /// <param name="mapper">The mapper.</param>
+        public SettingsController(ISettingsResolver resolver, IMapper mapper, INotificationTemplatesRepository templateRepo)
         {
             SettingsResolver = resolver;
+            Mapper = mapper;
+            TemplateRepository = templateRepo;
         }
 
         private ISettingsResolver SettingsResolver { get; }
+        private IMapper Mapper { get; }
+        private INotificationTemplatesRepository TemplateRepository { get; }
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -169,16 +191,58 @@ namespace Ombi.Controllers
             return await Save(settings);
         }
 
-        private async Task<T> Get<T>()
+        /// <summary>
+        /// Saves the email notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/email")]
+        public async Task<bool> EmailNotificationSettings([FromBody] EmailNotificationsViewModel model)
         {
-            var settings = SettingsResolver.Resolve<T>();
-            return await settings.GetSettingsAsync();
-        }
+            // Save the email settings
+            var settings = Mapper.Map<EmailNotificationSettings>(model);
+            var result = await Save(settings);
 
-        private async Task<bool> Save<T>(T settingsModel)
-        {
-            var settings = SettingsResolver.Resolve<T>();
-            return await settings.SaveSettingsAsync(settingsModel);
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
         }
+    
+
+    /// <summary>
+    /// Gets the Email Notification Settings.
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet("notifications/email")]
+    public async Task<EmailNotificationsViewModel> EmailNotificationSettings()
+    {
+        var emailSettings = await Get<EmailNotificationSettings>();
+        var model = Mapper.Map<EmailNotificationsViewModel>(emailSettings);
+
+        // Lookup to see if we have any templates saved
+        model.NotificationTemplates = await BuildTemplates(NotificationAgent.Email);
+
+        return model;
     }
+
+    private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
+    {
+        var templates = await TemplateRepository.GetAllTemplates(agent);
+        return templates.ToList();
+    }
+
+
+    private async Task<T> Get<T>()
+    {
+        var settings = SettingsResolver.Resolve<T>();
+        return await settings.GetSettingsAsync();
+    }
+
+    private async Task<bool> Save<T>(T settingsModel)
+    {
+        var settings = SettingsResolver.Resolve<T>();
+        return await settings.SaveSettingsAsync(settingsModel);
+    }
+}
 }

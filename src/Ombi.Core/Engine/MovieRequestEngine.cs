@@ -16,6 +16,8 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Notifications;
+using Ombi.Store;
 
 namespace Ombi.Core.Engine
 {
@@ -136,10 +138,10 @@ namespace Ombi.Core.Engine
             {
                 //Log.Fatal(e);
                 //await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault, e.Message);
-                var notification = new NotificationModel
+                var notification = new NotificationOptions
                 {
                     DateTime = DateTime.Now,
-                    User = Username,
+                    RequestedUser = Username,
                     RequestType = RequestType.Movie,
                     Title = model.Title,
                     NotificationType = NotificationType.ItemAddedToFaultQueue
@@ -208,10 +210,10 @@ namespace Ombi.Core.Engine
 
             if (ShouldSendNotification(model.Type))
             {
-                var notificationModel = new NotificationModel
+                var notificationModel = new NotificationOptions
                 {
                     Title = model.Title,
-                    User = Username,
+                    RequestedUser = Username,
                     DateTime = DateTime.Now,
                     NotificationType = NotificationType.NewRequest,
                     RequestType = model.Type,

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 
@@ -16,13 +17,13 @@ namespace Ombi.Notifications
             Log = log;
             NotificationAgents = new List<INotification>();
             
-            var baseSearchType = typeof(BaseNotification<>).FullName;
+            var baseSearchType = typeof(BaseNotification<>).Name;
 
             var ass = typeof(NotificationService).GetTypeInfo().Assembly;
 
             foreach (var ti in ass.DefinedTypes)
             {
-                if (ti?.BaseType?.FullName == baseSearchType)
+                if (ti?.BaseType?.Name == baseSearchType)
                 {
                     var type = ti?.AsType();
                     var ctors = type.GetConstructors();
@@ -48,7 +49,7 @@ namespace Ombi.Notifications
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        public async Task Publish(NotificationModel model)
+        public async Task Publish(NotificationOptions model)
         {
             var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
 
@@ -61,7 +62,7 @@ namespace Ombi.Notifications
         /// <param name="model">The model.</param>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
-        public async Task Publish(NotificationModel model, Settings.Settings.Models.Settings settings)
+        public async Task Publish(NotificationOptions model, Ombi.Settings.Settings.Models.Settings settings)
         {
             var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model, settings));
 
@@ -69,7 +70,7 @@ namespace Ombi.Notifications
         }
 
        
-        private async Task NotifyAsync(INotification notification, NotificationModel model)
+        private async Task NotifyAsync(INotification notification, NotificationOptions model)
         {
             try
             {
@@ -82,7 +83,7 @@ namespace Ombi.Notifications
 
         }
 
-        private async Task NotifyAsync(INotification notification, NotificationModel model, Settings.Settings.Models.Settings settings)
+        private async Task NotifyAsync(INotification notification, NotificationOptions model, Ombi.Settings.Settings.Models.Settings settings)
         {
             try
             {
@@ -94,7 +95,7 @@ namespace Ombi.Notifications
             }
         }
 
-        public async Task PublishTest(NotificationModel model, Settings.Settings.Models.Settings settings, INotification type)
+        public async Task PublishTest(NotificationOptions model, Ombi.Settings.Settings.Models.Settings settings, INotification type)
         {
             await type.NotifyAsync(model, settings);
         }

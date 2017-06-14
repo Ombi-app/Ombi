@@ -2,17 +2,18 @@
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
-using Ombi.Core.Models.Requests;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Repository;
 
-namespace Ombi.Notifications.Email
+namespace Ombi.Notifications.Agents
 {
     public class EmailNotification : BaseNotification<EmailNotificationSettings>
     {
-        public EmailNotification(ISettingsService<EmailNotificationSettings> settings) : base(settings)
+        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r) : base(settings, r)
         {
         }
 
@@ -26,12 +27,12 @@ namespace Ombi.Notifications.Email
             }
             if (settings.Authentication)
             {
-                if (string.IsNullOrEmpty(settings.EmailUsername) || string.IsNullOrEmpty(settings.EmailPassword))
+                if (string.IsNullOrEmpty(settings.Username) || string.IsNullOrEmpty(settings.Password))
                 {
                     return false;
                 }
             }
-            if (string.IsNullOrEmpty(settings.EmailHost) || string.IsNullOrEmpty(settings.RecipientEmail) || string.IsNullOrEmpty(settings.EmailPort.ToString()))
+            if (string.IsNullOrEmpty(settings.Host) || string.IsNullOrEmpty(settings.AdminEmail) || string.IsNullOrEmpty(settings.Port.ToString()))
             {
                 return false;
             }
@@ -39,69 +40,78 @@ namespace Ombi.Notifications.Email
             return true;
         }
 
-        protected override async Task NewRequest(NotificationModel model, EmailNotificationSettings settings)
+        private async Task<NotificationMessageContent> LoadTemplate(NotificationType type, NotificationOptions model)
         {
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, type);
+            // Need to do the parsing
+            var resolver = new NotificationMessageResolver();
+            return resolver.ParseMessage(template, new NotificationMessageCurlys(model.RequestedUser, model.Title, DateTime.Now.ToString("D"),
+                    model.NotificationType.ToString(), null));
+            
+        }
+
+        protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var template = await LoadTemplate(NotificationType.NewRequest, model);
+
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
-                $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}",
-                model.ImgSrc);
+            var html = email.LoadTemplate(template.Subject, template.Message, model.ImgSrc);
 
 
             var message = new NotificationMessage
             {
                 Message = html,
-                Subject = $"Ombi: New {model.RequestType.GetString()?.ToLower()} request for {model.Title}!",
-                To = settings.RecipientEmail,
+                Subject = $"Ombi: New {model.RequestType} request for {model.Title}!",
+                To = settings.AdminEmail,
             };
 
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested the {model.RequestType.GetString()?.ToLower()} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested the {model.RequestType} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
 
             await Send(message, settings);
         }
 
-        protected override async Task Issue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task Issue(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 $"Ombi: New issue for {model.Title}!",
-                $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!",
+                $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!",
                 model.ImgSrc);
 
             var message = new NotificationMessage
             {
                 Message = html,
                 Subject = $"Ombi: New issue for {model.Title}!",
-                To = settings.RecipientEmail,
+                To = settings.AdminEmail,
             };
 
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has reported a new issue {model.Body} for the title {model.Title}!");
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!");
 
             await Send(message, settings);
         }
 
-        protected override async Task AddedToRequestQueue(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task AddedToRequestQueue(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Ombi: A request could not be added.",
-                $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
+                $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
                 model.ImgSrc);
 
             var message = new NotificationMessage
             {
                 Message = html,
                 Subject = $"Ombi: A request could not be added",
-                To = settings.RecipientEmail,
+                To = settings.AdminEmail,
             };
 
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.User}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
+            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
 
 
             await Send(message, settings);
         }
 
-        protected override async Task RequestDeclined(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task RequestDeclined(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -122,7 +132,7 @@ namespace Ombi.Notifications.Email
             await Send(message, settings);
         }
 
-        protected override async Task RequestApproved(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task RequestApproved(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -142,7 +152,7 @@ namespace Ombi.Notifications.Email
             await Send(message, settings);
         }
 
-        protected override async Task AvailableRequest(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task AvailableRequest(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -178,12 +188,12 @@ namespace Ombi.Notifications.Email
                     Body = body.ToMessageBody(),
                     Subject = model.Subject
                 };
-                message.From.Add(new MailboxAddress(settings.EmailSender, settings.EmailSender));
+                message.From.Add(new MailboxAddress(settings.Sender, settings.Sender));
                 message.To.Add(new MailboxAddress(model.To, model.To));
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.EmailHost, settings.EmailPort); // Let MailKit figure out the correct SecureSocketOptions.
+                    client.Connect(settings.Host, settings.Port); // Let MailKit figure out the correct SecureSocketOptions.
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
@@ -191,7 +201,7 @@ namespace Ombi.Notifications.Email
 
                     if (settings.Authentication)
                     {
-                        client.Authenticate(settings.EmailUsername, settings.EmailPassword);
+                        client.Authenticate(settings.Username, settings.Password);
                     }
                     //Log.Info("sending message to {0} \r\n from: {1}\r\n Are we authenticated: {2}", message.To, message.From, client.IsAuthenticated);
                     await client.SendAsync(message);
@@ -205,7 +215,7 @@ namespace Ombi.Notifications.Email
             }
         }
 
-        protected override async Task Test(NotificationModel model, EmailNotificationSettings settings)
+        protected override async Task Test(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
@@ -216,7 +226,7 @@ namespace Ombi.Notifications.Email
             {
                 Message = html,
                 Subject = $"Ombi: Test",
-                To = settings.RecipientEmail,
+                To = settings.AdminEmail,
             };
 
             message.Other.Add("PlainTextBody", "This is just a test! Success!");

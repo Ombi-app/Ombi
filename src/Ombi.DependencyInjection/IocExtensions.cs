@@ -16,6 +16,7 @@ using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Notifications;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Rule;
 using Ombi.Core.Settings;
@@ -75,6 +76,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
+            services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
         }
         public static void RegisterServices(this IServiceCollection services)
