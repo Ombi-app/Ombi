@@ -1,82 +1,99 @@
 ﻿
 <settings-menu></settings-menu>
-<div *ngIf="settings">
+<div *ngIf="emailForm">
     <fieldset>
         <legend>Email Notifications</legend>
         <div class="col-md-6">
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" [(ngModel)]="settings.enabled" ng-checked="settings.enabled">
-                    <label for="enable">Enabled</label>
+            <form novalidate [formGroup]="emailForm" (ngSubmit)="onSubmit(emailForm)">
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled">
+                        <label for="enable">Enabled</label>
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="Authentication" [(ngModel)]="settings.authentication" ng-checked="settings.authentication"><label for="Authentication">Enable SMTP Authentication</label>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="Authentication" formControlName="authentication"><label for="Authentication">Enable SMTP Authentication</label>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="host" class="control-label">SMTP Host</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="host" name="host" placeholder="localhost" [(ngModel)]="settings.host" value="{{settings.host}}">
+                <div *ngIf="emailForm.invalid && emailForm.dirty" class="alert alert-danger">
+                    <div *ngIf="emailForm.get('host').hasError('required')">Host is required</div>
+                    <div *ngIf="emailForm.get('port').hasError('required')">The Port is required</div>
+                    <div *ngIf="emailForm.get('sender').hasError('required')">The Email Sender is required</div>
+                    <div *ngIf="emailForm.get('sender').hasError('email')">The Email Sender needs to be a valid email address</div>
+                    <div *ngIf="emailForm.get('adminEmail').hasError('required')">The Email Sender is required</div>
+                    <div *ngIf="emailForm.get('adminEmail').hasError('email')">The Admin Email needs to be a valid email address</div>
+                    <div *ngIf="emailForm.get('username').hasError('required')">The Username is required</div>
+                    <div *ngIf="emailForm.get('password').hasError('required')">The Password is required</div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="portNumber" class="control-label">SMTP Port</label>
-                <div>
-                    <input type="text" [(ngModel)]="settings.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{settings.port}}">
+                <div class="form-group">
+                    <label for="host" class="control-label">SMTP Host</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="host" name="host" placeholder="localhost" formControlName="host">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="sender" class="control-label">Email Sender</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="sender" name="sender" [(ngModel)]="settings.sender" value="{{settings.sender}}" tooltipPosition="top" pTooltip="The email address that the emails will be sent from">
+                <div class="form-group">
+                    <label for="portNumber" class="control-label">SMTP Port</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" formControlName="port">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="adminEmail" class="control-label">Admin Email</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="adminEmail" name="adminEmail" [(ngModel)]="settings.adminEmail" value="{{settings.adminEmail}}" tooltipPosition="top" pTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
+                <div class="form-group">
+                    <label for="sender" class="control-label">Email Sender</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="sender" name="sender" formControlName="sender" tooltipPosition="top" pTooltip="The email address that the emails will be sent from">
+                    </div>
                 </div>
-            </div>
 
-
-            <div class="form-group" *ngIf="settings.authentication">
-                <label for="username" class="control-label">Username</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="username" name="username" [(ngModel)]="settings.username" value="{{settings.username}}" pTooltip="The username if authentication is enabled" tooltipPosition="top">
+                <div class="form-group">
+                    <label for="adminEmail" class="control-label">Admin Email</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="adminEmail" name="adminEmail" formControlName="adminEmail" tooltipPosition="top" pTooltip="The administrator email will be used to send emails for admin only notifications (e.g. New Requests that require approvals)">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group" *ngIf="settings.authentication">
-                <label for="password" class="control-label">Password</label>
-                <div>
-                    <input type="password" class="form-control form-control-custom " id="password" name="password" [(ngModel)]="settings.password" value="{{settings.password}}" pTooltip="The password if authentication is enabled" tooltipPosition="top">
+
+                <div class="form-group" *ngIf="emailForm.controls['username'].validator">
+                    <label for="username" class="control-label">Username</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username" pTooltip="The username if authentication is enabled" tooltipPosition="top">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div>
-                    <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
+                <div class="form-group" *ngIf="emailForm.get('password').validator">
+                    <label for="password" class="control-label">Password</label>
+                    <div>
+                        <input type="password" class="form-control form-control-custom " id="password" name="password" formControlName="password" pTooltip="The password if authentication is enabled" tooltipPosition="top">
+                    </div>
                 </div>
-            </div>
 
-
-
-            <div class="form-group">
-                <div>
-                    <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                <div class="form-group">
+                    <div>
+                        <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">
+                            Test Connectivity
+                            <div id="spinner"></div>
+                        </button>
+                    </div>
                 </div>
-            </div>
+
+
+
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="emailForm.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    </div>
+                </div>
+            </form>
         </div>
 
+
         <div class="col-md-6">
-            <notification-templates [templates]="settings.notificationTemplates"></notification-templates>
+            <notification-templates [templates]="templates"></notification-templates>
         </div>
     </fieldset>
 </div>

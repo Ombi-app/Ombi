@@ -40,31 +40,43 @@ namespace Ombi.Notifications.Agents
             return true;
         }
 
-        private async Task<NotificationMessageContent> LoadTemplate(NotificationType type, NotificationOptions model)
+        private async Task<NotificationMessage> LoadTemplate(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
             var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, type);
+            if (!template.Enabled)
+            {
+                return null;
+            }
             // Need to do the parsing
             var resolver = new NotificationMessageResolver();
-            return resolver.ParseMessage(template, new NotificationMessageCurlys(model.RequestedUser, model.Title, DateTime.Now.ToString("D"),
+            var parsed = resolver.ParseMessage(template, new NotificationMessageCurlys(model.RequestedUser, model.Title, DateTime.Now.ToString("D"),
                     model.NotificationType.ToString(), null));
             
-        }
-
-        protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
-        {
-            var template = await LoadTemplate(NotificationType.NewRequest, model);
 
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(template.Subject, template.Message, model.ImgSrc);
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message, model.ImgSrc);
 
 
             var message = new NotificationMessage
             {
                 Message = html,
-                Subject = $"Ombi: New {model.RequestType} request for {model.Title}!",
+                Subject = parsed.Subject,
                 To = settings.AdminEmail,
             };
 
+            return message;
+        }
+        
+        
+
+        protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
+        {
+            var message = await LoadTemplate(NotificationType.NewRequest, model, settings);
+            if (message == null)
+            {
+                return;
+            }
+            
             message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested the {model.RequestType} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
 
             await Send(message, settings);
@@ -72,18 +84,11 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task Issue(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                $"Ombi: New issue for {model.Title}!",
-                $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!",
-                model.ImgSrc);
-
-            var message = new NotificationMessage
+            var message = await LoadTemplate(NotificationType.Issue, model, settings);
+            if (message == null)
             {
-                Message = html,
-                Subject = $"Ombi: New issue for {model.Title}!",
-                To = settings.AdminEmail,
-            };
+                return;
+            }
 
             message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!");
 
@@ -113,18 +118,11 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task RequestDeclined(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                "Ombi: Your request has been declined",
-                $"Hello! Your request for {model.Title} has been declined, Sorry!",
-                model.ImgSrc);
-
-            var message = new NotificationMessage
+            var message = await LoadTemplate(NotificationType.RequestDeclined, model, settings);
+            if (message == null)
             {
-                Message = html,
-                Subject = $"Ombi: Your request has been declined",
-                To = model.UserEmail,
-            };
+                return;
+            }
 
             message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been declined, Sorry!");
 
@@ -134,18 +132,11 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task RequestApproved(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                "Ombi: Your request has been approved!",
-                $"Hello! Your request for {model.Title} has been approved!",
-                model.ImgSrc);
-
-            var message = new NotificationMessage
+            var message = await LoadTemplate(NotificationType.RequestApproved, model, settings);
+            if (message == null)
             {
-                Message = html,
-                Subject = $"Ombi: Your request has been approved!",
-                To = model.UserEmail,
-            };
+                return;
+            }
 
             message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been approved!");
 
@@ -154,19 +145,11 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task AvailableRequest(NotificationOptions model, EmailNotificationSettings settings)
         {
-            var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(
-                $"Ombi: {model.Title} is now available!",
-                $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)",
-                model.ImgSrc);
-
-
-            var message = new NotificationMessage
+            var message = await LoadTemplate(NotificationType.RequestAvailable, model, settings);
+            if (message == null)
             {
-                Message = html,
-                Subject = $"Ombi: {model.Title} is now available!",
-                To = model.UserEmail,
-            };
+                return;
+            }
 
             message.Other.Add("PlainTextBody", $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)");
 

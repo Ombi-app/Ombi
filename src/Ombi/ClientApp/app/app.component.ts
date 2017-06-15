@@ -14,19 +14,17 @@ import { ICustomizationSettings } from './interfaces/ISettings';
 })
 export class AppComponent implements OnInit {
 
-    constructor(public notificationService: NotificationService, public authService: AuthService, private router: Router, private settingsService: SettingsService
-    ) {
+    constructor(public notificationService: NotificationService, public authService: AuthService, private router: Router, private settingsService: SettingsService)
+    {
     }
 
     customizationSettings: ICustomizationSettings;
     user: ILocalUser;
 
-    ngOnInit(): void { 
+    ngOnInit() : void { 
 
         this.user = this.authService.claims();
-
-
-
+        
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
         this.router.events.subscribe(() => {
@@ -34,7 +32,6 @@ export class AppComponent implements OnInit {
             this.user = this.authService.claims();
             this.showNav = this.authService.loggedIn();
         });
-
     }
 
     hasRole(role: string): boolean {

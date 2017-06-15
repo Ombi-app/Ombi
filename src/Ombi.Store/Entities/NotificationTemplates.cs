@@ -10,5 +10,6 @@ namespace Ombi.Store.Entities
         public NotificationAgent Agent { get; set; }
         public string Subject { get; set; }
         public string Message { get; set; }
+        public bool Enabled { get; set; }
     }
 }

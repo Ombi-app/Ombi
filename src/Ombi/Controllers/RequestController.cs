@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Models;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Controllers
 {

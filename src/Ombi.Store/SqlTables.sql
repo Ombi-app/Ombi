@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS NotificationTemplates
     NotificationType						INTEGER NOT NULL,
     Agent						INTEGER NOT NULL,
     Subject						BLOB NULL, 
-    Message						BLOB  NULL
+    Message						BLOB  NULL,
+	Enabled						INTEGER  NOT NULL
 
 );

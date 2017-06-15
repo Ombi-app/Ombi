@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Ombi.Store.Entities;
 
 namespace Ombi.Notifications
@@ -18,11 +19,19 @@ namespace Ombi.Notifications
             Type = type;
             Issue = issue;
         }
+        
+        // User Defined
         private string RequestedUser { get; }
         private string Title { get; }
         private string RequestedDate { get; }
         private string Type { get; }
         private string Issue { get; }
+
+        // System Defined
+        private string LongDate => DateTime.Now.ToString("D");
+        private string ShortDate => DateTime.Now.ToString("d");
+        private string LongTime => DateTime.Now.ToString("T");
+        private string ShortTime => DateTime.Now.ToString("t");
 
         public Dictionary<string, string> Curlys => new Dictionary<string, string>
         {
@@ -30,7 +39,11 @@ namespace Ombi.Notifications
             {nameof(Title), Title },
             {nameof(RequestedDate), RequestedDate },
             {nameof(Type), Type },
-            {nameof(Issue), Issue }
+            {nameof(Issue), Issue },
+            {nameof(LongDate),LongDate},
+            {nameof(ShortDate),ShortDate},
+            {nameof(LongTime),LongTime},
+            {nameof(ShortTime),ShortTime},
         };
     }
     

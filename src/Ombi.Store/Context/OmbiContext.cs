@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -64,25 +63,27 @@ namespace Ombi.Store.Context
             {
                 foreach (var notificationType in allTypes)
                 {
-                    var notificationToAdd = new NotificationTemplates();
+                    NotificationTemplates notificationToAdd;
                     switch (notificationType)
                     {
                         case NotificationType.NewRequest:
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{requestedUser}' has requested the {Type} '{Title}'! Please log in to approve this request. Request Date: {RequestedDate}",
+                                Message = "Hello! The user '{RequestedUser}' has requested the {Type} '{Title}'! Please log in to approve this request. Request Date: {RequestedDate}",
                                 Subject = "Ombi: New {Type} request for {Title}!",
                                 Agent = agent,
+                                Enabled = true,
                             };
                             break;
                         case NotificationType.Issue:
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! The user '{requestedUser}' has reported a new issue for the title {Title}! </br> {Issue}",
+                                Message = "Hello! The user '{RequestedUser}' has reported a new issue for the title {Title}! </br> {Issue}",
                                 Subject = "Ombi: New issue for {Title}!",
                                 Agent = agent,
+                                Enabled = true,
                             };
                             break;
                         case NotificationType.RequestAvailable:
@@ -92,6 +93,7 @@ namespace Ombi.Store.Context
                                 Message = "Hello! You requested {Title} on Ombi! This is now available! :)",
                                 Subject = "Ombi: {Title} is now available!",
                                 Agent = agent,
+                                Enabled = true,
                             };
                             break;
                         case NotificationType.RequestApproved:
@@ -101,6 +103,7 @@ namespace Ombi.Store.Context
                                 Message = "Hello! Your request for {Title} has been approved!",
                                 Subject = "Ombi: your request has been approved",
                                 Agent = agent,
+                                Enabled = true,
                             };
                             break;
                         case NotificationType.AdminNote:
@@ -110,12 +113,11 @@ namespace Ombi.Store.Context
                         case NotificationType.RequestDeclined:
                             notificationToAdd = new NotificationTemplates
                             {
-                                //"Ombi: Your request has been declined",
-                                //$"Hello! Your request for {model.Title} has been declined, Sorry!",
                                 NotificationType = notificationType,
                                 Message = "Hello! Your request for {Title} has been declined, Sorry!",
                                 Subject = "Ombi: your request has been declined",
                                 Agent = agent,
+                                Enabled = true,
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:

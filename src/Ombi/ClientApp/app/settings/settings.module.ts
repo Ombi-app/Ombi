@@ -1,6 +1,6 @@
 ﻿import { NgModule, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -9,6 +9,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { AuthModule } from '../auth/auth.module';
 import { SonarrService } from '../services/applications/sonarr.service';
 import { RadarrService } from '../services/applications/radarr.service';
+import { ValidationService } from '../services/helpers/validation.service';
 
 import { OmbiComponent } from './ombi/ombi.component';
 import { PlexComponent } from './plex/plex.component';
@@ -23,7 +24,7 @@ import { NotificationTemplate } from './notifications/notificationtemplate.compo
 import { SettingsMenuComponent } from './settingsmenu.component';
 import { HumanizePipe } from '../pipes/HumanizePipe';
 
-import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule } from 'primeng/primeng';
+import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule, AutoCompleteModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] },
@@ -40,6 +41,7 @@ const routes: Routes = [
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         RouterModule.forChild(routes),
         MenuModule,
         InputSwitchModule,
@@ -47,7 +49,8 @@ const routes: Routes = [
         AuthModule,
         NgbModule,
         TooltipModule,
-        NgbAccordionModule
+        NgbAccordionModule,
+        AutoCompleteModule
     ],
     declarations: [
         SettingsMenuComponent,
@@ -70,6 +73,7 @@ const routes: Routes = [
         AuthService,
         RadarrService,
         AuthGuard,
+        ValidationService
     ],
    
 })

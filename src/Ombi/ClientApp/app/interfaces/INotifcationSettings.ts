@@ -22,6 +22,7 @@ export interface INotificationTemplates {
     message: string,
     notificationType: NotificationType,
     notificationAgent: NotificationAgent,
+    enabled:boolean,
 }
 
 export enum NotificationAgent {

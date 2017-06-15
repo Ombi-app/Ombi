@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
 using Ombi.Store;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
 namespace Ombi.Notifications
@@ -36,7 +39,6 @@ namespace Ombi.Notifications
             {
                 return;
             }
-
             try
             {
                 switch (model.NotificationType)

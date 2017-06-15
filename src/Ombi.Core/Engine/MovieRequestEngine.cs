@@ -1,12 +1,10 @@
-﻿using Hangfire;
-using Ombi.Api.TheMovieDb;
+﻿using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rules;
 using Ombi.Helpers;
 using Ombi.Notifications;
-using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;
@@ -16,24 +14,22 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Notifications;
-using Ombi.Store;
 
 namespace Ombi.Core.Engine
 {
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationService notificationService, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log) : base(user, requestService, r)
+            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log) : base(user, requestService, r)
         {
             MovieApi = movieApi;
-            NotificationService = notificationService;
+            NotificationHelper = helper;
             Sender = sender;
             Logger = log;
         }
 
         private IMovieDbApi MovieApi { get; }
-        private INotificationService NotificationService { get; }
+        private INotificationHelper NotificationHelper { get; }
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
 
@@ -84,6 +80,7 @@ namespace Ombi.Core.Engine
             //        });
             //}
 
+
             var requestModel = new MovieRequestModel
             {
                 ProviderId = movieInfo.Id,
@@ -98,64 +95,41 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUser =Username,
+                RequestedUser = Username,
                 Issues = IssueState.None
             };
 
-            try
+            var ruleResults = RunRequestRules(requestModel).ToList();
+            if (ruleResults.Any(x => !x.Success))
             {
-                var ruleResults = RunRequestRules(requestModel).ToList();
-                if (ruleResults.Any(x => !x.Success))
+                return new RequestEngineResult
+                {
+                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                };
+            }
+
+            if (requestModel.Approved) // The rules have auto approved this
+            {
+                var result = await Sender.Send(requestModel);
+                if (result.Success && result.MovieSent)
+                {
+                    return await AddMovieRequest(requestModel, /*settings,*/
+                        $"{fullMovieName} has been successfully added!");
+                }
+                if (!result.Success)
+                {
+                    Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
                     return new RequestEngineResult
                     {
-                        ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                        Message = result.Message,
+                        ErrorMessage = result.Message,
+                        RequestAdded = false
                     };
-
-                if (requestModel.Approved) // The rules have auto approved this
-                {
-                    var result = await Sender.Send(requestModel);
-                    if (result.Success && result.MovieSent)
-                    {
-                        return await AddMovieRequest(requestModel, /*settings,*/
-                            $"{fullMovieName} has been successfully added!");
-                    }
-                    if (!result.Success)
-                    {
-                        Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
-                        return new RequestEngineResult
-                        {
-                            Message = result.Message,
-                            ErrorMessage = result.Message,
-                            RequestAdded = false
-                        };
-                    }
                 }
-
-                return await AddMovieRequest(requestModel, /*settings,*/
-                    $"{fullMovieName} has been successfully added!");
-            }
-            catch (Exception e)
-            {
-                //Log.Fatal(e);
-                //await FaultQueue.QueueItemAsync(model, movieInfo.Id.ToString(), RequestType.Movie, FaultType.RequestFault, e.Message);
-                var notification = new NotificationOptions
-                {
-                    DateTime = DateTime.Now,
-                    RequestedUser = Username,
-                    RequestType = RequestType.Movie,
-                    Title = model.Title,
-                    NotificationType = NotificationType.ItemAddedToFaultQueue
-                };
-                BackgroundJob.Enqueue(() => NotificationService.Publish(notification).Wait());
-
-                //return Response.AsJson(new JsonResponseModel
-                //{
-                //    Result = true,
-                //    Message = $"{fullMovieName} {Resources.UI.Search_SuccessfullyAdded}"
-                //});
             }
 
-            return null;
+            return await AddMovieRequest(requestModel, /*settings,*/
+                $"{fullMovieName} has been successfully added!");
         }
 
         public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
@@ -210,21 +184,9 @@ namespace Ombi.Core.Engine
 
             if (ShouldSendNotification(model.Type))
             {
-                var notificationModel = new NotificationOptions
-                {
-                    Title = model.Title,
-                    RequestedUser = Username,
-                    DateTime = DateTime.Now,
-                    NotificationType = NotificationType.NewRequest,
-                    RequestType = model.Type,
-                    ImgSrc = model.Type == RequestType.Movie
-                        ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}"
-                        : model.PosterPath
-                };
-
-                BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel).Wait());
+                NotificationHelper.NewRequest(model);
             }
-
+            
             //var limit = await RequestLimitRepo.GetAllAsync();
             //var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
             //if (usersLimit == null)

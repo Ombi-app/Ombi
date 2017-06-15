@@ -84,6 +84,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRequestServiceMain, RequestService>();
             services.AddTransient(typeof(IRequestService<>), typeof(JsonRequestService<>));
             services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<INotificationHelper, NotificationHelper>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

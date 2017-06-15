@@ -15,23 +15,21 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.Notifications;
-using Ombi.Store;
 
 namespace Ombi.Core.Engine
 {
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationService notificationService, IMapper map,
+            INotificationHelper helper, IMapper map,
             IRuleEvaluator rule) : base(user, requestService, rule)
         {
             TvApi = tvApi;
-            NotificationService = notificationService;
+            NotificationHelper = helper;
             Mapper = map;
         }
 
-        private INotificationService NotificationService { get; }
+        private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
 
@@ -270,24 +268,11 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model);
         }
 
-        private async Task<RequestEngineResult> AfterRequest(TvRequestModel model)
+        private Task<RequestEngineResult> AfterRequest(TvRequestModel model)
         {
             if (ShouldSendNotification(model.Type))
             {
-                var n = new NotificationOptions();
-
-                n.Title = model.Title;
-                n.RequestedUser = Username;
-                n.DateTime = DateTime.Now;
-                n.NotificationType = NotificationType.NewRequest;
-                n.RequestType = model.Type;
-                n.ImgSrc = model.PosterPath;
-                
-
-                BackgroundJob.Enqueue(() =>
-                
-                    NotificationService.Publish(n).Wait()
-                );
+                NotificationHelper.NewRequest(model);
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();
@@ -308,7 +293,7 @@ namespace Ombi.Core.Engine
             //    await RequestLimitRepo.UpdateAsync(usersLimit);
             //}
 
-            return new RequestEngineResult { RequestAdded = true };
+            return Task.FromResult(new RequestEngineResult { RequestAdded = true });
         }
 
         public async Task<IEnumerable<TvRequestModel>> GetApprovedRequests()

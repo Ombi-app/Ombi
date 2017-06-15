@@ -1,4 +1,5 @@
-﻿using Ombi.Core.Claims;
+﻿using System;
+using Ombi.Core.Claims;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule;
 using Ombi.Core.Rules;
@@ -6,7 +7,12 @@ using Ombi.Store.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using Hangfire;
+using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
+using Ombi.Core.Notifications;
+using Ombi.Helpers;
+using Ombi.Notifications.Models;
 
 namespace Ombi.Core.Engine.Interfaces
 {
