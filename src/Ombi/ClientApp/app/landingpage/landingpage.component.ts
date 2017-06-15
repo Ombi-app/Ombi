@@ -5,7 +5,7 @@ import { ILandingPageSettings, ICustomizationSettings } from '../interfaces/ISet
 import { IRequestCountModel } from '../interfaces/IRequestModel';
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss']
 })

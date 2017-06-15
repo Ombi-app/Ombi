@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     customizationSettings: ICustomizationSettings;
     user: ILocalUser;
 
-    ngOnInit(): void {
+    ngOnInit(): void { 
 
         this.user = this.authService.claims();
 

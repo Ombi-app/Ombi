@@ -4,7 +4,7 @@ import { IUser, ICheckbox } from '../interfaces/IUser';
 import { IdentityService } from '../services/identity.service';
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './usermanagement.component.html'
 })
 export class UserManagementComponent implements OnInit {

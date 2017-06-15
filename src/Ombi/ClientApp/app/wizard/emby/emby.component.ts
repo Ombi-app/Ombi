@@ -7,7 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 import { IEmbySettings } from '../../interfaces/ISettings';
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './emby.component.html',
 })
 export class EmbyComponent {

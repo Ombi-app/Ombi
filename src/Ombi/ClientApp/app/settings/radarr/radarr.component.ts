@@ -9,7 +9,7 @@ import { RadarrService } from '../../services/applications/radarr.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './radarr.component.html',
 })
 export class RadarrComponent implements OnInit {

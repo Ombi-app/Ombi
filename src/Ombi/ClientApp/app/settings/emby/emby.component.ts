@@ -5,7 +5,7 @@ import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './emby.component.html',
 })
 export class EmbyComponent implements OnInit {

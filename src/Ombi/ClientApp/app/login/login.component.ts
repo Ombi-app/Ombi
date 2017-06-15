@@ -8,7 +8,7 @@ import { NotificationService } from '../services/notification.service';
 
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './login.component.html',
 })
 export class LoginComponent {

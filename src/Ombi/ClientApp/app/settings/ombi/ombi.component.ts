@@ -5,7 +5,6 @@ import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
     templateUrl: './ombi.component.html',
 })
 export class OmbiComponent implements OnInit {

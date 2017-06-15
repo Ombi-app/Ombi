@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './mediaserver.component.html',
 })
 export class MediaServerComponent {

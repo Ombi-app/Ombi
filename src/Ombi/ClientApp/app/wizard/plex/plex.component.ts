@@ -7,7 +7,7 @@ import { NotificationService } from '../../services/notification.service';
 import { IPlexAuthentication } from '../../interfaces/IPlex';
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './plex.component.html',
 })
 export class PlexComponent {

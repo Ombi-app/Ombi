@@ -7,7 +7,7 @@ import { AuthService } from '../../auth/auth.service';
 import { NotificationService } from '../../services/notification.service';
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './createadmin.component.html',
 })
 export class CreateAdminComponent {

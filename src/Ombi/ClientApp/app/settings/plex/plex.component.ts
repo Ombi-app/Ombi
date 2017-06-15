@@ -10,7 +10,6 @@ import { PlexService } from '../../services/applications/plex.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
     templateUrl: './plex.component.html',
 })
 export class PlexComponent implements OnInit, OnDestroy {

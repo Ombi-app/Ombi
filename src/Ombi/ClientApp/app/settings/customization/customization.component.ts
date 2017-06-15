@@ -5,7 +5,7 @@ import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './customization.component.html',
 })
 export class CustomizationComponent implements OnInit {

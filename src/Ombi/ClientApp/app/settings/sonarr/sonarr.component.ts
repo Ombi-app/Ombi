@@ -9,7 +9,7 @@ import { SonarrService } from '../../services/applications/sonarr.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-    selector: 'ombi',
+  
     templateUrl: './sonarr.component.html',
 })
 export class SonarrComponent implements OnInit, OnDestroy {
