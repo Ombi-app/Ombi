@@ -43,3 +43,31 @@ export enum NotificationType {
     RequestDeclined,
     ItemAddedToFaultQueue
 }
+
+export interface IDiscordNotifcationSettings extends INotificationSettings{
+    webhookUrl : string,
+    username : string,
+    
+
+    // public string WebhookUrl { get; set; }
+    //     public string Username { get; set; }
+
+    //     [JsonIgnore]
+    //     public string WebookId => SplitWebUrl(4);
+
+    //     [JsonIgnore]
+    //     public string Token => SplitWebUrl(5);
+
+    //     private string SplitWebUrl(int index)
+    //     {
+    //         if (!WebhookUrl.StartsWith("http", StringComparison.InvariantCulture))
+    //         {
+    //             WebhookUrl = "https://" + WebhookUrl;
+    //         }
+    //         var split = WebhookUrl.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+    //         return split.Length < index 
+    //             ? string.Empty 
+    //             : split[index];
+    //     }
+}
