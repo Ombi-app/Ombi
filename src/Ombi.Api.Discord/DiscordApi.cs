@@ -14,15 +14,10 @@ namespace Ombi.Api.Discord
         private string Endpoint => "https://discordapp.com/api/"; //webhooks/270828242636636161/lLysOMhJ96AFO1kvev0bSqP-WCZxKUh1UwfubhIcLkpS0DtM3cg4Pgeraw3waoTXbZii
         private Api Api { get; }
         
-        public async Task SendMessage(string message, string webhookId, string webhookToken, string username = null)
+        public async Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken)
         {
             var request = new Request(Endpoint, $"webhooks/{webhookId}/{webhookToken}", HttpMethod.Post);
           
-            var body = new DiscordWebhookBody
-            {
-                content = message,
-                username = username
-            };
             request.AddJsonBody(body);
 
             request.AddHeader("Content-Type", "application/json");

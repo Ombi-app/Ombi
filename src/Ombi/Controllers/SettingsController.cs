@@ -6,11 +6,11 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Attributes;
+using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
-using Ombi.Models.Notifications;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
@@ -208,41 +208,74 @@ namespace Ombi.Controllers
 
             return result;
         }
-    
 
-    /// <summary>
-    /// Gets the Email Notification Settings.
-    /// </summary>
-    /// <returns></returns>
-    [HttpGet("notifications/email")]
-    public async Task<EmailNotificationsViewModel> EmailNotificationSettings()
-    {
-        var emailSettings = await Get<EmailNotificationSettings>();
-        var model = Mapper.Map<EmailNotificationsViewModel>(emailSettings);
+        /// <summary>
+        /// Gets the Email Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/email")]
+        public async Task<EmailNotificationsViewModel> EmailNotificationSettings()
+        {
+            var emailSettings = await Get<EmailNotificationSettings>();
+            var model = Mapper.Map<EmailNotificationsViewModel>(emailSettings);
 
-        // Lookup to see if we have any templates saved
-        model.NotificationTemplates = await BuildTemplates(NotificationAgent.Email);
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Email);
 
-        return model;
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the discord notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/email")]
+        public async Task<bool> DiscordNotificationSettings([FromBody] DiscordNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<DiscordNotificationSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the discord Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/email")]
+        public async Task<DiscordNotificationsViewModel> DiscordNotificationSettings()
+        {
+            var emailSettings = await Get<DiscordNotificationSettings>();
+            var model = Mapper.Map<DiscordNotificationsViewModel>(emailSettings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Discord);
+
+            return model;
+        }
+
+        private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
+        {
+            var templates = await TemplateRepository.GetAllTemplates(agent);
+            return templates.ToList();
+        }
+
+
+        private async Task<T> Get<T>()
+        {
+            var settings = SettingsResolver.Resolve<T>();
+            return await settings.GetSettingsAsync();
+        }
+
+        private async Task<bool> Save<T>(T settingsModel)
+        {
+            var settings = SettingsResolver.Resolve<T>();
+            return await settings.SaveSettingsAsync(settingsModel);
+        }
     }
-
-    private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
-    {
-        var templates = await TemplateRepository.GetAllTemplates(agent);
-        return templates.ToList();
-    }
-
-
-    private async Task<T> Get<T>()
-    {
-        var settings = SettingsResolver.Resolve<T>();
-        return await settings.GetSettingsAsync();
-    }
-
-    private async Task<bool> Save<T>(T settingsModel)
-    {
-        var settings = SettingsResolver.Resolve<T>();
-        return await settings.SaveSettingsAsync(settingsModel);
-    }
-}
 }

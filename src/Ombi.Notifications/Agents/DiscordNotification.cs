@@ -1,16 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Discord;
+using Ombi.Api.Discord.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Repository;
 
 namespace Ombi.Notifications.Agents
 {
-    public class DiscordNotification : BaseNotification<DiscordNotificationSettings>
+    public class DiscordNotification : BaseNotification<DiscordNotificationSettings>, IDiscordNotification
     {
         public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log, INotificationTemplatesRepository r) : base(sn, r)
         {
@@ -47,21 +50,22 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"{model.Title} has been requested by user: {model.RequestedUser}";
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.NewRequest);
 
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = template.Message,
             };
             await Send(notification, settings);
         }
 
         protected override async Task Issue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"A new issue: {model.Body} has been reported by user: {model.RequestedUser} for the title: {model.Title}";
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.Issue);
+
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = template.Message,
             };
             await Send(notification, settings);
         }
@@ -71,37 +75,41 @@ namespace Ombi.Notifications.Agents
             var message = $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = message
             };
+            notification.Other.Add("image", model.ImgSrc);
             await Send(notification, settings);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"Hello! Your request for {model.Title} has been declined, Sorry!";
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestDeclined);
+
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = template.Message,
             };
             await Send(notification, settings);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"Hello! The request for {model.Title} has now been approved!";
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestApproved);
+
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = template.Message,
             };
             await Send(notification, settings);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"Hello! The request for {model.Title} is now available!";
+            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestAvailable);
+
             var notification = new NotificationMessage
             {
-                Message = message,
+                Message = template.Message,
             };
             await Send(notification, settings);
         }
@@ -110,7 +118,28 @@ namespace Ombi.Notifications.Agents
         {
             try
             {
-                await Api.SendMessage(model.Message, settings.WebookId, settings.Token, settings.Username);
+                var discordBody = new DiscordWebhookBody
+                {
+                    content = model.Message,
+                    username = settings.Username,
+                };
+
+                string image;
+                if (model.Other.TryGetValue("image", out image))
+                {
+                    discordBody.embeds = new List<DiscordEmbeds>
+                    {
+                        new DiscordEmbeds
+                        {
+                            image = new DiscordImage
+                            {
+                                url = image
+                            }
+                        }
+                    };
+                }
+                
+                await Api.SendMessage(discordBody, settings.WebookId, settings.Token);
             }
             catch (Exception e)
             {

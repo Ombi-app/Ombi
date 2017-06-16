@@ -13,7 +13,7 @@ import {
     ICustomizationSettings,
     IRadarrSettings
 } from '../interfaces/ISettings';
-import { IEmailNotificationSettings } from '../interfaces/INotifcationSettings';
+import { IEmailNotificationSettings, IDiscordNotifcationSettings } from '../interfaces/INotifcationSettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -87,5 +87,13 @@ export class SettingsService extends ServiceAuthHelpers {
 
     saveEmailNotificationSettings(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/notifications/email`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
+    }
+
+    getDiscordNotificationSettings(): Observable<IDiscordNotifcationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/discord`).map(this.extractData).catch(this.handleError)
+    }
+
+    saveDiscordNotificationSettings(settings: IDiscordNotifcationSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/notifications/discord`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
     }
 }

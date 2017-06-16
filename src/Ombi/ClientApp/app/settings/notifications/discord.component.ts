@@ -1,10 +1,10 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-import { INotificationTemplates, IEmailNotificationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
+import { INotificationTemplates, IDiscordNotifcationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
 import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
-import { ValidationService } from "../../services/helpers/validation.service";
+import { TesterService } from "../../services/applications/tester.service";
 
 @Component({
     templateUrl: './discord.component.html',
@@ -13,75 +13,58 @@ export class DiscordComponent implements OnInit {
     constructor(private settingsService: SettingsService,
         private notificationService: NotificationService,
         private fb: FormBuilder,
-        private validationService: ValidationService) { }
+        private testerService : TesterService) { }
 
     NotificationType = NotificationType;
     templates: INotificationTemplates[];
 
-    emailForm: FormGroup;
+    form: FormGroup;
 
     ngOnInit(): void {
-        this.settingsService.getEmailNotificationSettings().subscribe(x => {
+        this.settingsService.getDiscordNotificationSettings().subscribe(x => {
             this.templates = x.notificationTemplates;
 
-            this.emailForm = this.fb.group({
+            this.form = this.fb.group({
                 enabled: [x.enabled],
-                authentication: [x.authentication],
-                host: [x.host, [Validators.required]],
-                password: [x.password],
-                port: [x.port, [Validators.required]],
-                sender: [x.sender, [Validators.required, Validators.email]],
                 username: [x.username],
-                adminEmail: [x.adminEmail, [Validators.required, Validators.email]],
+                webhookUrl: [x.webhookUrl, [Validators.required]],
+
             });
-
-            if (x.authentication) {
-                this.validationService.enableValidation(this.emailForm, 'username');
-                this.validationService.enableValidation(this.emailForm, 'password');
-            }
-
-            this.subscribeToAuthChanges();
         });
     }
 
     onSubmit(form: FormGroup) {
-        console.log(form.value, form.valid);
-
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return
         }
 
-        var settings = <IEmailNotificationSettings>form.value;
+        var settings = <IDiscordNotifcationSettings>form.value;
         settings.notificationTemplates = this.templates;
 
-        this.settingsService.saveEmailNotificationSettings(settings).subscribe(x => {
+        this.settingsService.saveDiscordNotificationSettings(settings).subscribe(x => {
             if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Email settings");
+                this.notificationService.success("Settings Saved", "Successfully saved the Discord settings");
             } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Email settings");
+                this.notificationService.success("Settings Saved", "There was an error when saving the Discord settings");
             }
         });
 
     }
 
-    save() {
+    test(form: FormGroup) {
+        if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return
+        }
 
-    }
-
-    private subscribeToAuthChanges() {
-        const authCtrl = this.emailForm.controls.authentication;
-        const changes$ = authCtrl.valueChanges;
-
-        changes$.subscribe((auth: boolean) => {
-
-            if (auth) {
-                this.validationService.enableValidation(this.emailForm, 'username');
-                this.validationService.enableValidation(this.emailForm, 'password');
+        this.testerService.discordTest(form.value).subscribex(x => {
+            if (x) {
+                this.notificationService.success("Successful", "Successfully sent a Discord message, please check the discord channel");
             } else {
-                this.validationService.disableValidation(this.emailForm, 'username');
-                this.validationService.disableValidation(this.emailForm, 'password');
+                this.notificationService.success("Error", "There was an error when sending the Discord message. Please check your settings");
             }
-        });
+        })
+
     }
 }

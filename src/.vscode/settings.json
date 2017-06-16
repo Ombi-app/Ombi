@@ -1,0 +1,11 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/*.js": {"when": "$(basename).ts"}, // Hide JS files when there is a ts file
+        "**/*.js.map" : true
+    }
+}

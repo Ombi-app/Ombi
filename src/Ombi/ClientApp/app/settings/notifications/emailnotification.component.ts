@@ -4,6 +4,7 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { INotificationTemplates, IEmailNotificationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
 import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
+import { TesterService } from "../../services/applications/tester.service";
 import { ValidationService } from "../../services/helpers/validation.service";
 
 @Component({
@@ -13,7 +14,8 @@ export class EmailNotificationComponent implements OnInit {
     constructor(private settingsService: SettingsService,
         private notificationService: NotificationService,
         private fb: FormBuilder,
-        private validationService: ValidationService) { }
+        private validationService: ValidationService,
+        private testerService: TesterService) { }
 
     NotificationType = NotificationType;
     templates: INotificationTemplates[];
@@ -45,8 +47,6 @@ export class EmailNotificationComponent implements OnInit {
     }
 
     onSubmit(form: FormGroup) {
-        console.log(form.value, form.valid);
-
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return
@@ -65,8 +65,19 @@ export class EmailNotificationComponent implements OnInit {
 
     }
 
-    save() {
+    test(form: FormGroup) {
+        if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return
+        }
 
+        this.testerService.emailTest(form.value).subscribe(x => {
+              if (x) {
+                this.notificationService.success("Sent", "Successfully sent an email message, please check your inbox");
+            } else {
+                this.notificationService.success("Error", "There was an error when sending the Email message, please check your settings.");
+            }
+        })
     }
 
     private subscribeToAuthChanges() {

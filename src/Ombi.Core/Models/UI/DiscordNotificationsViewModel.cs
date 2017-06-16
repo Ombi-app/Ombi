@@ -7,8 +7,8 @@ namespace Ombi.Core.Models.UI
     /// <summary>
     /// The view model for the notification settings page
     /// </summary>
-    /// <seealso cref="Ombi.Settings.Settings.Models.Notifications.EmailNotificationSettings" />
-    public class EmailNotificationsViewModel : EmailNotificationSettings
+    /// <seealso cref="DiscordNotificationSettings" />
+    public class DiscordNotificationsViewModel : DiscordNotificationSettings
     {
         /// <summary>
         /// Gets or sets the notification templates.

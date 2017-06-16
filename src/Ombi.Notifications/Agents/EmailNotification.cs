@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MimeKit;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models.Notifications;
@@ -11,7 +12,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Notifications.Agents
 {
-    public class EmailNotification : BaseNotification<EmailNotificationSettings>
+    public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
         public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r) : base(settings, r)
         {

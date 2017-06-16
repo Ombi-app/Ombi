@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Ombi.Api.Discord.Models;
 
 namespace Ombi.Api.Discord
 {
     public interface IDiscordApi
     {
-        Task SendMessage(string message, string webhookId, string webhookToken, string username = null);
+        Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken);
     }
 }

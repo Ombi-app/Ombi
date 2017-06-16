@@ -9,6 +9,7 @@ import { AuthGuard } from '../auth/auth.guard';
 import { AuthModule } from '../auth/auth.module';
 import { SonarrService } from '../services/applications/sonarr.service';
 import { RadarrService } from '../services/applications/radarr.service';
+import { TesterService } from '../services/applications/tester.service';
 import { ValidationService } from '../services/helpers/validation.service';
 
 import { OmbiComponent } from './ombi/ombi.component';
@@ -73,7 +74,8 @@ const routes: Routes = [
         AuthService,
         RadarrService,
         AuthGuard,
-        ValidationService
+        ValidationService,
+        TesterService
     ],
    
 })

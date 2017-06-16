@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Ombi.Models.Notifications;
+using Ombi.Core.Models.UI;
 using Ombi.Settings.Settings.Models.Notifications;
 
 namespace Ombi.Mapping.Profiles
@@ -9,6 +9,7 @@ namespace Ombi.Mapping.Profiles
         public SettingsProfile()
         {
             CreateMap<EmailNotificationsViewModel, EmailNotificationSettings>().ReverseMap();
+            CreateMap<DiscordNotificationsViewModel, DiscordNotificationSettings>().ReverseMap();
         }
     }
 }

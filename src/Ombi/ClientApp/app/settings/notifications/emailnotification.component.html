@@ -74,7 +74,7 @@
 
                 <div class="form-group">
                     <div>
-                        <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">
+                        <button [disabled]="emailForm.invalid" type="submit" (click)="test(emailForm)" class="btn btn-primary-outline">
                             Test Connectivity
                             <div id="spinner"></div>
                         </button>

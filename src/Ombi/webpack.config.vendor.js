@@ -48,6 +48,8 @@ module.exports = function (env) {
                 'font-awesome/scss/font-awesome.scss',
                 'pace-progress',
                 'pace-progress/themes/orange/pace-theme-flash.css',
+                'ng2-dragula',
+                'dragula/dist/dragula.min.css'
             ]
         },
         output: {

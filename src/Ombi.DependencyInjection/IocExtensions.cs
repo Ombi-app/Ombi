@@ -27,6 +27,7 @@ using Ombi.Settings.Settings;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
 using Ombi.Core.Rules;
+using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 
 namespace Ombi.DependencyInjection
@@ -84,7 +85,11 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRequestServiceMain, RequestService>();
             services.AddTransient(typeof(IRequestService<>), typeof(JsonRequestService<>));
             services.AddSingleton<INotificationService, NotificationService>();
-            services.AddSingleton<INotificationHelper, NotificationHelper>();
+            services.AddTransient<INotificationHelper, NotificationHelper>();
+
+
+            services.AddTransient<IDiscordNotification, DiscordNotification>();
+            services.AddTransient<IEmailNotification, EmailNotification>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)
