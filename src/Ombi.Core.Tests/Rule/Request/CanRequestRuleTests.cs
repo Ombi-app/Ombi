@@ -1,4 +1,5 @@
 using System.Security.Principal;
+using System.Threading.Tasks;
 using Moq;
 using Ombi.Core.Claims;
 using Ombi.Core.Models.Requests;
@@ -19,62 +20,62 @@ namespace Ombi.Core.Tests.Rule
         private Mock<IPrincipal> PrincipalMock { get; }
 
         [Fact]
-        public void Should_ReturnSuccess_WhenRequestingMovieWithMovieRole()
+        public async Task Should_ReturnSuccess_WhenRequestingMovieWithMovieRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestMovie)).Returns(true);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.Movie };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
         }
 
         [Fact]
-        public void Should_ReturnFail_WhenRequestingMovieWithoutMovieRole()
+        public async Task Should_ReturnFail_WhenRequestingMovieWithoutMovieRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestMovie)).Returns(false);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.Movie };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, false);
             Assert.Equal(string.IsNullOrEmpty(result.Message), false);
         }
 
         [Fact]
-        public void Should_ReturnSuccess_WhenRequestingMovieWithAdminRole()
+        public async Task Should_ReturnSuccess_WhenRequestingMovieWithAdminRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.Admin)).Returns(true);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.Movie };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
         }
 
         [Fact]
-        public void Should_ReturnSuccess_WhenRequestingTVWithAdminRole()
+        public async Task Should_ReturnSuccess_WhenRequestingTVWithAdminRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.Admin)).Returns(true);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.TvShow };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
         }
 
         [Fact]
-        public void Should_ReturnSuccess_WhenRequestingTVWithTVRole()
+        public async Task Should_ReturnSuccess_WhenRequestingTVWithTVRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestTv)).Returns(true);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.TvShow };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
         }
 
         [Fact]
-        public void Should_ReturnFail_WhenRequestingTVWithoutTVRole()
+        public async Task Should_ReturnFail_WhenRequestingTVWithoutTVRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestTv)).Returns(false);
             var request = new BaseRequestModel() { Type = Store.Entities.RequestType.TvShow };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, false);
             Assert.Equal(string.IsNullOrEmpty(result.Message), false);

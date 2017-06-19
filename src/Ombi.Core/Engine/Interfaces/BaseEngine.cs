@@ -7,6 +7,7 @@ using Ombi.Store.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using Hangfire;
 using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
@@ -64,15 +65,15 @@ namespace Ombi.Core.Engine.Interfaces
             }
         }
 
-        public IEnumerable<RuleResult> RunRequestRules(BaseRequestModel model)
+        public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequestModel model)
         {
-            var ruleResults = Rules.StartRequestRules(model).ToList();
+            var ruleResults = await Rules.StartRequestRules(model);
             return ruleResults;
         }
 
-        public IEnumerable<RuleResult> RunSearchRules(SearchViewModel model)
+        public async Task<IEnumerable<RuleResult>> RunSearchRules(SearchViewModel model)
         {
-            var ruleResults = Rules.StartSearchRules(model).ToList();
+            var ruleResults = await Rules.StartSearchRules(model);
             return ruleResults;
         }
     }

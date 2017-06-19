@@ -1,13 +1,14 @@
 ﻿using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
 
 namespace Ombi.Core.Rules
 {
     public interface IRuleEvaluator
     {
-        IEnumerable<RuleResult> StartRequestRules(BaseRequestModel obj);
-        IEnumerable<RuleResult> StartSearchRules(SearchViewModel obj);
+        Task<IEnumerable<RuleResult>> StartRequestRules(BaseRequestModel obj);
+        Task<IEnumerable<RuleResult>> StartSearchRules(SearchViewModel obj);
     }
 }

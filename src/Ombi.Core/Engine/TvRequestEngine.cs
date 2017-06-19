@@ -15,6 +15,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Rule;
 
 namespace Ombi.Core.Engine
 {
@@ -141,12 +142,13 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            var ruleResults = RunRequestRules(model).ToList();
-            if (ruleResults.Any(x => !x.Success))
+            var ruleResults = await RunRequestRules(model);
+            var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
+            if (results.Any(x => !x.Success))
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
             }
 

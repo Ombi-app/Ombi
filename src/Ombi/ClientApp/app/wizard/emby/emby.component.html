@@ -1,6 +1,6 @@
 ﻿
 <h4 class="media-heading landing-title">Emby Authentication</h4>
-<div class="form-group">
+<div class="form-group" *ngIf="embySettings">
     <label for="Ip" class="control-label">Emby Hostname or IP Address</label>
     <div>
         <input type="text" [(ngModel)]="embySettings.ip" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="192.168.1.1">

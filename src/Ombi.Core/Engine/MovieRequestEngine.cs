@@ -14,6 +14,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Rule;
 
 namespace Ombi.Core.Engine
 {
@@ -37,22 +38,26 @@ namespace Ombi.Core.Engine
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
             if (movieInfo == null)
+            {
                 return new RequestEngineResult
                 {
                     RequestAdded = false,
                     Message = "There was an issue adding this movie!",
                     ErrorMessage = $"TheMovieDb didn't have any information for ID {model.Id}"
                 };
+            }
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
             var existingRequest = await MovieRequestService.CheckRequestAsync(model.Id);
             if (existingRequest != null)
+            {
                 return new RequestEngineResult
                 {
                     RequestAdded = false,
                     Message = $"{fullMovieName} has already been requested"
                 };
+            }
 
             // TODO
             //try
@@ -99,12 +104,13 @@ namespace Ombi.Core.Engine
                 Issues = IssueState.None
             };
 
-            var ruleResults = RunRequestRules(requestModel).ToList();
-            if (ruleResults.Any(x => !x.Success))
+            var ruleResults = await RunRequestRules(requestModel);
+            var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
+            if (results.Any(x => !x.Success))
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
             }
 
@@ -186,7 +192,7 @@ namespace Ombi.Core.Engine
             {
                 NotificationHelper.NewRequest(model);
             }
-            
+
             //var limit = await RequestLimitRepo.GetAllAsync();
             //var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
             //if (usersLimit == null)

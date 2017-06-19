@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 
@@ -62,24 +63,24 @@ namespace Ombi.Core.Rule
         private List<IRequestRules<BaseRequestModel>> RequestRules { get; }
         private List<IRequestRules<SearchViewModel>> SearchRules { get; }
 
-        public IEnumerable<RuleResult> StartRequestRules(BaseRequestModel obj)
+        public async Task<IEnumerable<RuleResult>> StartRequestRules(BaseRequestModel obj)
         {
             var results = new List<RuleResult>();
             foreach (var rule in RequestRules)
             {
-                var result = rule.Execute(obj);
+                var result = await rule.Execute(obj);
                 results.Add(result);
             }
 
             return results;
         }
 
-        public IEnumerable<RuleResult> StartSearchRules(SearchViewModel obj)
+        public async Task<IEnumerable<RuleResult>> StartSearchRules(SearchViewModel obj)
         {
             var results = new List<RuleResult>();
             foreach (var rule in SearchRules)
             {
-                var result = rule.Execute(obj);
+                var result = await rule.Execute(obj);
                 results.Add(result);
             }
 

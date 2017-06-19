@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Moq;  
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Rules.Search;
@@ -19,7 +20,7 @@ namespace Ombi.Core.Tests.Rule.Search
         private Mock<IOmbiContext> ContextMock { get; }
 
         [Fact]
-        public void Should_ReturnApproved_WhenMovieIsInRadarr()
+        public async Task Should_ReturnApproved_WhenMovieIsInRadarr()
         {
             var list = DbHelper.GetQueryableMockDbSet(new RadarrCache
             {
@@ -29,7 +30,7 @@ namespace Ombi.Core.Tests.Rule.Search
             ContextMock.Setup(x => x.RadarrCache).Returns(list);
 
             var request = new SearchMovieViewModel { Id = 123 };
-            var result = Rule.Execute(request);
+            var result =await  Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
             Assert.Equal(request.Approved, true);
@@ -37,7 +38,7 @@ namespace Ombi.Core.Tests.Rule.Search
 
 
         [Fact]
-        public void Should_ReturnNotApproved_WhenMovieIsNotInRadarr()
+        public async Task Should_ReturnNotApproved_WhenMovieIsNotInRadarr()
         {
             var list = DbHelper.GetQueryableMockDbSet(new RadarrCache
             {
@@ -47,7 +48,7 @@ namespace Ombi.Core.Tests.Rule.Search
             ContextMock.Setup(x => x.RadarrCache).Returns(list);
 
             var request = new SearchMovieViewModel { Id = 123 };
-            var result = Rule.Execute(request);
+            var result = await Rule.Execute(request);
 
             Assert.Equal(result.Success, true);
             Assert.Equal(request.Approved, false);

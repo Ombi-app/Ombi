@@ -15,18 +15,6 @@ export class EmbyComponent {
     constructor(private embyService: EmbyService,
         private router: Router,
         private notificationService: NotificationService) {
-
-        this.embySettings = {
-            administratorId: "",
-            apiKey: "",
-            enable: true,
-            enableEpisodeSearching: true,
-            id: 0,
-            ip: "",
-            port: 8096,
-            ssl: false,
-            subDir: "",
-        }
     }
 
     private embySettings: IEmbySettings;

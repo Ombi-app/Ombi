@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
+using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 
 namespace Ombi.Notifications

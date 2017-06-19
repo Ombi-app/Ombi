@@ -9,7 +9,7 @@ import { SonarrService } from '../../services/applications/sonarr.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
-  
+
     templateUrl: './sonarr.component.html',
 })
 export class SonarrComponent implements OnInit, OnDestroy {
@@ -43,11 +43,11 @@ export class SonarrComponent implements OnInit, OnDestroy {
         this.sonarrService.getQualityProfiles(this.settings)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-            this.qualities = x;
+                this.qualities = x;
 
-            this.profilesRunning = false;
-            this.notificationService.success("Quality Profiles", "Successfully retrevied the Quality Profiles");
-        });
+                this.profilesRunning = false;
+                this.notificationService.success("Quality Profiles", "Successfully retrevied the Quality Profiles");
+            });
     }
 
     getRootFolders() {
@@ -55,11 +55,11 @@ export class SonarrComponent implements OnInit, OnDestroy {
         this.sonarrService.getRootFolders(this.settings)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-            this.rootFolders = x;
+                this.rootFolders = x;
 
-            this.rootFoldersRunning = false;
-            this.notificationService.success("Settings Saved", "Successfully retrevied the Root Folders");
-        });
+                this.rootFoldersRunning = false;
+                this.notificationService.success("Settings Saved", "Successfully retrevied the Root Folders");
+            });
     }
 
     test() {
@@ -67,15 +67,24 @@ export class SonarrComponent implements OnInit, OnDestroy {
     }
 
     save() {
+
+        if (!this.qualities || !this.rootFolders) {
+
+            this.notificationService.error("Settings Saved", "Please make sure we have selected a quality profile");
+        }
+        if (!this.rootFolders) {
+
+            this.notificationService.error("Settings Saved", "Please make sure we have a root folder");
+        }
         this.settingsService.saveSonarr(this.settings)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-            if (x) {
-                this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
-            } else {
-                this.notificationService.success("Settings Saved", "There was an error when saving the Sonarr settings");
-            }
-        });
+                if (x) {
+                    this.notificationService.success("Settings Saved", "Successfully saved Sonarr settings");
+                } else {
+                    this.notificationService.error("Settings Saved", "There was an error when saving the Sonarr settings");
+                }
+            });
     }
 
     ngOnDestroy(): void {

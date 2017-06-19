@@ -58,7 +58,7 @@ export class DiscordComponent implements OnInit {
             return
         }
 
-        this.testerService.discordTest(form.value).subscribex(x => {
+        this.testerService.discordTest(form.value).subscribe(x => {
             if (x) {
                 this.notificationService.success("Successful", "Successfully sent a Discord message, please check the discord channel");
             } else {

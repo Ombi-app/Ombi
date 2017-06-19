@@ -1,9 +1,10 @@
-﻿using Ombi.Core.Models.Requests;
+﻿using System.Threading.Tasks;
+using Ombi.Core.Models.Requests;
 
 namespace Ombi.Core.Rule.Interfaces
 {
     public interface IRequestRules<T> where T : new() 
     {
-        RuleResult Execute(T obj);
+        Task<RuleResult> Execute(T obj);
     }
 }

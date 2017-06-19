@@ -3,6 +3,7 @@ using Ombi.Core.Models.Requests;
 using Ombi.Core.Rules;
 using Ombi.Store.Entities;
 using System.Security.Principal;
+using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
 
 namespace Ombi.Core.Rule.Rules
@@ -16,21 +17,21 @@ namespace Ombi.Core.Rule.Rules
 
         private IPrincipal User { get; }
 
-        public RuleResult Execute(BaseRequestModel obj)
+        public Task<RuleResult> Execute(BaseRequestModel obj)
         {
             if (User.IsInRole(OmbiClaims.Admin))
-                return Success();
+                return Task.FromResult(Success());
 
             if (obj.Type == RequestType.Movie)
             {
                 if (User.IsInRole(OmbiClaims.RequestMovie))
-                    return Success();
-                return Fail("You do not have permissions to Request a Movie");
+                    return Task.FromResult(Success());
+                return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
             }
 
             if (User.IsInRole(OmbiClaims.RequestTv))
-                return Success();
-            return Fail("You do not have permissions to Request a Movie");
+                return Task.FromResult(Success());
+            return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
         }
     }
 }
