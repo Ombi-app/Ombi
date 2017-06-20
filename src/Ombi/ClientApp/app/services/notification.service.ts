@@ -5,6 +5,7 @@ import { Message } from 'primeng/components/common/api';
 export class NotificationService {
     messages: Message[] = [];
     public addMessage(message: Message) {
+        this.clearMessages();
         this.messages.push(message);
         this.messages = JSON.parse(JSON.stringify(this.messages)); // NOTE: THIS IS A HACK AROUND A BUG https://github.com/primefaces/primeng/issues/2943
     }

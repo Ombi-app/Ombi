@@ -5,7 +5,6 @@ namespace Ombi.Core.Models.Search
 {
     public class SearchTvShowViewModel : SearchViewModel
     {
-        public int Id { get; set; }
         public string Title { get; set; }
         public List<string> Aliases { get; set; }
         public string Banner { get; set; }

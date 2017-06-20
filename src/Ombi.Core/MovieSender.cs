@@ -45,9 +45,8 @@ namespace Ombi.Core
 
             return new MovieSenderResult
             {
-                Success = false,
+                Success = true,
                 MovieSent = false,
-                Message = "There are no movie providers enabled!"
             };
         }
 

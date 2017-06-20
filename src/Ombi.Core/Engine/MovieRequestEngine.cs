@@ -132,6 +132,7 @@ namespace Ombi.Core.Engine
                         RequestAdded = false
                     };
                 }
+                // If there are no providers then it's successful but movie has not been sent
             }
 
             return await AddMovieRequest(requestModel, /*settings,*/

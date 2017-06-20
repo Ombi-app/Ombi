@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Requests.Movie;
@@ -21,8 +22,8 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var movieRequests = Movie.GetAllQueryable();
-            var existing = await movieRequests.FirstOrDefaultAsync(x => x.ProviderId == obj.Id);
+            var movieRequests = await Movie.GetAllAsync();
+            var existing = movieRequests.FirstOrDefault(x => x.ProviderId == obj.Id);
             if (existing != null) // Do we already have a request for this?
             {
 
@@ -33,14 +34,14 @@ namespace Ombi.Core.Rule.Rules.Search
                 return Success();
             }
             
-            var tvRequests = Tv.GetAllQueryable();
-            var movieExisting = await tvRequests.FirstOrDefaultAsync(x => x.ProviderId == obj.Id);
-            if (movieExisting != null) // Do we already have a request for this?
+            var tvRequests = await Tv.GetAllAsync();
+            var tv = tvRequests.FirstOrDefault(x => x.ProviderId == obj.Id);
+            if (tv != null) // Do we already have a request for this?
             {
 
                 obj.Requested = true;
-                obj.Approved = movieExisting.Approved;
-                obj.Available = movieExisting.Available;
+                obj.Approved = tv.Approved;
+                obj.Available = tv.Available;
 
                 return Success();
             }

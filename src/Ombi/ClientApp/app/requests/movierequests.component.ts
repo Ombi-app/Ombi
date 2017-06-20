@@ -59,12 +59,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
 
 
     loadMore() {
-        this.requestService.getMovieRequests(this.amountToLoad, this.currentlyLoaded + 1)
-            .takeUntil(this.subscriptions)
-            .subscribe(x => {
-                this.movieRequests.push.apply(this.movieRequests, x);
-                this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
-            });
+        this.loadRequests(this.amountToLoad, this.currentlyLoaded);
     }
 
     search(text: any) {
@@ -74,6 +69,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
     removeRequest(request: IMovieRequestModel) {
         this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
+        this.loadRequests(1, this.currentlyLoaded);
     }
 
     changeAvailability(request: IMovieRequestModel, available: boolean) {
@@ -92,6 +88,15 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
+    }
+
+    private loadRequests(amountToLoad: number, currentlyLoaded: number) {
+        this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
+            .takeUntil(this.subscriptions)
+            .subscribe(x => {
+                this.movieRequests.push.apply(this.movieRequests, x);
+                this.currentlyLoaded = currentlyLoaded + amountToLoad;
+            });
     }
 
     private updateRequest(request: IMovieRequestModel) {
