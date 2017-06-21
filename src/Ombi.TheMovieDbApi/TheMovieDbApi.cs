@@ -10,16 +10,16 @@ namespace Ombi.Api.TheMovieDb
 {
     public class TheMovieDbApi : IMovieDbApi
     {
-        public TheMovieDbApi(IMapper mapper)
+        public TheMovieDbApi(IMapper mapper, IApi api)
         {
-            Api = new Api();
+            Api = api;
             Mapper = mapper;
         }
 
         private IMapper Mapper { get; }
         private readonly string ApiToken = "b8eabaf5608b88d0298aa189dd90bf00";
         private static readonly string BaseUri ="http://api.themoviedb.org/3/";
-        private Api Api { get; }
+        private IApi Api { get; }
 
         public async Task<MovieResponseDto> GetMovieInformation(int movieId)
         {

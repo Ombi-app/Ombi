@@ -46,11 +46,12 @@ export interface IPlexLibraries {
 
 export interface ISonarrSettings extends IExternalSettings {
     apiKey: string,
-    enable: boolean,
+    enabled: boolean,
     qualityProfile: string,
     seasonFolders: boolean,
     rootPath: string,
     fullRootPath: string,
+    addOnly:boolean,
 }
 
 export interface IRadarrSettings extends IExternalSettings {

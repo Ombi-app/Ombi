@@ -1,8 +1,8 @@
 ﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs/Subject';
 import "rxjs/add/operator/takeUntil";
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
-import { ISonarrSettings } from '../../interfaces/ISettings'
 import { ISonarrProfile, ISonarrRootFolder } from '../../interfaces/ISonarr'
 import { SettingsService } from '../../services/settings.service';
 import { SonarrService } from '../../services/applications/sonarr.service';
@@ -14,9 +14,8 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class SonarrComponent implements OnInit, OnDestroy {
 
-    constructor(private settingsService: SettingsService, private sonarrService: SonarrService, private notificationService: NotificationService) { }
-
-    settings: ISonarrSettings;
+    constructor(private settingsService: SettingsService, private sonarrService: SonarrService, private notificationService: NotificationService,
+    private fb : FormBuilder) { }
 
     qualities: ISonarrProfile[];
     rootFolders: ISonarrRootFolder[];
@@ -27,20 +26,43 @@ export class SonarrComponent implements OnInit, OnDestroy {
     profilesRunning: boolean;
     rootFoldersRunning: boolean;
     private subscriptions = new Subject<void>();
+    form : FormGroup;
+    advanced = false;
 
     ngOnInit(): void {
 
         this.settingsService.getSonarr()
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.settings = x;
+
+                 this.form = this.fb.group({
+                    enabled: [x.enabled],
+                    apiKey: [x.apiKey, [Validators.required]],
+                    qualityProfile: [x.qualityProfile, [Validators.required]],
+                    rootPath: [x.rootPath, [Validators.required]],
+                    ssl: [x.ssl],
+                    subDir: [x.subDir],
+                    ip: [x.ip, [Validators.required]],
+                    port: [x.port, [Validators.required]],
+                    addOnly: [x.addOnly],
+                    seasonFolders: [x.seasonFolders],
+                });
+
+                if (x.qualityProfile)
+                {
+                    this.getProfiles(this.form);
+                }
+                if (x.rootPath)
+                {
+                    this.getRootFolders(this.form);
+                }
             });
     }
 
 
-    getProfiles() {
+    getProfiles(form:FormGroup) {
         this.profilesRunning = true;
-        this.sonarrService.getQualityProfiles(this.settings)
+        this.sonarrService.getQualityProfiles(form.value)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.qualities = x;
@@ -50,9 +72,9 @@ export class SonarrComponent implements OnInit, OnDestroy {
             });
     }
 
-    getRootFolders() {
+    getRootFolders(form:FormGroup) {
         this.rootFoldersRunning = true;
-        this.sonarrService.getRootFolders(this.settings)
+        this.sonarrService.getRootFolders(form.value)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.rootFolders = x;
@@ -66,17 +88,12 @@ export class SonarrComponent implements OnInit, OnDestroy {
         // TODO
     }
 
-    save() {
-
-        if (!this.qualities || !this.rootFolders) {
-
-            this.notificationService.error("Settings Saved", "Please make sure we have selected a quality profile");
+    onSubmit(form:FormGroup) {
+   if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return
         }
-        if (!this.rootFolders) {
-
-            this.notificationService.error("Settings Saved", "Please make sure we have a root folder");
-        }
-        this.settingsService.saveSonarr(this.settings)
+        this.settingsService.saveSonarr(form.value)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 if (x) {

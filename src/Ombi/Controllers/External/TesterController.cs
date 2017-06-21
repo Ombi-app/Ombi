@@ -22,6 +22,7 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <param name="service">The service.</param>
         /// <param name="notification">The notification.</param>
+        /// <param name="emailN">The notification.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN)
         {
             Service = service;
@@ -42,7 +43,7 @@ namespace Ombi.Controllers.External
         public bool Discord([FromBody] DiscordNotificationSettings settings)
         {
             settings.Enabled = true;
-            BackgroundJob.Enqueue(() => Service.PublishTest(new NotificationOptions{NotificationType = NotificationType.Test}, settings, DiscordNotification));
+            BackgroundJob.Enqueue(() => Service.PublishTest(new NotificationOptions{NotificationType = NotificationType.Test}, settings, (DiscordNotification)DiscordNotification));
 
             return true;
         }

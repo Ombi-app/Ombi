@@ -8,7 +8,6 @@ namespace Ombi.Settings.Settings.Models.External
         public string ApiKey { get; set; }
         public string DefaultQualityProfile { get; set; }
         public string DefaultRootPath { get; set; }
-        public string FullRootPath { get; set; }
         public bool AddOnly { get; set; }
     }
 }

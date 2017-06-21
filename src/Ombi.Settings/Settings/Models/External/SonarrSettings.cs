@@ -13,7 +13,5 @@
         /// The root path.
         /// </value>
         public string RootPath { get; set; }
-        public string FullRootPath { get; set; }
-
     }
 }

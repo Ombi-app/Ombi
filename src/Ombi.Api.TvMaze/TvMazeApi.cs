@@ -11,14 +11,14 @@ namespace Ombi.Api.TvMaze
 {
     public class TvMazeApi : ITvMazeApi
     {
-        public TvMazeApi(ILogger<TvMazeApi> logger)
+        public TvMazeApi(ILogger<TvMazeApi> logger, IApi api)
         {
-            Api = new Ombi.Api.Api();
+            Api = api;
             Logger = logger;
             //Mapper = mapper;
         }
         private string Uri = "http://api.tvmaze.com";
-        private Api Api { get; }
+        private IApi Api { get; }
         private ILogger<TvMazeApi> Logger { get; }
 
         public async Task<List<TvMazeSearch>> Search(string searchTerm)

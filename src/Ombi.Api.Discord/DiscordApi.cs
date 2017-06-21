@@ -6,13 +6,13 @@ namespace Ombi.Api.Discord
 {
     public class DiscordApi : IDiscordApi
     {
-        public DiscordApi()
+        public DiscordApi(IApi api)
         {
-            Api = new Api();
+            Api = api;
         }
         
         private string Endpoint => "https://discordapp.com/api/"; //webhooks/270828242636636161/lLysOMhJ96AFO1kvev0bSqP-WCZxKUh1UwfubhIcLkpS0DtM3cg4Pgeraw3waoTXbZii
-        private Api Api { get; }
+        private IApi Api { get; }
         
         public async Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken)
         {

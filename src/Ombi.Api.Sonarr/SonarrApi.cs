@@ -9,16 +9,16 @@ namespace Ombi.Api.Sonarr
     public class SonarrApi : ISonarrApi
     {
 
-        public SonarrApi()
+        public SonarrApi(IApi api)
         {
-            Api = new Api();
+            Api = api;
         }
 
-        private Api Api { get; }
+        private IApi Api { get; }
 
         public async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/profile", HttpMethod.Get);
+            var request = new Request("/api/profile", baseUrl, HttpMethod.Get);
 
             request.AddHeader("X-Api-Key", apiKey);
 
@@ -27,7 +27,7 @@ namespace Ombi.Api.Sonarr
 
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/rootfolder", HttpMethod.Get);
+            var request = new Request("/api/rootfolder", baseUrl, HttpMethod.Get);
 
             request.AddHeader("X-Api-Key", apiKey);
 

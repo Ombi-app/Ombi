@@ -56,4 +56,4 @@ gulp.task('test', callback => runSequence('test_compile', 'test_run'));
 gulp.task('build', callback => runSequence('vendor', 'main', callback));
 gulp.task('analyse', callback => runSequence('analyse_var', 'build'));
 gulp.task('full', callback => runSequence('clean', 'build'));
-gulp.task('publish', callback => runSequence('prod_var', 'build'));
+gulp.task('publish', callback => runSequence('prod_var', 'build')); 

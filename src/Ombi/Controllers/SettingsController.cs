@@ -230,7 +230,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
-        [HttpPost("notifications/email")]
+        [HttpPost("notifications/discord")]
         public async Task<bool> DiscordNotificationSettings([FromBody] DiscordNotificationsViewModel model)
         {
             // Save the email settings
@@ -247,7 +247,7 @@ namespace Ombi.Controllers
         /// Gets the discord Notification Settings.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("notifications/email")]
+        [HttpGet("notifications/discord")]
         public async Task<DiscordNotificationsViewModel> DiscordNotificationSettings()
         {
             var emailSettings = await Get<DiscordNotificationSettings>();
@@ -262,7 +262,7 @@ namespace Ombi.Controllers
         private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
         {
             var templates = await TemplateRepository.GetAllTemplates(agent);
-            return templates.ToList();
+            return templates.OrderBy(x => x.NotificationType.ToString()).ToList();
         }
 
 

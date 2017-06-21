@@ -29,6 +29,7 @@ using Ombi.Store.Repository;
 using Ombi.Core.Rules;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
+using Ombi.Api;
 
 namespace Ombi.DependencyInjection
 {
@@ -52,11 +53,12 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITvRequestEngine, TvRequestEngine>();
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
             services.AddSingleton<IRuleEvaluator, RuleEvaluator>();
-            services.AddSingleton<IMovieSender, MovieSender>();
+            services.AddTransient<IMovieSender, MovieSender>();
         }
 
         public static void RegisterApi(this IServiceCollection services)
         {
+            services.AddTransient<IApi, Api.Api>();
             services.AddTransient<IMovieDbApi, Api.TheMovieDb.TheMovieDbApi>();
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
@@ -78,7 +80,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
             services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
-            services.AddTransient(typeof(ISettingsService<>), typeof(SettingsServiceV2<>));
+            services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)
         {

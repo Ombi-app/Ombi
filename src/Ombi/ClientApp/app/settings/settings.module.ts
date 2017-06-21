@@ -20,6 +20,7 @@ import { RadarrComponent } from './radarr/radarr.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { CustomizationComponent } from './customization/customization.component';
 import { EmailNotificationComponent } from './notifications/emailnotification.component';
+import { DiscordComponent } from './notifications/discord.component';
 import { NotificationTemplate } from './notifications/notificationtemplate.component';
 
 import { SettingsMenuComponent } from './settingsmenu.component';
@@ -36,6 +37,7 @@ const routes: Routes = [
     { path: 'Settings/LandingPage', component: LandingPageComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Customization', component: CustomizationComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Email', component: EmailNotificationComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Discord', component: DiscordComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -60,11 +62,12 @@ const routes: Routes = [
         EmbyComponent,
         LandingPageComponent,
         CustomizationComponent,
+        DiscordComponent,
         SonarrComponent,
         RadarrComponent,
         EmailNotificationComponent,
         HumanizePipe,
-        NotificationTemplate
+        NotificationTemplate,
     ],
     exports: [
         RouterModule

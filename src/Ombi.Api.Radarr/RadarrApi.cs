@@ -12,18 +12,18 @@ namespace Ombi.Api.Radarr
 {
     public class RadarrApi : IRadarrApi
     {
-        public RadarrApi(ILogger<RadarrApi> logger)
+        public RadarrApi(ILogger<RadarrApi> logger, IApi api)
         {
-            Api = new Api();
+            Api = api;
             Logger = logger;
         }
 
-        private Api Api { get; }
+        private IApi Api { get; }
         private ILogger<RadarrApi> Logger { get; }
 
         public async Task<List<RadarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/profile", HttpMethod.Get);
+            var request = new Request("/api/profile", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
             return await Api.Request<List<RadarrProfile>>(request);
@@ -31,7 +31,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<List<RadarrRootFolder>> GetRootFolders(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/rootfolder", HttpMethod.Get);
+            var request = new Request("/api/rootfolder", baseUrl, HttpMethod.Get);
 
             AddHeaders(request, apiKey);
             return await Api.Request<List<RadarrRootFolder>>(request);
@@ -39,7 +39,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<SystemStatus> SystemStatus(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/system/status", HttpMethod.Get);
+            var request = new Request("/api/system/status", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
 
             return await Api.Request<SystemStatus>(request);
@@ -47,7 +47,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<List<MovieResponse>> GetMovies(string apiKey, string baseUrl)
         {
-            var request = new Request(baseUrl, "/api/movie", HttpMethod.Get);
+            var request = new Request("/api/movie", baseUrl, HttpMethod.Get);
             AddHeaders(request, apiKey);
 
             return await Api.Request<List<MovieResponse>>(request);
@@ -55,7 +55,7 @@ namespace Ombi.Api.Radarr
 
         public async Task<RadarrAddMovieResponse> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow = false)
         {
-            var request = new Request(baseUrl, "/api/movie", HttpMethod.Post);
+            var request = new Request("/api/movie", baseUrl, HttpMethod.Post);
 
             var options = new RadarrAddMovieResponse
             {
@@ -97,7 +97,7 @@ namespace Ombi.Api.Radarr
             }
             catch (JsonSerializationException jse)
             {
-                Logger.LogError(LoggingEvents.RadarrApiException,jse, "Error When adding movie to Radarr");
+                Logger.LogError(LoggingEvents.RadarrApiException, jse, "Error When adding movie to Radarr");
             }
             return null;
         }

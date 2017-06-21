@@ -1,7 +1,5 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Ombi.Api.Plex.Models;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
@@ -10,12 +8,12 @@ namespace Ombi.Api.Plex
 {
     public class PlexApi : IPlexApi
     {
-        public PlexApi()
+        public PlexApi(IApi api)
         {
-            Api = new Api();
+            Api = api;
         }
 
-        private Api Api { get; }
+        private IApi Api { get; }
 
         private const string SignInUri = "https://plex.tv/users/sign_in.json";
         private const string FriendsUri = "https://plex.tv/pms/friends/all";

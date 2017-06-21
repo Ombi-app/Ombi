@@ -4,21 +4,24 @@ using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace Ombi.Settings.Settings
 {
-    public class SettingsServiceV2<T> : ISettingsService<T>
+    public class SettingsService<T> : ISettingsService<T>
         where T : Ombi.Settings.Settings.Models.Settings, new()
     {
 
-        public SettingsServiceV2(ISettingsRepository repo)
+        public SettingsService(ISettingsRepository repo, IDataProtectionProvider provider)
         {
             Repo = repo;
             EntityName = typeof(T).Name;
+            _protector = provider.CreateProtector(GetType().FullName);
         }
 
         private ISettingsRepository Repo { get; }
         private string EntityName { get; }
+        private readonly IDataProtector _protector;
 
         public T GetSettings()
         {
@@ -119,12 +122,12 @@ namespace Ombi.Settings.Settings
 
         private string EncryptSettings(GlobalSettings settings)
         {
-            return StringCipher.EncryptString(settings.Content, $"Ombiv3SettingsEncryptionPassword");
+            return _protector.Protect(settings.Content);
         }
 
         private string DecryptSettings(GlobalSettings settings)
         {
-            return StringCipher.DecryptString(settings.Content, $"Ombiv3SettingsEncryptionPassword");
+            return _protector.Unprotect(settings.Content);
         }
     }
 }

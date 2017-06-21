@@ -9,12 +9,12 @@ namespace Ombi.Api.Emby
 {
     public class EmbyApi : IEmbyApi
     {
-        public EmbyApi()
+        public EmbyApi(IApi api)
         {
-            Api = new Api();
+            Api = api;
         }
 
-        private Api Api { get; }
+        private IApi Api { get; }
 
         /// <summary>
         /// Returns all users from the Emby Instance

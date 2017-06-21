@@ -4,11 +4,20 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
+using Ombi.Helpers;
 
 namespace Ombi.Api
 {
-    public class Api
+    public class Api : IApi
     {
+        public Api(ILogger<Api> log)
+        {
+            Logger = log;
+        }
+
+        private ILogger<Api> Logger { get; }
+
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore
@@ -36,12 +45,10 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            // Logging
+                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                         // do something with the response
                         var data = httpResponseMessage.Content;
-
-
                         var receivedString = await data.ReadAsStringAsync();
                         if (request.ContentType == ContentType.Json)
                         {
@@ -82,7 +89,7 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            // Logging
+                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                         // do something with the response
                         var data = httpResponseMessage.Content;
@@ -116,7 +123,7 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            // Logging
+                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                     }
                 }
