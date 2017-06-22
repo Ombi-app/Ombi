@@ -24,6 +24,22 @@ after_build:
 - dotnet publish -c Release -r ubuntu.16.10-x64
 - dotnet publish -c Release -r debian.8-x64
 - dotnet publish -c Release -r centos.7-x64
+- dotnet publish "../Ombi.Updater" -c Release -r win10-x64
+- dotnet publish "../Ombi.Updater" -c Release -r osx.10.12-x64
+- dotnet publish "../Ombi.Updater" -c Release -r ubuntu.16.10-x64
+- dotnet publish "../Ombi.Updater" -c Release -r debian.8-x64
+- dotnet publish "../Ombi.Updater" -c Release -r centos.7-x64    
+# Copy over the updater files so we can include them in the .zip
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.exe"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/osx.10.12-x64/publish/Ombi.Updater.dll"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/osx.10.12-x64/publish/Ombi.Updater.exe"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/ubuntu.16.10-x64/publish/Ombi.Updater.dll"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/ubuntu.16.10-x64/publish/Ombi.Updater.exe"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/debian.8-x64/publish/Ombi.Updater.dll"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/debian.8-x64/publish/Ombi.Updater.exe"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/centos.7-x64/publish/Ombi.Updater.dll"
+- copy "../Ombi.Updater/bin/release/netcoreapp1.1/win10-x64/publish/Ombi.Updater.dll" "bin/Release/netcoreapp1.1/centos.7-x64/publish/Ombi.Updater.exe"
 - cmd: >-
     7z a Ombi_windows.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
     
