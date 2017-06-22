@@ -93,7 +93,14 @@ namespace Ombi
                 c.CustomSchemaIds(x => x.FullName);
                 var basePath = PlatformServices.Default.Application.ApplicationBasePath;
                 var xmlPath = Path.Combine(basePath, "Swagger.xml");
-                c.IncludeXmlComments(xmlPath);
+                try
+                {
+                    c.IncludeXmlComments(xmlPath);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
                 
                 c.AddSecurityDefinition("Authentication",new ApiKeyScheme());
                 c.OperationFilter<SwaggerOperationFilter>();

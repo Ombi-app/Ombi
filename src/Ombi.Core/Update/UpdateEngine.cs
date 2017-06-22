@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -22,8 +23,20 @@ namespace Ombi.Core.Update
 
             Extract(path);
 
-            
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            var current = Path.GetDirectoryName(location);
             // TODO Run the Update.exe and pass in the args
+            var start = new ProcessStartInfo
+            {
+                UseShellExecute = false,
+                CreateNoWindow = true,
+                FileName = Path.Combine(current, "Ombi.Updater.exe")
+            };
+            using (var proc = new Process { StartInfo = start })
+            {
+                proc.Start();
+            }
+
         }
 
         private void Extract(string path)
@@ -89,7 +102,7 @@ namespace Ombi.Core.Update
             return new UpdateOptions
             {
                 Status = UpdateStatus.Available,
-                DownloadUrl = "https://ci.appveyor.com/api/buildjobs/tsghsfcaoqin2wbk/artifacts/Ombi_windows.zip",
+                DownloadUrl = "https://ci.appveyor.com/api/buildjobs/t500indclt3etd50/artifacts/Ombi_windows.zip",
                 UpdateDate = DateTime.Now,
                 Version = "3.0.0"
             };

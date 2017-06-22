@@ -29,4 +29,10 @@
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="System.Diagnostics.Process">
+      <HintPath>..\..\..\..\..\.nuget\packages\system.diagnostics.process\4.3.0\ref\netstandard1.4\System.Diagnostics.Process.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
