@@ -31,6 +31,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
+using Ombi.Core.Update;
 
 namespace Ombi.Controllers
 {
@@ -68,6 +69,15 @@ namespace Ombi.Controllers
             var settings = await Ombi.GetSettingsAsync();
 
             return new { Result = settings?.Wizard ?? false};
+        }
+
+        [AllowAnonymous]
+        [HttpGet("Update")]
+        public async Task Update()
+        {
+            var u = new UpdateEngine();
+            var result = u.CheckForUpdate();
+            await u.Update(result);
         }
 
     }

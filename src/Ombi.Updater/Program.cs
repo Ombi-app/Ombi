@@ -14,6 +14,8 @@ namespace Ombi.Updater
 
 
             var options = CheckArgs(args);
+            var install = new Installer();
+            install.Start(options);
 
         }
 
@@ -26,12 +28,12 @@ namespace Ombi.Updater
             }
 
             var p = new ProcessProvider();
-            var ombiProc = p.FindProcessByName("Ombi").FirstOrDefault().Id;
+            var ombiProc = p.FindProcessByName("Ombi").FirstOrDefault();
 
             return new StartupOptions
             {
                 ApplicationPath = args[0],
-                OmbiProcessId = ombiProc 
+                OmbiProcessId = ombiProc?.Id ?? -1
             };
         }
     }

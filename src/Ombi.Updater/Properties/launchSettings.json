@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Ombi.Updater": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\Jamie.Rees\\Source\\Repos\\PlexRequests.Net\\src\\Ombi\\bin\\Debug\\netcoreapp1.1",
+      "workingDirectory": "C:\\Users\\Jamie.Rees\\Source\\Repos\\PlexRequests.Net\\src\\Ombi\\bin\\Debug\\netcoreapp1.1\\UpdateTemp"
+    }
+  }
+}
