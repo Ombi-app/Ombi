@@ -46,6 +46,7 @@ namespace Ombi.Api.Models.Radarr
     public class RadarrMovieResponse
     {
         public string title { get; set; }
+        public string minimumAvailability { get; set; }
         public string sortTitle { get; set; }
         public double sizeOnDisk { get; set; }
         public string status { get; set; }

@@ -77,7 +77,7 @@ namespace Ombi.Api
             return obj;
         }
 
-        public RadarrAddMovie AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, Uri baseUrl, bool searchNow = false)
+        public RadarrAddMovie AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, Uri baseUrl, bool searchNow = false, string minimumAvailability = null)
         {
             var request = new RestRequest
             {
@@ -95,6 +95,10 @@ namespace Ombi.Api
                 monitored = true,
                 year = year
             };
+            if(!string.IsNullOrEmpty(minimumAvailability))
+            {
+                options.minimumAvailability = minimumAvailability;
+            }
 
             if (searchNow)
             {

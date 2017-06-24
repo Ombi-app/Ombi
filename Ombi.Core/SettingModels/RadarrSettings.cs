@@ -33,5 +33,6 @@ namespace Ombi.Core.SettingModels
         public string QualityProfile { get; set; }
         public string RootPath { get; set; }
         public string FullRootPath { get; set; }
+        public string MinimumAvailability { get; set; }
     }
 }
