@@ -15,8 +15,9 @@
                     <div *ngIf="form.get('apiKey').hasError('required')">The Api Key is required</div>
                     </div>
                  <div>
-                    <div *ngIf="form.get('defaultQualityProfile').hasError('required')">A Default Quality Profile is required</div>
-                    <div *ngIf="form.get('defaultRootPath').hasError('required')">A Default Root Path is required</div>
+                     <div *ngIf="form.get('defaultQualityProfile').hasError('required')">A Default Quality Profile is required</div>
+                     <div *ngIf="form.get('defaultRootPath').hasError('required')">A Default Root Path is required</div>
+                     <div *ngIf="form.get('minimumAvailability').hasError('required')">A Default Minimum Availability is required</div>
                 </div>
                 </div>
 
@@ -90,6 +91,15 @@
                 <div id="rootFolders">
                     <select formControlName="defaultRootPath" class="form-control form-control-custom">
                         <option *ngFor='let folder of rootFolders' value='{{folder.id}}'>{{folder.path}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rootFolders" class="control-label">Default Minimum Availability</label>
+                <div id="rootFolders">
+                    <select formControlName="minimumAvailability" class="form-control form-control-custom">
+                        <option *ngFor='let min of minimumAvailabilityOptions' value='{{min.value}}'>{{min.name}}</option>
                     </select>
                 </div>
             </div>

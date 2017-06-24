@@ -53,7 +53,7 @@ namespace Ombi.Api.Radarr
             return await Api.Request<List<MovieResponse>>(request);
         }
 
-        public async Task<RadarrAddMovieResponse> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow = false)
+        public async Task<RadarrAddMovieResponse> AddMovie(int tmdbId, string title, int year, int qualityId, string rootPath, string apiKey, string baseUrl, bool searchNow, string minimumAvailability)
         {
             var request = new Request("/api/movie", baseUrl, HttpMethod.Post);
 
@@ -65,7 +65,8 @@ namespace Ombi.Api.Radarr
                 rootFolderPath = rootPath,
                 titleSlug = title,
                 monitored = true,
-                year = year
+                year = year,
+                minimumAvailability = minimumAvailability,
             };
 
             if (searchNow)

@@ -11,6 +11,11 @@ export interface IRadarrProfile {
     items:IItem[],
 }
 
+export interface IMinimumAvailability {
+    value: string,
+    name:string,
+}
+
 export interface ICutoff {
     id: number,
     name:string,

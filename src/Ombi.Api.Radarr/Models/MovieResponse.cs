@@ -20,6 +20,7 @@ namespace Ombi.Api.Radarr.Models
         public string studio { get; set; }
         public string path { get; set; }
         public int profileId { get; set; }
+        public string minimumAvailability { get; set; }
         public bool monitored { get; set; }
         public int runtime { get; set; }
         public string lastInfoSync { get; set; }

@@ -22,6 +22,6 @@ namespace Ombi.Api.Radarr.Models
         public string titleSlug { get; set; }
         public int id { get; set; }
         public int year { get; set; }
-
+        public string minimumAvailability { get; set; }
     }
 }

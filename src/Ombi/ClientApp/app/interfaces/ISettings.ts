@@ -61,6 +61,7 @@ export interface IRadarrSettings extends IExternalSettings {
     defaultRootPath: string,
     fullRootPath: string,
     addOnly: boolean,
+    minimumAvailability:string,
 }
 
 export interface ILandingPageSettings extends ISettings {

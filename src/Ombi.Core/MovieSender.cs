@@ -65,7 +65,7 @@ namespace Ombi.Core
 
             //var rootFolderPath = model.RootFolderSelected <= 0 ? settings.FullRootPath : GetRootPath(model.RootFolderSelected, settings);
             var rootFolderPath = settings.DefaultRootPath; // TODO Allow changing in the UI
-            var result = await RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly);
+            var result = await RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {

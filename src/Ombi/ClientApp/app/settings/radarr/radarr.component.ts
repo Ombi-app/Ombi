@@ -4,7 +4,7 @@ import "rxjs/add/operator/takeUntil";
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { IRadarrSettings } from '../../interfaces/ISettings';
-import { IRadarrProfile, IRadarrRootFolder } from '../../interfaces/IRadarr';
+import { IRadarrProfile, IRadarrRootFolder, IMinimumAvailability } from '../../interfaces/IRadarr';
 import { SettingsService } from '../../services/settings.service';
 import { RadarrService } from '../../services/applications/radarr.service';
 import { NotificationService } from "../../services/notification.service";
@@ -19,7 +19,9 @@ export class RadarrComponent implements OnInit {
         private fb: FormBuilder) { }
     qualities: IRadarrProfile[];
     rootFolders: IRadarrRootFolder[];
-    
+
+    minimumAvailabilityOptions: IMinimumAvailability[];
+
     profilesRunning: boolean;
     rootFoldersRunning: boolean;
 
@@ -43,18 +45,23 @@ export class RadarrComponent implements OnInit {
                     ip: [x.ip, [Validators.required]],
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
+                    minimumAvailability: [x.minimumAvailability, [Validators.required]]
                 });
 
-                if (x.defaultQualityProfile)
-                {
+                if (x.defaultQualityProfile) {
                     this.getProfiles(this.form);
                 }
-                if (x.defaultRootPath)
-                {
+                if (x.defaultRootPath) {
                     this.getRootFolders(this.form);
                 }
             });
 
+        this.minimumAvailabilityOptions = [
+            { name: "Announced", value:"Announced" },
+            { name: "InCinemas", value:"In Cinemas" },
+            { name: "Released", value:"Physical/Web" },
+            { name: "PreDb", value:"PreDb" },
+        ]
 
     }
 
