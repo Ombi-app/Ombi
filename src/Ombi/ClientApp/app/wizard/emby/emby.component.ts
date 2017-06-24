@@ -1,4 +1,4 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { EmbyService } from '../../services/applications/emby.service';
@@ -10,11 +10,25 @@ import { IEmbySettings } from '../../interfaces/ISettings';
   
     templateUrl: './emby.component.html',
 })
-export class EmbyComponent {
+export class EmbyComponent implements OnInit {
 
     constructor(private embyService: EmbyService,
         private router: Router,
         private notificationService: NotificationService) {
+    }
+
+    ngOnInit(): void {
+        this.embySettings = {
+            administratorId: "",
+            apiKey: "",
+            enable: true,
+            enableEpisodeSearching: true,
+            id: 0,
+            ip: "",
+            port: 8096,
+            ssl: false,
+            subDir:""
+        }
     }
 
     private embySettings: IEmbySettings;

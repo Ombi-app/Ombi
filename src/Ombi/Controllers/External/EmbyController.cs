@@ -9,9 +9,17 @@ using Ombi.Core.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Admin]
     public class EmbyController : BaseV1ApiController
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="emby"></param>
+        /// <param name="embySettings"></param>
         public EmbyController(IEmbyApi emby, ISettingsService<EmbySettings> embySettings)
         {
             EmbyApi = emby;
@@ -30,9 +38,9 @@ namespace Ombi.Controllers.External
         [AllowAnonymous]
         public async Task<EmbySettings> SignIn([FromBody] EmbySettings request)
         {
-            // Check if settings exist
+            // Check if settings exist since we allow anon...
             var settings = await EmbySettings.GetSettingsAsync();
-            if (settings != null && !string.IsNullOrEmpty(settings.ApiKey)) return null;
+            if (!string.IsNullOrEmpty(settings?.ApiKey)) return null;
 
             request.Enable = true;
             // Test that we can connect
