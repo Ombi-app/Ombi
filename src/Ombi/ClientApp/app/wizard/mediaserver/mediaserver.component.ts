@@ -18,4 +18,9 @@ export class MediaServerComponent {
     emby() {
         this.router.navigate(['Wizard/Emby']);
     }
+
+    skip()
+    {
+        this.router.navigate(['Wizard/CreateAdmin']);
+    }
 }
