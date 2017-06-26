@@ -77,15 +77,16 @@ namespace Ombi.Core.Engine
                     });
                     mapped.SeasonRequests.Add(newSeason);
                 }
-                else
-                {
-                    // Find the episode
-                    var ep = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == e.number);
-                    ep.Url = e.url;
-                    ep.Title = e.name;
-                    ep.AirDate = DateTime.Parse(e.airstamp);
-                    ep.EpisodeNumber = e.number;
-                }
+                //else
+                //{
+                //    // Find the episode
+                //    var ep = episodes.FirstOrDefault(x => x.number == e.number);
+                    
+                //    ep.Url = e.url;
+                //    ep.Title = e.name;
+                //    ep.AirDate = DateTime.Parse(e.airstamp);
+                //    ep.EpisodeNumber = e.number;
+                //}
             }
 
             var existingRequests = await GetTvRequests();
@@ -180,6 +181,10 @@ namespace Ombi.Core.Engine
                             {
                                 // Find the episode from what we are searching
                                 var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
+                                if(episodeSearching == null)
+                                {
+                                    continue;
+                                }
                                 episodeSearching.Requested = true;
                                 episodeSearching.Available = ep.Available;
                                 episodeSearching.Approved = ep.Season.ChildRequest.Approved;

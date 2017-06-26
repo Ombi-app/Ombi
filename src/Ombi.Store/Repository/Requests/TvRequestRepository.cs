@@ -19,9 +19,10 @@ namespace Ombi.Store.Repository.Requests
         {
             return await Db.TvRequests.Where(x => x.TvDbId == tvDbId)
                 .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.Issues)
-                .Include(x => x.ChildRequests)
                     .ThenInclude(x => x.RequestedUser)
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
                 .FirstOrDefaultAsync();
         }
 
@@ -29,16 +30,18 @@ namespace Ombi.Store.Repository.Requests
         {
             return Db.TvRequests
                 .Include(x => x.ChildRequests)
-                .ThenInclude(x => x.Issues)
-                .Include(x => x.ChildRequests)
                 .ThenInclude(x => x.RequestedUser)
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
                 .AsQueryable();
         }
         public IQueryable<ChildRequests> GetChild()
         {
             return Db.ChildRequests
-                .Include(x => x.Issues)
                 .Include(x => x.RequestedUser)
+                .Include(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
                 .AsQueryable();
         }
 

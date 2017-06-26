@@ -7,24 +7,26 @@ using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
     public class ExistingRequestRule : BaseSearchRule, IRequestRules<SearchViewModel>
     {
-        public ExistingRequestRule(IRequestService<MovieRequestModel> movie, IRequestService<TvRequestModel> tv)
+        public ExistingRequestRule(IMovieRequestRepository movie, ITvRequestRepository tv)
         {
             Movie = movie;
             Tv = tv;
         }
 
-        private IRequestService<MovieRequestModel> Movie { get; }
-        private IRequestService<TvRequestModel> Tv { get; }
+        private IMovieRequestRepository Movie { get; }
+        private ITvRequestRepository Tv { get; }
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var movieRequests = await Movie.GetAllAsync();
-            var existing = movieRequests.FirstOrDefault(x => x.ProviderId == obj.Id);
+            var movieRequests = Movie.Get();
+            var existing = await movieRequests.FirstOrDefaultAsync(x => x.TheMovieDbId == obj.Id);
             if (existing != null) // Do we already have a request for this?
             {
 
@@ -35,14 +37,14 @@ namespace Ombi.Core.Rule.Rules.Search
                 return Success();
             }
             
-            var tvRequests = await Tv.GetAllAsync();
-            var tv = tvRequests.FirstOrDefault(x => x.ProviderId == obj.Id);
+            var tvRequests = Tv.Get();
+            var tv = await tvRequests.FirstOrDefaultAsync(x => x.TvDbId == obj.Id);
             if (tv != null) // Do we already have a request for this?
             {
 
                 obj.Requested = true;
-                obj.Approved = tv.Approved;
-                obj.Available = tv.Available;
+                obj.Approved = tv.ChildRequests.Any(x => x.Approved);
+                obj.Available = tv.ChildRequests.Any(x => x.Available);
 
                 return Success();
             }

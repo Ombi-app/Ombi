@@ -7,6 +7,7 @@ using Ombi.Core.Models.Search;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
+using System.Diagnostics;
 
 namespace Ombi.Controllers
 {
@@ -95,7 +96,16 @@ namespace Ombi.Controllers
         [HttpGet("tv/{count:int}/{position:int}")]
         public async Task<IEnumerable<TvRequests>> GetTvRequests(int count, int position)
         {
-            return await TvRequestEngine.GetRequests(count, position);
+            try
+            {
+
+                return await TvRequestEngine.GetRequests(count, position);
+            }
+            catch (System.Exception e)
+            {
+                Debug.WriteLine(e.Message);
+                throw;
+            }
         }
 
         /// <summary>

@@ -40,7 +40,8 @@ export class RequestService extends ServiceAuthHelpers {
     }
 
     getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
-        return this.http.get(`${this.url}tv/${count}/${position}`).map(this.extractData);
+        return this.http.get(`${this.url}tv/${count}/${position}`).map(this.extractData)
+            .catch(this.handleError);
     }
 
     searchTvRequests(search: string): Observable<ITvRequests[]> {

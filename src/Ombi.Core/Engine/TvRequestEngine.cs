@@ -81,6 +81,7 @@ namespace Ombi.Core.Engine
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = user.Id,
+                SeasonRequests = new List<SeasonRequests>()
             };
 
             if (tv.LatestSeason)
@@ -112,13 +113,16 @@ namespace Ombi.Core.Engine
                 var episodesRequests = new List<EpisodeRequests>();
                 foreach (var ep in episodes)
                 {
-                    episodesRequests.Add(new EpisodeRequests
+                    if (ep.season == first.season)
                     {
-                        EpisodeNumber = ep.number,
-                        AirDate = DateTime.Parse(ep.airdate),
-                        Title = ep.name,
-                        Url = ep.url
-                    });
+                        episodesRequests.Add(new EpisodeRequests
+                        {
+                            EpisodeNumber = ep.number,
+                            AirDate = DateTime.Parse(ep.airdate),
+                            Title = ep.name,
+                            Url = ep.url
+                        });
+                    }
                 }
                 childRequest.SeasonRequests.Add(new SeasonRequests
                 {
