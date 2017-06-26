@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Core.Models.Requests.Tv;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine
 {
@@ -132,7 +134,7 @@ namespace Ombi.Core.Engine
             return retVal;
         }
 
-        private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item, Dictionary<int, TvRequestModel> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
+        private async Task<SearchTvShowViewModel> ProcessResult(SearchTvShowViewModel item, Dictionary<int, TvRequests> existingRequests, PlexSettings plexSettings, EmbySettings embySettings)
         {
             if (embySettings.Enable)
             {
@@ -162,7 +164,7 @@ namespace Ombi.Core.Engine
                     var existingRequest = existingRequests[tvdbid];
 
                     item.Requested = true;
-                    item.Approved = existingRequest.Approved;
+                    item.Approved = existingRequest.ChildRequests.Any(x => x.Approved);
 
                     // Let's modify the seasonsrequested to reflect what we have requested...
                     foreach (var season in item.SeasonRequests)
@@ -178,9 +180,9 @@ namespace Ombi.Core.Engine
                             {
                                 // Find the episode from what we are searching
                                 var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
-                                episodeSearching.Requested = ep.Requested;
+                                episodeSearching.Requested = true;
                                 episodeSearching.Available = ep.Available;
-                                episodeSearching.Approved = ep.Approved;
+                                episodeSearching.Approved = ep.Season.ChildRequest.Approved;
                             }
                         }
                     }

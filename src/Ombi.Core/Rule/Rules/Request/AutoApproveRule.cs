@@ -4,10 +4,11 @@ using Ombi.Core.Claims;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
 {
-    public class AutoApproveRule : BaseRequestRule, IRequestRules<BaseRequestModel>
+    public class AutoApproveRule : BaseRequestRule, IRequestRules<BaseRequest>
     {
         public AutoApproveRule(IPrincipal principal)
         {
@@ -16,7 +17,7 @@ namespace Ombi.Core.Rule.Rules.Request
 
         private IPrincipal User { get; }
 
-        public Task<RuleResult> Execute(BaseRequestModel obj)
+        public Task<RuleResult> Execute(BaseRequest obj)
         {
             if (User.IsInRole(OmbiClaims.Admin))
             {
@@ -24,9 +25,9 @@ namespace Ombi.Core.Rule.Rules.Request
                 return Task.FromResult(Success());
             }
 
-            if (obj.Type == RequestType.Movie && User.IsInRole(OmbiClaims.AutoApproveMovie))
+            if (obj.RequestType == RequestType.Movie && User.IsInRole(OmbiClaims.AutoApproveMovie))
                 obj.Approved = true;
-            if (obj.Type == RequestType.TvShow && User.IsInRole(OmbiClaims.AutoApproveTv))
+            if (obj.RequestType == RequestType.TvShow && User.IsInRole(OmbiClaims.AutoApproveTv))
                 obj.Approved = true;
             return Task.FromResult(Success()); // We don't really care, we just don't set the obj to approve
         }

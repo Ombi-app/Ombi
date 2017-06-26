@@ -13,7 +13,9 @@ namespace Ombi
 {
     public partial class Startup
     {
-
+        /// <summary>
+        /// A key...
+        /// </summary>
         public SymmetricSecurityKey SigningKey;
         private void ConfigureAuth(IApplicationBuilder app, IOptions<TokenAuthenticationOptions> options)
         {

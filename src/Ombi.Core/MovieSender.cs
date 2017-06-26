@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Ombi.Api.Radarr;
 using Ombi.Core.Models.Requests;
 using Ombi.Helpers;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core
 {
@@ -22,7 +23,7 @@ namespace Ombi.Core
         private IRadarrApi RadarrApi { get; }
         private ILogger<MovieSender> Log { get; }
 
-        public async Task<MovieSenderResult> Send(MovieRequestModel model, string qualityId = "")
+        public async Task<MovieSenderResult> Send(MovieRequests model, string qualityId = "")
         {
             //var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
             //var watcherSettings = await WatcherSettings.GetSettingsAsync();
@@ -50,7 +51,7 @@ namespace Ombi.Core
             };
         }
 
-        private async Task<MovieSenderResult> SendToRadarr(BaseRequestModel model, RadarrSettings settings, string qualityId)
+        private async Task<MovieSenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings, string qualityId)
         {
             var qualityProfile = 0;
             if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
@@ -65,7 +66,7 @@ namespace Ombi.Core
 
             //var rootFolderPath = model.RootFolderSelected <= 0 ? settings.FullRootPath : GetRootPath(model.RootFolderSelected, settings);
             var rootFolderPath = settings.DefaultRootPath; // TODO Allow changing in the UI
-            var result = await RadarrApi.AddMovie(model.ProviderId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
+            var result = await RadarrApi.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {

@@ -1,14 +1,13 @@
 ﻿using Ombi.Core.Claims;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Rules;
 using Ombi.Store.Entities;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules
 {
-    public class CanRequestRule : BaseRequestRule, IRequestRules<BaseRequestModel>
+    public class CanRequestRule : BaseRequestRule, IRequestRules<BaseRequest>
     {
         public CanRequestRule(IPrincipal principal)
         {
@@ -17,12 +16,12 @@ namespace Ombi.Core.Rule.Rules
 
         private IPrincipal User { get; }
 
-        public Task<RuleResult> Execute(BaseRequestModel obj)
+        public Task<RuleResult> Execute(BaseRequest obj)
         {
             if (User.IsInRole(OmbiClaims.Admin))
                 return Task.FromResult(Success());
 
-            if (obj.Type == RequestType.Movie)
+            if (obj.RequestType == RequestType.Movie)
             {
                 if (User.IsInRole(OmbiClaims.RequestMovie))
                     return Task.FromResult(Success());

@@ -12,7 +12,7 @@ import 'rxjs/add/operator/map';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { ITvRequestModel, IChildTvRequest } from '../interfaces/IRequestModel';
+import { ITvRequests, IChildRequests } from '../interfaces/IRequestModel';
 
 @Component({
     selector: 'tv-requests',
@@ -39,7 +39,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
 
     private subscriptions = new Subject<void>();
 
-    tvRequests: ITvRequestModel[];
+    tvRequests: ITvRequests[];
 
     searchChanged = new Subject<string>();
     searchText: string;
@@ -50,7 +50,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     private amountToLoad: number;
 
     public showChildDialogue = false; // This is for the child modal popup
-    public selectedSeason : ITvRequestModel;
+    public selectedSeason: ITvRequests;
 
 
     ngOnInit() {
@@ -74,53 +74,53 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.searchChanged.next(text.target.value);
     }
 
-    public removeRequest(request: ITvRequestModel) {
+    public removeRequest(request: ITvRequests) {
         this.requestService.removeTvRequest(request);
         this.removeRequestFromUi(request);
     }
 
-    public changeAvailability(request: ITvRequestModel, available: boolean) {
+    public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
 
-        this.updateRequest(request);
+        //this.updateRequest(request);
     }
 
-    public approve(request: ITvRequestModel) {
+    public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
-        this.updateRequest(request);
+        //this.updateRequest(request);
     }
 
-    public deny(request: ITvRequestModel) {
+    public deny(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
-        this.updateRequest(request);
+        //this.updateRequest(request);
     }
 
-    public approveSeasonRequest(request: IChildTvRequest) {
+    public approveSeasonRequest(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
         this.requestService.updateTvRequest(this.selectedSeason)
             .subscribe();
     }
 
-    public denySeasonRequest(request: IChildTvRequest) {
+    public denySeasonRequest(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
         this.requestService.updateTvRequest(this.selectedSeason)
             .subscribe();
     }
 
-    public showChildren(request: ITvRequestModel) {
+    public showChildren(request: ITvRequests) {
         this.selectedSeason = request;
         this.showChildDialogue = true;
     }
 
-    private updateRequest(request: ITvRequestModel) {
-        this.requestService.updateTvRequest(request)
-            .takeUntil(this.subscriptions)
-            .subscribe(x => request = x);
-    }
+    //private updateRequest(request: ITvRequests) {
+    //    this.requestService.updateTvRequest(request)
+    //        .takeUntil(this.subscriptions)
+    //        .subscribe(x => request = x);
+    //}
 
     private loadInit() {
         this.requestService.getTvRequests(this.amountToLoad, 0)
@@ -136,7 +136,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.loadInit();
     }
 
-    private removeRequestFromUi(key: ITvRequestModel) {
+    private removeRequestFromUi(key: ITvRequests) {
         var index = this.tvRequests.indexOf(key, 0);
         if (index > -1) {
             this.tvRequests.splice(index, 1);

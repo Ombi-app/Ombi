@@ -14,6 +14,7 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine.Interfaces
 {
@@ -65,7 +66,7 @@ namespace Ombi.Core.Engine.Interfaces
             }
         }
 
-        public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequestModel model)
+        public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)
         {
             var ruleResults = await Rules.StartRequestRules(model);
             return ruleResults;

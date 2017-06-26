@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Moq;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Requests.Movie;
+using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Requests.Models;
 using Ombi.Core.Rule.Rules.Search;

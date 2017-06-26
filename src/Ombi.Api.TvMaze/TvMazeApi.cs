@@ -57,31 +57,6 @@ namespace Ombi.Api.TvMaze
             {
                 var obj = await Api.Request<TvMazeShow>(request);
 
-                var episodes = await EpisodeLookup(obj.id);
-
-                foreach (var e in episodes)
-                {
-                    // Check if the season exists
-                    var currentSeason = obj.Season.FirstOrDefault(x => x.SeasonNumber == e.season);
-
-                    if (currentSeason == null)
-                    {
-                        // Create the season
-                        obj.Season.Add(new TvMazeCustomSeason
-                        {
-                            SeasonNumber = e.season,
-                            EpisodeNumber = new List<int> {e.number}
-                        });
-                    }
-                    else
-                    {
-                        // Just add a new episode into that season
-                        currentSeason.EpisodeNumber.Add(e.number);
-                    }
-
-
-                }
-
                 return obj;
             }
             catch (Exception e)

@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule
 {
@@ -14,7 +15,7 @@ namespace Ombi.Core.Rule
     {
         public RuleEvaluator(IServiceProvider provider)
         {
-            RequestRules = new List<IRequestRules<BaseRequestModel>>();
+            RequestRules = new List<IRequestRules<BaseRequest>>();
             SearchRules = new List<IRequestRules<SearchViewModel>>();
             var baseSearchType = typeof(BaseRequestRule).FullName;
             var baseRequestType = typeof(BaseSearchRule).FullName;
@@ -36,7 +37,7 @@ namespace Ombi.Core.Rule
                     }
 
                     var item = Activator.CreateInstance(type, services.ToArray());
-                    RequestRules.Add((IRequestRules<BaseRequestModel>) item);
+                    RequestRules.Add((IRequestRules<BaseRequest>) item);
                 }
             }
             
@@ -60,10 +61,10 @@ namespace Ombi.Core.Rule
             }
         }
 
-        private List<IRequestRules<BaseRequestModel>> RequestRules { get; }
+        private List<IRequestRules<BaseRequest>> RequestRules { get; }
         private List<IRequestRules<SearchViewModel>> SearchRules { get; }
 
-        public async Task<IEnumerable<RuleResult>> StartRequestRules(BaseRequestModel obj)
+        public async Task<IEnumerable<RuleResult>> StartRequestRules(BaseRequest obj)
         {
             var results = new List<RuleResult>();
             foreach (var rule in RequestRules)

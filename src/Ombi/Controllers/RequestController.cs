@@ -3,13 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Ombi.Models;
-using Ombi.Notifications.Models;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Controllers
 {
@@ -31,7 +28,7 @@ namespace Ombi.Controllers
         /// <param name="count">The count of items you want to return.</param>
         /// <param name="position">The position.</param>
         [HttpGet("movie/{count:int}/{position:int}")]
-        public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
+        public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
             return await MovieRequestEngine.GetRequests(count, position);
         }
@@ -40,7 +37,7 @@ namespace Ombi.Controllers
         /// Gets all movie requests.
         /// </summary>
         [HttpGet("movie")]
-        public async Task<IEnumerable<MovieRequestModel>> GetRequests()
+        public async Task<IEnumerable<MovieRequests>> GetRequests()
         {
             return await MovieRequestEngine.GetRequests();
         }
@@ -62,7 +59,7 @@ namespace Ombi.Controllers
         /// <param name="searchTerm">The search term.</param>
         /// <returns></returns>
         [HttpGet("movie/search/{searchTerm}")]
-        public async Task<IEnumerable<MovieRequestModel>> Search(string searchTerm)
+        public async Task<IEnumerable<MovieRequests>> Search(string searchTerm)
         {
             return await MovieRequestEngine.SearchMovieRequest(searchTerm);
         }
@@ -84,7 +81,7 @@ namespace Ombi.Controllers
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPut("movie")]
-        public async Task<MovieRequestModel> UpdateRequest([FromBody] MovieRequestModel model)
+        public async Task<MovieRequests> UpdateRequest([FromBody] MovieRequests model)
         {
             return await MovieRequestEngine.UpdateMovieRequest(model);
         }
@@ -96,7 +93,7 @@ namespace Ombi.Controllers
         /// <param name="position">The position.</param>
         /// <returns></returns>
         [HttpGet("tv/{count:int}/{position:int}")]
-        public async Task<IEnumerable<TvRequestModel>> GetTvRequests(int count, int position)
+        public async Task<IEnumerable<TvRequests>> GetTvRequests(int count, int position)
         {
             return await TvRequestEngine.GetRequests(count, position);
         }
@@ -106,7 +103,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("tv")]
-        public async Task<IEnumerable<TvRequestModel>> GetTvRequests()
+        public async Task<IEnumerable<TvRequests>> GetTvRequests()
         {
             return await TvRequestEngine.GetRequests();
         }
@@ -128,7 +125,7 @@ namespace Ombi.Controllers
         /// <param name="searchTerm">The search term.</param>
         /// <returns></returns>
         [HttpGet("tv/search/{searchTerm}")]
-        public async Task<IEnumerable<TvRequestModel>> SearchTv(string searchTerm)
+        public async Task<IEnumerable<TvRequests>> SearchTv(string searchTerm)
         {
             return await TvRequestEngine.SearchTvRequest(searchTerm);
         }
@@ -150,7 +147,7 @@ namespace Ombi.Controllers
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPut("tv")]
-        public async Task<TvRequestModel> UpdateRequest([FromBody] TvRequestModel model)
+        public async Task<TvRequests> UpdateRequest([FromBody] TvRequests model)
         {
             return await TvRequestEngine.UpdateTvRequest(model);
         }
@@ -167,39 +164,39 @@ namespace Ombi.Controllers
             return TvRequestEngine.RequestCount();
         }
 
-        /// <summary>
-        /// Gets the specific grid model for the requests (for modelling the UI).
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("tv/grid")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<RequestGridModel<TvRequestModel>> GetTvRequestsGrid()
-        {
-            return await GetGrid(TvRequestEngine);
-        }
+        ///// <summary>
+        ///// Gets the specific grid model for the requests (for modelling the UI).
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("tv/grid")]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public async Task<RequestGridModel<TvRequests>> GetTvRequestsGrid()
+        //{
+        //    return await GetGrid(TvRequestEngine);
+        //}
 
-        /// <summary>
-        /// Gets the specific grid model for the requests (for modelling the UI).
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("movie/grid")]
-        [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<RequestGridModel<MovieRequestModel>> GetMovieRequestsGrid()
-        {
-            return await GetGrid(MovieRequestEngine);
-        }
+        ///// <summary>
+        ///// Gets the specific grid model for the requests (for modelling the UI).
+        ///// </summary>
+        ///// <returns></returns>
+        //[HttpGet("movie/grid")]
+        //[ApiExplorerSettings(IgnoreApi = true)]
+        //public async Task<RequestGridModel<MovieRequests>> GetMovieRequestsGrid()
+        //{
+        //    return await GetGrid(MovieRequestEngine);
+        //}
 
-        private async Task<RequestGridModel<T>> GetGrid<T>(IRequestEngine<T> engine) where T : BaseRequestModel
-        {
-            var allRequests = await engine.GetRequests();
-            var r = allRequests.ToList();
-            var model = new RequestGridModel<T>
-            {
-                Available = r.Where(x => x.Available && !x.Approved),
-                Approved = r.Where(x => x.Approved && !x.Available),
-                New = r.Where(x => !x.Available && !x.Approved)
-            };
-            return model;
-        }
+        //private async Task<RequestGridModel<T>> GetGrid<T>(IRequestEngine<T> engine) where T : BaseRequestModel
+        //{
+        //    var allRequests = await engine.GetRequests();
+        //    var r = allRequests.ToList();
+        //    var model = new RequestGridModel<T>
+        //    {
+        //        Available = r.Where(x => x.Available && !x.Approved),
+        //        Approved = r.Where(x => x.Approved && !x.Available),
+        //        New = r.Where(x => !x.Available && !x.Approved)
+        //    };
+        //    return model;
+        //}
     }
 }

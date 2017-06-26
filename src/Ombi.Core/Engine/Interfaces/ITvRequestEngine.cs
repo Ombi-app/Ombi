@@ -1,19 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Core.Models.Requests;
+using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Models.Search;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine.Interfaces
 {
-    public interface ITvRequestEngine : IRequestEngine<TvRequestModel>
+    public interface ITvRequestEngine : IRequestEngine<TvRequests>
     {
 
         Task RemoveTvRequest(int requestId);
 
         Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv);
 
-        Task<IEnumerable<TvRequestModel>> SearchTvRequest(string search);
+        Task<IEnumerable<TvRequests>> SearchTvRequest(string search);
 
-        Task<TvRequestModel> UpdateTvRequest(TvRequestModel request);
+        Task<TvRequests> UpdateTvRequest(TvRequests request);
     }
 }

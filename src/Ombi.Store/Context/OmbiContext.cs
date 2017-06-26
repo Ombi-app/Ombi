@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Context
 {
@@ -40,6 +41,13 @@ namespace Ombi.Store.Context
         public DbSet<PlexContent> PlexContent { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
+        
+        public DbSet<MovieRequests> MovieRequests { get; set; }
+        public DbSet<TvRequests> TvRequests { get; set; }
+        public DbSet<ChildRequests> ChildRequests { get; set; }
+        public DbSet<MovieIssues> MovieIssues { get; set; }
+        public DbSet<TvIssues> TvIssues { get; set; }
+        
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

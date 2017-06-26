@@ -59,7 +59,7 @@
 
                     {{/if}}
                     {{/if_eq}}-->
-                    <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span></div>
+                    
 
                     <div>Requested Date: {{request.requestedDate | date}}</div>
                     <!--{{#if admin}}
@@ -187,6 +187,7 @@
 
 
 
+
 <div class="modal fade in" *ngIf="showChildDialogue" style="display: block;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -201,21 +202,21 @@
                         <div class="col-md-9">
                             <span class="col-md-12">Requested By: <b>{{child.requestedUser}}</b></span>
 
-                            <span class="col-md-12" *ngIf="child.requestAll">Requested All Seasons</span>
+                            <!--<span class="col-md-12" *ngIf="child.requestAll">Requested All Seasons</span>-->
                             <!--Seasons-->
                             <span *ngIf="child.approved && !child.available" class="label label-info">Processing Request</span>
                             <span *ngIf="child.denied" class="label label-danger">Request Denied</span>
                             <span *ngIf="child.deniedReason" title="{{child.deniedReason}}"><i class="fa fa-info-circle"></i></span>
                             <span *ngIf="!child.approved && !child.availble && !child.denied" class="label label-warning">Pending Approval</span>
                             <div class="col-md-12" *ngFor="let seasons of child.seasonRequests">
-                       
+
 
                                 <span>Season: {{seasons.seasonNumber}}</span>
                                 <span>Episodes:</span>
 
                                 <div *ngFor="let episode of seasons.episodes">
                                     <!--Episodes-->
-                                    <span># {{episode.episodeNumber}}</span>
+                                    <span># {{episode.episodeNumber}} | {{episode.title}}</span>
                                     <span *ngIf="episode.available" class="label label-success">Available</span>
                                 </div>
                             </div>

@@ -4,10 +4,7 @@ namespace Ombi.Api.TvMaze.Models
 {
     public class TvMazeShow
     {
-        public TvMazeShow()
-        {
-            Season = new List<TvMazeCustomSeason>();
-        }
+
         public int id { get; set; }
         public string url { get; set; }
         public string name { get; set; }
@@ -27,7 +24,6 @@ namespace Ombi.Api.TvMaze.Models
         public string summary { get; set; }
         public int updated { get; set; }
         public Links _links { get; set; }
-        public List<TvMazeCustomSeason> Season { get; set; }
         public Embedded _embedded { get; set; }
     }
 

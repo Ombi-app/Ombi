@@ -13,7 +13,7 @@ import 'rxjs/add/operator/map';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { IMovieRequestModel } from '../interfaces/IRequestModel';
+import { IMovieRequests } from '../interfaces/IRequestModel';
 
 @Component({
     selector: 'movie-requests',
@@ -37,7 +37,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
             });
     }
 
-    movieRequests: IMovieRequestModel[];
+    movieRequests: IMovieRequests[];
 
     searchChanged: Subject<string> = new Subject<string>();
     searchText: string;
@@ -66,25 +66,25 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         this.searchChanged.next(text.target.value);
     }
 
-    removeRequest(request: IMovieRequestModel) {
+    removeRequest(request: IMovieRequests) {
         this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
         this.loadRequests(1, this.currentlyLoaded);
     }
 
-    changeAvailability(request: IMovieRequestModel, available: boolean) {
+    changeAvailability(request: IMovieRequests, available: boolean) {
         request.available = available;
 
         this.updateRequest(request);
     }
 
-    approve(request: IMovieRequestModel) {
+    approve(request: IMovieRequests) {
         request.approved = true;
         request.denied = false;
         this.updateRequest(request);
     }
 
-    deny(request: IMovieRequestModel) {
+    deny(request: IMovieRequests) {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
@@ -99,7 +99,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
             });
     }
 
-    private updateRequest(request: IMovieRequestModel) {
+    private updateRequest(request: IMovieRequests) {
         this.requestService.updateMovieRequest(request)
             .takeUntil(this.subscriptions)
             .subscribe(x => request = x);
@@ -117,7 +117,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         this.loadInit();
     }
 
-    private removeRequestFromUi(key: IMovieRequestModel) {
+    private removeRequestFromUi(key: IMovieRequests) {
         var index = this.movieRequests.indexOf(key, 0);
         if (index > -1) {
             this.movieRequests.splice(index, 1);

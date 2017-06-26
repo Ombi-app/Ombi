@@ -1,4 +1,6 @@
-﻿export interface IMediaBase {
+﻿import { IUser } from './IUser';
+
+export interface IMediaBase {
     imdbId: string,
     id: number,
     providerId: number,
@@ -73,5 +75,68 @@ export interface IRequestsPageScroll {
 export interface IRequestGrid<T> {
     available: T[],
     new: T[],
-    approved:T[]
+    approved: T[]
 }
+
+
+// NEW WORLD
+
+export interface IMovieRequests extends IFullBaseRequest {
+    theMovieDbId: number,
+}
+
+export interface IFullBaseRequest extends IBaseRequest {
+    imdbId: string,
+    overview: string,
+    title: string,
+    posterPath: string,
+    releaseDate: Date,
+    status: string,
+    released: boolean,
+}
+
+export interface IBaseRequest {
+    id: number,
+    approved: boolean,
+    requestedDate: Date,
+    available: boolean,
+    requestedUserId: number,
+    issueId: number,
+    denied: boolean,
+    deniedReason: string,
+    requestType: RequestType,
+    requestedUser: IUser
+}
+
+export interface ITvRequests {
+    id: number,
+    imdbId: string,
+    rootFolder: number,
+    overview: string,
+    title: string,
+    posterPath: string,
+    releaseDate: Date,
+    status: string,
+    childRequests: IChildRequests[]
+
+}
+
+export interface IChildRequests extends IBaseRequest {
+    seasonRequests: INewSeasonRequests[]
+}
+
+export interface INewSeasonRequests {
+    id: number,
+    seasonNumber: number,
+    episodes: IEpisodesRequests[]
+}
+
+export interface IEpisodesRequests {
+    id: number,
+    episodeNumber: number,
+    title: string,
+    airDate: Date,
+    url: string,
+    available: boolean,
+}
+

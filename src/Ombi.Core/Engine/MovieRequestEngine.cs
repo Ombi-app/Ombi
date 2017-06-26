@@ -12,27 +12,32 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.IdentityResolver;
 using Ombi.Core.Rule;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine
 {
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log) : base(user, requestService, r)
+            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, IUserIdentityManager manager) : base(user, requestService, r)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
             Sender = sender;
             Logger = log;
+            UserManager = manager;
         }
 
         private IMovieDbApi MovieApi { get; }
         private INotificationHelper NotificationHelper { get; }
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
+        private IUserIdentityManager UserManager { get; }
 
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
@@ -49,7 +54,7 @@ namespace Ombi.Core.Engine
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
-            var existingRequest = await MovieRequestService.CheckRequestAsync(model.Id);
+            var existingRequest = await MovieRepository.GetRequest(model.Id);
             if (existingRequest != null)
             {
                 return new RequestEngineResult
@@ -85,11 +90,12 @@ namespace Ombi.Core.Engine
             //        });
             //}
 
+            var userDetails = await UserManager.GetUser(User.Identity.Name);
 
-            var requestModel = new MovieRequestModel
+            var requestModel = new MovieRequests
             {
-                ProviderId = movieInfo.Id,
-                Type = RequestType.Movie,
+                TheMovieDbId = movieInfo.Id,
+                RequestType = RequestType.Movie,
                 Overview = movieInfo.Overview,
                 ImdbId = movieInfo.ImdbId,
                 PosterPath = movieInfo.PosterPath,
@@ -100,8 +106,7 @@ namespace Ombi.Core.Engine
                 Status = movieInfo.Status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUser = Username,
-                Issues = IssueState.None
+                RequestedUserId = userDetails.Id,
             };
 
             var ruleResults = await RunRequestRules(requestModel);
@@ -139,57 +144,56 @@ namespace Ombi.Core.Engine
                 $"{fullMovieName} has been successfully added!");
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetRequests(int count, int position)
+        public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await MovieRequestService.GetAllAsync(count, position);
+            var allRequests = await MovieRepository.Get().Skip(position).Take(count).ToListAsync();
             return allRequests;
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetRequests()
+        public async Task<IEnumerable<MovieRequests>> GetRequests()
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
+            var allRequests = await MovieRepository.Get().ToListAsync();
             return allRequests;
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> SearchMovieRequest(string search)
+        public async Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search)
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
+            var allRequests = await MovieRepository.Get().ToListAsync();
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
             return results;
         }
 
-        public async Task<MovieRequestModel> UpdateMovieRequest(MovieRequestModel request)
+        public async Task<MovieRequests> UpdateMovieRequest(MovieRequests request)
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
+            var allRequests = await MovieRepository.Get().ToListAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
 
             results.Approved = request.Approved;
             results.Available = request.Available;
             results.Denied = request.Denied;
             results.DeniedReason = request.DeniedReason;
-            results.AdminNote = request.AdminNote;
             results.ImdbId = request.ImdbId;
             results.IssueId = request.IssueId;
             results.Issues = request.Issues;
-            results.OtherMessage = request.OtherMessage;
             results.Overview = request.Overview;
             results.PosterPath = request.PosterPath;
             results.RequestedUser = request.RequestedUser;
 
-            var model = MovieRequestService.UpdateRequest(results);
-            return model;
+            await MovieRepository.Update(results);
+            return results;
         }
 
         public async Task RemoveMovieRequest(int requestId)
         {
-            await MovieRequestService.DeleteRequestAsync(requestId);
+            var request = await MovieRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+            await MovieRepository.Delete(request);
         }
 
-        private async Task<RequestEngineResult> AddMovieRequest(MovieRequestModel model, string message)
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string message)
         {
-            await MovieRequestService.AddRequestAsync(model);
+            await MovieRepository.Add(model);
 
-            if (ShouldSendNotification(model.Type))
+            if (ShouldSendNotification(RequestType.Movie))
             {
                 NotificationHelper.NewRequest(model);
             }
@@ -215,22 +219,22 @@ namespace Ombi.Core.Engine
             return new RequestEngineResult { RequestAdded = true, Message = message };
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetApprovedRequests()
+        public async Task<IEnumerable<MovieRequests>> GetApprovedRequests()
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
-            return allRequests.Where(x => x.Approved && !x.Available);
+            var allRequests = MovieRepository.Get();
+            return await allRequests.Where(x => x.Approved && !x.Available).ToListAsync();
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetNewRequests()
+        public async Task<IEnumerable<MovieRequests>> GetNewRequests()
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
-            return allRequests.Where(x => !x.Approved && !x.Available);
+            var allRequests = MovieRepository.Get();
+            return await allRequests.Where(x => !x.Approved && !x.Available).ToListAsync();
         }
 
-        public async Task<IEnumerable<MovieRequestModel>> GetAvailableRequests()
+        public async Task<IEnumerable<MovieRequests>> GetAvailableRequests()
         {
-            var allRequests = await MovieRequestService.GetAllAsync();
-            return allRequests.Where(x => !x.Approved && x.Available);
+            var allRequests = MovieRepository.Get();
+            return await allRequests.Where(x => !x.Approved && x.Available).ToListAsync();
         }
     }
 }

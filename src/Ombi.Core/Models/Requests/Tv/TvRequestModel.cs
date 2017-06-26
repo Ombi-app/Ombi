@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Ombi.Core.Models.Requests
+namespace Ombi.Core.Models.Requests.Tv
 {
     public class TvRequestModel : BaseRequestModel
     {

@@ -1,11 +1,11 @@
-﻿using Ombi.Core.Models.Requests.Movie;
-using Ombi.Core.Requests.Models;
+﻿using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Models.Requests
 {
     public interface IRequestServiceMain
     {
-        IRequestService<MovieRequestModel> MovieRequestService { get; }
-        IRequestService<TvRequestModel> TvRequestService { get; }
+        IMovieRequestRepository MovieRequestService { get; }
+        ITvRequestRepository TvRequestService { get; }
     }
 }

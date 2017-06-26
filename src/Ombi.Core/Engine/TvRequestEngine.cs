@@ -10,12 +10,18 @@ using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Tracing;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.IdentityResolver;
+using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Rule;
+using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Engine
 {
@@ -23,16 +29,18 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule) : base(user, requestService, rule)
+            IRuleEvaluator rule, IUserIdentityManager manager) : base(user, requestService, rule)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             Mapper = map;
+            UserManager = manager;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
+        private IUserIdentityManager UserManager { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -60,89 +68,66 @@ namespace Ombi.Core.Engine
                 }
             }
 
-            
-            var childRequest = new ChildTvRequest
+            var user = await UserManager.GetUser(User.Identity.Name);
+            var childRequest = new ChildRequests
             {
                 Id = tv.Id,
-                Type = RequestType.TvShow,
-                Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = posterPath,
-                Title = showInfo.name,
-                ReleaseDate = firstAir,
-                Status = showInfo.status,
+                RequestType = RequestType.TvShow,
+                //Overview = showInfo.summary.RemoveHtml(),
+                //PosterPath = posterPath,
+                //Title = showInfo.name,
+                //ReleaseDate = firstAir,
+                //Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
-                RequestedUser =  Username,
-                Issues = IssueState.None,
-                ProviderId = tv.Id,
-                RequestAll = tv.RequestAll,
-                SeasonRequests = tvRequests
+                RequestedUserId = user.Id,
             };
-
-            var model = new TvRequestModel
-            {
-                Id = tv.Id,
-                Type = RequestType.TvShow,
-                Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = posterPath,
-                Title = showInfo.name,
-                ReleaseDate = firstAir,
-                Status = showInfo.status,
-                Approved = false,
-                ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                TvDbId = tv.Id.ToString(),
-                ProviderId = tv.Id
-            };
-
-            model.ChildRequests.Add(childRequest);
-
-            //if (childRequest.SeasonRequests.Any())
-            //{
-            //    var episodes = await TvApi.EpisodeLookup(showInfo.id);
-
-            //    foreach (var e in episodes)
-            //    {
-            //        var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
-            //        season?.Episodes.Add(new EpisodesRequested
-            //        {
-            //            Url = e.url,
-            //            Title = e.name,
-            //            AirDate = DateTime.Parse(e.airstamp),
-            //            EpisodeNumber = e.number
-            //        });
-            //    }
-            //}
 
             if (tv.LatestSeason)
             {
-                var latest = showInfo.Season.OrderBy(x => x.SeasonNumber).FirstOrDefault();
-                foreach (var modelSeasonRequest in childRequest.SeasonRequests)
+                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+                var latest = episodes.OrderBy(x => x.season).FirstOrDefault();
+                var episodesRequests = new List<EpisodeRequests>();
+                foreach (var ep in episodes)
                 {
-                    if (modelSeasonRequest.SeasonNumber == latest.SeasonNumber)
+                    episodesRequests.Add(new EpisodeRequests
                     {
-                        foreach (var episodesRequested in modelSeasonRequest.Episodes)
-                        {
-                            episodesRequested.Requested = true;
-                        }
-                    }
+                        EpisodeNumber = ep.number,
+                        AirDate = DateTime.Parse(ep.airdate),
+                        Title = ep.name,
+                        Url = ep.url
+                    });
                 }
+                childRequest.SeasonRequests.Add(new SeasonRequests
+                {
+                    Episodes = episodesRequests,
+                    SeasonNumber = latest.season,
+                });
             }
+            
             if (tv.FirstSeason)
             {
-                var first = showInfo.Season.OrderByDescending(x => x.SeasonNumber).FirstOrDefault();
-                foreach (var modelSeasonRequest in childRequest.SeasonRequests)
+                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+                var first = episodes.OrderByDescending(x => x.season).FirstOrDefault();
+                var episodesRequests = new List<EpisodeRequests>();
+                foreach (var ep in episodes)
                 {
-                    if (modelSeasonRequest.SeasonNumber == first.SeasonNumber)
+                    episodesRequests.Add(new EpisodeRequests
                     {
-                        foreach (var episodesRequested in modelSeasonRequest.Episodes)
-                        {
-                            episodesRequested.Requested = true;
-                        }
-                    }
+                        EpisodeNumber = ep.number,
+                        AirDate = DateTime.Parse(ep.airdate),
+                        Title = ep.name,
+                        Url = ep.url
+                    });
                 }
+                childRequest.SeasonRequests.Add(new SeasonRequests
+                {
+                    Episodes = episodesRequests,
+                    SeasonNumber = first.season,
+                });
             }
 
-            var ruleResults = await RunRequestRules(model);
+            var ruleResults = await RunRequestRules(childRequest);
             var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
             if (results.Any(x => !x.Success))
             {
@@ -152,68 +137,72 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            var existingRequest = await TvRequestService.CheckRequestAsync(model.Id);
+            var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.Id);
             if (existingRequest != null)
             {
-                return await AddExistingRequest(model, existingRequest);
+                return await AddExistingRequest(childRequest, existingRequest);
             }
             // This is a new request
+
+            var model = new TvRequests
+            {
+                Id = tv.Id,
+                Overview = showInfo.summary.RemoveHtml(),
+                PosterPath = posterPath,
+                Title = showInfo.name,
+                ReleaseDate = firstAir,
+                Status = showInfo.status,
+                ImdbId = showInfo.externals?.imdb ?? string.Empty,
+                TvDbId = tv.Id,
+                ChildRequests = new List<ChildRequests>()
+            };
+            model.ChildRequests.Add(childRequest);
             return await AddRequest(model);
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetRequests(int count, int position)
+        public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await TvRequestService.GetAllAsync(count, position);
+            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
             return allRequests;
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetRequests()
+        public async Task<IEnumerable<TvRequests>> GetRequests()
         {
-            var allRequests = await TvRequestService.GetAllAsync();
-            return allRequests;
+            var allRequests = TvRepository.Get();
+            return await allRequests.ToListAsync();
         }
 
-        public async Task<IEnumerable<TvRequestModel>> SearchTvRequest(string search)
+        public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)
         {
-            var allRequests = await TvRequestService.GetAllAsync();
+            var allRequests = TvRepository.Get();
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
             return results;
         }
 
-        public async Task<TvRequestModel> UpdateTvRequest(TvRequestModel request)
+        public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
-            var allRequests = await TvRequestService.GetAllAsync();
-            var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
-            results = Mapper.Map<TvRequestModel>(request);
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
+            results = Mapper.Map<TvRequests>(request);
 
             // TODO need to check if we need to approve any child requests since they may have updated
             
-            var model = TvRequestService.UpdateRequest(results);
-            return model;
+            await TvRepository.Update(results);
+            return results;
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
-            await TvRequestService.DeleteRequestAsync(requestId);
+            var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+            await TvRepository.Delete(request);
         }
 
-        private async Task<RequestEngineResult> AddExistingRequest(TvRequestModel newRequest,
-            TvRequestModel existingRequest)
+        private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest)
         {
-            var child = newRequest.ChildRequests.FirstOrDefault(); // There will only be 1
-            var episodeDiff = new List<SeasonRequestModel>();
-            foreach (var existingChild in existingRequest.ChildRequests)
-            {
-                var difference = GetListDifferences(existingChild.SeasonRequests, child.SeasonRequests).ToList();
-                if (difference.Any())
-                    episodeDiff = difference;
-            }
+            // Add the child
+            existingRequest.ChildRequests.Add(newRequest);
 
-            if (episodeDiff.Any())
-                child.SeasonRequests = episodeDiff;
-
-            existingRequest.ChildRequests.AddRange(newRequest.ChildRequests);
-            TvRequestService.UpdateRequest(existingRequest);
+            await TvRepository.Update(existingRequest);
 
             if (newRequest.Approved) // The auto approve rule
             {
@@ -263,18 +252,18 @@ namespace Ombi.Core.Engine
             return request;
         }
 
-        private async Task<RequestEngineResult> AddRequest(TvRequestModel model)
+        private async Task<RequestEngineResult> AddRequest(TvRequests model)
         {
-            await TvRequestService.AddRequestAsync(model);
-
-            return await AfterRequest(model);
+            await TvRepository.Add(model);
+            // This is a new request so we should only have 1 child
+            return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-        private Task<RequestEngineResult> AfterRequest(TvRequestModel model)
+        private Task<RequestEngineResult> AfterRequest(ChildRequests model)
         {
-            if (ShouldSendNotification(model.Type))
+            if (ShouldSendNotification(RequestType.TvShow))
             {
-                NotificationHelper.NewRequest(model);
+                //NotificationHelper.NewRequest(model.ParentRequest);
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();
@@ -298,22 +287,25 @@ namespace Ombi.Core.Engine
             return Task.FromResult(new RequestEngineResult { RequestAdded = true });
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetApprovedRequests()
+        public async Task<IEnumerable<TvRequests>> GetApprovedRequests()
         {
-            var allRequests = await TvRequestService.GetAllAsync();
-            return allRequests.Where(x => x.Approved && !x.Available);
+            //var allRequests = TvRepository.Get();
+            //return await allRequests.Where(x => x.Approved && !x.Available).ToListAsync();
+            return null;
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetNewRequests()
+        public async Task<IEnumerable<TvRequests>> GetNewRequests()
         {
-            var allRequests = await TvRequestService.GetAllAsync();
-            return allRequests.Where(x => !x.Approved && !x.Available);
+            //var allRequests = await TvRepository.GetAllAsync();
+            //return allRequests.Where(x => !x.Approved && !x.Available);
+            return null;
         }
 
-        public async Task<IEnumerable<TvRequestModel>> GetAvailableRequests()
+        public async Task<IEnumerable<TvRequests>> GetAvailableRequests()
         {
-            var allRequests = await TvRequestService.GetAllAsync();
-            return allRequests.Where(x => x.Available);
+            //var allRequests = await TvRepository.GetAllAsync();
+            //return allRequests.Where(x => x.Available);
+            return null;
         }
     }
 }

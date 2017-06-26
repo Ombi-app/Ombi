@@ -1,7 +1,7 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { DragulaService } from 'ng2-dragula/ng2-dragula';
 import { RequestService } from '../services/request.service';
-import { ITvRequestModel, IMovieRequestModel, IRequestGrid } from '../interfaces/IRequestModel';
+import { ITvRequests, IMovieRequests, IRequestGrid } from '../interfaces/IRequestModel';
 
 @Component({
     templateUrl: './request-grid.component.html'
@@ -24,7 +24,7 @@ export class RequestGridComponent implements OnInit {
     }
 
 
-    movieRequests: IRequestGrid<IMovieRequestModel>;
-    tvRequests: IRequestGrid<ITvRequestModel>;
+    movieRequests: IRequestGrid<IMovieRequests>;
+    tvRequests: IRequestGrid<ITvRequests>;
 
 }
