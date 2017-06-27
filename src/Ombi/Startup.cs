@@ -67,7 +67,8 @@ namespace Ombi
         {
             // Add framework services.
             services.AddMemoryCache();
-            services.AddMvc();
+            services.AddMvc()
+                .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             services.AddOmbiMappingProfile();
             services.AddAutoMapper(expression =>
             {
