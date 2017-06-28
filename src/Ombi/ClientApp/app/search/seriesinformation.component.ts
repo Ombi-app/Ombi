@@ -10,7 +10,7 @@ import { NotificationService } from '../services/notification.service';
 
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-import { IEpisodesRequested } from "../interfaces/IRequestModel";
+import { IEpisodesRequests } from "../interfaces/IRequestModel";
 
 @Component({
     templateUrl: './seriesinformation.component.html', 
@@ -33,7 +33,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
     private seriesId: number;
     public series: ISearchTvResult;
 
-    requestedEpisodes: IEpisodesRequested[] = [];
+    requestedEpisodes: IEpisodesRequests[] = [];
 
 
     ngOnInit(): void {
@@ -61,7 +61,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
             });
     }
 
-    public addRequest(episode: IEpisodesRequested) {
+    public addRequest(episode: IEpisodesRequests) {
         episode.requested = true;
     }
 

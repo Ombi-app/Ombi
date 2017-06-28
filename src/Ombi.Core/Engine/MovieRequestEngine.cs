@@ -1,10 +1,8 @@
 ﻿using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rules;
 using Ombi.Helpers;
-using Ombi.Notifications;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;

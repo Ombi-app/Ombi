@@ -138,5 +138,7 @@ export interface IEpisodesRequests {
     airDate: Date,
     url: string,
     available: boolean,
+    requested: boolean,
+    approved: boolean,
 }
 

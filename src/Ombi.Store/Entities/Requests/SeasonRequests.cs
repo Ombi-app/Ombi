@@ -24,8 +24,10 @@ namespace Ombi.Store.Repository.Requests
         public DateTime AirDate { get; set; }
         public string Url { get; set; }
         public bool Available { get; set; }
-        
-        
+        public bool Approved { get; set; }
+        public bool Requested { get; set; }
+
+
         public int SeasonId { get; set; }
         [ForeignKey(nameof(SeasonId))]
         public SeasonRequests Season { get; set; }

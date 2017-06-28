@@ -34,8 +34,7 @@ namespace Ombi.Store.Context
             // Add the notifcation templates
             AddAllTemplates();
         }
-
-        public DbSet<RequestBlobs> Requests { get; set; }
+        
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }

@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-sm-2">
 
-                <img class="img-responsive" src="{{request.posterPath}}" alt="poster">
+                <img class="img-responsive poster"  src="{{request.posterPath}}" alt="poster">
 
             </div>
 
@@ -187,52 +187,85 @@
 
 
 
+<p-dialog *ngIf="showChildDialogue" id="dialogOverride" header="{{selectedSeason?.title}}" [(visible)]="showChildDialogue"  [contentStyle]="{'overflow':'auto','max-height':'500px'}" [width]="768">
+    <div class="row" *ngFor="let child of selectedSeason.childRequests">
+        <div class="col-md-12">
+            <!--Child Requests-->
+            <div class="col-md-9">
+                <span class="col-md-12">Requested By: <b>{{child.requestedUser.username}}</b></span>
 
-<div class="modal fade in" *ngIf="showChildDialogue" style="display: block;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="showChildDialogue=false">&times;</button>
-                <h4 class="modal-title">{{selectedSeason?.title}}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row" *ngFor="let child of selectedSeason.childRequests">
-                    <div class="col-md-12">
-                        <!--Child Requests-->
-                        <div class="col-md-9">
-                            <span class="col-md-12">Requested By: <b>{{child.requestedUser}}</b></span>
-
-                            <!--<span class="col-md-12" *ngIf="child.requestAll">Requested All Seasons</span>-->
-                            <!--Seasons-->
-                            <span *ngIf="child.approved && !child.available" class="label label-info">Processing Request</span>
-                            <span *ngIf="child.denied" class="label label-danger">Request Denied</span>
-                            <span *ngIf="child.deniedReason" title="{{child.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                            <span *ngIf="!child.approved && !child.availble && !child.denied" class="label label-warning">Pending Approval</span>
-                            <div class="col-md-12" *ngFor="let seasons of child.seasonRequests">
+                <!--<span class="col-md-12" *ngIf="child.requestAll">Requested All Seasons</span>-->
+                <!--Seasons-->
+                <span *ngIf="child.approved && !child.available" class="label label-info">Processing Request</span>
+                <span *ngIf="child.denied" class="label label-danger">Request Denied</span>
+                <span *ngIf="child.deniedReason" title="{{child.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                <span *ngIf="!child.approved && !child.availble && !child.denied" class="label label-warning">Pending Approval</span>
+                <div class="col-md-12" *ngFor="let seasons of child.seasonRequests">
 
 
-                                <span>Season: {{seasons.seasonNumber}}</span>
-                                <span>Episodes:</span>
+                    <span><b>Season: {{seasons.seasonNumber}}</b></span>
+                    <div>
+                        <span>Episodes:</span>
 
-                                <div *ngFor="let episode of seasons.episodes">
-                                    <!--Episodes-->
-                                    <span># {{episode.episodeNumber}} | {{episode.title}}</span>
-                                    <span *ngIf="episode.available" class="label label-success">Available</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <button *ngIf="!child.approved" type="button" (click)="approveSeasonRequest(child)" class="btn btn-sm btn-success-outline" style="text-align: right"><i class="fa fa-plus"></i> Approve</button>
-                            <button *ngIf="!child.approved && !child.available && !child.denied" type="button" (click)="denySeasonRequest(child)" class="btn btn-sm btn-danger-outline" style="text-align: right"><i class="fa fa-plus"></i> Deny</button>
+                        <div *ngFor="let episode of seasons.episodes">
+                            <!--Episodes-->
+                            <span># {{episode.episodeNumber}} | {{episode.title}}</span>
+                            <span *ngIf="episode.available" class="label label-success">Available</span>
                         </div>
                     </div>
-                    <hr />
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger-outline" (click)="showChildDialogue=false">Close</button>
+            <div class="col-md-3">
+                <button *ngIf="!child.approved" type="button" (click)="approveSeasonRequest(child)" class="btn btn-sm btn-success-outline" style="text-align: right"><i class="fa fa-plus"></i> Approve</button>
+                <button *ngIf="child.approved && !child.available" type="button" [disabled]="true" class="btn btn-sm btn-primary-outline" style="text-align: right"><i class="fa fa-plus"></i> Processing</button>
+                <button *ngIf="!child.approved && !child.available && !child.denied" type="button" (click)="denySeasonRequest(child)" class="btn btn-sm btn-danger-outline" style="text-align: right"><i class="fa fa-plus"></i> Deny</button>
             </div>
         </div>
+        <hr />
     </div>
-</div>
+</p-dialog>
+    <!--<div class="modal fade in" *ngIf="showChildDialogue" style="display: block;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" (click)="showChildDialogue=false">&times;</button>
+                    <h4 class="modal-title">{{selectedSeason?.title}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" *ngFor="let child of selectedSeason.childRequests">
+                        <div class="col-md-12">
+                            <div class="col-md-9">
+                                <span class="col-md-12">Requested By: <b>{{child.requestedUser.username}}</b></span>
 
+                             
+                                <span *ngIf="child.approved && !child.available" class="label label-info">Processing Request</span>
+                                <span *ngIf="child.denied" class="label label-danger">Request Denied</span>
+                                <span *ngIf="child.deniedReason" title="{{child.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                                <span *ngIf="!child.approved && !child.availble && !child.denied" class="label label-warning">Pending Approval</span>
+                                <div class="col-md-12" *ngFor="let seasons of child.seasonRequests">
+
+
+                                    <span>Season: {{seasons.seasonNumber}}</span>
+                                    <span>Episodes:</span>
+
+                                    <div *ngFor="let episode of seasons.episodes">
+                                        <span># {{episode.episodeNumber}} | {{episode.title}}</span>
+                                        <span *ngIf="episode.available" class="label label-success">Available</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <button *ngIf="!child.approved" type="button" (click)="approveSeasonRequest(child)" class="btn btn-sm btn-success-outline" style="text-align: right"><i class="fa fa-plus"></i> Approve</button>
+                                <button *ngIf="child.approved && !child.available" type="button" [disabled]="true" class="btn btn-sm btn-primary-outline" style="text-align: right"><i class="fa fa-plus"></i> Processing</button>
+                                <button *ngIf="!child.approved && !child.available && !child.denied" type="button" (click)="denySeasonRequest(child)" class="btn btn-sm btn-danger-outline" style="text-align: right"><i class="fa fa-plus"></i> Deny</button>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger-outline" (click)="showChildDialogue=false">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>-->

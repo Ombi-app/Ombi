@@ -167,6 +167,8 @@ CREATE  TABLE IF NOT EXISTS EpisodeRequests (
 	Url		VARCHAR(100) NOT NULL,
 	SeasonId INTEGER NOT NULL,
 	Available INTEGER NOT NULL,
+	Requested INTEGER NOT NULL,
+	Approved INTEGER NOT NULL,
 	
 
     FOREIGN KEY (SeasonId) REFERENCES SeasonRequests(Id)

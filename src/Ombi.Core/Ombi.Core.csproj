@@ -30,4 +30,9 @@
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Requests\Movie\" />
+    <Folder Include="Models\Requests\Tv\" />
+  </ItemGroup>
+
 </Project>

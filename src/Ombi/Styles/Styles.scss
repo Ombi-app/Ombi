@@ -14,3 +14,14 @@ $bg-colour-disabled: #252424;
     background: $primary-colour !important;
     color: white;
 }
+
+#dialogOverride > div > .ui-dialog-content {
+    border: 1px solid $bg-colour-disabled !important;
+    background: $bg-colour !important;
+    color: white;
+}
+/*#dialogOverride > div > .ui-dialog-titlebar {
+    background: $primary-colour !important;
+    color: white;
+}*/
+

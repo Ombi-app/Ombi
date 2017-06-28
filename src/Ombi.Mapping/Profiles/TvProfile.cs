@@ -7,6 +7,7 @@ using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using TraktApiSharp.Objects.Get.Shows;
 using TraktApiSharp.Objects.Get.Shows.Common;
+using Ombi.Store.Repository.Requests;
 
 //using TraktApiSharp.Objects.Get.Shows;
 //using TraktApiSharp.Objects.Get.Shows.Common;
@@ -51,23 +52,22 @@ namespace Ombi.Mapping.Profiles
 
 
 
-            CreateMap<TvMazeCustomSeason, SeasonRequestModel>()
-                .ConstructUsing(x =>
-                {
-                    var season = new SeasonRequestModel
-                    {
-                        SeasonNumber = x.SeasonNumber
-                    };
-                    foreach (var ep in x.EpisodeNumber)
-                    {
-                        season.Episodes.Add(new EpisodesRequested
-                        {
-                            EpisodeNumber = ep,    
-                            
-                        });
-                    }
-                    return season;
-                });
+            //CreateMap<TvMazeCustomSeason, SeasonRequests>()
+            //    .ConstructUsing(x =>
+            //    {
+            //        var season = new SeasonRequests
+            //        {
+            //            SeasonNumber = x.SeasonNumber
+            //        };
+            //        foreach (var ep in x.EpisodeNumber)
+            //        {
+            //            season.Episodes.Add(new EpisodeRequests
+            //            {
+            //                EpisodeNumber = ep,   
+            //            });
+            //        }
+            //        return season;
+            //    });
 
 
 

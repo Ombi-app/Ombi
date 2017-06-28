@@ -1,10 +1,8 @@
-﻿using Ombi.Core.Models.Requests.Movie;
-using Ombi.Core.Settings;
+﻿using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models.External;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Radarr;
-using Ombi.Core.Models.Requests;
 using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
 

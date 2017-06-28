@@ -1,11 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Movie;
-using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Requests.Models;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;

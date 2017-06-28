@@ -15,8 +15,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Ombi.Core.Models.Requests.Tv;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Engine
 {
@@ -64,29 +64,32 @@ namespace Ombi.Core.Engine
                 var season = mapped.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == e.season);
                 if (season == null)
                 {
-                    var newSeason = new SeasonRequestModel
+                    var newSeason = new SeasonRequests
                     {
                         SeasonNumber = e.season,
+                        Episodes = new List<EpisodeRequests>()
                     };
-                    newSeason.Episodes.Add(new EpisodesRequested
+                    newSeason.Episodes.Add(new EpisodeRequests
+                    {
+                        Url = e.url,
+                        Title = e.name,
+                        AirDate = DateTime.Parse(e.airstamp),
+                        EpisodeNumber = e.number,
+                        
+                    });
+                    mapped.SeasonRequests.Add(newSeason);
+                }
+                else
+                {
+                    // We already have the season, so just add the episode
+                    season.Episodes.Add(new EpisodeRequests
                     {
                         Url = e.url,
                         Title = e.name,
                         AirDate = DateTime.Parse(e.airstamp),
                         EpisodeNumber = e.number,
                     });
-                    mapped.SeasonRequests.Add(newSeason);
                 }
-                //else
-                //{
-                //    // Find the episode
-                //    var ep = episodes.FirstOrDefault(x => x.number == e.number);
-                    
-                //    ep.Url = e.url;
-                //    ep.Title = e.name;
-                //    ep.AirDate = DateTime.Parse(e.airstamp);
-                //    ep.EpisodeNumber = e.number;
-                //}
             }
 
             var existingRequests = await GetTvRequests();

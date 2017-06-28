@@ -1,4 +1,5 @@
 ﻿using Ombi.Core.Models.Requests;
+using Ombi.Store.Repository.Requests;
 using System.Collections.Generic;
 
 namespace Ombi.Core.Models.Search
@@ -39,7 +40,7 @@ namespace Ombi.Core.Models.Search
         /// </value>
         public string Homepage { get; set; }
 
-        public List<SeasonRequestModel> SeasonRequests { get; set; } = new List<SeasonRequestModel>();
+        public List<SeasonRequests> SeasonRequests { get; set; } = new List<SeasonRequests>();
 
         /// <summary>
         ///     If we are requesting the entire series

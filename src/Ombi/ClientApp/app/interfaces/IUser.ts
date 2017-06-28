@@ -8,7 +8,6 @@
     userType: UserType,
 }
 
-
 export enum UserType {
     LocalUser = 1,
     PlexUser = 2,

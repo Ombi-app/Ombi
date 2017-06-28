@@ -1,16 +1,12 @@
 ﻿using AutoMapper;
-using Hangfire;
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rules;
 using Ombi.Helpers;
-using Ombi.Notifications;
-using Ombi.Notifications.Models;
 using Ombi.Store.Entities;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Tracing;
 using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
@@ -18,7 +14,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
-using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Rule;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
@@ -50,7 +45,7 @@ namespace Ombi.Core.Engine
             // For some reason the poster path is always http
             var posterPath = showInfo.image?.medium.Replace("http:", "https:");
 
-            var tvRequests = new List<SeasonRequestModel>();
+            var tvRequests = new List<SeasonRequests>();
             // Only have the TV requests we actually requested and not everything
             foreach (var season in tv.SeasonRequests)
             {
@@ -84,7 +79,44 @@ namespace Ombi.Core.Engine
                 SeasonRequests = new List<SeasonRequests>()
             };
 
-            if (tv.LatestSeason)
+            if (tv.RequestAll)
+            {
+                var episodes = await TvApi.EpisodeLookup(showInfo.id);
+                var seasonRequests = new List<SeasonRequests>();
+                foreach (var ep in episodes)
+                {
+                    var episodesRequests = new List<EpisodeRequests>();
+                    var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == ep.season);
+                    if (season == null)
+                    {
+                        childRequest.SeasonRequests.Add(new SeasonRequests
+                        {
+                            Episodes = new List<EpisodeRequests>{
+                                new EpisodeRequests
+                                {
+                                    EpisodeNumber = ep.number,
+                                    AirDate = DateTime.Parse(ep.airdate),
+                                    Title = ep.name,
+                                    Url = ep.url
+                                }
+                            },
+                            SeasonNumber = ep.season,
+                        });
+                    }
+                    else
+                    {
+                        season.Episodes.Add(new EpisodeRequests
+                        {
+                            EpisodeNumber = ep.number,
+                            AirDate = DateTime.Parse(ep.airdate),
+                            Title = ep.name,
+                            Url = ep.url
+                        });
+                    }
+                }
+
+            }
+            else if (tv.LatestSeason)
             {
                 var episodes = await TvApi.EpisodeLookup(showInfo.id);
                 var latest = episodes.OrderBy(x => x.season).FirstOrDefault();
@@ -105,8 +137,7 @@ namespace Ombi.Core.Engine
                     SeasonNumber = latest.season,
                 });
             }
-            
-            if (tv.FirstSeason)
+            else if (tv.FirstSeason)
             {
                 var episodes = await TvApi.EpisodeLookup(showInfo.id);
                 var first = episodes.OrderByDescending(x => x.season).FirstOrDefault();
@@ -130,7 +161,12 @@ namespace Ombi.Core.Engine
                     SeasonNumber = first.season,
                 });
             }
-
+            else
+            {
+                // It's a custom request
+                childRequest.SeasonRequests = tvRequests;
+            }
+            
             var ruleResults = await RunRequestRules(childRequest);
             var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
             if (results.Any(x => !x.Success))
@@ -144,6 +180,35 @@ namespace Ombi.Core.Engine
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.Id);
             if (existingRequest != null)
             {
+                // Remove requests we already have, we just want new ones
+                var existingSeasons = existingRequest.ChildRequests.Select(x => x.SeasonRequests);
+                foreach (var existingSeason in existingRequest.ChildRequests)
+                    foreach (var existing in existingSeason.SeasonRequests)
+                    {
+                        var newChild = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == existing.SeasonNumber);
+                        if (newChild != null)
+                        {
+                            // We have some requests in this season...
+                            // Let's find the episodes.
+                            foreach (var existingEp in existing.Episodes)
+                            {
+                                var duplicateEpisode = newChild.Episodes.FirstOrDefault(x => x.EpisodeNumber == existingEp.EpisodeNumber);
+                                if (duplicateEpisode != null)
+                                {
+                                    // Remove it.
+                                    newChild.Episodes.Remove(duplicateEpisode);
+                                }
+                            }
+                            if (!newChild.Episodes.Any())
+                            {
+                                // We may have removed all episodes
+                                childRequest.SeasonRequests.Remove(newChild);
+                            }
+                        }
+                    }
+
+                // Remove the ID since this is a new child
+                childRequest.Id = 0;
                 return await AddExistingRequest(childRequest, existingRequest);
             }
             // This is a new request
@@ -190,7 +255,7 @@ namespace Ombi.Core.Engine
             results = Mapper.Map<TvRequests>(request);
 
             // TODO need to check if we need to approve any child requests since they may have updated
-            
+
             await TvRepository.Update(results);
             return results;
         }
@@ -213,47 +278,6 @@ namespace Ombi.Core.Engine
                 // TODO Auto Approval Code
             }
             return await AfterRequest(newRequest);
-        }
-
-        private IEnumerable<SeasonRequestModel> GetListDifferences(List<SeasonRequestModel> existing,
-            List<SeasonRequestModel> request)
-        {
-            var requestsToRemove = new List<SeasonRequestModel>();
-            foreach (var r in request)
-            {
-                // Do we have an existing season?
-                var existingSeason = existing.FirstOrDefault(x => x.SeasonNumber == r.SeasonNumber);
-                if (existingSeason == null)
-                {
-                    continue;
-                }
-
-                // Compare the episodes
-                for (var i = r.Episodes.Count - 1; i >= 0; i--)
-                {
-                    var existingEpisode = existingSeason.Episodes.FirstOrDefault(x => x.EpisodeNumber == r.Episodes[i].EpisodeNumber);
-                    if (existingEpisode == null)
-                    {
-                        // we are fine, we have not yet requested this
-                    }
-                    else
-                    {
-                        // We already have this request
-                        r.Episodes.RemoveAt(i);
-                    }
-                }
-
-                if (!r.Episodes.Any())
-                {
-                    requestsToRemove.Add(r);
-                }
-            }
-
-            foreach (var remove in requestsToRemove)
-            {
-                request.Remove(remove);
-            }
-            return request;
         }
 
         private async Task<RequestEngineResult> AddRequest(TvRequests model)

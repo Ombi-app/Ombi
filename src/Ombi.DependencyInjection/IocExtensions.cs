@@ -17,7 +17,6 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Notifications;
-using Ombi.Core.Requests.Models;
 using Ombi.Core.Rule;
 using Ombi.Core.Settings;
 using Ombi.Notifications;
@@ -75,7 +74,6 @@ namespace Ombi.DependencyInjection
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
 
             services.AddScoped<IOmbiContext, OmbiContext>();
-            services.AddTransient<IRequestRepository, RequestJsonRepository>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
@@ -89,7 +87,6 @@ namespace Ombi.DependencyInjection
         public static void RegisterServices(this IServiceCollection services)
         {
             services.AddTransient<IRequestServiceMain, RequestService>();
-            services.AddTransient(typeof(IRequestService<>), typeof(JsonRequestService<>));
             services.AddSingleton<INotificationService, NotificationService>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
 

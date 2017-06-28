@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Ombi.Core.Models.Requests;
-using Ombi.Core.Models.Requests.Tv;
 using Ombi.Core.Models.Search;
 using Ombi.Store.Entities.Requests;
 

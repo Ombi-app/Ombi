@@ -1,19 +1,11 @@
-﻿using System;
-using Ombi.Core.Claims;
-using Ombi.Core.Models.Requests;
+﻿using Ombi.Core.Claims;
 using Ombi.Core.Rule;
 using Ombi.Core.Rules;
 using Ombi.Store.Entities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Hangfire;
-using Ombi.Core.Models.Requests.Movie;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Notifications;
-using Ombi.Helpers;
-using Ombi.Notifications.Models;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine.Interfaces
