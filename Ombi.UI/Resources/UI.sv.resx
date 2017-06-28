@@ -151,7 +151,7 @@
     <value>Sök</value>
   </data>
   <data name="Layout_Requests" xml:space="preserve">
-    <value>Önsningar</value>
+    <value>Önskningar</value>
   </data>
   <data name="Layout_Issues" xml:space="preserve">
     <value>Problem</value>
@@ -202,7 +202,7 @@
     <value>Nederländska</value>
   </data>
   <data name="Search_Request" xml:space="preserve">
-    <value>Problem</value>
+    <value>Önska</value>
   </data>
   <data name="Search_Movies" xml:space="preserve">
     <value>Filmer</value>
