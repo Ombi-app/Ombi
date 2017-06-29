@@ -119,22 +119,20 @@ namespace Ombi
 
             services.AddHangfire(x =>
             {
-#if DEBUG
+
                 x.UseMemoryStorage(new MemoryStorageOptions());
-#else
-                x.UseSQLiteStorage("Data Source=Ombi.db;");
-#endif
+
+                //x.UseSQLiteStorage("Data Source=Ombi.db;");
+
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
 
 #if DEBUG
             // Note .AddMiniProfiler() returns a IMiniProfilerBuilder for easy intellisense
             services.AddMiniProfiler();
-
+#endif
             // Make sure you have memory cache available unless you're using another storage provider
             services.AddMemoryCache();
-#endif
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
