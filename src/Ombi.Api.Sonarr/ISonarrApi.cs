@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Ombi.Api.Sonarr.Models;
+using System.Net.Http;
 
 namespace Ombi.Api.Sonarr
 {
@@ -12,5 +13,12 @@ namespace Ombi.Api.Sonarr
         Task<SonarrSeries> GetSeriesById(int id, string apiKey, string baseUrl);
         Task<SonarrSeries> UpdateSeries(SonarrSeries updated, string apiKey, string baseUrl);
         Task<NewSeries> AddSeries(NewSeries seriesToAdd, string apiKey, string baseUrl);
+        Task<IEnumerable<Episode>> GetEpisodes(int seriesId, string apiKey, string baseUrl);
+        Task<Episode> GetEpisodeById(int episodeId, string apiKey, string baseUrl);
+        Task<EpisodeUpdateResult> UpdateEpisode(Episode episodeToUpdate, string apiKey, string baseUrl);
+        Task<bool> EpisodeSearch(int[] episodeIds, string apiKey, string baseUrl);
+        Task<bool> SeasonSearch(int seriesId, int seasonNumber, string apiKey, string baseUrl);
+        Task<bool> SeriesSearch(int seriesId, string apiKey, string baseUrl);
+
     }
 }

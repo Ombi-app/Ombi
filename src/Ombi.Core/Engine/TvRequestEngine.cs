@@ -301,7 +301,7 @@ namespace Ombi.Core.Engine
             if(model.Approved)
             {
                 // Autosend
-                TvSender.SendToSonarr(model,model.ParentRequest.TotalSeasons);
+                TvSender.SendToSonarr(model);
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();

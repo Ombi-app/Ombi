@@ -30,7 +30,7 @@ namespace Ombi.Core
         /// <param name="model"></param>
         /// <param name="qualityId">This is for any qualities overriden from the UI</param>
         /// <returns></returns>
-        public async Task<NewSeries> SendToSonarr(ChildRequests model, int totalSeasons, string qualityId = null)
+        public async Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null)
         {
             var s = await Settings.GetSettingsAsync();
             var qualityProfile = 0;
@@ -48,58 +48,119 @@ namespace Ombi.Core
             // For some reason, if we haven't got one use the first root folder in Sonarr
             // TODO make this overrideable via the UI
             var rootFolderPath = await GetSonarrRootPath(model.ParentRequest.RootFolder ?? 0, s);
-
-
-            // Does the series actually exist?
-            var allSeries = await SonarrApi.GetSeries(s.ApiKey, s.FullUri);
-            var existingSeries = allSeries.FirstOrDefault(x => x.tvdbId == model.ParentRequest.TvDbId);
-
-            if(existingSeries == null)
+            try
             {
-                // Time to add a new one
-                var newSeries = new NewSeries
-                {
-                    title = model.ParentRequest.Title,
-                    imdbId = model.ParentRequest.ImdbId,
-                    tvdbId = model.ParentRequest.TvDbId,
-                    cleanTitle = model.ParentRequest.Title,
-                    monitored = true,
-                    seasonFolder = s.SeasonFolders,
-                    rootFolderPath = rootFolderPath,
-                    qualityProfileId = qualityProfile,
-                    titleSlug = model.ParentRequest.Title,
-                    addOptions = new AddOptions
-                    {
-                        ignoreEpisodesWithFiles = true, // There shouldn't be any episodes with files, this is a new season
-                        ignoreEpisodesWithoutFiles = false, // We want all missing
-                        searchForMissingEpisodes = true // we want to search for missing TODO pass this in
-                    }
-                };
 
-                // Montitor the correct seasons,
-                // If we have that season in the model then it's monitored!
-                var seasonsToAdd = new List<Season>();
-                for (int i = 1; i < totalSeasons; i++)
+
+                // Does the series actually exist?
+                var allSeries = await SonarrApi.GetSeries(s.ApiKey, s.FullUri);
+                var existingSeries = allSeries.FirstOrDefault(x => x.tvdbId == model.ParentRequest.TvDbId);
+
+
+
+                if (existingSeries == null)
                 {
-                    var season = new Season
+                    // Time to add a new one
+                    var newSeries = new NewSeries
                     {
-                        seasonNumber = i,
-                        monitored = model.SeasonRequests.Any(x => x.SeasonNumber == i)
+                        title = model.ParentRequest.Title,
+                        imdbId = model.ParentRequest.ImdbId,
+                        tvdbId = model.ParentRequest.TvDbId,
+                        cleanTitle = model.ParentRequest.Title,
+                        monitored = true,
+                        seasonFolder = s.SeasonFolders,
+                        rootFolderPath = rootFolderPath,
+                        qualityProfileId = qualityProfile,
+                        titleSlug = model.ParentRequest.Title,
+                        addOptions = new AddOptions
+                        {
+                            ignoreEpisodesWithFiles = true, // There shouldn't be any episodes with files, this is a new season
+                            ignoreEpisodesWithoutFiles = true, // We want all missing
+                            searchForMissingEpisodes = false // we want dont want to search yet. We want to make sure everything is unmonitored/monitored correctly.
+                        }
                     };
-                    seasonsToAdd.Add(season);
+
+                    // Montitor the correct seasons,
+                    // If we have that season in the model then it's monitored!
+                    var seasonsToAdd = new List<Season>();
+                    for (int i = 1; i < model.ParentRequest.TotalSeasons +1 ; i++)
+                    {
+                        var season = new Season
+                        {
+                            seasonNumber = i,
+                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == i)
+                        };
+                        seasonsToAdd.Add(season);
+                    }
+                    newSeries.seasons = seasonsToAdd;
+                    var result = await SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
+
+                    // Ok, now let's sort out the episodes.
+                    var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
+                    while(sonarrEpisodes.Count() == 0)
+                    {
+                        sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
+                        await Task.Delay(300);
+                    }
+
+                    var episodesToUpdate = new List<Episode>();
+                    foreach (var req in model.SeasonRequests)
+                    {
+                        foreach (var ep in req.Episodes)
+                        {
+                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == ep.Season.SeasonNumber);
+                            if(sonarrEp != null)
+                            {
+                                sonarrEp.monitored = true;
+                                episodesToUpdate.Add(sonarrEp);
+                            }
+                        }
+                    }
+
+                    // Now update the episodes that need updating
+                    foreach (var epToUpdate in episodesToUpdate)
+                    {
+                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                    }
+
+                    if(!s.AddOnly)
+                    {
+                        foreach (var season in model.SeasonRequests)
+                        {
+                            var sonarrSeason = sonarrEpisodes.Where(x => x.seasonNumber == season.SeasonNumber);
+                            var sonarrEpCount = sonarrSeason.Count();
+                            var ourRequestCount = season.Episodes.Count();
+
+                            if(sonarrEpCount == ourRequestCount)
+                            {
+                                // We have the same amount of requests as all of the episodes in the season.
+                                // Do a season search
+                                await SonarrApi.SeasonSearch(result.id, season.SeasonNumber, s.ApiKey, s.FullUri);
+                            }
+                            else
+                            {
+                                // There is a miss-match, let's search the episodes indiviaully 
+                                await SonarrApi.EpisodeSearch(episodesToUpdate.Select(x => x.id).ToArray(), s.ApiKey, s.FullUri);
+                            }
+                        }
+                    }
+
+                    return result;
+                }
+                else
+                {
+                    // Let's update the existing
                 }
 
-                var result = SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
-                return result;
             }
-            else
+            catch (System.Exception e)
             {
-                // Let's update the existing
+
+                throw;
             }
 
 
 
-            
             return null;
         }
 
@@ -107,7 +168,7 @@ namespace Ombi.Core
         {
             var rootFoldersResult = await SonarrApi.GetRootFolders(sonarrSettings.ApiKey, sonarrSettings.FullUri);
 
-            if(pathId == 0)
+            if (pathId == 0)
             {
                 return rootFoldersResult.FirstOrDefault().path;
             }

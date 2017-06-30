@@ -7,6 +7,6 @@ namespace Ombi.Core
 {
     public interface ITvSender
     {
-        Task<NewSeries> SendToSonarr(ChildRequests model, int totalSeasons, string qualityId = null);
+        Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null);
     }
 }

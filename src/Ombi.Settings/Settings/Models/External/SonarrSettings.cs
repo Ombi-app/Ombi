@@ -13,5 +13,6 @@
         /// The root path.
         /// </value>
         public string RootPath { get; set; }
+        public bool AddOnly { get; set; }
     }
 }

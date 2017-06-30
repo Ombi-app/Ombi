@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ombi.Store.Entities.Requests
 {
@@ -16,6 +17,7 @@ namespace Ombi.Store.Entities.Requests
         /// <summary>
         /// This is so we can correctly send the right amount of seasons to Sonarr
         /// </summary>
+        [NotMapped]
         public int TotalSeasons { get; set; }
 
         public List<ChildRequests> ChildRequests { get; set; }

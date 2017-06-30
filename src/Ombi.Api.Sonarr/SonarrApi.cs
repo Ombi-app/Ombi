@@ -10,7 +10,6 @@ namespace Ombi.Api.Sonarr
 {
     public class SonarrApi : ISonarrApi
     {
-
         public SonarrApi(IApi api)
         {
             Api = api;
@@ -21,18 +20,14 @@ namespace Ombi.Api.Sonarr
         public async Task<IEnumerable<SonarrProfile>> GetProfiles(string apiKey, string baseUrl)
         {
             var request = new Request("/api/profile", baseUrl, HttpMethod.Get);
-
             request.AddHeader("X-Api-Key", apiKey);
-
             return await Api.Request<List<SonarrProfile>>(request);
         }
 
         public async Task<IEnumerable<SonarrRootFolder>> GetRootFolders(string apiKey, string baseUrl)
         {
             var request = new Request("/api/rootfolder", baseUrl, HttpMethod.Get);
-
             request.AddHeader("X-Api-Key", apiKey);
-
             return await Api.Request<List<SonarrRootFolder>>(request);
         }
 
@@ -45,10 +40,14 @@ namespace Ombi.Api.Sonarr
         public async Task<IEnumerable<SonarrSeries>> GetSeries(string apiKey, string baseUrl)
         {
             var request = new Request("/api/series", baseUrl, HttpMethod.Get);
-
             request.AddHeader("X-Api-Key", apiKey);
+            var results = await Api.Request<List<SonarrSeries>>(request);
 
-            return await Api.Request<List<SonarrSeries>>(request);
+            foreach (var s in results)
+            {
+                s.seasons.ToList().RemoveAt(0);
+            }
+            return results;
         }
 
         /// <summary>
@@ -61,10 +60,11 @@ namespace Ombi.Api.Sonarr
         public async Task<SonarrSeries> GetSeriesById(int id, string apiKey, string baseUrl)
         {
             var request = new Request($"/api/series/{id}", baseUrl, HttpMethod.Get);
-
             request.AddHeader("X-Api-Key", apiKey);
+            var result = await Api.Request<SonarrSeries>(request);
+            result.seasons.ToList().RemoveAt(0);
 
-            return await Api.Request<SonarrSeries>(request);
+            return result;
         }
 
         /// <summary>
@@ -77,22 +77,21 @@ namespace Ombi.Api.Sonarr
         public async Task<SonarrSeries> UpdateSeries(SonarrSeries updated, string apiKey, string baseUrl)
         {
             var request = new Request("/api/series/", baseUrl, HttpMethod.Put);
-
             request.AddHeader("X-Api-Key", apiKey);
             request.AddJsonBody(updated);
-
             return await Api.Request<SonarrSeries>(request);
         }
 
         public async Task<NewSeries> AddSeries(NewSeries seriesToAdd, string apiKey, string baseUrl)
         {
-            if(!string.IsNullOrEmpty(seriesToAdd.Validate()))
+            if (!string.IsNullOrEmpty(seriesToAdd.Validate()))
             {
                 return new NewSeries { ErrorMessages = new List<string> { seriesToAdd.Validate() } };
             }
             var request = new Request("/api/series/", baseUrl, HttpMethod.Post);
 
             request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(seriesToAdd);
             try
             {
 
@@ -102,10 +101,92 @@ namespace Ombi.Api.Sonarr
             {
                 var error = await Api.Request<List<SonarrError>>(request);
                 var messages = error?.Select(x => x.errorMessage).ToList();
-                messages?.ForEach(x => Log.Error(x));
                 return new NewSeries { ErrorMessages = messages };
             }
         }
 
+        /// <summary>
+        /// Returns the episodes for the series
+        /// </summary>
+        /// <param name="seriesId">The Sonarr SeriesId value</param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Episode>> GetEpisodes(int seriesId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/Episode?seriesId={seriesId}", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+            return await Api.Request<List<Episode>>(request);
+        }
+
+        /// <summary>
+        /// Returns the episode for the series
+        /// </summary>
+        /// <param name="episodeId">The Sonarr Episode ID</param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public async Task<Episode> GetEpisodeById(int episodeId, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/Episode/{episodeId}", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+            return await Api.Request<Episode>(request);
+        }
+
+        public async Task<EpisodeUpdateResult> UpdateEpisode(Episode episodeToUpdate, string apiKey, string baseUrl)
+        {
+            var request = new Request($"/api/Episode/", baseUrl, HttpMethod.Put);
+            request.AddHeader("X-Api-Key", apiKey);
+            request.AddJsonBody(episodeToUpdate);
+            return await Api.Request<EpisodeUpdateResult>(request);
+        }
+
+        /// <summary>
+        /// Search for a list of episodes
+        /// </summary>
+        /// <param name="episodeIds">The episodes to search for</param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public async Task<bool> EpisodeSearch(int[] episodeIds, string apiKey, string baseUrl)
+        {
+            var result = await Command("EpisodeSearch", apiKey, baseUrl, episodeIds);
+            return result != null;
+        }
+
+        /// <summary>
+        /// Search for all episodes of a particular season
+        /// </summary>
+        /// <param name="seriesId">Series to search for</param>
+        /// <param name="seasonNumber">Season to get all episodes</param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public async Task<bool> SeasonSearch(int seriesId, int seasonNumber, string apiKey, string baseUrl)
+        {
+            var result = await Command("SeasonSearch", apiKey, baseUrl, new { seriesId, seasonNumber });
+            return result != null;
+        }
+
+        /// <summary>
+        /// Search for all episodes in a series
+        /// </summary>
+        /// <param name="seriesId">Series to search for</param>
+        /// <param name="apiKey"></param>
+        /// <param name="baseUrl"></param>
+        /// <returns></returns>
+        public async Task<bool> SeriesSearch(int seriesId, string apiKey, string baseUrl)
+        {
+            var result = await Command("SeasonSearch", apiKey, baseUrl, seriesId);
+            return result != null;
+        }
+
+        private async Task<CommandResult> Command(string commandName, string apiKey, string baseUrl, object body = null)
+        {
+            var request = new Request($"/api/Command/{commandName}", baseUrl, HttpMethod.Post);
+            request.AddHeader("X-Api-Key", apiKey);
+            if(body != null) request.AddJsonBody(body);
+            return await Api.Request<CommandResult>(request);
+        }
     }
 }

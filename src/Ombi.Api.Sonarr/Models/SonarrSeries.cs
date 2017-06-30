@@ -28,7 +28,7 @@ namespace Ombi.Api.Sonarr.Models
         public bool seasonFolder { get; set; }
         public bool monitored { get; set; }
         public bool useSceneNumbering { get; set; }
-        public int runtime { get; set; }
+        public long runtime { get; set; }
         public int tvdbId { get; set; }
         public int tvRageId { get; set; }
         public int tvMazeId { get; set; }
@@ -80,7 +80,7 @@ namespace Ombi.Api.Sonarr.Models
         public int episodeCount { get; set; }
         public int totalEpisodeCount { get; set; }
         public long sizeOnDisk { get; set; }
-        public int percentOfEpisodes { get; set; }
+        public long percentOfEpisodes { get; set; }
         public DateTime previousAiring { get; set; }
         public DateTime nextAiring { get; set; }
     }
