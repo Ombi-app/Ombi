@@ -24,18 +24,21 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule, IUserIdentityManager manager) : base(user, requestService, rule)
+            IRuleEvaluator rule, IUserIdentityManager manager,
+            ITvSender sender) : base(user, requestService, rule)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             Mapper = map;
             UserManager = manager;
+            TvSender = sender;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
         private IUserIdentityManager UserManager { get; }
+        private ITvSender TvSender {get;}
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
@@ -223,7 +226,8 @@ namespace Ombi.Core.Engine
                 Status = showInfo.status,
                 ImdbId = showInfo.externals?.imdb ?? string.Empty,
                 TvDbId = tv.Id,
-                ChildRequests = new List<ChildRequests>()
+                ChildRequests = new List<ChildRequests>(),
+                TotalSeasons = tv.SeasonRequests.Count()
             };
             model.ChildRequests.Add(childRequest);
             return await AddRequest(model);
@@ -292,6 +296,12 @@ namespace Ombi.Core.Engine
             if (ShouldSendNotification(RequestType.TvShow))
             {
                 //NotificationHelper.NewRequest(model.ParentRequest);
+            }
+
+            if(model.Approved)
+            {
+                // Autosend
+                TvSender.SendToSonarr(model,model.ParentRequest.TotalSeasons);
             }
 
             //var limit = await RequestLimitRepo.GetAllAsync();

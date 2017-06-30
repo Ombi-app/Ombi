@@ -11,6 +11,8 @@ namespace Ombi.Store.Entities.Requests
         public TvRequests ParentRequest { get; set; }
         public int ParentRequestId { get; set; }
         public int? IssueId { get; set; }
+
+
         [ForeignKey(nameof(IssueId))]
         public List<TvIssues> Issues { get; set; }
 
