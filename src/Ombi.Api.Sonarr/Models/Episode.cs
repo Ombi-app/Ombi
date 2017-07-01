@@ -31,7 +31,7 @@ namespace Ombi.Api.Sonarr.Models
         public int seasonNumber { get; set; }
         public string relativePath { get; set; }
         public string path { get; set; }
-        public int size { get; set; }
+        public long size { get; set; }
         public DateTime dateAdded { get; set; }
         public string sceneName { get; set; }
         public EpisodeQuality quality { get; set; }

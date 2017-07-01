@@ -150,7 +150,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<bool> EpisodeSearch(int[] episodeIds, string apiKey, string baseUrl)
         {
-            var result = await Command("EpisodeSearch", apiKey, baseUrl, episodeIds);
+            var result = await Command(apiKey, baseUrl, new { name = "EpisodeSearch", episodeIds });
             return result != null;
         }
 
@@ -164,7 +164,7 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<bool> SeasonSearch(int seriesId, int seasonNumber, string apiKey, string baseUrl)
         {
-            var result = await Command("SeasonSearch", apiKey, baseUrl, new { seriesId, seasonNumber });
+            var result = await Command(apiKey, baseUrl, new { name = "SeasonSearch", seriesId, seasonNumber });
             return result != null;
         }
 
@@ -177,15 +177,15 @@ namespace Ombi.Api.Sonarr
         /// <returns></returns>
         public async Task<bool> SeriesSearch(int seriesId, string apiKey, string baseUrl)
         {
-            var result = await Command("SeasonSearch", apiKey, baseUrl, seriesId);
+            var result = await Command(apiKey, baseUrl, new { name = "SeriesSearch", seriesId });
             return result != null;
         }
 
-        private async Task<CommandResult> Command(string commandName, string apiKey, string baseUrl, object body = null)
+        private async Task<CommandResult> Command(string apiKey, string baseUrl, object body)
         {
-            var request = new Request($"/api/Command/{commandName}", baseUrl, HttpMethod.Post);
+            var request = new Request($"/api/Command/", baseUrl, HttpMethod.Post);
             request.AddHeader("X-Api-Key", apiKey);
-            if(body != null) request.AddJsonBody(body);
+            request.AddJsonBody(body);
             return await Api.Request<CommandResult>(request);
         }
     }
