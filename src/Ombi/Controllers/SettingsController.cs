@@ -31,6 +31,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="resolver">The resolver.</param>
         /// <param name="mapper">The mapper.</param>
+        /// <param name="templateRepo">The templateRepo.</param>
         public SettingsController(ISettingsResolver resolver, IMapper mapper, INotificationTemplatesRepository templateRepo)
         {
             SettingsResolver = resolver;

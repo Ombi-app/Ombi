@@ -248,7 +248,7 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)
         {
             var allRequests = TvRepository.Get();
-            var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
+            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
             return results;
         }
 
@@ -325,25 +325,25 @@ namespace Ombi.Core.Engine
             return Task.FromResult(new RequestEngineResult { RequestAdded = true });
         }
 
-        public async Task<IEnumerable<TvRequests>> GetApprovedRequests()
-        {
-            //var allRequests = TvRepository.Get();
-            //return await allRequests.Where(x => x.Approved && !x.Available).ToListAsync();
-            return null;
-        }
+        //public async Task<IEnumerable<TvRequests>> GetApprovedRequests()
+        //{
+        //    var allRequests = TvRepository.Get();
+            
+            
+        //}
 
-        public async Task<IEnumerable<TvRequests>> GetNewRequests()
-        {
-            //var allRequests = await TvRepository.GetAllAsync();
-            //return allRequests.Where(x => !x.Approved && !x.Available);
-            return null;
-        }
+        //public async Task<IEnumerable<TvRequests>> GetNewRequests()
+        //{
+        //    //var allRequests = await TvRepository.GetAllAsync();
+        //    //return allRequests.Where(x => !x.Approved && !x.Available);
+        //    return null;
+        //}
 
-        public async Task<IEnumerable<TvRequests>> GetAvailableRequests()
-        {
-            //var allRequests = await TvRepository.GetAllAsync();
-            //return allRequests.Where(x => x.Available);
-            return null;
-        }
+        //public async Task<IEnumerable<TvRequests>> GetAvailableRequests()
+        //{
+        //    //var allRequests = await TvRepository.GetAllAsync();
+        //    //return allRequests.Where(x => x.Available);
+        //    return null;
+        //}
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
@@ -16,20 +15,7 @@ namespace Ombi.Store.Context
             if (_created) return;
 
             _created = true;
-            Database.EnsureCreated();
             Database.Migrate();
-
-#if DEBUG
-            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-            var directory = System.IO.Path.GetDirectoryName(location);
-            var file = File.ReadAllText(Path.Combine(directory,"SqlTables.sql"));
-#else
-
-            var file = File.ReadAllText("SqlTables.sql");
-#endif
-            // Run Script
-
-            Database.ExecuteSqlCommand(file, 0);
             
             // Add the notifcation templates
             AddAllTemplates();

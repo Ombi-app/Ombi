@@ -1,0 +1,1 @@
+﻿dotnet ef migrations add MIGRATIONNAME --context OmbiContext --startup-project ../Ombi/Ombi.csproj
