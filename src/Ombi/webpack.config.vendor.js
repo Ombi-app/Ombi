@@ -36,7 +36,6 @@ module.exports = function (env) {
                 'primeng/resources/primeng.min.css',
                 'primeng/resources/themes/omega/theme.css',
                 '@angular/material/prebuilt-themes/deeppurple-amber.css',
-                //'bootswatch/superhero/bootstrap.min.css',
                 'event-source-polyfill',
                 'jquery',
                 'zone.js',
@@ -48,8 +47,8 @@ module.exports = function (env) {
                 'font-awesome/scss/font-awesome.scss',
                 'pace-progress',
                 'pace-progress/themes/orange/pace-theme-flash.css',
-                'ng2-dragula',
-                'dragula/dist/dragula.min.css'
+                //'ng2-dragula',
+                //'dragula/dist/dragula.min.css'
             ]
         },
         output: {
