@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications.Interfaces
 {
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
-        protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo)
+        protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
+            MovieRepository = movie;
+            TvRepository = tv;
         }
         
         protected ISettingsService<T> Settings { get; }
         protected INotificationTemplatesRepository TemplateRepository { get; }
+        protected IMovieRequestRepository MovieRepository { get; }
+        protected ITvRequestRepository TvRepository { get; }
+        
+        protected ChildRequests TvRequest { get; set; }
+        protected MovieRequests MovieRequest { get; set; }
+        
         public abstract string NotificationName { get; }
 
         public async Task NotifyAsync(NotificationOptions model)
@@ -30,10 +42,17 @@ namespace Ombi.Notifications.Interfaces
             if (settings == null) await NotifyAsync(model);
             
             var notificationSettings = (T)settings;
-
+            
             if (!ValidateConfiguration(notificationSettings))
             {
                 return;
+            }
+            
+            // Is this a test?
+            // The request id for tests is -1
+            if (model.RequestId > 0)
+            {
+                await LoadRequest(model.RequestId, model.RequestType);
             }
             try
             {
@@ -73,10 +92,52 @@ namespace Ombi.Notifications.Interfaces
             }
         }
 
+        protected virtual async Task LoadRequest(int requestId, RequestType type)
+        {
+            if (type == RequestType.Movie)
+            {
+                MovieRequest = await MovieRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+                MovieRequest.PosterPath = $"https://image.tmdb.org/t/p/w300/{MovieRequest.PosterPath}";
+            }
+            else
+            {
+               TvRequest = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            }
+        }
+
         private T GetConfiguration()
         {
             var settings = Settings.GetSettings();
             return settings;
+        }
+
+        protected virtual async Task<NotificationMessageContent> LoadTemplate(NotificationAgent agent, NotificationType type, NotificationOptions model)
+        {
+            var template = await TemplateRepository.GetTemplate(agent, type);
+            if (!template.Enabled)
+            {
+                return null;
+            }
+            var parsed = Parse(model, template);
+
+            return parsed;
+        }
+
+        private NotificationMessageContent Parse(NotificationOptions model, NotificationTemplates template)
+        {
+            var resolver = new NotificationMessageResolver();
+            var curlys = new NotificationMessageCurlys();
+            if (model.RequestType == RequestType.Movie)
+            {
+                curlys.Setup(MovieRequest);
+            }
+            else
+            {
+                curlys.Setup(TvRequest);
+            }
+            var parsed = resolver.ParseMessage(template, curlys);
+
+            return parsed;
         }
 
 

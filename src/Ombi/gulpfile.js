@@ -1,5 +1,5 @@
 /// <binding BeforeBuild='build' />
-'use strict';
+'use strict'; 
 
 const gulp = require('gulp');
 const run = require('gulp-run');

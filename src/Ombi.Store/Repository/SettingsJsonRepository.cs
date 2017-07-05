@@ -49,7 +49,9 @@ namespace Ombi.Store.Repository
 
         public GlobalSettings Get(string pageName)
         {
-            return Db.Settings.FirstOrDefault(x => x.SettingsName == pageName);
+            var entity = Db.Settings.FirstOrDefault(x => x.SettingsName == pageName);
+            Db.Entry(entity).Reload();
+            return entity;
         }
 
         public async Task<GlobalSettings> GetAsync(string settingsName)

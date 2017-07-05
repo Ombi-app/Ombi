@@ -293,9 +293,9 @@ namespace Ombi.Core.Engine
 
         private Task<RequestEngineResult> AfterRequest(ChildRequests model)
         {
-            if (ShouldSendNotification(RequestType.TvShow))
+            if (ShouldSendNotification(model))
             {
-                //NotificationHelper.NewRequest(model.ParentRequest);
+                NotificationHelper.NewRequest(model);
             }
 
             if(model.Approved)

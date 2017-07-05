@@ -10,9 +10,6 @@ namespace Ombi.Core.Engine.Interfaces
     {
         Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model);
 
-        bool ShouldAutoApprove(RequestType requestType);
-        
-
         Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search);
 
         Task RemoveMovieRequest(int requestId);

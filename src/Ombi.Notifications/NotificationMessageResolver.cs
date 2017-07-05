@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Ombi.Store.Entities;
+using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Notifications
 {
@@ -8,24 +10,49 @@ namespace Ombi.Notifications
     {
         public string Subject { get; set; }
         public string Message { get; set; }
+        public string Image { get; set; }
     }
     public class NotificationMessageCurlys
-    {
-        public NotificationMessageCurlys(string requestedUser, string title, string requestedDateTime, string type, string issue)
+    { 
+
+        public void Setup(FullBaseRequest req)
         {
-            RequestedUser = requestedUser;
-            Title = title;
-            RequestedDate = requestedDateTime;
-            Type = type;
-            Issue = issue;
+            RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
+                ? req.RequestedUser.Username
+                : req.RequestedUser.Alias;
+            Title = req.Title;
+            RequestedDate = req.RequestedDate.ToString("D");
+            Type = req.RequestType.ToString();
+            Overview = req.Overview;
+            Year = req.ReleaseDate.Year.ToString();
+            PosterImage = req.PosterPath;
+        }
+
+        public void Setup(ChildRequests req)
+        {
+            RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
+                ? req.RequestedUser.Username
+                : req.RequestedUser.Alias;
+            Title = req.ParentRequest.Title;
+            RequestedDate = req.RequestedDate.ToString("D");
+            Type = req.RequestType.ToString();
+            Overview = req.ParentRequest.Overview;
+            Year = req.ParentRequest.ReleaseDate.Year.ToString();
+            PosterImage = req.ParentRequest.PosterPath;
+            // DO Episode and Season Lists
         }
         
         // User Defined
-        private string RequestedUser { get; }
-        private string Title { get; }
-        private string RequestedDate { get; }
-        private string Type { get; }
-        private string Issue { get; }
+        public string RequestedUser { get; set; }
+        public string Title { get; set; }
+        public string RequestedDate { get; set; }
+        public string Type { get; set; }
+        public string Issue { get; set; }
+        public string Overview { get; set; }
+        public string Year { get; set; }
+        public string EpisodesList { get; set; }
+        public string SeasonsList { get; set; }
+        public string PosterImage { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -44,6 +71,11 @@ namespace Ombi.Notifications
             {nameof(ShortDate),ShortDate},
             {nameof(LongTime),LongTime},
             {nameof(ShortTime),ShortTime},
+            {nameof(Overview),Overview},
+            {nameof(Year),Year},
+            {nameof(EpisodesList),EpisodesList},
+            {nameof(SeasonsList),SeasonsList},
+            {nameof(PosterImage),PosterImage},
         };
     }
     
@@ -66,7 +98,9 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public NotificationMessageContent ParseMessage(NotificationTemplates notification, NotificationMessageCurlys c)
         {
-            return Resolve(notification.Message, notification.Subject, c.Curlys);
+            var content = Resolve(notification.Message, notification.Subject, c.Curlys);
+            content.Image = c.PosterImage;
+            return content;
         }
 
         /// <summary>
@@ -84,8 +118,7 @@ namespace Ombi.Notifications
 
             body = ReplaceFields(bodyFields, parameters, body);
             subject = ReplaceFields(subjectFields, parameters, subject);
-
-            return new NotificationMessageContent { Message = body ?? string.Empty, Subject = subject ?? string.Empty };
+            return new NotificationMessageContent { Message = body ?? string.Empty, Subject = subject ?? string.Empty};
         }
 
         /// <summary>

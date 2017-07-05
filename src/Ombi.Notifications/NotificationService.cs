@@ -52,8 +52,13 @@ namespace Ombi.Notifications
         /// <returns></returns>
         public async Task Publish(NotificationOptions model)
         {
-            var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
+            //var notificationTasks = NotificationAgents.Select(notification => NotifyAsync(notification, model));
+            var notificationTasks = new List<Task>();
 
+            foreach (var agent in NotificationAgents)
+            {
+                notificationTasks.Add(NotifyAsync(agent,model));
+            }
             await Task.WhenAll(notificationTasks).ConfigureAwait(false);
         }
 
@@ -86,6 +91,10 @@ namespace Ombi.Notifications
 
         private async Task NotifyAsync(INotification notification, NotificationOptions model, Ombi.Settings.Settings.Models.Settings settings)
         {
+            if (model.RequestId == 0)
+            {
+                throw new ArgumentException("RequestId is not set");
+            }
             try
             {
                 await notification.NotifyAsync(model, settings).ConfigureAwait(false);

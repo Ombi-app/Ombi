@@ -142,6 +142,8 @@ namespace Ombi.Core.Engine
                 $"{fullMovieName} has been successfully added!");
         }
 
+
+
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
             var allRequests = await MovieRepository.Get().Skip(position).Take(count).ToListAsync();
@@ -191,7 +193,7 @@ namespace Ombi.Core.Engine
         {
             await MovieRepository.Add(model);
 
-            if (ShouldSendNotification(RequestType.Movie))
+            if (ShouldSendNotification(model))
             {
                 NotificationHelper.NewRequest(model);
             }

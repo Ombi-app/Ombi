@@ -8,13 +8,15 @@ using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications.Agents
 {
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
-        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r) : base(settings, r)
+        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t) : base(settings, r, m, t)
         {
         }
 
@@ -40,23 +42,14 @@ namespace Ombi.Notifications.Agents
 
             return true;
         }
-
+        
         private async Task<NotificationMessage> LoadTemplate(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, type);
-            if (!template.Enabled)
-            {
-                return null;
-            }
-            // Need to do the parsing
-            var resolver = new NotificationMessageResolver();
-            var parsed = resolver.ParseMessage(template, new NotificationMessageCurlys(model.RequestedUser, model.Title, DateTime.Now.ToString("D"),
-                    model.NotificationType.ToString(), null));
+            var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
             
-
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message, model.ImgSrc);
-
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image);
+            
 
             var message = new NotificationMessage
             {
@@ -67,8 +60,8 @@ namespace Ombi.Notifications.Agents
 
             return message;
         }
-        
-        
+
+
 
         protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
         {
@@ -77,8 +70,8 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-            
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested the {model.RequestType} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
+
+            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested the {model.RequestType} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
 
             await Send(message, settings);
         }
@@ -91,7 +84,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!");
+            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!");
 
             await Send(message, settings);
         }
@@ -99,10 +92,24 @@ namespace Ombi.Notifications.Agents
         protected override async Task AddedToRequestQueue(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
+            var user = string.Empty;
+            var title = string.Empty;
+            var img = string.Empty;
+            if (model.RequestType == RequestType.Movie)
+            {
+                user = MovieRequest.RequestedUser.UserAlias;
+                title = MovieRequest.Title;
+                img = MovieRequest.PosterPath;
+            }
+            else
+            {
+                user = TvRequest.RequestedUser.UserAlias;
+                title = TvRequest.ParentRequest.Title;
+                img = TvRequest.ParentRequest.PosterPath;
+            }
             var html = email.LoadTemplate(
                 "Ombi: A request could not be added.",
-                $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying",
-                model.ImgSrc);
+                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img);
 
             var message = new NotificationMessage
             {
@@ -111,7 +118,7 @@ namespace Ombi.Notifications.Agents
                 To = settings.AdminEmail,
             };
 
-            message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
+            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
 
 
             await Send(message, settings);
@@ -125,7 +132,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been declined, Sorry!");
+            //message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been declined, Sorry!");
 
 
             await Send(message, settings);
@@ -139,7 +146,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been approved!");
+            //message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been approved!");
 
             await Send(message, settings);
         }
@@ -152,7 +159,7 @@ namespace Ombi.Notifications.Agents
                 return;
             }
 
-            message.Other.Add("PlainTextBody", $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)");
+            //message.Other.Add("PlainTextBody", $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)");
 
             await Send(message, settings);
         }
@@ -164,7 +171,7 @@ namespace Ombi.Notifications.Agents
                 var body = new BodyBuilder
                 {
                     HtmlBody = model.Message,
-                    TextBody = model.Other["PlainTextBody"]
+                    //TextBody = model.Other["PlainTextBody"]
                 };
 
                 var message = new MimeMessage
@@ -204,8 +211,7 @@ namespace Ombi.Notifications.Agents
             var email = new EmailBasicTemplate();
             var html = email.LoadTemplate(
                 "Test Message",
-                "This is just a test! Success!",
-                model.ImgSrc);
+                "This is just a test! Success!", "");
             var message = new NotificationMessage
             {
                 Message = html,

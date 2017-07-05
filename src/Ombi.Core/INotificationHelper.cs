@@ -6,5 +6,6 @@ namespace Ombi.Core
     public interface INotificationHelper
     {
         void NewRequest(FullBaseRequest model);
+        void NewRequest(ChildRequests model);
     }
 }

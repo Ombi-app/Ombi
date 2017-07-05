@@ -21,14 +21,22 @@ namespace Ombi.Core
         {
             var notificationModel = new NotificationOptions
             {
-                Title = model.Title,
-                RequestedUser = model.RequestedUser.Username,
+                RequestId = model.Id,
                 DateTime = DateTime.Now,
                 NotificationType = NotificationType.NewRequest,
-                RequestType = model.RequestType,
-                ImgSrc = model.RequestType == RequestType.Movie
-                    ? $"https://image.tmdb.org/t/p/w300/{model.PosterPath}"
-                    : model.PosterPath
+                RequestType = model.RequestType
+            };
+            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+
+        }
+        public void NewRequest(ChildRequests model)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = NotificationType.NewRequest,
+                RequestType = model.RequestType
             };
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
 

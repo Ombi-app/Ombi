@@ -9,13 +9,15 @@ using Ombi.Helpers;
 using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Settings.Settings.Models.Notifications;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Notifications.Agents
 {
     public class DiscordNotification : BaseNotification<DiscordNotificationSettings>, IDiscordNotification
     {
-        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log, INotificationTemplatesRepository r) : base(sn, r)
+        public DiscordNotification(IDiscordApi api, ISettingsService<DiscordNotificationSettings> sn, ILogger<DiscordNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t) : base(sn, r, m, t)
         {
             Api = api;
             Logger = log;
@@ -50,67 +52,89 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.NewRequest);
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.NewRequest, model);
 
             var notification = new NotificationMessage
             {
-                Message = template.Message,
+                Message = parsed.Message,
             };
+
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
 
         protected override async Task Issue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.Issue);
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.Issue, model);
 
             var notification = new NotificationMessage
             {
-                Message = template.Message,
+                Message = parsed.Message,
             };
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
 
         protected override async Task AddedToRequestQueue(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var message = $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying";
+            var user = string.Empty;
+            var title = string.Empty;
+            var image = string.Empty;
+            if (model.RequestType == RequestType.Movie)
+            {
+                user = MovieRequest.RequestedUser.UserAlias;
+                title = MovieRequest.Title;
+                image = MovieRequest.PosterPath;
+            }
+            else
+            {
+                user = TvRequest.RequestedUser.UserAlias;
+                title = TvRequest.ParentRequest.Title;
+                image = TvRequest.ParentRequest.PosterPath;
+            }
+            var message = $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying";
             var notification = new NotificationMessage
             {
                 Message = message
             };
-            notification.Other.Add("image", model.ImgSrc);
+            notification.Other.Add("image", image);
             await Send(notification, settings);
         }
 
         protected override async Task RequestDeclined(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestDeclined);
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestDeclined, model);
 
             var notification = new NotificationMessage
             {
-                Message = template.Message,
+                Message = parsed.Message,
             };
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
 
         protected override async Task RequestApproved(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestApproved);
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestApproved, model);
 
             var notification = new NotificationMessage
             {
-                Message = template.Message,
+                Message = parsed.Message,
             };
+
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
 
         protected override async Task AvailableRequest(NotificationOptions model, DiscordNotificationSettings settings)
         {
-            var template = await TemplateRepository.GetTemplate(NotificationAgent.Email, NotificationType.RequestAvailable);
+            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestAvailable, model);
 
             var notification = new NotificationMessage
             {
-                Message = template.Message,
+                Message = parsed.Message,
             };
+            notification.Other.Add("image", parsed.Image);
             await Send(notification, settings);
         }
 
@@ -138,7 +162,7 @@ namespace Ombi.Notifications.Agents
                         }
                     };
                 }
-                
+
                 await Api.SendMessage(discordBody, settings.WebookId, settings.Token);
             }
             catch (Exception e)

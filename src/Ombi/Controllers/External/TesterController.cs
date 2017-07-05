@@ -43,7 +43,8 @@ namespace Ombi.Controllers.External
         public bool Discord([FromBody] DiscordNotificationSettings settings)
         {
             settings.Enabled = true;
-            BackgroundJob.Enqueue(() => Service.PublishTest(new NotificationOptions{NotificationType = NotificationType.Test}, settings, (DiscordNotification)DiscordNotification));
+            DiscordNotification.NotifyAsync(
+                new NotificationOptions {NotificationType = NotificationType.Test, RequestId = -1}, settings);
 
             return true;
         }
@@ -60,10 +61,9 @@ namespace Ombi.Controllers.External
             var notificationModel = new NotificationOptions
             {
                 NotificationType = NotificationType.Test,
-                DateTime = DateTime.Now,
-                ImgSrc = "https://imgs.xkcd.com/comics/shouldnt_be_hard.png"
+                RequestId = -1 
             };
-            BackgroundJob.Enqueue(() => Service.PublishTest(notificationModel, settings, EmailNotification));
+            EmailNotification.NotifyAsync(notificationModel, settings);
 
             return true;
         }

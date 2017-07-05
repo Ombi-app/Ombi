@@ -45,6 +45,9 @@ namespace Ombi.Store.Entities
         public UserType UserType { get; set; }
 
         [NotMapped]
+        public string UserAlias => string.IsNullOrEmpty(Alias) ? Username : Alias;
+
+        [NotMapped]
         public List<Claim> Claims {
             get => JsonConvert.DeserializeObject<List<Claim>>(ClaimsSerialized, new ClaimConverter());
             set => ClaimsSerialized = JsonConvert.SerializeObject(value, new ClaimConverter());
