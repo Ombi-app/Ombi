@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MdButtonModule, MdCardModule, MdInputModule, MdTabsModule } from '@angular/material';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
@@ -11,7 +11,7 @@ import { ButtonModule, DialogModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
+//import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
@@ -26,7 +26,7 @@ import { SeriesInformationComponent } from './search/seriesinformation.component
 import { RequestComponent } from './requests/request.component';
 import { MovieRequestsComponent } from './requests/movierequests.component';
 import { TvRequestsComponent } from './requests/tvrequests.component';
-import { RequestGridComponent } from './request-grid/request-grid.component';
+//import { RequestGridComponent } from './request-grid/request-grid.component';
 import { RequestCardComponent } from './request-grid/request-card.component';
 
 import { LoginComponent } from './login/login.component';
@@ -34,7 +34,7 @@ import { LandingPageComponent } from './landingpage/landingpage.component';
 import { UserManagementComponent } from './usermanagement/usermanagement.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
-// Services
+// Services 
 import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
 import { NotificationService } from './services/notification.service';
@@ -56,7 +56,7 @@ const routes: Routes = [
     { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
     { path: 'search/show/:id', component: SeriesInformationComponent, canActivate: [AuthGuard] },
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
-    { path: 'requests-grid', component: RequestGridComponent },
+    //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent },
     { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard] },
@@ -80,10 +80,11 @@ const routes: Routes = [
         DialogModule,
         MdButtonModule,
         NgbModule.forRoot(),
-        DragulaModule,
+        //DragulaModule,
         MdCardModule,
         MdInputModule,
-        MdTabsModule
+        MdTabsModule,
+        ReactiveFormsModule
     ],
     declarations: [
         AppComponent,
@@ -98,7 +99,7 @@ const routes: Routes = [
         MovieRequestsComponent,
         TvRequestsComponent,
         SeriesInformationComponent,
-        RequestGridComponent,
+        //RequestGridComponent,
         RequestCardComponent,
     ],
     providers: [
@@ -110,7 +111,7 @@ const routes: Routes = [
         SettingsService,
         IdentityService,
         StatusService,
-    DragulaService
+    //DragulaService
     ],
     bootstrap: [AppComponent]
 })
