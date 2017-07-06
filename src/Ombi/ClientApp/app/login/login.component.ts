@@ -5,6 +5,8 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../auth/auth.service';
 import { StatusService } from '../services/status.service';
 import { NotificationService } from '../services/notification.service';
+import { SettingsService } from '../services/settings.service';
+import { ICustomizationSettings } from '../interfaces/ISettings';
 
 
 
@@ -15,7 +17,8 @@ import { NotificationService } from '../services/notification.service';
 export class LoginComponent implements OnInit {
 
 
-    constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService, private fb: FormBuilder) {
+    constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
+     private fb: FormBuilder, private settingsService : SettingsService) {
         this.form = this.fb.group({
             username: ["", [Validators.required]],
             password: ["", [Validators.required]]
@@ -29,9 +32,10 @@ export class LoginComponent implements OnInit {
     }
     
     form: FormGroup;
-    
-    ngOnInit(): void {
+    customizationSettings : ICustomizationSettings;
 
+    ngOnInit(): void {
+        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
     }
 
 

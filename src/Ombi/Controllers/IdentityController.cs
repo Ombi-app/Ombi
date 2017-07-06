@@ -28,7 +28,7 @@ namespace Ombi.Controllers
             IdentityManager = identity;
             Mapper = mapper;
         }
-        
+
         private IUserIdentityManager IdentityManager { get; }
         private IMapper Mapper { get; }
 
@@ -39,7 +39,7 @@ namespace Ombi.Controllers
         [HttpGet]
         public async Task<UserViewModel> GetUser()
         {
-            return  Mapper.Map<UserViewModel>(await IdentityManager.GetUser(this.HttpContext.User.Identity.Name));
+            return Mapper.Map<UserViewModel>(await IdentityManager.GetUser(this.HttpContext.User.Identity.Name));
         }
 
 
@@ -68,7 +68,7 @@ namespace Ombi.Controllers
             {
                 Username = user.Username,
                 UserType = UserType.LocalUser,
-                Claims = new List<Claim>() {new Claim(ClaimTypes.Role, OmbiClaims.Admin)},
+                Claims = new List<Claim>() { new Claim(ClaimTypes.Role, OmbiClaims.Admin) },
                 Password = user.Password,
             });
 
@@ -106,6 +106,38 @@ namespace Ombi.Controllers
             }
 
             return users;
+        }
+
+        /// <summary>
+        /// Gets the user by the user id.
+        /// </summary>
+        /// <returns>Information about the user</returns>
+        [HttpGet("Users/{id}")]
+        public async Task<UserViewModel> GetUser(int id)
+        {
+            var type = typeof(OmbiClaims);
+            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
+                                                    BindingFlags.Static | BindingFlags.FlattenHierarchy);
+
+            var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
+            var allClaims = fields.Select(x => x.Name).ToList();
+            var user = Mapper.Map<UserViewModel>(await IdentityManager.GetUser(id)).ToList();
+
+
+            var userClaims = user.Claims.Select(x => x.Value);
+            IEnumerable<string> left = allClaims.Except(userClaims);
+
+            foreach (var c in left)
+            {
+                user.Claims.Add(new ClaimCheckboxes
+                {
+                    Enabled = false,
+                    Value = c
+                });
+            }
+
+
+            return user;
         }
 
         /// <summary>
@@ -159,8 +191,8 @@ namespace Ombi.Controllers
             var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
             var allClaims = fields.Select(x => x.Name).ToList();
 
-            return allClaims.Select(x => new ClaimCheckboxes() {Value = x});
+            return allClaims.Select(x => new ClaimCheckboxes() { Value = x });
         }
-        
+
     }
 }

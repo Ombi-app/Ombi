@@ -50,6 +50,13 @@ namespace Ombi.Store.Repository
             return user;
         }
 
+        public async Task<User> GetUser(int userId)
+        {
+            var user = await Db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            Db.Entry(user).Reload();
+            return user;
+        }
+
         public async Task CreateUser(User user)
         {
             Db.Users.Add(user);

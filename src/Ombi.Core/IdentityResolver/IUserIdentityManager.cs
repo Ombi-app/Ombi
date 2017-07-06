@@ -11,6 +11,7 @@ namespace Ombi.Core.IdentityResolver
         Task<bool> CredentialsValid(string username, string password);
 
         Task<UserDto> GetUser(string username);
+        Task<UserDto> GetUser(int userId);
 
         Task<IEnumerable<UserDto>> GetUsers();
 

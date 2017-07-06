@@ -36,6 +36,10 @@ namespace Ombi.Core.IdentityResolver
         {
             return Mapper.Map<UserDto>(await UserRepository.GetUser(username));
         }
+        public async Task<UserDto> GetUser(int userId)
+        {
+            return Mapper.Map<UserDto>(await UserRepository.GetUser(userId));
+        }
 
         public async Task<IEnumerable<UserDto>> GetUsers()
         {
