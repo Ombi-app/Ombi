@@ -25,5 +25,5 @@ export class NotificationTemplate {
 {LongTime} : 16:02:34 <br/>
 {ShortTime} : 16:02 <br/>
 
-`
+`;
 }

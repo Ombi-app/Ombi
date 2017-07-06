@@ -25,10 +25,10 @@ using Ombi.Schedule.Jobs;
 using Ombi.Settings.Settings;
 using Ombi.Store.Context;
 using Ombi.Store.Repository;
-using Ombi.Core.Rules;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
+using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Repository.Requests;
 
 namespace Ombi.DependencyInjection

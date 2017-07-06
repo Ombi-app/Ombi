@@ -5,7 +5,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class PlexAvailabilityRule : BaseSearchRule, IRequestRules<SearchViewModel>
+    public class PlexAvailabilityRule : BaseSearchRule, IRules<SearchViewModel>
     {
         public PlexAvailabilityRule(IPlexContentRepository repo)
         {

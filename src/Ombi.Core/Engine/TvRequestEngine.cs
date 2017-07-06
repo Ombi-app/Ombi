@@ -2,7 +2,6 @@
 using Ombi.Api.TvMaze;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Rules;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using System;
@@ -15,6 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Rule;
+using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 
@@ -71,11 +71,6 @@ namespace Ombi.Core.Engine
             {
                 Id = tv.Id,
                 RequestType = RequestType.TvShow,
-                //Overview = showInfo.summary.RemoveHtml(),
-                //PosterPath = posterPath,
-                //Title = showInfo.name,
-                //ReleaseDate = firstAir,
-                //Status = showInfo.status,
                 RequestedDate = DateTime.UtcNow,
                 Approved = false,
                 RequestedUserId = user.Id,
@@ -85,10 +80,8 @@ namespace Ombi.Core.Engine
             if (tv.RequestAll)
             {
                 var episodes = await TvApi.EpisodeLookup(showInfo.id);
-                var seasonRequests = new List<SeasonRequests>();
                 foreach (var ep in episodes)
                 {
-                    var episodesRequests = new List<EpisodeRequests>();
                     var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == ep.season);
                     if (season == null)
                     {
@@ -184,7 +177,6 @@ namespace Ombi.Core.Engine
             if (existingRequest != null)
             {
                 // Remove requests we already have, we just want new ones
-                var existingSeasons = existingRequest.ChildRequests.Select(x => x.SeasonRequests);
                 foreach (var existingSeason in existingRequest.ChildRequests)
                     foreach (var existing in existingSeason.SeasonRequests)
                     {
@@ -259,7 +251,6 @@ namespace Ombi.Core.Engine
             results = Mapper.Map<TvRequests>(request);
 
             // TODO need to check if we need to approve any child requests since they may have updated
-
             await TvRepository.Update(results);
             return results;
         }
@@ -277,10 +268,6 @@ namespace Ombi.Core.Engine
 
             await TvRepository.Update(existingRequest);
 
-            if (newRequest.Approved) // The auto approve rule
-            {
-                // TODO Auto Approval Code
-            }
             return await AfterRequest(newRequest);
         }
 
@@ -291,9 +278,10 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
-        private Task<RequestEngineResult> AfterRequest(ChildRequests model)
+        private async Task<RequestEngineResult> AfterRequest(ChildRequests model)
         {
-            if (ShouldSendNotification(model))
+            var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            if (sendRuleResult.Success)
             {
                 NotificationHelper.NewRequest(model);
             }
@@ -301,28 +289,10 @@ namespace Ombi.Core.Engine
             if(model.Approved)
             {
                 // Autosend
-                TvSender.SendToSonarr(model);
+                await TvSender.SendToSonarr(model);
             }
 
-            //var limit = await RequestLimitRepo.GetAllAsync();
-            //var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
-            //if (usersLimit == null)
-            //{
-            //    await RequestLimitRepo.InsertAsync(new RequestLimit
-            //    {
-            //        Username = Username,
-            //        RequestType = model.Type,
-            //        FirstRequestDate = DateTime.UtcNow,
-            //        RequestCount = 1
-            //    });
-            //}
-            //else
-            //{
-            //    usersLimit.RequestCount++;
-            //    await RequestLimitRepo.UpdateAsync(usersLimit);
-            //}
-
-            return Task.FromResult(new RequestEngineResult { RequestAdded = true });
+            return new RequestEngineResult { RequestAdded = true };
         }
 
         //public async Task<IEnumerable<TvRequests>> GetApprovedRequests()

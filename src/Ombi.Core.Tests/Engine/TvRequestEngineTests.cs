@@ -1,11 +1,10 @@
 ﻿//using System.Collections.Generic;
-//using System.Linq;
 //using System.Threading.Tasks;
 //using Moq;
 //using Ombi.Core.Engine;
 //using Ombi.Core.Models.Requests;
-//using Ombi.Core.Models.Requests.Tv;
-//using Ombi.Core.Requests.Models;
+//using Ombi.Store.Entities.Requests;
+//using Ombi.Store.Repository.Requests;
 //using Xunit;
 
 //namespace Ombi.Core.Tests.Engine
@@ -14,49 +13,49 @@
 //    {
 //        public TvRequestEngineTests()
 //        {
-//            RequestService = new Mock<IRequestService<TvRequestModel>>();
+//            RequestService = new Mock<ITvRequestRepository>();
 //            var requestService = new RequestService(RequestService.Object, null);
-//            Engine = new TvRequestEngine(null, requestService, null, null, null, null);
+//            Engine = new TvRequestEngine(null, requestService, null, null, null, null, null, null);
 //        }
 
 //        private TvRequestEngine Engine { get; }
-//        private Mock<IRequestService<TvRequestModel>> RequestService { get; }
+//        private Mock<ITvRequestRepository> RequestService { get; }
 
-//        [Fact]
-//        public async Task GetNewRequests_Should_ReturnEmpty_WhenThereAreNoNewRequests()
-//        {
-//            var requests = new List<TvRequestModel>
-//            {
-//                new TvRequestModel { Available = true },
-//                new TvRequestModel { Approved = true },
-//            };
-//            RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        //[Fact]
+//        //public async Task GetNewRequests_Should_ReturnEmpty_WhenThereAreNoNewRequests()
+//        //{
+//        //    var requests = new List<TvRequests>
+//        //    {
+//        //        new TvRequests { Available = true },
+//        //        new TvRequests { Approved = true },
+//        //    };
+//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
 
-//            var result = await Engine.GetNewRequests();
+//        //    var result = await Engine.GetNewRequests();
 
-//            Assert.False(result.Any());
-//        }
+//        //    Assert.False(result.Any());
+//        //}
 
-//        [Fact]
-//        public async Task GetNewRequests_Should_ReturnOnlyNewRequests_WhenThereAreMultipleRequests()
-//        {
-//            var requests = new List<TvRequestModel>
-//            {
-//                new TvRequestModel { Available = true },
-//                new TvRequestModel { Approved = true },
-//                new TvRequestModel(),
-//            };
-//            RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        //[Fact]
+//        //public async Task GetNewRequests_Should_ReturnOnlyNewRequests_WhenThereAreMultipleRequests()
+//        //{
+//        //    var requests = new List<TvRequestModel>
+//        //    {
+//        //        new TvRequestModel { Available = true },
+//        //        new TvRequestModel { Approved = true },
+//        //        new TvRequestModel(),
+//        //    };
+//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
 
-//            var result = await Engine.GetNewRequests();
+//        //    var result = await Engine.GetNewRequests();
 
-//            Assert.Equal(result.Count(), 1);
-//            Assert.All(result, x =>
-//            {
-//                Assert.Equal(x.Available, false);
-//                Assert.Equal(x.Approved, false);
-//            });
-//        }
+//        //    Assert.Equal(result.Count(), 1);
+//        //    Assert.All(result, x =>
+//        //    {
+//        //        Assert.Equal(x.Available, false);
+//        //        Assert.Equal(x.Approved, false);
+//        //    });
+//        //}
 
 //        [Fact]
 //        public async Task GetApprovedRequests_Should_ReturnEmpty_WhenThereAreNoApprovedRequests()

@@ -7,7 +7,7 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules
 {
-    public class CanRequestRule : BaseRequestRule, IRequestRules<BaseRequest>
+    public class CanRequestRule : BaseRequestRule, IRules<BaseRequest>
     {
         public CanRequestRule(IPrincipal principal)
         {

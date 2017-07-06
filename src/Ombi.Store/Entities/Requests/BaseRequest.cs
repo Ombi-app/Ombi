@@ -6,7 +6,7 @@ namespace Ombi.Store.Entities.Requests
 {
     public class BaseRequest : Entity
     {
-       
+        public string Title { get; set; }
         public bool Approved { get; set; }
         public DateTime RequestedDate { get; set; }
         public bool Available { get; set; }

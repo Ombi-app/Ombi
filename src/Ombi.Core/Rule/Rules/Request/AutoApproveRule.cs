@@ -8,7 +8,7 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
 {
-    public class AutoApproveRule : BaseRequestRule, IRequestRules<BaseRequest>
+    public class AutoApproveRule : BaseRequestRule, IRules<BaseRequest>
     {
         public AutoApproveRule(IPrincipal principal)
         {

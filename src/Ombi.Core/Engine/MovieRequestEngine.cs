@@ -1,7 +1,6 @@
 ﻿using Ombi.Api.TheMovieDb;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Rules;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using System;
@@ -14,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.IdentityResolver;
-using Ombi.Core.Rule;
+using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Engine
@@ -37,6 +36,11 @@ namespace Ombi.Core.Engine
         private ILogger<MovieRequestEngine> Logger { get; }
         private IUserIdentityManager UserManager { get; }
 
+        /// <summary>
+        /// Requests the movie.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
@@ -51,42 +55,6 @@ namespace Ombi.Core.Engine
             }
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
-
-            var existingRequest = await MovieRepository.GetRequest(model.Id);
-            if (existingRequest != null)
-            {
-                return new RequestEngineResult
-                {
-                    RequestAdded = false,
-                    Message = $"{fullMovieName} has already been requested"
-                };
-            }
-
-            // TODO
-            //try
-            //{
-            //    var content = PlexContentRepository.GetAll();
-            //    var movies = PlexChecker.GetPlexMovies(content);
-            //    if (PlexChecker.IsMovieAvailable(movies.ToArray(), movieInfo.Title, movieInfo.ReleaseDate?.Year.ToString()))
-            //    {
-            //        return
-            //            Response.AsJson(new JsonResponseModel
-            //            {
-            //                Result = false,
-            //                Message = $"{fullMovieName} is already in Plex!"
-            //            });
-            //    }
-            //}
-            //catch (Exception e)
-            //{
-            //    Log.Error(e);
-            //    return
-            //        Response.AsJson(new JsonResponseModel
-            //        {
-            //            Result = false,
-            //            Message = string.Format(Resources.UI.Search_CouldNotCheckPlex, fullMovieName, GetMediaServerName())
-            //        });
-            //}
 
             var userDetails = await UserManager.GetUser(User.Identity.Name);
 
@@ -107,13 +75,12 @@ namespace Ombi.Core.Engine
                 RequestedUserId = userDetails.Id,
             };
 
-            var ruleResults = await RunRequestRules(requestModel);
-            var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
-            if (results.Any(x => !x.Success))
+            var ruleResults = (await RunRequestRules(requestModel)).ToList();
+            if (ruleResults.Any(x => !x.Success))
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
             }
 
@@ -122,8 +89,7 @@ namespace Ombi.Core.Engine
                 var result = await Sender.Send(requestModel);
                 if (result.Success && result.MovieSent)
                 {
-                    return await AddMovieRequest(requestModel, /*settings,*/
-                        $"{fullMovieName} has been successfully added!");
+                    return await AddMovieRequest(requestModel, fullMovieName);
                 }
                 if (!result.Success)
                 {
@@ -138,24 +104,37 @@ namespace Ombi.Core.Engine
                 // If there are no providers then it's successful but movie has not been sent
             }
 
-            return await AddMovieRequest(requestModel, /*settings,*/
-                $"{fullMovieName} has been successfully added!");
+            return await AddMovieRequest(requestModel, fullMovieName);
         }
 
 
-
+        /// <summary>
+        /// Gets the requests.
+        /// </summary>
+        /// <param name="count">The count.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
             var allRequests = await MovieRepository.Get().Skip(position).Take(count).ToListAsync();
             return allRequests;
         }
 
+        /// <summary>
+        /// Gets the requests.
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests()
         {
             var allRequests = await MovieRepository.Get().ToListAsync();
             return allRequests;
         }
 
+        /// <summary>
+        /// Searches the movie request.
+        /// </summary>
+        /// <param name="search">The search.</param>
+        /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search)
         {
             var allRequests = await MovieRepository.Get().ToListAsync();
@@ -163,6 +142,11 @@ namespace Ombi.Core.Engine
             return results;
         }
 
+        /// <summary>
+        /// Updates the movie request.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <returns></returns>
         public async Task<MovieRequests> UpdateMovieRequest(MovieRequests request)
         {
             var allRequests = await MovieRepository.Get().ToListAsync();
@@ -183,13 +167,18 @@ namespace Ombi.Core.Engine
             return results;
         }
 
+        /// <summary>
+        /// Removes the movie request.
+        /// </summary>
+        /// <param name="requestId">The request identifier.</param>
+        /// <returns></returns>
         public async Task RemoveMovieRequest(int requestId)
         {
             var request = await MovieRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
             await MovieRepository.Delete(request);
         }
 
-        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string message)
+        private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName)
         {
             await MovieRepository.Add(model);
 
@@ -198,25 +187,7 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
-            //var limit = await RequestLimitRepo.GetAllAsync();
-            //var usersLimit = limit.FirstOrDefault(x => x.Username == Username && x.RequestType == model.Type);
-            //if (usersLimit == null)
-            //{
-            //    await RequestLimitRepo.InsertAsync(new RequestLimit
-            //    {
-            //        Username = Username,
-            //        RequestType = model.Type,
-            //        FirstRequestDate = DateTime.UtcNow,
-            //        RequestCount = 1
-            //    });
-            //}
-            //else
-            //{
-            //    usersLimit.RequestCount++;
-            //    await RequestLimitRepo.UpdateAsync(usersLimit);
-            //}
-
-            return new RequestEngineResult { RequestAdded = true, Message = message };
+            return new RequestEngineResult { RequestAdded = true, Message = $"{movieName} has been successfully added!" };
         }
 
         public async Task<IEnumerable<MovieRequests>> GetApprovedRequests()

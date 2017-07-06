@@ -9,7 +9,7 @@
 
         public RuleResult Fail(string message)
         {
-            return new RuleResult {Message = message};
+            return new RuleResult { Message = message };
         }
     }
 }

@@ -6,7 +6,7 @@ using Ombi.Store.Context;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class RadarrCacheRule : BaseSearchRule, IRequestRules<SearchViewModel>
+    public class RadarrCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
         public RadarrCacheRule(IOmbiContext ctx)
         {

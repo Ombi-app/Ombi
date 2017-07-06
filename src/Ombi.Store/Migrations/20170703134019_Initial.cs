@@ -146,7 +146,8 @@ namespace Ombi.Store.Migrations
                     ParentRequestId = table.Column<int>(nullable: false),
                     RequestType = table.Column<int>(nullable: false),
                     RequestedDate = table.Column<DateTime>(nullable: false),
-                    RequestedUserId = table.Column<int>(nullable: false)
+                    RequestedUserId = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

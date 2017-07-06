@@ -47,18 +47,6 @@ namespace Ombi.Controllers
         /// <summary>
         /// Gets extra information on the movie e.g. IMDBId
         /// </summary>
-        /// <remarks>We use TheMovieDb as the Movie Provider</remarks>
-        /// <param name="model">The model.</param>
-        /// <returns></returns>
-        [HttpPost("movie/extrainfo")]
-        public async Task<IEnumerable<SearchMovieViewModel>> GetImdbInfo([FromBody]IEnumerable<SearchMovieViewModel> model)
-        {
-            return await MovieEngine.LookupImdbInformation(model);
-        }
-
-        /// <summary>
-        /// Gets extra information on the movie e.g. IMDBId
-        /// </summary>
         /// <param name="theMovieDbId">The movie database identifier.</param>
         /// <returns></returns>
         /// <remarks>

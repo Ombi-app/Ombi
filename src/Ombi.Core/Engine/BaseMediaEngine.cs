@@ -1,6 +1,5 @@
 ﻿using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
-using Ombi.Core.Rules;
 using Ombi.Helpers;
 using System;
 using System.Collections.Generic;
@@ -8,6 +7,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;

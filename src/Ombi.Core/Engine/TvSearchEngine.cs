@@ -5,7 +5,6 @@ using Ombi.Api.TvMaze;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Rules;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Repository;
@@ -15,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 
