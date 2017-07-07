@@ -1,5 +1,4 @@
-﻿using Ombi.Core.Claims;
-using Ombi.Core.Rule;
+﻿using Ombi.Core.Rule;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -18,23 +17,12 @@ namespace Ombi.Core.Engine.Interfaces
         }
 
         protected IPrincipal User { get; }
-
         protected IRuleEvaluator Rules { get; }
-
         protected string Username => User.Identity.Name;
 
         protected bool HasRole(string roleName)
         {
             return User.IsInRole(roleName);
-        }
-
-        protected bool ShouldSendNotification(BaseRequest req)
-        {
-            var sendNotification = !req.Approved; /*|| !prSettings.IgnoreNotifyForAutoApprovedRequests;*/
-
-            if (HasRole(OmbiClaims.Admin))
-                sendNotification = false; // Don't bother sending a notification if the user is an admin
-            return sendNotification;
         }
         
         public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)

@@ -20,6 +20,10 @@ export class IdentityService extends ServiceAuthHelpers {
         return this.http.get(this.url).map(this.extractData);
     }
 
+    getUserById(id: number): Observable<IUser> {
+        return this.http.get(`${this.url}User/${id}`).map(this.extractData);
+    }
+
     getUsers(): Observable<IUser[]> {
         return this.http.get(`${this.url}Users`).map(this.extractData);
     }

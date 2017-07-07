@@ -1,84 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics;
 using Ombi.Store.Entities;
-using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Notifications
 {
-    public class NotificationMessageContent
-    {
-        public string Subject { get; set; }
-        public string Message { get; set; }
-        public string Image { get; set; }
-    }
-    public class NotificationMessageCurlys
-    { 
-
-        public void Setup(FullBaseRequest req)
-        {
-            RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
-                ? req.RequestedUser.Username
-                : req.RequestedUser.Alias;
-            Title = req.Title;
-            RequestedDate = req.RequestedDate.ToString("D");
-            Type = req.RequestType.ToString();
-            Overview = req.Overview;
-            Year = req.ReleaseDate.Year.ToString();
-            PosterImage = req.PosterPath;
-        }
-
-        public void Setup(ChildRequests req)
-        {
-            RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
-                ? req.RequestedUser.Username
-                : req.RequestedUser.Alias;
-            Title = req.ParentRequest.Title;
-            RequestedDate = req.RequestedDate.ToString("D");
-            Type = req.RequestType.ToString();
-            Overview = req.ParentRequest.Overview;
-            Year = req.ParentRequest.ReleaseDate.Year.ToString();
-            PosterImage = req.ParentRequest.PosterPath;
-            // DO Episode and Season Lists
-        }
-        
-        // User Defined
-        public string RequestedUser { get; set; }
-        public string Title { get; set; }
-        public string RequestedDate { get; set; }
-        public string Type { get; set; }
-        public string Issue { get; set; }
-        public string Overview { get; set; }
-        public string Year { get; set; }
-        public string EpisodesList { get; set; }
-        public string SeasonsList { get; set; }
-        public string PosterImage { get; set; }
-
-        // System Defined
-        private string LongDate => DateTime.Now.ToString("D");
-        private string ShortDate => DateTime.Now.ToString("d");
-        private string LongTime => DateTime.Now.ToString("T");
-        private string ShortTime => DateTime.Now.ToString("t");
-
-        public Dictionary<string, string> Curlys => new Dictionary<string, string>
-        {
-            {nameof(RequestedUser), RequestedUser },
-            {nameof(Title), Title },
-            {nameof(RequestedDate), RequestedDate },
-            {nameof(Type), Type },
-            {nameof(Issue), Issue },
-            {nameof(LongDate),LongDate},
-            {nameof(ShortDate),ShortDate},
-            {nameof(LongTime),LongTime},
-            {nameof(ShortTime),ShortTime},
-            {nameof(Overview),Overview},
-            {nameof(Year),Year},
-            {nameof(EpisodesList),EpisodesList},
-            {nameof(SeasonsList),SeasonsList},
-            {nameof(PosterImage),PosterImage},
-        };
-    }
-    
     public class NotificationMessageResolver
     {
         /// <summary>
@@ -113,12 +39,91 @@ namespace Ombi.Notifications
         private NotificationMessageContent Resolve(string body, string subject, IReadOnlyDictionary<string, string> parameters)
         {
             // Find the fields
-            var bodyFields = FindCurlyFields(body);
-            var subjectFields = FindCurlyFields(subject);
+            var bodyFields = FindFields(body, StartChar, EndChar);
+            var subjectFields = FindFields(subject, StartChar, EndChar);
+
+            //var conditionalFields = FindFields(body, '<', '>');
+            //ProcessConditions(conditionalFields, parameters);
 
             body = ReplaceFields(bodyFields, parameters, body);
             subject = ReplaceFields(subjectFields, parameters, subject);
             return new NotificationMessageContent { Message = body ?? string.Empty, Subject = subject ?? string.Empty};
+        }
+
+        public IEnumerable<string> ProcessConditions(IEnumerable<string> conditionalFields, IReadOnlyDictionary<string, string> parameters)
+        {
+            foreach (var f in conditionalFields)
+            {
+                var field = f.ToLower();
+                if (field.StartsWith("if"))
+                {
+                    var ifPosition = field.IndexOf("if", StringComparison.Ordinal);
+                    Console.WriteLine(ifPosition);
+                    var identifierStart = field.Substring(ifPosition + 3);
+                    Console.WriteLine(identifierStart);
+                    var identifierEnd = identifierStart.IndexOf(' ');
+                    Console.WriteLine(identifierEnd);
+
+                    var identitifier = identifierStart.Substring(ifPosition, identifierEnd);
+
+                    if (identitifier.Equals("type"))
+                    {
+                        // Find the operator == or !=
+                        var stringWithoutIdentifier = identifierStart.Substring(identitifier.Length + 1);
+                        var operatorValue = stringWithoutIdentifier.Substring(0,2);
+
+                        var stringWithoutOperator = stringWithoutIdentifier.Substring(operatorValue.Length + 1);
+                        var endPosition = stringWithoutOperator.IndexOf(' ');
+                        var comparison = stringWithoutOperator.Substring(0, endPosition);
+                        
+                        if (operatorValue == "==")
+                        {
+                            var type = (RequestType)int.Parse(parameters["Type"]);
+                            if (comparison.Equals("Movie", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                if (type == RequestType.Movie)
+                                {
+                                    // Get the text
+                                    var stringWithoutComparison = stringWithoutOperator.Substring(comparison.Length + 2);
+                                    var endString = stringWithoutComparison.IndexOf(' ');
+                                    var text = stringWithoutComparison.Substring(0, endString - 1);
+                                    field = text;
+                                }
+                                else
+                                {
+                                    // Get the text in the ELSE
+                                    var stringWithoutComparison = stringWithoutOperator.Substring(comparison.Length + 2);
+                                    var elseIndex = stringWithoutComparison.IndexOf("else", StringComparison.CurrentCultureIgnoreCase);
+                                    var endIndex = stringWithoutComparison.IndexOf(' ');
+                                    if (elseIndex >= 0)
+                                    {
+                                        var elseString = stringWithoutComparison.Substring(elseIndex, endIndex);
+                                        
+                                    }
+                                    else
+                                    {
+                                        // No else
+                                    }
+                                }
+                            }
+                            else if(comparison.Equals("TvShow", StringComparison.CurrentCultureIgnoreCase) || comparison.Equals("Tv", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                if (type == RequestType.TvShow)
+                                {
+
+                                }
+                            }
+                        }
+                        else if (operatorValue == "!=")
+                        {
+                            
+                        }
+                    }
+                    
+                }
+            }
+
+            return conditionalFields;
         }
 
         /// <summary>
@@ -126,7 +131,7 @@ namespace Ombi.Notifications
         /// </summary>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        private IEnumerable<string> FindCurlyFields(string message)
+        private IEnumerable<string> FindFields(string message, char start, char end)
         {
             if (string.IsNullOrEmpty(message))
             {
@@ -145,13 +150,13 @@ namespace Ombi.Notifications
                     continue;
                 }
 
-                if (c == StartChar) // Start of curly '{'
+                if (c == start) // Start of curly '{'
                 {
                     insideCurly = true;
                     continue;
                 }
 
-                if (c == EndChar) // End of curly '}'
+                if (c == end) // End of curly '}'
                 {
                     fields.Add(currentWord); // We have finished the curly, add the word into the list
                     currentWord = string.Empty;

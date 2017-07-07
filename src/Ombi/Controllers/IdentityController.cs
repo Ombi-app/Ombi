@@ -112,7 +112,7 @@ namespace Ombi.Controllers
         /// Gets the user by the user id.
         /// </summary>
         /// <returns>Information about the user</returns>
-        [HttpGet("Users/{id}")]
+        [HttpGet("User/{id}")]
         public async Task<UserViewModel> GetUser(int id)
         {
             var type = typeof(OmbiClaims);
@@ -121,7 +121,7 @@ namespace Ombi.Controllers
 
             var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
             var allClaims = fields.Select(x => x.Name).ToList();
-            var user = Mapper.Map<UserViewModel>(await IdentityManager.GetUser(id)).ToList();
+            var user = Mapper.Map<UserViewModel>(await IdentityManager.GetUser(id));
 
 
             var userClaims = user.Claims.Select(x => x.Value);

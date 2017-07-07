@@ -12,6 +12,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
+using Ombi.Core.Helpers;
 using Ombi.Core.IdentityResolver;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
@@ -42,128 +43,17 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-            var showInfo = await TvApi.ShowLookupByTheTvDbId(tv.Id);
-            DateTime.TryParse(showInfo.premiered, out DateTime firstAir);
-
-            // For some reason the poster path is always http
-            var posterPath = showInfo.image?.medium.Replace("http:", "https:");
-
-            var tvRequests = new List<SeasonRequests>();
-            // Only have the TV requests we actually requested and not everything
-            foreach (var season in tv.SeasonRequests)
-            {
-                for (int i = season.Episodes.Count - 1; i >= 0; i--)
-                {
-                    if (!season.Episodes[i].Requested)
-                    {
-                        season.Episodes.RemoveAt(i); // Remove the episode since it's not requested
-                    }
-                }
-
-                if (season.Episodes.Any())
-                {
-                    tvRequests.Add(season);
-                }
-            }
-
             var user = await UserManager.GetUser(User.Identity.Name);
-            var childRequest = new ChildRequests
-            {
-                Id = tv.Id,
-                RequestType = RequestType.TvShow,
-                RequestedDate = DateTime.UtcNow,
-                Approved = false,
-                RequestedUserId = user.Id,
-                SeasonRequests = new List<SeasonRequests>()
-            };
 
-            if (tv.RequestAll)
-            {
-                var episodes = await TvApi.EpisodeLookup(showInfo.id);
-                foreach (var ep in episodes)
-                {
-                    var season = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == ep.season);
-                    if (season == null)
-                    {
-                        childRequest.SeasonRequests.Add(new SeasonRequests
-                        {
-                            Episodes = new List<EpisodeRequests>{
-                                new EpisodeRequests
-                                {
-                                    EpisodeNumber = ep.number,
-                                    AirDate = DateTime.Parse(ep.airdate),
-                                    Title = ep.name,
-                                    Url = ep.url
-                                }
-                            },
-                            SeasonNumber = ep.season,
-                        });
-                    }
-                    else
-                    {
-                        season.Episodes.Add(new EpisodeRequests
-                        {
-                            EpisodeNumber = ep.number,
-                            AirDate = DateTime.Parse(ep.airdate),
-                            Title = ep.name,
-                            Url = ep.url
-                        });
-                    }
-                }
+            var tvBuilder = new TvShowRequestBuilder(TvApi);
+            (await tvBuilder
+                .GetShowInfo(tv.Id))
+                .CreateTvList(tv)
+                .CreateChild(tv, user.Id);
 
-            }
-            else if (tv.LatestSeason)
-            {
-                var episodes = await TvApi.EpisodeLookup(showInfo.id);
-                var latest = episodes.OrderBy(x => x.season).FirstOrDefault();
-                var episodesRequests = new List<EpisodeRequests>();
-                foreach (var ep in episodes)
-                {
-                    episodesRequests.Add(new EpisodeRequests
-                    {
-                        EpisodeNumber = ep.number,
-                        AirDate = DateTime.Parse(ep.airdate),
-                        Title = ep.name,
-                        Url = ep.url
-                    });
-                }
-                childRequest.SeasonRequests.Add(new SeasonRequests
-                {
-                    Episodes = episodesRequests,
-                    SeasonNumber = latest.season,
-                });
-            }
-            else if (tv.FirstSeason)
-            {
-                var episodes = await TvApi.EpisodeLookup(showInfo.id);
-                var first = episodes.OrderByDescending(x => x.season).FirstOrDefault();
-                var episodesRequests = new List<EpisodeRequests>();
-                foreach (var ep in episodes)
-                {
-                    if (ep.season == first.season)
-                    {
-                        episodesRequests.Add(new EpisodeRequests
-                        {
-                            EpisodeNumber = ep.number,
-                            AirDate = DateTime.Parse(ep.airdate),
-                            Title = ep.name,
-                            Url = ep.url
-                        });
-                    }
-                }
-                childRequest.SeasonRequests.Add(new SeasonRequests
-                {
-                    Episodes = episodesRequests,
-                    SeasonNumber = first.season,
-                });
-            }
-            else
-            {
-                // It's a custom request
-                childRequest.SeasonRequests = tvRequests;
-            }
-            
-            var ruleResults = await RunRequestRules(childRequest);
+            await tvBuilder.BuildEpisodes(tv);
+           
+            var ruleResults = await RunRequestRules(tvBuilder.ChildRequest);
             var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
             if (results.Any(x => !x.Success))
             {
@@ -180,7 +70,7 @@ namespace Ombi.Core.Engine
                 foreach (var existingSeason in existingRequest.ChildRequests)
                     foreach (var existing in existingSeason.SeasonRequests)
                     {
-                        var newChild = childRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == existing.SeasonNumber);
+                        var newChild = tvBuilder.ChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == existing.SeasonNumber);
                         if (newChild != null)
                         {
                             // We have some requests in this season...
@@ -197,32 +87,19 @@ namespace Ombi.Core.Engine
                             if (!newChild.Episodes.Any())
                             {
                                 // We may have removed all episodes
-                                childRequest.SeasonRequests.Remove(newChild);
+                                tvBuilder.ChildRequest.SeasonRequests.Remove(newChild);
                             }
                         }
                     }
 
                 // Remove the ID since this is a new child
-                childRequest.Id = 0;
-                return await AddExistingRequest(childRequest, existingRequest);
+                tvBuilder.ChildRequest.Id = 0;
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
             }
             // This is a new request
 
-            var model = new TvRequests
-            {
-                Id = tv.Id,
-                Overview = showInfo.summary.RemoveHtml(),
-                PosterPath = posterPath,
-                Title = showInfo.name,
-                ReleaseDate = firstAir,
-                Status = showInfo.status,
-                ImdbId = showInfo.externals?.imdb ?? string.Empty,
-                TvDbId = tv.Id,
-                ChildRequests = new List<ChildRequests>(),
-                TotalSeasons = tv.SeasonRequests.Count()
-            };
-            model.ChildRequests.Add(childRequest);
-            return await AddRequest(model);
+            var newRequest = tvBuilder.CreateNewRequest(tv);
+            return await AddRequest(newRequest.NewRequest);
         }
 
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)

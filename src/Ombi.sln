@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -13,57 +13,59 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Build\publish.bat = Build\publish.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{9293CA11-360A-4C20-A674-B9E794431BF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.TheMovieDb", "Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj", "{132DA282-5894-4570-8916-D8C18ED2CE84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.TheMovieDb", "Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj", "{132DA282-5894-4570-8916-D8C18ED2CE84}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api", "Ombi.Api\Ombi.Api.csproj", "{EA31F915-31F9-4318-B521-1500CDF40DDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api", "Ombi.Api\Ombi.Api.csproj", "{EA31F915-31F9-4318-B521-1500CDF40DDF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Helpers", "Ombi.Helpers\Ombi.Helpers.csproj", "{C182B435-1FAB-49C5-9BF9-F7F5C6EF3C94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Store", "Ombi.Store\Ombi.Store.csproj", "{68086581-1EFD-4390-8100-47F87D1CB628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.DependencyInjection", "Ombi.DependencyInjection\Ombi.DependencyInjection.csproj", "{B39E4558-C557-48E7-AA74-19C5CD809617}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.DependencyInjection", "Ombi.DependencyInjection\Ombi.DependencyInjection.csproj", "{B39E4558-C557-48E7-AA74-19C5CD809617}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Mapping", "Ombi.Mapping\Ombi.Mapping.csproj", "{63E63511-1C7F-4162-8F92-8F7391B3C8A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Mapping", "Ombi.Mapping\Ombi.Mapping.csproj", "{63E63511-1C7F-4162-8F92-8F7391B3C8A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mappers", "Mappers", "{025FB189-2FFB-4F43-A64B-6F1B5A0D2065}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DI", "DI", "{410F36CF-9C60-428A-B191-6FD90610991A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Plex", "Ombi.Api.Plex\Ombi.Api.Plex.csproj", "{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Plex", "Ombi.Api.Plex\Ombi.Api.Plex.csproj", "{2E1A7B91-F29B-42BC-8F1E-1CF2DCC389BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Schedule", "Ombi.Schedule\Ombi.Schedule.csproj", "{5B42ADD4-757A-47C1-9CC5-320829C5E665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Schedule", "Ombi.Schedule\Ombi.Schedule.csproj", "{5B42ADD4-757A-47C1-9CC5-320829C5E665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Emby", "Ombi.Api.Emby\Ombi.Api.Emby.csproj", "{08FF107D-31E1-470D-AF86-E09B015CEE06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Emby", "Ombi.Api.Emby\Ombi.Api.Emby.csproj", "{08FF107D-31E1-470D-AF86-E09B015CEE06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Sonarr", "Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj", "{CFB5E008-D0D0-43C0-AA06-89E49D17F384}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Sonarr", "Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj", "{CFB5E008-D0D0-43C0-AA06-89E49D17F384}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6F42AB98-9196-44C4-B888-D5E409F415A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.TvMaze", "Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj", "{0E8EF835-E4F0-4EE5-A2B6-678DEE973721}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.TvMaze", "Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj", "{0E8EF835-E4F0-4EE5-A2B6-678DEE973721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Notifications", "Ombi.Notifications\Ombi.Notifications.csproj", "{E6EE2830-E4AC-4F2E-AD93-2C9305605761}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Notifications", "Ombi.Notifications\Ombi.Notifications.csproj", "{E6EE2830-E4AC-4F2E-AD93-2C9305605761}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{EA30DD15-6280-4687-B370-2956EC2E54E5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Notifications.Templates", "Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj", "{6EE01B17-0966-4E11-8BC1-A5318A92AB1D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Notifications.Templates", "Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj", "{6EE01B17-0966-4E11-8BC1-A5318A92AB1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Settings", "Ombi.Settings\Ombi.Settings.csproj", "{AE3AA23D-5B66-42AF-B44E-B9B4D8856C6F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Settings", "Ombi.Settings\Ombi.Settings.csproj", "{AE3AA23D-5B66-42AF-B44E-B9B4D8856C6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Trakt", "Ombi.Api.Trakt\Ombi.Api.Trakt.csproj", "{3880375C-1A7E-4D75-96EC-63B954C42FEA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Trakt", "Ombi.Api.Trakt\Ombi.Api.Trakt.csproj", "{3880375C-1A7E-4D75-96EC-63B954C42FEA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Core.Tests", "Ombi.Core.Tests\Ombi.Core.Tests.csproj", "{FC6A8F7C-9722-4AE4-960D-277ACB0E81CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Core.Tests", "Ombi.Core.Tests\Ombi.Core.Tests.csproj", "{FC6A8F7C-9722-4AE4-960D-277ACB0E81CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Radarr", "Ombi.Api.Radarr\Ombi.Api.Radarr.csproj", "{94D04C1F-E35A-499C-B0A0-9FADEBDF8336}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Radarr", "Ombi.Api.Radarr\Ombi.Api.Radarr.csproj", "{94D04C1F-E35A-499C-B0A0-9FADEBDF8336}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Discord", "Ombi.Api.Discord\Ombi.Api.Discord.csproj", "{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Discord", "Ombi.Api.Discord\Ombi.Api.Discord.csproj", "{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Updater", "Ombi.Updater\Ombi.Updater.csproj", "{6294A82D-4915-4FC3-B301-8F985716F34C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Updater", "Ombi.Updater\Ombi.Updater.csproj", "{6294A82D-4915-4FC3-B301-8F985716F34C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Update", "Update", "{D11FE57E-1E57-491D-A1D4-01AEF4BE5CB6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Notifications.Tests", "Ombi.Notifications.Tests\Ombi.Notifications.Tests.csproj", "{2C7836E7-B120-40A6-B641-DDAA02FBAE23}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{6294A82D-4915-4FC3-B301-8F985716F34C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6294A82D-4915-4FC3-B301-8F985716F34C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6294A82D-4915-4FC3-B301-8F985716F34C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C7836E7-B120-40A6-B641-DDAA02FBAE23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C7836E7-B120-40A6-B641-DDAA02FBAE23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C7836E7-B120-40A6-B641-DDAA02FBAE23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C7836E7-B120-40A6-B641-DDAA02FBAE23}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -175,5 +181,6 @@ Global
 		{94D04C1F-E35A-499C-B0A0-9FADEBDF8336} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{5AF2B6D2-5CC6-49FE-928A-BA27AF52B194} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{6294A82D-4915-4FC3-B301-8F985716F34C} = {D11FE57E-1E57-491D-A1D4-01AEF4BE5CB6}
+		{2C7836E7-B120-40A6-B641-DDAA02FBAE23} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 	EndGlobalSection
 EndGlobal

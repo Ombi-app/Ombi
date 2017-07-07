@@ -182,7 +182,8 @@ namespace Ombi.Core.Engine
         {
             await MovieRepository.Add(model);
 
-            if (ShouldSendNotification(model))
+            var result = await RunSpecificRule(model, SpecificRules.CanSendNotification);
+            if (result.Success)
             {
                 NotificationHelper.NewRequest(model);
             }

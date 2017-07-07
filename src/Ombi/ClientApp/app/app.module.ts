@@ -16,11 +16,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
 import { AppComponent } from './app.component';
+
 // Search
-import { SearchComponent } from './search/search.component';
-import { MovieSearchComponent } from './search/moviesearch.component';
-import { TvSearchComponent } from './search/tvsearch.component';
-import { SeriesInformationComponent } from './search/seriesinformation.component';
 
 // Request
 import { RequestComponent } from './requests/request.component';
@@ -32,10 +29,10 @@ import { RequestCardComponent } from './request-grid/request-card.component';
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { UserManagementComponent } from './usermanagement/usermanagement.component';
+import { UserManagementEditComponent } from './usermanagement/usermanagement-edit.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services 
-import { SearchService } from './services/search.service';
 import { RequestService } from './services/request.service';
 import { NotificationService } from './services/notification.service';
 import { SettingsService } from './services/settings.service';
@@ -49,17 +46,17 @@ import { StatusService } from './services/status.service';
 // Modules
 import { SettingsModule } from './settings/settings.module';
 import { WizardModule } from './wizard/wizard.module';
+import { SearchModule } from './search/search.module';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
     { path: '', redirectTo: '/search', pathMatch: 'full' },
-    { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
-    { path: 'search/show/:id', component: SeriesInformationComponent, canActivate: [AuthGuard] },
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
     //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent },
     { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard] },
+    { path: 'usermanagement/edit/:id', component: UserManagementEditComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -77,6 +74,7 @@ const routes: Routes = [
         InfiniteScrollModule,
         AuthModule,
         WizardModule,
+        SearchModule,
         DialogModule,
         MdButtonModule,
         NgbModule.forRoot(),
@@ -89,21 +87,17 @@ const routes: Routes = [
     declarations: [
         AppComponent,
         PageNotFoundComponent,
-        SearchComponent,
         RequestComponent,
         LoginComponent,
-        MovieSearchComponent,
-        TvSearchComponent,
         LandingPageComponent,
         UserManagementComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
-        SeriesInformationComponent,
         //RequestGridComponent,
         RequestCardComponent,
+        UserManagementEditComponent,
     ],
     providers: [
-        SearchService,
         RequestService,
         NotificationService,
         AuthService,
