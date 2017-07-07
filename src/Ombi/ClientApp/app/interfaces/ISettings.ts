@@ -14,7 +14,8 @@ export interface IOmbiSettings extends ISettings {
     //baseUrl:string, 
     collectAnalyticData: boolean,
     wizard: boolean,
-    apiKey: string
+    apiKey: string,
+    externalUrl:string,
 }
 
 export interface IEmbySettings extends IExternalSettings {

@@ -62,10 +62,10 @@ hr {
 }
 
 .form-control-custom {
-    background-color: $form-color $i;
+    /*background-color: $form-color $i;
     color: white $i;
     border-radius: 0;
-    box-shadow: 0 0 0 !important;
+    box-shadow: 0 0 0 !important;*/
 }
 
 .form-small {
@@ -762,9 +762,16 @@ textarea {
 }
 
 
-.form-signin .form-control:focus {
+.form-control:focus {
     border-color: rgb(104, 145, 162);
     outline: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
     box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgb(104, 145, 162);
+}
+
+.form-control:focus#search {
+    border-color: transparent;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Ombi.Core.Models;
 using Ombi.Store.Entities;
@@ -13,14 +14,16 @@ namespace Ombi.Core.IdentityResolver
 {
     public class UserIdentityManager : IUserIdentityManager
     {
-        public UserIdentityManager(IUserRepository userRepository, IMapper mapper)
+        public UserIdentityManager(IUserRepository userRepository, IMapper mapper, ITokenRepository token)
         {
             UserRepository = userRepository;
             Mapper = mapper;
+            TokenRepository = token;
         }
 
         private IMapper Mapper { get; }
         private IUserRepository UserRepository { get; }
+        private ITokenRepository TokenRepository { get; }
 
         public async Task<bool> CredentialsValid(string username, string password)
         {
@@ -50,10 +53,18 @@ namespace Ombi.Core.IdentityResolver
         {
             var user = Mapper.Map<User>(userDto);
             user.Claims.RemoveAll(x => x.Type == ClaimTypes.Country); // This is a hack around the Mapping Profile
-            var result = HashPassword(user.Password);
+            var result = HashPassword(Guid.NewGuid().ToString("N")); // Since we do not allow the admin to set up the password. We send an email to the user
             user.Password = result.HashedPass;
             user.Salt = result.Salt;
             await UserRepository.CreateUser(user);
+
+            await TokenRepository.CreateToken(new EmailTokens
+            {
+                UserId = user.Id,
+                ValidUntil = DateTime.UtcNow.AddDays(7),
+            });
+
+            //BackgroundJob.Enqueue(() => );
 
             return Mapper.Map<UserDto>(user);
         }

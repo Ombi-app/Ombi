@@ -1,0 +1,42 @@
+﻿
+<h3>Create User</h3>
+<button type="button" class="btn btn-primary-outline" style="float:right;" [routerLink]="['/usermanagement/']">Back</button>
+
+
+<div class="modal-body" style="margin-top:45px;">
+    <div class="form-group">
+        <label for="username" class="control-label">Username</label>
+        <div>
+            <input type="text" [(ngModel)]="user.username" class="form-control form-control-custom " id="username" name="username" value="{{user?.username}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="alias" class="control-label">Alias</label>
+        <div>
+            <input type="text" [(ngModel)]="user.alias" class="form-control form-control-custom " id="alias" name="alias" value="{{user?.alias}}">
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="alias" class="control-label">Email Address</label>
+        <div>
+            <input type="text" [(ngModel)]="user.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{user?.emailAddress}}">
+        </div>
+    </div>
+    <div *ngFor="let c of availableClaims">
+        <div class="form-group">
+            <div class="checkbox">
+                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                <label for="create{{c.value}}">{{c.value}}</label>
+
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+<div>
+    <button type="button" class="btn btn-danger-outline" (click)="update()">Create</button>
+
+</div>

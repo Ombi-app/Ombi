@@ -32,6 +32,7 @@ namespace Ombi.Store.Context
         public DbSet<ChildRequests> ChildRequests { get; set; }
         public DbSet<MovieIssues> MovieIssues { get; set; }
         public DbSet<TvIssues> TvIssues { get; set; }
+        public DbSet<EmailTokens> EmailTokens { get; set; }
         
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -28,8 +28,6 @@ import { RequestCardComponent } from './request-grid/request-card.component';
 
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
-import { UserManagementComponent } from './usermanagement/usermanagement.component';
-import { UserManagementEditComponent } from './usermanagement/usermanagement-edit.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
 // Services 
@@ -47,6 +45,7 @@ import { StatusService } from './services/status.service';
 import { SettingsModule } from './settings/settings.module';
 import { WizardModule } from './wizard/wizard.module';
 import { SearchModule } from './search/search.module';
+import { UserManagementModule } from './usermanagement/usermanagement.module';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
@@ -54,9 +53,7 @@ const routes: Routes = [
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
     //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
-    { path: 'landingpage', component: LandingPageComponent },
-    { path: 'usermanagement', component: UserManagementComponent, canActivate: [AuthGuard] },
-    { path: 'usermanagement/edit/:id', component: UserManagementEditComponent, canActivate: [AuthGuard] },
+    { path: 'landingpage', component: LandingPageComponent }
 ];
 
 @NgModule({
@@ -82,7 +79,8 @@ const routes: Routes = [
         MdCardModule,
         MdInputModule,
         MdTabsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        UserManagementModule
     ],
     declarations: [
         AppComponent,
@@ -90,12 +88,10 @@ const routes: Routes = [
         RequestComponent,
         LoginComponent,
         LandingPageComponent,
-        UserManagementComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
         //RequestGridComponent,
         RequestCardComponent,
-        UserManagementEditComponent,
     ],
     providers: [
         RequestService,

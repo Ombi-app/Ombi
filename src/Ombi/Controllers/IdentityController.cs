@@ -152,7 +152,7 @@ namespace Ombi.Controllers
             var userResult = await IdentityManager.CreateUser(Mapper.Map<UserDto>(user));
             return Mapper.Map<UserViewModel>(userResult);
         }
-
+        
         /// <summary>
         /// Updates the user.
         /// </summary>

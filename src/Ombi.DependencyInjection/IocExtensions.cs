@@ -83,6 +83,7 @@ namespace Ombi.DependencyInjection
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)

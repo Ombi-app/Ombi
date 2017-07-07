@@ -7,6 +7,7 @@
         public bool CollectAnalyticData { get; set; }
         public bool Wizard { get; set; }
 
+        public string ExternalUrl { get; set; }
         public string ApiKey { get; set; }
     }
 }

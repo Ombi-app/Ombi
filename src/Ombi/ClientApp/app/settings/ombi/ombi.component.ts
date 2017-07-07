@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
-import { IOmbiSettings } from '../../interfaces/ISettings'
 import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 
@@ -9,19 +9,21 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class OmbiComponent implements OnInit {
 
-    constructor(private settingsService: SettingsService, private notificationService: NotificationService) {  }
+    constructor(private settingsService: SettingsService,
+        private notificationService: NotificationService,
+        private fb: FormBuilder) { }
 
-    settings: IOmbiSettings;
+    form: FormGroup;
 
     ngOnInit(): void {
-        this.settings = {
-            apiKey: "",
-            port: 3579,
-            wizard: true,
-            collectAnalyticData: true,
-            id:0
-        }
-        this.settingsService.getOmbi().subscribe(x => this.settings = x);
+        this.settingsService.getOmbi().subscribe(x => {
+            this.form = this.fb.group({
+                port: [x.port],
+                collectAnalyticData: [x.collectAnalyticData],
+                apiKey: [{ value: x.apiKey, disabled: true }],
+                externalUrl: [x.externalUrl],
+            });            
+        });
     }
 
 
@@ -29,8 +31,12 @@ export class OmbiComponent implements OnInit {
         
     }
 
-    save() {
-        this.settingsService.saveOmbi(this.settings).subscribe(x => {
+    onSubmit(form: FormGroup) {
+        if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return
+        }
+        this.settingsService.saveOmbi(form.value).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Ombi settings");
             } else {

@@ -9,7 +9,7 @@
                 <i class="fa fa-search"></i>
             </div>
 
-            <input type="text" class="form-control" placeholder="Search" [(ngModel)]="searchTerm">
+            <input type="text" class="form-control" id="search" placeholder="Search" [(ngModel)]="searchTerm">
 
         </div>
     </div>
@@ -17,7 +17,7 @@
 
 
 
-<button type="button" class="btn btn-success-outline" (click)="showCreateDialogue=true">Add User</button>
+<button type="button" class="btn btn-success-outline" [routerLink]="['/usermanagement/add']">Add User</button>
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed">
     <thead>
@@ -70,7 +70,7 @@
             <span *ngIf="u.userType === 3">Emby User</span>
         </td>
         <td>
-            <a (click)="edit(u)" class="btn btn-sm btn-info-outline">Details/Edit</a>
+            <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
         </td>
     </tr>
     </tbody>

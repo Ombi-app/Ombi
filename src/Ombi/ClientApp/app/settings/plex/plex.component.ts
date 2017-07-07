@@ -91,7 +91,8 @@ export class PlexComponent implements OnInit, OnDestroy {
                 };
                 server.plexSelectedLibraries.push(lib);
             });
-        });
+        },
+            err => { this.notificationService.error("Error", err) });
     }
 
     save() {

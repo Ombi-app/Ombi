@@ -25,7 +25,7 @@ export class PlexService extends ServiceAuthHelpers {
     }
 
     getLibraries(plexSettings: IPlexServer): Observable<IPlexLibraries> {
-        return this.http.post(`${this.url}Libraries`, JSON.stringify(plexSettings), { headers: this.headers }).map(this.extractData);
+        return this.http.post(`${this.url}Libraries`, JSON.stringify(plexSettings), { headers: this.headers }).map(this.extractData).catch(this.handleError);
     }
     
 }
