@@ -1,8 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Ombi.Api.Emby.Models;
+using Ombi.Api.Emby.Models.Media.Tv;
+using Ombi.Api.Emby.Models.Movie;
 using Ombi.Helpers;
 
 namespace Ombi.Api.Emby
@@ -24,7 +26,7 @@ namespace Ombi.Api.Emby
         public async Task<List<EmbyUser>> GetUsers(string baseUri, string apiKey)
         {
             var request = new Request("emby/users", baseUri, HttpMethod.Get);
- 
+
             AddHeaders(request, apiKey);
             var obj = await Api.Request<List<EmbyUser>>(request);
 
@@ -61,6 +63,59 @@ namespace Ombi.Api.Emby
             AddHeaders(request, apiKey);
 
             var obj = await Api.Request<EmbyUser>(request);
+            return obj;
+        }
+
+        public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string userId, string baseUri)
+        {
+            return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri);
+        }
+
+        public async Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string userId, string baseUri)
+        {
+            return await GetAll<EmbyEpisodes>("Episode", apiKey, userId, baseUri);
+        }
+
+        public async Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string userId, string baseUri)
+        {
+            return await GetAll<EmbySeries>("Series", apiKey, userId, baseUri);
+        }
+
+        public async Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl)
+        {
+            return await GetInformation<SeriesInformation>(mediaId, apiKey, userId, baseUrl);
+        }
+        public async Task<MovieInformation> GetMovieInformation(string mediaId, string apiKey, string userId, string baseUrl)
+        {
+            return await GetInformation<MovieInformation>(mediaId, apiKey, userId, baseUrl);
+        }
+        public async Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl)
+        {
+            return await GetInformation<EpisodeInformation>(mediaId, apiKey, userId, baseUrl);
+        }
+
+        private async Task<T> GetInformation<T>(string mediaId, string apiKey, string userId, string baseUrl)
+        {
+            var request = new Request($"emby/users/{userId}/items/{mediaId}", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+            var response = await Api.RequestContent(request);
+
+            return JsonConvert.DeserializeObject<T>(response);
+        }
+
+
+
+        private async Task<EmbyItemContainer<T>> GetAll<T>(string type, string apiKey, string userId, string baseUri)
+        {
+            var request = new Request($"emby/users/{userId}/items", baseUri, HttpMethod.Get);
+
+            request.AddQueryString("Recursive", true.ToString());
+            request.AddQueryString("IncludeItemTypes", type);
+
+            AddHeaders(request, apiKey);
+
+
+            var obj = await Api.Request<EmbyItemContainer<T>>(request);
             return obj;
         }
 

@@ -6,7 +6,6 @@ import { NotificationService } from '../services/notification.service';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-
     templateUrl: './usermanagement-edit.component.html'
 })
 export class UserManagementEditComponent {

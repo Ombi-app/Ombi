@@ -40,6 +40,5 @@ const routes: Routes = [
         SearchService,
         RequestService
     ],
-   
 })
 export class SearchModule { }

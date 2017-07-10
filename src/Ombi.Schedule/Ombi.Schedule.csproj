@@ -18,8 +18,4 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Jobs\Emby\" />
-  </ItemGroup>
-
 </Project>
