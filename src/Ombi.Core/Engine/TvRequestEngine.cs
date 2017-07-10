@@ -114,6 +114,11 @@ namespace Ombi.Core.Engine
             return await allRequests.ToListAsync();
         }
 
+        public async Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId)
+        {
+            return await TvRepository.GetChild().Where(x => x.ParentRequestId == tvId).ToListAsync();
+        }
+        
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)
         {
             var allRequests = TvRepository.Get();

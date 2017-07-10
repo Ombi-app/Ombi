@@ -7,7 +7,7 @@ import { ServiceAuthHelpers } from './service.helpers';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IMovieRequests, ITvRequests, IRequestCountModel, IRequestGrid } from '../interfaces/IRequestModel';
+import { IMovieRequests, ITvRequests, IRequestCountModel, IRequestGrid, IChildRequests } from '../interfaces/IRequestModel';
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
@@ -41,6 +41,11 @@ export class RequestService extends ServiceAuthHelpers {
 
     getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
         return this.http.get(`${this.url}tv/${count}/${position}`).map(this.extractData)
+            .catch(this.handleError);
+    }   
+    
+     getChildRequests(requestId: number): Observable<IChildRequests[]> {
+        return this.http.get(`${this.url}tv/${requestId}/child`).map(this.extractData)
             .catch(this.handleError);
     }
 

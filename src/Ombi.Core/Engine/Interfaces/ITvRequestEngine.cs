@@ -15,5 +15,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task<IEnumerable<TvRequests>> SearchTvRequest(string search);
 
         Task<TvRequests> UpdateTvRequest(TvRequests request);
+        Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId);
     }
 }

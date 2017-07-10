@@ -163,6 +163,17 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Retuns all children requests for the request id
+        /// </summary>
+        /// <param name="requestId">The Request Id</param>
+        /// <returns></returns>
+        [HttpGet("tv/{requestId:int}/child")]
+        public async Task<IEnumerable<ChildRequests>> GetAllChildren(int requestId)
+        {
+            return await TvRequestEngine.GetAllChldren(requestId);
+        }
+
+        /// <summary>
         /// Gets the count of total requests
         /// </summary>
         /// <returns></returns>

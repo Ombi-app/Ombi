@@ -67,6 +67,5 @@ namespace Ombi.Api.Emby.Models.Media.Tv
         public string MediaType { get; set; }
         public object[] LockedFields { get; set; }
         public bool LockData { get; set; }
-
     }
 }

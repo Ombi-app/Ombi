@@ -41,6 +41,12 @@ after_build:
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.exe"
 - cmd: >-
+    dir %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
+    
+    
+    dir %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64
+
+    
     7z a Ombi_windows.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
     
     

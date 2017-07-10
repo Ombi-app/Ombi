@@ -10,21 +10,11 @@ import { HttpModule } from '@angular/http';
 import { ButtonModule, DialogModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 // Components
 import { AppComponent } from './app.component';
-
-// Search
-
-// Request
-import { RequestComponent } from './requests/request.component';
-import { MovieRequestsComponent } from './requests/movierequests.component';
-import { TvRequestsComponent } from './requests/tvrequests.component';
-//import { RequestGridComponent } from './request-grid/request-grid.component';
-import { RequestCardComponent } from './request-grid/request-card.component';
 
 import { LoginComponent } from './login/login.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
@@ -46,11 +36,12 @@ import { SettingsModule } from './settings/settings.module';
 import { WizardModule } from './wizard/wizard.module';
 import { SearchModule } from './search/search.module';
 import { UserManagementModule } from './usermanagement/usermanagement.module';
+import { RequestsModule } from './requests/requests.module';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
     { path: '', redirectTo: '/search', pathMatch: 'full' },
-    { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
+   
     //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
     { path: 'landingpage', component: LandingPageComponent }
@@ -68,7 +59,6 @@ const routes: Routes = [
         SettingsModule,
         DataTableModule,
         SharedModule,
-        InfiniteScrollModule,
         AuthModule,
         WizardModule,
         SearchModule,
@@ -80,18 +70,14 @@ const routes: Routes = [
         MdInputModule,
         MdTabsModule,
         ReactiveFormsModule,
-        UserManagementModule
+        UserManagementModule,
+        RequestsModule
     ],
     declarations: [
         AppComponent,
         PageNotFoundComponent,
-        RequestComponent,
         LoginComponent,
         LandingPageComponent,
-        MovieRequestsComponent,
-        TvRequestsComponent,
-        //RequestGridComponent,
-        RequestCardComponent,
     ],
     providers: [
         RequestService,
