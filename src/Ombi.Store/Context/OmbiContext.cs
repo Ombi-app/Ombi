@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
@@ -7,7 +8,7 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Context
 {
-    public sealed class OmbiContext : DbContext, IOmbiContext
+    public sealed class OmbiContext : IdentityDbContext<OmbiUser>, IOmbiContext
     {
         private static bool _created;
         public OmbiContext()
@@ -19,10 +20,12 @@ namespace Ombi.Store.Context
             
             // Add the notifcation templates
             AddAllTemplates();
+            
         }
-        
+
+
         public DbSet<GlobalSettings> Settings { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> OldUsers { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }

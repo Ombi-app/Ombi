@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Attributes;
 using Ombi.Core.Claims;
-using Ombi.Core.IdentityResolver;
-using Ombi.Core.Models;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
+using Ombi.Store.Entities;
 
 namespace Ombi.Controllers
 {
@@ -23,13 +23,15 @@ namespace Ombi.Controllers
     [PowerUser]
     public class IdentityController : BaseV1ApiController
     {
-        public IdentityController(IUserIdentityManager identity, IMapper mapper)
+        public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm)
         {
-            IdentityManager = identity;
+            UserManager = user;
             Mapper = mapper;
+            RoleManager = rm;
         }
 
-        private IUserIdentityManager IdentityManager { get; }
+        private UserManager<OmbiUser> UserManager { get; }
+        private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
 
         /// <summary>
@@ -39,9 +41,8 @@ namespace Ombi.Controllers
         [HttpGet]
         public async Task<UserViewModel> GetUser()
         {
-            return Mapper.Map<UserViewModel>(await IdentityManager.GetUser(this.HttpContext.User.Identity.Name));
+            return Mapper.Map<UserViewModel>(await UserManager.GetUserAsync(User));
         }
-
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -57,20 +58,39 @@ namespace Ombi.Controllers
         [AllowAnonymous]
         public async Task<bool> CreateWizardUser([FromBody] UserAuthModel user)
         {
-            var users = await IdentityManager.GetUsers();
+            var users = UserManager.Users;
             if (users.Any())
             {
                 // No one should be calling this. Only the wizard
                 return false;
             }
 
-            await IdentityManager.CreateUser(new UserDto
+            var userToCreate = new OmbiUser
             {
-                Username = user.Username,
-                UserType = UserType.LocalUser,
-                Claims = new List<Claim>() { new Claim(ClaimTypes.Role, OmbiClaims.Admin) },
-                Password = user.Password,
-            });
+                UserName = user.Username,
+                
+            };
+            
+            var result = await UserManager.CreateAsync(userToCreate, user.Password);
+            if (result.Succeeded)
+            {
+                if (!(await RoleManager.RoleExistsAsync("Admin")))
+                {
+                    var r = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+                var re = await UserManager.AddToRoleAsync(userToCreate, "Admin");
+
+                var v = User.IsInRole("Admin");
+                
+
+            }
+            //await UserManager.CreateUser(new UserDto
+            //{
+            //    Username = user.Username,
+            //    UserType = UserType.LocalUser,
+            //    Claims = new List<Claim>() { new Claim(ClaimTypes.Role, OmbiClaims.Admin) },
+            //    Password = user.Password,
+            //});
 
             return true;
         }
@@ -88,7 +108,7 @@ namespace Ombi.Controllers
 
             var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
             var allClaims = fields.Select(x => x.Name).ToList();
-            var users = Mapper.Map<IEnumerable<UserViewModel>>(await IdentityManager.GetUsers()).ToList();
+            var users = Mapper.Map<IEnumerable<UserViewModel>>(UserManager.Users).ToList();
 
             foreach (var user in users)
             {
@@ -121,7 +141,7 @@ namespace Ombi.Controllers
 
             var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
             var allClaims = fields.Select(x => x.Name).ToList();
-            var user = Mapper.Map<UserViewModel>(await IdentityManager.GetUser(id));
+            var user = Mapper.Map<UserViewModel>(await UserManager.Users.FirstOrDefaultAsync(x => x.Id == id.ToString()));
 
 
             var userClaims = user.Claims.Select(x => x.Value);
@@ -145,37 +165,37 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        [HttpPost]
-        public async Task<UserViewModel> CreateUser([FromBody] UserViewModel user)
-        {
-            user.Id = null;
-            var userResult = await IdentityManager.CreateUser(Mapper.Map<UserDto>(user));
-            return Mapper.Map<UserViewModel>(userResult);
-        }
-        
+        //[HttpPost]
+        //public async Task<UserViewModel> CreateUser([FromBody] UserViewModel user)
+        //{
+        //    user.Id = null;
+        //    var userResult = await UserManager.CreateUser(Mapper.Map<UserDto>(user));
+        //    return Mapper.Map<UserViewModel>(userResult);
+        //}
+
         /// <summary>
         /// Updates the user.
         /// </summary>
         /// <param name="user">The user.</param>
         /// <returns></returns>
-        [HttpPut]
-        public async Task<UserViewModel> UpdateUser([FromBody] UserViewModel user)
-        {
-            var userResult = await IdentityManager.UpdateUser(Mapper.Map<UserDto>(user));
-            return Mapper.Map<UserViewModel>(userResult);
-        }
+        //[HttpPut]
+        //public async Task<UserViewModel> UpdateUser([FromBody] UserViewModel user)
+        //{
+        //    var userResult = await UserManager.UpdateUser(Mapper.Map<UserDto>(user));
+        //    return Mapper.Map<UserViewModel>(userResult);
+        //}
 
-        /// <summary>
-        /// Deletes the user.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <returns></returns>
-        [HttpDelete]
-        public async Task<StatusCodeResult> DeleteUser([FromBody] UserViewModel user)
-        {
-            await IdentityManager.DeleteUser(Mapper.Map<UserDto>(user));
-            return Ok();
-        }
+        ///// <summary>
+        ///// Deletes the user.
+        ///// </summary>
+        ///// <param name="user">The user.</param>
+        ///// <returns></returns>
+        //[HttpDelete]
+        //public async Task<StatusCodeResult> DeleteUser([FromBody] UserViewModel user)
+        //{
+        //    await UserManager.DeleteUser(Mapper.Map<UserDto>(user));
+        //    return Ok();
+        //}
 
         /// <summary>
         /// Gets all available claims in the system.

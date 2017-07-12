@@ -45,32 +45,32 @@ namespace Ombi.Store.Repository
 
         public async Task<User> GetUser(string username)
         {
-            var user = await Db.Users.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
+            var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
             Db.Entry(user).Reload();
             return user;
         }
 
         public async Task<User> GetUser(int userId)
         {
-            var user = await Db.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Id == userId);
             Db.Entry(user).Reload();
             return user;
         }
 
         public async Task CreateUser(User user)
         {
-            Db.Users.Add(user);
+            Db.OldUsers.Add(user);
             await Db.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetUsers()
         {
-            return await Db.Users.ToListAsync();
+            return await Db.OldUsers.ToListAsync();
         }
 
         public async Task DeleteUser(User user)
         {
-            Db.Users.Remove(user);
+            Db.OldUsers.Remove(user);
             await Db.SaveChangesAsync();
         }
 

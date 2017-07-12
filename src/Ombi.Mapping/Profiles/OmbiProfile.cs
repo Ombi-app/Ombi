@@ -18,7 +18,7 @@ namespace Ombi.Mapping.Profiles
 
             CreateMap<Claim, ClaimCheckboxes>().ConvertUsing<ClaimsConverter>();
 
-            CreateMap<UserDto, UserViewModel>().ForMember(x => x.Password, opt => opt.Ignore());
+            CreateMap<OmbiUser, UserViewModel>().ForMember(x => x.Password, opt => opt.Ignore());
 
             CreateMap<ClaimCheckboxes, Claim>()
                 .ConstructUsing(checkbox => checkbox.Enabled ? new Claim(ClaimTypes.Role, checkbox.Value) : new Claim(ClaimTypes.Country, ""));

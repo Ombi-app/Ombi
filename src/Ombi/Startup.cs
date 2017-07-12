@@ -9,19 +9,23 @@ using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
-using Ombi.Auth;
+using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
 using Ombi.Schedule;
+using Ombi.Store.Context;
+using Ombi.Store.Entities;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Profiling;
@@ -66,9 +70,35 @@ namespace Ombi
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<OmbiContext>(options =>
+                options.UseSqlite("Data Source=Ombi.db"));
+            
+            services.AddIdentity<OmbiUser, IdentityRole>()
+                .AddEntityFrameworkStores<OmbiContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddIdentityServer()
+                .AddTemporarySigningCredential()
+                .AddInMemoryPersistedGrants()
+                .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
+                .AddInMemoryApiResources(IdentityConfig.GetApiResources())
+                .AddInMemoryClients(IdentityConfig.GetClients())
+                .AddAspNetIdentity<OmbiUser>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 1;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            });
+
             services.AddMemoryCache();
+            
             services.AddMvc()
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+            
             services.AddOmbiMappingProfile();
             services.AddAutoMapper(expression =>
             {
@@ -114,8 +144,9 @@ namespace Ombi
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
 
-            services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
+            //services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+            services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
 
             services.AddHangfire(x =>
             {
@@ -140,6 +171,24 @@ namespace Ombi
         {
             //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             //loggerFactory.AddDebug();
+            var options = (IOptions<UserSettings>) app.ApplicationServices.GetService(
+                typeof(IOptions<UserSettings>));
+            
+            app.UseIdentity();
+            app.UseIdentityServer();
+            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            {
+                Authority = options.Value.WebsiteUrl,
+                ApiName = "api",
+                ApiSecret = "secret",
+
+                EnableCaching = true,
+                CacheDuration = TimeSpan.FromMinutes(10), // that's the default
+                RequireHttpsMetadata = options.Value.UseHttps, // FOR DEV set to false
+                AutomaticAuthenticate = true,
+                AutomaticChallenge = true
+
+            });
 
             loggerFactory.AddSerilog();
 
@@ -180,7 +229,7 @@ namespace Ombi
             var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
             jobSetup.Setup();
 
-            ConfigureAuth(app, (IOptions<TokenAuthenticationOptions>)app.ApplicationServices.GetService(typeof(IOptions<TokenAuthenticationOptions>)));
+            //ConfigureAuth(app, (IOptions<TokenAuthenticationOptions>)app.ApplicationServices.GetService(typeof(IOptions<TokenAuthenticationOptions>)));
 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".map"] = "application/octet-stream";
