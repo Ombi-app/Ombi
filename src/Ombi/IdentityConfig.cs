@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using IdentityModel;
 using IdentityServer4.Models;
 
 namespace Ombi
@@ -25,8 +26,8 @@ namespace Ombi
             {
                 new ApiResource("api", "API")
                 {
-                    UserClaims = {"role", "name"},
-                    
+                    UserClaims = {JwtClaimTypes.Name, JwtClaimTypes.Role, JwtClaimTypes.Email, JwtClaimTypes.Id},
+
                 }
             };
         }

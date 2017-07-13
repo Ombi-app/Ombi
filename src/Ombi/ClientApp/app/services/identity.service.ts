@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IUser, ICheckbox } from '../interfaces/IUser';
+import { IUser, IUpdateLocalUser, ICheckbox, IIdentityResult } from '../interfaces/IUser';
 
 
 @Injectable()
@@ -20,7 +20,7 @@ export class IdentityService extends ServiceAuthHelpers {
         return this.http.get(this.url).map(this.extractData);
     }
 
-    getUserById(id: number): Observable<IUser> {
+    getUserById(id: string): Observable<IUser> {
         return this.http.get(`${this.url}User/${id}`).map(this.extractData);
     }
 
@@ -32,12 +32,19 @@ export class IdentityService extends ServiceAuthHelpers {
         return this.http.get(`${this.url}Claims`).map(this.extractData);
     }
 
-    createUser(user: IUser): Observable<IUser> {
+    createUser(user: IUser): Observable<IIdentityResult> {
         return this.http.post(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
     }
 
-    updateUser(user: IUser): Observable<IUser> {
+    updateUser(user: IUser): Observable<IIdentityResult> {
         return this.http.put(this.url, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+    }     
+    updateLocalUser(user: IUpdateLocalUser): Observable<IIdentityResult> {
+        return this.http.put(this.url + 'local', JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+    }    
+    
+    deleteUser(user: IUser): Observable<IIdentityResult> {
+        return this.http.delete(`${this.url}/${user.id}`, { headers: this.headers }).map(this.extractData);
     }
 
     hasRole(role: string): boolean {

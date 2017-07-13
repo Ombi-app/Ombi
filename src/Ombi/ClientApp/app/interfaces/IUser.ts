@@ -20,3 +20,13 @@ export interface ICheckbox {
     enabled: boolean,
 }
 
+export interface IIdentityResult {
+    errors: string[],
+    successful: boolean,
+}
+
+export interface IUpdateLocalUser extends IUser {
+    currentPassword: string,
+    confirmNewPassword: string
+}
+

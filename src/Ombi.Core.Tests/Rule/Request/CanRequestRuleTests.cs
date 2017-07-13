@@ -23,7 +23,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithMovieRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestMovie)).Returns(true);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestMovie)).Returns(true);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
@@ -33,7 +33,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnFail_WhenRequestingMovieWithoutMovieRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestMovie)).Returns(false);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestMovie)).Returns(false);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
@@ -44,7 +44,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithAdminRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.Admin)).Returns(true);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.Admin)).Returns(true);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
@@ -54,7 +54,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnSuccess_WhenRequestingTVWithAdminRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.Admin)).Returns(true);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.Admin)).Returns(true);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
@@ -64,7 +64,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnSuccess_WhenRequestingTVWithTVRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestTv)).Returns(true);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestTv)).Returns(true);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
@@ -74,7 +74,7 @@ namespace Ombi.Core.Tests.Rule
         [Fact]
         public async Task Should_ReturnFail_WhenRequestingTVWithoutTVRole()
         {
-            PrincipalMock.Setup(x => x.IsInRole(OmbiClaims.RequestTv)).Returns(false);
+            PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestTv)).Returns(false);
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 

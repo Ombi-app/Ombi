@@ -22,7 +22,7 @@
                     <div *ngIf="emailForm.get('host').hasError('required')">Host is required</div>
                     <div *ngIf="emailForm.get('port').hasError('required')">The Port is required</div>
                     <div *ngIf="emailForm.get('sender').hasError('required')">The Email Sender is required</div>
-                    <div *ngIf="emailForm.get('sender').hasError('email')">The Email Sender needs to be a valid email address</div>
+                    <div *ngIf="emailForm.get('sender').hasError('incorrectMailFormat')">The Email Sender needs to be a valid email address</div>
                     <div *ngIf="emailForm.get('adminEmail').hasError('required')">The Email Sender is required</div>
                     <div *ngIf="emailForm.get('adminEmail').hasError('email')">The Admin Email needs to be a valid email address</div>
                     <div *ngIf="emailForm.get('username').hasError('required')">The Username is required</div>

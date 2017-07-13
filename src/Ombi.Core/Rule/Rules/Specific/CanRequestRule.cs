@@ -21,7 +21,7 @@ namespace Ombi.Core.Rule.Rules.Specific
             var req = (BaseRequest)obj;
             var sendNotification = !req.Approved; /*|| !prSettings.IgnoreNotifyForAutoApprovedRequests;*/
 
-            if (User.IsInRole(OmbiClaims.Admin))
+            if (User.IsInRole(OmbiRoles.Admin))
                 sendNotification = false; // Don't bother sending a notification if the user is an admin
             return Task.FromResult(new RuleResult
             {

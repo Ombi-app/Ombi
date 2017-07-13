@@ -9,8 +9,8 @@ namespace Ombi.Attributes
         {
             var roles = new []
             {
-                OmbiClaims.Admin,
-                OmbiClaims.PowerUser
+                OmbiRoles.Admin,
+                OmbiRoles.PowerUser
             };
             Roles = string.Join(",",roles);
         }

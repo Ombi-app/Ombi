@@ -44,8 +44,8 @@ export class AuthService extends ServiceHelpers {
                 throw "Invalid token";
             }
             var json = this.jwtHelper.decodeToken(token);
-            var roles = json["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"]
-            var name = json["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
+            var roles = json["role"];
+            var name = json["name"];
 
 
             var u = { name: name, roles: [] as string[] };
@@ -64,7 +64,6 @@ export class AuthService extends ServiceHelpers {
 
     logout() {
         localStorage.removeItem('id_token');
-        localStorage.removeItem('currentUser');
     }
 }
 

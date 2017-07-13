@@ -19,15 +19,15 @@ namespace Ombi.Core.Rule.Rules.Request
 
         public Task<RuleResult> Execute(BaseRequest obj)
         {
-            if (User.IsInRole(OmbiClaims.Admin))
+            if (User.IsInRole(OmbiRoles.Admin))
             {
                 obj.Approved = true;
                 return Task.FromResult(Success());
             }
 
-            if (obj.RequestType == RequestType.Movie && User.IsInRole(OmbiClaims.AutoApproveMovie))
+            if (obj.RequestType == RequestType.Movie && User.IsInRole(OmbiRoles.AutoApproveMovie))
                 obj.Approved = true;
-            if (obj.RequestType == RequestType.TvShow && User.IsInRole(OmbiClaims.AutoApproveTv))
+            if (obj.RequestType == RequestType.TvShow && User.IsInRole(OmbiRoles.AutoApproveTv))
                 obj.Approved = true;
             return Task.FromResult(Success()); // We don't really care, we just don't set the obj to approve
         }

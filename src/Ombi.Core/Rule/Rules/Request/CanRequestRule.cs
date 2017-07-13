@@ -18,17 +18,17 @@ namespace Ombi.Core.Rule.Rules
 
         public Task<RuleResult> Execute(BaseRequest obj)
         {
-            if (User.IsInRole(OmbiClaims.Admin))
+            if (User.IsInRole(OmbiRoles.Admin))
                 return Task.FromResult(Success());
 
             if (obj.RequestType == RequestType.Movie)
             {
-                if (User.IsInRole(OmbiClaims.RequestMovie))
+                if (User.IsInRole(OmbiRoles.RequestMovie))
                     return Task.FromResult(Success());
                 return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
             }
 
-            if (User.IsInRole(OmbiClaims.RequestTv))
+            if (User.IsInRole(OmbiRoles.RequestTv))
                 return Task.FromResult(Success());
             return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
         }

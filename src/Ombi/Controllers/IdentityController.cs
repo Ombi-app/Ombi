@@ -1,18 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
+
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using Ombi.Attributes;
 using Ombi.Core.Claims;
+using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Models;
+using Ombi.Models.Identity;
 using Ombi.Store.Entities;
+using IdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
 {
@@ -33,16 +38,6 @@ namespace Ombi.Controllers
         private UserManager<OmbiUser> UserManager { get; }
         private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
-
-        /// <summary>
-        /// Gets the current user.
-        /// </summary>
-        /// <returns>Information about the current user</returns>
-        [HttpGet]
-        public async Task<UserViewModel> GetUser()
-        {
-            return Mapper.Map<UserViewModel>(await UserManager.GetUserAsync(User));
-        }
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -68,29 +63,18 @@ namespace Ombi.Controllers
             var userToCreate = new OmbiUser
             {
                 UserName = user.Username,
-                
+                UserType = UserType.LocalUser
             };
-            
+
             var result = await UserManager.CreateAsync(userToCreate, user.Password);
             if (result.Succeeded)
             {
-                if (!(await RoleManager.RoleExistsAsync("Admin")))
+                if (!await RoleManager.RoleExistsAsync(OmbiRoles.Admin))
                 {
-                    var r = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+                    await RoleManager.CreateAsync(new IdentityRole(OmbiRoles.Admin));
                 }
-                var re = await UserManager.AddToRoleAsync(userToCreate, "Admin");
-
-                var v = User.IsInRole("Admin");
-                
-
+                await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
             }
-            //await UserManager.CreateUser(new UserDto
-            //{
-            //    Username = user.Username,
-            //    UserType = UserType.LocalUser,
-            //    Claims = new List<Claim>() { new Claim(ClaimTypes.Role, OmbiClaims.Admin) },
-            //    Password = user.Password,
-            //});
 
             return true;
         }
@@ -102,30 +86,30 @@ namespace Ombi.Controllers
         [HttpGet("Users")]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
-            var type = typeof(OmbiClaims);
-            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
-                                                    BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var users = await UserManager.Users
+                .ToListAsync();
 
-            var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-            var allClaims = fields.Select(x => x.Name).ToList();
-            var users = Mapper.Map<IEnumerable<UserViewModel>>(UserManager.Users).ToList();
+            var model = new List<UserViewModel>();
 
             foreach (var user in users)
             {
-                var userClaims = user.Claims.Select(x => x.Value);
-                var left = allClaims.Except(userClaims);
-
-                foreach (var c in left)
-                {
-                    user.Claims.Add(new ClaimCheckboxes
-                    {
-                        Enabled = false,
-                        Value = c
-                    });
-                }
+                model.Add(await GetUserWithRoles(user));
             }
 
-            return users;
+            return model;
+        }
+
+        /// <summary>
+        /// Gets the current logged in user.
+        /// </summary>
+        /// <returns>Information about all users</returns>
+        [HttpGet]
+        [Authorize]
+        public async Task<UserViewModel> GetCurrentUser()
+        {
+            var user = await UserManager.GetUserAsync(User);
+
+            return await GetUserWithRoles(user);
         }
 
         /// <summary>
@@ -133,86 +117,299 @@ namespace Ombi.Controllers
         /// </summary>
         /// <returns>Information about the user</returns>
         [HttpGet("User/{id}")]
-        public async Task<UserViewModel> GetUser(int id)
+        public async Task<UserViewModel> GetUser(string id)
         {
-            var type = typeof(OmbiClaims);
-            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
-                                                    BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == id);
 
-            var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-            var allClaims = fields.Select(x => x.Name).ToList();
-            var user = Mapper.Map<UserViewModel>(await UserManager.Users.FirstOrDefaultAsync(x => x.Id == id.ToString()));
+            return await GetUserWithRoles(user);
+        }
 
-
-            var userClaims = user.Claims.Select(x => x.Value);
-            IEnumerable<string> left = allClaims.Except(userClaims);
-
-            foreach (var c in left)
+        private async Task<UserViewModel> GetUserWithRoles(OmbiUser user)
+        {
+            var userRoles = await UserManager.GetRolesAsync(user);
+            var vm = new UserViewModel
             {
-                user.Claims.Add(new ClaimCheckboxes
+                Alias = user.Alias,
+                Username = user.UserName,
+                Id = user.Id,
+                EmailAddress = user.Email,
+                UserType = (Core.Models.UserType)(int)user.UserType,
+                Claims = new List<ClaimCheckboxes>(),
+            };
+
+            foreach (var role in userRoles)
+            {
+                vm.Claims.Add(new ClaimCheckboxes
                 {
-                    Enabled = false,
-                    Value = c
+                    Value = role,
+                    Enabled = true
                 });
             }
 
+            // Add the missing claims
+            var allRoles = await RoleManager.Roles.ToListAsync();
+            var missing = allRoles.Select(x => x.Name).Except(userRoles);
+            foreach (var role in missing)
+            {
+                vm.Claims.Add(new ClaimCheckboxes
+                {
+                    Value = role,
+                    Enabled = false
+                });
+            }
 
-            return user;
+            return vm;
         }
 
         /// <summary>
         /// Creates the user.
         /// </summary>
-        /// <param name="user">The user.</param>
+        /// <param name = "user" > The user.</param>
         /// <returns></returns>
-        //[HttpPost]
-        //public async Task<UserViewModel> CreateUser([FromBody] UserViewModel user)
-        //{
-        //    user.Id = null;
-        //    var userResult = await UserManager.CreateUser(Mapper.Map<UserDto>(user));
-        //    return Mapper.Map<UserViewModel>(userResult);
-        //}
+        [HttpPost]
+        public async Task<IdentityResult> CreateUser([FromBody] UserViewModel user)
+        {
+            if (!EmailValidator.IsValidEmail(user.EmailAddress))
+            {
+                return Error($"The email address {user.EmailAddress} is not a valid format");
+            }
+            var ombiUser = new OmbiUser
+            {
+                Alias = user.Alias,
+                Email = user.EmailAddress,
+                UserName = user.Username,
+                UserType = UserType.LocalUser,
+            };
+            var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
+
+            if (!userResult.Succeeded)
+            {
+                // We did not create the user
+                return new IdentityResult
+                {
+                    Errors = userResult.Errors.Select(x => x.Description).ToList()
+                };
+            }
+
+            var roleResult = await AddRoles(user.Claims, ombiUser);
+
+            if (roleResult.Any(x => !x.Succeeded))
+            {
+                var messages = new List<string>();
+                foreach (var errors in roleResult.Where(x => !x.Succeeded))
+                {
+                    messages.AddRange(errors.Errors.Select(x => x.Description).ToList());
+                }
+
+                return new IdentityResult
+                {
+                    Errors = messages
+                };
+            }
+
+            return new IdentityResult
+            {
+                Successful = true
+            };
+        }
+
+        /// <summary>
+        /// This is for the local user to change their details.
+        /// </summary>
+        /// <param name="ui"></param>
+        /// <returns></returns>
+        [HttpPut("local")]
+        [Authorize]
+        public async Task<IdentityResult> UpdateLocalUser([FromBody] UpdateLocalUserModel ui)
+        {
+            if (string.IsNullOrEmpty(ui.CurrentPassword))
+            {
+                return Error("You need to provide your current password to make any changes");
+            }
+
+            var changingPass = !string.IsNullOrEmpty(ui.Password) || !string.IsNullOrEmpty(ui.ConfirmNewPassword);
+
+            if (changingPass)
+            {
+                if (!ui.Password.Equals(ui?.ConfirmNewPassword, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return Error("Passwords do not match");
+                }
+            }
+
+            if (!EmailValidator.IsValidEmail(ui.EmailAddress))
+            {
+                return Error($"The email address {ui.EmailAddress} is not a valid format");
+            }
+            // Get the user
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == ui.Id);
+            if (user == null)
+            {
+                return Error("The user does not exist");
+            }
+
+            // Make sure the pass is ok
+            var passwordCheck = await UserManager.CheckPasswordAsync(user, ui.CurrentPassword);
+            if (!passwordCheck)
+            {
+                return Error("Your password is incorrect");
+            }
+
+            user.Email = ui.EmailAddress;
+
+            var updateResult = await UserManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                return new IdentityResult
+                {
+                    Errors = updateResult.Errors.Select(x => x.Description).ToList()
+                };
+            }
+
+            if (changingPass)
+            {
+                var result = await UserManager.ChangePasswordAsync(user, ui.CurrentPassword, ui.Password);
+
+                if (!result.Succeeded)
+                {
+                    return new IdentityResult
+                    {
+                        Errors = result.Errors.Select(x => x.Description).ToList()
+                    };
+                }
+            }
+            return new IdentityResult
+            {
+                Successful = true
+            };
+
+        }
 
         /// <summary>
         /// Updates the user.
         /// </summary>
-        /// <param name="user">The user.</param>
+        /// <param name = "ui" > The user.</param>
         /// <returns></returns>
-        //[HttpPut]
-        //public async Task<UserViewModel> UpdateUser([FromBody] UserViewModel user)
-        //{
-        //    var userResult = await UserManager.UpdateUser(Mapper.Map<UserDto>(user));
-        //    return Mapper.Map<UserViewModel>(userResult);
-        //}
+        [HttpPut]
+        public async Task<IdentityResult> UpdateUser([FromBody] UserViewModel ui)
+        {
+            if (!EmailValidator.IsValidEmail(ui.EmailAddress))
+            {
+                return Error($"The email address {ui.EmailAddress} is not a valid format");
+            }
+            // Get the user
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == ui.Id);
+            user.Alias = ui.Alias;
+            user.Email = ui.EmailAddress;
+            var updateResult = await UserManager.UpdateAsync(user);
+            if (!updateResult.Succeeded)
+            {
+                return new IdentityResult
+                {
+                    Errors = updateResult.Errors.Select(x => x.Description).ToList()
+                };
+            }
 
-        ///// <summary>
-        ///// Deletes the user.
-        ///// </summary>
-        ///// <param name="user">The user.</param>
-        ///// <returns></returns>
-        //[HttpDelete]
-        //public async Task<StatusCodeResult> DeleteUser([FromBody] UserViewModel user)
-        //{
-        //    await UserManager.DeleteUser(Mapper.Map<UserDto>(user));
-        //    return Ok();
-        //}
+            // Get the roles
+            var userRoles = await UserManager.GetRolesAsync(user);
+
+            foreach (var role in userRoles)
+            {
+                await UserManager.RemoveFromRoleAsync(user, role);
+            }
+
+            var result = await AddRoles(ui.Claims, user);
+            if (result.Any(x => !x.Succeeded))
+            {
+                var messages = new List<string>();
+                foreach (var errors in result.Where(x => !x.Succeeded))
+                {
+                    messages.AddRange(errors.Errors.Select(x => x.Description).ToList());
+                }
+
+                return new IdentityResult
+                {
+                    Errors = messages
+                };
+            }
+
+            return new IdentityResult
+            {
+                Successful = true
+            };
+
+        }
+
+        /// <summary>
+        /// Deletes the user.
+        /// </summary>
+        /// <param name="userId">The user.</param>
+        /// <returns></returns>
+        [HttpDelete("{userId}")]
+        public async Task<IdentityResult> DeleteUser(string userId)
+        {
+
+            var userToDelete = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            if (userToDelete != null)
+            {
+                var result = await UserManager.DeleteAsync(userToDelete);
+                if (result.Succeeded)
+                {
+                    return new IdentityResult
+                    {
+                        Successful = true
+                    };
+                }
+
+                return new IdentityResult
+                {
+                    Errors = result.Errors.Select(x => x.Description).ToList()
+                };
+            }
+            return Error("Could not find user to delete.");
+        }
 
         /// <summary>
         /// Gets all available claims in the system.
         /// </summary>
         /// <returns></returns>
         [HttpGet("claims")]
-        public IEnumerable<ClaimCheckboxes> GetAllClaims()
+        public async Task<IEnumerable<ClaimCheckboxes>> GetAllClaims()
         {
-            var type = typeof(OmbiClaims);
-            FieldInfo[] fieldInfos = type.GetFields(BindingFlags.Public |
-                                                    BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-            var fields = fieldInfos.Where(fi => fi.IsLiteral && !fi.IsInitOnly).ToList();
-            var allClaims = fields.Select(x => x.Name).ToList();
-
-            return allClaims.Select(x => new ClaimCheckboxes() { Value = x });
+            var claims = new List<ClaimCheckboxes>();
+            // Add the missing claims
+            var allRoles = await RoleManager.Roles.ToListAsync();
+            var missing = allRoles.Select(x => x.Name);
+            foreach (var role in missing)
+            {
+                claims.Add(new ClaimCheckboxes
+                {
+                    Value = role,
+                    Enabled = false
+                });
+            }
+            return claims;
         }
 
+        private async Task<List<Microsoft.AspNetCore.Identity.IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
+        {
+            var roleResult = new List<Microsoft.AspNetCore.Identity.IdentityResult>();
+            foreach (var role in roles)
+            {
+                if (role.Enabled)
+                {
+                    roleResult.Add(await UserManager.AddToRoleAsync(ombiUser, role.Value));
+                }
+            }
+            return roleResult;
+        }
+
+        private IdentityResult Error(string message)
+        {
+            return new IdentityResult
+            {
+                Errors = new List<string> { message }
+            };
+        }
     }
 }

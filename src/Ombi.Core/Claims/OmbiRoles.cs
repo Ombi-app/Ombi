@@ -1,6 +1,6 @@
 ﻿namespace Ombi.Core.Claims
 {
-    public static class OmbiClaims
+    public static class OmbiRoles
     {
         public const string Admin = nameof(Admin);
         public const string AutoApproveMovie = nameof(AutoApproveMovie);

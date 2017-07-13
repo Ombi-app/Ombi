@@ -12,10 +12,11 @@ import { NotificationService } from '../services/notification.service';
 export class UserManagementAddComponent implements OnInit {
     constructor(private identityService: IdentityService,
         private notificationSerivce: NotificationService,
-    private router : Router) { }
+        private router: Router) { }
 
     user: IUser;
     availableClaims: ICheckbox[];
+    confirmPass: "";
 
     ngOnInit(): void {
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
@@ -30,11 +31,35 @@ export class UserManagementAddComponent implements OnInit {
         }
     }
 
-    update(): void {
+    create(): void {
         this.user.claims = this.availableClaims;
+
+        if (this.user.password) {
+            if (this.user.password !== this.confirmPass) {
+                this.notificationSerivce.error("Error", "Passwords do not match");
+                return;
+            }
+        }
+        var hasClaims = this.availableClaims.some((item) => {
+            if (item.enabled) { return true; }
+
+            return false;
+        });
+
+        if (!hasClaims) {
+            this.notificationSerivce.error("Error", "Please assign a role");
+            return;
+        }
+
         this.identityService.createUser(this.user).subscribe(x => {
-            this.notificationSerivce.success("Updated", `The user ${this.user.username} has been created successfully`)
-            this.router.navigate(['usermanagement']);
+            if (x.successful) {
+                this.notificationSerivce.success("Updated", `The user ${this.user.username} has been created successfully`)
+                this.router.navigate(['usermanagement']);
+            } else {
+                x.errors.forEach((val) => {
+                    this.notificationSerivce.error("Error", val);
+                });
+            }
         })
     }
 

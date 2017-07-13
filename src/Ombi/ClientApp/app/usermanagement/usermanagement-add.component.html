@@ -18,9 +18,23 @@
     </div>
 
     <div class="form-group">
-        <label for="alias" class="control-label">Email Address</label>
+        <label for="emailAddress" class="control-label">Email Address</label>
         <div>
             <input type="text" [(ngModel)]="user.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{user?.emailAddress}}">
+        </div>
+    </div>   
+    
+    <div class="form-group">
+        <label for="password" class="control-label">Password</label>
+        <div>
+            <input type="password" [(ngModel)]="user.password" class="form-control form-control-custom " id="password" name="password">
+        </div>
+    </div>
+
+        <div class="form-group">
+        <label for="confirmPass" class="control-label">Confirm Password</label>
+        <div>
+            <input type="password" [(ngModel)]="confirmPass" class="form-control form-control-custom " id="confirmPass" name="confirmPass">
         </div>
     </div>
     <div *ngFor="let c of availableClaims">
@@ -31,12 +45,9 @@
 
             </div>
         </div>
-
-
-
     </div>
 </div>
 <div>
-    <button type="button" class="btn btn-danger-outline" (click)="update()">Create</button>
+    <button type="button" class="btn btn-danger-outline" (click)="create()">Create</button>
 
 </div>
