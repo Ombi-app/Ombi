@@ -1,3 +1,21 @@
+
+
+
+
+!! Version 2.X is not supported anymore. Pleas don't open issue for that version !!
+See https://github.com/tidusjar/Ombi/issues/1455 for more information.
+
+
+
+
+
+
+
+
+
+
+
+
 <!--- 
 
 !! Please use the Support / bug report template, otherwise we will close the Github issue !!
