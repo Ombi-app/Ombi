@@ -90,6 +90,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IRequestServiceMain, RequestService>();
             services.AddSingleton<INotificationService, NotificationService>();
+            services.AddSingleton<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
 
 

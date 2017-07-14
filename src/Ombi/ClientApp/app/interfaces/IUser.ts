@@ -30,3 +30,8 @@ export interface IUpdateLocalUser extends IUser {
     confirmNewPassword: string
 }
 
+export interface IResetPasswordToken{
+    email:string,
+    token:string,
+    password:string
+}

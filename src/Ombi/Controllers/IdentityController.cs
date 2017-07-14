@@ -9,15 +9,22 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 using Ombi.Attributes;
+using Ombi.Config;
 using Ombi.Core.Claims;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
+using Ombi.Core.Settings;
 using Ombi.Models;
 using Ombi.Models.Identity;
+using Ombi.Notifications;
+using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
+using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
-using IdentityResult = Ombi.Models.Identity.IdentityResult;
+using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
 {
@@ -28,16 +35,27 @@ namespace Ombi.Controllers
     [PowerUser]
     public class IdentityController : BaseV1ApiController
     {
-        public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm)
+        public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
+            ISettingsService<EmailNotificationSettings> s,
+            ISettingsService<CustomizationSettings> c,
+            IOptions<UserSettings> userSettings)
         {
             UserManager = user;
             Mapper = mapper;
             RoleManager = rm;
+            EmailProvider = prov;
+            EmailSettings = s;
+            CustomizationSettings = c;
+            UserSettings = userSettings;
         }
 
         private UserManager<OmbiUser> UserManager { get; }
         private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
+        private IEmailProvider EmailProvider { get; }
+        private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+        private IOptions<UserSettings> UserSettings { get; }
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -167,7 +185,7 @@ namespace Ombi.Controllers
         /// <param name = "user" > The user.</param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IdentityResult> CreateUser([FromBody] UserViewModel user)
+        public async Task<OmbiIdentityResult> CreateUser([FromBody] UserViewModel user)
         {
             if (!EmailValidator.IsValidEmail(user.EmailAddress))
             {
@@ -185,7 +203,7 @@ namespace Ombi.Controllers
             if (!userResult.Succeeded)
             {
                 // We did not create the user
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = userResult.Errors.Select(x => x.Description).ToList()
                 };
@@ -201,13 +219,13 @@ namespace Ombi.Controllers
                     messages.AddRange(errors.Errors.Select(x => x.Description).ToList());
                 }
 
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = messages
                 };
             }
 
-            return new IdentityResult
+            return new OmbiIdentityResult
             {
                 Successful = true
             };
@@ -220,7 +238,7 @@ namespace Ombi.Controllers
         /// <returns></returns>
         [HttpPut("local")]
         [Authorize]
-        public async Task<IdentityResult> UpdateLocalUser([FromBody] UpdateLocalUserModel ui)
+        public async Task<OmbiIdentityResult> UpdateLocalUser([FromBody] UpdateLocalUserModel ui)
         {
             if (string.IsNullOrEmpty(ui.CurrentPassword))
             {
@@ -260,7 +278,7 @@ namespace Ombi.Controllers
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = updateResult.Errors.Select(x => x.Description).ToList()
                 };
@@ -272,13 +290,13 @@ namespace Ombi.Controllers
 
                 if (!result.Succeeded)
                 {
-                    return new IdentityResult
+                    return new OmbiIdentityResult
                     {
                         Errors = result.Errors.Select(x => x.Description).ToList()
                     };
                 }
             }
-            return new IdentityResult
+            return new OmbiIdentityResult
             {
                 Successful = true
             };
@@ -291,7 +309,7 @@ namespace Ombi.Controllers
         /// <param name = "ui" > The user.</param>
         /// <returns></returns>
         [HttpPut]
-        public async Task<IdentityResult> UpdateUser([FromBody] UserViewModel ui)
+        public async Task<OmbiIdentityResult> UpdateUser([FromBody] UserViewModel ui)
         {
             if (!EmailValidator.IsValidEmail(ui.EmailAddress))
             {
@@ -304,7 +322,7 @@ namespace Ombi.Controllers
             var updateResult = await UserManager.UpdateAsync(user);
             if (!updateResult.Succeeded)
             {
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = updateResult.Errors.Select(x => x.Description).ToList()
                 };
@@ -327,13 +345,13 @@ namespace Ombi.Controllers
                     messages.AddRange(errors.Errors.Select(x => x.Description).ToList());
                 }
 
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = messages
                 };
             }
 
-            return new IdentityResult
+            return new OmbiIdentityResult
             {
                 Successful = true
             };
@@ -346,7 +364,7 @@ namespace Ombi.Controllers
         /// <param name="userId">The user.</param>
         /// <returns></returns>
         [HttpDelete("{userId}")]
-        public async Task<IdentityResult> DeleteUser(string userId)
+        public async Task<OmbiIdentityResult> DeleteUser(string userId)
         {
 
             var userToDelete = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -355,13 +373,13 @@ namespace Ombi.Controllers
                 var result = await UserManager.DeleteAsync(userToDelete);
                 if (result.Succeeded)
                 {
-                    return new IdentityResult
+                    return new OmbiIdentityResult
                     {
                         Successful = true
                     };
                 }
 
-                return new IdentityResult
+                return new OmbiIdentityResult
                 {
                     Errors = result.Errors.Select(x => x.Description).ToList()
                 };
@@ -391,6 +409,86 @@ namespace Ombi.Controllers
             return claims;
         }
 
+        /// <summary>
+        /// Send out the email with the reset link
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        [HttpPost("reset")]
+        [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<OmbiIdentityResult> SubmitResetPassword([FromBody]SubmitPasswordReset email)
+        {
+            // Check if account exists
+            var user = await UserManager.FindByEmailAsync(email.Email);
+            
+            var defaultMessage = new OmbiIdentityResult
+            {
+                Successful = true,
+                Errors = new List<string> { "If this account exists you should recieve a password reset link." }
+            };
+            
+            if (user == null)
+            {
+                return defaultMessage;
+            }
+            
+            // We have the user
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
+            
+            // We now need to email the user with this token
+            var emailSettings = await EmailSettings.GetSettingsAsync();
+            var customizationSettings = await CustomizationSettings.GetSettingsAsync();
+            var appName = (string.IsNullOrEmpty(customizationSettings.ApplicationName)
+                ? "Ombi"
+                : customizationSettings.ApplicationName);
+            await EmailProvider.Send(new NotificationMessage
+            {
+                To = user.Email,
+                Subject = $"{appName} Password Reset",
+                Message = $"Hello {user.UserName}, <br/> You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
+                          $"<a href=\"{UserSettings.Value.WebsiteUrl}/reset/{token}\"> Reset </a>"
+            }, emailSettings);
+
+            return defaultMessage;
+        }
+
+        /// <summary>
+        /// Resets the password
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        [HttpPost("resetpassword")]
+        [AllowAnonymous]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<OmbiIdentityResult> ResetPassword(ResetPasswordToken token)
+        {
+            var user = await UserManager.FindByEmailAsync(token.Email);
+
+            if (user == null)
+            {
+                return new OmbiIdentityResult
+                {
+                    Successful = false,
+                    Errors = new List<string> { "Please check you email." }
+                };
+            }
+
+            var tokenValid = await UserManager.ResetPasswordAsync(user, token.Token, token.Password);
+
+            if (tokenValid.Succeeded)
+            {
+                return new OmbiIdentityResult
+                {
+                    Successful = true,
+                };
+            }
+            return new OmbiIdentityResult
+            {
+                Errors = tokenValid.Errors.Select(x => x.Description).ToList()
+            };
+        }
+
         private async Task<List<Microsoft.AspNetCore.Identity.IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<Microsoft.AspNetCore.Identity.IdentityResult>();
@@ -404,9 +502,9 @@ namespace Ombi.Controllers
             return roleResult;
         }
 
-        private IdentityResult Error(string message)
+        private OmbiIdentityResult Error(string message)
         {
-            return new IdentityResult
+            return new OmbiIdentityResult
             {
                 Errors = new List<string> { message }
             };

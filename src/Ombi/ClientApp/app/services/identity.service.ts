@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from './service.helpers';
-import { IUser, IUpdateLocalUser, ICheckbox, IIdentityResult } from '../interfaces/IUser';
+import { IUser, IUpdateLocalUser, ICheckbox, IIdentityResult, IResetPasswordToken } from '../interfaces/IUser';
 
 
 @Injectable()
@@ -45,6 +45,14 @@ export class IdentityService extends ServiceAuthHelpers {
     
     deleteUser(user: IUser): Observable<IIdentityResult> {
         return this.http.delete(`${this.url}/${user.id}`, { headers: this.headers }).map(this.extractData);
+    }
+
+    submitResetPassword(email:string): Observable<IIdentityResult>{
+        return this.regularHttp.post(this.url + 'reset', JSON.stringify({email:email}), { headers: this.headers }).map(this.extractData);
+    }
+
+    resetPassword(token: IResetPasswordToken):Observable<IIdentityResult>{
+        return this.regularHttp.post(this.url + 'resetpassword', JSON.stringify(token), { headers: this.headers }).map(this.extractData);
     }
 
     hasRole(role: string): boolean {

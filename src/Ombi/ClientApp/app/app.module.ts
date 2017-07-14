@@ -7,7 +7,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 // Third Party
-import { ButtonModule, DialogModule } from 'primeng/primeng';
+import { ButtonModule, DialogModule, CaptchaModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
 import { DataTableModule, SharedModule } from 'primeng/primeng';
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
@@ -17,6 +17,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 
 import { LoginComponent } from './login/login.component';
+import { ResetPasswordComponent } from './login/resetpassword.component';
+import { TokenResetPasswordComponent } from './login/tokenresetpassword.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { PageNotFoundComponent } from './errors/not-found.component';
 
@@ -44,6 +46,7 @@ const routes: Routes = [
    
     //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
+    { path: 'reset', component: ResetPasswordComponent },
     { path: 'landingpage', component: LandingPageComponent }
 ];
 
@@ -71,13 +74,16 @@ const routes: Routes = [
         MdTabsModule,
         ReactiveFormsModule,
         UserManagementModule,
-        RequestsModule
+        RequestsModule,
+        CaptchaModule
     ],
     declarations: [
         AppComponent,
         PageNotFoundComponent,
         LoginComponent,
         LandingPageComponent,
+        ResetPasswordComponent,
+        TokenResetPasswordComponent
     ],
     providers: [
         RequestService,
