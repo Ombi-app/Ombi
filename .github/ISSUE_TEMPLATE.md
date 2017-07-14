@@ -26,7 +26,7 @@ See https://github.com/tidusjar/Ombi/issues/1455 for more information.
 
 #### Ombi Version:
 
-V 1.XX.XX
+V 3.XX.XX
 
 #### Update Branch:
 
