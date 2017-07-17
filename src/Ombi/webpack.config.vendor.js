@@ -32,7 +32,6 @@ module.exports = function (env) {
                 '@angular/platform-browser-dynamic',
                 '@angular/router',
                 '@angular/material',
-                '@covalent/core',
                 'primeng/resources/primeng.min.css',
                 'primeng/resources/themes/omega/theme.css',
                 '@angular/material/prebuilt-themes/deeppurple-amber.css',
