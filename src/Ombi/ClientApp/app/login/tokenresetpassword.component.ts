@@ -1,12 +1,13 @@
 ﻿import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { IdentityService } from '../services/identity.service';
 import { NotificationService } from '../services/notification.service';
 import { SettingsService } from '../services/settings.service';
 import { ICustomizationSettings } from '../interfaces/ISettings';
+import { IResetPasswordToken } from '../interfaces/IUser';
 
 @Component({
     templateUrl: './tokenresetpassword.component.html',
@@ -16,8 +17,9 @@ export class TokenResetPasswordComponent implements OnInit {
     constructor(private identityService: IdentityService, private router: Router, private route: ActivatedRoute, private notify: NotificationService,
         private fb: FormBuilder, private settingsService: SettingsService) {
 
-        this.route.params
-            .subscribe(params => {
+        this.route.queryParams
+            .subscribe((params:Params) => {
+                debugger;
                 this.form = this.fb.group({
                     email: ["", [Validators.required]],
                     password: ["", [Validators.required]],
@@ -31,7 +33,7 @@ export class TokenResetPasswordComponent implements OnInit {
     customizationSettings: ICustomizationSettings;
 
 
-    ngOnInit(): void {
+    ngOnInit() : void {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
     }
 
@@ -41,8 +43,8 @@ export class TokenResetPasswordComponent implements OnInit {
             this.notify.error("Validation", "Email address is required");
             return
         }
-
-        this.identityService.resetPassword(form.value).subscribe(x => {
+        var token = form.value as IResetPasswordToken;
+        this.identityService.resetPassword(token).subscribe(x => {
             if (x.successful) {
                 this.notify.success("Success", `Your Password has been reset`)
                 this.router.navigate(['login']);

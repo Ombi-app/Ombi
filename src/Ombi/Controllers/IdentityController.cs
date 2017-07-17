@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 using AutoMapper;
@@ -434,20 +435,23 @@ namespace Ombi.Controllers
             }
             
             // We have the user
-            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
-            
+            var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             // We now need to email the user with this token
             var emailSettings = await EmailSettings.GetSettingsAsync();
             var customizationSettings = await CustomizationSettings.GetSettingsAsync();
             var appName = (string.IsNullOrEmpty(customizationSettings.ApplicationName)
                 ? "Ombi"
                 : customizationSettings.ApplicationName);
+            
+            
+            var url =
+                $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
             await EmailProvider.Send(new NotificationMessage
             {
                 To = user.Email,
                 Subject = $"{appName} Password Reset",
                 Message = $"Hello {user.UserName}, <br/> You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
-                          $"<a href=\"{UserSettings.Value.WebsiteUrl}/reset/{token}\"> Reset </a>"
+                          $"<a href=\"{url}/token?token={token}\"> Reset </a>"
             }, emailSettings);
 
             return defaultMessage;
@@ -461,7 +465,7 @@ namespace Ombi.Controllers
         [HttpPost("resetpassword")]
         [AllowAnonymous]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<OmbiIdentityResult> ResetPassword(ResetPasswordToken token)
+        public async Task<OmbiIdentityResult> ResetPassword([FromBody]ResetPasswordToken token)
         {
             var user = await UserManager.FindByEmailAsync(token.Email);
 
@@ -473,8 +477,9 @@ namespace Ombi.Controllers
                     Errors = new List<string> { "Please check you email." }
                 };
             }
-
-            var tokenValid = await UserManager.ResetPasswordAsync(user, token.Token, token.Password);
+            var validToken = WebUtility.UrlDecode(token.Token);
+            validToken = validToken.Replace(" ", "+");
+            var tokenValid = await UserManager.ResetPasswordAsync(user, validToken, token.Password);
 
             if (tokenValid.Succeeded)
             {
