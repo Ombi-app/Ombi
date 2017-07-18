@@ -19,7 +19,6 @@
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
-    <Content Remove="package-lock.json" />
     <Compile Remove="wwwroot\dist\**" />
 
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->

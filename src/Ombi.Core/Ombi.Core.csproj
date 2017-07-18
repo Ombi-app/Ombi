@@ -35,4 +35,13 @@
     <Folder Include="Models\Requests\Tv\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="IdentityModel">
+      <HintPath>..\..\..\..\..\.nuget\packages\identitymodel\2.8.1\lib\netstandard1.4\IdentityModel.dll</HintPath>
+    </Reference>
+    <Reference Include="IdentityServer4">
+      <HintPath>..\..\..\..\..\.nuget\packages\identityserver4\1.5.2\lib\netstandard1.4\IdentityServer4.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

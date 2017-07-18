@@ -6,6 +6,8 @@ using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
 using Hangfire.SQLite;
+using IdentityServer4.Services;
+using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +23,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
+using Ombi.Core.IdentityResolver;
 using Ombi.DependencyInjection;
 using Ombi.Mapping;
 using Ombi.Schedule;
@@ -83,7 +86,9 @@ namespace Ombi
                 .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
                 .AddInMemoryApiResources(IdentityConfig.GetApiResources())
                 .AddInMemoryClients(IdentityConfig.GetClients())
-                .AddAspNetIdentity<OmbiUser>();
+                .AddAspNetIdentity<OmbiUser>()
+                .Services.AddTransient<IResourceOwnerPasswordValidator, OmbiOwnerPasswordValidator>()
+                .AddTransient<IProfileService, OmbiProfileService>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -112,7 +117,7 @@ namespace Ombi
                 {
                     Version = "v1",
                     Title = "Ombi Api",
-                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"api/v1/token/\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
+                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/connect/token/\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
                                   "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
                     Contact = new Contact
                     {
@@ -133,7 +138,7 @@ namespace Ombi
                     Console.WriteLine(e);
                 }
                 
-                c.AddSecurityDefinition("Authentication",new ApiKeyScheme());
+                c.AddSecurityDefinition("Authentication", new ApiKeyScheme());
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
             });
