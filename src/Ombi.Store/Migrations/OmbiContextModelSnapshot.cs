@@ -124,28 +124,6 @@ namespace Ombi.Store.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.EmailTokens", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("DateUsed");
-
-                    b.Property<Guid>("Token");
-
-                    b.Property<bool>("Used");
-
-                    b.Property<int>("UserId");
-
-                    b.Property<DateTime>("ValidUntil");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("EmailTokens");
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>
                 {
                     b.Property<int>("Id")
@@ -311,7 +289,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<DateTime>("RequestedDate");
 
-                    b.Property<int>("RequestedUserId");
+                    b.Property<string>("RequestedUserId");
 
                     b.Property<string>("Title");
 
@@ -373,7 +351,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<DateTime>("RequestedDate");
 
-                    b.Property<int>("RequestedUserId");
+                    b.Property<string>("RequestedUserId");
 
                     b.Property<string>("Status");
 
@@ -434,30 +412,6 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
-                });
-
-            modelBuilder.Entity("Ombi.Store.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Alias");
-
-                    b.Property<string>("ClaimsSerialized");
-
-                    b.Property<string>("EmailAddress");
-
-                    b.Property<string>("Password");
-
-                    b.Property<byte[]>("Salt");
-
-                    b.Property<int>("UserType");
-
-                    b.Property<string>("Username");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OldUsers");
                 });
 
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>
@@ -541,14 +495,6 @@ namespace Ombi.Store.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Ombi.Store.Entities.EmailTokens", b =>
-                {
-                    b.HasOne("Ombi.Store.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>
                 {
                     b.HasOne("Ombi.Store.Entities.PlexContent")
@@ -564,10 +510,9 @@ namespace Ombi.Store.Migrations
                         .HasForeignKey("ParentRequestId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Ombi.Store.Entities.User", "RequestedUser")
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
-                        .HasForeignKey("RequestedUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RequestedUserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieIssues", b =>
@@ -584,10 +529,9 @@ namespace Ombi.Store.Migrations
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.MovieRequests", b =>
                 {
-                    b.HasOne("Ombi.Store.Entities.User", "RequestedUser")
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "RequestedUser")
                         .WithMany()
-                        .HasForeignKey("RequestedUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("RequestedUserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Requests.TvIssues", b =>

@@ -34,53 +34,53 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class UserRepository : IUserRepository
-    {
-        public UserRepository(IOmbiContext ctx)
-        {
-            Db = ctx;
-        }
+    //public class UserRepository : IUserRepository
+    //{
+    //    public UserRepository(IOmbiContext ctx)
+    //    {
+    //        Db = ctx;
+    //    }
 
-        private IOmbiContext Db { get; }
+    //    private IOmbiContext Db { get; }
 
-        public async Task<User> GetUser(string username)
-        {
-            var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
-            Db.Entry(user).Reload();
-            return user;
-        }
+    //    public async Task<User> GetUser(string username)
+    //    {
+    //        var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Username.ToLower() == username.ToLower());
+    //        Db.Entry(user).Reload();
+    //        return user;
+    //    }
 
-        public async Task<User> GetUser(int userId)
-        {
-            var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Id == userId);
-            Db.Entry(user).Reload();
-            return user;
-        }
+    //    public async Task<User> GetUser(int userId)
+    //    {
+    //        var user = await Db.OldUsers.FirstOrDefaultAsync(x => x.Id == userId);
+    //        Db.Entry(user).Reload();
+    //        return user;
+    //    }
 
-        public async Task CreateUser(User user)
-        {
-            Db.OldUsers.Add(user);
-            await Db.SaveChangesAsync();
-        }
+    //    public async Task CreateUser(User user)
+    //    {
+    //        Db.OldUsers.Add(user);
+    //        await Db.SaveChangesAsync();
+    //    }
 
-        public async Task<IEnumerable<User>> GetUsers()
-        {
-            return await Db.OldUsers.ToListAsync();
-        }
+    //    public async Task<IEnumerable<User>> GetUsers()
+    //    {
+    //        return await Db.OldUsers.ToListAsync();
+    //    }
 
-        public async Task DeleteUser(User user)
-        {
-            Db.OldUsers.Remove(user);
-            await Db.SaveChangesAsync();
-        }
+    //    public async Task DeleteUser(User user)
+    //    {
+    //        Db.OldUsers.Remove(user);
+    //        await Db.SaveChangesAsync();
+    //    }
 
-        public async Task<User> UpdateUser(User user)
-        {
-            Db.Entry(user).State = EntityState.Modified;
-            Db.Entry(user).Property(x => x.Salt).IsModified = false;
-            Db.Entry(user).Property(x => x.Password).IsModified = false;
-            await Db.SaveChangesAsync();
-            return user;
-        }
-    }
+    //    public async Task<User> UpdateUser(User user)
+    //    {
+    //        Db.Entry(user).State = EntityState.Modified;
+    //        Db.Entry(user).Property(x => x.Salt).IsModified = false;
+    //        Db.Entry(user).Property(x => x.Password).IsModified = false;
+    //        await Db.SaveChangesAsync();
+    //        return user;
+    //    }
+    //}
 }

@@ -169,6 +169,7 @@ namespace Ombi
 #endif
             // Make sure you have memory cache available unless you're using another storage provider
             services.AddMemoryCache();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -232,9 +233,9 @@ namespace Ombi
 
             // Setup the scheduler
             var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
+            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
             jobSetup.Setup();
-
-            //ConfigureAuth(app, (IOptions<TokenAuthenticationOptions>)app.ApplicationServices.GetService(typeof(IOptions<TokenAuthenticationOptions>)));
+            ctx.Seed();
 
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".map"] = "application/octet-stream";

@@ -435,7 +435,7 @@ namespace Ombi.Controllers
             }
             
             // We have the user
-            var token = await UserManager.GenerateEmailConfirmationTokenAsync(user);
+            var token = await UserManager.GeneratePasswordResetTokenAsync(user);
             // We now need to email the user with this token
             var emailSettings = await EmailSettings.GetSettingsAsync();
             var customizationSettings = await CustomizationSettings.GetSettingsAsync();

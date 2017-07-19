@@ -17,17 +17,16 @@ namespace Ombi.Store.Context
         DbSet<PlexContent> PlexContent { get; set; }
         DbSet<RadarrCache> RadarrCache { get; set; }
         DatabaseFacade Database { get; }
-        DbSet<User> OldUsers { get; set; }
         EntityEntry<T> Entry<T>(T entry) where T : class;
         EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         DbSet<NotificationTemplates> NotificationTemplates { get; set; }
+        void Seed();
 
         DbSet<MovieRequests> MovieRequests { get; set; }
         DbSet<TvRequests> TvRequests { get; set; }
         DbSet<ChildRequests> ChildRequests { get; set; }
         DbSet<MovieIssues> MovieIssues { get; set; }
         DbSet<TvIssues> TvIssues { get; set; }
-        DbSet<EmailTokens> EmailTokens { get; set; }
     }
 }

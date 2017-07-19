@@ -43,7 +43,7 @@ namespace Ombi.Core.Helpers
             return this;
         }
         
-        public TvShowRequestBuilder CreateChild(SearchTvShowViewModel model, int userId)
+        public TvShowRequestBuilder CreateChild(SearchTvShowViewModel model, string userId)
         {
             ChildRequest = new ChildRequests
             {

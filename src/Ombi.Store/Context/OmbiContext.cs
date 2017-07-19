@@ -19,28 +19,20 @@ namespace Ombi.Store.Context
             Database.Migrate();
             
             // Add the notifcation templates
-            AddAllTemplates();
-            
+           
         }
 
 
+        public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         public DbSet<GlobalSettings> Settings { get; set; }
-        public DbSet<User> OldUsers { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
-        public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         
         public DbSet<MovieRequests> MovieRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
         public DbSet<ChildRequests> ChildRequests { get; set; }
         public DbSet<MovieIssues> MovieIssues { get; set; }
         public DbSet<TvIssues> TvIssues { get; set; }
-        public DbSet<EmailTokens> EmailTokens { get; set; }
-
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -48,7 +40,7 @@ namespace Ombi.Store.Context
         }
 
 
-        private void AddAllTemplates()
+        public void Seed()
         {
             // Check if templates exist
             var templates = NotificationTemplates.ToList();

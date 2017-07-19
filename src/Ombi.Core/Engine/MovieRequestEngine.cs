@@ -7,8 +7,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
@@ -21,7 +23,7 @@ namespace Ombi.Core.Engine
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, IUserIdentityManager manager) : base(user, requestService, r)
+            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, UserManager<OmbiUser> manager) : base(user, requestService, r)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
@@ -34,7 +36,7 @@ namespace Ombi.Core.Engine
         private INotificationHelper NotificationHelper { get; }
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
-        private IUserIdentityManager UserManager { get; }
+        private UserManager<OmbiUser> UserManager { get; }
 
         /// <summary>
         /// Requests the movie.
@@ -56,7 +58,7 @@ namespace Ombi.Core.Engine
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
-            var userDetails = await UserManager.GetUser(User.Identity.Name);
+            var userDetails = await UserManager.GetUserAsync(new ClaimsPrincipal(User));
 
             var requestModel = new MovieRequests
             {

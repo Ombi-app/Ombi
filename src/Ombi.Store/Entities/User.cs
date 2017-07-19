@@ -34,25 +34,25 @@ using Ombi.Helpers;
 
 namespace Ombi.Store.Entities
 {
-    public class User : Entity
-    {
-        public string Username { get; set; }
-        public string Alias { get; set; }
-        public string ClaimsSerialized { get; set; }
-        public string EmailAddress { get; set; }
-        public string Password { get; set; }
-        public byte[] Salt { get; set; }
-        public UserType UserType { get; set; }
+    //public class User : Entity
+    //{
+    //    public string Username { get; set; }
+    //    public string Alias { get; set; }
+    //    public string ClaimsSerialized { get; set; }
+    //    public string EmailAddress { get; set; }
+    //    public string Password { get; set; }
+    //    public byte[] Salt { get; set; }
+    //    public UserType UserType { get; set; }
 
-        [NotMapped]
-        public string UserAlias => string.IsNullOrEmpty(Alias) ? Username : Alias;
+    //    [NotMapped]
+    //    public string UserAlias => string.IsNullOrEmpty(Alias) ? Username : Alias;
 
-        [NotMapped]
-        public List<Claim> Claims {
-            get => JsonConvert.DeserializeObject<List<Claim>>(ClaimsSerialized, new ClaimConverter());
-            set => ClaimsSerialized = JsonConvert.SerializeObject(value, new ClaimConverter());
-        }
-    }
+    //    [NotMapped]
+    //    public List<Claim> Claims {
+    //        get => JsonConvert.DeserializeObject<List<Claim>>(ClaimsSerialized, new ClaimConverter());
+    //        set => ClaimsSerialized = JsonConvert.SerializeObject(value, new ClaimConverter());
+    //    }
+    //}
 
     public enum UserType
     {

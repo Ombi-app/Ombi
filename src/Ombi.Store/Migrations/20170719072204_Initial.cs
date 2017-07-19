@@ -147,25 +147,6 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OldUsers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Alias = table.Column<string>(nullable: true),
-                    ClaimsSerialized = table.Column<string>(nullable: true),
-                    EmailAddress = table.Column<string>(nullable: true),
-                    Password = table.Column<string>(nullable: true),
-                    Salt = table.Column<byte[]>(nullable: true),
-                    UserType = table.Column<int>(nullable: false),
-                    Username = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_OldUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -252,6 +233,39 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MovieRequests",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Approved = table.Column<bool>(nullable: false),
+                    Available = table.Column<bool>(nullable: false),
+                    Denied = table.Column<bool>(nullable: true),
+                    DeniedReason = table.Column<string>(nullable: true),
+                    ImdbId = table.Column<string>(nullable: true),
+                    IssueId = table.Column<int>(nullable: true),
+                    Overview = table.Column<string>(nullable: true),
+                    PosterPath = table.Column<string>(nullable: true),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
+                    RequestType = table.Column<int>(nullable: false),
+                    RequestedDate = table.Column<DateTime>(nullable: false),
+                    RequestedUserId = table.Column<string>(nullable: true),
+                    Status = table.Column<string>(nullable: true),
+                    TheMovieDbId = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MovieRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MovieRequests_AspNetUsers_RequestedUserId",
+                        column: x => x.RequestedUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlexSeasonsContent",
                 columns: table => new
                 {
@@ -274,29 +288,6 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "EmailTokens",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    DateUsed = table.Column<DateTime>(nullable: false),
-                    Token = table.Column<Guid>(nullable: false),
-                    Used = table.Column<bool>(nullable: false),
-                    UserId = table.Column<int>(nullable: false),
-                    ValidUntil = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmailTokens", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EmailTokens_OldUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "OldUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ChildRequests",
                 columns: table => new
                 {
@@ -310,7 +301,7 @@ namespace Ombi.Store.Migrations
                     ParentRequestId = table.Column<int>(nullable: false),
                     RequestType = table.Column<int>(nullable: false),
                     RequestedDate = table.Column<DateTime>(nullable: false),
-                    RequestedUserId = table.Column<int>(nullable: false),
+                    RequestedUserId = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -323,42 +314,37 @@ namespace Ombi.Store.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ChildRequests_OldUsers_RequestedUserId",
+                        name: "FK_ChildRequests_AspNetUsers_RequestedUserId",
                         column: x => x.RequestedUserId,
-                        principalTable: "OldUsers",
+                        principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "MovieRequests",
+                name: "MovieIssues",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Approved = table.Column<bool>(nullable: false),
-                    Available = table.Column<bool>(nullable: false),
-                    Denied = table.Column<bool>(nullable: true),
-                    DeniedReason = table.Column<string>(nullable: true),
-                    ImdbId = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
                     IssueId = table.Column<int>(nullable: true),
-                    Overview = table.Column<string>(nullable: true),
-                    PosterPath = table.Column<string>(nullable: true),
-                    ReleaseDate = table.Column<DateTime>(nullable: false),
-                    RequestType = table.Column<int>(nullable: false),
-                    RequestedDate = table.Column<DateTime>(nullable: false),
-                    RequestedUserId = table.Column<int>(nullable: false),
-                    Status = table.Column<string>(nullable: true),
-                    TheMovieDbId = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true)
+                    MovieId = table.Column<int>(nullable: false),
+                    Subect = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieRequests", x => x.Id);
+                    table.PrimaryKey("PK_MovieIssues", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_MovieRequests_OldUsers_RequestedUserId",
-                        column: x => x.RequestedUserId,
-                        principalTable: "OldUsers",
+                        name: "FK_MovieIssues_MovieRequests_IssueId",
+                        column: x => x.IssueId,
+                        principalTable: "MovieRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_MovieIssues_MovieRequests_MovieId",
+                        column: x => x.MovieId,
+                        principalTable: "MovieRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -407,34 +393,6 @@ namespace Ombi.Store.Migrations
                         name: "FK_SeasonRequests_ChildRequests_ChildRequestId",
                         column: x => x.ChildRequestId,
                         principalTable: "ChildRequests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "MovieIssues",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Description = table.Column<string>(nullable: true),
-                    IssueId = table.Column<int>(nullable: true),
-                    MovieId = table.Column<int>(nullable: false),
-                    Subect = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_MovieIssues", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_MovieIssues_MovieRequests_IssueId",
-                        column: x => x.IssueId,
-                        principalTable: "MovieRequests",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_MovieIssues_MovieRequests_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "MovieRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -490,11 +448,6 @@ namespace Ombi.Store.Migrations
                 name: "IX_AspNetUserRoles_RoleId",
                 table: "AspNetUserRoles",
                 column: "RoleId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EmailTokens_UserId",
-                table: "EmailTokens",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
@@ -576,9 +529,6 @@ namespace Ombi.Store.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EmailTokens");
-
-            migrationBuilder.DropTable(
                 name: "GlobalSettings");
 
             migrationBuilder.DropTable(
@@ -603,9 +553,6 @@ namespace Ombi.Store.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "PlexContent");
 
             migrationBuilder.DropTable(
@@ -621,7 +568,7 @@ namespace Ombi.Store.Migrations
                 name: "TvRequests");
 
             migrationBuilder.DropTable(
-                name: "OldUsers");
+                name: "AspNetUsers");
         }
     }
 }

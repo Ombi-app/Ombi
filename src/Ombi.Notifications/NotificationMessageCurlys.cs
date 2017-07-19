@@ -10,7 +10,7 @@ namespace Ombi.Notifications
         public void Setup(FullBaseRequest req)
         {
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
-                ? req.RequestedUser.Username
+                ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
             Title = req.Title;
             RequestedDate = req.RequestedDate.ToString("D");
@@ -23,7 +23,7 @@ namespace Ombi.Notifications
         public void Setup(ChildRequests req)
         {
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
-                ? req.RequestedUser.Username
+                ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
             Title = req.ParentRequest.Title;
             RequestedDate = req.RequestedDate.ToString("D");

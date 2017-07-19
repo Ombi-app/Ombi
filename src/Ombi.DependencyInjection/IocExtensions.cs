@@ -76,14 +76,14 @@ namespace Ombi.DependencyInjection
 
             services.AddScoped<IOmbiContext, OmbiContext>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            //services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
             services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
-            services.AddTransient<ITokenRepository, TokenRepository>();
+            //services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)
@@ -107,7 +107,6 @@ namespace Ombi.DependencyInjection
 
         public static void RegisterIdentity(this IServiceCollection services)
         {
-            services.AddTransient<IUserIdentityManager, UserIdentityManager>();
             services.AddAuthorization(auth =>
             {
                 auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()

@@ -8,8 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
@@ -25,7 +27,7 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule, IUserIdentityManager manager,
+            IRuleEvaluator rule, UserManager<OmbiUser> manager,
             ITvSender sender) : base(user, requestService, rule)
         {
             TvApi = tvApi;
@@ -38,12 +40,12 @@ namespace Ombi.Core.Engine
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
-        private IUserIdentityManager UserManager { get; }
+        private UserManager<OmbiUser> UserManager { get; }
         private ITvSender TvSender {get;}
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-            var user = await UserManager.GetUser(User.Identity.Name);
+            var user = await UserManager.GetUserAsync(new ClaimsPrincipal(User));
 
             var tvBuilder = new TvShowRequestBuilder(TvApi);
             (await tvBuilder

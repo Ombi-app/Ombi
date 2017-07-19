@@ -13,7 +13,7 @@ namespace Ombi.Mapping.Profiles
     {
         public OmbiProfile()
         {
-            CreateMap<User, UserDto>().ReverseMap();
+            //CreateMap<User, UserDto>().ReverseMap();
 
 
             CreateMap<Claim, ClaimCheckboxes>().ConvertUsing<ClaimsConverter>();

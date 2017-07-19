@@ -10,13 +10,13 @@ namespace Ombi.Store.Entities.Requests
         public bool Approved { get; set; }
         public DateTime RequestedDate { get; set; }
         public bool Available { get; set; }
-        public int RequestedUserId { get; set; }
+        public string RequestedUserId { get; set; }
         public bool? Denied { get; set; }
         public string DeniedReason { get; set; }
         public RequestType RequestType { get; set; }
 
         [ForeignKey(nameof(RequestedUserId))]
-        public User RequestedUser { get; set; }
+        public OmbiUser RequestedUser { get; set; }
 
 
         [NotMapped]
