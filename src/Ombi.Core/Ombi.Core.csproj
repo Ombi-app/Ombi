@@ -9,6 +9,7 @@
     <PackageReference Include="AutoMapper" Version="6.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="2.0.1" />
     <PackageReference Include="Hangfire" Version="1.6.14" />
+    <PackageReference Include="IdentityServer4" Version="1.5.2" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.2" />
@@ -33,15 +34,6 @@
   <ItemGroup>
     <Folder Include="Models\Requests\Movie\" />
     <Folder Include="Models\Requests\Tv\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="IdentityModel">
-      <HintPath>..\..\..\..\..\.nuget\packages\identitymodel\2.8.1\lib\netstandard1.4\IdentityModel.dll</HintPath>
-    </Reference>
-    <Reference Include="IdentityServer4">
-      <HintPath>..\..\..\..\..\.nuget\packages\identityserver4\1.5.2\lib\netstandard1.4\IdentityServer4.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
