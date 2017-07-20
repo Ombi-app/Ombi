@@ -32,8 +32,7 @@ namespace Ombi.Core.IdentityResolver
                     var roles = await UserManager.GetRolesAsync(user);
                     var claims = new List<Claim>
                     {
-                        new Claim(JwtClaimTypes.Name, user.UserName),
-                        new Claim(JwtClaimTypes.Email, user.Email)
+                        new Claim(JwtClaimTypes.Name, user.UserName)
                     };
 
                     foreach (var role in roles)

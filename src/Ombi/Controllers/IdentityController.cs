@@ -126,7 +126,7 @@ namespace Ombi.Controllers
         [Authorize]
         public async Task<UserViewModel> GetCurrentUser()
         {
-            var user = await UserManager.GetUserAsync(User);
+            var user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity.Name);
 
             return await GetUserWithRoles(user);
         }
