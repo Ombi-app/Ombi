@@ -446,11 +446,11 @@ namespace Ombi.Controllers
             
             var url =
                 $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
-            await EmailProvider.Send(new NotificationMessage
+            await EmailProvider.SendAdHoc(new NotificationMessage
             {
                 To = user.Email,
                 Subject = $"{appName} Password Reset",
-                Message = $"Hello {user.UserName}, <br/> You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
+                Message = $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
                           $"<a href=\"{url}/token?token={token}\"> Reset </a>"
             }, emailSettings);
 
