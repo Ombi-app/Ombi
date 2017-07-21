@@ -4,6 +4,8 @@
 
 ### **New Features**
 
+- Added changelog. [Jamie.Rees]
+
 - Update README.md. [Jamie]
 
 - Updated stuff. [Jamie.Rees]
@@ -71,562 +73,6 @@
 - Changes. [Jamie.Rees]
 
 - Update StringCipher.cs. [Jamie]
-
-- Updates. [tidusjar]
-
-- Update gulpfile.js. [Jamie]
-
-- Update gulpfile.js. [Jamie]
-
-- Update gulpfile.js. [Jamie]
-
-- Update gulpfile.js. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update gulpfile.js. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added a retry policy around the emby newsletter. [Jamie.Rees]
-
-- Update appveyor.yml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added a new setting for the Netflix option, we can now disable it appearing in the search. [tidusjar]
-
-- Update German Translation. [Marius Schiffer]
-
-- Added a release notes page, you can access via Admin>Updates>Recent Changes tab. Note to self, need to put better comments in for users to understand! [Jamie.Rees]
-
-- Added gravitar image. [Jamie.Rees]
-
-- Added a missing `await` for an HP AddArtist call.  Added some more Trace logging. [smcpeck]
-
-- Added a missing `await` for an HP AddArtist call.  Added some more Trace logging. [smcpeck]
-
-- Added some logging around API calls. [smcpeck]
-
-- Changed IEmbyAvailabilityChecker to use IEnumberables + checking actor search against Emby content + PR feedback. [smcpeck]
-
-- Changed actor searching to support non-actors too. [smcpeck]
-
-- Added a 10 second timer to refresh some new caching I put in. [smcpeck]
-
-- Added root folder and approving quality profiles in radarr #1065. [tidusjar]
-
-- Added some debugging code around the newsletter for Emby #1116. [tidusjar]
-
-- Added a TMDB Rate limiter for the newsletter. [tidusjar]
-
-- Added port check in wizard. also fixed favicon. [tidusjar]
-
-- Update Radarr placeholder. [d2dyno]
-
-- Added the user login for emby users #435. [tidusjar]
-
-- Added User Management support for Emby #435. [tidusjar]
-
-- Added emby to the sidebar #435. [tidusjar]
-
-- Added API endpoint for /actor/new/ to support searching for movies not already available/requested. [smcpeck]
-
-- Update ISSUE_TEMPLATE.md. [Jamie]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update README.md. [Jamie]
-
-- Update .gitattributes. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added the new labels to the search. [tidusjar]
-
-- Added a switch to use the new search or not, just in case people do not like it. added a migration to turn on the new search. [Jamie.Rees]
-
-- Added a bunch of categories for tv search similar to what we have for movies. [Jamie.Rees]
-
-- Update appveyor.yml. [Jamie]
-
-- Added a netflix api. [Jamie.Rees]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Update README.md. [SuperPotatoMen]
-
-- Added the settings for #925 but need to apply the settings to the UI. [Jamie.Rees]
-
-- Changed the settings name from Plex Requests to Ombi. [Jamie.Rees]
-
-- Added support for Managed Users #811. [Jamie.Rees]
-
-- Change solution name in travis. [mhann]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update README.md. [Jamie]
-
-- Added optional launch args for the auto updater. [Jamie.Rees]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update _Navbar.cshtml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update _Navbar.cshtml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added a new permission to bypass the request limit. [Jamie.Rees]
-
-- Update Version1100.cs. [SuperPotatoMen]
-
-- Added logging around the Newsletter #717. [Jamie.Rees]
-
-- Added missing migration. [tidusjar]
-
-- Added loading spinner. [Jamie.Rees]
-
-- Update UI.resx. [SuperPotatoMen]
-
-- Update Version1100.cs. [Jamie]
-
-- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added our own custom migrations, a lot easier to migrate DB versions now. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Added Paypalme options, no UI yet (#568) [Jim MacKenize]
-
-- Update appveyor.yml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added properties to disable tv requests for specific episodes or seasons and wired up to admin settings. [Matt McHughes]
-
-- Update appveyor.yml. [Jamie]
-
-- Update CouchPotatoCacher.cs. [Jamie]
-
-- Added different sonarr search commands. [tidusjar]
-
-- Added some error handing around the GetMovie area #517. [tidusjar]
-
-- Added a version endpoint in "/api/version" #529. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Added french to the navbar. [tidusjar]
-
-- Changed the way we use the setTimeout function. Should fix #403 #491 #492. [tidusjar]
-
-- Change the redirection to use a relative uri redirect #473. [tidusjar]
-
-- Update the availability checker to search for TV Episodes. [tidusjar]
-
-- Changed the no TVMazeid message. [tidusjar]
-
-- Added an option to disable/enable the Plex episode cacher. [tidusjar]
-
-- Updated the episode cacher to have a minimum of 11 hours before it runs again. [tidusjar]
-
-- Added some useful analytical infomation around the wizard. [tidusjar]
-
-- Updated the German translations #402. [tidusjar]
-
-- Added some code to shrink the DB. reworked the search to speed it up. [tidusjar]
-
-- Change to use the GrandparentTitle rather than the thumbnail.... facepalm. [tidusjar]
-
-- Change the interval to hours! [tidusjar]
-
-- Added the transaction back into the DB. Do not run the episode cacher if it's been run in the last hour. [tidusjar]
-
-- Added logging. [tidusjar]
-
-- Changed the query slightly. [tidusjar]
-
-- Updated Newtonsoft.Json, Autofixture, Nlog and Dapper packages. [tidusjar]
-
-- Added the Sonarr check for episodes #254. [tidusjar]
-
-- Added unit tests. [tidusjar]
-
-- Added #436. [tidusjar]
-
-- Update build no. [tidusjar]
-
-- Updated translations for #402. [tidusjar]
-
-- Added a beta module. [tidusjar]
-
-- Added a custom debug root path provider, this means we do not have to recompile the views every time we make a view change. [tidusjar]
-
-- Update .gitignore. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added tests for the string hash. [tidusjar]
-
-- Added code to request the api key for CouchPotato. [tidusjar]
-
-- Added the file version to the layout. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added automation tests. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Updated packages. [tidusjar]
-
-- Updated Polly. [tidusjar]
-
-- Updated Fr, IT and NL translations #402. [tidusjar]
-
-- Changed the way the donate button works for #414. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Added MediatR. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Added some of the backend bits for #182. [tidusjar]
-
-- Updates for #243. [tidusjar]
-
-- Added Dutch language #243. [tidusjar]
-
-- Added languages #243. [tidusjar]
-
-- Added logging #350. [tidusjar]
-
-- Update readme. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added the new advanced search into the search page too. [tidusjar]
-
-- Change the way we configure the IoC container in the bootstrapper, we are registering all the concrete instances on application start rather than on each web request. This should increase the performance per HTTP request. [tidusjar]
-
-- Updated nlog and fixed #295. [tidusjar]
-
-- Update preview. [Jamie]
-
-- Updated dapper.contrib. Looks like there was a bug in the async methods. [tidusjar]
-
-- Updater wouldn't work when running a reverse proxy #236. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Update version. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added the ability to get the apikey from the api if you provide a correct username and password. Added more unit tests Added the ability to change a users password using the api refactored the Usermapper and made it unit testsable. [tidusjar]
-
-- Update. [tidusjar]
-
-- Added in an audit table. Since we are now allowing multiple users to change and modify things we need to audit this. [TidusJar]
-
-- Added the updater to the soloution and did a bit of starting code. [TidusJar]
-
-- Updated the claims so we can support more users. Added a user management section (not yet complete) Added the api to the solution and a api key in the settings (currently only gets the requests). [TidusJar]
-
-- Updated packages. [TidusJar]
-
-- Added a retry handler into the solution. We can now retry failed api requests. [TidusJar]
-
-- Update README.md. [Jamie]
-
-- Added Released propety to RequestViewModel. Added Released filter to the Requests page. [Chris Lees]
-
-- Added #27 to albums. [tidusjar]
-
-- Added the actual notification part of #27. [tidusjar]
-
-- Added the missing baseurl bit on the login page for #72. [tidusjar]
-
-- Added the 'enable user notifications' to the email settings view and model. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added a url base. [tidusjar]
-
-- Change default logging. [tidusjar]
-
-- Added logging around SickRage. [tidusjar]
-
-- Changed the build number. [tidusjar]
-
-- Update README.md. [Drew]
-
-- Update README.md. [Drew]
-
-- Update README.md. [Drew]
-
-- Update README.md. [Drew]
-
-- Changed the title to a contains but the artist still must match, [tidusjar]
-
-- Added unit tests to cover the new changes to the availability checker. [tidusjar]
-
-- Added the music check in the Plex Checker. [tidusjar]
-
-- Changed around the startup so we cache the profiles after the DB has been created. [tidusjar]
-
-- Updated where we update the request blobs schema change. [tidusjar]
-
-- Update SearchModule.cs. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Change the new columns type. [tidusjar]
-
-- Added a DBSchema so we have an easier way to update the DB. [tidusjar]
-
-- Added an issue template. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Added back the username into the Session when the admin logs in. This means they do not have to log in twice. [tidusjar]
-
-- Added happy path tests for the Checker. [tidusjar]
-
-- Added music to the search and requests page. [tidusjar]
-
-- Added a scroll to the top thingy and a bit more work on headphones. [tidusjar]
-
-- Added some tests and fixed the issue where the DB would get created in the wrong place depending on how you launched the application. [tidusjar]
-
-- Added the settings page for #32. [tidusjar]
-
-- Update README.md. [Drewster727]
-
-- Update README.md. [Drewster727]
-
-- Update README.md. [Drewster727]
-
-- Update README.md. [Drewster727]
-
-- Update README.md. [Drewster727]
-
-- Update appveyor.yml. [Jamie]
-
-- Update appveyor.yml. [Jamie]
-
-- Added logs to the sidebar. I'm an idiot. [tidusjar]
-
-- Updated version number for release. [tidusjar]
-
-- Updated the logic for handling specific seasons in Sonarr and Sickrage. [Shannon Barrett]
-
-- Updated the readme and added some icons to the navbar. [tidusjar]
-
-- Added the ability to sepcify a username in the email notification settings for external MTA's. We have had to add a new option called Email Sender because of this. #78. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added a notification model to the notifiers. Added the backend work for sending a notification for an issue report #75. [tidusjar]
-
-- Added a subdir to CP, SickRage, Sonarr and Plex #43. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Update AvailabilityUpdateService.cs. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Updated the build version ready for the next release. [tidusjar]
-
-- Added the api and settings page for Sickrage. Just need to do the tester and hook it up #40. [tidusjar]
-
-- Added the option to set a CP quality #38. [tidusjar]
-
-- Added the code to lookup the old requests and refresh them with new information from TVMaze. [tidusjar]
-
-- Update StatusCheckerTests.cs. [Jamie]
-
-- Update README.md. [Jamie]
-
-- Added TVMaze to the search. #21. [tidusjar]
-
-- Added migration code and cleaned up the DB. [tidusjar]
-
-- Updated the way we add requests. [tidusjar]
-
-- Updated the Dapper.Contrib package, it had a bug where it wasn't returning the correct Id from inserts. [tidusjar]
-
-- Added pushbullet to the sidebar. [Jamie Rees]
-
-- Updated build version for the next release. [Jamie Rees]
-
-- Updated readme link. [tidusjar]
-
-- Added ignore to static tests. [tidusjar]
-
-- Added Pushbullet notifications #8. [tidusjar]
-
-- Added first implimentation of the Notification Service #8 Added tests to cover the notification service. [tidusjar]
-
-- Added validation to the Email settings, also increased the availability checker from 2 minutes to 5. [tidusjar]
-
-- Update Program.cs. [Jamie]
-
-- Update Program.cs. [Jamie]
-
-- Added back the reference. [tidusjar]
-
-- Update appveyor.yml. [Jamie]
-
-- Updated. [Jamie Rees]
-
-- Updated appveyor. [Jamie Rees]
-
-- Update appveyor.yml. [Jamie]
-
-- Added latest version code and view. Need to finish the view #11. [tidusjar]
-
-- Added test button to Plex. That's fixed #9. [tidusjar]
-
-- Added test sonarr button #9. [tidusjar]
-
-- Added more tests. [tidusjar]
-
-- Added a bunch of logging. [tidusjar]
-
-- Added the application tester for CP #9. [tidusjar]
-
-- Added settings page for #8. [tidusjar]
-
-- Added pace.js. [tidusjar]
-
-- Updated readme. [Jamie Rees]
-
-- Added the support for TV Series integrating with Sonarr. [Jamie Rees]
-
-- Added the functionality to pass a port through an argument. [tidusjar]
-
-- Added the code to get the quality profiles from Sonarr Started plugging that into the UI. [Jamie Rees]
-
-- Added the spinners #3. [tidusjar]
-
-- Added the functionality for the admin to clear the issues. [tidusjar]
-
-- Added the issues to the requests page. [tidusjar]
-
-- Added user logout method and unit tests to cover it. [tidusjar]
-
-- Added DeniedUsers to the view. [tidusjar]
-
-- Added the denied user check to the UserLoginModule. added a test case to cover it. [tidusjar]
-
-- Added a missing reference. [tidusjar]
-
-- Added first real test. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Added the latest version of nuget. [tidusjar]
-
-- Added travisyml. [tidusjar]
-
-- Added logging. [tidusjar]
-
-- Added missing files. [tidusjar]
-
-- Update README.md. [Jamie]
-
-- Added logging (Still WIP) [tidusjar]
-
-- Added favicon and also structured the HTML correctly. [tidusjar]
-
-- Updated the packages so everything is now with the correct framework (4.5.2) [tidusjar]
-
-- Added in deletion of requests. [tidusjar]
-
-- Added test code. [tidusjar]
-
-- Added dashboard. [tidusjar]
-
-- Added couchpotato page. [Jamie Rees]
-
-- Added readme to the project and updated it. [Jamie Rees]
-
-- Added helpers. [tidusjar]
 
 ### **Fixes**
 
@@ -880,6 +326,45 @@
 
 - Upgrade to .Net Standard 1.6. [tidusjar]
 
+
+## v2.2.1 (2017-04-09)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the forums. [tidusjar]
+
+- Updates. [tidusjar]
+
+- Update gulpfile.js. [Jamie]
+
+- Update gulpfile.js. [Jamie]
+
+- Update gulpfile.js. [Jamie]
+
+- Update gulpfile.js. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update gulpfile.js. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added a retry policy around the emby newsletter. [Jamie.Rees]
+
+### **Fixes**
+
+- Revert "Merge branch 'DotNetCore' into dev" [tidusjar]
+
 - More borken build. [Jamie.Rees]
 
 - Started adding requesting. [Jamie.Rees]
@@ -924,6 +409,8 @@
 
 - The start of a new world. [Jamie.Rees]
 
+- Fixed the migration number and order by the added date for the newsletter #1264. [tidusjar]
+
 - Forgot this change. [tidusjar]
 
 - Also fixed the issue for the Emby Newsletter where episodes were not getting added :( [tidusjar]
@@ -939,6 +426,65 @@
 - For test emails, if there is no new content then just grab some old data. [tidusjar]
 
 - Fixed an issue where the emby newsletter was always showing series. [tidusjar]
+
+
+## v2.2.0 (2017-03-30)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added a new setting for the Netflix option, we can now disable it appearing in the search. [tidusjar]
+
+- Update German Translation. [Marius Schiffer]
+
+- Added a release notes page, you can access via Admin>Updates>Recent Changes tab. Note to self, need to put better comments in for users to understand! [Jamie.Rees]
+
+- Added gravitar image. [Jamie.Rees]
+
+- Added a missing `await` for an HP AddArtist call.  Added some more Trace logging. [smcpeck]
+
+- Added a missing `await` for an HP AddArtist call.  Added some more Trace logging. [smcpeck]
+
+- Added some logging around API calls. [smcpeck]
+
+- Changed IEmbyAvailabilityChecker to use IEnumberables + checking actor search against Emby content + PR feedback. [smcpeck]
+
+- Changed actor searching to support non-actors too. [smcpeck]
+
+- Added a 10 second timer to refresh some new caching I put in. [smcpeck]
+
+- Added root folder and approving quality profiles in radarr #1065. [tidusjar]
+
+- Added some debugging code around the newsletter for Emby #1116. [tidusjar]
+
+- Added a TMDB Rate limiter for the newsletter. [tidusjar]
+
+- Added port check in wizard. also fixed favicon. [tidusjar]
+
+- Update Radarr placeholder. [d2dyno]
+
+- Added the user login for emby users #435. [tidusjar]
+
+- Added User Management support for Emby #435. [tidusjar]
+
+- Added emby to the sidebar #435. [tidusjar]
+
+- Added API endpoint for /actor/new/ to support searching for movies not already available/requested. [smcpeck]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Update README.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+### **Fixes**
 
 - Translation changes. [Jamie.Rees]
 
@@ -1174,6 +720,33 @@
 
 - Enforcing async/await in synchronous methods that were marked async. [smcpeck]
 
+
+## v2.1.0 (2017-01-31)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Update .gitattributes. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added the new labels to the search. [tidusjar]
+
+- Added a switch to use the new search or not, just in case people do not like it. added a migration to turn on the new search. [Jamie.Rees]
+
+- Added a bunch of categories for tv search similar to what we have for movies. [Jamie.Rees]
+
+### **Fixes**
+
 - Fixed typos. [Haries Ramdhani]
 
 - Fix typo in readme. [tdorsey]
@@ -1252,7 +825,53 @@
 
 - Improved the search UI and made it more consistant. Finished the Netflix API Part #884. [Jamie.Rees]
 
+
+## v2.0.1 (2017-01-16)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Added a netflix api. [Jamie.Rees]
+
+### **Fixes**
+
 - Fixed #934. [Jamie.Rees]
+
+
+## v2.0 (2017-01-14)
+
+### **New Features**
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+- Update README.md. [SuperPotatoMen]
+
+- Added the settings for #925 but need to apply the settings to the UI. [Jamie.Rees]
+
+- Changed the settings name from Plex Requests to Ombi. [Jamie.Rees]
+
+- Added support for Managed Users #811. [Jamie.Rees]
+
+- Change solution name in travis. [mhann]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+### **Fixes**
 
 - Finished #925. [Jamie.Rees]
 
@@ -1334,6 +953,11 @@
 
 - Product name change. [tidusjar]
 
+
+## v1.10.1 (2016-12-17)
+
+### **Fixes**
+
 - #788 fixed! [tidusjar]
 
 - Fixed #788 and #791. [tidusjar]
@@ -1347,6 +971,45 @@
 - #782. [Jamie.Rees]
 
 - #785. [Jamie.Rees]
+
+
+## v1.10.0 (2016-12-15)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Added optional launch args for the auto updater. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update _Navbar.cshtml. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update _Navbar.cshtml. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added a new permission to bypass the request limit. [Jamie.Rees]
+
+- Update Version1100.cs. [SuperPotatoMen]
+
+- Added logging around the Newsletter #717. [Jamie.Rees]
+
+- Added missing migration. [tidusjar]
+
+- Added loading spinner. [Jamie.Rees]
+
+- Update UI.resx. [SuperPotatoMen]
+
+- Update Version1100.cs. [Jamie]
+
+- Update ISSUE_TEMPLATE.md. [SuperPotatoMen]
+
+### **Fixes**
 
 - Fixed an issue where the HTML in the newsletter was incorrect. [Jamie.Rees]
 
@@ -1504,14 +1167,6 @@
 
 - Finished #659 #236 has been modified slightly. Needs testing on Different systems. [Jamie.Rees]
 
-- Potential fix for #629. [TidusJar]
-
-- Fixed an issue to stop blatting over the base url. [tidusjar]
-
-- Fixed #643. [TidusJar]
-
-- Fixed #622. [TidusJar]
-
 - Almost finished #659. [Jamie.Rees]
 
 - Started on #483. [Jamie.Rees]
@@ -1526,11 +1181,48 @@
 
 - User perms. [Jamie.Rees]
 
+
+## v1.9.7 (2016-11-02)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+### **Fixes**
+
+- Potential fix for #629. [TidusJar]
+
+- Fixed an issue to stop blatting over the base url. [tidusjar]
+
+- Fixed #643. [TidusJar]
+
+- Fixed #622. [TidusJar]
+
+
+## v1.9.6 (2016-10-28)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+### **Fixes**
+
 - Fixed #586. [Jamie.Rees]
 
 - Fixed #622. [Jamie.Rees]
 
 - Fixed #621. [Jamie.Rees]
+
+
+## v1.9.5 (2016-10-27)
+
+### **New Features**
+
+- Added our own custom migrations, a lot easier to migrate DB versions now. [tidusjar]
+
+### **Fixes**
 
 - Bump version. [Jamie.Rees]
 
@@ -1604,6 +1296,21 @@
 
 - Fixed #589. [tidusjar]
 
+
+## v1.9.4 (2016-10-10)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Added Paypalme options, no UI yet (#568) [Jim MacKenize]
+
+- Update appveyor.yml. [Jamie]
+
+- Update README.md. [Jamie]
+
+### **Fixes**
+
 - Reverted. [tidusjar]
 
 - Make sure it's enabled before sending the recently added. [tidusjar]
@@ -1613,6 +1320,17 @@
 - FIXED!!!!! YES BITCH! #550. [tidusjar]
 
 - Moved the horizontal rules inside the table row. [tidusjar]
+
+
+## v1.9.3 (2016-10-09)
+
+### **New Features**
+
+- Added properties to disable tv requests for specific episodes or seasons and wired up to admin settings. [Matt McHughes]
+
+- Added different sonarr search commands. [tidusjar]
+
+### **Fixes**
 
 - Fixed #515. [tidusjar]
 
@@ -1642,6 +1360,21 @@
 
 - #515. [tidusjar]
 
+
+## v1.9.2 (2016-09-18)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update CouchPotatoCacher.cs. [Jamie]
+
+- Added some error handing around the GetMovie area #517. [tidusjar]
+
+- Added a version endpoint in "/api/version" #529. [tidusjar]
+
+### **Fixes**
+
 - Trying to fix the auto CP. [tidusjar]
 
 - Increase the notice message text box #527. [tidusjar]
@@ -1667,6 +1400,21 @@
 - Sorted out some of the UI for #18. [tidusjar]
 
 - Finished #18. [tidusjar]
+
+
+## v1.9.1 (2016-08-30)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Added french to the navbar. [tidusjar]
+
+- Changed the way we use the setTimeout function. Should fix #403 #491 #492. [tidusjar]
+
+- Change the redirection to use a relative uri redirect #473. [tidusjar]
+
+### **Fixes**
 
 - Fixed tests. [tidusjar]
 
@@ -1696,11 +1444,86 @@
 
 - Working on the beta releases page and also the user management. [tidusjar]
 
+- User work. [tidusjar]
+
+
+## v1.9.0 (2016-08-18)
+
+### **New Features**
+
+- Update the availability checker to search for TV Episodes. [tidusjar]
+
+- Changed the no TVMazeid message. [tidusjar]
+
+- Added an option to disable/enable the Plex episode cacher. [tidusjar]
+
+- Updated the episode cacher to have a minimum of 11 hours before it runs again. [tidusjar]
+
+- Added some useful analytical infomation around the wizard. [tidusjar]
+
+- Updated the German translations #402. [tidusjar]
+
+- Added some code to shrink the DB. reworked the search to speed it up. [tidusjar]
+
+- Change to use the GrandparentTitle rather than the thumbnail.... facepalm. [tidusjar]
+
+- Change the interval to hours! [tidusjar]
+
+- Added the transaction back into the DB. Do not run the episode cacher if it's been run in the last hour. [tidusjar]
+
+- Added logging. [tidusjar]
+
+- Changed the query slightly. [tidusjar]
+
+- Updated Newtonsoft.Json, Autofixture, Nlog and Dapper packages. [tidusjar]
+
+- Added the Sonarr check for episodes #254. [tidusjar]
+
+- Added unit tests. [tidusjar]
+
+- Added #436. [tidusjar]
+
+- Update build no. [tidusjar]
+
+- Updated translations for #402. [tidusjar]
+
+- Added a beta module. [tidusjar]
+
+- Added a custom debug root path provider, this means we do not have to recompile the views every time we make a view change. [tidusjar]
+
+- Update .gitignore. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added tests for the string hash. [tidusjar]
+
+- Added code to request the api key for CouchPotato. [tidusjar]
+
+- Added the file version to the layout. [tidusjar]
+
+- Update appveyor.yml. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added automation tests. [tidusjar]
+
+- Update appveyor.yml. [Jamie]
+
+- Updated packages. [tidusjar]
+
+- Updated Polly. [tidusjar]
+
+- Updated Fr, IT and NL translations #402. [tidusjar]
+
+- Changed the way the donate button works for #414. [tidusjar]
+
+- Added MediatR. [tidusjar]
+
+### **Fixes**
+
 - User management stuff. [tidusjar]
 
 - Fixed! [tidusjar]
-
-- User work. [tidusjar]
 
 - Small amount of work on the user management. [tidusjar]
 
@@ -1880,8 +1703,6 @@
 
 - Stupid &$(*£ merge. [tidusjar]
 
-- Fixed the bug where we were auto approving everything. Added French language into the navigation bar. [tidusjar]
-
 - Angular. [tidusjar]
 
 - Reworked the custom notifications... again. Need to figure out how to find the view to the model. [tidusjar]
@@ -1911,6 +1732,34 @@
 - Plugged in MediatR. [tidusjar]
 
 - Moved over to using Ninject. [tidusjar]
+
+
+## v1.8.4 (2016-06-30)
+
+### **Fixes**
+
+- Fixed the bug where we were auto approving everything. Added French language into the navigation bar. [tidusjar]
+
+
+## v1.8.3 (2016-06-29)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Update appveyor.yml. [Jamie]
+
+- Added some of the backend bits for #182. [tidusjar]
+
+- Updates for #243. [tidusjar]
+
+- Added Dutch language #243. [tidusjar]
+
+- Added languages #243. [tidusjar]
+
+- Added logging #350. [tidusjar]
+
+### **Fixes**
 
 - Small changes. [tidusjar]
 
@@ -1972,6 +1821,17 @@
 
 - Fixed #362. [tidusjar]
 
+
+## v1.8.2 (2016-06-22)
+
+### **New Features**
+
+- Update readme. [tidusjar]
+
+- Update appveyor.yml. [Jamie]
+
+### **Fixes**
+
 - Fixed a circular reference issue. [tidusjar]
 
 - Small changes around how we work with custom events in the analytics. [tidusjar]
@@ -1984,9 +1844,37 @@
 
 - Add an option to stop sending notifications for requests that don't require approval #345. [Drewster727]
 
+
+## v1.8.1 (2016-06-21)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+### **Fixes**
+
 - Fix obj ref error when scheduler runs (ProviderId is null?) [Drewster727]
 
 - Fix logic for obtaining a sonarr quality profile #340. [Drewster727]
+
+
+## v1.8.0 (2016-06-21)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the new advanced search into the search page too. [tidusjar]
+
+- Change the way we configure the IoC container in the bootstrapper, we are registering all the concrete instances on application start rather than on each web request. This should increase the performance per HTTP request. [tidusjar]
+
+- Updated nlog and fixed #295. [tidusjar]
+
+### **Fixes**
 
 - Workaround for #334. [Drewster727]
 
@@ -2096,6 +1984,19 @@
 
 - Started #273. [tidusjar]
 
+
+## v1.7.5 (2016-05-29)
+
+### **New Features**
+
+- Update preview. [Jamie]
+
+- Updated dapper.contrib. Looks like there was a bug in the async methods. [tidusjar]
+
+- Updater wouldn't work when running a reverse proxy #236. [tidusjar]
+
+### **Fixes**
+
 - Bump build ver. [tidusjar]
 
 - Use HTTPS for the poster images, so there aren't any mixed content warnings when serving the application via an HTTPS reverse proxy. [Sean Callinan]
@@ -2144,6 +2045,15 @@
 
 - Fixed an issue where if you have only 1 plex friend it would not show in the list. [tidusjar]
 
+
+## v1.7.4 (2016-05-25)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+### **Fixes**
+
 - Fixed #252. [tidusjar]
 
 - Fixed #428. [tidusjar]
@@ -2156,7 +2066,17 @@
 
 - We wan't updating the DB schema. [tidusjar]
 
+
+## v1.7.3 (2016-05-25)
+
+### **Fixes**
+
 - Fixed the release build issue where we could not access the settings #239. [tidusjar]
+
+
+## v1.7.2 (2016-05-25)
+
+### **Fixes**
 
 - Fixed a small bug where an exception would get thrown. [tidusjar]
 
@@ -2172,9 +2092,59 @@
 
 - Fixed #238. [tidusjar]
 
+- Small UI tweaks/improvements. [Drewster727]
+
+
+## v1.7.1 (2016-05-24)
+
+### **New Features**
+
+- Update version. [tidusjar]
+
+### **Fixes**
+
 - Fixed an issue with the auth page when running with a reverse proxy. [tidusjar]
 
-- Small UI tweaks/improvements. [Drewster727]
+
+## v1.7 (2016-05-24)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the ability to get the apikey from the api if you provide a correct username and password. Added more unit tests Added the ability to change a users password using the api refactored the Usermapper and made it unit testsable. [tidusjar]
+
+- Update. [tidusjar]
+
+- Added in an audit table. Since we are now allowing multiple users to change and modify things we need to audit this. [TidusJar]
+
+- Added the updater to the soloution and did a bit of starting code. [TidusJar]
+
+- Updated the claims so we can support more users. Added a user management section (not yet complete) Added the api to the solution and a api key in the settings (currently only gets the requests). [TidusJar]
+
+- Updated packages. [TidusJar]
+
+- Added a retry handler into the solution. We can now retry failed api requests. [TidusJar]
+
+- Update README.md. [Jamie]
+
+- Added Released propety to RequestViewModel. Added Released filter to the Requests page. [Chris Lees]
+
+- Added #27 to albums. [tidusjar]
+
+- Added the actual notification part of #27. [tidusjar]
+
+- Added the missing baseurl bit on the login page for #72. [tidusjar]
+
+- Added the 'enable user notifications' to the email settings view and model. [tidusjar]
+
+- Update README.md. [Jamie]
+
+### **Fixes**
 
 - Remove pointless test, change the default theme and fix a small bug. [tidusjar]
 
@@ -2308,6 +2278,21 @@
 
 - Set the max json length (fixes large json response errors) [Drewster727]
 
+
+## v1.6.1 (2016-04-16)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Added a url base. [tidusjar]
+
+- Change default logging. [tidusjar]
+
+- Added logging around SickRage. [tidusjar]
+
+### **Fixes**
+
 - Bump up the version number ready for the release. [tidusjar]
 
 - BaseUrl is finally finished! #72. [tidusjar]
@@ -2387,6 +2372,71 @@
 - Fixes for sonarr, we now display the error messages back to the user. [tidusjar]
 
 - Fixed #144. [tidusjar]
+
+
+## v1.6.0 (2016-04-06)
+
+### **New Features**
+
+- Changed the build number. [tidusjar]
+
+- Update README.md. [Drew]
+
+- Update README.md. [Drew]
+
+- Update README.md. [Drew]
+
+- Update README.md. [Drew]
+
+- Changed the title to a contains but the artist still must match, [tidusjar]
+
+- Added unit tests to cover the new changes to the availability checker. [tidusjar]
+
+- Added the music check in the Plex Checker. [tidusjar]
+
+- Changed around the startup so we cache the profiles after the DB has been created. [tidusjar]
+
+- Updated where we update the request blobs schema change. [tidusjar]
+
+- Update SearchModule.cs. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Change the new columns type. [tidusjar]
+
+- Added a DBSchema so we have an easier way to update the DB. [tidusjar]
+
+- Added an issue template. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Added back the username into the Session when the admin logs in. This means they do not have to log in twice. [tidusjar]
+
+- Added happy path tests for the Checker. [tidusjar]
+
+- Added music to the search and requests page. [tidusjar]
+
+- Added a scroll to the top thingy and a bit more work on headphones. [tidusjar]
+
+- Added some tests and fixed the issue where the DB would get created in the wrong place depending on how you launched the application. [tidusjar]
+
+- Added the settings page for #32. [tidusjar]
+
+- Update README.md. [Drewster727]
+
+- Update README.md. [Drewster727]
+
+- Update README.md. [Drewster727]
+
+- Update README.md. [Drewster727]
+
+- Update README.md. [Drewster727]
+
+- Update appveyor.yml. [Jamie]
+
+### **Fixes**
 
 - Some final tweaks for #32. [tidusjar]
 
@@ -2550,15 +2600,54 @@
 
 - Show the movie/show title when requesting. [Drewster727]
 
+
+## v1.5.2 (2016-03-26)
+
+### **Fixes**
+
 - Stoped users from spamming the request button. [tidusjar]
 
 - Fixed the logger no longer writing to the file. [tidusjar]
 
 - Fixed #97. [tidusjar]
 
+
+## v1.5.1 (2016-03-26)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Added logs to the sidebar. I'm an idiot. [tidusjar]
+
+### **Fixes**
+
 - Approve tv shows or movies. [Drewster727]
 
 - Fixed a bug where if you had auto approve it wouldn't notify you. [tidusjar]
+
+
+## v1.5.0 (2016-03-25)
+
+### **New Features**
+
+- Updated version number for release. [tidusjar]
+
+- Updated the logic for handling specific seasons in Sonarr and Sickrage. [Shannon Barrett]
+
+- Updated the readme and added some icons to the navbar. [tidusjar]
+
+- Added the ability to sepcify a username in the email notification settings for external MTA's. We have had to add a new option called Email Sender because of this. #78. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added a notification model to the notifiers. Added the backend work for sending a notification for an issue report #75. [tidusjar]
+
+- Added a subdir to CP, SickRage, Sonarr and Plex #43. [tidusjar]
+
+### **Fixes**
 
 - And again. [tidusjar]
 
@@ -2612,6 +2701,50 @@
 
 - Started #57, currently there is a bug where the TV list won't filter. [tidusjar]
 
+
+## v1.4.1 (2016-03-20)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Update AvailabilityUpdateService.cs. [Jamie]
+
+
+## v1.4.0 (2016-03-19)
+
+### **New Features**
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Updated the build version ready for the next release. [tidusjar]
+
+- Added the api and settings page for Sickrage. Just need to do the tester and hook it up #40. [tidusjar]
+
+- Added the option to set a CP quality #38. [tidusjar]
+
+- Added the code to lookup the old requests and refresh them with new information from TVMaze. [tidusjar]
+
+- Update StatusCheckerTests.cs. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added TVMaze to the search. #21. [tidusjar]
+
+- Added migration code and cleaned up the DB. [tidusjar]
+
+- Updated the way we add requests. [tidusjar]
+
+- Updated the Dapper.Contrib package, it had a bug where it wasn't returning the correct Id from inserts. [tidusjar]
+
+### **Fixes**
+
 - This fixes #36. [tidusjar]
 
 - Should fix issue #36. [Shannon Barrett]
@@ -2652,17 +2785,80 @@
 
 - Fixed #25. [Jamie Rees]
 
+
+## v1.3.0 (2016-03-17)
+
+### **New Features**
+
+- Added pushbullet to the sidebar. [Jamie Rees]
+
+- Updated build version for the next release. [Jamie Rees]
+
+- Updated readme link. [tidusjar]
+
+- Added ignore to static tests. [tidusjar]
+
+- Added Pushbullet notifications #8. [tidusjar]
+
+- Added first implimentation of the Notification Service #8 Added tests to cover the notification service. [tidusjar]
+
+- Added validation to the Email settings, also increased the availability checker from 2 minutes to 5. [tidusjar]
+
+### **Fixes**
+
 - Fixed #22. [Jamie Rees]
 
 - Started on #16, nothing is hooked up yet. [tidusjar]
 
 - Fixed tests. [tidusjar]
 
+
+## v1.2.1 (2016-03-16)
+
+### **New Features**
+
+- Update Program.cs. [Jamie]
+
+- Update Program.cs. [Jamie]
+
+- Added back the reference. [tidusjar]
+
+### **Fixes**
+
 - Removed the email notification settings from the settings (for release 1.2.1) [Jamie Rees]
 
 - Fixed. [Jamie Rees]
 
 - Resolved #10. [tidusjar]
+
+
+## v1.2.0 (2016-03-15)
+
+### **New Features**
+
+- Updated. [Jamie Rees]
+
+- Updated appveyor. [Jamie Rees]
+
+- Update appveyor.yml. [Jamie]
+
+- Added latest version code and view. Need to finish the view #11. [tidusjar]
+
+- Added test button to Plex. That's fixed #9. [tidusjar]
+
+- Added test sonarr button #9. [tidusjar]
+
+- Added more tests. [tidusjar]
+
+- Added a bunch of logging. [tidusjar]
+
+- Added the application tester for CP #9. [tidusjar]
+
+- Added settings page for #8. [tidusjar]
+
+- Added pace.js. [tidusjar]
+
+### **Fixes**
 
 - Finished the notes! Resolved #7. [Jamie Rees]
 
@@ -2683,6 +2879,69 @@
 - Started added tests. [Jamie Rees]
 
 - Fixed an issue where the issues text appears larger. [Jamie Rees]
+
+
+## v1.1 (2016-03-13)
+
+### **New Features**
+
+- Update appveyor.yml. [Jamie]
+
+- Updated readme. [Jamie Rees]
+
+- Added the support for TV Series integrating with Sonarr. [Jamie Rees]
+
+- Added the functionality to pass a port through an argument. [tidusjar]
+
+- Added the code to get the quality profiles from Sonarr Started plugging that into the UI. [Jamie Rees]
+
+- Added the spinners #3. [tidusjar]
+
+- Added the functionality for the admin to clear the issues. [tidusjar]
+
+- Added the issues to the requests page. [tidusjar]
+
+- Added user logout method and unit tests to cover it. [tidusjar]
+
+- Added DeniedUsers to the view. [tidusjar]
+
+- Added the denied user check to the UserLoginModule. added a test case to cover it. [tidusjar]
+
+- Added a missing reference. [tidusjar]
+
+- Added first real test. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Added the latest version of nuget. [tidusjar]
+
+- Added travisyml. [tidusjar]
+
+- Added logging. [tidusjar]
+
+- Added missing files. [tidusjar]
+
+- Update README.md. [Jamie]
+
+- Added logging (Still WIP) [tidusjar]
+
+- Added favicon and also structured the HTML correctly. [tidusjar]
+
+- Updated the packages so everything is now with the correct framework (4.5.2) [tidusjar]
+
+- Added in deletion of requests. [tidusjar]
+
+- Added test code. [tidusjar]
+
+- Added dashboard. [tidusjar]
+
+- Added couchpotato page. [Jamie Rees]
+
+- Added readme to the project and updated it. [Jamie Rees]
+
+- Added helpers. [tidusjar]
+
+### **Fixes**
 
 - Bug fix, Couchpotato settings wouldn't show in release due to a Nancy bug. [Jamie Rees]
 
