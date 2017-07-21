@@ -2,6 +2,9 @@
     <div *ngFor="let child of childRequests">
         <div class="col-md-12">
             
+            <div class="col-md-6">
+                <span>Requested By: {{child.requestedUser.alias}}</span>
+            </div>
         </div>
     </div>
 </div>
