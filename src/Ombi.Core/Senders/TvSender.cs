@@ -35,6 +35,10 @@ namespace Ombi.Core
         public async Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null)
         {
             var s = await Settings.GetSettingsAsync();
+            if(string.IsNullOrEmpty(s.ApiKey))
+            {
+                return null;
+            }
             var qualityProfile = 0;
             if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
             {

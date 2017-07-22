@@ -28,24 +28,22 @@ namespace Ombi.Core.Engine
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
             IRuleEvaluator rule, UserManager<OmbiUser> manager,
-            ITvSender sender) : base(user, requestService, rule)
+            ITvSender sender) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             Mapper = map;
-            UserManager = manager;
             TvSender = sender;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
-        private UserManager<OmbiUser> UserManager { get; }
         private ITvSender TvSender {get;}
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-            var user = await UserManager.GetUserAsync(new ClaimsPrincipal(User));
+            var user = await User();
 
             var tvBuilder = new TvShowRequestBuilder(TvApi);
             (await tvBuilder
@@ -132,11 +130,26 @@ namespace Ombi.Core.Engine
         {
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
-            results = Mapper.Map<TvRequests>(request);
 
             // TODO need to check if we need to approve any child requests since they may have updated
             await TvRepository.Update(results);
             return results;
+        }
+
+        public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
+        {
+            var allRequests = TvRepository.GetChild();
+            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
+
+            // TODO need to check if we need to approve any child requests since they may have updated
+            await TvRepository.UpdateChild(results);
+            return results;
+        }
+
+        public async Task RemoveTvChild(int requestId)
+        {
+            var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            await TvRepository.DeleteChild(request);
         }
 
         public async Task RemoveTvRequest(int requestId)

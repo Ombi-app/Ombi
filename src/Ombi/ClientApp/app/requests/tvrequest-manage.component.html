@@ -2,9 +2,34 @@
     <div *ngFor="let child of childRequests">
         <div class="col-md-12">
             
-            <div class="col-md-6">
-                <span>Requested By: {{child.requestedUser.alias}}</span>
+            <div class="col-md-2">
+                <span>Requested By: {{child.requestedUser.userName}}</span>
+
+                <div *ngFor="let season of child.seasonRequests">
+                    <span>Season {{season.seasonNumber}}</span>
+                    <div>Episodes:</div>
+                    <span *ngFor="let episode of season.episodes">
+                        <span [ngStyle]="{ 'color': getColour(episode) }">{{episode.episodeNumber}}</span>
+                    </span>
+                    <br />
+                    <br />
+                </div>
+            </div>
+
+            <div class="col-md-1 col-md-push-9">
+                <form>
+                    <button style="text-align: right" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                </form>
+                <form>
+                    <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                </form>
+                <form>
+                    <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
+                </form>
             </div>
         </div>
+        <br />
+        <br />
+        <hr />
     </div>
 </div>

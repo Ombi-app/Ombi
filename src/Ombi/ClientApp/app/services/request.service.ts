@@ -60,6 +60,12 @@ export class RequestService extends ServiceAuthHelpers {
     updateTvRequest(request: ITvRequests): Observable<ITvRequests> {
         return this.http.put(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
+    updateChild(child: IChildRequests): Observable<IChildRequests> {
+        return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    }
+    deleteChild(child: IChildRequests): Observable<IChildRequests> {
+        return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);
+    }
 
     getRequestsCount(): Observable<IRequestCountModel> {
         return this.basicHttp.get(`${this.url}count`).map(this.extractData);

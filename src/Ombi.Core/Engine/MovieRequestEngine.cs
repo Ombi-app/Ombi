@@ -23,20 +23,19 @@ namespace Ombi.Core.Engine
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, UserManager<OmbiUser> manager) : base(user, requestService, r)
+            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, 
+            UserManager<OmbiUser> manager) : base(user, requestService, r, manager)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;
             Sender = sender;
             Logger = log;
-            UserManager = manager;
         }
 
         private IMovieDbApi MovieApi { get; }
         private INotificationHelper NotificationHelper { get; }
         private IMovieSender Sender { get; }
         private ILogger<MovieRequestEngine> Logger { get; }
-        private UserManager<OmbiUser> UserManager { get; }
 
         /// <summary>
         /// Requests the movie.
@@ -58,7 +57,7 @@ namespace Ombi.Core.Engine
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
-            var userDetails = await UserManager.GetUserAsync(new ClaimsPrincipal(User));
+            var userDetails = await User();
 
             var requestModel = new MovieRequests
             {

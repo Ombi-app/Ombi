@@ -11,6 +11,8 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using Ombi.Store.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ombi.Core.Engine
 {
@@ -21,7 +23,7 @@ namespace Ombi.Core.Engine
         private Dictionary<int, TvRequests> _dbTv;
 
         protected BaseMediaEngine(IPrincipal identity, IRequestServiceMain requestService,
-            IRuleEvaluator rules) : base(identity, rules)
+            IRuleEvaluator rules, UserManager<OmbiUser> um) : base(identity, um, rules)
         {
             RequestService = requestService;
         }

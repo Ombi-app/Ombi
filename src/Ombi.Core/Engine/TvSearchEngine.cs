@@ -17,14 +17,16 @@ using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
+using Ombi.Store.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt, IRuleEvaluator r)
-            : base(identity, service, r)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt, IRuleEvaluator r, UserManager<OmbiUser> um)
+            : base(identity, service, r, um)
         {
             TvMazeApi = tvMaze;
             Mapper = mapper;

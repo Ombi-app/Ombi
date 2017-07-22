@@ -163,6 +163,29 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Updates the a specific child request
+        /// </summary>
+        /// <param name="child">The model.</param>
+        /// <returns></returns>
+        [HttpPut("tv/child")]
+        public async Task<ChildRequests> UpdateChild([FromBody] ChildRequests child)
+        {
+            return await TvRequestEngine.UpdateChildRequest(child);
+        }
+
+        /// <summary>
+        /// Deletes the a specific tv request
+        /// </summary>
+        /// <param name="requestId">The model.</param>
+        /// <returns></returns>
+        [HttpDelete("tv/child/{requestId:int}")]
+        public async Task DeleteChildRequest(int requestId)
+        {
+            await TvRequestEngine.RemoveTvChild(requestId);
+        }
+
+
+        /// <summary>
         /// Retuns all children requests for the request id
         /// </summary>
         /// <param name="requestId">The Request Id</param>

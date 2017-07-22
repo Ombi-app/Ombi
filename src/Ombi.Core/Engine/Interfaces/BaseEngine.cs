@@ -5,24 +5,44 @@ using System.Threading.Tasks;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
+using Ombi.Store.Entities;
+using Microsoft.AspNetCore.Identity;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ombi.Core.Engine.Interfaces
 {
     public abstract class BaseEngine
     {
-        protected BaseEngine(IPrincipal user, IRuleEvaluator rules)
+        protected BaseEngine(IPrincipal user, UserManager<OmbiUser> um, IRuleEvaluator rules)
         {
-            User = user;
+            UserPrinciple = user;
             Rules = rules;
+            UserManager = um;
         }
 
-        protected IPrincipal User { get; }
+        protected IPrincipal UserPrinciple { get; }
         protected IRuleEvaluator Rules { get; }
-        protected string Username => User.Identity.Name;
+        protected UserManager<OmbiUser> UserManager { get;  }
+        protected string Username => UserPrinciple.Identity.Name;
 
-        protected bool HasRole(string roleName)
+        private OmbiUser _user;
+        protected async Task<OmbiUser> User()
         {
-            return User.IsInRole(roleName);
+            if(_user == null)
+                _user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == Username);
+
+            return _user;
+        }
+
+        protected async Task<string> UserAlias()
+        {
+            return (await User()).UserAlias;
+        }
+
+        protected async Task<bool> IsInRole(string roleName)
+        {
+            return await UserManager.IsInRoleAsync(await User(), roleName);
         }
         
         public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)

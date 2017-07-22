@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { IChildRequests } from '../interfaces/IRequestModel';
+import { IChildRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
 
 @Component({
     templateUrl: './tvrequest-manage.component.html'
@@ -29,7 +29,8 @@ export class TvRequestManageComponent {
     isAdmin: boolean;
 
     public removeRequest(request: IChildRequests) {
-        //this.requestService.removeTvRequest(request);
+        this.requestService.deleteChild(request)
+            .subscribe();
         this.removeRequestFromUi(request);
     }
 
@@ -37,31 +38,38 @@ export class TvRequestManageComponent {
         request.available = available;
     }
 
-    public approve(request: IChildRequests) {
-        request.approved = true;
-        request.denied = false;
-    }
-
     public deny(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
+        this.requestService.updateChild(request)
+            .subscribe();
     }
 
-    public approveSeasonRequest(request: IChildRequests) {
+    public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
-        // this.requestService.updateTvRequest(this.selectedSeason)
-        //     .subscribe();
+        this.requestService.updateChild(request)
+             .subscribe();
     }
 
     public denySeasonRequest(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
-        // this.requestService.updateTvRequest(this.selectedSeason)
-        //     .subscribe();
+        this.requestService.updateChild(request)
+            .subscribe();
     }
 
-
+    public getColour(ep: IEpisodesRequests): string {
+        if (ep.available)
+        {
+            return "lime";
+        }
+        if (ep.approved)
+        {
+            return "#00c0ff";
+        }
+        return "white";
+    }
 
     private removeRequestFromUi(key: IChildRequests) {
         var index = this.childRequests.indexOf(key, 0);
