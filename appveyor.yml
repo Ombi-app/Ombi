@@ -3,7 +3,6 @@ configuration: Release
 os: Visual Studio 2017
 environment:
   nodejs_version: "7.8.0"
-  appveyor_rdp_password: Password1!
 
 # Install scripts. (runs after repo cloning)
 init:
