@@ -2,8 +2,7 @@
 ____
 [![Gitter](https://badges.gitter.im/tidusjar/Ombi.svg)](https://gitter.im/tidusjar/Ombi?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/tidusjar/Ombi.svg)](http://isitmaintained.com/project/tidusjar/Ombi "Percentage of issues still open")
+[![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 [![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
 
