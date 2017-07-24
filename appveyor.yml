@@ -5,8 +5,8 @@ environment:
   nodejs_version: "7.8.0"
 
 # Install scripts. (runs after repo cloning)
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
   # Get the latest stable version of Node.js or io.js
   - ps: Install-Product node $env:nodejs_version
@@ -43,6 +43,14 @@ after_build:
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.exe"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.exe"
+
+#Copy the swagger files
+
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.10-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Swagger.xml"
 - cmd: >-
     dir %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
     
