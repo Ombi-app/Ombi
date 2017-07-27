@@ -34,15 +34,15 @@ after_build:
 - dotnet publish "../Ombi.Updater" -c Release -r centos.7-x64    
 # Copy over the updater files so we can include them in the .zip
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.dll"
-- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.exe" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.exe"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.dll"
-- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater.dll"
-- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.10-x64\publish\Ombi.Updater"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll"
-- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater"
 - copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll"
-- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater"
 
 #Copy the swagger files
 

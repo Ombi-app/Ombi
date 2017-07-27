@@ -9,6 +9,10 @@ namespace Ombi.Helpers
     {
         public static bool Contains(this string paragraph, string word, CompareOptions opts)
         {
+            if (string.IsNullOrEmpty(paragraph))
+            {
+                return false;
+            }
             return CultureInfo.CurrentUICulture.CompareInfo.IndexOf(paragraph, word, CompareOptions.IgnoreCase) >= 0;
         }
 

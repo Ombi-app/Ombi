@@ -93,7 +93,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     anticipatedShows() {
         this.clearResults();
-        this.searchService.anticiplatedTv()
+        this.searchService.anticipatedTv()
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.tvResults = x;

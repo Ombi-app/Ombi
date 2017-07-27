@@ -48,7 +48,7 @@ export class SearchService extends ServiceAuthHelpers {
     mostWatchedTv(): Observable<ISearchTvResult[]> {
         return this.http.get(`${this.url}/Tv/mostwatched`).map(this.extractData);
     }
-    anticiplatedTv(): Observable<ISearchTvResult[]> {
+    anticipatedTv(): Observable<ISearchTvResult[]> {
         return this.http.get(`${this.url}/Tv/anticipated`).map(this.extractData);
     }
     trendingTv(): Observable<ISearchTvResult[]> {

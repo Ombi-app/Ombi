@@ -18,5 +18,8 @@ namespace Ombi.Helpers
         public static EventId TvSender => new EventId(5000);
         public static EventId SonarrSender => new EventId(5001);
 
+
+        public static EventId Updater => new EventId(6000);
+
     }
 }

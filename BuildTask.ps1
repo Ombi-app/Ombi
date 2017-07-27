@@ -8,4 +8,5 @@ param([String]$env='local')
 $appSettingsPath = $env:APPVEYOR_BUILD_FOLDER + '\src\Ombi\appsettings.json'
 $appSettings = Get-Content $appSettingsPath -raw
 $appSettings = $appSettings.Replace("{{VERSIONNUMBER}}",$env:APPVEYOR_BUILD_VERSION);
+$appSettings = $appSettings.Replace("{{BRANCH}}",$env:APPVEYOR_REPO_BRANCH);
 Set-Content -Path $appSettingsPath -Value $appSettings 

@@ -28,7 +28,9 @@ using Ombi.Store.Repository;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
+using Ombi.Api.Service;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 
 namespace Ombi.DependencyInjection
@@ -68,6 +70,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
             services.AddTransient<IDiscordApi, DiscordApi>();
+            services.AddTransient<IOmbiService, OmbiService>();
         }
 
         public static void RegisterStore(this IServiceCollection services)
@@ -103,6 +106,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
+            services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
         }
 
         public static void RegisterIdentity(this IServiceCollection services)

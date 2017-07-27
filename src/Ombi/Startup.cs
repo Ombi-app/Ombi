@@ -25,6 +25,7 @@ using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
 using Ombi.Core.IdentityResolver;
 using Ombi.DependencyInjection;
+using Ombi.Helpers;
 using Ombi.Mapping;
 using Ombi.Schedule;
 using Ombi.Store.Context;

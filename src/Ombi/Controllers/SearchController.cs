@@ -138,7 +138,7 @@ namespace Ombi.Controllers
         /// </summary>
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
-        [HttpGet("tv/anticiplated")]
+        [HttpGet("tv/anticipated")]
         public async Task<IEnumerable<SearchTvShowViewModel>> AnticiplatedTv()
         {
             return await TvEngine.Anticipated();

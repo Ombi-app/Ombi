@@ -45,7 +45,7 @@ namespace Ombi.Core.Engine
         public async Task<RequestEngineResult> RequestMovie(SearchMovieViewModel model)
         {
             var movieInfo = await MovieApi.GetMovieInformation(model.Id);
-            if (movieInfo == null)
+            if (movieInfo == null || movieInfo.Id == 0)
             {
                 return new RequestEngineResult
                 {

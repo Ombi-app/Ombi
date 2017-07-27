@@ -13,7 +13,6 @@ namespace Ombi.Updater
         {
             // Kill Ombi Process
             var p = new ProcessProvider();
-
             p.Kill(options.OmbiProcessId);
 
 
