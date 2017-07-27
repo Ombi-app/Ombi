@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\BuildTask.ps1 = ..\BuildTask.ps1
-		Build\publish windows.bat = Build\publish windows.bat
-		Build\publish.bat = Build\publish.bat
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
