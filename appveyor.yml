@@ -29,7 +29,7 @@ after_build:
 - dotnet publish -c Release -r centos.7-x64
 - dotnet publish "../Ombi.Updater" -c Release -r win10-x64
 - dotnet publish "../Ombi.Updater" -c Release -r osx.10.12-x64
-- dotnet publish "../Ombi.Updater" -c Release -r ubuntu.16.10-x64
+- dotnet publish "../Ombi.Updater" -c Release -r ubuntu.16.04-x64
 - dotnet publish "../Ombi.Updater" -c Release -r debian.8-x64
 - dotnet publish "../Ombi.Updater" -c Release -r centos.7-x64    
 # Copy over the updater files so we can include them in the .zip
@@ -89,8 +89,8 @@ after_build:
     
     
 
-cache:
-- '%USERPROFILE%\.nuget\packages'
+#cache:
+#- '%USERPROFILE%\.nuget\packages'
 deploy:
 - provider: GitHub
   release: Ombi v$(appveyor_build_version)
