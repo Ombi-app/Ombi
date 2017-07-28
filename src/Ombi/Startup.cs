@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Principal;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
@@ -10,6 +11,7 @@ using IdentityServer4.Services;
 using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -180,12 +182,18 @@ namespace Ombi
             //loggerFactory.AddDebug();
             var options = (IOptions<UserSettings>) app.ApplicationServices.GetService(
                 typeof(IOptions<UserSettings>));
-            
+
+            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
+
+            // Get the url
+            var url = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+
+            Console.WriteLine($"Using Url {url.Value} for Identity Server");
             app.UseIdentity();
             app.UseIdentityServer();
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = options.Value.WebsiteUrl,
+                Authority = url.Value,
                 ApiName = "api",
                 ApiSecret = "secret",
 
@@ -234,7 +242,6 @@ namespace Ombi
 
             // Setup the scheduler
             var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
-            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
             jobSetup.Setup();
             ctx.Seed();
 

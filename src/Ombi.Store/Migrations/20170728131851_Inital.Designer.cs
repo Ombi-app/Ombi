@@ -4,14 +4,14 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Ombi.Store.Context;
-using Ombi.Helpers;
 using Ombi.Store.Entities;
+using Ombi.Helpers;
 
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20170719072204_Initial")]
-    partial class Initial
+    [Migration("20170728131851_Inital")]
+    partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -123,6 +123,20 @@ namespace Ombi.Store.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.ApplicationConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationConfiguration");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>

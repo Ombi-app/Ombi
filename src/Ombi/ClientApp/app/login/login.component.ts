@@ -9,7 +9,6 @@ import { SettingsService } from '../services/settings.service';
 import { ICustomizationSettings } from '../interfaces/ISettings';
 
 
-
 @Component({
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']

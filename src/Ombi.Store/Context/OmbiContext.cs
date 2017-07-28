@@ -34,6 +34,8 @@ namespace Ombi.Store.Context
         public DbSet<MovieIssues> MovieIssues { get; set; }
         public DbSet<TvIssues> TvIssues { get; set; }
 
+        public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=Ombi.db");

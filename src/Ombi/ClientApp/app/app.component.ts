@@ -7,6 +7,7 @@ import { ILocalUser } from './auth/IUserLogin';
 
 import { ICustomizationSettings } from './interfaces/ISettings';
 
+
 @Component({
     selector: 'ombi',
     templateUrl: './app.component.html',
@@ -21,7 +22,9 @@ export class AppComponent implements OnInit {
     customizationSettings: ICustomizationSettings;
     user: ILocalUser;
 
-    ngOnInit() : void { 
+    ngOnInit(): void { 
+
+
 
         this.user = this.authService.claims();
         

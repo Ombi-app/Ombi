@@ -21,6 +21,7 @@ namespace Ombi.Store.Context
         EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
         DbSet<NotificationTemplates> NotificationTemplates { get; set; }
+        DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         void Seed();
 
         DbSet<MovieRequests> MovieRequests { get; set; }

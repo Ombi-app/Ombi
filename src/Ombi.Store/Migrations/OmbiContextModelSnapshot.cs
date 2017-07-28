@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Ombi.Store.Context;
-using Ombi.Helpers;
 using Ombi.Store.Entities;
+using Ombi.Helpers;
 
 namespace Ombi.Store.Migrations
 {
@@ -122,6 +122,20 @@ namespace Ombi.Store.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.ApplicationConfiguration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApplicationConfiguration");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>

@@ -16,9 +16,9 @@
                 </div>
             </div>
 
-            <div class="col-md-1 col-md-push-9">
+            <div class="col-md-1 col-md-push-9"> <!--// TODO ADMIN-->
                 <form>
-                    <button style="text-align: right" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
                 <form>
                     <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>

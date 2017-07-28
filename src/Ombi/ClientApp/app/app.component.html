@@ -19,13 +19,13 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li [routerLinkActive]="['active']"><a  [routerLink]="['/search']"><i class="fa fa-search"></i> Search</a></li>
+                <li id="Search" [routerLinkActive]="['active']"><a  [routerLink]="['/search']"><i class="fa fa-search"></i> Search</a></li>
             </ul>
             <ul class="nav navbar-nav">
-                <li [routerLinkActive]="['active']"><a [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
+                <li id="Requests" [routerLinkActive]="['active']"><a [routerLink]="['/requests']"><i class="fa fa-plus"></i> Requests</a></li>
             </ul>
             <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
-                <li [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
+                <li id="UserManagement" [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
             </ul>
 
             
