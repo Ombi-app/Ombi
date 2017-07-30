@@ -187,13 +187,18 @@ namespace Ombi
 
             // Get the url
             var url = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+            var port = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Port);
 
-            Console.WriteLine($"Using Url {url.Value} for Identity Server");
+            Console.WriteLine($"Using Url {url.Value}:{port.Value} for Identity Server");
             app.UseIdentity();
             app.UseIdentityServer();
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
-                Authority = url.Value,
+#if !DEBUG
+                Authority = $"{url.Value}:{port.Value}",
+#else
+                Authority = $"http://localhost:52038/",
+#endif
                 ApiName = "api",
                 ApiSecret = "secret",
 
@@ -201,7 +206,8 @@ namespace Ombi
                 CacheDuration = TimeSpan.FromMinutes(10), // that's the default
                 RequireHttpsMetadata = options.Value.UseHttps, // FOR DEV set to false
                 AutomaticAuthenticate = true,
-                AutomaticChallenge = true
+                AutomaticChallenge = true,
+                
 
             });
 

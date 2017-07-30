@@ -4,6 +4,14 @@
 
 ### **New Features**
 
+- Change the RID. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Updated Changelog. [Jamie.Rees]
+
 - Added changelog. [Jamie.Rees]
 
 - Update README.md. [Jamie]
@@ -75,6 +83,26 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
+
+- Fixed the issue with the Identity Server running on a different port, we can now use -url #865. [Jamie.Rees]
+
+- Try again. [TidusJar]
+
+- Publish ubuntu 16.04. [Jamie.Rees]
+
+- Chnaged the updater job from Minutely to Hourly. [Jamie.Rees]
+
+- Some work around the Auto Updater and other small changes #1460 #865. [Jamie.Rees]
+
+- Missed a file. [tidusjar]
+
+- Fixed the swagger issue. [tidusjar]
+
+- RDP issues. [tidusjar]
+
+- Appveyor build rdp investigation. [tidusjar]
+
+- Working on the requests page #1457 #865. [tidusjar]
 
 - Made the password reset email style the same as other email notifications #1456 #865. [Jamie.Rees]
 
