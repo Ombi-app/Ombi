@@ -84,6 +84,8 @@
 
 ### **Fixes**
 
+- Fixed the Identity Server discovery bug #1456 #865. [tidusjar]
+
 - Fixed the issue with the Identity Server running on a different port, we can now use -url #865. [Jamie.Rees]
 
 - Try again. [TidusJar]
