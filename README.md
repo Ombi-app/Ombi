@@ -5,6 +5,10 @@ ____
 [![Docker Pulls](https://img.shields.io/docker/pulls/linuxserver/ombi.svg)](https://hub.docker.com/r/linuxserver/ombi/)
 [![Github All Releases](https://img.shields.io/github/downloads/tidusjar/Ombi/total.svg)](https://github.com/tidusjar/Ombi)
 [![firsttimersonly](http://img.shields.io/badge/first--timers--only-friendly-blue.svg?style=flat-square)](http://www.firsttimersonly.com/)
+
+
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi)
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 [![Gratipay User](https://img.shields.io/gratipay/user/tidusjar.svg)](https://gratipay.com/Ombi/)
 
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
@@ -82,7 +86,10 @@ We are looking for any contributions to the project! Just pick up a task, if you
 Please feel free to submit a pull request!
 
 # Donation
-If you feel like donating you can donate [here](https://paypal.me/PlexRequestsNet)!
+If you feel like donating you can donate with the below buttons!
+
+[![Patreon](https://www.ombi.io/img/patreondonate.svg)](https://patreon.com/tidusjar/Ombi) 
+[![Paypal](https://www.ombi.io/img/paypaldonate.svg)](https://paypal.me/PlexRequestsNet)
 
 ### A massive thanks to everyone for all their helps!
 
