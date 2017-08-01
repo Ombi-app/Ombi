@@ -10,7 +10,8 @@ using Ombi.Settings.Settings.Models.External;
 namespace Ombi.Controllers.External
 {
    [Admin]
-    public class RadarrController : BaseV1ApiController
+   [ApiV1]
+    public class RadarrController : Controller
     {
         public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings)
         {

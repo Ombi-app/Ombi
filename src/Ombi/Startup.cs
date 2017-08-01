@@ -193,7 +193,7 @@ namespace Ombi
             app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
             {
 #if !DEBUG
-                Authority = $"{url.Value}:{port.Value}",
+                Authority = $"http://localhost:{port.Value}",
 #else
                 Authority = $"http://localhost:52038/",
 #endif

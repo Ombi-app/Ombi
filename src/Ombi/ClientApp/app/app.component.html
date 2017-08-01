@@ -44,7 +44,11 @@
 </nav>
 
 
-<div class="container top-spacing">
+<div *ngIf="showNav" class="container top-spacing">
+    <router-outlet></router-outlet>
+</div>
+<div *ngIf="!showNav">
+
     <router-outlet></router-outlet>
 </div>
 

@@ -14,7 +14,8 @@ using Ombi.Models.External;
 namespace Ombi.Controllers.External
 {
     [Admin]
-    public class PlexController : BaseV1ApiController
+    [ApiV1]
+    public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings)
         {

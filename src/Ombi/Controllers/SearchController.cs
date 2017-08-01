@@ -14,7 +14,8 @@ using StackExchange.Profiling;
 namespace Ombi.Controllers
 {
     [Authorize]
-    public class SearchController : BaseV1ApiController
+    [ApiV1]
+    public class SearchController : Controller
     {
         public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger)
         {

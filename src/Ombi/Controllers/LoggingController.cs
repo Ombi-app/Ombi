@@ -7,7 +7,8 @@ using System;
 namespace Ombi.Controllers
 {
     [Authorize]
-    public class LoggingController : BaseV1ApiController
+    [ApiV1]
+    public class LoggingController : Controller
     {
         public LoggingController(ILogger logger)
         {

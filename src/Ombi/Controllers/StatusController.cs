@@ -36,8 +36,8 @@ using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Controllers
 {
-    
-    public class StatusController : BaseV1ApiController
+    [ApiV1]
+    public class StatusController : Controller
     {
         public StatusController(ISettingsService<OmbiSettings> ombi)
         {

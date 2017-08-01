@@ -4,6 +4,9 @@ import { RequestService } from '../services/request.service';
 import { ILandingPageSettings, ICustomizationSettings } from '../interfaces/ISettings';
 import { IRequestCountModel } from '../interfaces/IRequestModel';
 
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageService } from '../services/image.service';
+
 @Component({
   
     templateUrl: './landingpage.component.html',
@@ -11,11 +14,13 @@ import { IRequestCountModel } from '../interfaces/IRequestModel';
 })
 export class LandingPageComponent implements OnInit {
 
-    constructor(private settingsService: SettingsService, private requestService : RequestService) { }
+    constructor(private settingsService: SettingsService, private requestService: RequestService,
+        private images: ImageService, private sanitizer: DomSanitizer) { }
 
     customizationSettings : ICustomizationSettings;
     landingPageSettings: ILandingPageSettings;
     requestCount: IRequestCountModel;
+    background: any;
 
     mediaServerStatus: boolean;
 
@@ -23,7 +28,10 @@ export class LandingPageComponent implements OnInit {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
         this.requestService.getRequestsCount().subscribe(x => this.requestCount = x);
-
+        this.images.getRandomBackground().subscribe(x => {
+            this.background = this.sanitizer.bypassSecurityTrustStyle('url(' + x.url + ')');
+            
+        });
         this.mediaServerStatus = true;
     }
 }

@@ -24,7 +24,8 @@ namespace Ombi.Controllers
     /// </summary>
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
-    public class SettingsController : BaseV1ApiController
+    [ApiV1]
+    public class SettingsController : Controller
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsController" /> class.

@@ -12,7 +12,8 @@ using System.Diagnostics;
 namespace Ombi.Controllers
 {
     [Authorize]
-    public class RequestController : BaseV1ApiController
+    [ApiV1]
+    public class RequestController : Controller
     {
         public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine)
         {

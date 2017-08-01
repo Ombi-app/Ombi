@@ -31,6 +31,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthModule } from './auth/auth.module';
 import { IdentityService } from './services/identity.service';
 import { StatusService } from './services/status.service';
+import { ImageService } from './services/image.service';
 
 
 // Modules
@@ -94,6 +95,7 @@ const routes: Routes = [
         SettingsService,
         IdentityService,
         StatusService,
+ImageService,
     //DragulaService
     ],
     bootstrap: [AppComponent]

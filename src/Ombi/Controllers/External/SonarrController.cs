@@ -11,7 +11,8 @@ using Ombi.Core.Settings.Models.External;
 namespace Ombi.Controllers.External
 {
    [Admin]
-    public class SonarrController : BaseV1ApiController
+   [ApiV1]
+    public class SonarrController : Controller
     {
         public SonarrController(ISonarrApi sonarr, ISettingsService<SonarrSettings> settings)
         {

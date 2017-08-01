@@ -1,51 +1,35 @@
-﻿<div *ngIf="landingPageSettings && customizationSettings">
+﻿<div  *ngIf="landingPageSettings && customizationSettings && background">
 
-    <div *ngIf="customizationSettings.logo" class="landing-logo">
-        <img [src]="customizationSettings.logo" />
-    </div>
+    <style>
+        landingDiv {
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
 
-    <h1>
-        Hey! Welcome back to
-        <span *ngIf="customizationSettings.applicationName">
-            {{customizationSettings.applicationName}}
-        </span>
-        <span *ngIf="!customizationSettings.applicationName">
-            Ombi
-        </span>
-    </h1>
-    <br />
-    <br />
-    <br />
-    <h3 *ngIf="landingPageSettings.noticeEnabled" [innerHtml]="landingPageSettings.noticeText" style="background-color: {{landingPageSettings.noticeBackgroundColor}}"></h3>
-    <div class="col-md-3 landing-box" [routerLink]="['/search']">
-        <div>
-            Search
-        </div>
-    </div>
+        img.bg {
+            /* Set rules to fill background */
+            min-height: 100%;
+            min-width: 1024px;
+            /* Set up proportionate scaling */
+            width: 100%;
+            height: auto;
+            /* Set up positioning */
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
 
-    <div class="col-md-3 col-md-offset-1 landing-box" [routerLink]="['/requests']">
-        <div>
-            View all your requests
-            <br />
-            <br />
-            <br />
-            <div *ngIf="requestCount">
-                Pending Requests: <span>{{requestCount.pending}}</span>
-                <br />
-                Approved Requests: <span>{{requestCount.approved}}</span>
-                <br />
-                Available Requests: <span>{{requestCount.available}}</span>
-            </div>
-        </div>
-    </div>
+        @media screen and (max-width: 1024px) { /* Specific to this particular image */
+            img.bg {
+                left: 50%;
+                margin-left: -512px; /* 50% */
+            }
+        }
 
-    <div class="col-md-3 col-md-offset-1 landing-box">
-        <div>
-            Media Server Status:
-            <span *ngIf="mediaServerStatus"><i class="fa fa-check-circle" style="color: #00c853"></i></span>
-            <span *ngIf="!mediaServerStatus"><i class="fa fa-times-circle" style="color: #d50000"></i></span>
-        </div>
-    </div>
+    </style>
+    <img  class="landingDiv bg" [style.background-image]="background" />
 
 
 

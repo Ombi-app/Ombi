@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using CommandLine;
 
 namespace Ombi
 {
@@ -13,35 +14,18 @@ namespace Ombi
         public static void Main(string[] args)
         {
             Console.Title = "Ombi";
-            var port = 5000;
-            var urlArgs = $"http://*:{port}";
-            if (args.Length <= 0)
-            {
-                Console.WriteLine("No URL provided, we will run on \"http://localhost:5000\"");
-                //Console.WriteLine("Please provider the argument -url e.g. \"ombi.exe -url http://ombi.io:80/\"");
-            }
-            else
-            {
-                if (args[0].Contains("-url"))
+            var options = new Options();
+            int port = 0;
+            string host = string.Empty;
+            Parser.Default.ParseArguments<Options>(args)
+                .WithParsed(o =>
                 {
-                    try
-                    {
-                        urlArgs = args[0].Replace("-url ", string.Empty);
-                        var index = urlArgs.IndexOf(':', urlArgs.IndexOf(':') + 1);
-                        var portString = urlArgs.Substring(index + 1, urlArgs.Length - index - 1);
-                        port = int.Parse(portString);
-
-                        urlArgs = urlArgs.Substring(0, urlArgs.Length - portString.Length - 1);
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine("Port is not defined or correctly formatted");
-                        Console.WriteLine(e.Message);
-                        Console.ReadLine();
-                        Environment.Exit(1);
-                    }
-                }
-            }
+                    port = o.Port;
+                    host = o.Host;
+                });
+            
+            var urlArgs = $"{host}:{port}";
+            
             var urlValue = string.Empty;
             using (var ctx = new OmbiContext())
             {
@@ -67,7 +51,7 @@ namespace Ombi
                     urlValue = url.Value;
                     port = int.Parse(dbPort.Value);
                 }
-                else if (!url.Value.Equals(urlArgs))
+                if (url != null && !url.Value.Equals(host))
                 {
                     url.Value = urlArgs;
                     ctx.SaveChanges();
@@ -84,16 +68,25 @@ namespace Ombi
 
             Console.WriteLine($"We are running on {urlValue}");
 
-            var host = new WebHostBuilder()
+            var webHost = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseIISIntegration()
-                .UseUrls($"{urlValue}:{port}")
+                .UseUrls(urlArgs)
                 .UseStartup<Startup>()
                 .Build();
 
 
-            host.Run();
+            webHost.Run();
         }
+    }
+
+    public class Options
+    {
+        [Option('h', "host", Required = false, HelpText = "The Hostname default is http://*", Default ="http://*")]
+        public string Host { get; set; }
+
+        [Option('p', "port", Required = false, HelpText = "The port, default is 5000", Default =5000)]
+        public int Port { get; set; }
     }
 }

@@ -13,7 +13,8 @@ namespace Ombi.Controllers.External
     /// 
     /// </summary>
     [Admin]
-    public class EmbyController : BaseV1ApiController
+    [ApiV1]
+    public class EmbyController : Controller
     {
         /// <summary>
         /// 

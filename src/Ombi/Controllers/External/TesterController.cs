@@ -15,7 +15,8 @@ namespace Ombi.Controllers.External
     /// </summary>
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
-    public class TesterController : BaseV1ApiController
+    [ApiV1]
+    public class TesterController : Controller
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TesterController" /> class.

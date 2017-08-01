@@ -34,7 +34,8 @@ namespace Ombi.Controllers
     /// </summary>
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [PowerUser]
-    public class IdentityController : BaseV1ApiController
+    [ApiV1]
+    public class IdentityController : Controller
     {
         public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
