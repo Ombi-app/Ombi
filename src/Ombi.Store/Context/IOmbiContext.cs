@@ -23,7 +23,7 @@ namespace Ombi.Store.Context
         DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
         void Seed();
-
+        DbSet<Audit> Audit { get; set; }
         DbSet<MovieRequests> MovieRequests { get; set; }
         DbSet<TvRequests> TvRequests { get; set; }
         DbSet<ChildRequests> ChildRequests { get; set; }

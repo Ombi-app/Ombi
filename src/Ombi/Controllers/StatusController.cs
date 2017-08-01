@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Mvc;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Update;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Controllers
 {

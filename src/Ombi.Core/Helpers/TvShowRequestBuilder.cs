@@ -123,17 +123,20 @@ namespace Ombi.Core.Helpers
             else if (tv.LatestSeason)
             {
                 var episodes = await TvApi.EpisodeLookup(ShowInfo.id);
-                var latest = episodes.OrderBy(x => x.season).FirstOrDefault();
+                var latest = episodes.OrderByDescending(x => x.season).FirstOrDefault();
                 var episodesRequests = new List<EpisodeRequests>();
                 foreach (var ep in episodes)
                 {
-                    episodesRequests.Add(new EpisodeRequests
+                    if (ep.season == latest.season)
                     {
-                        EpisodeNumber = ep.number,
-                        AirDate = DateTime.Parse(ep.airdate),
-                        Title = ep.name,
-                        Url = ep.url
-                    });
+                        episodesRequests.Add(new EpisodeRequests
+                        {
+                            EpisodeNumber = ep.number,
+                            AirDate = DateTime.Parse(ep.airdate),
+                            Title = ep.name,
+                            Url = ep.url
+                        });
+                    }
                 }
                 ChildRequest.SeasonRequests.Add(new SeasonRequests
                 {
@@ -144,7 +147,7 @@ namespace Ombi.Core.Helpers
             else if (tv.FirstSeason)
             {
                 var episodes = await TvApi.EpisodeLookup(ShowInfo.id);
-                var first = episodes.OrderByDescending(x => x.season).FirstOrDefault();
+                var first = episodes.OrderBy(x => x.season).FirstOrDefault();
                 var episodesRequests = new List<EpisodeRequests>();
                 foreach (var ep in episodes)
                 {

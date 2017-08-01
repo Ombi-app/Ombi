@@ -34,6 +34,8 @@ namespace Ombi.Store.Context
         public DbSet<MovieIssues> MovieIssues { get; set; }
         public DbSet<TvIssues> TvIssues { get; set; }
 
+        public DbSet<Audit> Audit { get; set; }
+
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -44,6 +46,30 @@ namespace Ombi.Store.Context
 
         public void Seed()
         {
+
+            // Add the tokens
+            var fanArt = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
+            if (fanArt == null)
+            {
+                ApplicationConfigurations.Add(new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.FanartTv,
+                    Value = "4b6d983efa54d8f45c68432521335f15"
+                });
+                SaveChanges();
+            }
+            var movieDb = ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.FanartTv);
+            if (movieDb == null)
+            {
+                ApplicationConfigurations.Add(new ApplicationConfiguration
+                {
+                    Type = ConfigurationTypes.TheMovieDb,
+                    Value = "b8eabaf5608b88d0298aa189dd90bf00"
+                });
+                SaveChanges();
+            }
+
+
             // Check if templates exist
             var templates = NotificationTemplates.ToList();
             if (templates.Any())

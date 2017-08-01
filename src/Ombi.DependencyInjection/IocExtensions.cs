@@ -28,8 +28,10 @@ using Ombi.Store.Repository;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
+using Ombi.Api.FanartTv;
 using Ombi.Api.Service;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Senders;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 
@@ -71,6 +73,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRadarrApi, RadarrApi>();
             services.AddTransient<IDiscordApi, DiscordApi>();
             services.AddTransient<IOmbiService, OmbiService>();
+            services.AddTransient<IFanartTvApi, FanartTvApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)
@@ -86,6 +89,8 @@ namespace Ombi.DependencyInjection
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddTransient<IAuditRepository, AuditRepository>();
+            services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
             //services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }

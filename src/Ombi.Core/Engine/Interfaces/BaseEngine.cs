@@ -27,22 +27,19 @@ namespace Ombi.Core.Engine.Interfaces
         protected string Username => UserPrinciple.Identity.Name;
 
         private OmbiUser _user;
-        protected async Task<OmbiUser> User()
+        protected async Task<OmbiUser> GetUser()
         {
-            if(_user == null)
-                _user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == Username);
-
-            return _user;
+            return _user ?? (_user = await UserManager.Users.FirstOrDefaultAsync(x => x.UserName == Username));
         }
 
         protected async Task<string> UserAlias()
         {
-            return (await User()).UserAlias;
+            return (await GetUser()).UserAlias;
         }
 
         protected async Task<bool> IsInRole(string roleName)
         {
-            return await UserManager.IsInRoleAsync(await User(), roleName);
+            return await UserManager.IsInRoleAsync(await GetUser(), roleName);
         }
         
         public async Task<IEnumerable<RuleResult>> RunRequestRules(BaseRequest model)

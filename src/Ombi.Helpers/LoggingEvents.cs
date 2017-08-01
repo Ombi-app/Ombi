@@ -4,6 +4,8 @@ namespace Ombi.Helpers
 {
     public class LoggingEvents
     {
+        public static EventId Authentication => new EventId(500);
+
         public static EventId ApiException => new EventId(1000);
         public static EventId RadarrApiException => new EventId(1001);
         

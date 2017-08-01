@@ -57,7 +57,7 @@ namespace Ombi.Core.Engine
             var fullMovieName =
                 $"{movieInfo.Title}{(!string.IsNullOrEmpty(movieInfo.ReleaseDate) ? $" ({DateTime.Parse(movieInfo.ReleaseDate).Year})" : string.Empty)}";
 
-            var userDetails = await User();
+            var userDetails = await GetUser();
 
             var requestModel = new MovieRequests
             {

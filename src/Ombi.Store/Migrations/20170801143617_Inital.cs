@@ -51,6 +51,23 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Audit",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AuditArea = table.Column<int>(nullable: false),
+                    AuditType = table.Column<int>(nullable: false),
+                    DateTime = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    User = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Audit", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GlobalSettings",
                 columns: table => new
                 {
@@ -544,6 +561,9 @@ namespace Ombi.Store.Migrations
 
             migrationBuilder.DropTable(
                 name: "ApplicationConfiguration");
+
+            migrationBuilder.DropTable(
+                name: "Audit");
 
             migrationBuilder.DropTable(
                 name: "GlobalSettings");

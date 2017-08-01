@@ -4,22 +4,19 @@ using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
-using Ombi.Core.IdentityResolver;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
-using Ombi.Store.Repository.Requests;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Engine
 {
@@ -28,22 +25,24 @@ namespace Ombi.Core.Engine
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
             IRuleEvaluator rule, UserManager<OmbiUser> manager,
-            ITvSender sender) : base(user, requestService, rule, manager)
+            ITvSender sender, IAuditRepository audit) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
             Mapper = map;
             TvSender = sender;
+            Audit = audit;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
         private ITvSender TvSender {get;}
+        private IAuditRepository Audit { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
         {
-            var user = await User();
+            var user = await GetUser();
 
             var tvBuilder = new TvShowRequestBuilder(TvApi);
             (await tvBuilder
@@ -62,6 +61,8 @@ namespace Ombi.Core.Engine
                     ErrorMessage = results.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
                 };
             }
+
+            await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tv.Title}", Username);
 
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.Id);
             if (existingRequest != null)
@@ -128,6 +129,7 @@ namespace Ombi.Core.Engine
 
         public async Task<TvRequests> UpdateTvRequest(TvRequests request)
         {
+            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
@@ -138,6 +140,7 @@ namespace Ombi.Core.Engine
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
+            await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
             var allRequests = TvRepository.GetChild();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
@@ -149,12 +152,14 @@ namespace Ombi.Core.Engine
         public async Task RemoveTvChild(int requestId)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
             await TvRepository.DeleteChild(request);
         }
 
         public async Task RemoveTvRequest(int requestId)
         {
             var request = await TvRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+            await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
             await TvRepository.Delete(request);
         }
 

@@ -13,5 +13,7 @@ namespace Ombi.Store.Entities
     {
         Url,
         Port,
+        FanartTv,
+        TheMovieDb
     }
 }

@@ -1,16 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Ombi.Core
+namespace Ombi.Core.Senders
 {
     public class TvSender : ITvSender
     {
@@ -99,7 +99,7 @@ namespace Ombi.Core
 
                     // Ok, now let's sort out the episodes.
                     var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
-                    while (sonarrEpisodes.Count() == 0)
+                    while (!sonarrEpisodes.Any())
                     {
                         // It could be that the series metadata is not ready yet. So wait
                         sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);

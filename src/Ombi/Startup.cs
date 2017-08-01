@@ -178,8 +178,6 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
         {
-            //loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            //loggerFactory.AddDebug();
             var options = (IOptions<UserSettings>) app.ApplicationServices.GetService(
                 typeof(IOptions<UserSettings>));
 

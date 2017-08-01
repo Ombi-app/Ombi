@@ -138,6 +138,26 @@ namespace Ombi.Store.Migrations
                     b.ToTable("ApplicationConfiguration");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.Audit", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("AuditArea");
+
+                    b.Property<int>("AuditType");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("User");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Audit");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>
                 {
                     b.Property<int>("Id")

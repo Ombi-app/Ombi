@@ -22,13 +22,14 @@ export class OmbiComponent implements OnInit {
                 collectAnalyticData: [x.collectAnalyticData],
                 apiKey: [{ value: x.apiKey, disabled: true }],
                 externalUrl: [x.externalUrl],
-            });            
+                allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate]
+            });
         });
     }
 
 
     refreshApiKey() {
-        
+
     }
 
     onSubmit(form: FormGroup) {
