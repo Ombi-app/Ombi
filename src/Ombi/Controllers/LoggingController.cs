@@ -15,36 +15,37 @@ namespace Ombi.Controllers
         }
         
         private ILogger Logger { get; }
+        private const string Message = "Exception: {0} at {1}. Stacktrade {2}";
 
         [HttpPost]
-        public void Log([FromBody]UiLoggingModel l)
+        public IActionResult Log([FromBody]UiLoggingModel l)
         {
             l.DateTime = DateTime.UtcNow;
-            var exception = new Exception(l.Description, new Exception(l.StackTrace));
-
             switch (l.Level)
             {
                 case LogLevel.Trace:
-                    Logger.LogTrace(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogTrace(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.Debug:
-                    Logger.LogDebug(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogDebug(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.Information:
-                    Logger.LogInformation(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogInformation(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.Warning:
-                    Logger.LogWarning(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogWarning(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.Error:
-                    Logger.LogError(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogError(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.Critical:
-                    Logger.LogCritical(new EventId(l.Id), "Exception: {0} at {1}. Stacktrade {2}", l.Description, l.Location, l.StackTrace);
+                    Logger.LogCritical(new EventId(l.Id), Message, l.Description, l.Location, l.StackTrace);
                     break;
                 case LogLevel.None:
                     break;
             }
+
+            return Ok();
         }
     }
 }
