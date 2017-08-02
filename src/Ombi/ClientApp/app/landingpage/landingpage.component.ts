@@ -29,7 +29,7 @@ export class LandingPageComponent implements OnInit {
         this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
         this.requestService.getRequestsCount().subscribe(x => this.requestCount = x);
         this.images.getRandomBackground().subscribe(x => {
-            this.background = this.sanitizer.bypassSecurityTrustStyle('linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.3) 20.1%, rgba(0,0,0,0.3) 80.1%, transparent 80%), url(' + x.url + ')');
+            this.background = this.sanitizer.bypassSecurityTrustStyle('linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(' + x.url + ')');
             
         });
         this.mediaServerStatus = true;

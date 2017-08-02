@@ -1,52 +1,35 @@
-﻿<div  *ngIf="landingPageSettings && customizationSettings && background">
+﻿<div *ngIf="landingPageSettings && customizationSettings && background">
+    <img class="landingDiv bg" [style.background-image]="background" />
 
-    <style>
-        
-
-
-         landingDiv {
-             -webkit-background-size: cover;
-             -moz-background-size: cover;
-             -o-background-size: cover;
-             background-size: cover;
-         }
-
-         div.centered {
-             position: fixed; 
-             top: 50%;
-             left: 50%;
-             transform: translate(-50%, -50%);
-         }
-
-        img.bg {
-            /* Set rules to fill background */
-            min-height: 100%;
-            min-width: 1024px;
-            /* Set up proportionate scaling */
-            width: 100%;
-            height: auto;
-            /* Set up positioning */
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1; 
-            /*background-image: linear-gradient(-10deg, transparent 20%, rgba(255, 255, 255, 0.3) 20%, rgba(0, 0, 255, 0.3) 80%, transparent 80%), url("https://assets.fanart.tv/fanart/movies/155/moviebackground/the-dark-knight-51f269c2ce53a.jpg")*/
-        }
-
-        @media screen and (max-width: 1024px) { /* Specific to this particular image */
-            img.bg {
-                left: 50%;
-                margin-left: -512px; /* 50% */
-            }
-        }
-    </style>
-    
-
-
-    <img  class="landingDiv bg"  [style.background-image]="background"/>
-    
-    <div class="centered">
-        <h3>Notice</h3>
+    <div class="centered col-md-12">
+        <div class="row">
+            <div class="col-md-push-5 col-md-2">
+                <div *ngIf="customizationSettings.logo">
+                    <img [src]="customizationSettings.logo" style="width:100%"/>
+                </div>
+                <div *ngIf="!customizationSettings.logo">
+                    <img src="/images/logo.png" style="width:100%" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 col-md-push-3 vcenter">
+                <div *ngIf="landingPageSettings.noticeEnabled">
+                    <h3><i class="fa fa-bell-o"></i> <b>Notice</b></h3>
+                    <span [innerHtml]="landingPageSettings.noticeText"></span>
+                </div>
+                <div>
+                    <div *ngIf="mediaServerStatus">
+                        <h3 class="online"><i class="fa fa-check-circle "></i> Currently Online</h3>
+                        <span>The media server is currently online</span>
+                        <span>Check this page for continous site updates.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 col-md-push-4 vcenter">
+                <button [routerLink]="['/search']" class="btn btn-lg btn-success-outline">Contine</button>
+            </div>
+        </div>
     </div>
 
 </div>

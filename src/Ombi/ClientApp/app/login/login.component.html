@@ -2,7 +2,9 @@
 you can substitue the span of reauth email for a input with the email and
 include the remember me checkbox
 -->
-<div *ngIf="form && customizationSettings">
+<div *ngIf="form && customizationSettings && background">
+
+    <img class="landingDiv bg" [style.background-image]="background" />
     <div class="container" id="login">
         <div class="card card-container">
             <!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
@@ -15,10 +17,10 @@ include the remember me checkbox
                
                 <input type="email" id="inputEmail" class="form-control" formControlName="username" placeholder="Username" autofocus>
                 <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Password">
-                <button class="btn btn-success-outline" [disabled]="form.invalid" type="submit">Sign in</button>
+                <button class="btn btn-success" type="submit">Sign in</button>
             </form><!-- /form -->
-            <a [routerLink]="['/reset']" class="forgot-password">
-                Reset your password?
+            <a [routerLink]="['/reset']" class="forgot-password col-md-12">
+                <b>Forgot your password?</b>
             </a>
         </div><!-- /card-container -->
     </div><!-- /container -->

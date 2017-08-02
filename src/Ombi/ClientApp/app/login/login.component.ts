@@ -8,6 +8,9 @@ import { NotificationService } from '../services/notification.service';
 import { SettingsService } from '../services/settings.service';
 import { ICustomizationSettings } from '../interfaces/ISettings';
 
+import { DomSanitizer } from '@angular/platform-browser';
+import { ImageService } from '../services/image.service';
+
 
 @Component({
     templateUrl: './login.component.html',
@@ -17,7 +20,7 @@ export class LoginComponent implements OnInit {
 
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
-     private fb: FormBuilder, private settingsService : SettingsService) {
+        private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer) {
         this.form = this.fb.group({
             username: ["", [Validators.required]],
             password: ["", [Validators.required]]
@@ -32,9 +35,13 @@ export class LoginComponent implements OnInit {
     
     form: FormGroup;
     customizationSettings : ICustomizationSettings;
+    background: any;
 
     ngOnInit(): void {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
+        this.images.getRandomBackground().subscribe(x => {
+            this.background = this.sanitizer.bypassSecurityTrustStyle('linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(' + x.url + ')');
+        });
     }
 
 
