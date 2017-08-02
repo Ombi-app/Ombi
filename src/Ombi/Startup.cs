@@ -155,6 +155,7 @@ namespace Ombi
             //services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
+            services.Configure<LandingPageBackground>(Configuration.GetSection("LandingPageBackground"));
 
             services.AddHangfire(x =>
             {

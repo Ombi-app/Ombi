@@ -14,7 +14,7 @@ namespace Ombi
         public static void Main(string[] args)
         {
             Console.Title = "Ombi";
-            var options = new Options();
+
             int port = 0;
             string host = string.Empty;
             Parser.Default.ParseArguments<Options>(args)
@@ -86,7 +86,7 @@ namespace Ombi
         [Option('h', "host", Required = false, HelpText = "The Hostname default is http://*", Default ="http://*")]
         public string Host { get; set; }
 
-        [Option('p', "port", Required = false, HelpText = "The port, default is 5000", Default =5000)]
+        [Option('p', "port", Required = false, HelpText = "The port, default is 5000", Default = 5000)]
         public int Port { get; set; }
     }
 }

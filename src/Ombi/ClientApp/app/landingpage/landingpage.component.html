@@ -1,12 +1,22 @@
 ﻿<div  *ngIf="landingPageSettings && customizationSettings && background">
 
     <style>
-        landingDiv {
-            -webkit-background-size: cover;
-            -moz-background-size: cover;
-            -o-background-size: cover;
-            background-size: cover;
-        }
+        
+
+
+         landingDiv {
+             -webkit-background-size: cover;
+             -moz-background-size: cover;
+             -o-background-size: cover;
+             background-size: cover;
+         }
+
+         div.centered {
+             position: fixed; 
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+         }
 
         img.bg {
             /* Set rules to fill background */
@@ -19,6 +29,8 @@
             position: fixed;
             top: 0;
             left: 0;
+            z-index: -1; 
+            /*background-image: linear-gradient(-10deg, transparent 20%, rgba(255, 255, 255, 0.3) 20%, rgba(0, 0, 255, 0.3) 80%, transparent 80%), url("https://assets.fanart.tv/fanart/movies/155/moviebackground/the-dark-knight-51f269c2ce53a.jpg")*/
         }
 
         @media screen and (max-width: 1024px) { /* Specific to this particular image */
@@ -27,10 +39,14 @@
                 margin-left: -512px; /* 50% */
             }
         }
-
     </style>
-    <img  class="landingDiv bg" [style.background-image]="background" />
+    
 
 
+    <img  class="landingDiv bg"  [style.background-image]="background"/>
+    
+    <div class="centered">
+        <h3>Notice</h3>
+    </div>
 
 </div>
