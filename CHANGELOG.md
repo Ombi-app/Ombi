@@ -4,6 +4,16 @@
 
 ### **New Features**
 
+- Added Pushbullet notifications #1459 #865. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added the logging endpoint at /api/v1/Logging for the UI logs #1465. [tidusjar]
+
 - Change the RID. [Jamie.Rees]
 
 - Update README.md. [Jamie]
@@ -83,6 +93,18 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
+
+- Made the placeholder color on the login page a bit lighter #865. [Jamie.Rees]
+
+- Landing and login page changes #865 #1485. [tidusjar]
+
+- #1458 #865 More work on landing. [Jamie.Rees]
+
+- Working on the landing page #1458 #865. [tidusjar]
+
+- A lot of clean up and added a new Image api #865. [Jamie.Rees]
+
+- Cleaned up the Logging API slightly #1465 #865. [Jamie.Rees]
 
 - Fixed the Identity Server discovery bug #1456 #865. [tidusjar]
 

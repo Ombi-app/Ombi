@@ -42,7 +42,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task NewRequest(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.NewRequest, model);
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.NewRequest, model);
 
             var notification = new NotificationMessage
             {
@@ -54,7 +54,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task Issue(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.Issue, model);
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.Issue, model);
 
             var notification = new NotificationMessage
             {
@@ -87,7 +87,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task RequestDeclined(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestDeclined, model);
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestDeclined, model);
 
             var notification = new NotificationMessage
             {
@@ -98,7 +98,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task RequestApproved(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestApproved, model);
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestApproved, model);
 
             var notification = new NotificationMessage
             {
@@ -110,7 +110,7 @@ namespace Ombi.Notifications.Agents
 
         protected override async Task AvailableRequest(NotificationOptions model, PushbulletSettings settings)
         {
-            var parsed = await LoadTemplate(NotificationAgent.Discord, NotificationType.RequestAvailable, model);
+            var parsed = await LoadTemplate(NotificationAgent.Pushbullet, NotificationType.RequestAvailable, model);
 
             var notification = new NotificationMessage
             {
@@ -127,7 +127,7 @@ namespace Ombi.Notifications.Agents
             }
             catch (Exception e)
             {
-                Logger.LogError(LoggingEvents.DiscordNotification, e, "Failed to send Pushbullet Notification");
+                Logger.LogError(LoggingEvents.PushbulletNotification, e, "Failed to send Pushbullet Notification");
             }
         }
 
