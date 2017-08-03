@@ -24,16 +24,20 @@ namespace Ombi.Controllers.External
         /// <param name="service">The service.</param>
         /// <param name="notification">The notification.</param>
         /// <param name="emailN">The notification.</param>
-        public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN)
+        public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
+            IPushbulletNotification pushbullet)
         {
             Service = service;
             DiscordNotification = notification;
             EmailNotification = emailN;
+            PushbulletNotification = pushbullet;
         }
 
         private INotificationService Service { get; }
         private IDiscordNotification DiscordNotification { get; }
         private IEmailNotification EmailNotification { get; }
+        private IPushbulletNotification PushbulletNotification { get; }
+
 
         /// <summary>
         /// Sends a test message to discord using the provided settings
@@ -45,7 +49,22 @@ namespace Ombi.Controllers.External
         {
             settings.Enabled = true;
             DiscordNotification.NotifyAsync(
-                new NotificationOptions {NotificationType = NotificationType.Test, RequestId = -1}, settings);
+                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+            return true;
+        }     
+        
+        /// <summary>
+        /// Sends a test message to discord using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("pushbullet")]
+        public bool Pushbullet([FromBody] PushbulletSettings settings)
+        {
+            settings.Enabled = true;
+            PushbulletNotification.NotifyAsync(
+                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
             return true;
         }

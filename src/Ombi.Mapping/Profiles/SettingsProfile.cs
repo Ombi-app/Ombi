@@ -10,6 +10,7 @@ namespace Ombi.Mapping.Profiles
         {
             CreateMap<EmailNotificationsViewModel, EmailNotificationSettings>().ReverseMap();
             CreateMap<DiscordNotificationsViewModel, DiscordNotificationSettings>().ReverseMap();
+            CreateMap<PushbulletNotificationViewModel, PushbulletSettings>().ReverseMap();
         }
     }
 }

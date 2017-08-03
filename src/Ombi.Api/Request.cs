@@ -78,6 +78,11 @@ namespace Ombi.Api
             ContentHeaders.Add(new KeyValuePair<string, string>(key, value));
         }
 
+        public void ApplicationJsonContentType()
+        {
+            AddContentHeader("Content-Type", "application/json");
+        }
+
         public void AddQueryString(string key, string value)
         {
             if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(value)) return;

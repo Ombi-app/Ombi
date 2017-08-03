@@ -67,7 +67,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Notifications.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Service", "Ombi.Api.Service\Ombi.Api.Service.csproj", "{A0892896-F5BD-47E2-823E-DFCE82514EEC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.FanartTv", "Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj", "{FD947E63-A0D2-4878-8378-2005D5E9AB8A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.FanartTv", "Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj", "{FD947E63-A0D2-4878-8378-2005D5E9AB8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Pushbullet", "Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj", "{E237CDF6-D044-437D-B157-E9A3CC0BCF53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -171,6 +173,10 @@ Global
 		{FD947E63-A0D2-4878-8378-2005D5E9AB8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD947E63-A0D2-4878-8378-2005D5E9AB8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD947E63-A0D2-4878-8378-2005D5E9AB8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E237CDF6-D044-437D-B157-E9A3CC0BCF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E237CDF6-D044-437D-B157-E9A3CC0BCF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E237CDF6-D044-437D-B157-E9A3CC0BCF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E237CDF6-D044-437D-B157-E9A3CC0BCF53}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -194,5 +200,6 @@ Global
 		{2C7836E7-B120-40A6-B641-DDAA02FBAE23} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
 		{A0892896-F5BD-47E2-823E-DFCE82514EEC} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{FD947E63-A0D2-4878-8378-2005D5E9AB8A} = {9293CA11-360A-4C20-A674-B9E794431BF5}
+		{E237CDF6-D044-437D-B157-E9A3CC0BCF53} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 EndGlobal

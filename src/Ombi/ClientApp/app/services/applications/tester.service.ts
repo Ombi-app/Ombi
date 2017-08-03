@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from '../service.helpers';
 
-import { IDiscordNotifcationSettings, IEmailNotificationSettings } from '../../interfaces/INotifcationSettings'
+import { IDiscordNotifcationSettings, IEmailNotificationSettings, IPushbulletNotificationSettings } from '../../interfaces/INotifcationSettings'
 
 
 @Injectable()
@@ -15,6 +15,10 @@ export class TesterService extends ServiceAuthHelpers {
 
     discordTest(settings: IDiscordNotifcationSettings): Observable<boolean> {
         return this.http.post(`${this.url}discord`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    pushbulletTest(settings: IPushbulletNotificationSettings): Observable<boolean> {
+        return this.http.post(`${this.url}pushbullet`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 
     emailTest(settings: IEmailNotificationSettings): Observable<boolean> {

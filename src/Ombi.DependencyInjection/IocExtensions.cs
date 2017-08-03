@@ -29,6 +29,7 @@ using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
 using Ombi.Api.FanartTv;
+using Ombi.Api.Pushbullet;
 using Ombi.Api.Service;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
@@ -72,6 +73,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
             services.AddTransient<IDiscordApi, DiscordApi>();
+            services.AddTransient<IPushbulletApi, PushbulletApi>();
             services.AddTransient<IOmbiService, OmbiService>();
             services.AddTransient<IFanartTvApi, FanartTvApi>();
         }
@@ -82,7 +84,6 @@ namespace Ombi.DependencyInjection
 
             services.AddScoped<IOmbiContext, OmbiContext>();
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
-            //services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
             services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
@@ -91,7 +92,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
             services.AddTransient<IAuditRepository, AuditRepository>();
             services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
-            //services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)
@@ -104,6 +104,7 @@ namespace Ombi.DependencyInjection
 
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
+            services.AddTransient<IPushbulletNotification, PushbulletNotification>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

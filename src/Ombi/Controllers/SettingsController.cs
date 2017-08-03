@@ -261,6 +261,40 @@ namespace Ombi.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Saves the pushbullet notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/pushbullet")]
+        public async Task<bool> PushbulletNotificationSettings([FromBody] PushbulletNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<PushbulletSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the pushbullet Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/pushbullet")]
+        public async Task<PushbulletNotificationViewModel> PushbulletNotificationSettings()
+        {
+            var settings = await Get<PushbulletSettings>();
+            var model = Mapper.Map<PushbulletNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushbullet);
+
+            return model;
+        }
+
         private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
         {
             var templates = await TemplateRepository.GetAllTemplates(agent);

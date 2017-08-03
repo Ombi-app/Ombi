@@ -49,3 +49,9 @@ export interface IDiscordNotifcationSettings extends INotificationSettings{
     username: string,
     notificationTemplates: INotificationTemplates[],
 }
+
+export interface IPushbulletNotificationSettings extends INotificationSettings {
+    accessToken: string,
+    notificationTemplates: INotificationTemplates[],
+    channelTag: string;
+}
