@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "gulp test"
+    "publish": "gulp publish"
   },
   "dependencies": {
     "@angular/animations": "4.1.3",

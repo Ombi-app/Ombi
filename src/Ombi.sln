@@ -8,7 +8,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{9D30CCF8-A115-4EB7-A34D-07780D752789}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
+		..\build.cake = ..\build.cake
 		..\BuildTask.ps1 = ..\BuildTask.ps1
+		..\CHANGELOG.md = ..\CHANGELOG.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Core", "Ombi.Core\Ombi.Core.csproj", "{F56E79C7-791D-4668-A0EC-29E3BBC8D24B}"
@@ -69,7 +71,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Service", "Ombi.Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.FanartTv", "Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj", "{FD947E63-A0D2-4878-8378-2005D5E9AB8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Pushbullet", "Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj", "{E237CDF6-D044-437D-B157-E9A3CC0BCF53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Pushbullet", "Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj", "{E237CDF6-D044-437D-B157-E9A3CC0BCF53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

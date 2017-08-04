@@ -238,3 +238,7 @@ _Pvt_Extensions
 *.ncrunchsolution
 
 *.txt
+
+
+# CAKE - C# Make
+/Tools/*

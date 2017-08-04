@@ -1,0 +1,104 @@
+version: 3.0.{build}
+configuration: Release
+os: Visual Studio 2017
+environment:
+  nodejs_version: "7.8.0"
+
+# Install scripts. (runs after repo cloning)
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+install:
+  # Get the latest stable version of Node.js or io.js
+  - ps: Install-Product node $env:nodejs_version
+before_build:
+- ps: .\BuildTask.ps1 -env "live"
+- cmd: cd src/ombi
+- node --version
+- appveyor-retry dotnet restore
+- appveyor-retry npm install -g gulp 
+- appveyor-retry npm install
+- gulp publish
+build_script:
+- dotnet build
+#- dotnet test ./Ombi.Core.Tests/Ombi.Core.Tests.csproj
+after_build:
+- dotnet publish -c Release -r win10-x64
+- dotnet publish -c Release -r osx.10.12-x64
+- dotnet publish -c Release -r ubuntu.16.04-x64
+- dotnet publish -c Release -r debian.8-x64
+- dotnet publish -c Release -r centos.7-x64
+- dotnet publish "../Ombi.Updater" -c Release -r win10-x64
+- dotnet publish "../Ombi.Updater" -c Release -r osx.10.12-x64
+- dotnet publish "../Ombi.Updater" -c Release -r ubuntu.16.04-x64
+- dotnet publish "../Ombi.Updater" -c Release -r debian.8-x64
+- dotnet publish "../Ombi.Updater" -c Release -r centos.7-x64    
+# Copy over the updater files so we can include them in the .zip
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.dll"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.exe" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Ombi.Updater.exe"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater.dll"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Ombi.Updater"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\ubuntu.16.04-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.04-x64\publish\Ombi.Updater.dll"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\ubuntu.16.04-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.04-x64\publish\Ombi.Updater"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater.dll"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Ombi.Updater"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater.dll"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi.Updater\bin\release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Ombi.Updater"
+
+#Copy the swagger files
+
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.04-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish\Swagger.xml"
+- copy "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\Swagger.xml" "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish\Swagger.xml"
+- cmd: >-
+    dir %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
+    
+    
+    dir %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64
+
+    
+    7z a Ombi_windows.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\win10-x64\publish
+    
+    
+    7z a Ombi_osx.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.10.12-x64\publish
+    
+    
+    7z a Ombi_ubuntu.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.16.04-x64\publish
+    
+    
+    7z a Ombi_debian.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.8-x64\publish
+    
+    
+    7z a Ombi_centos.zip %APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.7-x64\publish
+
+    
+    appveyor PushArtifact Ombi_windows.zip
+    
+    
+    appveyor PushArtifact Ombi_osx.zip
+    
+    
+    appveyor PushArtifact Ombi_ubuntu.zip
+    
+    
+    appveyor PushArtifact Ombi_debian.zip
+    
+    
+    appveyor PushArtifact Ombi_centos.zip
+    
+    
+
+#cache:
+#- '%USERPROFILE%\.nuget\packages'
+deploy:
+- provider: GitHub
+  release: Ombi v$(appveyor_build_version)
+  auth_token:
+    secure: jDpp1/WUQl3uN41fNI3VeZoRZbDiDfs3GPQ1v+C5ZNE3cWdnUvuJfCCfUbYUV1Rp
+  draft: true
+  on:
+    branch: master
+
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
