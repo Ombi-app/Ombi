@@ -102,7 +102,7 @@ var runScriptSettings = new NpmRunScriptSettings {
 	};
 	
 	NpmRunScript(runScriptSettings);
-})
+});
 
 Task("Build")
     .IsDependentOn("Restore")
