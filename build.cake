@@ -75,7 +75,7 @@ Task("Clean")
 
 Task("Restore")
     .IsDependentOn("Clean")
-	.IsDependentOn("NPM")
+	.IsDependentOn("Gulp Publish")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);
@@ -90,15 +90,19 @@ var settings = new NpmInstallSettings {
 	};
 
 	NpmInstall(settings);
+});
 
-	var runScriptSettings = new NpmRunScriptSettings {
+Task("Gulp Publish")
+.IsDependentOn("NPM")
+.Does(() => {
+
+var runScriptSettings = new NpmRunScriptSettings {
 		ScriptName="publish",
 		WorkingDirectory = webProjDir,
 	};
 	
 	NpmRunScript(runScriptSettings);
-});
-
+})
 
 Task("Build")
     .IsDependentOn("Restore")
@@ -130,6 +134,7 @@ Task("Publish-Windows")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp1.1/win10-x64/published");
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp1.1/win10-x64/Swagger.xml", buildDir + "/netcoreapp1.1/win10-x64/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -140,6 +145,7 @@ Task("Publish-OSX")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp1.1/osx.10.12-x64/published");
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp1.1/osx.10.12-x64/Swagger.xml", buildDir + "/netcoreapp1.1/osx.10.12-x64/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
@@ -150,6 +156,7 @@ Task("Publish-Ubuntu")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp1.1/ubuntu.16.04-x64/published");
 
      DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp1.1/ubuntu.16.04-x64/Swagger.xml", buildDir + "/netcoreapp1.1/ubuntu.16.04-x64/published/Swagger.xml");
      DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 Task("Publish-Debian")
@@ -159,6 +166,7 @@ Task("Publish-Debian")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp1.1/debian.8-x64/published");
 
      DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp1.1/debian.8-x64/Swagger.xml", buildDir + "/netcoreapp1.1/debian.8-x64/published/Swagger.xml");
      DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 Task("Publish-Centos")
@@ -168,6 +176,7 @@ Task("Publish-Centos")
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp1.1/centos.7-x64/published");
 
      DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    CopyFile(buildDir + "/netcoreapp1.1/centos.7-x64/Swagger.xml", buildDir + "/netcoreapp1.1/centos.7-x64/published/Swagger.xml");
      DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
