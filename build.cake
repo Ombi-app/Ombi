@@ -84,7 +84,7 @@ Task("Restore")
 Task("NPM")
 .Does(() => {
 var settings = new NpmInstallSettings {
-		LogLevel = NpmLogLevel.Verbose,
+		LogLevel = NpmLogLevel.Silent,
 		WorkingDirectory = webProjDir,
 		Production = true
 	};
