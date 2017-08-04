@@ -13,19 +13,19 @@ build_script:
 after_build:
 - cmd: >-
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcore1.1\windows.zip"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\windows.zip"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcore1.1\osx.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\osx.tar.gz"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcore1.1\ubuntu.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\ubuntu.tar.gz"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcore1.1\debian.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\debian.tar.gz"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcore1.1\centos.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp1.1\centos.tar.gz"
     
     
 
