@@ -33,8 +33,8 @@ namespace Ombi.Updater
             var start = new ProcessStartInfo
             {
                 UseShellExecute = false,
-                CreateNoWindow = true,
-                FileName = Path.Combine(options.ApplicationPath,"Ombi.exe")
+                FileName = Path.Combine(options.ApplicationPath,"Ombi.exe"),
+                WorkingDirectory = options.ApplicationPath
             };
             using (var proc = new Process { StartInfo = start })
             {

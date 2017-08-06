@@ -12,6 +12,7 @@ using Microsoft.Extensions.Options;
 using Ombi.Api.Service;
 using Ombi.Api.Service.Models;
 using Ombi.Helpers;
+using System.IO.Compression;
 
 namespace Ombi.Schedule.Ombi
 {
@@ -92,23 +93,41 @@ namespace Ombi.Schedule.Ombi
                         return;
                     }
                 }
+                if(download == null)
+                {
+                    return;
+                }
 
                 // Download it
-                await DownloadAsync(download.Url, Path.Combine(currentLocation, "Ombi.zip"));
+                var extension = download.Name.Split('.').Last();
+                var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
+                await DownloadAsync(download.Url, zipDir);
 
+                var tempPath = Path.Combine(currentLocation, "TempUpdate");
+                // Extract it
+                using (var files = ZipFile.OpenRead(zipDir))
+                {
+                    foreach (var entry in files.Entries)
+                    {
+                        // Temp Path
+                        Directory.CreateDirectory(tempPath);
+
+                        entry.ExtractToFile(Path.Combine(tempPath, entry.FullName));
+                    }
+                }             
 
                 // There must be an update
-                //var start = new ProcessStartInfo
-                //{
-                //    UseShellExecute = false,
-                //    CreateNoWindow = true,
-                //    FileName = "Ombi.Updater.exe",
-                //    Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location)
-                //};
-                //using (var proc = new Process { StartInfo = start })
-                //{
-                //    proc.Start();
-                //}
+                var start = new ProcessStartInfo
+                {
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                    FileName = "Ombi.Updater",
+                    Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " +extension ,
+                };
+                using (var proc = new Process { StartInfo = start })
+                {
+                    proc.Start();
+                }
 
             }
             else
