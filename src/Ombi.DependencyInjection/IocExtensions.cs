@@ -14,7 +14,6 @@ using Ombi.Api.TvMaze;
 using Ombi.Core;
 using Ombi.Core.Engine;
 using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.IdentityResolver;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Notifications;
 using Ombi.Core.Rule;

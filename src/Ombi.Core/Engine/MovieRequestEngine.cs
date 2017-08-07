@@ -7,14 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Core.Engine.Interfaces;
-using Ombi.Core.IdentityResolver;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
 

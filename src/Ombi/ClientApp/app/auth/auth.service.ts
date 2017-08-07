@@ -7,28 +7,21 @@ import { IUserLogin, ILocalUser } from './IUserLogin';
 
 import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 
-import { Http, Headers, URLSearchParams } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 
 @Injectable()
 export class AuthService extends ServiceHelpers {
     constructor(http: Http) {
-        super(http, '/connect/token');
+        super(http, '/api/v1/token');
     }
 
     jwtHelper: JwtHelper = new JwtHelper();
 
     login(login: IUserLogin): Observable<any> {
         this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/x-www-form-urlencoded');
-        let data = new URLSearchParams();
-        data.append('client_id', 'frontend');
-        data.append('scope', 'api');
-        data.append('client_secret', 'secret');
-        data.append('grant_type', 'password');
-        data.append('username', login.username);
-        data.append('password', login.password);
+        this.headers.append('Content-Type', 'application/json');
 
-        return this.http.post(`${this.url}/`, data.toString(), { headers: this.headers })
+        return this.http.post(`${this.url}/`, JSON.stringify(login), { headers: this.headers })
             .map(this.extractData);
 
     }

@@ -2,16 +2,13 @@
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
+using System.Text;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.MemoryStorage;
-using Hangfire.SQLite;
-using IdentityServer4.Services;
-using IdentityServer4.Validation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -25,10 +22,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
-using Ombi.Core.IdentityResolver;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
 using Ombi.Mapping;
+using Ombi.Models.Identity;
 using Ombi.Schedule;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
@@ -83,15 +80,16 @@ namespace Ombi
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
-                .AddTemporarySigningCredential()
-                .AddInMemoryPersistedGrants()
-                .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
-                .AddInMemoryApiResources(IdentityConfig.GetApiResources())
-                .AddInMemoryClients(IdentityConfig.GetClients())
-                .AddAspNetIdentity<OmbiUser>()
-                .Services.AddTransient<IResourceOwnerPasswordValidator, OmbiOwnerPasswordValidator>()
-                .AddTransient<IProfileService, OmbiProfileService>();
+
+            //services.AddIdentityServer()
+            //    .AddTemporarySigningCredential()
+            //    .AddInMemoryPersistedGrants()
+            //    .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
+            //    .AddInMemoryApiResources(IdentityConfig.GetApiResources())
+            //    .AddInMemoryClients(IdentityConfig.GetClients())
+            //    .AddAspNetIdentity<OmbiUser>()
+            //    .Services.AddTransient<IResourceOwnerPasswordValidator, OmbiOwnerPasswordValidator>()
+            //    .AddTransient<IProfileService, OmbiProfileService>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -151,10 +149,9 @@ namespace Ombi
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
-
-            //services.Configure<TokenAuthenticationOptions>(Configuration.GetSection("TokenAuthentication"));
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
             services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
+            services.Configure<TokenAuthentication>(Configuration.GetSection("TokenAuthentication"));
             services.Configure<LandingPageBackground>(Configuration.GetSection("LandingPageBackground"));
 
             services.AddHangfire(x =>
@@ -179,8 +176,8 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
         {
-            var options = (IOptions<UserSettings>) app.ApplicationServices.GetService(
-                typeof(IOptions<UserSettings>));
+            var tokenOptions = (IOptions<TokenAuthentication>)app.ApplicationServices.GetService(
+                typeof(IOptions<TokenAuthentication>));
 
             var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
 
@@ -190,25 +187,53 @@ namespace Ombi
 
             Console.WriteLine($"Using Url {url.Value}:{port.Value} for Identity Server");
             app.UseIdentity();
-            app.UseIdentityServer();
-            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            {
+
 #if !DEBUG
-                Authority = $"{url.Value}:{port.Value}",
+            var audience = $"{url.Value}:{port.Value}";
 #else
-                Authority = $"http://localhost:52038/",
+
+            var audience = $"http://localhost:52038/";
 #endif
-                ApiName = "api",
-                ApiSecret = "secret",
 
-                EnableCaching = true,
-                CacheDuration = TimeSpan.FromMinutes(10), // that's the default
-                RequireHttpsMetadata = options.Value.UseHttps, // FOR DEV set to false
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.Value.SecretKey)),
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+                ValidAudience = "Ombi",
+                ValidIssuer = "Ombi",
+                ClockSkew = TimeSpan.Zero
+            };
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            {
+                Audience = "Ombi",
                 AutomaticAuthenticate = true,
-                AutomaticChallenge = true,
-                
-
+                TokenValidationParameters =  tokenValidationParameters
             });
+
+            //            app.UseIdentityServer();
+            //            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
+            //            {
+            //#if !DEBUG
+            //                Authority = $"{url.Value}:{port.Value}",
+            //#else
+            //                Authority = $"http://localhost:52038/",
+            //#endif
+            //                ApiName = "api",
+            //                ApiSecret = "secret",
+
+            //                EnableCaching = true,
+            //                CacheDuration = TimeSpan.FromMinutes(10), // that's the default
+            //                RequireHttpsMetadata = options.Value.UseHttps, // FOR DEV set to false
+            //                AutomaticAuthenticate = true,
+            //                AutomaticChallenge = true,
+
+
+            //            });
 
             loggerFactory.AddSerilog();
 

@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 
 @Component({
-  
     templateUrl: './mediaserver.component.html',
 })
 export class MediaServerComponent {
@@ -19,8 +18,7 @@ export class MediaServerComponent {
         this.router.navigate(['Wizard/Emby']);
     }
 
-    skip()
-    {
+    skip() {
         this.router.navigate(['Wizard/CreateAdmin']);
     }
 }
