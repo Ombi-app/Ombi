@@ -21,6 +21,7 @@ import { LandingPageComponent } from './landingpage/landingpage.component';
 import { CustomizationComponent } from './customization/customization.component';
 import { EmailNotificationComponent } from './notifications/emailnotification.component';
 import { DiscordComponent } from './notifications/discord.component';
+import { SlackComponent } from './notifications/slack.component';
 import { NotificationTemplate } from './notifications/notificationtemplate.component';
 
 import { SettingsMenuComponent } from './settingsmenu.component';
@@ -38,6 +39,7 @@ const routes: Routes = [
     { path: 'Settings/Customization', component: CustomizationComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Email', component: EmailNotificationComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Discord', component: DiscordComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Slack', component: SlackComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -65,6 +67,7 @@ const routes: Routes = [
         CustomizationComponent,
         DiscordComponent,
         SonarrComponent,
+        SlackComponent,
         RadarrComponent,
         EmailNotificationComponent,
         HumanizePipe,

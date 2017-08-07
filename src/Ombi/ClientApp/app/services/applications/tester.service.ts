@@ -4,7 +4,12 @@ import { Observable } from 'rxjs/Rx';
 
 import { ServiceAuthHelpers } from '../service.helpers';
 
-import { IDiscordNotifcationSettings, IEmailNotificationSettings, IPushbulletNotificationSettings } from '../../interfaces/INotifcationSettings'
+import {
+    IDiscordNotifcationSettings,
+    IEmailNotificationSettings,
+    IPushbulletNotificationSettings,
+    ISlackNotificationSettings
+} from '../../interfaces/INotifcationSettings'
 
 
 @Injectable()
@@ -19,6 +24,10 @@ export class TesterService extends ServiceAuthHelpers {
 
     pushbulletTest(settings: IPushbulletNotificationSettings): Observable<boolean> {
         return this.http.post(`${this.url}pushbullet`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+
+    slackTest(settings: ISlackNotificationSettings): Observable<boolean> {
+        return this.http.post(`${this.url}slack`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 
     emailTest(settings: IEmailNotificationSettings): Observable<boolean> {

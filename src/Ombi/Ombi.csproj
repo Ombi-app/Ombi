@@ -76,5 +76,11 @@
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\app\settings\notifications\slack.component.js">
+      <DependentUpon>slack.component.ts</DependentUpon>
+    </None>
+  </ItemGroup>
  
 </Project>

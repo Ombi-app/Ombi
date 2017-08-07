@@ -24,19 +24,23 @@ namespace Ombi.Controllers.External
         /// <param name="service">The service.</param>
         /// <param name="notification">The notification.</param>
         /// <param name="emailN">The notification.</param>
+        /// <param name="pushbullet">The pushbullet.</param>
+        /// <param name="slack">The slack.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
-            IPushbulletNotification pushbullet)
+            IPushbulletNotification pushbullet, ISlackNotification slack)
         {
             Service = service;
             DiscordNotification = notification;
             EmailNotification = emailN;
             PushbulletNotification = pushbullet;
+            SlackNotification = slack;
         }
 
         private INotificationService Service { get; }
         private IDiscordNotification DiscordNotification { get; }
         private IEmailNotification EmailNotification { get; }
         private IPushbulletNotification PushbulletNotification { get; }
+        private ISlackNotification SlackNotification { get; }
 
 
         /// <summary>
@@ -52,10 +56,10 @@ namespace Ombi.Controllers.External
                 new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
             return true;
-        }     
-        
+        }
+
         /// <summary>
-        /// Sends a test message to discord using the provided settings
+        /// Sends a test message to Pushbullet using the provided settings
         /// </summary>
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
@@ -64,6 +68,22 @@ namespace Ombi.Controllers.External
         {
             settings.Enabled = true;
             PushbulletNotification.NotifyAsync(
+                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+            return true;
+        }
+
+
+        /// <summary>
+        /// Sends a test message to Slack using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("slack")]
+        public bool Slack([FromBody] SlackNotificationSettings settings)
+        {
+            settings.Enabled = true;
+            SlackNotification.NotifyAsync(
                 new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
             return true;

@@ -44,9 +44,18 @@ export enum NotificationType {
     ItemAddedToFaultQueue
 }
 
-export interface IDiscordNotifcationSettings extends INotificationSettings{
-    webhookUrl : string,
+export interface IDiscordNotifcationSettings extends INotificationSettings {
+    webhookUrl: string,
     username: string,
+    notificationTemplates: INotificationTemplates[],
+}
+
+export interface ISlackNotificationSettings extends INotificationSettings {
+    webhookUrl: string,
+    username: string,
+    channel: string,
+    iconEmoji: string,
+    iconUrl:string
     notificationTemplates: INotificationTemplates[],
 }
 

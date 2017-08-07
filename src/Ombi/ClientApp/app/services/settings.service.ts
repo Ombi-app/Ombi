@@ -13,7 +13,12 @@ import {
     ICustomizationSettings,
     IRadarrSettings
 } from '../interfaces/ISettings';
-import { IEmailNotificationSettings, IDiscordNotifcationSettings, IPushbulletNotificationSettings } from '../interfaces/INotifcationSettings';
+import {
+    IEmailNotificationSettings,
+    IDiscordNotifcationSettings,
+    IPushbulletNotificationSettings,
+    ISlackNotificationSettings
+} from '../interfaces/INotifcationSettings';
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
@@ -102,5 +107,13 @@ export class SettingsService extends ServiceAuthHelpers {
 
     savePushbulletNotificationSettings(settings: IPushbulletNotificationSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/notifications/pushbullet`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
+    }
+
+    getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/slack`).map(this.extractData).catch(this.handleError)
+    }
+
+    saveSlackNotificationSettings(settings: ISlackNotificationSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/notifications/slack`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData).catch(this.handleError)
     }
 }

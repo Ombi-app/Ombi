@@ -30,6 +30,7 @@ using Ombi.Api;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Pushbullet;
 using Ombi.Api.Service;
+using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
 using Ombi.Schedule.Ombi;
@@ -68,6 +69,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexApi, PlexApi>();
             services.AddTransient<IEmbyApi, EmbyApi>();
             services.AddTransient<ISonarrApi, SonarrApi>();
+            services.AddTransient<ISlackApi, SlackApi>();
             services.AddTransient<ITvMazeApi, TvMazeApi>();
             services.AddTransient<ITraktApi, TraktApi>();
             services.AddTransient<IRadarrApi, RadarrApi>();
@@ -104,6 +106,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
             services.AddTransient<IPushbulletNotification, PushbulletNotification>();
+            services.AddTransient<ISlackNotification, SlackNotification>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

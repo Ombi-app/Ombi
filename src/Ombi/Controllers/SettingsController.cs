@@ -295,6 +295,41 @@ namespace Ombi.Controllers
             return model;
         }
 
+
+        /// <summary>
+        /// Saves the slack notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/slack")]
+        public async Task<bool> SlacktNotificationSettings([FromBody] SlackNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<SlackNotificationSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the slack Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/slack")]
+        public async Task<SlackNotificationsViewModel> SlackNotificationSettings()
+        {
+            var settings = await Get<SlackNotificationSettings>();
+            var model = Mapper.Map<SlackNotificationsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Slack);
+
+            return model;
+        }
+
         private async Task<List<NotificationTemplates>> BuildTemplates(NotificationAgent agent)
         {
             var templates = await TemplateRepository.GetAllTemplates(agent);

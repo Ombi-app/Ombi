@@ -18,6 +18,7 @@
     <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
     <ProjectReference Include="..\Ombi.Api.Radarr\Ombi.Api.Radarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.Service\Ombi.Api.Service.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
     <ProjectReference Include="..\Ombi.Api.Sonarr\Ombi.Api.Sonarr.csproj" />
     <ProjectReference Include="..\Ombi.Api.Trakt\Ombi.Api.Trakt.csproj" />
     <ProjectReference Include="..\Ombi.Api.TvMaze\Ombi.Api.TvMaze.csproj" />
