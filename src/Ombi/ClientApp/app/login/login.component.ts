@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { AuthService } from '../auth/auth.service';
@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
 
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
-        private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer) {
+        private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
+        private route: ActivatedRoute) {
         this.form = this.fb.group({
             username: ["", [Validators.required]],
             password: ["", [Validators.required]]
@@ -31,13 +32,25 @@ export class LoginComponent implements OnInit {
                 this.router.navigate(['Wizard']);
             }
         });
+
+        this.route.params
+            .subscribe(params => {
+                this.landingFlag = params['landing'];
+            });
     }
     
     form: FormGroup;
     customizationSettings : ICustomizationSettings;
     background: any;
+    landingFlag: boolean;
 
     ngOnInit(): void {
+        this.settingsService.getLandingPage().subscribe(x => {
+            debugger;
+            if (x.enabled && !this.landingFlag) {
+                this.router.navigate(['landingpage']);
+            }
+        });
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle('linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(' + x.url + ')');

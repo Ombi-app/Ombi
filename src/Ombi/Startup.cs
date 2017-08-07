@@ -166,7 +166,7 @@ namespace Ombi
 
 #if DEBUG
             // Note .AddMiniProfiler() returns a IMiniProfilerBuilder for easy intellisense
-            services.AddMiniProfiler();
+            //services.AddMiniProfiler();
 #endif
             // Make sure you have memory cache available unless you're using another storage provider
             services.AddMemoryCache();
@@ -245,19 +245,19 @@ namespace Ombi
                     HotModuleReplacement = true
                 });
 
-                app.UseMiniProfiler(new MiniProfilerOptions
-                {
-                    // Path to use for profiler URLs
-                    RouteBasePath = "~/profiler",
+                //app.UseMiniProfiler(new MiniProfilerOptions
+                //{
+                //    // Path to use for profiler URLs
+                //    RouteBasePath = "~/profiler",
 
-                    // (Optional) Control which SQL formatter to use
-                    // (default is no formatter)
-                    SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter(),
+                //    // (Optional) Control which SQL formatter to use
+                //    // (default is no formatter)
+                //    SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter(),
 
-                    // (Optional) Control storage
-                    // (default is 30 minutes in MemoryCacheStorage)
-                    Storage = new MemoryCacheStorage(cache, TimeSpan.FromMinutes(60)),
-                });
+                //    // (Optional) Control storage
+                //    // (default is 30 minutes in MemoryCacheStorage)
+                //    Storage = new MemoryCacheStorage(cache, TimeSpan.FromMinutes(60)),
+                //});
             }
             
             app.UseHangfireServer();

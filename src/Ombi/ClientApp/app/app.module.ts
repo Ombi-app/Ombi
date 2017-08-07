@@ -47,6 +47,7 @@ const routes: Routes = [
    
     //{ path: 'requests-grid', component: RequestGridComponent },
     { path: 'login', component: LoginComponent },
+    { path: 'login/:landing', component: LoginComponent },
     { path: 'reset', component: ResetPasswordComponent },
     { path: 'token', component: TokenResetPasswordComponent },
     { path: 'landingpage', component: LandingPageComponent }

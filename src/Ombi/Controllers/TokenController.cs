@@ -20,15 +20,17 @@ namespace Ombi.Controllers
     public class TokenController
     {
         public TokenController(UserManager<OmbiUser> um, IOptions<TokenAuthentication> ta,
-            IApplicationConfigRepository config)
+            IApplicationConfigRepository config, IAuditRepository audit)
         {
             UserManager = um;
             TokenAuthenticationOptions = ta.Value;
             Config = config;
+            Audit = audit;
         }
 
         private TokenAuthentication TokenAuthenticationOptions { get; }
         private IApplicationConfigRepository Config { get; }
+        private IAuditRepository Audit { get; }
         private UserManager<OmbiUser> UserManager { get; }
 
         /// <summary>
@@ -39,6 +41,8 @@ namespace Ombi.Controllers
         [HttpPost]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
+            await Audit.Record(AuditType.None, AuditArea.Authentication,
+                $"Username {model.Username} attempting to authenticate");
 
             var user = await UserManager.FindByNameAsync(model.Username);
 

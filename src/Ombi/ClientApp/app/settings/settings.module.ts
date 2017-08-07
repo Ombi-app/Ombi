@@ -26,7 +26,7 @@ import { NotificationTemplate } from './notifications/notificationtemplate.compo
 import { SettingsMenuComponent } from './settingsmenu.component';
 import { HumanizePipe } from '../pipes/HumanizePipe';
 
-import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule, AutoCompleteModule } from 'primeng/primeng';
+import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule, AutoCompleteModule, CalendarModule } from 'primeng/primeng';
 
 const routes: Routes = [
     { path: 'Settings/Ombi', component: OmbiComponent, canActivate: [AuthGuard] },
@@ -53,7 +53,8 @@ const routes: Routes = [
         NgbModule,
         TooltipModule,
         NgbAccordionModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        CalendarModule,
     ],
     declarations: [
         SettingsMenuComponent,

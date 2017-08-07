@@ -68,14 +68,14 @@ export interface IRadarrSettings extends IExternalSettings {
 
 export interface ILandingPageSettings extends ISettings {
     enabled: boolean,
-    beforeLogin: boolean,
-    afterLogin: boolean,
+   
     noticeEnabled: boolean,
     noticeText: string,
-    noticeBackgroundColor: string,
+   
     timeLimit: boolean,
     startDateTime: Date,
     endDateTime: Date,
+    expired:boolean,
 }
 
 export interface ICustomizationSettings extends ISettings {

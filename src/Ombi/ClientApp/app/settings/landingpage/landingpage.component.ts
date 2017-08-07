@@ -15,7 +15,9 @@ export class LandingPageComponent implements OnInit {
     settings: ILandingPageSettings;
 
     ngOnInit(): void {
-        this.settingsService.getLandingPage().subscribe(x => this.settings = x);
+        this.settingsService.getLandingPage().subscribe(x => {
+            this.settings = x
+        });
     }
 
     save() {
