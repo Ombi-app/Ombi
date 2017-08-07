@@ -21,58 +21,68 @@
 <!-- Table -->
 <table class="table table-striped table-hover table-responsive table-condensed">
     <thead>
-    <tr>
-        <th>
-            <a>
-                Username
-                <!--<span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
-                <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>-->
-            </a>
-        </th>
-        <th>
-            <a>
-                Alias
-            </a>
-        </th>
-        <th>
-            <a>
-                Email
-            </a>
-        </th>
-        <th>
-            Roles
-        </th>
-        <th>
-            <a>
-                User Type
-            </a>
-        </th>
-    </tr>
+        <tr>
+            <th>
+                <a>
+                    <input type="checkbox" ng-checked="checkAll" (change)="checkAllBoxes()">
+                </a>
+            </th>
+            <th>
+                <a>
+                    Username
+                    <!--<span ng-show="sortType == 'username' && !sortReverse" class="fa fa-caret-down"></span>
+                    <span ng-show="sortType == 'username' && sortReverse" class="fa fa-caret-up"></span>-->
+                </a>
+            </th>
+            <th>
+                <a>
+                    Alias
+                </a>
+            </th>
+            <th>
+                <a>
+                    Email
+                </a>
+            </th>
+            <th>
+                Roles
+            </th>
+            <th>
+                <a>
+                    User Type
+                </a>
+            </th>
+        </tr>
     </thead>
     <tbody>
-    <tr *ngFor="let u of users">
-        <td>
-            {{u.username}}
-        </td>
-        <td>
-            {{u.alias}}
-        </td>
-        <td>
-            {{u.emailAddress}}
-        </td>
-        <td>
-            <div *ngFor="let claim of u.claims"><span *ngIf="claim.enabled">{{claim.value}}</span></div>
+        <tr *ngFor="let u of users">
+            <td>
+                <input type="checkbox" [(ngModel)]="u.checked">
+            </td>
+            <td>
+                {{u.username}}
+            </td>
+            <td>
+                {{u.alias}}
+            </td>
+            <td>
+                {{u.emailAddress}}
+            </td>
+            <td>
+                <div *ngFor="let claim of u.claims">
+                    <span *ngIf="claim.enabled">{{claim.value}}</span>
+                </div>
 
-        </td>
-        <td ng-hide="hideColumns">
-            <span *ngIf="u.userType === 1">Local User</span>
-            <span *ngIf="u.userType === 2">Plex User</span>
-            <span *ngIf="u.userType === 3">Emby User</span>
-        </td>
-        <td>
-            <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
-        </td>
-    </tr>
+            </td>
+            <td ng-hide="hideColumns">
+                <span *ngIf="u.userType === 1">Local User</span>
+                <span *ngIf="u.userType === 2">Plex User</span>
+                <span *ngIf="u.userType === 3">Emby User</span>
+            </td>
+            <td>
+                <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
+            </td>
+        </tr>
     </tbody>
 </table>
 
@@ -98,14 +108,14 @@
                         <input type="text" [(ngModel)]="selectedUser.alias" class="form-control form-control-custom " id="alias" name="alias" value="{{selectedUser?.alias}}">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="alias" class="control-label">Email Address</label>
                     <div>
                         <input type="text" [(ngModel)]="selectedUser.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{selectedUser?.emailAddress}}">
                     </div>
                 </div>
-                
+
                 <div *ngFor="let c of selectedUser.claims">
                     <div class="form-group">
                         <div class="checkbox">
@@ -115,8 +125,8 @@
                         </div>
                     </div>
 
-         
-         
+
+
                 </div>
             </div>
             <div class="modal-footer">

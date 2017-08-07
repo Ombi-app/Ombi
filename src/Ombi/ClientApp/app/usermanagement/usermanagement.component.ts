@@ -4,7 +4,7 @@ import { IUser } from '../interfaces/IUser';
 import { IdentityService } from '../services/identity.service';
 
 @Component({
-  
+
     templateUrl: './usermanagement.component.html'
 })
 export class UserManagementComponent implements OnInit {
@@ -19,6 +19,12 @@ export class UserManagementComponent implements OnInit {
     }
 
     users: IUser[];
-    
-   
+    checkAll = false;
+
+    checkAllBoxes() {
+        this.checkAll = !this.checkAll;
+        this.users.forEach(user => {
+            user.checked = this.checkAll;
+        });
+    }
 }

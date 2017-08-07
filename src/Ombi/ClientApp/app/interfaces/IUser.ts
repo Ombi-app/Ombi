@@ -6,6 +6,10 @@
     emailAddress: string,
     password: string,
     userType: UserType,
+
+
+    // FOR UI
+    checked: boolean,
 }
 
 export enum UserType {

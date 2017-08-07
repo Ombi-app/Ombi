@@ -2,6 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MultiSelectModule } from 'primeng/primeng';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -28,6 +29,7 @@ const routes: Routes = [
         ReactiveFormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
+        MultiSelectModule
     ],
     declarations: [
         UserManagementComponent,
@@ -41,6 +43,6 @@ const routes: Routes = [
     providers: [
         IdentityService
     ],
-   
+
 })
 export class UserManagementModule { }
