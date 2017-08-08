@@ -19,9 +19,13 @@ export interface IOmbiSettings extends ISettings {
     allowExternalUsersToAuthenticate:boolean,
 }
 
-export interface IEmbySettings extends IExternalSettings {
-    apiKey: string,
+export interface IEmbySettings extends ISettings {
     enable: boolean,
+    servers: IEmbyServer[]
+}
+
+export interface IEmbyServer extends IExternalSettings {
+    apiKey: string,
     administratorId: string,
     enableEpisodeSearching: boolean,
 }

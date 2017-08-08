@@ -35,6 +35,7 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
+using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
 
 namespace Ombi.DependencyInjection
 {

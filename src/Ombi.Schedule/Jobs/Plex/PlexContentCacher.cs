@@ -38,9 +38,9 @@ using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
-namespace Ombi.Schedule.Jobs
+namespace Ombi.Schedule.Jobs.Plex
 {
-    public partial class PlexContentCacher : IPlexContentCacher
+    public class PlexContentCacher : IPlexContentCacher
     {
         public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentCacher> logger, IPlexContentRepository repo)
         {
@@ -89,7 +89,7 @@ namespace Ombi.Schedule.Jobs
                 var contentToAdd = new List<PlexContent>();
                 foreach (var content in allContent)
                 {
-                    if (content.viewGroup.Equals(PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Process Shows
                         foreach (var show in content.Metadata)
@@ -157,7 +157,7 @@ namespace Ombi.Schedule.Jobs
                             }
                         }
                     }
-                    if (content.viewGroup.Equals(PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
+                    if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         foreach (var movie in content.Metadata)
                         {
@@ -198,6 +198,13 @@ namespace Ombi.Schedule.Jobs
             }
         }
 
+        /// <summary>
+        /// Gets all the library sections.
+        /// If the user has specified only certain libraries then we will only look for those
+        /// If they have not set the settings then we will monitor them all
+        /// </summary>
+        /// <param name="plexSettings">The plex settings.</param>
+        /// <returns></returns>
         private List<Mediacontainer> GetAllContent(PlexServers plexSettings)
         {
             var sections = PlexApi.GetLibrarySections(plexSettings.PlexAuthToken, plexSettings.FullUri).Result;

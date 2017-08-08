@@ -11,7 +11,7 @@
 
             <div class="form-group col-md-3">
                 <div class="checkbox">
-                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" ng-checked="settings.enable">
+                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" [checked]="settings.enable">
                     <label for="enable">Enable</label>
                 </div>
             </div>
@@ -93,7 +93,7 @@
 
                             <div class="form-group">
                                 <div class="checkbox">
-                                    <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" ng-checked="server.ssl">
+                                    <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" [checked]="server.ssl">
                                     <label for="ssl">SSL</label>
                                 </div>
                             </div>
@@ -101,7 +101,7 @@
                             <div class="form-group">
                                 <div class="checkbox">
 
-                                    <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" ng-checked="server.enableEpisodeSearching">
+                                    <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" [checked]="server.enableEpisodeSearching">
                                     <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
                                 </div>
                                 <small>
@@ -136,7 +136,7 @@
                             <div *ngFor="let lib of server.plexSelectedLibraries">
                                 <div class="form-group">
                                     <div class="checkbox">
-                                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" ng-checked="lib.enabled">
+                                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled">
                                         <label for="{{lib.title}}">{{lib.title}}</label>
                                     </div>
                                 </div>
