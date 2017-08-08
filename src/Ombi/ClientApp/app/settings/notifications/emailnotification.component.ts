@@ -32,7 +32,8 @@ export class EmailNotificationComponent implements OnInit {
                 host: [x.host, [Validators.required]],
                 password: [x.password],
                 port: [x.port, [Validators.required]],
-                sender: [x.sender, [Validators.required, Validators.email]],
+                senderAddress: [x.senderAddress, [Validators.required, Validators.email]],
+                senderName: [x.senderName],
                 username: [x.username],
                 adminEmail: [x.adminEmail, [Validators.required, Validators.email]],
             });

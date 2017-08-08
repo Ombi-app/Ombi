@@ -21,8 +21,8 @@
                 <div *ngIf="emailForm.invalid && emailForm.dirty" class="alert alert-danger">
                     <div *ngIf="emailForm.get('host').hasError('required')">Host is required</div>
                     <div *ngIf="emailForm.get('port').hasError('required')">The Port is required</div>
-                    <div *ngIf="emailForm.get('sender').hasError('required')">The Email Sender is required</div>
-                    <div *ngIf="emailForm.get('sender').hasError('incorrectMailFormat')">The Email Sender needs to be a valid email address</div>
+                    <div *ngIf="emailForm.get('senderAddress').hasError('required')">The Email Sender Address is required</div>
+                    <div *ngIf="emailForm.get('senderAddress').hasError('incorrectMailFormat')">The Email Sender Address needs to be a valid email address</div>
                     <div *ngIf="emailForm.get('adminEmail').hasError('required')">The Email Sender is required</div>
                     <div *ngIf="emailForm.get('adminEmail').hasError('email')">The Admin Email needs to be a valid email address</div>
                     <div *ngIf="emailForm.get('username').hasError('required')">The Username is required</div>
@@ -44,10 +44,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="sender" class="control-label">Email Sender</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="sender" name="sender" formControlName="sender" tooltipPosition="top" pTooltip="The email address that the emails will be sent from">
+                    <label style="padding-left: 0"  for="senderAddress" class="control-label col-md-12">Email Sender</label>
+                    <div style="padding-left: 0" class="col-md-6">
+                        <input type="text" class="form-control form-control-custom " id="senderAddress" name="senderAddress" formControlName="senderAddress" tooltipPosition="top" placeholder="Sender Address" pTooltip="The email address that the emails will be sent from">
                     </div>
+                    <div style="padding-left: 0" class="col-md-6">
+                        <input type="text" class="form-control form-control-custom " id="senderName" name="senderName" formControlName="senderName" tooltipPosition="top" placeholder="Sender Name" pTooltip="The 'Friendly' name that will appear in the 'FROM:' part of the email">
+                    </div>
+                    <br/>
+                    <br/>
+                    <br/>
                 </div>
 
                 <div class="form-group">
