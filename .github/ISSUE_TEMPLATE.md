@@ -2,7 +2,7 @@
 
 
 
-!! Version 2.X is not supported anymore. Pleas don't open a issue for the 2.x version.
+Version 2.X is not supported anymore. Please don't open a issue for the 2.x version.
 See https://github.com/tidusjar/Ombi/issues/1455 for more information.
 
 
