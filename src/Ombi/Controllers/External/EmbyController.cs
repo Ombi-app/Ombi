@@ -41,15 +41,16 @@ namespace Ombi.Controllers.External
         {
             // Check if settings exist since we allow anon...
             var settings = await EmbySettings.GetSettingsAsync();
-            if (!string.IsNullOrEmpty(settings?.ApiKey)) return null;
+            if (settings?.Servers?.Any() ?? false) return null;
 
             request.Enable = true;
+            var firstServer = request.Servers.FirstOrDefault();
             // Test that we can connect
-            var result = await EmbyApi.GetUsers(request.FullUri, request.ApiKey);
+            var result = await EmbyApi.GetUsers(firstServer.FullUri, firstServer.ApiKey);
 
             if (result != null && result.Any())
             {
-                request.AdministratorId = result.FirstOrDefault(x => x.Policy.IsAdministrator)?.Id ?? string.Empty;
+                firstServer.AdministratorId = result.FirstOrDefault(x => x.Policy.IsAdministrator)?.Id ?? string.Empty;
                 await EmbySettings.SaveSettingsAsync(request);
 
                 return request;

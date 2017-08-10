@@ -19,16 +19,22 @@ export class EmbyComponent implements OnInit {
 
     ngOnInit(): void {
         this.embySettings = {
-            administratorId: "",
-            apiKey: "",
+            servers: [],
+            id:0,
             enable: true,
-            enableEpisodeSearching: true,
-            id: 0,
+        }
+        this.embySettings.servers.push({
             ip: "",
+            administratorId: "",
+            id: 0,
+            apiKey: "",
+            enableEpisodeSearching: false,
+            name: "Default",
             port: 8096,
             ssl: false,
-            subDir:""
-        }
+            subDir: "",
+
+        })
     }
 
     private embySettings: IEmbySettings;
@@ -36,7 +42,7 @@ export class EmbyComponent implements OnInit {
 
     save() {
         this.embyService.logIn(this.embySettings).subscribe(x => {
-            if (x == null || !x.apiKey) {
+            if (x == null || !x.servers[0].apiKey) {
                 this.notificationService.error("Could Not Authenticate", "Username or password was incorrect. Could not authenticate with Emby.");
                 return;
             }

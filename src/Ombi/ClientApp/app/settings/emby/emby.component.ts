@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from '@angular/core';
 
-import { IEmbySettings } from '../../interfaces/ISettings'
+import { IEmbySettings, IEmbyServer } from '../../interfaces/ISettings'
 import { SettingsService } from '../../services/settings.service';
 import { NotificationService } from "../../services/notification.service";
 
@@ -16,6 +16,13 @@ export class EmbyComponent implements OnInit {
 
     ngOnInit(): void {
         this.settingsService.getEmby().subscribe(x => this.settings = x);
+    }
+
+    addTab() {
+        if (this.settings.servers == null) {
+            this.settings.servers = [];
+        } 
+        this.settings.servers.push(<IEmbyServer>{ name: "New*", id: Math.floor(Math.random() * (99999 - 0 + 1) + 1), apiKey: "", administratorId: "", enableEpisodeSearching: false, ip: "", port: 0, ssl: false, subDir: "" });
     }
 
     test() {

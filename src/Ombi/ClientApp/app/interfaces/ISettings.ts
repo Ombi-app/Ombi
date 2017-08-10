@@ -25,6 +25,7 @@ export interface IEmbySettings extends ISettings {
 }
 
 export interface IEmbyServer extends IExternalSettings {
+    name:string,
     apiKey: string,
     administratorId: string,
     enableEpisodeSearching: boolean,

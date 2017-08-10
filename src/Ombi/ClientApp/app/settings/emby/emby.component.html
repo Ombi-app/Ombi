@@ -2,63 +2,87 @@
 <settings-menu></settings-menu>
 <div *ngIf="settings">
     <fieldset>
-        <legend>Emby Configuration 
-            <b>(UNDER CONSTRUCTION <i class="fa fa-smile-o"></i>)</b>
+        <legend>
+            Emby Configuration
         </legend>
-        
-        <div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" id="enable" [(ngModel)]="settings.enable" ng-checked="settings.enable">
-                <label for="enable">Enable</label>
+
+        <div class="row">
+                 <div class="form-group col-md-3">
+                <div class="checkbox">
+                    <input type="checkbox" id="enable" [(ngModel)]="settings.enable" [checked]="settings.enable">
+                    <label for="enable">Enable</label>
+                </div>
+            </div>
+            <div class="col-md-2 col-md-push-7">
+                <button type="submit" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="Ip" class="control-label">Hostname or IP</label>
-            <div>
-                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="settings.ip" value="{{settings.ip}}">
+        <ngb-tabset>
+            <div *ngFor="let server of settings.servers">
+                <ngb-tab [id]="server.id" [title]="server.name">
+                    <ng-template ngbTabContent>
+                        <br />
+                        <br />
+                        <div class="col-md-12 col-md-push-10" style="float: right;">
+                            <button type="submit" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
+                        </div>
+                        <br />
+                        <br />
+                        <div class="form-group">
+                            <label for="name" class="control-label">Server name</label>
+                            <div>
+                                <input type="text" class="form-control form-control-custom " id="name" name="name" placeholder="Server" [(ngModel)]="server.name" value="{{server.name}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="Ip" class="control-label">Hostname or IP</label>
+                            <div>
+                                <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" [(ngModel)]="server.ip" value="{{server.ip}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="portNumber" class="control-label">Port</label>
+                            <div>
+                                <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{server.port}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <input type="checkbox" id="ssl" [(ngModel)]="server.ssl" ng-checked="server.ssl">
+                                <label for="ssl">SSL</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="checkbox">
+
+
+                                <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" ng-checked="server.enableEpisodeSearching">
+                                <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
+
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="authToken" class="control-label">Emby Api Key</label>
+                            <div class="">
+                                <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="server.apiKey" placeholder="Emby Api Key" value="{{server.apiKey}}">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
+                            </div>
+                        </div>
+                    </ng-template>
+                </ngb-tab>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label for="portNumber" class="control-label">Port</label>
-            <div>
-                <input type="text" [(ngModel)]="settings.port" class="form-control form-control-custom " id="portNumber" name="Port" placeholder="Port Number" value="{{settings.port}}">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="checkbox">
-                <input type="checkbox" id="ssl" [(ngModel)]="settings.ssl" ng-checked="settings.ssl">
-                <label for="ssl">SSL</label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="checkbox">
-
-
-                <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="settings.enableEpisodeSearching" ng-checked="settings.enableEpisodeSearching">
-                <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
-
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="authToken" class="control-label">Emby Api Key</label>
-            <div class="">
-                <input type="text" class="form-control-custom form-control" id="authToken" [(ngModel)]="settings.apiKey" placeholder="Emby Api Key" value="{{settings.apiKey}}">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div>
-                <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
-            </div>
-        </div>
-
-
+        </ngb-tabset>
 
         <div class="form-group">
             <div>

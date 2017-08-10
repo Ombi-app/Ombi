@@ -16,10 +16,13 @@ namespace Ombi.Schedule.Jobs.Emby
         {
             if (emby.Enable)
             {
-                if (emby?.Ip == null || string.IsNullOrEmpty(emby?.ApiKey))
+                foreach (var server in emby.Servers)
                 {
-                    //Log.Warn("A setting is null, Ensure Emby is configured correctly, and we have a Emby Auth token.");
-                    return false;
+                    if (server?.Ip == null || string.IsNullOrEmpty(server?.ApiKey))
+                    {
+                        //Log.Warn("A setting is null, Ensure Emby is configured correctly, and we have a Emby Auth token.");
+                        return false;
+                    }
                 }
             }
             return emby.Enable;

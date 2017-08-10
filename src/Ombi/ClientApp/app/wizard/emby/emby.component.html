@@ -4,36 +4,40 @@
 <div class="media">
 <div id="contentBody" class="media-body">
 <h4 class="media-heading landing-title">Emby Authentication</h4>
-<div *ngIf="embySettings">
-    <div class="form-group">
-        <label for="Ip" class="control-label">Emby Hostname or IP Address</label>
-        <div>
-            <input type="text" [(ngModel)]="embySettings.ip" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="192.168.1.1">
-        </div>
-    </div>
+    <div *ngIf="embySettings">
+        <div *ngIf="embySettings.servers">
+            <div *ngFor="let server of embySettings.servers">
+                <div class="form-group">
+                    <label for="Ip" class="control-label">Emby Hostname or IP Address</label>
+                    <div>
+                        <input type="text" [(ngModel)]="server.ip" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="192.168.1.1">
+                    </div>
+                </div>
 
-    <div class="form-group">
-        <label for="portNumber" class="control-label">Port</label>
+                <div class="form-group">
+                    <label for="portNumber" class="control-label">Port</label>
 
-        <div>
-            <input type="text" [(ngModel)]="embySettings.port" class="form-control form-control-custom " id="portNumber" name="Port" value="{{embySettings.port}}">
+                    <div>
+                        <input type="text" [(ngModel)]="server.port" class="form-control form-control-custom " id="portNumber" name="Port" value="{{server.port}}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" [(ngModel)]="server.ssl" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="control-label">Api Key</label>
+                    <div>
+                        <input type="text" [(ngModel)]="server.apiKey" class="form-control form-control-custom" id="apiKey" name="ApiKey" placeholder="ApiKey">
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 20px">
+                    <a (click)="save()" id="embyApiKeySave" class="btn btn-primary-outline">Next <div id="spinner"></div></a>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="form-group">
-        <div class="checkbox">
-            <input type="checkbox" [(ngModel)]="embySettings.ssl" id="Ssl" name="Ssl"><label for="Ssl">SSL</label>
-        </div>
-    </div>
-    <div class="form-group">
-        <label for="username" class="control-label">Api Key</label>
-        <div>
-            <input type="text" [(ngModel)]="embySettings.apiKey" class="form-control form-control-custom" id="apiKey" name="ApiKey" placeholder="ApiKey">
-        </div>
-    </div>
-    <div style="text-align: center; margin-top: 20px">
-        <a (click)="save()" id="embyApiKeySave" class="btn btn-primary-outline">Next <div id="spinner"></div></a>
-    </div>
-</div>
 </div>
 </div>
 </div>

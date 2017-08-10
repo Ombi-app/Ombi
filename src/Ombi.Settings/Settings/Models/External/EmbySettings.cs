@@ -10,6 +10,7 @@ namespace Ombi.Core.Settings.Models.External
 
     public class EmbyServers : ExternalSettings
     {
+        public string Name { get; set; }
         public string ApiKey { get; set; }
         public string AdministratorId { get; set; }
         public bool EnableEpisodeSearching { get; set; }
