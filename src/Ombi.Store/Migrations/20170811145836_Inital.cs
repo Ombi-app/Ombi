@@ -297,6 +297,26 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tokens",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Token = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tokens", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PlexSeasonsContent",
                 columns: table => new
                 {
@@ -532,6 +552,11 @@ namespace Ombi.Store.Migrations
                 column: "TvId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tokens_UserId",
+                table: "Tokens",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_EpisodeRequests_SeasonId",
                 table: "EpisodeRequests",
                 column: "SeasonId");
@@ -582,6 +607,9 @@ namespace Ombi.Store.Migrations
 
             migrationBuilder.DropTable(
                 name: "TvIssues");
+
+            migrationBuilder.DropTable(
+                name: "Tokens");
 
             migrationBuilder.DropTable(
                 name: "EpisodeRequests");

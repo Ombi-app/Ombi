@@ -94,6 +94,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
             services.AddTransient<IAuditRepository, AuditRepository>();
             services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
+            services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)
