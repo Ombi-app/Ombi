@@ -9,48 +9,201 @@
      [infiniteScrollDistance]="1"
      [infiniteScrollThrottle]="100"
      (scrolled)="loadMore()">
+    <!--<div>-->
 
+    <p-treeTable [value]="tvRequests">
+        <!--<p-column>
+            <ng-template let-col let-node="rowData" pTemplate="body">
+                <img src="{{node.data.data.banner}}" class="img-responsive poster" width="150" />
+            </ng-template>
+        </p-column>-->
 
-    <div *ngFor="let request of tvRequests">
+        <p-column>
+            <ng-template let-col let-node="rowData" pTemplate="header">
+                Results
+            </ng-template>
+            <ng-template let-col let-node="rowData" pTemplate="body">
+                <!--This is the section that holds the parent level results set-->
+                <div *ngIf="!node.leaf">
+                    <div class="row">
+                        <div class="col-sm-2">
 
+                            <img class="img-responsive poster" src="{{node.data.posterPath}}" alt="poster">
 
-        <div class="row">
-            <div class="col-sm-2">
+                        </div>
 
-                <img class="img-responsive poster" src="{{request.posterPath}}" alt="poster">
+                        <div class="col-sm-5 ">
+                            <div>
+                                <a href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
+                                    <h4 class="request-title">{{node.data.title}} ({{node.data.releaseDate | date: 'yyyy'}})</h4>
+                                </a>
+                            </div>
+                            <br />
+                            <div>
+                                <span>Status: </span>
+                                <span class="label label-success">{{node.data.status}}</span>
+                            </div>
 
-            </div>
+                            <div>
+                                <span>Request status: </span>
+                                <span *ngIf="node.data.available" class="label label-success">Available</span>
+                                <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>
+                                <span *ngIf="node.data.denied" class="label label-danger">Request Denied</span>
+                                <span *ngIf="node.data.deniedReason" title="{{node.data.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                                <span *ngIf="!node.data.approved && !node.data.availble && !node.data.denied" class="label label-warning">Pending Approval</span>
 
-            <div class="col-sm-5 ">
-                <div>
-                    <a href="http://www.imdb.com/title/{{request.imdbId}}/" target="_blank">
-                        <h4 class="request-title">{{request.title}} ({{request.releaseDate | date: 'yyyy'}})</h4>
-                    </a>
+                            </div>
+                            <div>Release Date: {{node.data.releaseDate | date}}</div>
+                            <br />
+                            <div>Requested Date: {{node.data.requestedDate | date}}</div>
+                        </div>
+                        <div class="col-sm-3 col-sm-push-3">
+
+                            <button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>
+                        </div>
+                    </div>
                 </div>
-                <br />
-                <div>
-                    <span>Status: </span>
-                    <span class="label label-success">{{request.status}}</span>
+                <!--This is the section that holds the child seasons if they want to specify specific episodes-->
+                <div *ngIf="node.leaf">
+                    <hr />
+                    <div *ngIf="node.data">
+                        <div *ngFor="let child of node.data">
+                            <div class="col-md-12">
+
+                                <div class="col-md-2">
+                                    <span>Requested By: {{child.requestedUser.userName}}</span>
+                                </div>
+
+
+                                <div class="col-md-1 col-md-push-9">
+                                    <!--// TODO ADMIN-->
+                                    <form>
+                                        <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                                    </form>
+                                    <form>
+                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                                    </form>
+                                    <form>
+                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <ngb-tabset>
+
+                                    <div *ngFor="let season of child.seasonRequests">
+                                        <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
+                                            <ng-template ngbTabContent>
+                                                <h2>Season: {{season.seasonNumber}}</h2>
+
+                                                <table class="table table-striped table-hover table-responsive table-condensed">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <a>
+                                                                    #
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a>
+                                                                    Title
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a>
+                                                                    Air Date
+                                                                </a>
+                                                            </th>
+                                                            <th>
+                                                                <a>
+                                                                    Status
+                                                                </a>
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr *ngFor="let ep of season.episodes">
+                                                            <td>
+                                                                {{ep.episodeNumber}}
+                                                            </td>
+                                                            <td>
+                                                                {{ep.title}}
+                                                            </td>
+                                                            <td>
+                                                                {{ep.airDate | date: 'dd/MM/yyyy' }}
+                                                            </td>
+                                                            <td>
+                                                                <span *ngIf="ep.available" class="label label-success">Available</span>
+                                                                <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
+                                                                <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
+                                                                <ng-template #requested>
+                                                                    <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
+                                                                </ng-template>
+
+                                                                <ng-template #notRequested>
+                                                                    <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
+                                                                </ng-template>
+                                                            </td>
+
+
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </ng-template>
+                                        </ngb-tab>
+                                    </div>
+                                </ngb-tabset>
+                            </div>
+                            <br />
+                            <br />
+                            <hr />
+                        </div>
+
+                    </div>
                 </div>
+            </ng-template>
+        </p-column>
+    </p-treeTable>
 
-                <div>
-                    <span>Request status: </span>
-                    <span *ngIf="request.available" class="label label-success">Available</span>
-                    <span *ngIf="request.approved && !request.available" class="label label-info">Processing Request</span>
-                    <span *ngIf="request.denied" class="label label-danger">Request Denied</span>
-                    <span *ngIf="request.deniedReason" title="{{request.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                    <span *ngIf="!request.approved && !request.availble && !request.denied" class="label label-warning">Pending Approval</span>
 
-                </div>
-                <div>Release Date: {{request.releaseDate | date}}</div>
-                <br />
-                <div>Requested Date: {{request.requestedDate | date}}</div>
-            </div>
-            <div class="col-sm-3 col-sm-push-3">
+    <!--<div *ngFor="let request of tvRequests">-->
+    <!--<div class="row">
+        <div class="col-sm-2">
 
-                <button [routerLink]="[request.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>
-            </div>
+            <img class="img-responsive poster" src="{{node.data.posterPath}}" alt="poster">
+
         </div>
-        <hr />
+
+        <div class="col-sm-5 ">
+            <div>
+                <a href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
+                    <h4 class="request-title">{{node.data.title}} ({{node.data.releaseDate | date: 'yyyy'}})</h4>
+                </a>
+            </div>
+            <br />
+            <div>
+                <span>Status: </span>
+                <span class="label label-success">{{node.data.status}}</span>
+            </div>
+
+            <div>
+                <span>Request status: </span>
+                <span *ngIf="node.data.available" class="label label-success">Available</span>
+                <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>
+                <span *ngIf="node.data.denied" class="label label-danger">Request Denied</span>
+                <span *ngIf="node.data.deniedReason" title="{{node.data.deniedReason}}"><i class="fa fa-info-circle"></i></span>
+                <span *ngIf="!node.data.approved && !node.data.availble && !node.data.denied" class="label label-warning">Pending Approval</span>
+
+            </div>
+            <div>Release Date: {{node.data.releaseDate | date}}</div>
+            <br />
+            <div>Requested Date: {{node.data.requestedDate | date}}</div>
+        </div>
+        <div class="col-sm-3 col-sm-push-3">
+
+            <button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>
+        </div>
     </div>
+    <hr />-->
+    <!--</div>-->
 </div>

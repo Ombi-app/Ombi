@@ -15,6 +15,7 @@ import { TvRequestsComponent } from './tvrequests.component';
 import { TvRequestManageComponent } from './tvrequest-manage.component';
 //import { RequestGridComponent } from '../request-grid/request-grid.component';
 // import { RequestCardComponent } from '../request-grid/request-card.component';
+import { TreeTableModule } from 'primeng/primeng';
 
 import { IdentityService } from '../services/identity.service';
 import { RequestService } from '../services/request.service';
@@ -35,6 +36,7 @@ const routes: Routes = [
         InfiniteScrollModule,
         ButtonModule,
         DialogModule,
+        TreeTableModule
     ],
     declarations: [
         RequestComponent,
@@ -49,6 +51,6 @@ const routes: Routes = [
         IdentityService,
         RequestService
     ],
-   
+
 })
 export class RequestsModule { }

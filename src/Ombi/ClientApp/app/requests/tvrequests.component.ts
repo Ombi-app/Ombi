@@ -12,7 +12,8 @@ import 'rxjs/add/operator/map';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { ITvRequests, IChildRequests } from '../interfaces/IRequestModel';
+import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
+import { /*TreeTableModule,*/ TreeNode, /*SharedModule*/ } from "primeng/primeng";
 
 @Component({
     selector: 'tv-requests',
@@ -32,11 +33,24 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                 }
                 this.requestService.searchTvRequests(this.searchText)
                     .takeUntil(this.subscriptions)
-                    .subscribe(m => this.tvRequests = m);
+                    .subscribe(m => this.tvRequests = this.transformData(m));
             });
     }
 
-
+    transformData(datain: ITvRequests[]): any {
+        var temp: TreeNode[] = [];
+        datain.forEach(function (value) {
+            temp.push({
+                "data": value,
+                "children": [{
+                    "data": this.fixEpisodeSort(value.childRequests), leaf: true
+                }],
+                leaf: false
+            });
+        }, this)
+        console.log(temp);
+        return <TreeNode[]>temp;
+    }
     private subscriptions = new Subject<void>();
 
     tvRequests: ITvRequests[];
@@ -52,14 +66,22 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
 
-
+    fixEpisodeSort(items: IChildRequests[]) {
+        items.forEach(function (value) {
+            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
+                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
+                    return a.episodeNumber - b.episodeNumber;
+                })
+            })
+        })
+        return items;
+    }
     ngOnInit() {
         this.amountToLoad = 5;
         this.currentlyLoaded = 5;
+        this.tvRequests = [];
         this.loadInit();
     }
-
-
 
     public loadMore() {
         this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
@@ -78,6 +100,11 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.removeTvRequest(request);
         this.removeRequestFromUi(request);
     }
+    public removeChildRequest(request: IChildRequests) {
+        this.requestService.deleteChild(request)
+            .subscribe();
+        this.removeChildRequestFromUi(request);
+    }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
@@ -85,16 +112,29 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         //this.updateRequest(request);
     }
 
+    //Was already here but not sure what's using it...'
+    //public approve(request: IChildRequests) {
+    //    request.approved = true;
+    //    request.denied = false;
+    //    //this.updateRequest(request);
+    //}
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
-        //this.updateRequest(request);
+        this.requestService.updateChild(request)
+            .subscribe();
     }
-
+    //Was already here but not sure what's using it...'
+    //public deny(request: IChildRequests) {
+    //    request.approved = false;
+    //    request.denied = true;
+    //    //this.updateRequest(request);
+    //}
     public deny(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
-        //this.updateRequest(request);
+        this.requestService.updateChild(request)
+            .subscribe();
     }
 
     public approveSeasonRequest(request: IChildRequests) {
@@ -110,10 +150,26 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.updateTvRequest(this.selectedSeason)
             .subscribe();
     }
+    public denyChildSeasonRequest(request: IChildRequests) {
+        request.approved = false;
+        request.denied = true;
+        this.requestService.updateChild(request)
+            .subscribe();
+    }
 
     public showChildren(request: ITvRequests) {
         this.selectedSeason = request;
         this.showChildDialogue = true;
+    }
+
+    public getColour(ep: IEpisodesRequests): string {
+        if (ep.available) {
+            return "lime";
+        }
+        if (ep.approved) {
+            return "#00c0ff";
+        }
+        return "white";
     }
 
     //private updateRequest(request: ITvRequests) {
@@ -126,7 +182,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.getTvRequests(this.amountToLoad, 0)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.tvRequests = x;
+                this.tvRequests = this.transformData(x);
             });
         this.isAdmin = this.identityService.hasRole("Admin");
     }
@@ -142,6 +198,14 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             this.tvRequests.splice(index, 1);
         }
     }
+    private removeChildRequestFromUi(key: IChildRequests) {
+        //var index = this.childRequests.indexOf(key, 0);
+        //if (index > -1) {
+        //    this.childRequests.splice(index, 1);
+        //}
+        //TODO FIX THIS
+    }
+
 
     ngOnDestroy(): void {
         this.subscriptions.next();
