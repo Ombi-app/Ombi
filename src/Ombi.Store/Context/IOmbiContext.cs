@@ -29,5 +29,6 @@ namespace Ombi.Store.Context
         DbSet<ChildRequests> ChildRequests { get; set; }
         DbSet<MovieIssues> MovieIssues { get; set; }
         DbSet<TvIssues> TvIssues { get; set; }
+        DbSet<Tokens> Tokens { get; set; }
     }
 }

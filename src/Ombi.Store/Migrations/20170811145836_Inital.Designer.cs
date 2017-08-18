@@ -10,7 +10,7 @@ using Ombi.Helpers;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20170801143617_Inital")]
+    [Migration("20170811145836_Inital")]
     partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -449,6 +449,22 @@ namespace Ombi.Store.Migrations
                     b.ToTable("TvRequests");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Token");
+
+                    b.Property<string>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>
                 {
                     b.Property<int>("Id")
@@ -579,6 +595,13 @@ namespace Ombi.Store.Migrations
                         .WithMany()
                         .HasForeignKey("TvId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.OmbiUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Ombi.Store.Repository.Requests.EpisodeRequests", b =>

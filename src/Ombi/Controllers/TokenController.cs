@@ -20,18 +20,20 @@ namespace Ombi.Controllers
     public class TokenController
     {
         public TokenController(UserManager<OmbiUser> um, IOptions<TokenAuthentication> ta,
-            IApplicationConfigRepository config, IAuditRepository audit)
+            IApplicationConfigRepository config, IAuditRepository audit, ITokenRepository token)
         {
-            UserManager = um;
-            TokenAuthenticationOptions = ta.Value;
-            Config = config;
-            Audit = audit;
+            _userManager = um;
+            _tokenAuthenticationOptions = ta.Value;
+            _config = config;
+            _audit = audit;
+            _token = token;
         }
 
-        private TokenAuthentication TokenAuthenticationOptions { get; }
-        private IApplicationConfigRepository Config { get; }
-        private IAuditRepository Audit { get; }
-        private UserManager<OmbiUser> UserManager { get; }
+        private readonly TokenAuthentication _tokenAuthenticationOptions;
+        private IApplicationConfigRepository _config;
+        private readonly IAuditRepository _audit;
+        private readonly ITokenRepository _token;
+        private readonly UserManager<OmbiUser> _userManager;
 
         /// <summary>
         /// Gets the token.
@@ -41,40 +43,31 @@ namespace Ombi.Controllers
         [HttpPost]
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
-            await Audit.Record(AuditType.None, AuditArea.Authentication,
+            await _audit.Record(AuditType.None, AuditArea.Authentication,
                 $"Username {model.Username} attempting to authenticate");
 
-            var user = await UserManager.FindByNameAsync(model.Username);
+            var user = await _userManager.FindByNameAsync(model.Username);
 
             if (user == null)
             {
-                return null;
+                return new UnauthorizedResult();
             }
 
             // Verify Password
-            if ((await UserManager.CheckPasswordAsync(user, model.Password)))
+            if (await _userManager.CheckPasswordAsync(user, model.Password))
             {
-                // Get the url
-                var url = Config.Get(ConfigurationTypes.Url);
-                var port = Config.Get(ConfigurationTypes.Port);
-
-#if !DEBUG
-                var audience = $"{url}:{port}";
-#else
-
-                var audience = $"http://localhost:52038/";
-#endif
-                var roles = await UserManager.GetRolesAsync(user);
+                var roles = await _userManager.GetRolesAsync(user);
 
                 var claims = new List<Claim>
                         {
                             new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                            new Claim("name", user.UserName),
+                            new Claim(ClaimTypes.NameIdentifier, user.Id),
+                            new Claim(ClaimTypes.Name, user.UserName),
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
                         };
                 claims.AddRange(roles.Select(role => new Claim("role", role)));
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(TokenAuthenticationOptions.SecretKey));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_tokenAuthenticationOptions.SecretKey));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
                 var token = new JwtSecurityToken(
@@ -83,15 +76,21 @@ namespace Ombi.Controllers
                     signingCredentials: creds,
                     audience: "Ombi", issuer:"Ombi"
                 );
+                var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+                if (model.RememberMe)
+                {
+                    // Save the token so we can refresh it later
+                    await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
+                }
 
                 return new JsonResult(new
                 {
-                    access_token = new JwtSecurityTokenHandler().WriteToken(token),
+                    access_token = accessToken,
                     expiration = token.ValidTo
                 });
             }
 
-            return null;
+            return new UnauthorizedResult();
         }
 
         /// <summary>
@@ -101,9 +100,24 @@ namespace Ombi.Controllers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] UserAuthModel model)
+        public async Task<IActionResult> RefreshToken([FromBody] TokenRefresh token)
         {
+
+            // Check if token exists
+            var dbToken = _token.GetToken(token.Token).FirstOrDefault();
+            if (dbToken == null)
+            {
+                return new UnauthorizedResult();
+            }
+                
+
             throw new NotImplementedException();
+        }
+
+        public class TokenRefresh
+        {
+            public string Token { get; set; }
+            public string Userename { get; set; }
         }
 
     }
