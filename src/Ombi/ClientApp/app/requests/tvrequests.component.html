@@ -10,7 +10,6 @@
      [infiniteScrollThrottle]="100"
      (scrolled)="loadMore()">
     <!--<div>-->
-
     <p-treeTable [value]="tvRequests">
         <!--<p-column>
             <ng-template let-col let-node="rowData" pTemplate="body">
@@ -59,7 +58,8 @@
                         </div>
                         <div class="col-sm-3 col-sm-push-3">
 
-                            <button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>
+                            <button  style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab($event)"><i class="fa fa-plus"></i> View</button>
+                            <!--<button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>-->
                         </div>
                     </div>
                 </div>
