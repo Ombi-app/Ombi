@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RequestService } from '../services/request.service';
 import { IdentityService } from '../services/identity.service';
 
-import { IChildRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
+import { IChildRequests, IEpisodesRequests, INewSeasonRequests } from '../interfaces/IRequestModel';
 
 @Component({
     templateUrl: './tvrequest-manage.component.html'
@@ -17,7 +17,7 @@ export class TvRequestManageComponent {
             .subscribe(params => {
                 this.tvId = +params['id']; // (+) converts string 'id' to a number
                 this.requestService.getChildRequests(this.tvId).subscribe(x => {
-                    this.childRequests = x;
+                    this.childRequests = this.fixEpisodeSort(x);
                 });
             });
 
@@ -27,7 +27,16 @@ export class TvRequestManageComponent {
     tvId: number;
     childRequests: IChildRequests[];
     isAdmin: boolean;
-
+    public fixEpisodeSort(items: IChildRequests[]) {
+        items.forEach(function (value) {
+            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
+                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
+                    return a.episodeNumber - b.episodeNumber;
+                })
+            })
+        })
+        return items;
+    }
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)
             .subscribe();
@@ -49,7 +58,7 @@ export class TvRequestManageComponent {
         request.approved = true;
         request.denied = false;
         this.requestService.updateChild(request)
-             .subscribe();
+            .subscribe();
     }
 
     public denySeasonRequest(request: IChildRequests) {
@@ -60,12 +69,10 @@ export class TvRequestManageComponent {
     }
 
     public getColour(ep: IEpisodesRequests): string {
-        if (ep.available)
-        {
+        if (ep.available) {
             return "lime";
         }
-        if (ep.approved)
-        {
+        if (ep.approved) {
             return "#00c0ff";
         }
         return "white";
