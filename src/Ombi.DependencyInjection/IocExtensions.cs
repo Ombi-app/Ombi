@@ -28,7 +28,9 @@ using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
 using Ombi.Api.FanartTv;
+using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
+using Ombi.Api.Pushover;
 using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
@@ -78,6 +80,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPushbulletApi, PushbulletApi>();
             services.AddTransient<IOmbiService, OmbiService>();
             services.AddTransient<IFanartTvApi, FanartTvApi>();
+            services.AddTransient<IPushoverApi, PushoverApi>();
+            services.AddTransient<IMattermostApi, MattermostApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)
@@ -109,6 +113,9 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmailNotification, EmailNotification>();
             services.AddTransient<IPushbulletNotification, PushbulletNotification>();
             services.AddTransient<ISlackNotification, SlackNotification>();
+            services.AddTransient<ISlackNotification, SlackNotification>();
+            services.AddTransient<IMattermostNotification, MattermostNotification>();
+            services.AddTransient<IPushoverNotification, PushoverNotification>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

@@ -10,7 +10,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Mattermost\Ombi.Api.Mattermost.csproj" />
     <ProjectReference Include="..\Ombi.Api.Pushbullet\Ombi.Api.Pushbullet.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Pushover\Ombi.Api.Pushover.csproj" />
     <ProjectReference Include="..\Ombi.Api.Slack\Ombi.Api.Slack.csproj" />
     <ProjectReference Include="..\Ombi.Notifications.Templates\Ombi.Notifications.Templates.csproj" />
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />

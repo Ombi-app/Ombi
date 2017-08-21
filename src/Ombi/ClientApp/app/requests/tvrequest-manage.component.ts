@@ -48,6 +48,7 @@ export class TvRequestManageComponent {
     }
 
     public deny(request: IChildRequests) {
+        debugger;
         request.approved = false;
         request.denied = true;
         this.requestService.updateChild(request)
@@ -55,6 +56,7 @@ export class TvRequestManageComponent {
     }
 
     public approve(request: IChildRequests) {
+        debugger;
         request.approved = true;
         request.denied = false;
         this.requestService.updateChild(request)

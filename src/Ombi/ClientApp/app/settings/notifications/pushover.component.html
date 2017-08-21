@@ -2,7 +2,7 @@
 <settings-menu></settings-menu>
 <div *ngIf="form">
     <fieldset>
-        <legend>Pushbullet Notifications</legend>
+        <legend>Pushover Notifications</legend>
         <div class="col-md-6">
             <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
 
@@ -16,18 +16,17 @@
                 <div *ngIf="form.invalid && form.dirty" class="alert alert-danger">
                     <div *ngIf="form.get('accessToken').hasError('required')">The Access Token is required</div>
                 </div>
-                <small>You can find this here: <a href="https://www.pushbullet.com/#settings/account">https://www.pushbullet.com/#settings/account </a></small>
                 <div class="form-group">
                     <label for="accessToken" class="control-label">Access Token</label>
                     <div>
-                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" formControlName="accessToken">
+                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="channelTag" class="control-label">Channel Tag</label>
+                    <label for="userToken" class="control-label">User Token</label>
                     <div>
-                        <input type="text" class="form-control form-control-custom " id="channelTag" name="channelTag" formControlName="channelTag" pTooltip="Optional, this is if you want to send a message to everyone subscribed to a channel">
+                        <input type="text" class="form-control form-control-custom " id="userToken" name="userToken" formControlName="userToken" pTooltip="Your user or group key from Pushover.">
                     </div>
                 </div>
 

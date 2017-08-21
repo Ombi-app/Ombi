@@ -7,6 +7,7 @@
         Pushbullet,
         Pushover,
         Telegram,
-        Slack
+        Slack,
+        Mattermost,
     }
 }

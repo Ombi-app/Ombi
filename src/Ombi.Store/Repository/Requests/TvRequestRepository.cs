@@ -74,11 +74,15 @@ namespace Ombi.Store.Repository.Requests
 
         public async Task Update(TvRequests request)
         {
+            Db.Attach(request).State = EntityState.Modified;
+            
             await Db.SaveChangesAsync();
         }
         
         public async Task UpdateChild(ChildRequests request)
         {
+            Db.Attach(request).State = EntityState.Modified;
+            
             await Db.SaveChangesAsync();
         }
     }

@@ -141,12 +141,9 @@ namespace Ombi.Core.Engine
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
             await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
-            var allRequests = TvRepository.GetChild();
-            var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
-
-            // TODO need to check if we need to approve any child requests since they may have updated
-            await TvRepository.UpdateChild(results);
-            return results;
+            
+            await TvRepository.UpdateChild(request);
+            return request;
         }
 
         public async Task RemoveTvChild(int requestId)

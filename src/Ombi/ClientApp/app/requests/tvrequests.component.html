@@ -54,7 +54,6 @@
                             </div>
                             <div>Release Date: {{node.data.releaseDate | date}}</div>
                             <br />
-                            <div>Requested Date: {{node.data.requestedDate | date}}</div>
                         </div>
                         <div class="col-sm-3 col-sm-push-3">
 
@@ -72,19 +71,24 @@
 
                                 <div class="col-md-2">
                                     <span>Requested By: {{child.requestedUser.userName}}</span>
+                                    <span>Requested Date: {{child.requestedDate | date}}</span>
+
+                                    <span *ngIf="child.available" class="label label-success">Available</span>
+                                    <span *ngIf="child.denied" class="label label-danger">Denied</span>
+                                    <span *ngIf="child.approved && !child.available && !child.denied" class="label label-info">Processing Request</span>
                                 </div>
 
 
-                                <div class="col-md-1 col-md-push-9">
+                                <div class="col-md-1 col-md-push-9" *ngIf="admin">
                                     <!--// TODO ADMIN-->
                                     <form>
-                                        <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                                        <button style="text-align: right" *ngIf="child.canApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
                                     </form>
                                     <form>
-                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
+                                        <button type="button"  *ngIf="!child.denied" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
                                     </form>
                                     <form>
-                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
+                                        <button type="button" (click)="removeChildRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
                                     </form>
                                 </div>
                             </div>
@@ -100,24 +104,16 @@
                                                     <thead>
                                                         <tr>
                                                             <th>
-                                                                <a>
-                                                                    #
-                                                                </a>
+                                                                <a>#</a>
                                                             </th>
                                                             <th>
-                                                                <a>
-                                                                    Title
-                                                                </a>
+                                                                <a>Title</a>
                                                             </th>
                                                             <th>
-                                                                <a>
-                                                                    Air Date
-                                                                </a>
+                                                                <a>Air Date</a>
                                                             </th>
                                                             <th>
-                                                                <a>
-                                                                    Status
-                                                                </a>
+                                                                <a>Status</a>
                                                             </th>
                                                         </tr>
                                                     </thead>

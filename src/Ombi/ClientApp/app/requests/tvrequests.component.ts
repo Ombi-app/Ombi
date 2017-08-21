@@ -10,6 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
+import { AuthService } from '../auth/auth.service';
 import { IdentityService } from '../services/identity.service';
 
 import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
@@ -25,7 +26,8 @@ import { TreeNode, } from "primeng/primeng";
     encapsulation: ViewEncapsulation.None
 })
 export class TvRequestsComponent implements OnInit, OnDestroy {
-    constructor(private requestService: RequestService, private identityService: IdentityService) {
+    constructor(private requestService: RequestService,
+        private identityService: IdentityService, private authService : AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -41,6 +43,17 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                     .subscribe(m => this.tvRequests = this.transformData(m));
             });
     }
+
+    ngOnInit() {
+        this.amountToLoad = 5;
+        this.currentlyLoaded = 5;
+        this.tvRequests = [];
+        this.loadInit();
+        this.admin = this.authService.hasRole("admin");
+    }
+
+    public admin = false;
+
     openClosestTab(el:any): void {
         var rowclass = "undefined";
         el = el.toElement;
@@ -70,17 +83,21 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     }
     transformData(datain: ITvRequests[]): any {
         var temp: TreeNode[] = [];
-        datain.forEach(function (value) {
-            temp.push({
-                "data": value,
-                "children": [{
-                    "data": this.fixEpisodeSort(value.childRequests), leaf: true
-                }],
-                leaf: false
-            });
-        }, this)
+        datain.forEach(function(value) {
+                temp.push({
+                    "data": value,
+                    "children": [
+                        {
+                            "data": this.fixEpisodeSort(value.childRequests),
+                            leaf: true
+                        }
+                    ],
+                    leaf: false
+                });
+            },
+            this);
         console.log(temp);
-        return <TreeNode[]>temp;
+        return temp;
     }
     private subscriptions = new Subject<void>();
 
@@ -97,22 +114,16 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
 
-    fixEpisodeSort(items: IChildRequests[]) {
-        items.forEach(function (value) {
-            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
-                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
-                    return a.episodeNumber - b.episodeNumber;
-                })
-            })
-        })
+    private fixEpisodeSort(items: IChildRequests[]) : IChildRequests[] {
+        items.forEach(value => {
+            value.seasonRequests.forEach((requests: INewSeasonRequests) => {
+                requests.episodes.sort(
+                    (a: IEpisodesRequests, b: IEpisodesRequests) => a.episodeNumber - b.episodeNumber)
+            });
+        });
         return items;
     }
-    ngOnInit() {
-        this.amountToLoad = 5;
-        this.currentlyLoaded = 5;
-        this.tvRequests = [];
-        this.loadInit();
-    }
+
 
     public loadMore() {
         this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
@@ -143,25 +154,15 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         //this.updateRequest(request);
     }
 
-    //Was already here but not sure what's using it...'
-    //public approve(request: IChildRequests) {
-    //    request.approved = true;
-    //    request.denied = false;
-    //    //this.updateRequest(request);
-    //}
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
         this.requestService.updateChild(request)
             .subscribe();
     }
-    //Was already here but not sure what's using it...'
-    //public deny(request: IChildRequests) {
-    //    request.approved = false;
-    //    request.denied = true;
-    //    //this.updateRequest(request);
-    //}
+
     public deny(request: IChildRequests) {
+        debugger;
         request.approved = false;
         request.denied = true;
         this.requestService.updateChild(request)
@@ -230,11 +231,13 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         }
     }
     private removeChildRequestFromUi(key: IChildRequests) {
-        //var index = this.childRequests.indexOf(key, 0);
-        //if (index > -1) {
-        //    this.childRequests.splice(index, 1);
-        //}
-        //TODO FIX THIS
+        this.tvRequests.forEach((val) => {
+            var data = (<any>val).data;
+            var index = data.childRequests.indexOf(key, 0);
+            if (index > -1) {
+                data.childRequests.splice(index, 1);
+            }
+        });
     }
 
 

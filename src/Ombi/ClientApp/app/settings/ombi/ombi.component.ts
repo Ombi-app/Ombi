@@ -29,13 +29,17 @@ export class OmbiComponent implements OnInit {
 
 
     refreshApiKey() {
-
+        this.settingsService.resetOmbiApi().subscribe(x => {
+            this.form.patchValue({
+                apiKey: x
+            });
+        });
     }
 
     onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
         this.settingsService.saveOmbi(form.value).subscribe(x => {
             if (x) {

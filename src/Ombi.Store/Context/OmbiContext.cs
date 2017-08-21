@@ -71,18 +71,23 @@ namespace Ombi.Store.Context
             }
 
 
-            // Check if templates exist
+            //Check if templates exist
             var templates = NotificationTemplates.ToList();
-            if (templates.Any())
-            {
-                return;
-            }
+            //if (templates.Any())
+            //{
+            //    return;
+            //}
 
             var allAgents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().ToList();
             var allTypes = Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToList();
 
             foreach (var agent in allAgents)
             {
+                if (templates.Any(x => x.Agent == agent))
+                {
+                    // We have all the templates for this notification agent
+                    continue;
+                }
                 foreach (var notificationType in allTypes)
                 {
                     NotificationTemplates notificationToAdd;

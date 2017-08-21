@@ -105,7 +105,8 @@ export interface IBaseRequest {
     denied: boolean,
     deniedReason: string,
     requestType: RequestType,
-    requestedUser: IUser
+    requestedUser: IUser,
+    canApprove:boolean,
 }
 
 export interface ITvRequests {
