@@ -68,7 +68,7 @@ namespace Ombi.Core
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {
-                Log.LogError(LoggingEvents.RadarrCacherException,result.Error.message);
+                Log.LogError(LoggingEvents.RadarrCacher,result.Error.message);
                 return new MovieSenderResult { Success = false, Message = result.Error.message, MovieSent = false };
             }
             if (!string.IsNullOrEmpty(result.title))

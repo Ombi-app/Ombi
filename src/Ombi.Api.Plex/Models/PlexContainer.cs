@@ -26,7 +26,7 @@
 #endregion
 namespace Ombi.Api.Plex.Models
 {
-    public class PlexLibraries
+    public class PlexContainer
     {
         public Mediacontainer MediaContainer { get; set; }
     }

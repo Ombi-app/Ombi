@@ -10,7 +10,7 @@ using Ombi.Helpers;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20170811145836_Inital")]
+    [Migration("20170823144220_Inital")]
     partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -269,6 +269,28 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PlexContent");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("EpisodeNumber");
+
+                    b.Property<string>("GrandparentKey");
+
+                    b.Property<string>("Key");
+
+                    b.Property<string>("ParentKey");
+
+                    b.Property<int>("SeasonNumber");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PlexEpisode");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.PlexSeasonsContent", b =>

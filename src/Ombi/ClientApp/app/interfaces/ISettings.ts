@@ -87,3 +87,15 @@ export interface ICustomizationSettings extends ISettings {
     applicationName: string,
     logo: string,
 }
+
+export interface IAuthenticationSettings extends ISettings {
+
+    allowExternalUsersToAuthenticate: boolean,
+    // Password
+
+    requiredDigit: boolean,
+    requiredLength: number,
+    requiredLowercase: boolean,
+    requireNonAlphanumeric: boolean,
+    requireUppercase:boolean,
+}

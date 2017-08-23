@@ -98,7 +98,7 @@ namespace Ombi.Api.Radarr
             }
             catch (JsonSerializationException jse)
             {
-                Logger.LogError(LoggingEvents.RadarrApiException, jse, "Error When adding movie to Radarr");
+                Logger.LogError(LoggingEvents.RadarrApi, jse, "Error When adding movie to Radarr");
             }
             return null;
         }

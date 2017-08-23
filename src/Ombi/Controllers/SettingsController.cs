@@ -193,6 +193,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Save the Authentication settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("authentication")]
+        public async Task<bool> AuthenticationsSettings([FromBody]AuthenticationSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("authentication")]
+        public async Task<AuthenticationSettings> AuthenticationsSettings()
+        {
+            return await Get<AuthenticationSettings>();
+        }
+
+        /// <summary>
         /// Save the Radarr settings.
         /// </summary>
         /// <param name="settings">The settings.</param>

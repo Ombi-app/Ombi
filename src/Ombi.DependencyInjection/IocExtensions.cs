@@ -35,6 +35,7 @@ using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
@@ -121,6 +122,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterJobs(this IServiceCollection services)
         {
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
+            services.AddTransient<IPlexEpisodeCacher, PlexEpisodeCacher>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();

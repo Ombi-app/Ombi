@@ -11,7 +11,8 @@ import {
     ISonarrSettings,
     ILandingPageSettings,
     ICustomizationSettings,
-    IRadarrSettings
+    IRadarrSettings,
+    IAuthenticationSettings
 } from '../interfaces/ISettings';
 import {
     IEmailNotificationSettings,
@@ -77,6 +78,17 @@ export class SettingsService extends ServiceAuthHelpers {
 
     saveRadarr(settings: IRadarrSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Radarr`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+
+    getAuthentication(): Observable<IAuthenticationSettings> {
+        return this.httpAuth.get(`${this.url}/Authentication`).map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
+        return this.httpAuth.post(`${this.url}/Authentication`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 

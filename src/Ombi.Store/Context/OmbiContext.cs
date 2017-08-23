@@ -26,6 +26,7 @@ namespace Ombi.Store.Context
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }
+        public DbSet<PlexEpisode> PlexEpisode { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         
         public DbSet<MovieRequests> MovieRequests { get; set; }

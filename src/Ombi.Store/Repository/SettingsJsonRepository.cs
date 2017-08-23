@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,10 @@ namespace Ombi.Store.Repository
         public GlobalSettings Get(string pageName)
         {
             var entity = Db.Settings.FirstOrDefault(x => x.SettingsName == pageName);
+            if (entity == null)
+            {
+                throw new ArgumentNullException($"The setting {pageName} does not exist");
+            }
             Db.Entry(entity).Reload();
             return entity;
         }

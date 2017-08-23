@@ -60,18 +60,18 @@ namespace Ombi.Api.Plex
             return await Api.Request<PlexServer>(request);
         }
 
-        public async Task<PlexLibraries> GetLibrarySections(string authToken, string plexFullHost)
+        public async Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost)
         {
             var request = new Request("library/sections", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
-            return await Api.Request<PlexLibraries>(request);
+            return await Api.Request<PlexContainer>(request);
         }
 
-        public async Task<PlexLibraries> GetLibrary(string authToken, string plexFullHost, string libraryId)
+        public async Task<PlexContainer> GetLibrary(string authToken, string plexFullHost, string libraryId)
         {
             var request = new Request($"library/sections/{libraryId}/all", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
-            return await Api.Request<PlexLibraries>(request);
+            return await Api.Request<PlexContainer>(request);
         }
 
         /// <summary>
@@ -107,6 +107,26 @@ namespace Ombi.Api.Plex
         }
 
         /// <summary>
+        /// Gets all episodes.
+        /// </summary>
+        /// <param name="authToken">The authentication token.</param>
+        /// <param name="host">The host.</param>
+        /// <param name="section">The section.</param>
+        /// <param name="start">The start count.</param>
+        /// <param name="retCount">The return count, how many items you want returned.</param>
+        /// <returns></returns>
+        public async Task<PlexContainer> GetAllEpisodes(string authToken, string host, string section, int start, int retCount)
+        {
+            var request = new Request($"/library/sections/{section}/all", host, HttpMethod.Get);
+
+            request.AddQueryString("type", "4");
+            AddLimitHeaders(request, start, retCount);
+            AddHeaders(request, authToken);
+
+            return await Api.Request<PlexContainer>(request);  
+        }
+
+        /// <summary>
         /// Adds the required headers and also the authorization header
         /// </summary>
         /// <param name="request"></param>
@@ -128,6 +148,12 @@ namespace Ombi.Api.Plex
             request.AddHeader("X-Plex-Version", "3");
             request.AddContentHeader("Content-Type", request.ContentType == ContentType.Json ? "application/json" : "application/xml");
             request.AddHeader("Accept", "application/json");
+        }
+
+        private void AddLimitHeaders(Request request, int from, int to)
+        {
+            request.AddHeader("X-Plex-Container-Start", from.ToString());
+            request.AddHeader("X-Plex-Container-Size", to.ToString());
         }
     }
 }

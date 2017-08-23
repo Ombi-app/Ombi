@@ -59,7 +59,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                 }
                 catch (System.Exception ex)
                 {
-                    Logger.LogError(LoggingEvents.CacherException, ex, "Failed caching queued items from Radarr");
+                    Logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Radarr");
                 }
             }
         }

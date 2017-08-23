@@ -145,6 +145,24 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PlexEpisode",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EpisodeNumber = table.Column<int>(nullable: false),
+                    GrandparentKey = table.Column<string>(nullable: true),
+                    Key = table.Column<string>(nullable: true),
+                    ParentKey = table.Column<string>(nullable: true),
+                    SeasonNumber = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlexEpisode", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RadarrCache",
                 columns: table => new
                 {
@@ -595,6 +613,9 @@ namespace Ombi.Store.Migrations
 
             migrationBuilder.DropTable(
                 name: "NotificationTemplates");
+
+            migrationBuilder.DropTable(
+                name: "PlexEpisode");
 
             migrationBuilder.DropTable(
                 name: "PlexSeasonsContent");

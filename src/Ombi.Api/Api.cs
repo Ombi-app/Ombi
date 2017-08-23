@@ -45,7 +45,7 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
+                            Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                         // do something with the response
                         var data = httpResponseMessage.Content;
@@ -89,7 +89,7 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
+                            Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                         // do something with the response
                         var data = httpResponseMessage.Content;
@@ -123,7 +123,7 @@ namespace Ombi.Api
                     {
                         if (!httpResponseMessage.IsSuccessStatusCode)
                         {
-                            Logger.LogError(LoggingEvents.ApiException, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
+                            Logger.LogError(LoggingEvents.Api, $"StatusCode: {httpResponseMessage.StatusCode}, Reason: {httpResponseMessage.ReasonPhrase}");
                         }
                     }
                 }
