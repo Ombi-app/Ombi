@@ -61,7 +61,10 @@ namespace Ombi.Store.Repository
 
         public async Task<GlobalSettings> GetAsync(string settingsName)
         {
-            return await Db.Settings.FirstOrDefaultAsync(x => x.SettingsName == settingsName);
+           
+            var obj =  await Db.Settings.FirstOrDefaultAsync(x => x.SettingsName == settingsName);
+            Db.Entry(obj).Reload();
+            return obj;
         }
 
         public async Task DeleteAsync(GlobalSettings entity)
