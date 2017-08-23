@@ -71,14 +71,19 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 if (settings.PlexSelectedLibraries.Any())
                 {
-                    // Make sure we have enabled this 
-                    var keys = settings.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString()).ToList();
-                    if (!keys.Contains(section.key))
+                    // Are any enabled?
+                    if (settings.PlexSelectedLibraries.Any(x => x.Enabled))
                     {
-                        // We are not monitoring this lib
-                        continue;
+                        // Make sure we have enabled this 
+                        var keys = settings.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString())
+                            .ToList();
+                        if (!keys.Contains(section.key))
+                        {
+                            // We are not monitoring this lib
+                            continue;
+                        }
                     }
-                    
+
                     // Get the episodes
                     await GetEpisodes(settings, section);
                 }

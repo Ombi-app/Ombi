@@ -40,7 +40,7 @@ namespace Ombi.Settings.Settings
 
         public async Task<T> GetSettingsAsync()
         {
-            var result = await Repo.GetAsync(EntityName).ConfigureAwait(false);
+            var result = await Repo.GetAsync(EntityName);
             if (result == null)
             {
                 return new T();
@@ -94,8 +94,8 @@ namespace Ombi.Settings.Settings
             modified.Id = entity.Id;
 
             var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
-            entity.Content = EncryptSettings(globalSettings);
-             await Repo.UpdateAsync(entity).ConfigureAwait(false);
+            globalSettings.Content = EncryptSettings(globalSettings);
+            await Repo.UpdateAsync(globalSettings).ConfigureAwait(false);
 
             return true;
         }
@@ -117,7 +117,7 @@ namespace Ombi.Settings.Settings
             {
                 await Repo.DeleteAsync(entity);
             }
-            
+
         }
 
         private string EncryptSettings(GlobalSettings settings)

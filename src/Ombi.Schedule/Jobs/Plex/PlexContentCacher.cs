@@ -61,7 +61,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         public async Task CacheContent()
         {
-            var plexSettings = Plex.GetSettings();
+            var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
                 return;
@@ -222,12 +222,16 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     if (plexSettings.PlexSelectedLibraries.Any())
                     {
-                        // Only get the enabled libs
-                        var keys = plexSettings.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString()).ToList();
-                        if (!keys.Contains(dir.key))
+                        if (plexSettings.PlexSelectedLibraries.Any(x => x.Enabled))
                         {
-                            // We are not monitoring this lib
-                            continue;
+                            // Only get the enabled libs
+                            var keys = plexSettings.PlexSelectedLibraries.Where(x => x.Enabled)
+                                .Select(x => x.Key.ToString()).ToList();
+                            if (!keys.Contains(dir.key))
+                            {
+                                // We are not monitoring this lib
+                                continue;
+                            }
                         }
                     }
                     var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key).Result;

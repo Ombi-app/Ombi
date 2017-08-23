@@ -63,7 +63,7 @@ namespace Ombi.Store.Repository
         {
            
             var obj =  await Db.Settings.FirstOrDefaultAsync(x => x.SettingsName == settingsName);
-            Db.Entry(obj).Reload();
+            if (obj != null) Db.Entry(obj).Reload();
             return obj;
         }
 

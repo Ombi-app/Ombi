@@ -19,7 +19,7 @@ namespace Ombi.Store.Context
             Database.Migrate();
             
             // Add the notifcation templates
-           
+        
         }
 
 
