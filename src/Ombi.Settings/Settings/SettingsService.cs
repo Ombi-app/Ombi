@@ -46,7 +46,11 @@ namespace Ombi.Settings.Settings
                 return new T();
             }
             result.Content = DecryptSettings(result);
-            return string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
+            var obj = string.IsNullOrEmpty(result.Content) ? null : JsonConvert.DeserializeObject<T>(result.Content, SerializerSettings.Settings);
+
+            var model = obj;
+
+            return model;
         }
 
         public bool SaveSettings(T model)
@@ -67,10 +71,10 @@ namespace Ombi.Settings.Settings
 
             var modified = model;
             modified.Id = entity.Id;
+            entity.Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings);
 
-            var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
-            globalSettings.Content = EncryptSettings(globalSettings);
-            Repo.Update(globalSettings);
+            entity.Content = EncryptSettings(entity);
+            Repo.Update(entity);
 
             return true;
         }
@@ -85,7 +89,7 @@ namespace Ombi.Settings.Settings
 
                 var settings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(newEntity, SerializerSettings.Settings) };
                 settings.Content = EncryptSettings(settings);
-                var insertResult = await Repo.InsertAsync(settings).ConfigureAwait(false);
+                var insertResult = await Repo.InsertAsync(settings);
 
                 return insertResult != null;
             }
@@ -93,9 +97,10 @@ namespace Ombi.Settings.Settings
             var modified = model;
             modified.Id = entity.Id;
 
-            var globalSettings = new GlobalSettings { SettingsName = EntityName, Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings), Id = entity.Id };
-            globalSettings.Content = EncryptSettings(globalSettings);
-            await Repo.UpdateAsync(globalSettings).ConfigureAwait(false);
+            entity.Content = JsonConvert.SerializeObject(modified, SerializerSettings.Settings);
+
+            entity.Content = EncryptSettings(entity);
+            await Repo.UpdateAsync(entity);
 
             return true;
         }

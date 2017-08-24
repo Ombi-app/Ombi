@@ -37,33 +37,27 @@ namespace Ombi.Store.Repository
         public IEnumerable<GlobalSettings> GetAll()
         {
 
-            var page = Db.Settings.ToList();
+            var page = Db.Settings.AsNoTracking().ToList();
             return page;
 
         }
 
         public async Task<IEnumerable<GlobalSettings>> GetAllAsync()
         {
-            var page = await Db.Settings.ToListAsync();
+            var page = await Db.Settings.AsNoTracking().ToListAsync();
             return page;
         }
 
         public GlobalSettings Get(string pageName)
         {
-            var entity = Db.Settings.FirstOrDefault(x => x.SettingsName == pageName);
-            if (entity == null)
-            {
-                throw new ArgumentNullException($"The setting {pageName} does not exist");
-            }
-            Db.Entry(entity).Reload();
+            var entity = Db.Settings.AsNoTracking().FirstOrDefault(x => x.SettingsName == pageName);
             return entity;
         }
 
         public async Task<GlobalSettings> GetAsync(string settingsName)
         {
            
-            var obj =  await Db.Settings.FirstOrDefaultAsync(x => x.SettingsName == settingsName);
-            if (obj != null) Db.Entry(obj).Reload();
+            var obj =  await Db.Settings.AsNoTracking().FirstOrDefaultAsync(x => x.SettingsName == settingsName);
             return obj;
         }
 
@@ -75,6 +69,7 @@ namespace Ombi.Store.Repository
 
         public async Task UpdateAsync(GlobalSettings entity)
         {
+            Db.Update(entity);
             await Db.SaveChangesAsync();
         }
 

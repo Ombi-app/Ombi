@@ -83,10 +83,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             continue;
                         }
                     }
-
-                    // Get the episodes
-                    await GetEpisodes(settings, section);
                 }
+
+                // Get the episodes
+                await GetEpisodes(settings, section);
             }
 
         }
@@ -99,17 +99,17 @@ namespace Ombi.Schedule.Jobs.Plex
             var ResultCount = 50;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, ResultCount);
 
-            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.size}");
+            _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
             await ProcessEpsiodes(episodes);
             currentPosition += ResultCount;
 
-            while (currentPosition < episodes.MediaContainer.size)
+            while (currentPosition < episodes.MediaContainer.totalSize)
             {
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     ResultCount);
                 await ProcessEpsiodes(ep);
-                _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {ResultCount} more episodes. Total Remaining {currentPosition - episodes.MediaContainer.size}");
+                _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {ResultCount} more episodes. Total Remaining {currentPosition - episodes.MediaContainer.totalSize}");
                 currentPosition += ResultCount;
             }
 
@@ -128,9 +128,9 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     EpisodeNumber = episode.index,
                     SeasonNumber = episode.parentIndex,
-                    GrandparentKey = episode.grandparentKey,
-                    ParentKey = episode.parentKey,
-                    Key = episode.key,
+                    GrandparentKey = episode.grandparentRatingKey,
+                    ParentKey = episode.parentRatingKey,
+                    Key = episode.ratingKey,
                     Title = episode.title
                 });
             }
