@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -29,38 +30,45 @@ namespace Ombi.Schedule.Jobs.Radarr
 
         public async Task CacheContent()
         {
-            var settings = RadarrSettings.GetSettings();
-            if (settings.Enabled)
+            try
             {
-                try
+                var settings = RadarrSettings.GetSettings();
+                if (settings.Enabled)
                 {
-                    var movies = await RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
-                    if (movies != null)
+                    try
                     {
-                        // Let's remove the old cached data
-                        await _ctx.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE RadarrCache");
-
-                        var movieIds = new List<RadarrCache>();
-                        foreach (var m in movies)
+                        var movies = await RadarrApi.GetMovies(settings.ApiKey, settings.FullUri);
+                        if (movies != null)
                         {
-                            if (m.tmdbId > 0)
-                            {
-                                movieIds.Add(new RadarrCache{TheMovieDbId = m.tmdbId});
-                            }
-                            else
-                            {
-                                Log.Error("TMDBId is not > 0 for movie {0}", m.title);
-                            }
-                        }
-                        await _ctx.RadarrCache.AddRangeAsync(movieIds);
+                            // Let's remove the old cached data
+                            await _ctx.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE RadarrCache");
 
-                        await _ctx.SaveChangesAsync();
+                            var movieIds = new List<RadarrCache>();
+                            foreach (var m in movies)
+                            {
+                                if (m.tmdbId > 0)
+                                {
+                                    movieIds.Add(new RadarrCache { TheMovieDbId = m.tmdbId });
+                                }
+                                else
+                                {
+                                    Log.Error("TMDBId is not > 0 for movie {0}", m.title);
+                                }
+                            }
+                            await _ctx.RadarrCache.AddRangeAsync(movieIds);
+
+                            await _ctx.SaveChangesAsync();
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        Logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Radarr");
                     }
                 }
-                catch (System.Exception ex)
-                {
-                    Logger.LogError(LoggingEvents.Cacher, ex, "Failed caching queued items from Radarr");
-                }
+            }
+            catch (Exception e)
+            {
+                Logger.LogInformation(LoggingEvents.RadarrCacher, "Radarr is not setup, cannot cache episodes");
             }
         }
 

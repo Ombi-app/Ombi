@@ -12,11 +12,12 @@ namespace Ombi.Store.Repository
         Task<bool> ContentExists(string providerId);
         Task<IEnumerable<PlexContent>> GetAll();
         Task<PlexContent> Get(string providerId);
-        Task<PlexContent> GetByKey(string key);
+        Task<PlexContent> GetByKey(int key);
         Task Update(PlexContent existingContent);
         IQueryable<PlexEpisode> GetAllEpisodes();
         Task<PlexEpisode> Add(PlexEpisode content);
-        Task<PlexEpisode> GetEpisodeByKey(string key);
+        Task<PlexEpisode> GetEpisodeByKey(int key);
         Task AddRange(IEnumerable<PlexEpisode> content);
+        IQueryable<PlexContent> Get();
     }
 }

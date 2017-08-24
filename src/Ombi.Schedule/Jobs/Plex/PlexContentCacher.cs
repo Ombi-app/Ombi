@@ -107,10 +107,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             {
                                 seasonsContent.Add(new PlexSeasonsContent
                                 {
-                                    ParentKey = int.Parse(season.parentRatingKey),
-                                    SeasonKey = int.Parse(season.ratingKey),
+                                    ParentKey = season.parentRatingKey,
+                                    SeasonKey = season.ratingKey,
                                     SeasonNumber = season.index,
-                                    PlexContentId = int.Parse(show.ratingKey)
+                                    PlexContentId = show.ratingKey
                                 });
                             }
 
@@ -197,8 +197,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 if (contentToAdd.Any())
                 {
-                    
-                    contentToAdd.ForEach(async x => await Repo.Add(x));
+                    await Repo.AddRange(contentToAdd);
                 }
 
             }

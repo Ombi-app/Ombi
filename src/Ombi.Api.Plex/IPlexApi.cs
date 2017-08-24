@@ -12,9 +12,9 @@ namespace Ombi.Api.Plex
         Task<PlexServer> GetServer(string authToken);
         Task<PlexContainer> GetLibrarySections(string authToken, string plexFullHost);
         Task<PlexContainer> GetLibrary(string authToken, string plexFullHost, string libraryId);
-        Task<PlexMetadata> GetEpisodeMetaData(string authToken, string host, string ratingKey);
-        Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId);
-        Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey);
+        Task<PlexMetadata> GetEpisodeMetaData(string authToken, string host, int ratingKey);
+        Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId);
+        Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey);
         Task<PlexContainer> GetAllEpisodes(string authToken, string host, string section, int start, int retCount);
     }
 }

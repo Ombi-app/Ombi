@@ -123,6 +123,7 @@ namespace Ombi.DependencyInjection
         {
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
             services.AddTransient<IPlexEpisodeCacher, PlexEpisodeCacher>();
+            services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();

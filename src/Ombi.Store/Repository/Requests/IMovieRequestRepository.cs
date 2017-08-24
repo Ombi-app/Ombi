@@ -11,5 +11,6 @@ namespace Ombi.Store.Repository
         IQueryable<MovieRequests> Get();
         Task<MovieRequests> GetRequest(int theMovieDbId);
         Task Update(MovieRequests request);
+        Task Save();
     }
 }

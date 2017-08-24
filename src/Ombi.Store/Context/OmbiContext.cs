@@ -45,6 +45,16 @@ namespace Ombi.Store.Context
             optionsBuilder.UseSqlite("Data Source=Ombi.db");
         }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<PlexEpisode>()
+                .HasOne(p => p.Series)
+                .WithMany(b => b.Episodes)
+                .HasPrincipalKey(x => x.Key)
+                .HasForeignKey(p => p.GrandparentKey);
+            base.OnModelCreating(builder);
+        }
+
 
         public void Seed()
         {

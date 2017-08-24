@@ -45,11 +45,13 @@ namespace Ombi.Store.Entities
         /// Only used for TV Shows
         /// </summary>
         public virtual ICollection<PlexSeasonsContent> Seasons { get; set; }
+        
+        public ICollection<PlexEpisode> Episodes { get; set; }
 
         /// <summary>
         /// Plex's internal ID for this item
         /// </summary>
-        public string Key { get; set; }
+        public int Key { get; set; }
         public DateTime AddedAt { get; set; }
     }
 

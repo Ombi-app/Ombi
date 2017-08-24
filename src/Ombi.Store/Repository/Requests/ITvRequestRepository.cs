@@ -15,5 +15,6 @@ namespace Ombi.Store.Repository.Requests
         Task Update(TvRequests request);
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();
+        Task Save();
     }
 }

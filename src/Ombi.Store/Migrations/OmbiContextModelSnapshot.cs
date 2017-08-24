@@ -253,7 +253,7 @@ namespace Ombi.Store.Migrations
 
                     b.Property<DateTime>("AddedAt");
 
-                    b.Property<string>("Key");
+                    b.Property<int>("Key");
 
                     b.Property<string>("ProviderId");
 
@@ -277,17 +277,19 @@ namespace Ombi.Store.Migrations
 
                     b.Property<int>("EpisodeNumber");
 
-                    b.Property<string>("GrandparentKey");
+                    b.Property<int>("GrandparentKey");
 
-                    b.Property<string>("Key");
+                    b.Property<int>("Key");
 
-                    b.Property<string>("ParentKey");
+                    b.Property<int>("ParentKey");
 
                     b.Property<int>("SeasonNumber");
 
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GrandparentKey");
 
                     b.ToTable("PlexEpisode");
                 });
@@ -564,6 +566,15 @@ namespace Ombi.Store.Migrations
                     b.HasOne("Ombi.Store.Entities.OmbiUser")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.PlexEpisode", b =>
+                {
+                    b.HasOne("Ombi.Store.Entities.PlexContent", "Series")
+                        .WithMany("Episodes")
+                        .HasForeignKey("GrandparentKey")
+                        .HasPrincipalKey("Key")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

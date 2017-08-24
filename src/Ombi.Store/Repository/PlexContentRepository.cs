@@ -72,7 +72,12 @@ namespace Ombi.Store.Repository
             return await Db.PlexContent.FirstOrDefaultAsync(x => x.ProviderId == providerId);
         }
 
-        public async Task<PlexContent> GetByKey(string key)
+        public IQueryable<PlexContent> Get()
+        {
+            return Db.PlexContent.AsQueryable();
+        }
+
+        public async Task<PlexContent> GetByKey(int key)
         {
             return await Db.PlexContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
         }
@@ -94,7 +99,7 @@ namespace Ombi.Store.Repository
             await Db.SaveChangesAsync();
             return content;
         }
-        public async Task<PlexEpisode> GetEpisodeByKey(string key)
+        public async Task<PlexEpisode> GetEpisodeByKey(int key)
         {
             return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
         }

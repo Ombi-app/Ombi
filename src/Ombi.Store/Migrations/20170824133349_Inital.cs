@@ -132,7 +132,7 @@ namespace Ombi.Store.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     AddedAt = table.Column<DateTime>(nullable: false),
-                    Key = table.Column<string>(nullable: true),
+                    Key = table.Column<int>(nullable: false),
                     ProviderId = table.Column<string>(nullable: true),
                     ReleaseYear = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
@@ -142,24 +142,7 @@ namespace Ombi.Store.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_PlexContent", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PlexEpisode",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    EpisodeNumber = table.Column<int>(nullable: false),
-                    GrandparentKey = table.Column<string>(nullable: true),
-                    Key = table.Column<string>(nullable: true),
-                    ParentKey = table.Column<string>(nullable: true),
-                    SeasonNumber = table.Column<int>(nullable: false),
-                    Title = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PlexEpisode", x => x.Id);
+                    table.UniqueConstraint("AK_PlexContent_Key", x => x.Key);
                 });
 
             migrationBuilder.CreateTable(
@@ -332,6 +315,30 @@ namespace Ombi.Store.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlexEpisode",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    EpisodeNumber = table.Column<int>(nullable: false),
+                    GrandparentKey = table.Column<int>(nullable: false),
+                    Key = table.Column<int>(nullable: false),
+                    ParentKey = table.Column<int>(nullable: false),
+                    SeasonNumber = table.Column<int>(nullable: false),
+                    Title = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlexEpisode", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlexEpisode_PlexContent_GrandparentKey",
+                        column: x => x.GrandparentKey,
+                        principalTable: "PlexContent",
+                        principalColumn: "Key",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -528,6 +535,11 @@ namespace Ombi.Store.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlexEpisode_GrandparentKey",
+                table: "PlexEpisode",
+                column: "GrandparentKey");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PlexSeasonsContent_PlexContentId",

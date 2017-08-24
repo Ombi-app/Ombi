@@ -85,21 +85,21 @@ namespace Ombi.Api.Plex
         /// <param name="plexFullHost"></param>
         /// <param name="ratingKey"></param>
         /// <returns></returns>
-        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, string ratingKey)
+        public async Task<PlexMetadata> GetEpisodeMetaData(string authToken, string plexFullHost, int ratingKey)
         {
             var request = new Request($"/library/metadata/{ratingKey}", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, string itemId)
+        public async Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId)
         {
             var request = new Request($"library/metadata/{itemId}", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);
             return await Api.Request<PlexMetadata>(request);
         }
 
-        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, string ratingKey)
+        public async Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey)
         {
             var request = new Request($"library/metadata/{ratingKey}/children", plexFullHost, HttpMethod.Get);
             AddHeaders(request, authToken);

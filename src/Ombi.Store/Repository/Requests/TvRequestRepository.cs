@@ -45,6 +45,11 @@ namespace Ombi.Store.Repository.Requests
                 .AsQueryable();
         }
 
+        public async Task Save()
+        {
+            await Db.SaveChangesAsync();
+        }
+
         public async Task<TvRequests> Add(TvRequests request)
         {
             await Db.TvRequests.AddAsync(request);

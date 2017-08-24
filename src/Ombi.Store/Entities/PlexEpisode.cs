@@ -7,21 +7,24 @@ namespace Ombi.Store.Entities
     {
         public int EpisodeNumber { get; set; }
         public int SeasonNumber { get; set; }
-        public string Key { get; set; } // RatingKey
+        public int Key { get; set; } // RatingKey
         public string Title { get; set; }
         /// <summary>
-        /// The Show key
+        /// The Season key
         /// </summary>
         /// <value>
         /// The parent key.
         /// </value>
-        public string ParentKey { get; set; }
+        public int ParentKey { get; set; }
         /// <summary>
         /// The Series key
         /// </summary>
         /// <value>
         /// The grandparent key.
         /// </value>
-        public string GrandparentKey { get; set; }
+        public int GrandparentKey { get; set; }
+
+
+        public PlexContent Series { get; set; }
     }
 }

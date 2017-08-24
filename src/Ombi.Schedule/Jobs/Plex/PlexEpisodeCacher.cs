@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Hangfire.Common;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
@@ -19,19 +20,21 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexEpisodeCacher : IPlexEpisodeCacher
     {
         public PlexEpisodeCacher(ISettingsService<PlexSettings> s, ILogger<PlexEpisodeCacher> log, IPlexApi plexApi,
-            IPlexContentRepository repo)
+            IPlexContentRepository repo, IPlexAvailabilityChecker a)
         {
             _settings = s;
             _log = log;
             _api = plexApi;
             _repo = repo;
+            _availabilityChecker = a;
         }
 
         private readonly ISettingsService<PlexSettings> _settings;
         private readonly ILogger<PlexEpisodeCacher> _log;
         private readonly IPlexApi _api;
         private readonly IPlexContentRepository _repo;
-        
+        private readonly IPlexAvailabilityChecker _availabilityChecker;
+
         public async Task Start()
         {
             try
@@ -46,6 +49,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
 
                     await Cache(server);
+                    BackgroundJob.Enqueue(() => _availabilityChecker.Start());
                 }
             }
             catch (Exception e)

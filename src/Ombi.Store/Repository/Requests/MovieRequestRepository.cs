@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Store.Context;
@@ -46,5 +47,10 @@ namespace Ombi.Store.Repository.Requests
         {
             await Db.SaveChangesAsync();
         }
-     }
+
+        public async Task Save()
+        {
+            await Db.SaveChangesAsync();
+        }
+    }
 }
