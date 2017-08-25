@@ -46,7 +46,11 @@
 
                         <span *ngIf="result.releaseDate" class="label label-info" target="_blank">Release Date: {{result.releaseDate | date: 'dd/MM/yyyy'}}</span>
 
+                        <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
+
+                        <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
                         <span *ngIf="result.available" class="label label-success">Available</span>
+                        <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
                         <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
                         <div *ngIf="result.requested && !result.available; then requested else notRequested"></div>
                         <ng-template #requested>
@@ -58,11 +62,7 @@
                         </ng-template>
 
 
-                        <span id="{{id}}netflixTab"></span>
 
-                        <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
-
-                        <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
 
 
                         <br/>
@@ -132,11 +132,12 @@
 
                     <br/>
                     <div *ngIf="result.available">
-                        <input name="providerId" type="text" value="{{id}}" hidden="hidden"/>
+                        <a *ngIf="result.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{result.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
+                        <!--<input name="providerId" type="text" value="{{id}}" hidden="hidden"/>
                         <input name="type" type="text" value="{{type}}" hidden="hidden"/>
                         <div class="dropdown">
                             <button class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                <i class="fa fa-exclamation"></i> @UI.Search_ReportIssue
+                                <i class="fa fa-exclamation"></i> Report Issue
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -146,7 +147,7 @@
                                 <li><a issue-select="3" class="dropdownIssue" href="#">Playback</a></li>
                                 <li><a issue-select="4" class="dropdownIssue" href="#" data-toggle="modal" data-target="#issuesModal">Other</a></li>
                             </ul>
-                        </div>
+                        </div>-->
                     </div>
 
                 </div>

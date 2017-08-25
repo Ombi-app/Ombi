@@ -16,11 +16,12 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var item = await PlexContentRepository.Get(obj.Id.ToString());
+            var item = await PlexContentRepository.Get(obj.CustomId);
             if (item != null)
             {
                 obj.Available = true;
                 obj.PlexUrl = item.Url;
+                obj.Quality = item.Quality;
             }
             return Success();
         }

@@ -134,6 +134,7 @@ namespace Ombi.Store.Migrations
                     AddedAt = table.Column<DateTime>(nullable: false),
                     Key = table.Column<int>(nullable: false),
                     ProviderId = table.Column<string>(nullable: true),
+                    Quality = table.Column<string>(nullable: true),
                     ReleaseYear = table.Column<string>(nullable: true),
                     Title = table.Column<string>(nullable: true),
                     Type = table.Column<int>(nullable: false),

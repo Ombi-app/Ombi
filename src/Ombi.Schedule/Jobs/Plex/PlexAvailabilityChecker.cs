@@ -27,7 +27,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task ProcessTv()
         {
-            var tv = _tvRepo.GetChild();
+            var tv = _tvRepo.GetChild().Where(x => !x.Available);
             var plexEpisodes = _repo.GetAllEpisodes().Include(x => x.Series);
 
             foreach (var child in tv)

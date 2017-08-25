@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -16,11 +17,27 @@ namespace Ombi.Store.Repository.Requests
 
         private IOmbiContext Db { get; }
 
-        public async Task<MovieRequests> GetRequest(int theMovieDbId)
+        public async Task<MovieRequests> GetRequestAsync(int theMovieDbId)
         {
-            return await Db.MovieRequests.Where(x => x.TheMovieDbId == theMovieDbId)
+            try
+            {
+                return await Db.MovieRequests.Where(x => x.TheMovieDbId == theMovieDbId)
+                    .Include(x => x.RequestedUser)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+        }
+
+        public MovieRequests GetRequest(int theMovieDbId)
+        {
+            return Db.MovieRequests.Where(x => x.TheMovieDbId == theMovieDbId)
                 .Include(x => x.RequestedUser)
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
         }
 
         public IQueryable<MovieRequests> Get()

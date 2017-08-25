@@ -214,6 +214,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.getTvRequests(this.amountToLoad, 0)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
+                debugger;
                 this.tvRequests = this.transformData(x);
             });
         this.isAdmin = this.identityService.hasRole("Admin");

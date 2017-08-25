@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -89,18 +90,18 @@ namespace Ombi.DependencyInjection
         {
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
 
-            services.AddScoped<IOmbiContext, OmbiContext>();
-            services.AddScoped<ISettingsRepository, SettingsJsonRepository>();
-            services.AddScoped<ISettingsResolver, SettingsResolver>();
-            services.AddScoped<IPlexContentRepository, PlexContentRepository>();
-            services.AddScoped<INotificationTemplatesRepository, NotificationTemplatesRepository>();
+            services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
+            services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
+            services.AddTransient<ISettingsResolver, SettingsResolver>();
+            services.AddTransient<IPlexContentRepository, PlexContentRepository>();
+            services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             
-            services.AddScoped<ITvRequestRepository, TvRequestRepository>();
-            services.AddScoped<IMovieRequestRepository, MovieRequestRepository>();
-            services.AddScoped<IAuditRepository, AuditRepository>();
-            services.AddScoped<IApplicationConfigRepository, ApplicationConfigRepository>();
-            services.AddScoped<ITokenRepository, TokenRepository>();
-            services.AddScoped(typeof(ISettingsService<>), typeof(SettingsService<>));
+            services.AddTransient<ITvRequestRepository, TvRequestRepository>();
+            services.AddTransient<IMovieRequestRepository, MovieRequestRepository>();
+            services.AddTransient<IAuditRepository, AuditRepository>();
+            services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
+            services.AddTransient<ITokenRepository, TokenRepository>();
+            services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
         }
         public static void RegisterServices(this IServiceCollection services)
         {

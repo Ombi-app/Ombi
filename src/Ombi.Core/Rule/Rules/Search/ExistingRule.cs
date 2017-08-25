@@ -19,9 +19,9 @@ namespace Ombi.Core.Rule.Rules.Search
         private IMovieRequestRepository Movie { get; }
         private ITvRequestRepository Tv { get; }
 
-        public async Task<RuleResult> Execute(SearchViewModel obj)
+        public Task<RuleResult> Execute(SearchViewModel obj)
         {
-            var movieRequests = await Movie.GetRequest(obj.Id);
+            var movieRequests = Movie.GetRequest(obj.Id);
             if (movieRequests != null) // Do we already have a request for this?
             {
 
@@ -29,10 +29,10 @@ namespace Ombi.Core.Rule.Rules.Search
                 obj.Approved = movieRequests.Approved;
                 obj.Available = movieRequests.Available;
 
-                return Success();
+                return Task.FromResult(Success());
             }
             
-            var tvRequests = await Tv.GetRequest(obj.Id);
+            var tvRequests = Tv.GetRequest(obj.Id);
             if (tvRequests != null) // Do we already have a request for this?
             {
 
@@ -40,9 +40,9 @@ namespace Ombi.Core.Rule.Rules.Search
                 obj.Approved = tvRequests.ChildRequests.Any(x => x.Approved);
                 obj.Available = tvRequests.ChildRequests.Any(x => x.Available);
 
-                return Success();
+                return Task.FromResult(Success());
             }
-            return Success();
+            return Task.FromResult(Success());
         }
     }
 }

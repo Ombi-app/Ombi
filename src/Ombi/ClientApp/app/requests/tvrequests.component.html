@@ -43,15 +43,7 @@
                                 <span class="label label-success">{{node.data.status}}</span>
                             </div>
 
-                            <div>
-                                <span>Request status: </span>
-                                <span *ngIf="node.data.available" class="label label-success">Available</span>
-                                <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>
-                                <span *ngIf="node.data.denied" class="label label-danger">Request Denied</span>
-                                <span *ngIf="node.data.deniedReason" title="{{node.data.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                                <span *ngIf="!node.data.approved && !node.data.availble && !node.data.denied" class="label label-warning">Pending Approval</span>
-
-                            </div>
+    
                             <div>Release Date: {{node.data.releaseDate | date}}</div>
                             <br />
                         </div>

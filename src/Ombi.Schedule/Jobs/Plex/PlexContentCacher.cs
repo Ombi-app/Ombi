@@ -187,7 +187,8 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Type = PlexMediaTypeEntity.Movie,
                                 Title = movie.title,
                                 Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
-                                Seasons = new List<PlexSeasonsContent>()
+                                Seasons = new List<PlexSeasonsContent>(),
+                                Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                             };
 
                             contentToAdd.Add(item);

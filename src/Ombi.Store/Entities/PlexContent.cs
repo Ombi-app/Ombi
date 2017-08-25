@@ -53,6 +53,7 @@ namespace Ombi.Store.Entities
         /// </summary>
         public int Key { get; set; }
         public DateTime AddedAt { get; set; }
+        public string Quality { get; set; }
     }
 
     [Table("PlexSeasonsContent")]

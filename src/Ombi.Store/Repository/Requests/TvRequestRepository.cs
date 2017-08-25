@@ -15,15 +15,26 @@ namespace Ombi.Store.Repository.Requests
 
         private IOmbiContext Db { get; }
 
-        public async Task<TvRequests> GetRequest(int tvDbId)
+        public async Task<TvRequests> GetRequestAsync(int tvDbId)
         {
             return await Db.TvRequests.Where(x => x.TvDbId == tvDbId)
                 .Include(x => x.ChildRequests)
-                    .ThenInclude(x => x.RequestedUser)
+                .ThenInclude(x => x.RequestedUser)
                 .Include(x => x.ChildRequests)
                 .ThenInclude(x => x.SeasonRequests)
                 .ThenInclude(x => x.Episodes)
                 .FirstOrDefaultAsync();
+        }
+
+        public TvRequests GetRequest(int tvDbId)
+        {
+            return Db.TvRequests.Where(x => x.TvDbId == tvDbId)
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.RequestedUser)
+                .Include(x => x.ChildRequests)
+                .ThenInclude(x => x.SeasonRequests)
+                .ThenInclude(x => x.Episodes)
+                .FirstOrDefault();
         }
 
         public IQueryable<TvRequests> Get()
@@ -40,6 +51,7 @@ namespace Ombi.Store.Repository.Requests
         {
             return Db.ChildRequests
                 .Include(x => x.RequestedUser)
+                .Include(x => x.ParentRequest)
                 .Include(x => x.SeasonRequests)
                 .ThenInclude(x => x.Episodes)
                 .AsQueryable();

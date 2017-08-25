@@ -102,24 +102,24 @@ namespace Ombi.Schedule.Jobs.Plex
             var currentPosition = 0;
             var ResultCount = 50;
             var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, ResultCount);
-
+            var currentData = _repo.GetAllEpisodes();
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
-            await ProcessEpsiodes(episodes);
+            await ProcessEpsiodes(episodes, currentData);
             currentPosition += ResultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
             {
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
                     ResultCount);
-                await ProcessEpsiodes(ep);
+                await ProcessEpsiodes(ep, currentData);
                 _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {ResultCount} more episodes. Total Remaining {currentPosition - episodes.MediaContainer.totalSize}");
                 currentPosition += ResultCount;
             }
 
         }
 
-        private async Task ProcessEpsiodes(PlexContainer episodes)
+        private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)
         {
             var ep = new HashSet<PlexEpisode>();
             foreach (var episode in episodes.MediaContainer.Metadata)
@@ -127,6 +127,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 // I don't think we need to get the metadata, we only need to get the metadata if we need the provider id (TheTvDbid). Why do we need it for episodes?
                 // We have the parent and grandparent rating keys to link up to the season and series
                 //var metadata = _api.GetEpisodeMetaData(server.PlexAuthToken, server.FullUri, episode.ratingKey);
+
+                var epExists = currentEpisodes.Any(x => episode.ratingKey == x.Key &&
+                                                          episode.grandparentRatingKey == x.GrandparentKey);
+                if (epExists)
+                {
+                    continue;
+                }
 
                 ep.Add(new PlexEpisode
                 {

@@ -257,6 +257,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("ProviderId");
 
+                    b.Property<string>("Quality");
+
                     b.Property<string>("ReleaseYear");
 
                     b.Property<string>("Title");
