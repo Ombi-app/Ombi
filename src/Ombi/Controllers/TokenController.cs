@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Ombi.Core.Claims;
 using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Store.Entities;
@@ -57,6 +58,11 @@ namespace Ombi.Controllers
             if (await _userManager.CheckPasswordAsync(user, model.Password))
             {
                 var roles = await _userManager.GetRolesAsync(user);
+
+                if (roles.Contains(OmbiRoles.Disabled))
+                {
+                    return new UnauthorizedResult();
+                }
 
                 var claims = new List<Claim>
                         {

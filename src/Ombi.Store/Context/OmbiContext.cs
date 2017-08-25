@@ -81,7 +81,6 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
-
             //Check if templates exist
             var templates = NotificationTemplates.ToList();
             //if (templates.Any())
