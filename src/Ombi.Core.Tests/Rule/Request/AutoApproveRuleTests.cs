@@ -26,8 +26,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, true);
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
         }
 
         [Fact]
@@ -37,8 +37,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, true);
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
         }
 
         [Fact]
@@ -48,8 +48,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, true);
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
         }
 
         [Fact]
@@ -59,8 +59,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, true);
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
         }
 
         [Fact]
@@ -69,8 +69,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, false);
+            Assert.True(result.Success);
+            Assert.False(request.Approved);
         }
 
         [Fact]
@@ -79,8 +79,8 @@ namespace Ombi.Core.Tests.Rule.Request
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, false);
+            Assert.True(result.Success);
+            Assert.False(request.Approved);
         }
     }
 }

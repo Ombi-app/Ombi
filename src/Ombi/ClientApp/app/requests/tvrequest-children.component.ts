@@ -23,6 +23,7 @@ export class TvRequestChildrenComponent {
     }
 
     public deny(request: IChildRequests) {
+        debugger;
         request.approved = false;
         request.denied = true;
         this.requestService.updateChild(request)
@@ -30,6 +31,7 @@ export class TvRequestChildrenComponent {
     }
 
     public approve(request: IChildRequests) {
+        debugger;
         request.approved = true;
         request.denied = false;
         this.requestService.updateChild(request)

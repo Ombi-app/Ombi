@@ -89,14 +89,30 @@ namespace Ombi.Controllers
             var result = await UserManager.CreateAsync(userToCreate, user.Password);
             if (result.Succeeded)
             {
-                if (!await RoleManager.RoleExistsAsync(OmbiRoles.Admin))
-                {
-                    await RoleManager.CreateAsync(new IdentityRole(OmbiRoles.Admin));
-                }
+                await CreateRoles();
                 await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
             }
 
             return true;
+        }
+
+        private async Task CreateRoles()
+        {
+            await CreateRole(OmbiRoles.AutoApproveMovie);
+            await CreateRole(OmbiRoles.Admin);
+            await CreateRole(OmbiRoles.AutoApproveTv);
+            await CreateRole(OmbiRoles.PowerUser);
+            await CreateRole(OmbiRoles.RequestMovie);
+            await CreateRole(OmbiRoles.RequestTv);
+            await CreateRole(OmbiRoles.Disabled);
+        }
+
+        private async Task CreateRole(string role)
+        {
+            if (!await RoleManager.RoleExistsAsync(role))
+            {
+                await RoleManager.CreateAsync(new IdentityRole(role));
+            }
         }
 
         /// <summary>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using AutoMapper;
@@ -31,8 +30,6 @@ using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Serilog;
 using Serilog.Events;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Storage;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
@@ -79,17 +76,6 @@ namespace Ombi
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders();
-
-
-            //services.AddIdentityServer()
-            //    .AddTemporarySigningCredential()
-            //    .AddInMemoryPersistedGrants()
-            //    .AddInMemoryIdentityResources(IdentityConfig.GetIdentityResources())
-            //    .AddInMemoryApiResources(IdentityConfig.GetApiResources())
-            //    .AddInMemoryClients(IdentityConfig.GetClients())
-            //    .AddAspNetIdentity<OmbiUser>()
-            //    .Services.AddTransient<IResourceOwnerPasswordValidator, OmbiOwnerPasswordValidator>()
-            //    .AddTransient<IProfileService, OmbiProfileService>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -144,8 +130,6 @@ namespace Ombi
                 c.DescribeAllParametersInCamelCase();
             });
             
-
-
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
 
@@ -156,21 +140,10 @@ namespace Ombi
 
             services.AddHangfire(x =>
             {
-
                 x.UseMemoryStorage(new MemoryStorageOptions());
-
                 //x.UseSQLiteStorage("Data Source=Ombi.db;");
-
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
-
-#if DEBUG
-            // Note .AddMiniProfiler() returns a IMiniProfilerBuilder for easy intellisense
-            //services.AddMiniProfiler();
-#endif
-            // Make sure you have memory cache available unless you're using another storage provider
-            services.AddMemoryCache();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -180,20 +153,6 @@ namespace Ombi
                 typeof(IOptions<TokenAuthentication>));
 
             var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
-
-            // Get the url
-            var url = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-            var port = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Port);
-
-            Console.WriteLine($"Using Url {url.Value}:{port.Value} for Identity Server");
-            app.UseIdentity();
-
-#if !DEBUG
-            var audience = $"{url.Value}:{port.Value}";
-#else
-
-            var audience = $"http://localhost:52038/";
-#endif
 
             var tokenValidationParameters = new TokenValidationParameters
             {
@@ -212,28 +171,10 @@ namespace Ombi
             {
                 Audience = "Ombi",
                 AutomaticAuthenticate = true,
-                TokenValidationParameters =  tokenValidationParameters
+                TokenValidationParameters =  tokenValidationParameters,
+                
             });
 
-            //            app.UseIdentityServer();
-            //            app.UseIdentityServerAuthentication(new IdentityServerAuthenticationOptions
-            //            {
-            //#if !DEBUG
-            //                Authority = $"{url.Value}:{port.Value}",
-            //#else
-            //                Authority = $"http://localhost:52038/",
-            //#endif
-            //                ApiName = "api",
-            //                ApiSecret = "secret",
-
-            //                EnableCaching = true,
-            //                CacheDuration = TimeSpan.FromMinutes(10), // that's the default
-            //                RequireHttpsMetadata = options.Value.UseHttps, // FOR DEV set to false
-            //                AutomaticAuthenticate = true,
-            //                AutomaticChallenge = true,
-
-
-            //            });
 
             loggerFactory.AddSerilog();
 
@@ -244,20 +185,6 @@ namespace Ombi
                 {
                     HotModuleReplacement = true
                 });
-
-                //app.UseMiniProfiler(new MiniProfilerOptions
-                //{
-                //    // Path to use for profiler URLs
-                //    RouteBasePath = "~/profiler",
-
-                //    // (Optional) Control which SQL formatter to use
-                //    // (default is no formatter)
-                //    SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter(),
-
-                //    // (Optional) Control storage
-                //    // (default is 30 minutes in MemoryCacheStorage)
-                //    Storage = new MemoryCacheStorage(cache, TimeSpan.FromMinutes(60)),
-                //});
             }
             
             app.UseHangfireServer();

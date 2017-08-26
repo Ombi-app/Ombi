@@ -26,6 +26,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Store.Context;
@@ -71,7 +72,12 @@ namespace Ombi.Store.Repository
             return await Db.PlexContent.FirstOrDefaultAsync(x => x.ProviderId == providerId);
         }
 
-        public async Task<PlexContent> GetByKey(string key)
+        public IQueryable<PlexContent> Get()
+        {
+            return Db.PlexContent.AsQueryable();
+        }
+
+        public async Task<PlexContent> GetByKey(int key)
         {
             return await Db.PlexContent.Include(x => x.Seasons).FirstOrDefaultAsync(x => x.Key == key);
         }
@@ -79,6 +85,27 @@ namespace Ombi.Store.Repository
         public async Task Update(PlexContent existingContent)
         {
             Db.PlexContent.Update(existingContent);
+            await Db.SaveChangesAsync();
+        }
+
+        public IQueryable<PlexEpisode> GetAllEpisodes()
+        {
+            return Db.PlexEpisode.AsQueryable();
+        }
+
+        public async Task<PlexEpisode> Add(PlexEpisode content)
+        {
+            await Db.PlexEpisode.AddAsync(content);
+            await Db.SaveChangesAsync();
+            return content;
+        }
+        public async Task<PlexEpisode> GetEpisodeByKey(int key)
+        {
+            return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
+        }
+        public async Task AddRange(IEnumerable<PlexEpisode> content)
+        {
+            Db.PlexEpisode.AddRange(content);
             await Db.SaveChangesAsync();
         }
     }

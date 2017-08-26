@@ -65,6 +65,16 @@ namespace Ombi.Controllers
             return await Save(ombi);
         }
 
+        [HttpPost("ombi/resetApi")]
+        public async Task<string> ResetApiKey()
+        {
+            var currentSettings = await Get<OmbiSettings>();
+            currentSettings.ApiKey = Guid.NewGuid().ToString("N");
+            await Save(currentSettings);
+
+            return currentSettings.ApiKey;
+        }
+
         /// <summary>
         /// Gets the Plex Settings.
         /// </summary>
@@ -183,6 +193,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Save the Authentication settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("authentication")]
+        public async Task<bool> AuthenticationsSettings([FromBody]AuthenticationSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Authentication Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("authentication")]
+        public async Task<AuthenticationSettings> AuthenticationsSettings()
+        {
+            return await Get<AuthenticationSettings>();
+        }
+
+        /// <summary>
         /// Save the Radarr settings.
         /// </summary>
         /// <param name="settings">The settings.</param>
@@ -295,6 +326,40 @@ namespace Ombi.Controllers
             return model;
         }
 
+        /// <summary>
+        /// Saves the pushover notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/pushover")]
+        public async Task<bool> PushoverNotificationSettings([FromBody] PushoverNotificationViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<PushoverSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the pushover Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/pushover")]
+        public async Task<PushoverNotificationViewModel> PushoverNotificationSettings()
+        {
+            var settings = await Get<PushoverSettings>();
+            var model = Mapper.Map<PushoverNotificationViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Pushover);
+
+            return model;
+        }
+
 
         /// <summary>
         /// Saves the slack notification settings.
@@ -326,6 +391,40 @@ namespace Ombi.Controllers
 
             // Lookup to see if we have any templates saved
             model.NotificationTemplates = await BuildTemplates(NotificationAgent.Slack);
+
+            return model;
+        }
+
+        /// <summary>
+        /// Saves the Mattermost notification settings.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("notifications/mattermost")]
+        public async Task<bool> MattermostNotificationSettings([FromBody] MattermostNotificationsViewModel model)
+        {
+            // Save the email settings
+            var settings = Mapper.Map<MattermostNotificationSettings>(model);
+            var result = await Save(settings);
+
+            // Save the templates
+            await TemplateRepository.UpdateRange(model.NotificationTemplates);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the Mattermost Notification Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("notifications/mattermost")]
+        public async Task<MattermostNotificationsViewModel> MattermostNotificationSettings()
+        {
+            var settings = await Get<MattermostNotificationSettings>();
+            var model = Mapper.Map<MattermostNotificationsViewModel>(settings);
+
+            // Lookup to see if we have any templates saved
+            model.NotificationTemplates = await BuildTemplates(NotificationAgent.Mattermost);
 
             return model;
         }

@@ -65,3 +65,17 @@ export interface IPushbulletNotificationSettings extends INotificationSettings {
     notificationTemplates: INotificationTemplates[],
     channelTag: string;
 }
+
+export interface IPushoverNotificationSettings extends INotificationSettings {
+    accessToken: string,
+    notificationTemplates: INotificationTemplates[],
+    userToken: string;
+}
+
+export interface IMattermostNotifcationSettings extends INotificationSettings {
+    webhookUrl: string,
+    username: string,
+    channel: string,
+    iconUrl:string,
+    notificationTemplates: INotificationTemplates[],
+}

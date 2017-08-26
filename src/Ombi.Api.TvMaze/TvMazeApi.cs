@@ -61,7 +61,7 @@ namespace Ombi.Api.TvMaze
             }
             catch (Exception e)
             {
-                Logger.LogError(LoggingEvents.ApiException, e, "Exception when calling ShowLookupByTheTvDbId with id:{0}",theTvDbId);
+                Logger.LogError(LoggingEvents.Api, e, "Exception when calling ShowLookupByTheTvDbId with id:{0}",theTvDbId);
                 return null;
             }
         }

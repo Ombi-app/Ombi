@@ -15,6 +15,7 @@ namespace Ombi.Store.Context
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
         DbSet<GlobalSettings> Settings { get; set; }
         DbSet<PlexContent> PlexContent { get; set; }
+        DbSet<PlexEpisode> PlexEpisode { get; set; }
         DbSet<RadarrCache> RadarrCache { get; set; }
         DatabaseFacade Database { get; }
         EntityEntry<T> Entry<T>(T entry) where T : class;
@@ -30,5 +31,7 @@ namespace Ombi.Store.Context
         DbSet<MovieIssues> MovieIssues { get; set; }
         DbSet<TvIssues> TvIssues { get; set; }
         DbSet<Tokens> Tokens { get; set; }
+        EntityEntry Update(object entity);
+        EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
     }
 }

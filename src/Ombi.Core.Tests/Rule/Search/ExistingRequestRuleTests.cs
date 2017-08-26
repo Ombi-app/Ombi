@@ -33,7 +33,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 Approved = true
             };
 
-            MovieMock.Setup(x => x.GetRequest(123)).ReturnsAsync(list);
+            MovieMock.Setup(x => x.GetRequest(123)).Returns(list);
             var search = new SearchMovieViewModel
             {
                 Id = 123,
@@ -42,7 +42,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.Approved, true);
+            Assert.False(search.Approved);
         }
 
         [Fact]
@@ -54,7 +54,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 Approved = true
             };
 
-            MovieMock.Setup(x => x.GetRequest(123)).ReturnsAsync(list);
+            MovieMock.Setup(x => x.GetRequest(123)).Returns(list);
             var search = new SearchMovieViewModel
             {
                 Id = 999,
@@ -63,7 +63,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.Approved, false);
+            Assert.False(search.Approved);
         }
 
         [Fact]
@@ -82,7 +82,7 @@ namespace Ombi.Core.Tests.Rule.Search
                 }
             };
 
-            TvMock.Setup(x => x.GetRequest(123)).ReturnsAsync(list);
+            TvMock.Setup(x => x.GetRequest(123)).Returns(list);
             var search = new SearchTvShowViewModel
             {
                 Id = 123,
@@ -91,7 +91,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.Approved, true);
+            Assert.True(search.Approved);
         }
 
         [Fact]
@@ -111,7 +111,7 @@ namespace Ombi.Core.Tests.Rule.Search
             };
 
 
-            TvMock.Setup(x => x.GetRequest(123)).ReturnsAsync(list);
+            TvMock.Setup(x => x.GetRequest(123)).Returns(list);
             var search = new SearchTvShowViewModel()
             {
                 Id = 999,
@@ -120,7 +120,7 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.Approved, false);
+            Assert.False(search.Approved);
         }
 
 

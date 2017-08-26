@@ -185,7 +185,7 @@ namespace Ombi.Core.Senders
                         {
                             var sonarrSeason = sonarrEpisodes.Where(x => x.seasonNumber == season.SeasonNumber);
                             var sonarrEpCount = sonarrSeason.Count();
-                            var ourRequestCount = season.Episodes.Count();
+                            var ourRequestCount = season.Episodes.Count;
 
                             if (sonarrEpCount == ourRequestCount)
                             {

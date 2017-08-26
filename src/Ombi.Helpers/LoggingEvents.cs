@@ -6,11 +6,12 @@ namespace Ombi.Helpers
     {
         public static EventId Authentication => new EventId(500);
 
-        public static EventId ApiException => new EventId(1000);
-        public static EventId RadarrApiException => new EventId(1001);
+        public static EventId Api => new EventId(1000);
+        public static EventId RadarrApi => new EventId(1001);
         
-        public static EventId CacherException => new EventId(2000);
-        public static EventId RadarrCacherException => new EventId(2001);
+        public static EventId Cacher => new EventId(2000);
+        public static EventId RadarrCacher => new EventId(2001);
+        public static EventId PlexEpisodeCacher => new EventId(2001);
         
         public static EventId MovieSender => new EventId(3000);
 
@@ -18,6 +19,8 @@ namespace Ombi.Helpers
         public static EventId DiscordNotification => new EventId(4001);
         public static EventId PushbulletNotification => new EventId(4002);
         public static EventId SlackNotification => new EventId(4003);
+        public static EventId MattermostNotification => new EventId(4004);
+        public static EventId PushoverNotification => new EventId(4005);
 
         public static EventId TvSender => new EventId(5000);
         public static EventId SonarrSender => new EventId(5001);

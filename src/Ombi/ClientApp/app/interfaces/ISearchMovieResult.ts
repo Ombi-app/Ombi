@@ -20,5 +20,6 @@
     approved: boolean,
     requested: boolean,
     available: boolean,
-    plexUrl: string
+    plexUrl: string,
+    quality:string
 }

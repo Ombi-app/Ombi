@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: Library.cs
+//    File: MattermostBody.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -24,10 +24,22 @@
 //    WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //  ************************************************************************/
 #endregion
-namespace Ombi.Api.Plex.Models
+
+using Newtonsoft.Json;
+
+namespace Ombi.Api.Mattermost.Models
 {
-    public class PlexLibraries
+    public class MattermostBody
     {
-        public Mediacontainer MediaContainer { get; set; }
+        [JsonConstructor]
+        public MattermostBody()
+        {
+            username = "Ombi";
+        }
+
+        public string username { get; set; } = "Ombi";
+        public string channel { get; set; }
+        public string text { get; set; }
+        public string icon_url { get; set; }
     }
 }

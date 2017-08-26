@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Store.Entities;
 
@@ -11,7 +12,12 @@ namespace Ombi.Store.Repository
         Task<bool> ContentExists(string providerId);
         Task<IEnumerable<PlexContent>> GetAll();
         Task<PlexContent> Get(string providerId);
-        Task<PlexContent> GetByKey(string key);
+        Task<PlexContent> GetByKey(int key);
         Task Update(PlexContent existingContent);
+        IQueryable<PlexEpisode> GetAllEpisodes();
+        Task<PlexEpisode> Add(PlexEpisode content);
+        Task<PlexEpisode> GetEpisodeByKey(int key);
+        Task AddRange(IEnumerable<PlexEpisode> content);
+        IQueryable<PlexContent> Get();
     }
 }

@@ -22,6 +22,9 @@ import { CustomizationComponent } from './customization/customization.component'
 import { EmailNotificationComponent } from './notifications/emailnotification.component';
 import { DiscordComponent } from './notifications/discord.component';
 import { SlackComponent } from './notifications/slack.component';
+import { PushoverComponent } from './notifications/pushover.component';
+import { PushbulletComponent } from './notifications/pushbullet.component';
+import { MattermostComponent } from './notifications/mattermost.component';
 import { NotificationTemplate } from './notifications/notificationtemplate.component';
 
 import { SettingsMenuComponent } from './settingsmenu.component';
@@ -40,6 +43,9 @@ const routes: Routes = [
     { path: 'Settings/Email', component: EmailNotificationComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Discord', component: DiscordComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Slack', component: SlackComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Pushover', component: PushoverComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Pushbullet', component: PushbulletComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/Mattermost', component: MattermostComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -72,6 +78,9 @@ const routes: Routes = [
         EmailNotificationComponent,
         HumanizePipe,
         NotificationTemplate,
+        PushoverComponent,
+        MattermostComponent,
+        PushbulletComponent
     ],
     exports: [
         RouterModule

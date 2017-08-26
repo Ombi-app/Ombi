@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -28,11 +29,14 @@ using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
 using Ombi.Api.FanartTv;
+using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
+using Ombi.Api.Pushover;
 using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
@@ -78,13 +82,15 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPushbulletApi, PushbulletApi>();
             services.AddTransient<IOmbiService, OmbiService>();
             services.AddTransient<IFanartTvApi, FanartTvApi>();
+            services.AddTransient<IPushoverApi, PushoverApi>();
+            services.AddTransient<IMattermostApi, MattermostApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)
         {
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
 
-            services.AddScoped<IOmbiContext, OmbiContext>();
+            services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
@@ -109,11 +115,16 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IEmailNotification, EmailNotification>();
             services.AddTransient<IPushbulletNotification, PushbulletNotification>();
             services.AddTransient<ISlackNotification, SlackNotification>();
+            services.AddTransient<ISlackNotification, SlackNotification>();
+            services.AddTransient<IMattermostNotification, MattermostNotification>();
+            services.AddTransient<IPushoverNotification, PushoverNotification>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)
         {
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
+            services.AddTransient<IPlexEpisodeCacher, PlexEpisodeCacher>();
+            services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();

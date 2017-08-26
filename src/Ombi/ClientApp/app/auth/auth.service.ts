@@ -1,13 +1,10 @@
 ﻿import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
+import { Http, Headers } from '@angular/http';
 
 import { ServiceHelpers } from '../services/service.helpers';
-
 import { IUserLogin, ILocalUser } from './IUserLogin';
-
-import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
-
-import { Http, Headers } from '@angular/http';
 
 @Injectable()
 export class AuthService extends ServiceHelpers {
@@ -23,7 +20,6 @@ export class AuthService extends ServiceHelpers {
 
         return this.http.post(`${this.url}/`, JSON.stringify(login), { headers: this.headers })
             .map(this.extractData);
-
     }
 
     loggedIn() {
@@ -48,11 +44,14 @@ export class AuthService extends ServiceHelpers {
             } else {
                 u.roles.push(roles);
             }
-
             return <ILocalUser>u;
-
         }
         return <ILocalUser>{};
+    }
+
+
+    hasRole(role: string): boolean {
+        return this.claims().roles.some(r => r === role);
     }
 
     logout() {

@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.04-x64;debian.8-x64;centos.7-x64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

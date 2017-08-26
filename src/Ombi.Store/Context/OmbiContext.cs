@@ -19,13 +19,14 @@ namespace Ombi.Store.Context
             Database.Migrate();
             
             // Add the notifcation templates
-           
+        
         }
 
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
         public DbSet<GlobalSettings> Settings { get; set; }
         public DbSet<PlexContent> PlexContent { get; set; }
+        public DbSet<PlexEpisode> PlexEpisode { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         
         public DbSet<MovieRequests> MovieRequests { get; set; }
@@ -42,6 +43,16 @@ namespace Ombi.Store.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=Ombi.db");
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<PlexEpisode>()
+                .HasOne(p => p.Series)
+                .WithMany(b => b.Episodes)
+                .HasPrincipalKey(x => x.Key)
+                .HasForeignKey(p => p.GrandparentKey);
+            base.OnModelCreating(builder);
         }
 
 
@@ -70,19 +81,23 @@ namespace Ombi.Store.Context
                 SaveChanges();
             }
 
-
-            // Check if templates exist
+            //Check if templates exist
             var templates = NotificationTemplates.ToList();
-            if (templates.Any())
-            {
-                return;
-            }
+            //if (templates.Any())
+            //{
+            //    return;
+            //}
 
             var allAgents = Enum.GetValues(typeof(NotificationAgent)).Cast<NotificationAgent>().ToList();
             var allTypes = Enum.GetValues(typeof(NotificationType)).Cast<NotificationType>().ToList();
 
             foreach (var agent in allAgents)
             {
+                if (templates.Any(x => x.Agent == agent))
+                {
+                    // We have all the templates for this notification agent
+                    continue;
+                }
                 foreach (var notificationType in allTypes)
                 {
                     NotificationTemplates notificationToAdd;

@@ -5,6 +5,7 @@ namespace Ombi.Api.Plex.Models
     public class Mediacontainer
     {
         public int size { get; set; }
+        public int totalSize { get; set; }
         public bool allowSync { get; set; }
         public string identifier { get; set; }
         public string mediaTagPrefix { get; set; }

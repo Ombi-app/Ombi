@@ -12,6 +12,8 @@ namespace Ombi.Mapping.Profiles
             CreateMap<DiscordNotificationsViewModel, DiscordNotificationSettings>().ReverseMap();
             CreateMap<PushbulletNotificationViewModel, PushbulletSettings>().ReverseMap();
             CreateMap<SlackNotificationsViewModel, SlackNotificationSettings>().ReverseMap();
+            CreateMap<PushoverNotificationViewModel, PushoverSettings>().ReverseMap();
+            CreateMap<MattermostNotificationsViewModel, MattermostNotificationSettings>().ReverseMap();
         }
     }
 }

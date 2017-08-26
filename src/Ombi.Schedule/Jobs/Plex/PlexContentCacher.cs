@@ -29,6 +29,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
@@ -42,22 +43,25 @@ namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexContentCacher : IPlexContentCacher
     {
-        public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentCacher> logger, IPlexContentRepository repo)
+        public PlexContentCacher(ISettingsService<PlexSettings> plex, IPlexApi plexApi, ILogger<PlexContentCacher> logger, IPlexContentRepository repo,
+            IPlexEpisodeCacher epsiodeCacher)
         {
             Plex = plex;
             PlexApi = plexApi;
             Logger = logger;
             Repo = repo;
+            EpisodeCacher = epsiodeCacher;
         }
 
         private ISettingsService<PlexSettings> Plex { get; }
         private IPlexApi PlexApi { get; }
         private ILogger<PlexContentCacher> Logger { get; }
         private IPlexContentRepository Repo { get; }
+        private IPlexEpisodeCacher EpisodeCacher { get; }
 
         public async Task CacheContent()
         {
-            var plexSettings = Plex.GetSettings();
+            var plexSettings = await Plex.GetSettingsAsync();
             if (!plexSettings.Enable)
             {
                 return;
@@ -71,10 +75,12 @@ namespace Ombi.Schedule.Jobs.Plex
             try
             {
                 await StartTheCache(plexSettings);
+
+                BackgroundJob.Enqueue(() => EpisodeCacher.Start());
             }
             catch (Exception e)
             {
-                Logger.LogWarning(LoggingEvents.CacherException, e, "Exception thrown when attempting to cache the Plex Content");
+                Logger.LogWarning(LoggingEvents.Cacher, e, "Exception thrown when attempting to cache the Plex Content");
             }
         }
 
@@ -101,10 +107,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             {
                                 seasonsContent.Add(new PlexSeasonsContent
                                 {
-                                    ParentKey = int.Parse(season.parentRatingKey),
-                                    SeasonKey = int.Parse(season.ratingKey),
+                                    ParentKey = season.parentRatingKey,
+                                    SeasonKey = season.ratingKey,
                                     SeasonNumber = season.index,
-                                    PlexContentId = int.Parse(show.ratingKey)
+                                    PlexContentId = show.ratingKey
                                 });
                             }
 
@@ -181,7 +187,8 @@ namespace Ombi.Schedule.Jobs.Plex
                                 Type = PlexMediaTypeEntity.Movie,
                                 Title = movie.title,
                                 Url = PlexHelper.GetPlexMediaUrl(servers.MachineIdentifier, movie.ratingKey),
-                                Seasons = new List<PlexSeasonsContent>()
+                                Seasons = new List<PlexSeasonsContent>(),
+                                Quality = movie.Media?.FirstOrDefault()?.videoResolution ?? string.Empty
                             };
 
                             contentToAdd.Add(item);
@@ -191,8 +198,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 if (contentToAdd.Any())
                 {
-                    
-                    contentToAdd.ForEach(async x => await Repo.Add(x));
+                    await Repo.AddRange(contentToAdd);
                 }
 
             }
@@ -216,12 +222,16 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     if (plexSettings.PlexSelectedLibraries.Any())
                     {
-                        // Only get the enabled libs
-                        var keys = plexSettings.PlexSelectedLibraries.Where(x => x.Enabled).Select(x => x.Key.ToString()).ToList();
-                        if (!keys.Contains(dir.key))
+                        if (plexSettings.PlexSelectedLibraries.Any(x => x.Enabled))
                         {
-                            // We are not monitoring this lib
-                            continue;
+                            // Only get the enabled libs
+                            var keys = plexSettings.PlexSelectedLibraries.Where(x => x.Enabled)
+                                .Select(x => x.Key.ToString()).ToList();
+                            if (!keys.Contains(dir.key))
+                            {
+                                // We are not monitoring this lib
+                                continue;
+                            }
                         }
                     }
                     var lib = PlexApi.GetLibrary(plexSettings.PlexAuthToken, plexSettings.FullUri, dir.key).Result;

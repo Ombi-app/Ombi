@@ -27,13 +27,15 @@ namespace Ombi.Controllers.External
         /// <param name="pushbullet">The pushbullet.</param>
         /// <param name="slack">The slack.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
-            IPushbulletNotification pushbullet, ISlackNotification slack)
+            IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm)
         {
             Service = service;
             DiscordNotification = notification;
             EmailNotification = emailN;
             PushbulletNotification = pushbullet;
             SlackNotification = slack;
+            PushoverNotification = po;
+            MattermostNotification = mm;
         }
 
         private INotificationService Service { get; }
@@ -41,6 +43,8 @@ namespace Ombi.Controllers.External
         private IEmailNotification EmailNotification { get; }
         private IPushbulletNotification PushbulletNotification { get; }
         private ISlackNotification SlackNotification { get; }
+        private IPushoverNotification PushoverNotification { get; }
+        private IMattermostNotification MattermostNotification { get; }
 
 
         /// <summary>
@@ -68,6 +72,36 @@ namespace Ombi.Controllers.External
         {
             settings.Enabled = true;
             PushbulletNotification.NotifyAsync(
+                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sends a test message to Pushover using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("pushover")]
+        public bool Pushover([FromBody] PushoverSettings settings)
+        {
+            settings.Enabled = true;
+            PushoverNotification.NotifyAsync(
+                new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Sends a test message to mattermost using the provided settings
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("mattermost")]
+        public bool Mattermost([FromBody] MattermostNotificationSettings settings)
+        {
+            settings.Enabled = true;
+            MattermostNotification.NotifyAsync(
                 new NotificationOptions { NotificationType = NotificationType.Test, RequestId = -1 }, settings);
 
             return true;

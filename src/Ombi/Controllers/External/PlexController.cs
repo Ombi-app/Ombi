@@ -47,7 +47,7 @@ namespace Ombi.Controllers.External
 
                 settings.Enable = true;
                 settings.Servers = new List<PlexServers> { new PlexServers{
-PlexAuthToken = result.user.authentication_token,
+                        PlexAuthToken = result.user.authentication_token,
                         Id = new Random().Next(),
                         Ip = servers.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
                         MachineIdentifier = servers.MachineIdentifier,
@@ -87,7 +87,7 @@ PlexAuthToken = result.user.authentication_token,
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Libraries")]
-        public async Task<PlexLibraries> GetPlexLibraries([FromBody] PlexServers settings)
+        public async Task<PlexContainer> GetPlexLibraries([FromBody] PlexServers settings)
         {
             var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
