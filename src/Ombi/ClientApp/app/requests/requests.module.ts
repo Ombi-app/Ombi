@@ -12,9 +12,8 @@ import { ButtonModule, DialogModule } from 'primeng/primeng';
 import { RequestComponent } from './request.component';
 import { MovieRequestsComponent } from './movierequests.component';
 import { TvRequestsComponent } from './tvrequests.component';
-import { TvRequestManageComponent } from './tvrequest-manage.component';
-//import { RequestGridComponent } from '../request-grid/request-grid.component';
-// import { RequestCardComponent } from '../request-grid/request-card.component';
+import { TvRequestChildrenComponent } from './tvrequest-children.component';
+
 import { TreeTableModule } from 'primeng/primeng';
 
 import { IdentityService } from '../services/identity.service';
@@ -24,7 +23,7 @@ import { AuthGuard } from '../auth/auth.guard';
 
 const routes: Routes = [
     { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
-    { path: 'requests/:id', component: TvRequestManageComponent, canActivate: [AuthGuard] },
+    { path: 'requests/:id', component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -42,7 +41,7 @@ const routes: Routes = [
         RequestComponent,
         MovieRequestsComponent,
         TvRequestsComponent,
-        TvRequestManageComponent,
+        TvRequestChildrenComponent,
     ],
     exports: [
         RouterModule

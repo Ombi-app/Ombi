@@ -79,7 +79,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                 leaf: false
             });
         }, this)
-        console.log(temp);
         return <TreeNode[]>temp;
     }
     private subscriptions = new Subject<void>();
