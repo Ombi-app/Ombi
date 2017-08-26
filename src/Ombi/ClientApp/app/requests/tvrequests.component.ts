@@ -107,17 +107,22 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         return items;
     }
     ngOnInit() {
-        this.amountToLoad = 5;
+        this.amountToLoad = 1000;
         this.currentlyLoaded = 5;
         this.tvRequests = [];
         this.loadInit();
     }
 
     public loadMore() {
-        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
+        //TODO: I believe this +1 is causing off by one error skipping loading of tv shows
+        //When removed and scrolling very slowly everything works as expected, however
+        //if you scroll really quickly then you start getting duplicates of movies
+        //since it's async and some subsequent results return first and then incrementer
+        //is increased so you see movies which had already been gotten show up...
+        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded +1)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.tvRequests.push.apply(this.tvRequests, x);
+                this.tvRequests.push.apply(this.tvRequests, this.transformData(x));
                 this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
             });
     }

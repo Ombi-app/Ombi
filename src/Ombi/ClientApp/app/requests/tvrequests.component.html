@@ -4,12 +4,20 @@
     </div>
 </div>
 <br />
+<!--TODO: I believe this +1 is causing off by one error skipping loading of tv shows
+    When removed and scrolling very slowly everything works as expected, however
+    if you scroll really quickly then you start getting duplicates of movies
+    since it's async and some subsequent results return first and then incrementer
+    is increased so you see movies which had already been gotten show up...
+    
+    Removing infinte-scroll and setting max to 1000 till we work out some sort of fix
 
-<div infinite-scroll
+    -->
+<!--<div infinite-scroll
      [infiniteScrollDistance]="1"
      [infiniteScrollThrottle]="100"
-     (scrolled)="loadMore()">
-    <!--<div>-->
+     (scrolled)="loadMore()">-->
+    <div>
     <p-treeTable [value]="tvRequests">
         <!--<p-column>
             <ng-template let-col let-node="rowData" pTemplate="body">
@@ -27,7 +35,7 @@
                     <div class="row">
                         <div class="col-sm-2">
 
-                            <img class="img-responsive poster" src="{{node.data.posterPath}}" alt="poster">
+                            <img class="img-responsive poster" src="{{node.data.posterPath || null}}" alt="poster">
 
                         </div>
 
