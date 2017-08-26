@@ -50,107 +50,12 @@
                         <div class="col-sm-3 col-sm-push-3">
 
                             <button  style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab($event)"><i class="fa fa-plus"></i> View</button>
-                            <!--<button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>-->
                         </div>
                     </div>
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.leaf">
-                    <hr />
-                    <div *ngIf="node.data">
-                        <div *ngFor="let child of node.data">
-                            <div class="col-md-12">
-
-                                <div class="col-md-2">
-                                    <span>Requested By: {{child.requestedUser.userName}}</span>
-                                </div>
-
-
-                                <div class="col-md-1 col-md-push-9">
-                                    <!--// TODO ADMIN-->
-                                    <form>
-                                        <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
-                                    </form>
-                                    <form>
-                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
-                                    </form>
-                                    <form>
-                                        <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <ngb-tabset>
-
-                                    <div *ngFor="let season of child.seasonRequests">
-                                        <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
-                                            <ng-template ngbTabContent>
-                                                <h2>Season: {{season.seasonNumber}}</h2>
-
-                                                <table class="table table-striped table-hover table-responsive table-condensed">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                <a>
-                                                                    #
-                                                                </a>
-                                                            </th>
-                                                            <th>
-                                                                <a>
-                                                                    Title
-                                                                </a>
-                                                            </th>
-                                                            <th>
-                                                                <a>
-                                                                    Air Date
-                                                                </a>
-                                                            </th>
-                                                            <th>
-                                                                <a>
-                                                                    Status
-                                                                </a>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let ep of season.episodes">
-                                                            <td>
-                                                                {{ep.episodeNumber}}
-                                                            </td>
-                                                            <td>
-                                                                {{ep.title}}
-                                                            </td>
-                                                            <td>
-                                                                {{ep.airDate | date: 'dd/MM/yyyy' }}
-                                                            </td>
-                                                            <td>
-                                                                <span *ngIf="ep.available" class="label label-success">Available</span>
-                                                                <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
-                                                                <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
-                                                                <ng-template #requested>
-                                                                    <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
-                                                                </ng-template>
-
-                                                                <ng-template #notRequested>
-                                                                    <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
-                                                                </ng-template>
-                                                            </td>
-
-
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </ng-template>
-                                        </ngb-tab>
-                                    </div>
-                                </ngb-tabset>
-                            </div>
-                            <br />
-                            <br />
-                            <hr />
-                        </div>
-
-                    </div>
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin"></tvrequests-children>
                 </div>
             </ng-template>
         </p-column>
