@@ -68,9 +68,9 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             }
         };
     }
-    transformData(datain: ITvRequests[]): any {
+    transformData(data: ITvRequests[]): TreeNode[] {
         var temp: TreeNode[] = [];
-        datain.forEach(function (value) {
+        data.forEach(function (value) {
             temp.push({
                 "data": value,
                 "children": [{
@@ -83,7 +83,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     }
     private subscriptions = new Subject<void>();
 
-    tvRequests: ITvRequests[];
+    tvRequests: TreeNode[];
 
     searchChanged = new Subject<string>();
     searchText: string;
@@ -135,11 +135,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.removeTvRequest(request);
         this.removeRequestFromUi(request);
     }
-    public removeChildRequest(request: IChildRequests) {
-        this.requestService.deleteChild(request)
-            .subscribe();
-        this.removeChildRequestFromUi(request);
-    }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
@@ -185,12 +180,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.updateTvRequest(this.selectedSeason)
             .subscribe();
     }
-    public denyChildSeasonRequest(request: IChildRequests) {
-        request.approved = false;
-        request.denied = true;
-        this.requestService.updateChild(request)
-            .subscribe();
-    }
 
     public showChildren(request: ITvRequests) {
         this.selectedSeason = request;
@@ -233,14 +222,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             this.tvRequests.splice(index, 1);
         }
     }
-    private removeChildRequestFromUi(key: IChildRequests) {
-        //var index = this.childRequests.indexOf(key, 0);
-        //if (index > -1) {
-        //    this.childRequests.splice(index, 1);
-        //}
-        //TODO FIX THIS
-    }
-
 
     ngOnDestroy(): void {
         this.subscriptions.next();
