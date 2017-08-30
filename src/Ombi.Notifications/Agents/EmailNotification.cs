@@ -7,6 +7,7 @@ using Ombi.Helpers;
 using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
+using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -16,11 +17,13 @@ namespace Ombi.Notifications.Agents
 {
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
-        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov) : base(settings, r, m, t)
+        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c) : base(settings, r, m, t)
         {
             EmailProvider = prov;
+            CustomizationSettings = c;
         }
         private IEmailProvider EmailProvider { get; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         public override string NotificationName => nameof(EmailNotification);
 
         protected override bool ValidateConfiguration(EmailNotificationSettings settings)
@@ -47,9 +50,11 @@ namespace Ombi.Notifications.Agents
         private async Task<NotificationMessage> LoadTemplate(NotificationType type, NotificationOptions model, EmailNotificationSettings settings)
         {
             var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
-            
+
+            var customization = await CustomizationSettings.GetSettingsAsync();
+
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image);
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image, customization.Logo);
             
 
             var message = new NotificationMessage
@@ -108,9 +113,11 @@ namespace Ombi.Notifications.Agents
                 title = TvRequest.ParentRequest.Title;
                 img = TvRequest.ParentRequest.PosterPath;
             }
+
+            var customization = await CustomizationSettings.GetSettingsAsync();
             var html = email.LoadTemplate(
                 "Ombi: A request could not be added.",
-                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img);
+                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img, customization.Logo);
 
             var message = new NotificationMessage
             {
@@ -173,9 +180,10 @@ namespace Ombi.Notifications.Agents
         protected override async Task Test(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
+            var customization = await CustomizationSettings.GetSettingsAsync();
             var html = email.LoadTemplate(
                 "Test Message",
-                "This is just a test! Success!", "");
+                "This is just a test! Success!", "", customization.Logo);
             var message = new NotificationMessage
             {
                 Message = html,
