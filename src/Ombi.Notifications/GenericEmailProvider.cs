@@ -2,21 +2,30 @@
 using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
+using Ombi.Core.Settings;
 using Ombi.Notifications.Models;
 using Ombi.Notifications.Templates;
+using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 
 namespace Ombi.Notifications
 {
     public class GenericEmailProvider : IEmailProvider
     {
+        public GenericEmailProvider(ISettingsService<CustomizationSettings> s)
+        {
+            CustomizationSettings = s;
+        }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         public async Task SendAdHoc(NotificationMessage model, EmailNotificationSettings settings)
         {
             try
             {
 
                 var email = new EmailBasicTemplate();
-                var html = email.LoadTemplate(model.Subject, model.Message, null);
+
+                var customization = await CustomizationSettings.GetSettingsAsync();
+                var html = email.LoadTemplate(model.Subject, model.Message, null, customization.Logo);
 
                 var body = new BodyBuilder
                 {

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.3
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -80,7 +80,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Mattermost", "Ombi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Pushover", "Ombi.Api.Pushover\Ombi.Api.Pushover.csproj", "{CA55DD4F-4EFF-4906-A848-35FCC7BD5654}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Schedule.Tests", "Ombi.Schedule.Tests\Ombi.Schedule.Tests.csproj", "{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Schedule.Tests", "Ombi.Schedule.Tests\Ombi.Schedule.Tests.csproj", "{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Telegram", "Ombi.Api.Telegram\Ombi.Api.Telegram.csproj", "{484A8CA4-C9DC-4033-971D-D9D8EABB957E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -204,6 +206,10 @@ Global
 		{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{484A8CA4-C9DC-4033-971D-D9D8EABB957E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{484A8CA4-C9DC-4033-971D-D9D8EABB957E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{484A8CA4-C9DC-4033-971D-D9D8EABB957E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{484A8CA4-C9DC-4033-971D-D9D8EABB957E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -232,6 +238,7 @@ Global
 		{737B2620-FE5A-4135-A017-79C269A7D36C} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{CA55DD4F-4EFF-4906-A848-35FCC7BD5654} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 		{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C} = {6F42AB98-9196-44C4-B888-D5E409F415A1}
+		{484A8CA4-C9DC-4033-971D-D9D8EABB957E} = {9293CA11-360A-4C20-A674-B9E794431BF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {192E9BF8-00B4-45E4-BCCC-4C215725C869}

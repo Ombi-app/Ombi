@@ -30,7 +30,7 @@ namespace Ombi.Notifications.Templates
             sb.Replace(SubjectKey, subject);
             sb.Replace(BodyKey, body);
             sb.Replace(DateKey, DateTime.Now.ToString("f"));
-            sb.Replace(ImgSrc, img);
+            sb.Replace(ImgSrc, string.IsNullOrEmpty(img) ? string.Empty : img);
             sb.Replace(Logo, string.IsNullOrEmpty(logo) ? "http://i.imgur.com/qQsN78U.png" : logo);
 
             return sb.ToString();
