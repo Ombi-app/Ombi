@@ -10,7 +10,7 @@
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
-var target = Argument("target", "Build");
+var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Release");
 
 //////////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ Task("Clean")
     .Does(() =>
 {
     CleanDirectory(buildDir);
-    //CleanDirectory(nodeModulesDir);
+    CleanDirectory(nodeModulesDir);
     CleanDirectory(wwwRootDistDir);
 });
 
@@ -86,7 +86,7 @@ Task("SetVersionInfo")
 
 Task("Restore")
     .IsDependentOn("SetVersionInfo")
-	//.IsDependentOn("Gulp Publish")
+	.IsDependentOn("Gulp Publish")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);
@@ -134,9 +134,9 @@ Task("Package")
 
 Task("Publish")
     .IsDependentOn("Build")
-    .IsDependentOn("Publish-Windows");
-    //.IsDependentOn("Publish-OSX").IsDependentOn("Publish-Ubuntu").IsDependentOn("Publish-Debian").IsDependentOn("Publish-Centos")
-    //.IsDependentOn("Package");
+    .IsDependentOn("Publish-Windows")
+    .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Ubuntu").IsDependentOn("Publish-Debian").IsDependentOn("Publish-Centos")
+    .IsDependentOn("Package");
 
 Task("Publish-Windows")
     .Does(() =>
