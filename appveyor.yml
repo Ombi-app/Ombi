@@ -5,6 +5,8 @@ dotnet_csproj:
   patch: true
   file: '**\*.csproj'
   version: '{version}'
+  package_version: '{version}'
+
 environment:
   nodejs_version: "7.8.0"
 
