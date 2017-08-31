@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace Ombi.Updater
@@ -30,10 +31,16 @@ namespace Ombi.Updater
 
         private void StartOmbi(StartupOptions options)
         {
+            var fileName = "Ombi.exe";
+            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                fileName = "Ombi";
+            }
+
             var start = new ProcessStartInfo
             {
                 UseShellExecute = false,
-                FileName = Path.Combine(options.ApplicationPath,"Ombi.exe"),
+                FileName = Path.Combine(options.ApplicationPath,fileName),
                 WorkingDirectory = options.ApplicationPath
             };
             using (var proc = new Process { StartInfo = start })

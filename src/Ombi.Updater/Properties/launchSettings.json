@@ -2,7 +2,7 @@
   "profiles": {
     "Ombi.Updater": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\Jamie\\Desktop\\Test\\"
+      "commandLineArgs": "C:\\Users\\Jamie.Rees\\Source\\Repos\\PlexRequests.Net\\src\\Ombi\\bin\\Debug\\netcoreapp1.1\\"
     }
   }
 }

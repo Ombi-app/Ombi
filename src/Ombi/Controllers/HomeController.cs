@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Ombi.Api.Telegram;
 
 namespace Ombi.Controllers
 {
@@ -9,9 +11,9 @@ namespace Ombi.Controllers
         /// Indexes this instance.
         /// </summary>
         /// <returns></returns>
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+                     return View();
         }
     }
 }

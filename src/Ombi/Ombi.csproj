@@ -3,8 +3,10 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.1</TargetFramework>
     <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.04-x64;debian.8-x64;centos.7-x64;</RuntimeIdentifiers>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -69,6 +71,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
+    <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
@@ -76,12 +79,6 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="ClientApp\app\settings\notifications\slack.component.js">
-      <DependentUpon>slack.component.ts</DependentUpon>
-    </None>
   </ItemGroup>
  
 </Project>

@@ -93,7 +93,7 @@ namespace Ombi.Schedule.Ombi
                         return;
                     }
                 }
-                if(download == null)
+                if (download == null)
                 {
                     return;
                 }
@@ -101,20 +101,38 @@ namespace Ombi.Schedule.Ombi
                 // Download it
                 var extension = download.Name.Split('.').Last();
                 var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
-                await DownloadAsync(download.Url, zipDir);
+                try
+                {
+
+                    await DownloadAsync(download.Url, zipDir);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
 
                 var tempPath = Path.Combine(currentLocation, "TempUpdate");
+                if (Directory.Exists(tempPath))
+                {
+                    Directory.Delete(tempPath, true);
+                }
                 // Extract it
                 using (var files = ZipFile.OpenRead(zipDir))
                 {
+                    // Temp Path
+                    Directory.CreateDirectory(tempPath);
                     foreach (var entry in files.Entries)
                     {
-                        // Temp Path
-                        Directory.CreateDirectory(tempPath);
+                        if (entry.FullName.Contains("/"))
+                        {
+                            var path = Path.GetDirectoryName(Path.Combine(tempPath, entry.FullName));
+                            Directory.CreateDirectory(path);
+                        }
 
                         entry.ExtractToFile(Path.Combine(tempPath, entry.FullName));
                     }
-                }             
+                }
 
                 // There must be an update
                 var start = new ProcessStartInfo
@@ -122,7 +140,7 @@ namespace Ombi.Schedule.Ombi
                     UseShellExecute = false,
                     CreateNoWindow = true,
                     FileName = "Ombi.Updater",
-                    Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " +extension ,
+                    Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension,
                 };
                 using (var proc = new Process { StartInfo = start })
                 {

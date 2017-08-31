@@ -21,7 +21,9 @@ namespace Ombi.Schedule
         {
             RecurringJob.AddOrUpdate(() => Cacher.CacheContent(), Cron.Hourly);
             RecurringJob.AddOrUpdate(() => RadarrCacher.CacheContent(), Cron.Hourly);
-            RecurringJob.AddOrUpdate(() => Updater.Update(), Cron.Daily);
+            //RecurringJob.AddOrUpdate(() => Updater.Update(), Cron.Daily);
+
+            BackgroundJob.Enqueue(() => Updater.Update());
         }
     }
 }

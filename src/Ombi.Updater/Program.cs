@@ -8,9 +8,9 @@ namespace Ombi.Updater
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("=======================================");
-            Console.WriteLine("       Starting the Ombi Updater"       );
-            Console.WriteLine("=======================================");
+            Console.WriteLine(" =======================================");
+            Console.WriteLine("        Starting the Ombi Updater"       );
+            Console.WriteLine(" =======================================");
 
 
             var options = CheckArgs(args);
