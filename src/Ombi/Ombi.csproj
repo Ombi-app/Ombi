@@ -5,9 +5,9 @@
     <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.04-x64;debian.8-x64;centos.7-x64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
-    <FileVersion>3.0.0.0</FileVersion>
-    <Version></Version>
+    <AssemblyVersion>$(SemVer)</AssemblyVersion>
+    <FileVersion>$(SemVer)</FileVersion>
+    <Version>$(SemVer)</Version>
     <PackageVersion></PackageVersion>
   </PropertyGroup>
 

@@ -1,12 +1,6 @@
 version: 3.0.{build}
 configuration: Release
 os: Visual Studio 2015
-dotnet_csproj:
-  patch: true
-  file: '**\*.csproj'
-  version: '{version}-$(APPVEYOR_REPO_BRANCH)'
-  package_version: '{version}'
-
 environment:
   nodejs_version: "7.8.0"
 
@@ -35,6 +29,8 @@ after_build:
     
     
 
+#cache:
+#- '%USERPROFILE%\.nuget\packages'
 deploy:
 - provider: GitHub
   release: Ombi v$(appveyor_build_version)

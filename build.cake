@@ -1,14 +1,16 @@
 #tool "xunit.runner.console"
+#tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
 #addin "Cake.Npm"
 #addin "SharpZipLib"
 #addin "Cake.Compression"
+#addin "Cake.Incubator"
 
 //////////////////////////////////////////////////////////////////////
 // ARGUMENTS
 //////////////////////////////////////////////////////////////////////
 
-var target = Argument("target", "Default");
+var target = Argument("target", "Build");
 var configuration = Argument("configuration", "Release");
 
 //////////////////////////////////////////////////////////////////////
@@ -22,13 +24,13 @@ var projDir = "./src/";                         //  Project Directory
 var webProjDir = "./src/Ombi";
 var csProj = "./src/Ombi/Ombi.csproj";          // Path to the project.csproj
 var solutionFile = "Ombi.sln";                  // Solution file if needed
+GitVersion versionInfo = null;
 
 var buildSettings = new DotNetCoreBuildSettings
 {
     Framework = "netcoreapp1.1",
     Configuration = "Release",
     OutputDirectory = Directory(buildDir),
-    VersionSuffix = GetVersion(),
 };
 
 var publishSettings = new DotNetCorePublishSettings
@@ -36,7 +38,6 @@ var publishSettings = new DotNetCorePublishSettings
     Framework = "netcoreapp1.1",
     Configuration = "Release",
     OutputDirectory = Directory(buildDir),
-    VersionSuffix = GetVersion(),
 };
 
 var artifactsFolder = buildDir + "/netcoreapp1.1/";
@@ -47,19 +48,7 @@ var debianArtifactsFolder = artifactsFolder + "debian.8-x64/published";
 var centosArtifactsFolder = artifactsFolder + "centos.7-x64/published";
 
 
-//////////////////////////////////////////////////////////////////////
-// Helper
-//////////////////////////////////////////////////////////////////////
 
-public string GetVersion()
-{
-    if (AppVeyor.IsRunningOnAppVeyor) {
-        // Update the version		
-		return AppVeyor.Environment.Build.Version;
-        //AppVeyor.Environment.Repository.Branch;
-	} 
-    return "3.0.100";
-}
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -69,13 +58,35 @@ Task("Clean")
     .Does(() =>
 {
     CleanDirectory(buildDir);
-    CleanDirectory(nodeModulesDir);
+    //CleanDirectory(nodeModulesDir);
     CleanDirectory(wwwRootDistDir);
 });
 
-Task("Restore")
+Task("SetVersionInfo")
     .IsDependentOn("Clean")
-	.IsDependentOn("Gulp Publish")
+    .Does(() =>
+{
+	var settings = new GitVersionSettings {
+        RepositoryPath = ".",
+    };
+
+	if (AppVeyor.IsRunningOnAppVeyor) {
+		settings.Branch = AppVeyor.Environment.Repository.Branch;
+	} else {
+		settings.Branch = "master";
+	}
+
+    versionInfo = GitVersion(settings);
+	
+	Information("GitResults -> {0}", versionInfo.Dump());
+
+	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.BuildMetaData);
+	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.BuildMetaData);
+});
+
+Task("Restore")
+    .IsDependentOn("SetVersionInfo")
+	//.IsDependentOn("Gulp Publish")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);
@@ -123,9 +134,9 @@ Task("Package")
 
 Task("Publish")
     .IsDependentOn("Build")
-    .IsDependentOn("Publish-Windows")
-    .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Ubuntu").IsDependentOn("Publish-Debian").IsDependentOn("Publish-Centos")
-    .IsDependentOn("Package");
+    .IsDependentOn("Publish-Windows");
+    //.IsDependentOn("Publish-OSX").IsDependentOn("Publish-Ubuntu").IsDependentOn("Publish-Debian").IsDependentOn("Publish-Centos")
+    //.IsDependentOn("Package");
 
 Task("Publish-Windows")
     .Does(() =>
