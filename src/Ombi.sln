@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.26730.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi", "Ombi\Ombi.csproj", "{C987AA67-AFE1-468F-ACD3-EAD5A48E1F6A}"
 EndProject
@@ -9,7 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\build.cake = ..\build.cake
-		..\BuildTask.ps1 = ..\BuildTask.ps1
 		..\CHANGELOG.md = ..\CHANGELOG.md
 		..\global.json = ..\global.json
 	EndProjectSection
@@ -82,7 +81,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Pushover", "Ombi.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Schedule.Tests", "Ombi.Schedule.Tests\Ombi.Schedule.Tests.csproj", "{BDD8B924-016E-4CDA-9FFA-50B0A34BCD3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ombi.Api.Telegram", "Ombi.Api.Telegram\Ombi.Api.Telegram.csproj", "{484A8CA4-C9DC-4033-971D-D9D8EABB957E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ombi.Api.Telegram", "Ombi.Api.Telegram\Ombi.Api.Telegram.csproj", "{484A8CA4-C9DC-4033-971D-D9D8EABB957E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

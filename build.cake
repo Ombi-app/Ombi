@@ -58,7 +58,7 @@ Task("Clean")
     .Does(() =>
 {
     CleanDirectory(buildDir);
-    CleanDirectory(nodeModulesDir);
+    //CleanDirectory(nodeModulesDir);
     CleanDirectory(wwwRootDistDir);
 });
 
@@ -80,8 +80,15 @@ Task("SetVersionInfo")
 	
 	Information("GitResults -> {0}", versionInfo.Dump());
 
-	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.BuildMetaData);
-	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.BuildMetaData);
+	var fullVer = versionInfo.MajorMinorPatch + "-" + versionInfo.BranchName + "-" + versionInfo.BuildMetaData;
+
+
+	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
+	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
+	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
+	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
+	buildSettings.VersionSuffix = versionInfo.BranchName;
+	publishSettings.VersionSuffix = versionInfo.BranchName;
 });
 
 Task("Restore")

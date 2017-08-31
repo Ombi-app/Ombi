@@ -7,7 +7,7 @@
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
     <AssemblyVersion>$(SemVer)</AssemblyVersion>
     <FileVersion>$(SemVer)</FileVersion>
-    <Version>$(SemVer)</Version>
+    <Version>$(FullVer)</Version>
     <PackageVersion></PackageVersion>
   </PropertyGroup>
 

@@ -124,7 +124,14 @@ namespace Ombi
                 {
                     Console.WriteLine(e);
                 }
-                
+                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = "header",
+                    Type = "apiKey"
+                });
+
                 c.AddSecurityDefinition("Authentication", new ApiKeyScheme());
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
@@ -189,9 +196,10 @@ namespace Ombi
             
             app.UseHangfireServer();
             app.UseHangfireDashboard();
-            app.UseSwagger();
+
             app.UseSwaggerUI(c =>
             {
+         
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.ShowJsonEditor();
             });
