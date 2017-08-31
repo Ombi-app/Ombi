@@ -4,7 +4,7 @@ os: Visual Studio 2015
 dotnet_csproj:
   patch: true
   file: '**\*.csproj'
-  version: '{version}'
+  version: '{version}-$(APPVEYOR_REPO_BRANCH)'
   package_version: '{version}'
 
 environment:

@@ -35,7 +35,8 @@ namespace Ombi.Schedule.Ombi
             // IF AutoUpdateEnabled =>
             // ELSE Return;
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            var currentBranch = Settings.Branch;
+            //var currentBranch = Settings.Branch;
+            var currentBranch = "BRANCH";
 
 #if DEBUG
             if (currentBranch == "{{BRANCH}}")
@@ -45,7 +46,7 @@ namespace Ombi.Schedule.Ombi
 #endif
             var updates = await OmbiService.GetUpdates(currentBranch);
             var serverVersion = updates.UpdateVersionString.Substring(1, 6);
-            if (serverVersion != Settings.FriendlyVersion)
+            if (serverVersion != AssemblyHelper.GetRuntimeVersion())
             {
 
                 // Let's download the correct zip
