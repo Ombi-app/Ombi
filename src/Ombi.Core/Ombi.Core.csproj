@@ -38,4 +38,8 @@
     <Folder Include="Models\Requests\Tv\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="Rule\Rules\Search\EmbyAvailabilityRule.cs" />
+  </ItemGroup>
+
 </Project>

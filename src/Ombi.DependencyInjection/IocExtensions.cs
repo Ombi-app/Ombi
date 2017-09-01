@@ -36,6 +36,7 @@ using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
@@ -63,7 +64,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMovieRequestEngine, MovieRequestEngine>();
             services.AddTransient<ITvRequestEngine, TvRequestEngine>();
             services.AddTransient<ITvSearchEngine, TvSearchEngine>();
-            services.AddSingleton<IRuleEvaluator, RuleEvaluator>();
+            services.AddTransient<IRuleEvaluator, RuleEvaluator>();
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<ITvSender, TvSender>();
         }
@@ -95,6 +96,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
             services.AddTransient<IPlexContentRepository, PlexContentRepository>();
+            services.AddTransient<IEmbyContentRepository, EmbyContentRepository>();
             services.AddTransient<INotificationTemplatesRepository, NotificationTemplatesRepository>();
             
             services.AddTransient<ITvRequestRepository, TvRequestRepository>();
@@ -124,6 +126,7 @@ namespace Ombi.DependencyInjection
         public static void RegisterJobs(this IServiceCollection services)
         {
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
+            services.AddTransient<IEmbyContentCacher, EmbyContentCacher>();
             services.AddTransient<IPlexEpisodeCacher, PlexEpisodeCacher>();
             services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();

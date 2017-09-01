@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Ombi.Api.Emby;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
@@ -33,16 +34,19 @@ namespace Ombi.Controllers
         /// <param name="resolver">The resolver.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
-        public SettingsController(ISettingsResolver resolver, IMapper mapper, INotificationTemplatesRepository templateRepo)
+        public SettingsController(ISettingsResolver resolver, IMapper mapper, INotificationTemplatesRepository templateRepo,
+            IEmbyApi embyApi)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
             TemplateRepository = templateRepo;
+            _embyApi = embyApi;
         }
 
         private ISettingsResolver SettingsResolver { get; }
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
+        private readonly IEmbyApi _embyApi;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -114,6 +118,12 @@ namespace Ombi.Controllers
         [HttpPost("emby")]
         public async Task<bool> EmbySettings([FromBody]EmbySettings emby)
         {
+            foreach (var server in emby.Servers)
+            {
+                var users = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
+                server.AdministratorId = admin?.Id;
+            }
             return await Save(emby);
         }
 

@@ -13,7 +13,7 @@ namespace Ombi.Core.Models.Search
 
 
         /// <summary>
-        /// This is used for the PlexAvailabilityCheck rule
+        /// This is used for the PlexAvailabilityCheck/EmbyAvailabilityRule rule
         /// </summary>
         /// <value>
         /// The custom identifier.

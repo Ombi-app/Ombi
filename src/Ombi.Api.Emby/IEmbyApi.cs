@@ -17,6 +17,9 @@ namespace Ombi.Api.Emby
         Task<EmbyItemContainer<EmbyEpisodes>> GetAllEpisodes(string apiKey, string userId, string baseUri);
         Task<EmbyItemContainer<EmbySeries>> GetAllShows(string apiKey, string userId, string baseUri);
 
+        Task<EmbyItemContainer<MovieInformation>> GetCollection(string mediaId, string apiKey, string userId,
+            string baseUrl);
+
         Task<SeriesInformation> GetSeriesInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<MovieInformation> GetMovieInformation(string mediaId, string apiKey, string userId, string baseUrl);
         Task<EpisodeInformation> GetEpisodeInformation(string mediaId, string apiKey, string userId, string baseUrl);

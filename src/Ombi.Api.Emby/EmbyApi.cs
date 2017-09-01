@@ -66,6 +66,14 @@ namespace Ombi.Api.Emby
             return obj;
         }
 
+        public async Task<EmbyItemContainer<MovieInformation>> GetCollection(string mediaId, string apiKey, string userId, string baseUrl)
+        {
+            var request = new Request($"emby/users/{userId}/items?parentId={mediaId}", baseUrl, HttpMethod.Get);
+            AddHeaders(request, apiKey);
+
+            return await Api.Request<EmbyItemContainer<MovieInformation>>(request);
+        }
+
         public async Task<EmbyItemContainer<EmbyMovie>> GetAllMovies(string apiKey, string userId, string baseUri)
         {
             return await GetAll<EmbyMovie>("Movie", apiKey, userId, baseUri);

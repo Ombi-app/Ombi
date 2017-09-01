@@ -68,6 +68,23 @@ namespace Ombi.Store.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmbyContent",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    AddedAt = table.Column<DateTime>(nullable: false),
+                    EmbyId = table.Column<string>(nullable: true),
+                    ProviderId = table.Column<string>(nullable: true),
+                    Title = table.Column<string>(nullable: true),
+                    Type = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmbyContent", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "GlobalSettings",
                 columns: table => new
                 {
@@ -620,6 +637,9 @@ namespace Ombi.Store.Migrations
 
             migrationBuilder.DropTable(
                 name: "Audit");
+
+            migrationBuilder.DropTable(
+                name: "EmbyContent");
 
             migrationBuilder.DropTable(
                 name: "GlobalSettings");

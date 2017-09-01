@@ -158,6 +158,26 @@ namespace Ombi.Store.Migrations
                     b.ToTable("Audit");
                 });
 
+            modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<string>("EmbyId");
+
+                    b.Property<string>("ProviderId");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmbyContent");
+                });
+
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>
                 {
                     b.Property<int>("Id")

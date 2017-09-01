@@ -10,7 +10,7 @@ using Ombi.Helpers;
 namespace Ombi.Store.Migrations
 {
     [DbContext(typeof(OmbiContext))]
-    [Migration("20170825114646_Inital")]
+    [Migration("20170901230032_Inital")]
     partial class Inital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,6 +157,26 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Audit");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.EmbyContent", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("AddedAt");
+
+                    b.Property<string>("EmbyId");
+
+                    b.Property<string>("ProviderId");
+
+                    b.Property<string>("Title");
+
+                    b.Property<int>("Type");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmbyContent");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.GlobalSettings", b =>
