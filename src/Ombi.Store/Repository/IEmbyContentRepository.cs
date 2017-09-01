@@ -15,5 +15,9 @@ namespace Ombi.Store.Repository
         Task<IEnumerable<EmbyContent>> GetAll();
         Task<EmbyContent> GetByEmbyId(string embyId);
         Task Update(EmbyContent existingContent);
+        IQueryable<EmbyEpisode> GetAllEpisodes();
+        Task<EmbyEpisode> Add(EmbyEpisode content);
+        Task<EmbyEpisode> GetEpisodeByEmbyId(string key);
+        Task AddRange(IEnumerable<EmbyEpisode> content);
     }
 }

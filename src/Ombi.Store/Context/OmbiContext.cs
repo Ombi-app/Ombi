@@ -29,6 +29,7 @@ namespace Ombi.Store.Context
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
+        public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
 
         public DbSet<MovieRequests> MovieRequests { get; set; }
         public DbSet<TvRequests> TvRequests { get; set; }
@@ -53,6 +54,12 @@ namespace Ombi.Store.Context
                 .WithMany(b => b.Episodes)
                 .HasPrincipalKey(x => x.Key)
                 .HasForeignKey(p => p.GrandparentKey);
+
+            builder.Entity<EmbyEpisode>()
+                .HasOne(p => p.Series)
+                .WithMany(b => b.Episodes)
+                .HasPrincipalKey(x => x.EmbyId)
+                .HasForeignKey(p => p.ParentId);
             base.OnModelCreating(builder);
         }
 

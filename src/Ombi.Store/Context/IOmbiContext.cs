@@ -18,6 +18,7 @@ namespace Ombi.Store.Context
         DbSet<PlexEpisode> PlexEpisode { get; set; }
         DbSet<RadarrCache> RadarrCache { get; set; }
         DbSet<EmbyContent> EmbyContent { get; set; }
+        DbSet<EmbyEpisode> EmbyEpisode { get; set; }
         DatabaseFacade Database { get; }
         EntityEntry<T> Entry<T>(T entry) where T : class;
         EntityEntry<TEntity> Attach<TEntity>(TEntity entity) where TEntity : class;

@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: EmbyContent.cs
+//    File: EmbyEpisode.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -26,28 +26,22 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Ombi.Store.Entities
 {
-    [Table("EmbyContent")]
-    public class EmbyContent : Entity
+    [Table("EmbyEpisode")]
+    public class EmbyEpisode : Entity
     {
         public string Title { get; set; }
-        public string ProviderId { get; set; }
         public string EmbyId { get; set; }
-        public EmbyMediaType Type { get; set; }
+        public int EpisodeNumber { get; set; }
+        public int SeasonNumber { get; set; }
+        public string ParentId { get; set; }
+        public string ProviderId { get; set; }
         public DateTime AddedAt { get; set; }
 
-
-        public ICollection<EmbyEpisode> Episodes { get; set; }
-    }
-
-    public enum EmbyMediaType
-    {
-        Movie = 0,
-        Series = 1,
-        Music = 2
+        public EmbyContent Series { get; set; }
     }
 }

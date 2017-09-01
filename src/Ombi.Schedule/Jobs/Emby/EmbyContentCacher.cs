@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Emby;
 using Ombi.Api.Emby.Models.Movie;
@@ -18,18 +19,20 @@ namespace Ombi.Schedule.Jobs.Emby
     public class EmbyContentCacher : IEmbyContentCacher
     {
         public EmbyContentCacher(ISettingsService<EmbySettings> settings, IEmbyApi api, ILogger<EmbyContentCacher> logger,
-            IEmbyContentRepository repo)
+            IEmbyContentRepository repo, IEmbyEpisodeCacher epCacher)
         {
             _logger = logger;
             _settings = settings;
             _api = api;
             _repo = repo;
+            _episodeCacher = epCacher;
         }
 
         private readonly ILogger<EmbyContentCacher> _logger;
         private readonly ISettingsService<EmbySettings> _settings;
         private readonly IEmbyApi _api;
         private readonly IEmbyContentRepository _repo;
+        private readonly IEmbyEpisodeCacher _episodeCacher;
 
 
         public async Task Start()
@@ -42,7 +45,7 @@ namespace Ombi.Schedule.Jobs.Emby
                 await StartServerCache(server);
 
             // Episodes
-            //BackgroundJob.Enqueue(() => );
+            BackgroundJob.Enqueue(() => _episodeCacher.Start());
         }
 
 

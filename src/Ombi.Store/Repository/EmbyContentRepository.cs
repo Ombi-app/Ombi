@@ -88,25 +88,26 @@ namespace Ombi.Store.Repository
             await Db.SaveChangesAsync();
         }
 
-        //public IQueryable<PlexEpisode> GetAllEpisodes()
-        //{
-        //    return Db.PlexEpisode.AsQueryable();
-        //}
+        public IQueryable<EmbyEpisode> GetAllEpisodes()
+        {
+            return Db.EmbyEpisode.AsQueryable();
+        }
 
-        //public async Task<PlexEpisode> Add(PlexEpisode content)
-        //{
-        //    await Db.PlexEpisode.AddAsync(content);
-        //    await Db.SaveChangesAsync();
-        //    return content;
-        //}
-        //public async Task<PlexEpisode> GetEpisodeByKey(int key)
-        //{
-        //    return await Db.PlexEpisode.FirstOrDefaultAsync(x => x.Key == key);
-        //}
-        //public async Task AddRange(IEnumerable<PlexEpisode> content)
-        //{
-        //    Db.PlexEpisode.AddRange(content);
-        //    await Db.SaveChangesAsync();
-        //}
+        public async Task<EmbyEpisode> Add(EmbyEpisode content)
+        {
+            await Db.EmbyEpisode.AddAsync(content);
+            await Db.SaveChangesAsync();
+            return content;
+        }
+        public async Task<EmbyEpisode> GetEpisodeByEmbyId(string key)
+        {
+            return await Db.EmbyEpisode.FirstOrDefaultAsync(x => x.EmbyId == key);
+        }
+
+        public async Task AddRange(IEnumerable<EmbyEpisode> content)
+        {
+            Db.EmbyEpisode.AddRange(content);
+            await Db.SaveChangesAsync();
+        }
     }
 }
