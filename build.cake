@@ -80,7 +80,9 @@ Task("SetVersionInfo")
 	
 	Information("GitResults -> {0}", versionInfo.Dump());
 
-	var fullVer = versionInfo.MajorMinorPatch + "-" + versionInfo.BranchName + "-" + versionInfo.BuildMetaData;
+    Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
+
+	var fullVer = AppVeyor.Environment.Build.Version + "-" + versionInfo.BranchName;
 
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
