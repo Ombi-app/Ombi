@@ -4,12 +4,11 @@
 
 ### **New Features**
 
+- Added the emby episode cacher and the job to check if items are available on emby #1464 #865. [tidusjar]
+
+- Added the Emby Cacher, we now cache the Emby data! [tidusjar]
+
 - Updated CHangelog. [Jamie.Rees]
-
-
-## v3.0.0 (2017-09-01)
-
-### **New Features**
 
 - Updated changelog. [Jamie.Rees]
 
@@ -124,6 +123,12 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
+
+- Fixed the issue where we were using the wrong availability options. [tidusjar]
+
+- Fixed a bunch of bugs in Ombi #865. [tidusjar]
+
+- Build versioning. [Jamie.Rees]
 
 - #1460 The assembly versioning seems to work correctly now. [Jamie.Rees]
 
