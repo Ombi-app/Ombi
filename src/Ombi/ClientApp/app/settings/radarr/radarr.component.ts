@@ -58,8 +58,8 @@ export class RadarrComponent implements OnInit {
 
         this.minimumAvailabilityOptions = [
             { name: "Announced", value:"Announced" },
-            { name: "InCinemas", value:"In Cinemas" },
-            { name: "Released", value:"Physical/Web" },
+            { name: "In Cinemas", value:"InCinemas" },
+            { name: "Physical / Web", value:"Released" },
             { name: "PreDb", value:"PreDb" },
         ]
 
