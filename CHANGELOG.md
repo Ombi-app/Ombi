@@ -4,6 +4,28 @@
 
 ### **New Features**
 
+- Updated assembly versions. [Jamie.Rees]
+
+- Added the logo in the email notifications to use the application image #1459. [Jamie.Rees]
+
+- Change Os to VS2015. [Jamie.Rees]
+
+- Added multiple emby server support and enabled it for Plex #865. [tidusjar]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Update README.md. [Jamie]
+
+- Added slack #1459 #865. [Jamie.Rees]
+
+- Added a checkbox to the usermanagement screen.. Does nothing yet #865 #1456. [Jamie.Rees]
+
+- Update build.cake. [Jamie]
+
+- Added swagger into the .zips. [Jamie.Rees]
+
+- Added Cake build #865. [Jamie.Rees]
+
 - Added Pushbullet notifications #1459 #865. [Jamie.Rees]
 
 - Update README.md. [Jamie]
@@ -93,6 +115,70 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
+
+- #1460 The assembly versioning seems to work correctly now. [Jamie.Rees]
+
+- More build versioning changes #865. [tidusjar]
+
+- Fixed cake script. [Jamie.Rees]
+
+- WIP on the build versioning for the Updater #1460 #865. [Jamie.Rees]
+
+- Versioning. [Jamie.Rees]
+
+- Package versions. [Jamie.Rees]
+
+- #1460 #865 working on the auto updater. [Jamie.Rees]
+
+- Fixed build. [Jamie.Rees]
+
+- Small changes around the roles #865. [tidusjar]
+
+- Improvements to the UI and also finished the availability checker #865 #1464. [Jamie.Rees]
+
+- Availability Checker #1464 #865. [Jamie.Rees]
+
+- Fixed ##1492 and finished the episode searcher for #1464. [Jamie.Rees]
+
+- #1464. [tidusjar]
+
+- Reload the settings #1464 #865. [Jamie.Rees]
+
+- #1464 added the Plex episode cacher #865. [Jamie.Rees]
+
+- Fixed some issues around the tv requests area Added mattermost and telegram notifications #1459 #865 #1457. [tidusjar]
+
+- Fix global.json. [Dhruv Bhavsar]
+
+- Working UI for Requests. Approval/Deny does not work as it doesn't in your code either. [Dhruv Bhavsar]
+
+- Enable diagnostic on build #865. [Jamie.Rees]
+
+- Fixed the user token issue #865. [Jamie.Rees]
+
+- Some small refresh token work #865. [Jamie.Rees]
+
+- Initial TV Requests UI rebuild. [Dhruv Bhavsar]
+
+- Made a start on supporting multiple emby servers, the UI needs rework #865. [Jamie.Rees]
+
+- #865 #1459 Added the Sender From field for email notifcations. We can now have "Friendly Names" for email notifications. [Jamie.Rees]
+
+- Redirect to the landing page when enabled #1458 #865. [Jamie.Rees]
+
+- Removed IdentityServer, it was overkill #865. [Jamie.Rees]
+
+- Fixed another bug with identity. #865 I'm thinking about removing it. Causing more hassle than it's worth. [tidusjar]
+
+- #1460 #865. [tidusjar]
+
+- Delete appveyor_old.yml. [Jamie]
+
+- Fixed path. [Jamie.Rees]
+
+- Silent build level. [Jamie.Rees]
+
+- #1459 Forgot to get the Pushbullet agent to look up the pusbullet templates rather than the Discord ones. Updated the Gitchange log. [Jamie.Rees]
 
 - Made the placeholder color on the login page a bit lighter #865. [Jamie.Rees]
 
