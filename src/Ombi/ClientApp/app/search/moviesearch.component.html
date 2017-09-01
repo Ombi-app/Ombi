@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div *ngIf="!result.available">
-                    <div *ngIf="result.requested; then requestedBtn else notRequestedBtn"></div>
+                    <div *ngIf="result.requested || result.approved; then requestedBtn else notRequestedBtn"></div>
                     <ng-template #requestedBtn>
                         <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
                     </ng-template>

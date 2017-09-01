@@ -1,6 +1,12 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using Hangfire;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Notifications;
+using Ombi.Helpers;
+using Ombi.Notifications.Models;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
 
@@ -8,16 +14,19 @@ namespace Ombi.Schedule.Jobs.Plex
 {
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
-        public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies)
+        public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
+            INotificationService notification)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
+            _notificationService = notification;
         }
 
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
+        private readonly INotificationService _notificationService;
 
         public async Task Start()
         {
@@ -55,6 +64,13 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // We have fulfulled this request!
                     child.Available = true;
+                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    {
+                        DateTime = DateTime.Now,
+                        NotificationType = NotificationType.RequestAvailable,
+                        RequestId = child.ParentRequestId,
+                        RequestType = RequestType.TvShow
+                    }));
                 }
             }
 
@@ -76,6 +92,16 @@ namespace Ombi.Schedule.Jobs.Plex
                 }
 
                 movie.Available = true;
+                if (movie.Available)
+                {
+                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    {
+                        DateTime = DateTime.Now,
+                        NotificationType = NotificationType.RequestAvailable,
+                        RequestId = movie.Id,
+                        RequestType = RequestType.Movie
+                    }));
+                }
             }
 
             await _movieRepo.Save();

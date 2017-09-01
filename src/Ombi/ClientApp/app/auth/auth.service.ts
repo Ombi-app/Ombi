@@ -34,7 +34,7 @@ export class AuthService extends ServiceHelpers {
             }
             var json = this.jwtHelper.decodeToken(token);
             var roles = json["role"];
-            var name = json["name"];
+            var name = json["sub"];
 
 
             var u = { name: name, roles: [] as string[] };

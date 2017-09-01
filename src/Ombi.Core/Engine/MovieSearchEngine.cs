@@ -63,7 +63,7 @@ namespace Ombi.Core.Engine
                     if (result != null)
                     {
                         Logger.LogDebug("Search Result: {result}", result);
-                        return await TransformMovieResultsToResponse(result);
+                        return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
                     }
                 }
 
@@ -81,7 +81,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
         }
@@ -96,7 +96,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
         }
@@ -111,7 +111,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
         }
@@ -126,7 +126,7 @@ namespace Ombi.Core.Engine
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
-                return await TransformMovieResultsToResponse(result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
             return null;
         }

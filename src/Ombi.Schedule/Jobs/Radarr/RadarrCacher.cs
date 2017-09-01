@@ -41,7 +41,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                         if (movies != null)
                         {
                             // Let's remove the old cached data
-                            await _ctx.Database.ExecuteSqlCommandAsync("TRUNCATE TABLE RadarrCache");
+                            await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM RadarrCache");
 
                             var movieIds = new List<RadarrCache>();
                             foreach (var m in movies)
