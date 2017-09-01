@@ -9,7 +9,7 @@ namespace Ombi.Helpers
             Assembly.GetEntryAssembly().GetType()
                 .GetTypeInfo()
                 .Assembly
-                .GetCustomAttribute<AssemblyProductAttribute>()
-                .Product;
+                .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                .InformationalVersion;
     }
 }

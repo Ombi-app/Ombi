@@ -36,6 +36,7 @@ using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;

@@ -2,32 +2,31 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+
 using Ombi.Api.Service;
 using Ombi.Api.Service.Models;
 using Ombi.Helpers;
-using System.IO.Compression;
+using Ombi.Schedule.Ombi;
 
-namespace Ombi.Schedule.Ombi
+namespace Ombi.Schedule.Jobs.Ombi
 {
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
-        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service, IOptions<ApplicationSettings> settings)
+        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service)
         {
             Logger = log;
             OmbiService = service;
-            Settings = settings.Value;
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
         private IOmbiService OmbiService { get; }
-        private ApplicationSettings Settings { get; }
 
         public async Task Update()
         {
@@ -35,18 +34,17 @@ namespace Ombi.Schedule.Ombi
             // IF AutoUpdateEnabled =>
             // ELSE Return;
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            //var currentBranch = Settings.Branch;
-            var currentBranch = "BRANCH";
+            
+            var productVersion = AssemblyHelper.GetRuntimeVersion();
 
-#if DEBUG
-            if (currentBranch == "{{BRANCH}}")
-            {
-                currentBranch = "DotNetCore";
-            }
-#endif
-            var updates = await OmbiService.GetUpdates(currentBranch);
+            var productArray = productVersion.Split('-');
+            var version = productArray[0];
+            var branch = productArray[1];
+
+            
+            var updates = await OmbiService.GetUpdates(branch);
             var serverVersion = updates.UpdateVersionString.Substring(1, 6);
-            if (serverVersion != AssemblyHelper.GetRuntimeVersion())
+            if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
             {
 
                 // Let's download the correct zip
