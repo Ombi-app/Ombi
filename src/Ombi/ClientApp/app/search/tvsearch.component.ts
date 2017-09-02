@@ -1,4 +1,4 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import {Router} from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 import 'rxjs/add/operator/debounceTime';
@@ -12,10 +12,16 @@ import { NotificationService } from '../services/notification.service';
 
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
+import { TreeNode } from "primeng/primeng";
 
 @Component({
     selector: 'tv-search',
     templateUrl: './tvsearch.component.html',
+    styleUrls: ['./../requests/tvrequests.component.scss'],
+    //Was required to turn off encapsulation since CSS only should be overridden for this component
+    //However when encapsulation is on angular injects prefixes to all classes so css selectors
+    //Stop working
+    encapsulation: ViewEncapsulation.None
 })
 export class TvSearchComponent implements OnInit, OnDestroy {
 
@@ -41,10 +47,49 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                 this.searchService.searchTv(this.searchText)
                     .takeUntil(this.subscriptions)
                     .subscribe(x => {
-                        this.tvResults = x;
+                        this.tvResults = this.transformData(x);
                         this.searchApplied = true;
                     });
             });
+    }
+    openClosestTab(el: any): void {
+        var rowclass = "undefined";
+        el = el.toElement;
+        while (el.className != rowclass) {
+            // Increment the loop to the parent node until we find the row we need
+            el = el.parentNode;
+            if (!el) {
+            }
+        }
+        // At this point, the while loop has stopped and `el` represents the element that has
+        // the class you specified
+
+        // Then we loop through the children to find the caret which we want to click
+        var caretright = "ui-treetable-toggler fa fa-fw ui-c fa-caret-right";
+        var caretdown = "ui-treetable-toggler fa fa-fw ui-c fa-caret-down";
+        for (var value of el.children) {
+            // the caret from the ui has 2 class selectors depending on if expanded or not
+            // we search for both since we want to still toggle the clicking
+            if (value.className === caretright || value.className === caretdown) {
+                // Then we tell JS to click the element even though we hid it from the UI
+                value.click();
+                //Break from loop since we no longer need to continue looking
+                break;
+            }
+        };
+    }
+    transformData(datain: ISearchTvResult[]): any {
+        var temp: TreeNode[] = [];
+        datain.forEach(function (value) {
+            temp.push({
+                "data": value,
+                "children": [{
+                    "data": value, leaf: true
+                }],
+                leaf: false
+            });
+        }, this)
+        return <TreeNode[]>temp;
     }
 
     ngOnInit(): void {

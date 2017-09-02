@@ -1,5 +1,5 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+﻿import { Component, OnInit, OnDestroy, Input} from '@angular/core';
+//import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 
 import "rxjs/add/operator/takeUntil";
@@ -13,24 +13,19 @@ import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
 import { IEpisodesRequests } from "../interfaces/IRequestModel";
 
 @Component({
+    selector: 'seriesinformation',
     templateUrl: './seriesinformation.component.html', 
     styleUrls: ['./seriesinformation.component.scss']
 })
 export class SeriesInformationComponent implements OnInit, OnDestroy {
 
-    constructor(private searchService: SearchService, private route: ActivatedRoute,
-        private requestService: RequestService, private notificationService: NotificationService) {
-        this.route.params
-            .takeUntil(this.subscriptions)
-            .subscribe(params => {
-                this.seriesId = +params['id']; // (+) converts string 'id' to a number
-            });
+    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
     }
 
     private subscriptions = new Subject<void>();
 
     public result : IRequestEngineResult;
-    private seriesId: number;
+    @Input() private seriesId: number;
     public series: ISearchTvResult;
 
     requestedEpisodes: IEpisodesRequests[] = [];

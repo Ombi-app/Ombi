@@ -1,42 +1,17 @@
-﻿import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+﻿import { Component, Input } from '@angular/core';
 import { RequestService } from '../services/request.service';
-import { IdentityService } from '../services/identity.service';
-
-import { IChildRequests, IEpisodesRequests, INewSeasonRequests } from '../interfaces/IRequestModel';
+import { IChildRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
 
 @Component({
-    templateUrl: './tvrequest-manage.component.html'
+    selector:'tvrequests-children',
+    templateUrl: './tvrequest-children.component.html'
 })
-export class TvRequestManageComponent {
-    constructor(private requestService: RequestService, private identityService: IdentityService,
-        private route: ActivatedRoute) {
-
-        this.route.params
-            .subscribe(params => {
-                this.tvId = +params['id']; // (+) converts string 'id' to a number
-                this.requestService.getChildRequests(this.tvId).subscribe(x => {
-                    this.childRequests = this.fixEpisodeSort(x);
-                });
-            });
-
-        this.isAdmin = this.identityService.hasRole('admin');
+export class TvRequestChildrenComponent {
+    constructor(private requestService: RequestService) {
     }
 
-    tvId: number;
-    childRequests: IChildRequests[];
-    isAdmin: boolean;
-    public fixEpisodeSort(items: IChildRequests[]) {
-        items.forEach(function (value) {
-            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
-                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
-                    return a.episodeNumber - b.episodeNumber;
-                })
-            })
-        })
-        return items;
-    }
+    @Input() childRequests: IChildRequests[];
+    @Input() isAdmin: boolean;
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)
             .subscribe();
