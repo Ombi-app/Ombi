@@ -4,6 +4,9 @@ import "rxjs/add/operator/takeUntil";
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 
 import { ISonarrProfile, ISonarrRootFolder } from '../../interfaces/ISonarr'
+
+import { TesterService } from '../../services/applications/tester.service';
+import { ISonarrSettings } from '../../interfaces/ISettings';
 import { SettingsService } from '../../services/settings.service';
 import { SonarrService } from '../../services/applications/sonarr.service';
 import { NotificationService } from "../../services/notification.service";
@@ -14,8 +17,11 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class SonarrComponent implements OnInit, OnDestroy {
 
-    constructor(private settingsService: SettingsService, private sonarrService: SonarrService, private notificationService: NotificationService,
-    private fb : FormBuilder) { }
+    constructor(private settingsService: SettingsService,
+        private sonarrService: SonarrService,
+        private notificationService: NotificationService,
+        private testerService : TesterService,
+        private fb : FormBuilder) { }
 
     qualities: ISonarrProfile[];
     rootFolders: ISonarrRootFolder[];
@@ -84,15 +90,26 @@ export class SonarrComponent implements OnInit, OnDestroy {
             });
     }
 
-    test() {
-        // TODO
+    test(form: FormGroup) {
+        if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return;
+        }
+        var settings = <ISonarrSettings>form.value;
+        this.testerService.sonarrTest(settings).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Connected", "Successfully connected to Sonarr!");
+            } else {
+                this.notificationService.error("Connected", "We could not connect to Sonarr!");
+            }
+        });
     }
 
     onSubmit(form:FormGroup) {
    if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
-        }
+       return;
+   }
         this.settingsService.saveSonarr(form.value)
             .takeUntil(this.subscriptions)
             .subscribe(x => {

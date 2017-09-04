@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
@@ -12,6 +13,9 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs;
+using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
@@ -34,19 +38,30 @@ namespace Ombi.Controllers
         /// <param name="resolver">The resolver.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
-        public SettingsController(ISettingsResolver resolver, IMapper mapper, INotificationTemplatesRepository templateRepo,
-            IEmbyApi embyApi)
+        public SettingsController(ISettingsResolver resolver, 
+            IMapper mapper, 
+            INotificationTemplatesRepository templateRepo,
+            IEmbyApi embyApi,
+            IPlexContentCacher cacher,
+            IEmbyContentCacher embyCacher,
+            IRadarrCacher radarrCacher)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
+            _plexContentCacher = cacher;
+            _embyContentCacher = embyCacher;
+            _radarrCacher = radarrCacher;
         }
 
         private ISettingsResolver SettingsResolver { get; }
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
+        private readonly IPlexContentCacher _plexContentCacher;
+        private readonly IEmbyContentCacher _embyContentCacher;
+        private readonly IRadarrCacher _radarrCacher;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -66,6 +81,7 @@ namespace Ombi.Controllers
         [HttpPost("ombi")]
         public async Task<bool> OmbiSettings([FromBody]OmbiSettings ombi)
         {
+            ombi.Wizard = true;
             return await Save(ombi);
         }
 
@@ -97,7 +113,12 @@ namespace Ombi.Controllers
         [HttpPost("plex")]
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
-            return await Save(plex);
+            var result = await Save(plex);
+            if (result)
+            {
+                BackgroundJob.Enqueue(() => _plexContentCacher.CacheContent());
+            }
+            return result;
         }
 
         /// <summary>
@@ -124,7 +145,12 @@ namespace Ombi.Controllers
                 var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
                 server.AdministratorId = admin?.Id;
             }
-            return await Save(emby);
+            var result = await Save(emby);
+            if (result)
+            {
+                BackgroundJob.Enqueue(() => _embyContentCacher.Start());
+            }
+            return result;
         }
 
         /// <summary>
@@ -231,7 +257,12 @@ namespace Ombi.Controllers
         [HttpPost("radarr")]
         public async Task<bool> RadarrSettings([FromBody]RadarrSettings settings)
         {
-            return await Save(settings);
+            var result = await Save(settings);
+            if (result)
+            {
+                BackgroundJob.Enqueue(() => _radarrCacher.CacheContent());
+            }
+            return result;
         }
 
         /// <summary>

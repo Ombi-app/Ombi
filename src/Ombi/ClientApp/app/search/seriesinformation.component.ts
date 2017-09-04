@@ -65,6 +65,10 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         episode.requested = true;
     }
 
+    public removeRequest(episode: IEpisodesRequests) {
+        episode.requested = false;
+    }
+
 
     ngOnDestroy(): void {
         this.subscriptions.next();

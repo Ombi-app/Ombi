@@ -7,6 +7,7 @@ import { IRadarrSettings } from '../../interfaces/ISettings';
 import { IRadarrProfile, IRadarrRootFolder, IMinimumAvailability } from '../../interfaces/IRadarr';
 import { SettingsService } from '../../services/settings.service';
 import { RadarrService } from '../../services/applications/radarr.service';
+import { TesterService } from '../../services/applications/tester.service';
 import { NotificationService } from "../../services/notification.service";
 
 @Component({
@@ -15,8 +16,11 @@ import { NotificationService } from "../../services/notification.service";
 })
 export class RadarrComponent implements OnInit {
 
-    constructor(private settingsService: SettingsService, private radarrService: RadarrService, private notificationService: NotificationService,
-        private fb: FormBuilder) { }
+    constructor(private settingsService: SettingsService,
+        private radarrService: RadarrService,
+        private notificationService: NotificationService,
+        private fb: FormBuilder,
+        private testerService : TesterService) { }
     qualities: IRadarrProfile[];
     rootFolders: IRadarrRootFolder[];
 
@@ -57,11 +61,11 @@ export class RadarrComponent implements OnInit {
             });
 
         this.minimumAvailabilityOptions = [
-            { name: "Announced", value:"Announced" },
-            { name: "In Cinemas", value:"InCinemas" },
-            { name: "Physical / Web", value:"Released" },
-            { name: "PreDb", value:"PreDb" },
-        ]
+            { name: "Announced", value: "Announced" },
+            { name: "In Cinemas", value: "InCinemas" },
+            { name: "Physical / Web", value: "Released" },
+            { name: "PreDb", value: "PreDb" },
+        ];
 
     }
 
@@ -86,14 +90,25 @@ export class RadarrComponent implements OnInit {
          });
     }
 
-    test() {
-        // TODO
+    test(form: FormGroup) {
+        if (form.invalid) {
+            this.notificationService.error("Validation", "Please check your entered values");
+            return;
+        }
+        var settings = <IRadarrSettings>form.value;
+        this.testerService.radarrTest(settings).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Connected", "Successfully connected to Radarr!");
+            } else {
+                this.notificationService.error("Connected", "We could not connect to Radarr!");
+            }
+        });
     }
 
 onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
         var settings = <IRadarrSettings>form.value;

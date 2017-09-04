@@ -188,5 +188,13 @@ namespace Ombi.Api.Sonarr
             request.AddJsonBody(body);
             return await Api.Request<CommandResult>(request);
         }
+
+        public async Task<SystemStatus> SystemStatus(string apiKey, string baseUrl)
+        {
+            var request = new Request("/api/system/status", baseUrl, HttpMethod.Get);
+            request.AddHeader("X-Api-Key", apiKey);
+
+            return await Api.Request<SystemStatus>(request);
+        }
     }
 }

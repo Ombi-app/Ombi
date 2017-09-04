@@ -13,7 +13,7 @@ namespace Ombi.Store.Repository.Requests
             Db = ctx;
         }
 
-        private IOmbiContext Db { get; }
+        public IOmbiContext Db { get; }
 
         public async Task<TvRequests> GetRequestAsync(int tvDbId)
         {

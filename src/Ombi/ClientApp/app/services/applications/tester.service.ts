@@ -13,6 +13,12 @@ import {
     IMattermostNotifcationSettings
 } from '../../interfaces/INotifcationSettings'
 
+import {
+    IEmbyServer,
+    IPlexServer,
+    IRadarrSettings,
+    ISonarrSettings
+} from '../../interfaces/ISettings';
 
 @Injectable()
 export class TesterService extends ServiceAuthHelpers {
@@ -41,5 +47,17 @@ export class TesterService extends ServiceAuthHelpers {
 
     emailTest(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.http.post(`${this.url}email`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+    plexTest(settings: IPlexServer): Observable<boolean> {
+        return this.http.post(`${this.url}plex`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+    embyTest(settings: IEmbyServer): Observable<boolean> {
+        return this.http.post(`${this.url}emby`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+    radarrTest(settings: IRadarrSettings): Observable<boolean> {
+        return this.http.post(`${this.url}radarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }
+    sonarrTest(settings: ISonarrSettings): Observable<boolean> {
+        return this.http.post(`${this.url}sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }   
 }

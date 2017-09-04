@@ -6,6 +6,7 @@ import { IPlexSettings, IPlexLibraries, IPlexServer } from '../../interfaces/ISe
 import { IPlexServerResponse, IPlexServerViewModel } from '../../interfaces/IPlex'
 
 import { SettingsService } from '../../services/settings.service';
+import { TesterService } from '../../services/applications/tester.service';
 import { PlexService } from '../../services/applications/plex.service';
 import { NotificationService } from "../../services/notification.service";
 
@@ -13,7 +14,10 @@ import { NotificationService } from "../../services/notification.service";
     templateUrl: './plex.component.html',
 })
 export class PlexComponent implements OnInit, OnDestroy {
-    constructor(private settingsService: SettingsService, private notificationService: NotificationService, private plexService: PlexService) { }
+    constructor(private settingsService: SettingsService,
+        private notificationService: NotificationService,
+        private plexService: PlexService,
+        private testerService : TesterService) { }
 
     settings: IPlexSettings;
     loadedServers: IPlexServerViewModel; // This comes from the api call for the user to select a server
@@ -26,8 +30,7 @@ export class PlexComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.settingsService.getPlex().subscribe(x => {
             this.settings = x;
-        }
-        );
+        });
     }
 
     requestServers(server: IPlexServer): void {
@@ -55,8 +58,14 @@ export class PlexComponent implements OnInit, OnDestroy {
         this.notificationService.success("Success", `Selected ${server.name}!`)
     }
 
-    testPlex() {
-        // TODO Plex Service
+    testPlex(server: IPlexServer) {
+        this.testerService.plexTest(server).subscribe(x => {
+            if (x) {
+                this.notificationService.success("Connected", `Successfully connected to the Plex server ${server.name}!`);
+            } else {
+                this.notificationService.error("Connected", `We could not connect to the Plex server  ${server.name}!`);
+            }
+        });
     }
 
     addTab() {
@@ -68,11 +77,10 @@ export class PlexComponent implements OnInit, OnDestroy {
     }
 
     removeServer(server: IPlexServer) {
-        this.notificationService.warning("Disabled", "This feature is currently disabled");
-        //var index = this.settings.servers.indexOf(server, 0);
-        //if (index > -1) {
-        //    this.settings.servers.splice(index, 1);
-        //}
+        var index = this.settings.servers.indexOf(server, 0);
+        if (index > -1) {
+            this.settings.servers.splice(index, 1);
+        }
     }
 
     loadLibraries(server: IPlexServer) {

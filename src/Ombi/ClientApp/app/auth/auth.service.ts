@@ -51,7 +51,7 @@ export class AuthService extends ServiceHelpers {
 
 
     hasRole(role: string): boolean {
-        return this.claims().roles.some(r => r === role);
+        return this.claims().roles.some(r => r.toUpperCase() === role.toUpperCase());
     }
 
     logout() {

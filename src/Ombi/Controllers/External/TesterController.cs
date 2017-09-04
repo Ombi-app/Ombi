@@ -1,11 +1,20 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Ombi.Api.Emby;
+using Ombi.Api.Plex;
+using Ombi.Api.Radarr;
+using Ombi.Api.Sonarr;
 using Ombi.Attributes;
 using Ombi.Core.Notifications;
+using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Notifications.Agents;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 
 namespace Ombi.Controllers.External
@@ -27,7 +36,8 @@ namespace Ombi.Controllers.External
         /// <param name="pushbullet">The pushbullet.</param>
         /// <param name="slack">The slack.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
-            IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm)
+            IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
+            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log)
         {
             Service = service;
             DiscordNotification = notification;
@@ -36,6 +46,11 @@ namespace Ombi.Controllers.External
             SlackNotification = slack;
             PushoverNotification = po;
             MattermostNotification = mm;
+            PlexApi = plex;
+            RadarrApi = radarr;
+            EmbyApi = emby;
+            SonarrApi = sonarr;
+            Log = log;
         }
 
         private INotificationService Service { get; }
@@ -45,6 +60,11 @@ namespace Ombi.Controllers.External
         private ISlackNotification SlackNotification { get; }
         private IPushoverNotification PushoverNotification { get; }
         private IMattermostNotification MattermostNotification { get; }
+        private IPlexApi PlexApi { get; }
+        private IRadarrApi RadarrApi { get; }
+        private IEmbyApi EmbyApi { get; }
+        private ISonarrApi SonarrApi { get; }
+        private ILogger<TesterController> Log { get; }
 
 
         /// <summary>
@@ -135,11 +155,95 @@ namespace Ombi.Controllers.External
             var notificationModel = new NotificationOptions
             {
                 NotificationType = NotificationType.Test,
-                RequestId = -1 
+                RequestId = -1
             };
             EmailNotification.NotifyAsync(notificationModel, settings);
 
             return true;
+        }
+
+        /// <summary>
+        /// Checks if we can connect to Plex with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("plex")]
+        public async Task<bool> Plex([FromBody] PlexServers settings)
+        {
+            try
+            {
+                var result = await PlexApi.GetStatus(settings.PlexAuthToken, settings.FullUri);
+                return result?.MediaContainer?.version != null;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Plex");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if we can connect to Emby with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("emby")]
+        public async Task<bool> Emby([FromBody] EmbyServers settings)
+        {
+            try
+            {
+
+                var result = await EmbyApi.GetUsers(settings.FullUri, settings.ApiKey);
+                return result.Any();
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Emby");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if we can connect to Radarr with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("radarr")]
+        public async Task<bool> Radarr([FromBody] RadarrSettings settings)
+        {
+            try
+            {
+
+
+                var result = await RadarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
+                return result.version != null;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Radarr");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if we can connect to Sonarr with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("sonarr")]
+        public async Task<bool> Sonarr([FromBody] SonarrSettings settings)
+        {
+            try
+            {
+
+                var result = await SonarrApi.SystemStatus(settings.ApiKey, settings.FullUri);
+                return result.version != null;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test Sonarr");
+                return false;
+            }
         }
     }
 }

@@ -11,7 +11,6 @@ import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
 import { AuthService } from '../auth/auth.service';
-import { IdentityService } from '../services/identity.service';
 
 import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
 import { TreeNode, } from "primeng/primeng";
@@ -27,7 +26,9 @@ import { TreeNode, } from "primeng/primeng";
 })
 export class TvRequestsComponent implements OnInit, OnDestroy {
     constructor(private requestService: RequestService,
-        private identityService: IdentityService, private authService : AuthService) {
+        private authService: AuthService) {
+
+        this.admin = this.authService.hasRole("admin");
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -49,7 +50,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.currentlyLoaded = 5;
         this.tvRequests = [];
         this.loadInit();
-        this.admin = this.authService.hasRole("admin");
     }
 
     public admin = false;
@@ -157,14 +157,27 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
+
+        // Mark all the episodes as approved now
+        request.seasonRequests.forEach((val) => {
+            val.episodes.forEach((ep) => {
+                ep.approved = true;
+            });
+        });
         this.requestService.updateChild(request)
             .subscribe();
     }
 
     public deny(request: IChildRequests) {
-        debugger;
         request.approved = false;
         request.denied = true;
+
+        // Mark all the episodes as not approved now
+        request.seasonRequests.forEach((val) => {
+            val.episodes.forEach((ep) => {
+                ep.approved = false;
+            });
+        });
         this.requestService.updateChild(request)
             .subscribe();
     }
@@ -214,10 +227,8 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.getTvRequests(this.amountToLoad, 0)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                debugger;
                 this.tvRequests = this.transformData(x);
             });
-        this.isAdmin = this.identityService.hasRole("Admin");
     }
 
     private resetSearch() {
@@ -236,7 +247,12 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             var data = (<any>val).data;
             var index = data.childRequests.indexOf(key, 0);
             if (index > -1) {
-                data.childRequests.splice(index, 1);
+                // Check if we need to remove the parent (if this is the only child)
+                if (data.childRequests.length <= 1) {
+                    this.removeRequestFromUi(val);
+                } else {
+                    data.childRequests.splice(index, 1);
+                }
             }
         });
     }

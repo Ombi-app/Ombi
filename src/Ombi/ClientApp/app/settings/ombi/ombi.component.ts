@@ -30,9 +30,7 @@ export class OmbiComponent implements OnInit {
 
     refreshApiKey() {
         this.settingsService.resetOmbiApi().subscribe(x => {
-            this.form.patchValue({
-                apiKey: x
-            });
+            this.form.controls["apiKey"].patchValue(x);
         });
     }
 
@@ -41,6 +39,8 @@ export class OmbiComponent implements OnInit {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
+
+        
         this.settingsService.saveOmbi(form.value).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Ombi settings");

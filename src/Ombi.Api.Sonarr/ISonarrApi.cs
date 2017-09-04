@@ -19,6 +19,6 @@ namespace Ombi.Api.Sonarr
         Task<bool> EpisodeSearch(int[] episodeIds, string apiKey, string baseUrl);
         Task<bool> SeasonSearch(int seriesId, int seasonNumber, string apiKey, string baseUrl);
         Task<bool> SeriesSearch(int seriesId, string apiKey, string baseUrl);
-
+        Task<SystemStatus> SystemStatus(string apiKey, string baseUrl);
     }
 }

@@ -149,8 +149,19 @@ namespace Ombi.Core.Engine
         public async Task RemoveTvChild(int requestId)
         {
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
+            var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
+            var parent = all.FirstOrDefault(x => x.Id == request.ParentRequestId);
+           
+            // Is this the only child? If so delete the parent
+            if (parent.ChildRequests.Count <= 1)
+            {
+                // Delete the parent
+                TvRepository.Db.TvRequests.Remove(parent);
+            }
             await Audit.Record(AuditType.Deleted, AuditArea.TvRequest, $"Deleting Request {request.Title}", Username);
-            await TvRepository.DeleteChild(request);
+
+            TvRepository.Db.ChildRequests.Remove(request);
+            await TvRepository.Db.SaveChangesAsync();
         }
 
         public async Task RemoveTvRequest(int requestId)

@@ -37,7 +37,7 @@ namespace Ombi.Schedule.Jobs.Emby
 
         public async Task Start()
         {
-            var embySettings = await _settings.GetSettingsAsync();
+           var embySettings = await _settings.GetSettingsAsync();
             if (!embySettings.Enable)
                 return;
 
