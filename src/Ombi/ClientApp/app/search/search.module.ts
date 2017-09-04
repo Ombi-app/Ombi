@@ -10,6 +10,8 @@ import { MovieSearchComponent } from './moviesearch.component';
 import { TvSearchComponent } from './tvsearch.component';
 import { SeriesInformationComponent } from './seriesinformation.component';
 
+import { TreeTableModule } from 'primeng/primeng';
+
 import { SearchService } from '../services/search.service';
 import { RequestService } from '../services/request.service';
 
@@ -26,12 +28,13 @@ const routes: Routes = [
         FormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
+        TreeTableModule
     ],
     declarations: [
         SearchComponent,
         MovieSearchComponent,
         TvSearchComponent,
-        SeriesInformationComponent
+        SeriesInformationComponent,
     ],
     exports: [
         RouterModule

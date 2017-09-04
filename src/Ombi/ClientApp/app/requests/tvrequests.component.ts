@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
-import { AuthService } from '../auth/auth.service';
+import { IdentityService } from '../services/identity.service';
 
 import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
 import { TreeNode, } from "primeng/primeng";
@@ -25,10 +25,7 @@ import { TreeNode, } from "primeng/primeng";
     encapsulation: ViewEncapsulation.None
 })
 export class TvRequestsComponent implements OnInit, OnDestroy {
-    constructor(private requestService: RequestService,
-        private authService: AuthService) {
-
-        this.admin = this.authService.hasRole("admin");
+    constructor(private requestService: RequestService, private identityService: IdentityService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -44,16 +41,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                     .subscribe(m => this.tvRequests = this.transformData(m));
             });
     }
-
-    ngOnInit() {
-        this.amountToLoad = 5;
-        this.currentlyLoaded = 5;
-        this.tvRequests = [];
-        this.loadInit();
-    }
-
-    public admin = false;
-
     openClosestTab(el:any): void {
         var rowclass = "undefined";
         el = el.toElement;
@@ -81,27 +68,22 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             }
         };
     }
-    transformData(datain: ITvRequests[]): any {
+    transformData(data: ITvRequests[]): TreeNode[] {
         var temp: TreeNode[] = [];
-        datain.forEach(function(value) {
-                temp.push({
-                    "data": value,
-                    "children": [
-                        {
-                            "data": this.fixEpisodeSort(value.childRequests),
-                            leaf: true
-                        }
-                    ],
-                    leaf: false
-                });
-            },
-            this);
-        console.log(temp);
-        return temp;
+        data.forEach(function (value) {
+            temp.push({
+                "data": value,
+                "children": [{
+                    "data": this.fixEpisodeSort(value.childRequests), leaf: true
+                }],
+                leaf: false
+            });
+        }, this)
+        return <TreeNode[]>temp;
     }
     private subscriptions = new Subject<void>();
 
-    tvRequests: ITvRequests[];
+    tvRequests: TreeNode[];
 
     searchChanged = new Subject<string>();
     searchText: string;
@@ -114,22 +96,33 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     public showChildDialogue = false; // This is for the child modal popup
     public selectedSeason: ITvRequests;
 
-    private fixEpisodeSort(items: IChildRequests[]) : IChildRequests[] {
-        items.forEach(value => {
-            value.seasonRequests.forEach((requests: INewSeasonRequests) => {
-                requests.episodes.sort(
-                    (a: IEpisodesRequests, b: IEpisodesRequests) => a.episodeNumber - b.episodeNumber)
-            });
-        });
+    fixEpisodeSort(items: IChildRequests[]) {
+        items.forEach(function (value) {
+            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
+                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
+                    return a.episodeNumber - b.episodeNumber;
+                })
+            })
+        })
         return items;
     }
-
+    ngOnInit() {
+        this.amountToLoad = 1000;
+        this.currentlyLoaded = 5;
+        this.tvRequests = [];
+        this.loadInit();
+    }
 
     public loadMore() {
-        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
+        //TODO: I believe this +1 is causing off by one error skipping loading of tv shows
+        //When removed and scrolling very slowly everything works as expected, however
+        //if you scroll really quickly then you start getting duplicates of movies
+        //since it's async and some subsequent results return first and then incrementer
+        //is increased so you see movies which had already been gotten show up...
+        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded +1)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                this.tvRequests.push.apply(this.tvRequests, x);
+                this.tvRequests.push.apply(this.tvRequests, this.transformData(x));
                 this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
             });
     }
@@ -142,11 +135,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.requestService.removeTvRequest(request);
         this.removeRequestFromUi(request);
     }
-    public removeChildRequest(request: IChildRequests) {
-        this.requestService.deleteChild(request)
-            .subscribe();
-        this.removeChildRequestFromUi(request);
-    }
 
     public changeAvailability(request: IChildRequests, available: boolean) {
         request.available = available;
@@ -154,30 +142,27 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         //this.updateRequest(request);
     }
 
+    //Was already here but not sure what's using it...'
+    //public approve(request: IChildRequests) {
+    //    request.approved = true;
+    //    request.denied = false;
+    //    //this.updateRequest(request);
+    //}
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
-
-        // Mark all the episodes as approved now
-        request.seasonRequests.forEach((val) => {
-            val.episodes.forEach((ep) => {
-                ep.approved = true;
-            });
-        });
         this.requestService.updateChild(request)
             .subscribe();
     }
-
+    //Was already here but not sure what's using it...'
+    //public deny(request: IChildRequests) {
+    //    request.approved = false;
+    //    request.denied = true;
+    //    //this.updateRequest(request);
+    //}
     public deny(request: IChildRequests) {
         request.approved = false;
         request.denied = true;
-
-        // Mark all the episodes as not approved now
-        request.seasonRequests.forEach((val) => {
-            val.episodes.forEach((ep) => {
-                ep.approved = false;
-            });
-        });
         this.requestService.updateChild(request)
             .subscribe();
     }
@@ -193,12 +178,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         request.approved = false;
         request.denied = true;
         this.requestService.updateTvRequest(this.selectedSeason)
-            .subscribe();
-    }
-    public denyChildSeasonRequest(request: IChildRequests) {
-        request.approved = false;
-        request.denied = true;
-        this.requestService.updateChild(request)
             .subscribe();
     }
 
@@ -229,6 +208,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             .subscribe(x => {
                 this.tvRequests = this.transformData(x);
             });
+        this.isAdmin = this.identityService.hasRole("Admin");
     }
 
     private resetSearch() {
@@ -242,21 +222,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             this.tvRequests.splice(index, 1);
         }
     }
-    private removeChildRequestFromUi(key: IChildRequests) {
-        this.tvRequests.forEach((val) => {
-            var data = (<any>val).data;
-            var index = data.childRequests.indexOf(key, 0);
-            if (index > -1) {
-                // Check if we need to remove the parent (if this is the only child)
-                if (data.childRequests.length <= 1) {
-                    this.removeRequestFromUi(val);
-                } else {
-                    data.childRequests.splice(index, 1);
-                }
-            }
-        });
-    }
-
 
     ngOnDestroy(): void {
         this.subscriptions.next();

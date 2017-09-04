@@ -8,14 +8,8 @@
     }
 </style>
 <div *ngIf="series">
-    <!--<div class="row">
-        <div class="col-md-6 col-md-push-2">
-         
-            <div id="bannerimage" style="background-image: url('https://thetvdb.com/banners/graphical/121361-g19.jpg');">
-            </div>
-        </div>
-
-    </div>-->
+    <button class="btn btn-sm btn-success pull-right" (click)="submitRequests()" title="Go to top">Submit Request</button>
+    
     <ngb-tabset>
              
         <div *ngFor="let season of series.seasonRequests">
@@ -83,9 +77,5 @@
             </ngb-tab>
         </div>
     </ngb-tabset>
-
-   
     
-    
-    <button id="requestFloatingBtn" class="btn btn-sm btn-success" (click)="submitRequests()" title="Go to top">Submit Request</button>
 </div>

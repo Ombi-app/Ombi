@@ -1,25 +1,10 @@
 ﻿<div *ngIf="childRequests">
+    <hr />
     <div *ngFor="let child of childRequests">
         <div class="col-md-12">
 
             <div class="col-md-2">
                 <span>Requested By: {{child.requestedUser.userName}}</span>
-
-
-
-
-
-
-
-                <!--<div *ngFor="let season of child.seasonRequests">
-                    <span>Season {{season.seasonNumber}}</span>
-                    <div>Episodes:</div>
-                    <span *ngFor="let episode of season.episodes">
-                        <span [ngStyle]="{ 'color': getColour(episode) }">{{episode.episodeNumber}}</span>
-                    </span>
-                    <br />
-                    <br />
-                </div>-->
             </div>
 
 
@@ -92,8 +77,6 @@
                                                 <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
                                             </ng-template>
                                         </td>
-
-
                                     </tr>
                                 </tbody>
                             </table>

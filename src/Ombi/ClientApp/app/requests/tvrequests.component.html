@@ -4,12 +4,20 @@
     </div>
 </div>
 <br />
+<!--TODO: I believe this +1 is causing off by one error skipping loading of tv shows
+    When removed and scrolling very slowly everything works as expected, however
+    if you scroll really quickly then you start getting duplicates of movies
+    since it's async and some subsequent results return first and then incrementer
+    is increased so you see movies which had already been gotten show up...
+    
+    Removing infinte-scroll and setting max to 1000 till we work out some sort of fix
 
-<div infinite-scroll
+    -->
+<!--<div infinite-scroll
      [infiniteScrollDistance]="1"
      [infiniteScrollThrottle]="100"
-     (scrolled)="loadMore()">
-    <!--<div>-->
+     (scrolled)="loadMore()">-->
+    <div>
     <p-treeTable [value]="tvRequests">
         <!--<p-column>
             <ng-template let-col let-node="rowData" pTemplate="body">
@@ -27,7 +35,7 @@
                     <div class="row">
                         <div class="col-sm-2">
 
-                            <img class="img-responsive poster" src="{{node.data.posterPath}}" alt="poster">
+                            <img class="img-responsive poster" src="{{node.data.posterPath || null}}" alt="poster">
 
                         </div>
 
@@ -50,149 +58,15 @@
                         <div class="col-sm-3 col-sm-push-3">
 
                             <button  style="text-align: right" class="btn btn-sm btn-success-outline" (click)="openClosestTab($event)"><i class="fa fa-plus"></i> View</button>
-                            <!--<button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>-->
                         </div>
                     </div>
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.leaf">
-                    <hr />
-                    <div *ngIf="node.data">
-                        <div *ngFor="let child of node.data">
-                            <div class="col-md-12">
-
-                                <div class="col-md-2">
-                                    <span>Requested By: {{child.requestedUser.userName}}</span>
-                                    <span>Requested Date: {{child.requestedDate | date}}</span>
-
-                                    <span *ngIf="child.available" class="label label-success">Available</span>
-                                    <span *ngIf="child.denied" class="label label-danger">Denied</span>
-                                    <span *ngIf="child.approved && !child.available && !child.denied" class="label label-info">Processing Request</span>
-                                    <span *ngIf="!child.approved && !child.available" class="label label-info">Pending Approval</span>
-                                </div>
-
-
-                                <div class="col-md-1 col-md-push-9" *ngIf="admin">
-                                    <!--// TODO ADMIN-->
-                                    <form>
-                                        <button style="text-align: right" *ngIf="child.canApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
-                                    </form>
-                                    <form>
-                                        <button type="button"  *ngIf="!child.denied" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
-                                    </form>
-                                    <form>
-                                        <button type="button" (click)="removeChildRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
-                                    </form>
-                                </div>
-                            </div>
-                            <div class="col-md-12">
-                                <ngb-tabset>
-
-                                    <div *ngFor="let season of child.seasonRequests">
-                                        <ngb-tab [id]="season.seasonNumber" [title]="season.seasonNumber">
-                                            <ng-template ngbTabContent>
-                                                <h2>Season: {{season.seasonNumber}}</h2>
-
-                                                <table class="table table-striped table-hover table-responsive table-condensed">
-                                                    <thead>
-                                                        <tr>
-                                                            <th style="left">
-                                                                <a>#</a>
-                                                            </th>
-                                                            <th>
-                                                                <a>Title</a>
-                                                            </th>
-                                                            <th>
-                                                                <a>Air Date</a>
-                                                            </th>
-                                                            <th>
-                                                                <a>Status</a>
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let ep of season.episodes">
-                                                            <td>
-                                                                {{ep.episodeNumber}}
-                                                            </td>
-                                                            <td>
-                                                                {{ep.title}}
-                                                            </td>
-                                                            <td>
-                                                                {{ep.airDate | date: 'dd/MM/yyyy' }}
-                                                            </td>
-                                                            <td>
-                                                                <span *ngIf="ep.available" class="label label-success">Available</span>
-                                                                <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
-                                                                <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
-                                                                <ng-template #requested>
-                                                                    <span *ngIf="!ep.available" class="label label-info">Pending Approval</span>
-                                                                </ng-template>
-
-                                                                <ng-template #notRequested>
-                                                                    <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
-                                                                </ng-template>
-                                                            </td>
-
-
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </ng-template>
-                                        </ngb-tab>
-                                    </div>
-                                </ngb-tabset>
-                            </div>
-                            <br />
-                            <br />
-                            <hr />
-                        </div>
-
-                    </div>
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin"></tvrequests-children>
                 </div>
             </ng-template>
         </p-column>
     </p-treeTable>
 
-
-    <!--<div *ngFor="let request of tvRequests">-->
-    <!--<div class="row">
-        <div class="col-sm-2">
-
-            <img class="img-responsive poster" src="{{node.data.posterPath}}" alt="poster">
-
-        </div>
-
-        <div class="col-sm-5 ">
-            <div>
-                <a href="http://www.imdb.com/title/{{node.data.imdbId}}/" target="_blank">
-                    <h4 class="request-title">{{node.data.title}} ({{node.data.releaseDate | date: 'yyyy'}})</h4>
-                </a>
-            </div>
-            <br />
-            <div>
-                <span>Status: </span>
-                <span class="label label-success">{{node.data.status}}</span>
-            </div>
-
-            <div>
-                <span>Request status: </span>
-                <span *ngIf="node.data.available" class="label label-success">Available</span>
-                <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>
-                <span *ngIf="node.data.denied" class="label label-danger">Request Denied</span>
-                <span *ngIf="node.data.deniedReason" title="{{node.data.deniedReason}}"><i class="fa fa-info-circle"></i></span>
-                <span *ngIf="!node.data.approved && !node.data.availble && !node.data.denied" class="label label-warning">Pending Approval</span>
-
-            </div>
-            <div>Release Date: {{node.data.releaseDate | date}}</div>
-            <br />
-            <div>Requested Date: {{node.data.requestedDate | date}}</div>
-        </div>
-        <div class="col-sm-3 col-sm-push-3">
-
-            <button [routerLink]="[node.data.id]" style="text-align: right" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> View</button>
-        </div>
-    </div>
-    <hr />-->
-    <!--</div>-->
 </div>
