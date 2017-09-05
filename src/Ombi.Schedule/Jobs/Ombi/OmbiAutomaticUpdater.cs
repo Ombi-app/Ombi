@@ -36,14 +36,22 @@ namespace Ombi.Schedule.Jobs.Ombi
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             
             var productVersion = AssemblyHelper.GetRuntimeVersion();
+            Logger.LogInformation(LoggingEvents.Updater, "Product Version {0}", productVersion);
 
             var productArray = productVersion.Split('-');
             var version = productArray[0];
             var branch = productArray[1];
 
-            
+
+            Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
+            Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
+
+
             var updates = await OmbiService.GetUpdates(branch);
             var serverVersion = updates.UpdateVersionString.Substring(1, 6);
+
+            Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
+
             if (!serverVersion.Equals(version, StringComparison.CurrentCultureIgnoreCase))
             {
 
