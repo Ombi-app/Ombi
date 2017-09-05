@@ -72,7 +72,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
-    <ProjectReference Include="..\Ombi.Api.Telegram\Ombi.Api.Telegram.csproj" />
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
     <ProjectReference Include="..\Ombi.DependencyInjection\Ombi.DependencyInjection.csproj" />
     <ProjectReference Include="..\Ombi.Mapping\Ombi.Mapping.csproj" />
