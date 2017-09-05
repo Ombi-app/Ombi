@@ -31,8 +31,8 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.PlexUrl, "TestUrl");
-            Assert.Equal(search.Available, true);
+            Assert.Equal("TestUrl", search.PlexUrl);
+            Assert.True(search.Available);
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace Ombi.Core.Tests.Rule.Search
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.Equal(search.PlexUrl, null);
-            Assert.Equal(search.Available, false);
+            Assert.Null(search.PlexUrl);
+            Assert.False(search.Available);
         }
     }
 }

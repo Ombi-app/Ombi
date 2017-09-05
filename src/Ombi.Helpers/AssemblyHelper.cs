@@ -6,9 +6,7 @@ namespace Ombi.Helpers
     public static class AssemblyHelper
     {
         public static string GetRuntimeVersion() =>
-            Assembly.GetEntryAssembly().GetType()
-                .GetTypeInfo()
-                .Assembly
+            Assembly.GetEntryAssembly()
                 .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
                 .InformationalVersion;
     }

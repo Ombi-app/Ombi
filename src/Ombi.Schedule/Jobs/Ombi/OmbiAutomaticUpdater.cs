@@ -48,7 +48,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
 
             var updates = await OmbiService.GetUpdates(branch);
-            var serverVersion = updates.UpdateVersionString.Substring(1, 6);
+            var serverVersion = updates.UpdateVersionString;
 
             Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
 
@@ -106,16 +106,21 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
 
                 // Download it
+                Logger.LogInformation(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
                 var extension = download.Name.Split('.').Last();
                 var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
                 try
                 {
+                    if (File.Exists(zipDir))
+                    {
+                        File.Delete(zipDir);
+                    }
 
                     await DownloadAsync(download.Url, zipDir);
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Logger.LogError(LoggingEvents.Updater, e, "Error when downloading the zip");
                     throw;
                 }
 
@@ -154,11 +159,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     proc.Start();
                 }
 
-            }
-            else
-            {
-                // No updates
-                return;
             }
         }
 

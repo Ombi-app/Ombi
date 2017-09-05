@@ -27,7 +27,7 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -37,8 +37,8 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, false);
-            Assert.Equal(string.IsNullOrEmpty(result.Message), false);
+            Assert.False(result.Success);
+            Assert.False(string.IsNullOrEmpty(result.Message));
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.Movie };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -58,7 +58,7 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -68,7 +68,7 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
+            Assert.True(result.Success);
         }
 
         [Fact]
@@ -78,8 +78,8 @@ namespace Ombi.Core.Tests.Rule
             var request = new BaseRequest() { RequestType = Store.Entities.RequestType.TvShow };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, false);
-            Assert.Equal(string.IsNullOrEmpty(result.Message), false);
+            Assert.False(result.Success);
+            Assert.False(string.IsNullOrEmpty(result.Message));
         }
     }
 }

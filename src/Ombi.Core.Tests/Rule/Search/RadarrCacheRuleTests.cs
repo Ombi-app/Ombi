@@ -32,8 +32,8 @@ namespace Ombi.Core.Tests.Rule.Search
             var request = new SearchMovieViewModel { Id = 123 };
             var result =await  Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, true);
+            Assert.True(result.Success);
+            Assert.True(request.Approved);
         }
 
 
@@ -50,8 +50,8 @@ namespace Ombi.Core.Tests.Rule.Search
             var request = new SearchMovieViewModel { Id = 123 };
             var result = await Rule.Execute(request);
 
-            Assert.Equal(result.Success, true);
-            Assert.Equal(request.Approved, false);
+            Assert.True(result.Success);
+            Assert.False(request.Approved);
         }
     }
 }

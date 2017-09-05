@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="2.0.1" />
-    <PackageReference Include="Hangfire" Version="1.6.14" />
+    <PackageReference Include="Hangfire" Version="1.6.16" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.2" />
@@ -31,15 +31,6 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.Store\Ombi.Store.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\Requests\Movie\" />
-    <Folder Include="Models\Requests\Tv\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Rule\Rules\Search\EmbyAvailabilityRule.cs" />
   </ItemGroup>
 
 </Project>

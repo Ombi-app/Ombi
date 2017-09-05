@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Moq;
 using NUnit.Framework;
+using Ombi.Core.Notifications;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
@@ -20,12 +21,15 @@ namespace Ombi.Schedule.Tests
             _repo = new Mock<IPlexContentRepository>();
             _tv = new Mock<ITvRequestRepository>();
             _movie = new Mock<IMovieRequestRepository>();
-            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object);
+            _movie = new Mock<IMovieRequestRepository>();
+            _notify = new Mock<INotificationService>();
+            Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object);
         }
 
         private readonly Mock<IPlexContentRepository> _repo;
         private readonly Mock<ITvRequestRepository> _tv;
         private readonly Mock<IMovieRequestRepository> _movie;
+        private readonly Mock<INotificationService> _notify;
         private PlexAvailabilityChecker Checker { get; }
 
         [Test]
