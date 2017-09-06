@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +22,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
+using Ombi.Core.Claims;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
 using Ombi.Mapping;
@@ -195,7 +197,10 @@ namespace Ombi
             }
             
             app.UseHangfireServer();
-            app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new [] { new HangfireAuthorizationFilter() }
+            }););
 
             app.UseSwaggerUI(c =>
             {
@@ -228,6 +233,17 @@ namespace Ombi
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
             });
+        }
+    }
+    
+    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
+    {
+        public bool Authorize(DashboardContext context)
+        {
+            var httpContext = context.GetHttpContext();
+
+            // Allow all authenticated users to see the Dashboard (potentially dangerous).
+            return httpContext.User.IsInRole(OmbiRoles.Admin);
         }
     }
 }
