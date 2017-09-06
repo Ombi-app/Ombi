@@ -200,7 +200,7 @@ namespace Ombi
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
                 Authorization = new [] { new HangfireAuthorizationFilter() }
-            }););
+            });
 
             app.UseSwaggerUI(c =>
             {
