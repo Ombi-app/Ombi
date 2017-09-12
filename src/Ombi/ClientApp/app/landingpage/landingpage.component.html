@@ -19,10 +19,24 @@
                     <span [innerHtml]="landingPageSettings.noticeText"></span>
                 </div>
                 <div>
-                    <div *ngIf="mediaServerStatus">
+                    <div *ngIf="mediaServerStatus.fullyAvailable">
                         <h3 class="online"><i class="fa fa-check-circle "></i> Currently Online</h3>
                         <span>The media server is currently online</span>
-                        <span>Check this page for continous site updates.</span>
+                        <p>Check this page for continous site updates.</p>
+                    </div>
+                    
+                    <div *ngIf="mediaServerStatus.partiallyDown">
+                        <h3 class="partial"><i class="fa fa-exclamation-triangle "></i> Partially Online</h3>
+                        <span>The media server is partially online. </span>
+                        <p *ngIf="mediaServerStatus.serversUnavailable > 1">There are {{mediaServerStatus.serversUnavailable}} servers offline out of {{mediaServerStatus.totalServers}}.</p>
+                        <p *ngIf="mediaServerStatus.serversUnavailable == 1">There is {{mediaServerStatus.serversUnavailable}} server offline out of {{mediaServerStatus.totalServers}}.</p>
+                        <p>Check this page for continous site updates.</p>
+                    </div>
+
+                    <div *ngIf="mediaServerStatus.completelyDown">
+                        <h3 class="offline"><i class="fa fa-times "></i> Currently Offline</h3>
+                        <span>The media server is currently offline</span>
+                        <p>Check this page for continous site updates.</p>
                     </div>
                 </div>
             </div>

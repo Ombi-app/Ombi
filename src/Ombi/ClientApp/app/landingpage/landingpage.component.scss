@@ -36,9 +36,19 @@ img.bg {
     color:lightgreen;
 }
 
+
+.partial {
+    color: #ffd800
+}
+
 .offline {
     color: #F44336
 }
+
+p {
+    font-size: 14px !important;
+}
+
 
 @media screen and (max-width: 1024px) { /* Specific to this particular image */
     img.bg {

@@ -32,6 +32,7 @@ import { AuthModule } from './auth/auth.module';
 import { IdentityService } from './services/identity.service';
 import { StatusService } from './services/status.service';
 import { ImageService } from './services/image.service';
+import { LandingPageService } from './services/landingpage.service';
 
 
 // Modules
@@ -96,6 +97,7 @@ const routes: Routes = [
         SettingsService,
         IdentityService,
         StatusService,
+        LandingPageService,
 ImageService,
     //DragulaService
     ],
