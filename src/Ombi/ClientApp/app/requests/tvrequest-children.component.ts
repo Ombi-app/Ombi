@@ -26,6 +26,12 @@ export class TvRequestChildrenComponent {
         debugger;
         request.approved = false;
         request.denied = true;
+
+        request.seasonRequests.forEach((season) => {
+            season.episodes.forEach((ep) => {
+                ep.approved = false;
+            });
+        });
         this.requestService.updateChild(request)
             .subscribe();
     }

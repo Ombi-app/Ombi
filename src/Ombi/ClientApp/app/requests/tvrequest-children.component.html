@@ -68,14 +68,16 @@
                                         <td>
                                             <span *ngIf="ep.available" class="label label-success">Available</span>
                                             <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
+                                            <div *ngIf="!ep.approved">
                                             <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
                                             <ng-template #requested>
-                                                <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
+                                                <span  class="label label-warning">Pending Approval</span>
                                             </ng-template>
 
                                             <ng-template #notRequested>
-                                                <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
+                                                <span  class="label label-danger">Not Yet Requested</span>
                                             </ng-template>
+                                            </div>
                                         </td>
                                     </tr>
                                 </tbody>

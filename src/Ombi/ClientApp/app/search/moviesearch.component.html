@@ -52,16 +52,16 @@
                         <span *ngIf="result.available" class="label label-success">Available</span>
                         <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
                         <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
-                        <div *ngIf="result.requested && !result.available; then requested else notRequested"></div>
-                        <ng-template #requested>
-                            <span *ngIf="!result.available" class="label label-warning">Pending Approval</span>
-                        </ng-template>
+                        <span *ngIf="!result.approved">
+                            <span *ngIf="result.requested && !result.available; then requested else notRequested"></span>
+                            <ng-template #requested>
+                                <span *ngIf="!result.available" class="label label-warning">Pending Approval</span>
+                            </ng-template>
 
-                        <ng-template #notRequested>
-                            <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
-                        </ng-template>
-
-
+                            <ng-template #notRequested>
+                                <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
+                            </ng-template>
+                           </span>
 
 
 
