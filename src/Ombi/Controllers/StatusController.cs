@@ -37,6 +37,7 @@ using Ombi.Settings.Settings.Models;
 namespace Ombi.Controllers
 {
     [ApiV1]
+    [Produces("application/json")]
     public class StatusController : Controller
     {
         public StatusController(ISettingsService<OmbiSettings> ombi)

@@ -14,6 +14,7 @@ namespace Ombi.Controllers.External
     /// </summary>
     [Admin]
     [ApiV1]
+    [Produces("application/json")]
     public class EmbyController : Controller
     {
         /// <summary>

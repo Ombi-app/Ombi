@@ -8,6 +8,7 @@ namespace Ombi.Controllers
 {
     [Authorize]
     [ApiV1]
+    [Produces("application/json")]
     public class LoggingController : Controller
     {
         public LoggingController(ILogger logger)

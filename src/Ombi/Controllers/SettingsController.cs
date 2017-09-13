@@ -30,6 +30,7 @@ namespace Ombi.Controllers
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
     [ApiV1]
+    [Produces("application/json")]
     public class SettingsController : Controller
     {
         /// <summary>

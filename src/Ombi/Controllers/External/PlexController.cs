@@ -15,6 +15,7 @@ namespace Ombi.Controllers.External
 {
     [Admin]
     [ApiV1]
+    [Produces("application/json")]
     public class PlexController : Controller
     {
         public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings)

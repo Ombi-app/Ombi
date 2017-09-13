@@ -35,6 +35,7 @@ namespace Ombi.Controllers
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [PowerUser]
     [ApiV1]
+    [Produces("application/json")]
     public class IdentityController : Controller
     {
         public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,

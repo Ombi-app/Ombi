@@ -20,3 +20,4 @@ testem.log
 #/typings
 /systemjs.config.js*
 /Logs/**
+**.db

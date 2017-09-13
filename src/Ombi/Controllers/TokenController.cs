@@ -18,6 +18,7 @@ using Ombi.Store.Repository;
 namespace Ombi.Controllers
 {
     [ApiV1]
+    [Produces("application/json")]
     public class TokenController
     {
         public TokenController(UserManager<OmbiUser> um, IOptions<TokenAuthentication> ta,

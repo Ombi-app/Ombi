@@ -13,6 +13,7 @@ namespace Ombi.Controllers
 {
     [Authorize]
     [ApiV1]
+    [Produces("application/json")]
     public class RequestController : Controller
     {
         public RequestController(IMovieRequestEngine engine, ITvRequestEngine tvRequestEngine)

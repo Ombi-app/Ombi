@@ -12,6 +12,7 @@ namespace Ombi.Controllers.External
 {
    [Admin]
    [ApiV1]
+   [Produces("application/json")]
     public class SonarrController : Controller
     {
         public SonarrController(ISonarrApi sonarr, ISettingsService<SonarrSettings> settings)

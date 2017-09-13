@@ -15,6 +15,7 @@ namespace Ombi.Controllers
 {
     [Authorize]
     [ApiV1]
+    [Produces("application/json")]
     public class SearchController : Controller
     {
         public SearchController(IMovieEngine movie, ITvSearchEngine tvEngine, ILogger<SearchController> logger)

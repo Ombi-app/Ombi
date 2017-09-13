@@ -11,6 +11,7 @@ namespace Ombi.Controllers.External
 {
    [Admin]
    [ApiV1]
+   [Produces("application/json")]
     public class RadarrController : Controller
     {
         public RadarrController(IRadarrApi radarr, ISettingsService<RadarrSettings> settings)

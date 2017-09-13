@@ -11,6 +11,7 @@ using Ombi.Config;
 namespace Ombi.Controllers
 {
     [ApiV1]
+    [Produces("application/json")]
     public class ImagesController : Controller
     {
         public ImagesController(IFanartTvApi api, IApplicationConfigRepository config, IOptions<LandingPageBackground> options)

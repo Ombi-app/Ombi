@@ -71,11 +71,10 @@ namespace Ombi
         public IConfigurationRoot Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<OmbiContext>(options =>
-                options.UseSqlite("Data Source=Ombi.db"));
+            services.AddDbContext<OmbiContext>();
             
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
@@ -179,13 +178,20 @@ namespace Ombi
                 x.Audience = "Ombi";
                 x.TokenValidationParameters = tokenValidationParameters;
             });
+
+            // Build the intermediate service provider
+            var serviceProvider = services.BuildServiceProvider();
+            
+            //return the provider
+            return serviceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory,
+            IMemoryCache cache, IServiceProvider serviceProvider)
         {
 
-            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
+            var ctx = serviceProvider.GetService<IOmbiContext>();
 
 
 

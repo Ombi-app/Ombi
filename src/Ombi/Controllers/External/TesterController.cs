@@ -25,6 +25,7 @@ namespace Ombi.Controllers.External
     /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
     [ApiV1]
+    [Produces("application/json")]
     public class TesterController : Controller
     {
         /// <summary>
