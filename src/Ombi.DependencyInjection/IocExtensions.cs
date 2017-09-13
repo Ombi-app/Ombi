@@ -54,7 +54,6 @@ namespace Ombi.DependencyInjection
             services.RegisterApi();
             services.RegisterServices();
             services.RegisterStore();
-            services.RegisterIdentity();
             services.RegisterJobs();
         }
 
@@ -134,16 +133,6 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
-        }
-
-        public static void RegisterIdentity(this IServiceCollection services)
-        {
-            services.AddAuthorization(auth =>
-            {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
-                    .RequireAuthenticatedUser().Build());
-            });
         }
     }
 }

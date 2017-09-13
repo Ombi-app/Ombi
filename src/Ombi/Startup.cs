@@ -90,7 +90,32 @@ namespace Ombi
             });
 
             services.AddMemoryCache();
-            
+
+            var tokenOptions = Configuration.GetSection("TokenAuthentication");
+
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
+
+                RequireExpirationTime = true,
+                ValidateLifetime = true,
+                ValidAudience = "Ombi",
+                ValidIssuer = "Ombi",
+                ClockSkew = TimeSpan.Zero,
+            };
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.Audience = "Ombi";
+                x.TokenValidationParameters = tokenValidationParameters;
+            });
+
             services.AddMvc()
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
             
@@ -156,28 +181,7 @@ namespace Ombi
             });
 
 
-            var tokenOptions = Configuration.GetSection("TokenAuthentication");
-
             
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                ValidAudience = "Ombi",
-                ValidIssuer = "Ombi",
-                ClockSkew = TimeSpan.Zero
-            };
-
-            services.AddAuthentication().AddJwtBearer(x =>
-            {
-                x.Audience = "Ombi";
-                x.TokenValidationParameters = tokenValidationParameters;
-            });
 
             // Build the intermediate service provider
             var serviceProvider = services.BuildServiceProvider();
@@ -195,17 +199,15 @@ namespace Ombi
 
 
 
-            app.UseAuthentication();
-
             loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
+                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                //{
+                //    HotModuleReplacement = true
+                //});
             }
             
             app.UseHangfireServer();
@@ -234,6 +236,10 @@ namespace Ombi
             {
                 ContentTypeProvider = provider
             });
+
+
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             { 
