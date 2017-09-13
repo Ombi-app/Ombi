@@ -36,7 +36,7 @@ export class RequestService extends ServiceAuthHelpers {
     }
 
     updateMovieRequest(request: IMovieRequests): Observable<IMovieRequests> {
-        return this.http.post(`${this.url}movie/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
+        return this.http.put(`${this.url}movie/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
 
     getTvRequests(count: number, position: number): Observable<ITvRequests[]> {

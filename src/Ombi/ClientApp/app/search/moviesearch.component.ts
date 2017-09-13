@@ -6,6 +6,7 @@ import 'rxjs/add/operator/map';
 import "rxjs/add/operator/takeUntil";
 
 import { SearchService } from '../services/search.service';
+import { AuthService } from '../auth/auth.service';
 import { RequestService } from '../services/request.service';
 import { NotificationService } from '../services/notification.service';
 
@@ -25,7 +26,9 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
     result: IRequestEngineResult;
     searchApplied = false;
 
-    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
+    constructor(private searchService: SearchService, private requestService: RequestService,
+        private notificationService: NotificationService, private authService : AuthService) {
+
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -63,6 +66,10 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
 
     request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
+        if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
+            searchResult.approved = true;
+        }
+
         this.requestService.requestMovie(searchResult)
             .takeUntil(this.subscriptions)
             .subscribe(x => {

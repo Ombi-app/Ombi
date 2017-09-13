@@ -160,7 +160,6 @@ namespace Ombi.Core.Engine
             results.Issues = request.Issues;
             results.Overview = request.Overview;
             results.PosterPath = request.PosterPath;
-            results.RequestedUser = request.RequestedUser;
 
             await MovieRepository.Update(results);
             return results;

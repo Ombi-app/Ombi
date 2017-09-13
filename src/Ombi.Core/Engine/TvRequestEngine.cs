@@ -62,6 +62,19 @@ namespace Ombi.Core.Engine
                 };
             }
 
+            // Check if we have auto approved the request, if we have then mark the episodes as approved
+            if (tvBuilder.ChildRequest.Approved)
+            {
+                foreach (var seasons in tvBuilder.ChildRequest.SeasonRequests)
+                {
+                    foreach (var ep in seasons.Episodes)
+                    {
+                        ep.Approved = true;
+                        ep.Requested = true;
+                    }
+                }
+            }
+
             await Audit.Record(AuditType.Added, AuditArea.TvRequest, $"Added Request {tv.Title}", Username);
 
             var existingRequest = await TvRepository.Get().FirstOrDefaultAsync(x => x.TvDbId == tv.Id);
@@ -97,8 +110,8 @@ namespace Ombi.Core.Engine
                 tvBuilder.ChildRequest.Id = 0;
                 return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
             }
-            // This is a new request
 
+            // This is a new request
             var newRequest = tvBuilder.CreateNewRequest(tv);
             return await AddRequest(newRequest.NewRequest);
         }
