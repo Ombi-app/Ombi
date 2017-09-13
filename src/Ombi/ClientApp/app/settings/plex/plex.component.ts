@@ -24,7 +24,6 @@ export class PlexComponent implements OnInit, OnDestroy {
     private subscriptions = new Subject<void>();
     username: string;
     password: string;
-    advanced = false;
     serversButton = false;
 
     ngOnInit(): void {
@@ -42,7 +41,7 @@ export class PlexComponent implements OnInit, OnDestroy {
                     this.serversButton = true;
                     this.notificationService.success("Loaded", "Found the servers! Please select one!")
                 } else {
-                    this.notificationService.warning("Error When Requesting Plex Servers", x.message);
+                    this.notificationService.warning("Error When Requesting Plex Servers", "Please make sure your username and password are correct");
                 }
             });
     }
@@ -99,7 +98,7 @@ export class PlexComponent implements OnInit, OnDestroy {
                 server.plexSelectedLibraries.push(lib);
             });
         },
-            err => { this.notificationService.error("Error", err) });
+        err => { this.notificationService.error("Error", err) });
     }
 
     save() {

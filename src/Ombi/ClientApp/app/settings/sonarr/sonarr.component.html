@@ -1,125 +1,128 @@
 ﻿
 <settings-menu></settings-menu>
 <div *ngIf="form">
-        <fieldset>
-            <legend>Sonarr Settings</legend>
-          <div style="float: right;">
-                <span style="vertical-align: top;">Advanced</span>
-                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
-            </div>
+    <fieldset>
+        <legend>Sonarr Settings</legend>
+        <div style="float: right;">
+            <span style="vertical-align: top;">Advanced</span>
+            <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
+        </div>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-           <div *ngIf="form.invalid" class="alert alert-danger">
-               <div *ngIf="form.dirty">
+            <div *ngIf="form.invalid" class="alert alert-danger">
+                <div *ngIf="form.dirty">
                     <div *ngIf="form.get('ip').hasError('required')">The IP/Hostname is required</div>
                     <div *ngIf="form.get('port').hasError('required')">The Port is required</div>
                     <div *ngIf="form.get('apiKey').hasError('required')">The Api Key is required</div>
-                    </div>
-                 <div>
+                </div>
+                <div>
                     <div *ngIf="form.get('qualityProfile').hasError('required')">A Default Quality Profile is required</div>
                     <div *ngIf="form.get('rootPath').hasError('required')">A Default Root Path is required</div>
                 </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled">
+                        <label for="enable">Enable</label>
+                    </div>
                 </div>
-                
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" formControlName="enabled" >
-                    <label for="enable">Enable</label>
+
+                <div class="form-group">
+                    <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
+                    <div class="">
+                        <input type="text" class="form-control form-control-custom " formControlName="ip" id="Ip" name="Ip" placeholder="localhost">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="portNumber" class="control-label">Port</label>
+
+                    <div class="">
+                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="ApiKey" class="control-label">Sonarr API Key</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " formControlName="apiKey" id="ApiKey" name="ApiKey">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+
+                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="SubDir" class="control-label">Sonarr Base Url</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+                    </div>
                 </div>
             </div>
-
-            <div class="form-group">
-                <label for="Ip" class="control-label">Sonarr Hostname or IP</label>
-                <div class="">
-                    <input type="text" class="form-control form-control-custom " formControlName="ip" id="Ip" name="Ip" placeholder="localhost" >
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div>
+                        <button type="button" (click)="getProfiles(form)" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
+                    </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="portNumber" class="control-label">Port</label>
-
-                <div class="">
-                    <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number" >
-                </div>
-            </div>
-
-
-            <div class="form-group">
-                <label for="ApiKey" class="control-label">Sonarr API Key</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " formControlName="apiKey" id="ApiKey" name="ApiKey">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
-
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="SubDir" class="control-label">Sonarr Base Url</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir" >
-                </div>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button  type="button" (click)="getProfiles(form)" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"></span></button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="select" class="control-label">Quality Profiles</label>
-                <div id="profiles">
-                    <select class="form-control form-control-custom" id="select" formControlName="qualityProfile">
-                        <option *ngFor='let quality of qualities' value='{{quality.id}}'>{{quality.name}}</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div>
-                    <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin" ></span></button>
-
+                <div class="form-group">
+                    <label for="select" class="control-label">Quality Profiles</label>
+                    <div id="profiles">
+                        <select class="form-control form-control-custom" id="select" formControlName="qualityProfile">
+                            <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
+                        </select>
+                    </div>
                 </div>
 
-            </div>
-            <div class="form-group">
-                <label for="rootFolders" class="control-label">Default Root Folders</label>
-                <div id="rootFolders">
-                    <select class="form-control form-control-custom" formControlName="rootPath">
-                        <option *ngFor='let folder of rootFolders' value='{{folder.id}}'>{{folder.path}}</option>
-                    </select>
+                <div class="form-group">
+                    <div>
+                        <button type="button" (click)="getRootFolders(form)" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
+
+                    </div>
+
                 </div>
-            </div>
-
-
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="SeasonFolders" name="SeasonFolders"formControlName="seasonFolders">
-                    <label for="SeasonFolders">Enable season folders</label>
+                <div class="form-group">
+                    <label for="rootFolders" class="control-label">Default Root Folders</label>
+                    <div id="rootFolders">
+                        <select class="form-control form-control-custom" formControlName="rootPath">
+                            <option *ngFor="let folder of rootFolders" value="{{folder.id}}">{{folder.path}}</option>
+                        </select>
+                    </div>
                 </div>
-                <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
-            </div>
 
-            <div class="form-group" *ngIf="advanced">
-                <div class="checkbox">
-                    <input type="checkbox" id="addOnly" formControlName="addOnly">
-                    <label for="addOnly">Do not search</label>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="SeasonFolders" name="SeasonFolders" formControlName="seasonFolders">
+                        <label for="SeasonFolders">Enable season folders</label>
+                    </div>
+                    <label>Enabled Season Folders to organize seasons into individual folders within a show.</label>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <div>
-                    <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"> </span></button>
+                <div class="form-group" *ngIf="advanced" style="color:#ff761b">
+                    <div class="checkbox">
+                        <input type="checkbox" id="addOnly" formControlName="addOnly">
+                        <label for="addOnly">Do not search</label>
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <div>
+                        <button type="button" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"> </span></button>
+                    </div>
+                </div>
 
 
-            <div class="form-group">
-                <div>
-                    <button type="submit" class="btn btn-primary-outline ">Submit</button>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" class="btn btn-primary-outline ">Submit</button>
+                    </div>
                 </div>
             </div>
         </form>
-        </fieldset>
+    </fieldset>
 </div>

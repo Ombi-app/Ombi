@@ -2,124 +2,128 @@
 <settings-menu></settings-menu>
 <div *ngIf="form">
     <fieldset>
-        <legend>Radarr Settings</legend>          
-          <div style="float: right;">
-                <span style="vertical-align: top;">Advanced</span>
-                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
-            </div>
-        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)">
-           <div *ngIf="form.invalid" class="alert alert-danger">
-               <div *ngIf="form.dirty">
+        <legend>Radarr Settings</legend>
+        <div style="float: right;">
+            <span style="vertical-align: top;">Advanced</span>
+            <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
+        </div>
+        <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
+            <div *ngIf="form.invalid" class="alert alert-danger">
+                <div *ngIf="form.dirty">
                     <div *ngIf="form.get('ip').hasError('required')">The IP/Hostname is required</div>
                     <div *ngIf="form.get('port').hasError('required')">The Port is required</div>
                     <div *ngIf="form.get('apiKey').hasError('required')">The Api Key is required</div>
+                </div>
+                <div>
+                    <div *ngIf="form.get('defaultQualityProfile').hasError('required')">A Default Quality Profile is required</div>
+                    <div *ngIf="form.get('defaultRootPath').hasError('required')">A Default Root Path is required</div>
+                    <div *ngIf="form.get('minimumAvailability').hasError('required')">A Default Minimum Availability is required</div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
+                        <label for="enable">Enable</label>
                     </div>
-                 <div>
-                     <div *ngIf="form.get('defaultQualityProfile').hasError('required')">A Default Quality Profile is required</div>
-                     <div *ngIf="form.get('defaultRootPath').hasError('required')">A Default Root Path is required</div>
-                     <div *ngIf="form.get('minimumAvailability').hasError('required')">A Default Minimum Availability is required</div>
-                </div>
                 </div>
 
-            <div class="form-group">
-                <div class="checkbox">
-                    <input type="checkbox" id="enable" formControlName="enabled" ng-checked="form.enabled">
-                    <label for="enable">Enable</label>
+
+
+                <div class="form-group">
+                    <label for="Ip" class="control-label">Hostname or IP</label>
+                    <div class="">
+                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" formControlName="ip">
+                    </div>
                 </div>
-            </div>
 
+                <div class="form-group">
+                    <label for="portNumber" class="control-label">Port</label>
 
-
-            <div class="form-group">
-                <label for="Ip" class="control-label">Hostname or IP</label>
-                <div class="">
-                    <input type="text" class="form-control form-control-custom "id="Ip" name="Ip" placeholder="localhost" formControlName="ip">
+                    <div class="">
+                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
+                    </div>
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="portNumber" class="control-label">Port</label>
 
-                <div class="">
-                    <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number" >
+                <div class="form-group">
+                    <label for="ApiKey" class="control-label">API Key</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" formControlName="apiKey">
+                    </div>
                 </div>
-            </div>
+                <div class="form-group">
+                    <div class="checkbox">
 
+                        <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
 
-            <div class="form-group">
-                <label for="ApiKey" class="control-label">API Key</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" formControlName="apiKey">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="checkbox">
-
-                    <input type="checkbox" id="Ssl" name="Ssl" formControlName="ssl"><label for="Ssl">SSL</label>
-
+                <div class="form-group">
+                    <label for="SubDir" class="control-label">Base Url</label>
+                    <div>
+                        <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="SubDir" class="control-label">Base Url</label>
-                <div>
-                    <input type="text" class="form-control form-control-custom" formControlName="subDir" id="SubDir" name="SubDir">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <div>
+                        <button type="submit" (click)="getProfiles(form)" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button type="submit" (click)="getProfiles(form)" class="btn btn-primary-outline">Get Quality Profiles <span *ngIf="profilesRunning" class="fa fa-spinner fa-spin"> </span></button>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="select" class="control-label">Quality Profiles</label>
-                <div id="profiles">
-                    <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select">
-                        <option *ngFor='let quality of qualities' value='{{quality.id}}'>{{quality.name}}</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <div>
-                    <button type="submit" (click)="getRootFolders(form)" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
-
+                <div class="form-group">
+                    <label for="select" class="control-label">Quality Profiles</label>
+                    <div id="profiles">
+                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select">
+                            <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
+                        </select>
+                    </div>
                 </div>
 
-            </div>
-            <div class="form-group">
-                <label for="rootFolders" class="control-label">Default Root Folders</label>
-                <div id="rootFolders">
-                    <select formControlName="defaultRootPath" class="form-control form-control-custom">
-                        <option *ngFor='let folder of rootFolders' value='{{folder.path}}'>{{folder.path}}</option>
-                    </select>
-                </div>
-            </div>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" (click)="getRootFolders(form)" class="btn btn-primary-outline">Get Root Folders <span *ngIf="rootFoldersRunning" class="fa fa-spinner fa-spin"></span></button>
 
-            <div class="form-group">
-                <label for="rootFolders" class="control-label">Default Minimum Availability</label>
-                <div id="rootFolders">
-                    <select formControlName="minimumAvailability" class="form-control form-control-custom">
-                        <option *ngFor='let min of minimumAvailabilityOptions' value='{{min.value}}'>{{min.name}}</option>
-                    </select>
-                </div>
-            </div>
+                    </div>
 
-            <div class="form-group" *ngIf="advanced">
-                <div class="checkbox">
-                    <input type="checkbox" id="addOnly" formControlName="addOnly">
-                    <label for="addOnly">Do not search</label>
                 </div>
-            </div>
-            <div class="form-group">
-                <div>
-                    <button [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"></span></button>
+                <div class="form-group">
+                    <label for="rootFolders" class="control-label">Default Root Folders</label>
+                    <div id="rootFolders">
+                        <select formControlName="defaultRootPath" class="form-control form-control-custom">
+                            <option *ngFor="let folder of rootFolders" value="{{folder.path}}">{{folder.path}}</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
+
+                <div class="form-group">
+                    <label for="rootFolders" class="control-label">Default Minimum Availability</label>
+                    <div id="rootFolders">
+                        <select formControlName="minimumAvailability" class="form-control form-control-custom">
+                            <option *ngFor="let min of minimumAvailabilityOptions" value="{{min.value}}">{{min.name}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" *ngIf="advanced" style="color:#ff761b">
+                    <div class="checkbox">
+                        <input type="checkbox" id="addOnly" formControlName="addOnly">
+                        <label for="addOnly">Do not search</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div>
+                        <button [disabled]="form.invalid" (click)="test(form)" class="btn btn-primary-outline">Test Connectivity <span id="spinner"></span></button>
+                    </div>
+                </div>
 
 
-            <div class="form-group">
-                <div>
-                    <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                <div class="form-group">
+                    <div>
+                        <button type="submit" [disabled]="form.invalid" class="btn btn-primary-outline ">Submit</button>
+                    </div>
                 </div>
             </div>
         </form>

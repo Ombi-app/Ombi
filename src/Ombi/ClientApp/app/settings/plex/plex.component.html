@@ -4,10 +4,6 @@
         <legend>Plex Configuration</legend>
 
         <div class="row">
-            <div class="col-md-2 col-md-offset-10">
-                <span style="vertical-align: top;">Advanced</span>
-                <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
-            </div>
 
             <div class="form-group col-md-3">
                 <div class="checkbox">
@@ -33,43 +29,8 @@
                         <br />
                         <br />
 
-                        <div class="form-group">
-                            <label for="username" class="control-label">Username and Password</label>
-                            <div>
-                                <input type="text" class="form-control form-control-custom" id="username" [(ngModel)]="username" placeholder="username">
-                            </div>
-                            <br />
-                            <div>
-                                <input type="password" class="form-control form-control-custom" id="password" [(ngModel)]="password" placeholder="Password">
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div>
-                                <button id="requestToken" (click)="requestServers(server)" class="btn btn-primary-outline">Load Servers <i class="fa fa-key"></i></button>
-                            </div>
-                        </div>
-                        <br />
-                        <br />
-                        <div class="form-group">
-                            <label for="username" class="control-label">Please select the server</label><br />
-                            <div class="btn-group">
-                                <div class="btn-group">
-                                    <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                                        Servers
-                                        <span class="caret"></span>
-                                    </a>
-
-                                    <ul *ngIf="loadedServers" class="dropdown-menu">
-                                        <li *ngFor="let s of loadedServers.servers.server">
-                                            <a (click)="selectServer(s,server)">{{s.name}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div *ngIf="advanced">
+                        <div class="col-md-6">
+                            <!-- Main Content -->
                             <div class="form-group">
                                 <label for="name" class="control-label">Server name</label>
                                 <div>
@@ -98,7 +59,7 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
+                            <!--<div class="form-group">
                                 <div class="checkbox">
 
                                     <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" [checked]="server.enableEpisodeSearching">
@@ -108,7 +69,7 @@
                                     If enabled then we will lookup all episodes on your Plex server and store them in the local database. This will stop episode requests that already exist on Plex (that might not be in Sonarr).
                                     Please be aware that this is a very resource intensive process and while the Plex Episode Cacher job is running the application may appear slow (Depending on the size of your Plex library).
                                 </small>
-                            </div>
+                            </div>-->
 
                             <div class="form-group">
                                 <label for="authToken" class="control-label">Plex Authorization Token</label>
@@ -124,42 +85,84 @@
                                 </div>
                             </div>
                         </div>
-                        <label>Please select the libraries you want Ombi to look in for content</label>
-                        <br />
-                        <small>Note: if nothing is selected, we will monitor all libraries</small>
-                        <div class="form-group">
-                            <div>
-                                <button (click)="loadLibraries(server)" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="username" class="control-label">Username and Password</label>
+                                <div>
+                                    <input type="text" class="form-control form-control-custom" id="username" [(ngModel)]="username" placeholder="username">
+                                </div>
+                                <br />
+                                <div>
+                                    <input type="password" class="form-control form-control-custom" id="password" [(ngModel)]="password" placeholder="Password">
+                                </div>
                             </div>
-                        </div>
-                        <div *ngIf="server.plexSelectedLibraries">
-                            <div *ngFor="let lib of server.plexSelectedLibraries">
-                                <div class="form-group">
-                                    <div class="checkbox">
-                                        <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled">
-                                        <label for="{{lib.title}}">{{lib.title}}</label>
+
+                            <div class="form-group">
+                                <div>
+                                    <button id="requestToken" (click)="requestServers(server)" class="btn btn-primary-outline">Load Servers <i class="fa fa-key"></i></button>
+                                </div>
+                            </div>
+                            <br />
+                            <br />
+                            <div class="form-group" *ngIf="loadedServers">
+                                <label for="username" class="control-label">Please select the server</label><br />
+                                <div class="btn-group">
+                                    <div class="btn-group">
+                                        <a [attr.disabled]="!serversButton ? true : null" href="#" class="btn btn-info-outline dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                            Servers
+                                            <span class="caret"></span>
+                                        </a>
+
+                                        <ul *ngIf="loadedServers" class="dropdown-menu">
+                                            <li *ngFor="let s of loadedServers.servers.server">
+                                                <a (click)="selectServer(s,server)">{{s.name}}</a>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
+                            <hr/>
+                            <label>Please select the libraries you want Ombi to look in for content</label>
+                            <br />
+                            <small>Note: if nothing is selected, we will monitor all libraries</small>
+                            <div class="form-group">
+                                <div>
+                                    <button (click)="loadLibraries(server)" class="btn btn-primary-outline">Load Libraries <i class="fa fa-film"></i></button>
+                                </div>
+                            </div>
+                            <div *ngIf="server.plexSelectedLibraries">
+                                <div *ngFor="let lib of server.plexSelectedLibraries">
+                                    <div class="form-group">
+                                        <div class="checkbox">
+                                            <input type="checkbox" id="{{lib.title}}" [(ngModel)]="lib.enabled" [checked]="lib.enabled">
+                                            <label for="{{lib.title}}">{{lib.title}}</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div>
+                                    <button id="testPlex" type="submit" (click)="testPlex(server)" class="btn btn-primary-outline">
+                                        Test Connectivity
+                                        <div id="spinner"></div>
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="form-group">
-                            <div>
-                                <button id="testPlex" type="submit" (click)="testPlex(server)" class="btn btn-primary-outline">
-                                    Test Connectivity
-                                    <div id="spinner"></div>
-                                </button>
-                            </div>
-                        </div>
                     </ng-template>
                 </ngb-tab>
             </div>
         </ngb-tabset>
-
+        <div class="col-md-3">
         <div class="form-group">
             <div>
                 <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
             </div>
+        </div>
         </div>
     </fieldset>
 </div>
