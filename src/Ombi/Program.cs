@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
+using Microsoft.AspNetCore;
 
 namespace Ombi
 {
@@ -68,17 +69,14 @@ namespace Ombi
 
             Console.WriteLine($"We are running on {urlValue}");
 
-            var webHost = new WebHostBuilder()
-                .UseKestrel()
-                .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseIISIntegration()
-                .UseUrls(urlArgs)
-                .UseStartup<Startup>()
-                .Build();
-
-
-            webHost.Run();
+            BuildWebHost(args, urlArgs).Run();
         }
+
+        public static IWebHost BuildWebHost(string[] args, string urlArgs) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .UseUrls(urlArgs)
+                .Build();
     }
 
     public class Options

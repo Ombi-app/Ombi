@@ -7,9 +7,11 @@ using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
@@ -153,21 +155,17 @@ namespace Ombi
                 //x.UseSQLiteStorage("Data Source=Ombi.db;");
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
             });
-        }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
-        {
-            var tokenOptions = (IOptions<TokenAuthentication>)app.ApplicationServices.GetService(
-                typeof(IOptions<TokenAuthentication>));
 
-            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
+            var tokenOptions = Configuration.GetSection("TokenAuthentication");
+
+            
 
             var tokenValidationParameters = new TokenValidationParameters
             {
 
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.Value.SecretKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
 
                 RequireExpirationTime = true,
                 ValidateLifetime = true,
@@ -176,14 +174,22 @@ namespace Ombi
                 ClockSkew = TimeSpan.Zero
             };
 
-            app.UseJwtBearerAuthentication(new JwtBearerOptions()
+            services.AddAuthentication().AddJwtBearer(x =>
             {
-                Audience = "Ombi",
-                AutomaticAuthenticate = true,
-                TokenValidationParameters =  tokenValidationParameters,
-                
+                x.Audience = "Ombi";
+                x.TokenValidationParameters = tokenValidationParameters;
             });
+        }
 
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMemoryCache cache)
+        {
+
+            var ctx = (IOmbiContext)app.ApplicationServices.GetService(typeof(IOmbiContext));
+
+
+
+            app.UseAuthentication();
 
             loggerFactory.AddSerilog();
 

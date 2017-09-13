@@ -70,7 +70,7 @@ namespace Ombi.Schedule.Tests
         {
             var request = new ChildRequests
             {
-                ParentRequest = new TvRequests {TvDbId = 1},
+                ParentRequest = new TvRequests { TvDbId = 1 },
                 SeasonRequests = new EditableList<SeasonRequests>
                 {
                     new SeasonRequests
@@ -108,7 +108,7 @@ namespace Ombi.Schedule.Tests
             _tv.Verify(x => x.Save(), Times.Once);
 
             Assert.True(request.SeasonRequests[0].Episodes[0].Available);
-            
+
         }
     }
 }
