@@ -83,15 +83,15 @@ Task("SetVersionInfo")
 
     Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
-	var fullVer = AppVeyor.Environment.Build.Version + "-" + versionInfo.BranchName;
+	var fullVer = AppVeyor.Environment.Build.Version;
 
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
 	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
 	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
 	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
-// buildSettings.VersionSuffix = versionInfo.BranchName;
-//	publishSettings.VersionSuffix = versionInfo.BranchName;
+	buildSettings.VersionSuffix = versionInfo.BranchName;
+	publishSettings.VersionSuffix = versionInfo.BranchName;
 });
 
 Task("Restore")
