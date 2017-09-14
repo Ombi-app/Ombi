@@ -1,6 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Ombi.Api.Plex.Models;
+using Ombi.Api.Plex.Models.Friends;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
 
@@ -124,6 +125,20 @@ namespace Ombi.Api.Plex
             AddHeaders(request, authToken);
 
             return await Api.Request<PlexContainer>(request);  
+        }
+
+        /// <summary>
+        /// Retuns all the Plex users for this account
+        /// NOTE: For HOME USERS. There is no username or email, the user's home name is under the title property
+        /// </summary>
+        /// <param name="authToken"></param>
+        /// <returns></returns>
+        public async Task<PlexFriends> GetUsers(string authToken)
+        {
+            var request = new Request(string.Empty,FriendsUri, HttpMethod.Get, ContentType.Xml);
+            AddHeaders(request, authToken);
+
+            return await Api.Request<PlexFriends>(request);
         }
 
         /// <summary>

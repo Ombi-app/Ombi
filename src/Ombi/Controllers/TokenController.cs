@@ -80,7 +80,7 @@ namespace Ombi.Controllers
 
                 var token = new JwtSecurityToken(
                     claims: claims,
-                    expires: DateTime.UtcNow.AddHours(5),
+                    expires: model.RememberMe ? DateTime.UtcNow.AddDays(7) : DateTime.UtcNow.AddHours(5),
                     signingCredentials: creds,
                     audience: "Ombi", issuer:"Ombi"
                 );
@@ -104,11 +104,11 @@ namespace Ombi.Controllers
         /// <summary>
         /// Refreshes the token.
         /// </summary>
-        /// <param name="model">The model.</param>
+        /// <param name="token">The model.</param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         [HttpPost("refresh")]
-        public async Task<IActionResult> RefreshToken([FromBody] TokenRefresh token)
+        public IActionResult RefreshToken([FromBody] TokenRefresh token)
         {
 
             // Check if token exists

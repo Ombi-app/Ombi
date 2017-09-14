@@ -7,6 +7,10 @@ namespace Ombi.Store.Entities
     {
         public string Alias { get; set; }
         public UserType UserType { get; set; }
+        /// <summary>
+        /// This will be the unique Plex/Emby user id reference
+        /// </summary>
+        public string ProviderUserId { get; set; } 
 
         [NotMapped]
         public string UserAlias => string.IsNullOrEmpty(Alias) ? UserName : Alias;

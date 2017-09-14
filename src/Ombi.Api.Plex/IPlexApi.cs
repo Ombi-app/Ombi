@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Ombi.Api.Plex.Models;
+using Ombi.Api.Plex.Models.Friends;
 using Ombi.Api.Plex.Models.Server;
 using Ombi.Api.Plex.Models.Status;
 
@@ -16,5 +17,6 @@ namespace Ombi.Api.Plex
         Task<PlexMetadata> GetMetadata(string authToken, string plexFullHost, int itemId);
         Task<PlexMetadata> GetSeasons(string authToken, string plexFullHost, int ratingKey);
         Task<PlexContainer> GetAllEpisodes(string authToken, string host, string section, int start, int retCount);
+        Task<PlexFriends> GetUsers(string authToken);
     }
 }

@@ -12,6 +12,7 @@ namespace Ombi
 {
     public class Program
     {
+        private static string UrlArgs { get; set; }
         public static void Main(string[] args)
         {
             Console.Title = "Ombi";
@@ -25,7 +26,7 @@ namespace Ombi
                     host = o.Host;
                 });
             
-            var urlArgs = $"{host}:{port}";
+            UrlArgs = $"{host}:{port}";
             
             var urlValue = string.Empty;
             using (var ctx = new OmbiContext())
@@ -54,7 +55,7 @@ namespace Ombi
                 }
                 if (url != null && !url.Value.Equals(host))
                 {
-                    url.Value = urlArgs;
+                    url.Value = UrlArgs;
                     ctx.SaveChanges();
                     urlValue = url.Value;
                 }
@@ -69,13 +70,13 @@ namespace Ombi
 
             Console.WriteLine($"We are running on {urlValue}");
 
-            BuildWebHost(args, urlArgs).Run();
+            BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args, string urlArgs) =>
+        public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-                .UseUrls(urlArgs)
+                .UseUrls(UrlArgs)
                 .Build();
     }
 

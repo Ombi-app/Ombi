@@ -19,6 +19,7 @@ import { SonarrComponent } from './sonarr/sonarr.component';
 import { RadarrComponent } from './radarr/radarr.component';
 import { LandingPageComponent } from './landingpage/landingpage.component';
 import { CustomizationComponent } from './customization/customization.component';
+import { UserManagementComponent } from './usermanagement/usermanagement.component';
 import { EmailNotificationComponent } from './notifications/emailnotification.component';
 import { DiscordComponent } from './notifications/discord.component';
 import { SlackComponent } from './notifications/slack.component';
@@ -46,6 +47,7 @@ const routes: Routes = [
     { path: 'Settings/Pushover', component: PushoverComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Pushbullet', component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: 'Settings/Mattermost', component: MattermostComponent, canActivate: [AuthGuard] },
+    { path: 'Settings/UserManagement', component: UserManagementComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -80,7 +82,8 @@ const routes: Routes = [
         NotificationTemplate,
         PushoverComponent,
         MattermostComponent,
-        PushbulletComponent
+        PushbulletComponent,
+        UserManagementComponent,
     ],
     exports: [
         RouterModule

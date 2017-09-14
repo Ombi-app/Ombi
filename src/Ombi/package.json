@@ -46,6 +46,7 @@
     "ng2-dragula": "1.5.0",
     "ngx-infinite-scroll": "^0.5.1",
     "node-sass": "^4.5.3",
+    "npm": "^5.4.1",
     "pace-progress": "^1.0.2",
     "primeng": "^4.0.3",
     "reflect-metadata": "0.1.10",

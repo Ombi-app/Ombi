@@ -17,6 +17,11 @@ include the remember me checkbox
                
                 <input type="email" id="inputEmail" class="form-control" formControlName="username" placeholder="Username" autofocus>
                 <input type="password" id="inputPassword" class="form-control" formControlName="password" placeholder="Password">
+                <div class="form-group">
+                    <div class="checkbox">
+                        <input type="checkbox" id="RememberMe" formControlName="rememberMe"> Remember Me
+                    </div>
+                </div>
                 <button class="btn btn-success" type="submit">Sign in</button>
             </form><!-- /form -->
             <a [routerLink]="['/reset']" class="forgot-password col-md-12">
