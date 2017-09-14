@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -112,7 +113,6 @@ namespace Ombi.DependencyInjection
             services.AddSingleton<IEmailProvider, GenericEmailProvider>();
             services.AddTransient<INotificationHelper, NotificationHelper>();
 
-
             services.AddTransient<IDiscordNotification, DiscordNotification>();
             services.AddTransient<IEmailNotification, EmailNotification>();
             services.AddTransient<IPushbulletNotification, PushbulletNotification>();
@@ -120,6 +120,8 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ISlackNotification, SlackNotification>();
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
+
+            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)

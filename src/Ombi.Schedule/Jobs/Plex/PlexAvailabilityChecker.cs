@@ -15,18 +15,20 @@ namespace Ombi.Schedule.Jobs.Plex
     public class PlexAvailabilityChecker : IPlexAvailabilityChecker
     {
         public PlexAvailabilityChecker(IPlexContentRepository repo, ITvRequestRepository tvRequest, IMovieRequestRepository movies,
-            INotificationService notification)
+            INotificationService notification, IBackgroundJobClient background)
         {
             _tvRepo = tvRequest;
             _repo = repo;
             _movieRepo = movies;
             _notificationService = notification;
+            _backgroundJobClient = background;
         }
 
         private readonly ITvRequestRepository _tvRepo;
         private readonly IMovieRequestRepository _movieRepo;
         private readonly IPlexContentRepository _repo;
         private readonly INotificationService _notificationService;
+        private readonly IBackgroundJobClient _backgroundJobClient;
 
         public async Task Start()
         {
@@ -64,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 {
                     // We have fulfulled this request!
                     child.Available = true;
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
@@ -94,7 +96,7 @@ namespace Ombi.Schedule.Jobs.Plex
                 movie.Available = true;
                 if (movie.Available)
                 {
-                    BackgroundJob.Enqueue(() => _notificationService.Publish(new NotificationOptions
+                    _backgroundJobClient.Enqueue(() => _notificationService.Publish(new NotificationOptions
                     {
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,

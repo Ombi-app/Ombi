@@ -1,4 +1,4 @@
-#tool "xunit.runner.console"
+#tool "nuget:?package=NUnit.Runners
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
 #addin "Cake.Npm"
@@ -174,49 +174,50 @@ Task("Publish-OSX")
 Task("Publish-Ubuntu")
     .Does(() =>
 {
-     publishSettings.Runtime = "ubuntu-x64";
+    publishSettings.Runtime = "ubuntu-x64";
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/ubuntu-x64/published");
 
-     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/ubuntu-x64/Swagger.xml", buildDir + "/netcoreapp2.0/ubuntu-x64/published/Swagger.xml");
-     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 Task("Publish-Debian")
     .Does(() =>
 {
-     publishSettings.Runtime = "debian.8-x64";
+    publishSettings.Runtime = "debian.8-x64";
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/debian.8-x64/published");
 
-     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/debian.8-x64/Swagger.xml", buildDir + "/netcoreapp2.0/debian.8-x64/published/Swagger.xml");
-     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 Task("Publish-Centos")
     .Does(() =>
 {
-     publishSettings.Runtime = "centos.7-x64";
+    publishSettings.Runtime = "centos.7-x64";
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/centos.7-x64/published");
 
-     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/centos.7-x64/Swagger.xml", buildDir + "/netcoreapp2.0/centos.7-x64/published/Swagger.xml");
-     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
 Task("Publish-Linux")
     .Does(() =>
 {
-     publishSettings.Runtime = "linux-x64";
+    publishSettings.Runtime = "linux-x64";
     publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/linux-x64/published");
 
-     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/linux-x64/Swagger.xml", buildDir + "/netcoreapp2.0/linux-x64/published/Swagger.xml");
-     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
+    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Publish")
     .Does(() =>
 {
+	NUnit("./src/**/bin/Release/*.Tests.dll");
 });
 
 //////////////////////////////////////////////////////////////////////

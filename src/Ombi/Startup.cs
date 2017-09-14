@@ -196,9 +196,6 @@ namespace Ombi
         {
 
             var ctx = serviceProvider.GetService<IOmbiContext>();
-
-
-
             loggerFactory.AddSerilog();
 
             if (env.IsDevelopment())

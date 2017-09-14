@@ -2,14 +2,16 @@
 //using System.Linq;
 //using System.Threading.Tasks;
 //using Moq;
+//using NUnit.Framework;
 //using Ombi.Core.Engine;
 //using Ombi.Core.Models.Requests;
 //using Ombi.Store.Entities.Requests;
 //using Ombi.Store.Repository;
-//using Xunit;
+//using Assert = Xunit.Assert;
 
 //namespace Ombi.Core.Tests.Engine
 //{
+//    [TestFixture]
 //    public class MovieRequestEngineTests
 //    {
 //        public MovieRequestEngineTests()
@@ -22,7 +24,7 @@
 //        private MovieRequestEngine Engine { get; }
 //        private Mock<IMovieRequestRepository> RequestService { get; }
 
-//        [Fact]
+//        [Test]
 //        public async Task GetNewRequests_Should_ReturnEmpty_WhenThereAreNoNewRequests()
 //        {
 //            var requests = new List<MovieRequests>
@@ -39,95 +41,95 @@
 //            Assert.False(result.Any());
 //        }
 
-//        //[Fact]
-//        //public async Task GetNewRequests_Should_ReturnOnlyNewRequests_WhenThereAreMultipleRequests()
-//        //{
-//        //    var requests = new List<MovieRequestModel>
-//        //    {
-//        //        new MovieRequestModel { Available = true },
-//        //        new MovieRequestModel { Approved = true },
-//        //        new MovieRequestModel(),
-//        //    };
-//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        [Test]
+//        public async Task GetNewRequests_Should_ReturnOnlyNewRequests_WhenThereAreMultipleRequests()
+//        {
+//            var requests = new List<MovieRequests>
+//            {
+//                new MovieRequests { Available = true },
+//                new MovieRequests { Approved = true },
+//                new MovieRequests(),
+//            };
+//            RequestService.Setup(x => x.Get()).Returns(requests.AsQueryable);
 
-//        //    var result = await Engine.GetNewRequests();
+//            var result = await Engine.GetNewRequests();
 
-//        //    Assert.Equal(result.Count(), 1);
-//        //    Assert.All(result, x =>
-//        //    {
-//        //        Assert.Equal(x.Available, false);
-//        //        Assert.Equal(x.Approved, false);
-//        //    });
-//        //}
+//            Assert.Single(result);
+//            Assert.All(result, x =>
+//            {
+//                Assert.False(x.Available);
+//                Assert.False(x.Approved);
+//            });
+//        }
 
-//        //[Fact]
-//        //public async Task GetApprovedRequests_Should_ReturnEmpty_WhenThereAreNoApprovedRequests()
-//        //{
-//        //    var requests = new List<MovieRequestModel>
-//        //    {
-//        //        new MovieRequestModel { Available = true },
-//        //    };
-//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        [Test]
+//        public async Task GetApprovedRequests_Should_ReturnEmpty_WhenThereAreNoApprovedRequests()
+//        {
+//            var requests = new List<MovieRequests>
+//            {
+//                new MovieRequests { Available = true },
+//            };
+//            RequestService.Setup(x => x.Get()).Returns(requests.AsQueryable);
 
-//        //    var result = await Engine.GetApprovedRequests();
+//            var result = await Engine.GetApprovedRequests();
 
-//        //    Assert.False(result.Any());
-//        //}
+//            Assert.False(result.Any());
+//        }
 
-//        //[Fact]
-//        //public async Task GetApprovedRequests_Should_ReturnOnlyApprovedRequests_WhenThereAreMultipleRequests()
-//        //{
-//        //    var requests = new List<MovieRequestModel>
-//        //    {
-//        //        new MovieRequestModel { Available = true },
-//        //        new MovieRequestModel { Approved = true },
-//        //        new MovieRequestModel(),
-//        //    };
-//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        [Test]
+//        public async Task GetApprovedRequests_Should_ReturnOnlyApprovedRequests_WhenThereAreMultipleRequests()
+//        {
+//            var requests = new List<MovieRequests>
+//            {
+//                new MovieRequests { Available = true },
+//                new MovieRequests { Approved = true },
+//                new MovieRequests(),
+//            };
+//            RequestService.Setup(x => x.Get()).Returns(requests.AsQueryable);
 
-//        //    var result = await Engine.GetApprovedRequests();
+//            var result = await Engine.GetApprovedRequests();
 
-//        //    Assert.Equal(result.Count(), 1);
-//        //    Assert.All(result, x =>
-//        //    {
-//        //        Assert.Equal(x.Available, false);
-//        //        Assert.Equal(x.Approved, true);
-//        //    });
-//        //}
+//            Assert.Single(result);
+//            Assert.All(result, x =>
+//            {
+//                Assert.False(x.Available);
+//                Assert.True(x.Approved);
+//            });
+//        }
 
-//        //[Fact]
-//        //public async Task GetAvailableRequests_Should_ReturnEmpty_WhenThereAreNoAvailableRequests()
-//        //{
-//        //    var requests = new List<MovieRequestModel>
-//        //    {
-//        //        new MovieRequestModel { Approved = true },
-//        //    };
-//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        [Test]
+//        public async Task GetAvailableRequests_Should_ReturnEmpty_WhenThereAreNoAvailableRequests()
+//        {
+//            var requests = new List<MovieRequests>
+//            {
+//                new MovieRequests { Approved = true },
+//            };
+//            RequestService.Setup(x => x.Get()).Returns(requests.AsQueryable);
 
-//        //    var result = await Engine.GetAvailableRequests();
+//            var result = await Engine.GetAvailableRequests();
 
-//        //    Assert.False(result.Any());
-//        //}
+//            Assert.False(result.Any());
+//        }
 
-//        //[Fact]
-//        //public async Task GetAvailableRequests_Should_ReturnOnlyAvailableRequests_WhenThereAreMultipleRequests()
-//        //{
-//        //    var requests = new List<MovieRequestModel>
-//        //    {
-//        //        new MovieRequestModel { Available = true },
-//        //        new MovieRequestModel { Approved = true },
-//        //        new MovieRequestModel(),
-//        //    };
-//        //    RequestService.Setup(x => x.GetAllAsync()).ReturnsAsync(requests);
+//        [Test]
+//        public async Task GetAvailableRequests_Should_ReturnOnlyAvailableRequests_WhenThereAreMultipleRequests()
+//        {
+//            var requests = new List<MovieRequests>
+//            {
+//                new MovieRequests { Available = true },
+//                new MovieRequests { Approved = true },
+//                new MovieRequests(),
+//            };
+//            RequestService.Setup(x => x.Get()).Returns(requests.AsQueryable);
 
-//        //    var result = await Engine.GetAvailableRequests();
+//            var result = await Engine.GetAvailableRequests();
 
-//        //    Assert.Equal(result.Count(), 1);
-//        //    Assert.All(result, x =>
-//        //    {
-//        //        Assert.Equal(x.Available, true);
-//        //        Assert.Equal(x.Approved, false);
-//        //    });
-//        //}
+//            Assert.Single(result);
+//            Assert.All(result, x =>
+//            {
+//                Assert.True(x.Available);
+//                Assert.False(x.Approved);
+//            });
+//        }
 //    }
 //}
