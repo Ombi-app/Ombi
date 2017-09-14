@@ -217,7 +217,7 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Publish")
     .Does(() =>
 {
-	NUnit("./src/**/bin/Release/*.Tests.dll");
+	//NUnit("./src/**/bin/Release/*.Tests.dll");
 });
 
 //////////////////////////////////////////////////////////////////////
