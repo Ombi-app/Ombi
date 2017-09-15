@@ -48,6 +48,7 @@ module.exports = function (env) {
                 'pace-progress/themes/orange/pace-theme-flash.css',
                 'intro.js-mit/intro.js',
                 'intro.js-mit/introjs.css',
+                'ngx-clipboard',
                 //'ng2-dragula',
                 //'dragula/dist/dragula.min.css'
             ]

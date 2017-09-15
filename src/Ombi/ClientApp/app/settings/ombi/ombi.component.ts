@@ -20,7 +20,7 @@ export class OmbiComponent implements OnInit {
             this.form = this.fb.group({
                 port: [x.port],
                 collectAnalyticData: [x.collectAnalyticData],
-                apiKey: [{ value: x.apiKey, disabled: true }],
+                apiKey: [x.apiKey],
                 externalUrl: [x.externalUrl],
                 allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate]
             });
@@ -48,5 +48,9 @@ export class OmbiComponent implements OnInit {
                 this.notificationService.success("Settings Saved", "There was an error when saving the Ombi settings");
             }
         });
+    }
+
+    successfullyCopied() {
+        this.notificationService.success("Copied", "Copied the Api Key to the clipboard!");
     }
 }

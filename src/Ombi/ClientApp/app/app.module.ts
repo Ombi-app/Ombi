@@ -7,9 +7,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpModule } from '@angular/http';
 
 // Third Party
-import { ButtonModule, DialogModule, CaptchaModule } from 'primeng/primeng';
+import { ButtonModule, DialogModule, CaptchaModule,DataTableModule, SharedModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/components/growl/growl';
-import { DataTableModule, SharedModule } from 'primeng/primeng';
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -41,6 +40,7 @@ import { WizardModule } from './wizard/wizard.module';
 import { SearchModule } from './search/search.module';
 import { UserManagementModule } from './usermanagement/usermanagement.module';
 import { RequestsModule } from './requests/requests.module';
+//import { PipeModule } from './pipes/pipe.module';
 
 const routes: Routes = [
     { path: '*', component: PageNotFoundComponent },
@@ -79,7 +79,7 @@ const routes: Routes = [
         ReactiveFormsModule,
         UserManagementModule,
         RequestsModule,
-        CaptchaModule
+        CaptchaModule,
     ],
     declarations: [
         AppComponent,
@@ -87,7 +87,7 @@ const routes: Routes = [
         LoginComponent,
         LandingPageComponent,
         ResetPasswordComponent,
-        TokenResetPasswordComponent
+        TokenResetPasswordComponent,
     ],
     providers: [
         RequestService,

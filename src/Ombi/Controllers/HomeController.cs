@@ -10,9 +10,9 @@ namespace Ombi.Controllers
         /// Indexes this instance.
         /// </summary>
         /// <returns></returns>
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-                     return View();
+            return View();
         }
     }
 }

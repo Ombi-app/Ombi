@@ -7,7 +7,7 @@ import { IChildRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
     templateUrl: './tvrequest-children.component.html'
 })
 export class TvRequestChildrenComponent {
-    constructor(private requestService: RequestService) {
+    constructor(private requestService: RequestService  ) {
     }
 
     @Input() childRequests: IChildRequests[];

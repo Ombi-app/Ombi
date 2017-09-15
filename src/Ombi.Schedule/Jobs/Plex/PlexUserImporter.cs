@@ -7,29 +7,37 @@ using Ombi.Api.Plex;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
-    public class PlexUserImporter
+    public class PlexUserImporter : IPlexUserImporter
     {
         public PlexUserImporter(IPlexApi api, UserManager<OmbiUser> um, ILogger<PlexUserImporter> log,
-            ISettingsService<PlexSettings> plexSettings)
+            ISettingsService<PlexSettings> plexSettings, ISettingsService<UserManagementSettings> ums)
         {
             _api = api;
             _userManager = um;
             _log = log;
             _plexSettings = plexSettings;
+            _userManagementSettings = ums;
         }
 
         private readonly IPlexApi _api;
         private readonly UserManager<OmbiUser> _userManager;
         private readonly ILogger<PlexUserImporter> _log;
         private readonly ISettingsService<PlexSettings> _plexSettings;
+        private readonly ISettingsService<UserManagementSettings> _userManagementSettings;
 
 
         public async Task Start()
         {
+            var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
+            if (!userManagementSettings.ImportMediaServerUsers)
+            {
+                return;
+            }
             var settings = await _plexSettings.GetSettingsAsync();
             if (!settings.Enable)
             {
@@ -72,7 +80,13 @@ namespace Ombi.Schedule.Jobs.Plex
                             continue;
                         }
                         // TODO Set default permissions/roles
-
+                        if (userManagementSettings.DefaultRoles.Any())
+                        {
+                            foreach (var defaultRole in userManagementSettings.DefaultRoles)
+                            {
+                                await _userManager.AddToRoleAsync(newUser, defaultRole);
+                            }
+                        }
                     }
                     else
                     {

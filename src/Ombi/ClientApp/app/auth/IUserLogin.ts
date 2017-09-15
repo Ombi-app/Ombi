@@ -1,6 +1,7 @@
 ﻿export interface IUserLogin {
     username: string,
-    password:string
+    password: string,
+    rememberMe:boolean,
 }
 
 export interface ILocalUser {

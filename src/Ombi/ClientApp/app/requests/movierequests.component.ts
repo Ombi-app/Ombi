@@ -11,7 +11,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
-import { IdentityService } from '../services/identity.service';
+import { AuthService } from '../auth/auth.service';
 
 import { IMovieRequests } from '../interfaces/IRequestModel';
 
@@ -20,7 +20,8 @@ import { IMovieRequests } from '../interfaces/IRequestModel';
     templateUrl: './movierequests.component.html'
 })
 export class MovieRequestsComponent implements OnInit, OnDestroy {
-    constructor(private requestService: RequestService, private identityService: IdentityService) {
+    constructor(private requestService: RequestService,
+    private auth:AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -54,6 +55,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         this.amountToLoad = 5;
         this.currentlyLoaded = 5;
         this.loadInit();
+        this.isAdmin = this.auth.hasRole("admin");
     }
 
 
@@ -109,7 +111,6 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         this.requestService.getMovieRequests(this.amountToLoad, 0)
             .takeUntil(this.subscriptions)
             .subscribe(x => this.movieRequests = x);
-        this.isAdmin = this.identityService.hasRole("Admin");
     }
 
     private resetSearch() {

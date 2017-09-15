@@ -18,6 +18,10 @@ export class UserManagementComponent implements OnInit {
 
     }
 
+    welcomeEmail(user: IUser): void {
+        
+    }
+
     users: IUser[];
     checkAll = false;
 

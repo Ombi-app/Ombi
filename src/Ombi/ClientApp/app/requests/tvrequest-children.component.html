@@ -8,8 +8,7 @@
             </div>
 
 
-            <div class="col-md-1 col-md-push-9">
-                <!--// TODO ADMIN-->
+            <div class="col-md-1 col-md-push-9" *ngIf="isAdmin">
                 <form>
                     <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
@@ -69,14 +68,7 @@
                                             <span *ngIf="ep.available" class="label label-success">Available</span>
                                             <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
                                             <div *ngIf="!ep.approved">
-                                            <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
-                                            <ng-template #requested>
-                                                <span  class="label label-warning">Pending Approval</span>
-                                            </ng-template>
-
-                                            <ng-template #notRequested>
-                                                <span  class="label label-danger">Not Yet Requested</span>
-                                            </ng-template>
+                                            <div *ngIf="!ep.available"><span class="label label-warning">Pending Approval</span></div>
                                             </div>
                                         </td>
                                     </tr>

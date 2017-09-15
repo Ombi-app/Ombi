@@ -6,8 +6,7 @@
     emailAddress: string,
     password: string,
     userType: UserType,
-
-
+    isSetup:boolean,
     // FOR UI
     checked: boolean,
 }

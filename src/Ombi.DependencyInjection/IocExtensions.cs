@@ -135,6 +135,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
+            services.AddTransient<IPlexUserImporter, PlexUserImporter>();
         }
     }
 }

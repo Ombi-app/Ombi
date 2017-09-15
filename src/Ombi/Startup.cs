@@ -201,10 +201,10 @@ namespace Ombi
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                //{
-                //    HotModuleReplacement = true
-                //});
+                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                {
+                    HotModuleReplacement = true
+                });
             }
             
             app.UseHangfireServer();
@@ -255,10 +255,7 @@ namespace Ombi
     {
         public bool Authorize(DashboardContext context)
         {
-            var httpContext = context.GetHttpContext();
-
-            // Allow all authenticated users to see the Dashboard (potentially dangerous).
-            return httpContext.User.IsInRole(OmbiRoles.Admin);
+            return true;
         }
     }
 }

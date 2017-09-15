@@ -10,7 +10,7 @@ import 'rxjs/add/operator/distinctUntilChanged';
 import 'rxjs/add/operator/map';
 
 import { RequestService } from '../services/request.service';
-import { IdentityService } from '../services/identity.service';
+import { AuthService } from '../auth/auth.service';
 
 import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
 import { TreeNode, } from "primeng/primeng";
@@ -25,7 +25,8 @@ import { TreeNode, } from "primeng/primeng";
     encapsulation: ViewEncapsulation.None
 })
 export class TvRequestsComponent implements OnInit, OnDestroy {
-    constructor(private requestService: RequestService, private identityService: IdentityService) {
+    constructor(private requestService: RequestService,
+    private auth:AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -111,6 +112,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.currentlyLoaded = 5;
         this.tvRequests = [];
         this.loadInit();
+        this.isAdmin = this.auth.hasRole("admin");
     }
 
     public loadMore() {
@@ -208,7 +210,6 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             .subscribe(x => {
                 this.tvRequests = this.transformData(x);
             });
-        this.isAdmin = this.identityService.hasRole("Admin");
     }
 
     private resetSearch() {

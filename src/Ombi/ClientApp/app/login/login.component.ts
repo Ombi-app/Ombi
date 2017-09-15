@@ -47,7 +47,6 @@ export class LoginComponent implements OnInit {
 
     ngOnInit(): void {
         this.settingsService.getLandingPage().subscribe(x => {
-            debugger;
             if (x.enabled && !this.landingFlag) {
                 this.router.navigate(['landingpage']);
             }
@@ -62,10 +61,10 @@ export class LoginComponent implements OnInit {
     onSubmit(form: FormGroup): void {
         if (form.invalid) {
             this.notify.error("Validation", "Please check your entered values");
-            return
+            return;
         }
         var value = form.value;
-        this.authService.login({ password: value.password, username: value.username })
+        this.authService.login({ password: value.password, username: value.username, rememberMe:value.rememberMe })
             .subscribe(x => {
                 localStorage.setItem("id_token", x.access_token);
 

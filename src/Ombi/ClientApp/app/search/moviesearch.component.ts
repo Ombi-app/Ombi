@@ -56,7 +56,8 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
         this.movieResults = [];
         this.result = {
             message: "",
-            requestAdded: false
+            requestAdded: false,
+            errorMessage: ""
         }
     }
 
@@ -79,7 +80,9 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
                     this.notificationService.success("Request Added",
                         `Request for ${searchResult.title} has been added successfully`);
                 } else {
-                    this.notificationService.warning("Request Added", this.result.message);
+                    this.notificationService.warning("Request Added", this.result.message ? this.result.message : this.result.errorMessage);
+                    searchResult.requested = false;
+                    searchResult.approved = false;
                 }
             });
     }

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { NgbModule, NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { ClipboardModule } from 'ngx-clipboard/dist';
 
 import { AuthService } from '../auth/auth.service';
 import { AuthGuard } from '../auth/auth.guard';
@@ -27,9 +28,9 @@ import { PushoverComponent } from './notifications/pushover.component';
 import { PushbulletComponent } from './notifications/pushbullet.component';
 import { MattermostComponent } from './notifications/mattermost.component';
 import { NotificationTemplate } from './notifications/notificationtemplate.component';
+import { PipeModule } from '../pipes/pipe.module';
 
 import { SettingsMenuComponent } from './settingsmenu.component';
-import { HumanizePipe } from '../pipes/HumanizePipe';
 
 import { MenuModule, InputSwitchModule, InputTextModule, TooltipModule, AutoCompleteModule, CalendarModule } from 'primeng/primeng';
 
@@ -65,6 +66,8 @@ const routes: Routes = [
         NgbAccordionModule,
         AutoCompleteModule,
         CalendarModule,
+        ClipboardModule,
+        PipeModule,
     ],
     declarations: [
         SettingsMenuComponent,
@@ -78,7 +81,6 @@ const routes: Routes = [
         SlackComponent,
         RadarrComponent,
         EmailNotificationComponent,
-        HumanizePipe,
         NotificationTemplate,
         PushoverComponent,
         MattermostComponent,

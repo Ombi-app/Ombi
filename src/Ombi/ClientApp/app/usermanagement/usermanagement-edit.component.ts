@@ -41,6 +41,20 @@ export class UserManagementEditComponent {
         });
     }
 
+    resetPassword(): void {
+        this.identityService.submitResetPassword(this.user.emailAddress).subscribe(x => {
+            if (x.successful) {
+                this.notificationSerivce.success("Reset", `Sent reset password email to ${this.user.emailAddress}`);
+                this.router.navigate(['usermanagement']);
+            } else {
+                x.errors.forEach((val) => {
+                    this.notificationSerivce.error("Error", val);
+                });
+            }
+
+        });
+    }
+
     update(): void {
         var hasClaims = this.user.claims.some((item) => {
             if (item.enabled) { return true; }

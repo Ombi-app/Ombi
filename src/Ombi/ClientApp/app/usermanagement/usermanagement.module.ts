@@ -2,7 +2,7 @@
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MultiSelectModule } from 'primeng/primeng';
+import { MultiSelectModule, TooltipModule, } from 'primeng/primeng';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,6 +12,7 @@ import { UserManagementAddComponent } from './usermanagement-add.component';
 import { UpdateDetailsComponent } from './updatedetails.component';
 
 import { IdentityService } from '../services/identity.service';
+import { PipeModule } from '../pipes/pipe.module';
 
 import { AuthGuard } from '../auth/auth.guard';
 
@@ -29,13 +30,16 @@ const routes: Routes = [
         ReactiveFormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
-        MultiSelectModule
+        MultiSelectModule,
+        PipeModule,
+
+        TooltipModule,
     ],
     declarations: [
         UserManagementComponent,
         UserManagementAddComponent,
         UserManagementEditComponent,
-        UpdateDetailsComponent
+        UpdateDetailsComponent,
     ],
     exports: [
         RouterModule

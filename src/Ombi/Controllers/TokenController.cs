@@ -88,7 +88,7 @@ namespace Ombi.Controllers
                 if (model.RememberMe)
                 {
                     // Save the token so we can refresh it later
-                    await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
+                    //await _token.CreateToken(new Tokens() {Token = accessToken, User = user});
                 }
 
                 return new JsonResult(new

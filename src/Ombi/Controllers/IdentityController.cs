@@ -172,6 +172,7 @@ namespace Ombi.Controllers
                 EmailAddress = user.Email,
                 UserType = (Core.Models.UserType)(int)user.UserType,
                 Claims = new List<ClaimCheckboxes>(),
+                IsSetup = !string.IsNullOrEmpty(user.PasswordHash)
             };
 
             foreach (var role in userRoles)
@@ -427,6 +428,11 @@ namespace Ombi.Controllers
             }
             return claims;
         }
+
+        //public async Task SendWelcomeEmail([FromBody] UserViewModel user)
+        //{
+            
+        //}
 
         /// <summary>
         /// Send out the email with the reset link

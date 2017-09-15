@@ -10,6 +10,7 @@ namespace Ombi.Core.Models.UI
         public List<ClaimCheckboxes> Claims { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
+        public bool IsSetup { get; set; }
         public UserType UserType { get; set; }
     }
 
