@@ -1,4 +1,4 @@
-#tool "nuget:?package=NUnit.Runners
+
 #tool "nuget:?package=GitVersion.CommandLine"
 #addin "Cake.Gulp"
 #addin "Cake.Npm"
@@ -217,7 +217,6 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Publish")
     .Does(() =>
 {
-	//NUnit("./src/**/bin/Release/*.Tests.dll");
 });
 
 //////////////////////////////////////////////////////////////////////
