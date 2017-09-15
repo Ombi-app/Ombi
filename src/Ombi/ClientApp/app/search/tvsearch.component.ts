@@ -99,7 +99,8 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         this.tvResults = [];
         this.result = {
             message: "",
-            requestAdded: false
+            requestAdded: false,
+            errorMessage:""
         }
     }
 
