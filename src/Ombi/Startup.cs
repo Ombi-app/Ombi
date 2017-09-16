@@ -5,6 +5,7 @@ using System.Text;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
+using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -179,6 +180,7 @@ namespace Ombi
                 x.UseMemoryStorage(new MemoryStorageOptions());
                 //x.UseSQLiteStorage("Data Source=Ombi.db;");
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
+                x.UseConsole();
             });
 
 
