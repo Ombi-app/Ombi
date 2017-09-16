@@ -83,7 +83,15 @@ Task("SetVersionInfo")
 
     Information(@"Build:{0}",AppVeyor.Environment.Build.Dump());
 
-	var fullVer = AppVeyor.Environment.Build.Version;
+	var buildVersion = string.Empty;
+	if(string.IsNullOrEmpty(AppVeyor.Environment.Build.Version))
+	{
+		buildVersion = "3.0.000";
+	} else{
+		buildVersion = AppVeyor.Environment.Build.Version;
+	}
+
+	var fullVer = buildVersion + "-" + versionInfo.BranchName;
 
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
