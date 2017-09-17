@@ -72,7 +72,7 @@ Task("SetVersionInfo")
     };
 
 	if (AppVeyor.IsRunningOnAppVeyor) {
-		settings.Branch = AppVeyor.Environment.Repository.Branch.Replace("/", "-");
+		settings.Branch = AppVeyor.Environment.Repository.Branch;
 	} else {
 		settings.Branch = "master";
 	}
@@ -95,11 +95,11 @@ Task("SetVersionInfo")
 
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
+	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
 	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
-	buildSettings.VersionSuffix = versionInfo.BranchName;
-	publishSettings.VersionSuffix = versionInfo.BranchName;
+	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
+	//buildSettings.VersionSuffix = versionInfo.BranchName;
+	//publishSettings.VersionSuffix = versionInfo.BranchName;
 });
 
 Task("Restore")
