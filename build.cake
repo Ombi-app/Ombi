@@ -72,7 +72,7 @@ Task("SetVersionInfo")
     };
 
 	if (AppVeyor.IsRunningOnAppVeyor) {
-		settings.Branch = AppVeyor.Environment.Repository.Branch;
+		settings.Branch = AppVeyor.Environment.Repository.Branch.Replace("/", "-");
 	} else {
 		settings.Branch = "master";
 	}
