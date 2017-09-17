@@ -102,14 +102,6 @@ Task("SetVersionInfo")
 	//publishSettings.VersionSuffix = versionInfo.BranchName;
 });
 
-Task("Restore")
-    .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("Gulp Publish")
-    .Does(() =>
-{
-    DotNetCoreRestore(projDir);
-});
-
 Task("NPM")
 .Does(() => {
 var settings = new NpmInstallSettings {
@@ -121,17 +113,14 @@ var settings = new NpmInstallSettings {
 	NpmInstall(settings);
 });
 
-Task("Gulp Publish")
-.IsDependentOn("NPM")
-.Does(() => {
-
-var runScriptSettings = new NpmRunScriptSettings {
-		ScriptName="publish",
-		WorkingDirectory = webProjDir,
-	};
-	
-	NpmRunScript(runScriptSettings);
+Task("Restore")
+    .IsDependentOn("SetVersionInfo")
+	.IsDependentOn("NPM")
+    .Does(() =>
+{
+    DotNetCoreRestore(projDir);
 });
+
 
 Task("Build")
     .IsDependentOn("Restore")
