@@ -66,7 +66,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Logger.LogInformation(LoggingEvents.RadarrCacher, "Radarr is not setup, cannot cache episodes");
             }

@@ -1,4 +1,7 @@
+import "./styles/base.scss";
+import "./styles/Themes/plex.scss";
 import './polyfills';
+import './imports';
 import 'bootstrap/dist/js/bootstrap';
 import 'pace-progress';
 

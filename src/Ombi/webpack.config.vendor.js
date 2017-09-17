@@ -49,6 +49,8 @@ module.exports = function (env) {
                 'intro.js-mit/intro.js',
                 'intro.js-mit/introjs.css',
                 'ngx-clipboard',
+                'bootstrap/dist/css/bootstrap.min.css',
+                'style-loader',
                 //'ng2-dragula',
                 //'dragula/dist/dragula.min.css'
             ]
@@ -58,6 +60,9 @@ module.exports = function (env) {
             filename: '[name].js',
             library: '[name]_[hash]',
             path: path.join(__dirname, outputDir)
+        },
+        node: {
+            fs: "empty",
         },
         resolve: {
             alias: {

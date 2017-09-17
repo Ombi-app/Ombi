@@ -13,7 +13,7 @@ module.exports = function (env) {
     const cssLoader = prod ? 'css-loader?minimize' : 'css-loader';
     const outputDir = './wwwroot/dist';
     const bundleConfig = {
-        entry: { 'main': './ClientApp/main.ts', 'styles': './Styles/Themes/plex.scss' },
+        entry: { 'main': './ClientApp/main.ts' },
         stats: { modules: false },
         context: __dirname,
         resolve: { extensions: ['.ts', '.js'] },
@@ -28,8 +28,8 @@ module.exports = function (env) {
                 { test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', cssLoader] },
-                { test: /\.scss$/, include: /ClientApp/, use: ['to-string-loader', cssLoader, 'sass-loader'] },
-                { test: /\.scss$/, include: /Styles/, use: extractCSS.extract({ use: [cssLoader, 'sass-loader'] }) },
+                { test: /\.scss$/, include: /ClientApp(\\|\/)app/, use: ["to-string-loader", cssLoader, "sass-loader"] },
+                { test: /\.scss$/, include: /ClientApp(\\|\/)styles/, use: ["style-loader", cssLoader, "sass-loader"] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },

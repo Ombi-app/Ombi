@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win10-x64;osx.10.12-x64;ubuntu.16.04-x64;debian.8-x64;centos.7-x64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>2.5</TypeScriptToolsVersion>
     <AssemblyVersion>$(SemVer)</AssemblyVersion>
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
@@ -30,6 +30,13 @@
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
+
+  <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
+    <Exec Command="npm run-script vendor" />
+  </Target>
+  <Target Name="NpmCommandsRelease" Condition="'$(Configuration)'=='Release'" AfterTargets="Build">
+    <Exec Command="npm run-script publish" />
+  </Target>
   
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
     <ItemGroup>
@@ -82,6 +89,14 @@
     <None Update="ClientApp\app\pipes\pipe.module.js">
       <DependentUpon>pipe.module.ts</DependentUpon>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Styles\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\loading.css" />
   </ItemGroup>
  
 </Project>
