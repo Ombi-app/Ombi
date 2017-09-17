@@ -63,7 +63,7 @@
     "webpack": "^3.6.0",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-hot-middleware": "2.19.1",
-    "zone.js": "^0.8.16"
+    "zone.js": "0.8.16"
   },
   "devDependencies": {
     "@types/chai": "4.0.4",
