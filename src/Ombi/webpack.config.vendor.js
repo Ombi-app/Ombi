@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function (env) {
     const extractCSS = new ExtractTextPlugin('vendor.css');
@@ -81,7 +82,7 @@ module.exports = function (env) {
             })
         ].concat(prod ? [
             // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin()
+            new UglifyJSPlugin()
         ] : [
             // Plugins that apply in development builds only
         ]).concat(analyse ? [
