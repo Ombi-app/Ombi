@@ -54,6 +54,11 @@ namespace Ombi.Core.Engine
             return null;
         }
 
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTreeNode(string searchTerm)
+        {
+            var result = await Search(searchTerm);
+            return result.Select(ParseIntoTreeNode).ToList();
+        }
         public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbid)
         {
             var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbid);
@@ -77,7 +82,7 @@ namespace Ombi.Core.Engine
                         Title = e.name,
                         AirDate = DateTime.Parse(e.airstamp),
                         EpisodeNumber = e.number,
-                        
+
                     });
                     mapped.SeasonRequests.Add(newSeason);
                 }
@@ -100,29 +105,55 @@ namespace Ombi.Core.Engine
             return await ProcessResult(mapped, existingRequests, plexSettings, embySettings);
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Popular()
+        public async Task<TreeNode<SearchTvShowViewModel>> GetShowInformationTreeNode(int tvdbid)
+        {
+            var result = await GetShowInformation(tvdbid);
+            return ParseIntoTreeNode(result);
+        }
+
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Popular()
         {
             var result = await TraktApi.GetPopularShows();
-            return await ProcessResults(result);
+            var processed = await ProcessResults(result);
+            return processed.Select(ParseIntoTreeNode).ToList();
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Anticipated()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Anticipated()
         {
             var result = await TraktApi.GetAnticipatedShows();
-            return await ProcessResults(result);
+            var processed= await ProcessResults(result);
+            return processed.Select(ParseIntoTreeNode).ToList();
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatches()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatches()
         {
             var result = await TraktApi.GetMostWatchesShows();
-            return await ProcessResults(result);
+            var processed = await ProcessResults(result);
+            return processed.Select(ParseIntoTreeNode).ToList();
         }
 
-        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending()
         {
             var result = await TraktApi.GetTrendingShows();
-            return await ProcessResults(result);
+            var processed = await ProcessResults(result);
+            return processed.Select(ParseIntoTreeNode).ToList();
         }
+        private static TreeNode<SearchTvShowViewModel> ParseIntoTreeNode(SearchTvShowViewModel result)
+        {
+            return new TreeNode<SearchTvShowViewModel>
+            {
+                Data = result,
+                Children = new List<TreeNode<SearchTvShowViewModel>>
+                {
+                    new TreeNode<SearchTvShowViewModel>
+                    {
+                        Data = result, Leaf = true
+                    }
+                },
+                Leaf = false
+            };
+        }
+
 
         private async Task<IEnumerable<SearchTvShowViewModel>> ProcessResults<T>(IEnumerable<T> items)
         {
@@ -180,13 +211,13 @@ namespace Ombi.Core.Engine
                             // Find the existing request season
                             var existingSeason =
                                 existingRequestChildRequest.SeasonRequests.FirstOrDefault(x => x.SeasonNumber == season.SeasonNumber);
-                            if(existingSeason == null) continue;
+                            if (existingSeason == null) continue;
 
                             foreach (var ep in existingSeason.Episodes)
                             {
                                 // Find the episode from what we are searching
                                 var episodeSearching = season.Episodes.FirstOrDefault(x => x.EpisodeNumber == ep.EpisodeNumber);
-                                if(episodeSearching == null)
+                                if (episodeSearching == null)
                                 {
                                     continue;
                                 }

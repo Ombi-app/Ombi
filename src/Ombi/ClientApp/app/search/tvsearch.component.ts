@@ -20,7 +20,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     public searchText: string;
     public searchChanged = new Subject<string>();
-    public tvResults: ISearchTvResult[];
+    public tvResults: TreeNode[];
     public result: IRequestEngineResult;
     public searchApplied = false;
 
@@ -39,10 +39,10 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                     this.clearResults();
                     return;
                 }
-                this.searchService.searchTv(this.searchText)
+                this.searchService.searchTvTreeNode(this.searchText)
                     .takeUntil(this.subscriptions)
                     .subscribe(x => {
-                        this.tvResults = this.transformData(x);
+                        this.tvResults = x;
                         this.searchApplied = true;
                     });
             });
@@ -70,19 +70,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                 break;
             }
         }
-    }
-    public transformData(datain: ISearchTvResult[]): any {
-        const temp: TreeNode[] = [];
-        datain.forEach((value) => {
-            temp.push({
-                data: value,
-                children: [{
-                    data: value, leaf: true,
-                }],
-                leaf: false,
-            });
-        }, this);
-        return <TreeNode[]>temp;
     }
 
     public ngOnInit() {
@@ -141,12 +128,11 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-            this.searchService.getShowInformation(val.id)
+            this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
                 .subscribe(x => {
-                    this.updateItem(val, x);
+                    this.updateItem(val.data, x);
                 });
-
         });
     }
 
@@ -159,7 +145,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.result = x;
-
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
                         `Request for ${searchResult.title} has been added successfully`);
@@ -193,7 +178,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         this.subscriptions.complete();
     }
 
-    private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {
+    private updateItem(key: TreeNode, updated: TreeNode) {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
             this.tvResults[index] = updated;

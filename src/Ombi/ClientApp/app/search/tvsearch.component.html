@@ -43,7 +43,7 @@
                         <div class="row">
                             <div class="col-sm-2">
 
-                                <img *ngIf="node.data.banner" class="img-responsive poster" width="150" [src]="node.data.banner" alt="poster">
+                                <img *ngIf="node?.data?.banner" class="img-responsive poster" width="150" [src]="node.data.banner" alt="poster">
 
                             </div>
                             <div class="col-sm-8">
@@ -56,10 +56,7 @@
                                     <span *ngIf="node.data.status" class="label label-primary" target="_blank">{{node.data.status}}</span>
 
 
-                                    <span *ngIf="node.data.firstAired" class="label label-info" target="_blank">Air Date: {{node.data.firstAired}}</span>
-
-
-                                    <span *ngIf="node.data.releaseDate" class="label label-info" target="_blank">Release Date: {{node.data.releaseDate | date: 'dd/MM/yyyy'}}</span>
+                                    <span *ngIf="node.data.firstAired" class="label label-info" target="_blank">Air Date: {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
 
                                     <span *ngIf="node.data.available" class="label label-success">Available</span>
                                     <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>

@@ -114,6 +114,30 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Searches for a Tv Show.
+        /// </summary>
+        /// <param name="searchTerm">The search term.</param>
+        /// <remarks>We use TvMaze as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/{searchTerm}/tree")]
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> SearchTvTreeNode(string searchTerm)
+        {
+            return await TvEngine.SearchTreeNode(searchTerm);
+        }
+
+        /// <summary>
+        /// Gets extra show information.
+        /// </summary>
+        /// <param name="tvdbId">The TVDB identifier.</param>
+        /// <remarks>We use TvMaze as the Provider</remarks>
+        /// <returns></returns>
+        [HttpGet("tv/info/{tvdbId}/tree")]
+        public async Task<TreeNode<SearchTvShowViewModel>> GetShowInfoTreeNode(int tvdbId)
+        {
+            return await TvEngine.GetShowInformationTreeNode(tvdbId);
+        }
+
+        /// <summary>
         /// Gets extra show information.
         /// </summary>
         /// <param name="tvdbId">The TVDB identifier.</param>
@@ -131,7 +155,7 @@ namespace Ombi.Controllers
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/popular")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> PopularTv()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> PopularTv()
         {
             return await TvEngine.Popular();
         }
@@ -141,7 +165,7 @@ namespace Ombi.Controllers
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/anticipated")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> AnticiplatedTv()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> AnticiplatedTv()
         {
             return await TvEngine.Anticipated();
         }
@@ -151,7 +175,7 @@ namespace Ombi.Controllers
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/mostwatched")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> MostWatched()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatched()
         {
             return await TvEngine.MostWatches();
         }
@@ -161,7 +185,7 @@ namespace Ombi.Controllers
         /// <remarks>We use Trakt.tv as the Provider</remarks>
         /// <returns></returns>
         [HttpGet("tv/trending")]
-        public async Task<IEnumerable<SearchTvShowViewModel>> Trending()
+        public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending()
         {
             return await TvEngine.Trending();
         }
