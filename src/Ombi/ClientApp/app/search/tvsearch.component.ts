@@ -9,7 +9,7 @@ import { NotificationService } from '../services/notification.service';
 
 import { ISearchTvResult } from '../interfaces/ISearchTvResult';
 import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-import { TreeNode } from "primeng/primeng";
+import { TreeNode } from 'primeng/primeng';
 
 @Component({
     selector: 'tv-search',
@@ -21,7 +21,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     private subscriptions = new Subject<void>();
     searchText: string;
     searchChanged = new Subject<string>();
-    tvResults: ISearchTvResult[];
+    tvResults: TreeNode[];
     result: IRequestEngineResult;
     searchApplied = false;
 
@@ -38,16 +38,16 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                     this.clearResults();
                     return;
                 }
-                this.searchService.searchTv(this.searchText)
+                this.searchService.searchTvTreeNode(this.searchText)
                     .takeUntil(this.subscriptions)
                     .subscribe(x => {
-                        this.tvResults = this.transformData(x);
+                        this.tvResults = x;
                         this.searchApplied = true;
                     });
             });
     }
     openClosestTab(el: any): void {
-        var rowclass = "undefined";
+        let rowclass = "undefined";
         el = el.toElement;
         while (el.className != rowclass) {
             // Increment the loop to the parent node until we find the row we need
@@ -59,9 +59,9 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        var caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
-        var caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
-        for (var value of el.children) {
+        let caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
+        let caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
+        for (let value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking
             if (value.className === caretright || value.className === caretdown) {
@@ -72,20 +72,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             }
         };
     }
-    transformData(datain: ISearchTvResult[]): any {
-        var temp: TreeNode[] = [];
-        datain.forEach(function (value) {
-            temp.push({
-                "data": value,
-                "children": [{
-                    "data": value, leaf: true
-                }],
-                leaf: false
-            });
-        }, this)
-        return <TreeNode[]>temp;
-    }
-
+    
     ngOnInit(): void {
         this.searchText = "";
         this.tvResults = [];
@@ -143,12 +130,11 @@ export class TvSearchComponent implements OnInit, OnDestroy {
 
     getExtraInfo() {
         this.tvResults.forEach((val, index) => {
-            this.searchService.getShowInformation(val.id)
+            this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
                 .subscribe(x => {
-                    this.updateItem(val, x);
+                    this.updateItem(val.data, x);
                 });
-
         });
     }
 
@@ -161,7 +147,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.result = x;
-
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
                         `Request for ${searchResult.title} has been added successfully`);
@@ -170,7 +155,6 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                 }
             });
     }
-
 
     allSeasons(searchResult: ISearchTvResult) {
         searchResult.requestAll = true;
@@ -191,11 +175,11 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         this.route.navigate(['/search/show', searchResult.id]);
     }
 
-    private updateItem(key: ISearchTvResult, updated: ISearchTvResult) {
-        var index = this.tvResults.indexOf(key, 0);
-        if (index > -1) {
-            this.tvResults[index] = updated;
-        }
+    private updateItem(key: TreeNode, updated: TreeNode) {
+        let item = this.tvResults.filter((val) => {
+            return val.data == key;
+        });
+        item[0].data = updated.data;
     }
 
     private clearResults() {

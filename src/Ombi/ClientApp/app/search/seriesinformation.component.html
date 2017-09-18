@@ -54,16 +54,10 @@
                                 {{ep.airDate | date: 'dd/MM/yyyy' }}
                             </td>
                             <td>
-                                <span *ngIf="ep.available" class="label label-success">Available</span>
-                                <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
-                                <div *ngIf="ep.requested && !ep.available; then requested else notRequested"></div>
-                                <ng-template #requested>
-                                    <span *ngIf="!ep.available" class="label label-warning">Pending Approval</span>
-                                </ng-template>
-
-                                <ng-template #notRequested>
-                                    <span *ngIf="!ep.available" class="label label-danger">Not Yet Requested</span>
-                                </ng-template>
+                                <ng-template [ngIf]="ep.available"><span class="label label-success">Available</span></ng-template>
+                                <ng-template [ngIf]="ep.approved && !ep.available"><span class="label label-info">Processing Request</span></ng-template>
+                                <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available"><span class="label label-warning">Pending Approval</span></ng-template>
+                                <ng-template [ngIf]="!ep.requested && !ep.available"><span class="label label-danger">Not Requested</span></ng-template>
                             </td>
 
                             <td>

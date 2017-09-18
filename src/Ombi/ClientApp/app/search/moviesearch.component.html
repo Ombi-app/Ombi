@@ -51,17 +51,12 @@
                         <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
                         <span *ngIf="result.available" class="label label-success">Available</span>
                         <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
-                        <span *ngIf="result.approved && !result.available" class="label label-info">Processing Request</span>
-                        <span *ngIf="!result.approved">
-                            <span *ngIf="result.requested && !result.available; then requested else notRequested"></span>
-                            <ng-template #requested>
-                                <span *ngIf="!result.available" class="label label-warning">Pending Approval</span>
-                            </ng-template>
+                        
+                        <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>
+                        <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info">Processing Request</span></ng-template>
+                        <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning">Pending Approval</span></ng-template>
+                        <ng-template [ngIf]="!result.requested && !result.available"><span class="label label-danger">Not Requested</span></ng-template>
 
-                            <ng-template #notRequested>
-                                <span *ngIf="!result.available" class="label label-danger">Not Yet Requested</span>
-                            </ng-template>
-                           </span>
 
 
 

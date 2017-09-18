@@ -39,7 +39,6 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
             });
     }
 
-
     public submitRequests() {
         this.series.requested = true;
         
