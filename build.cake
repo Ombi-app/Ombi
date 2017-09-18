@@ -93,11 +93,15 @@ Task("SetVersionInfo")
 
 	var fullVer = buildVersion + "-" + versionInfo.BranchName;
 
+	if(versionInfo.PreReleaseTag.Contains("PullRequest"))
+	{
+		fullVer = buildVersion + "-PR";
+	}
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
+	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
 	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
+	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
 	//buildSettings.VersionSuffix = versionInfo.BranchName;
 	//publishSettings.VersionSuffix = versionInfo.BranchName;
 });
