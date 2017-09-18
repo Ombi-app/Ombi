@@ -55,8 +55,8 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        var caretright = "ui-treetable-toggler fa fa-fw ui-c fa-caret-right";
-        var caretdown = "ui-treetable-toggler fa fa-fw ui-c fa-caret-down";
+        var caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
+        var caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
         for (var value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking

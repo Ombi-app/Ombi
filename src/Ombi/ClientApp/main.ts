@@ -17,6 +17,7 @@ if (module['hot']) {
         const newRootElem = document.createElement('ombi');
         if (oldRootElem && oldRootElem.parentNode) {
             oldRootElem.parentNode.insertBefore(newRootElem, oldRootElem);
+            oldRootElem.parentNode.removeChild(oldRootElem);
         }
         modulePromise.then(appModule => appModule.destroy());
     });

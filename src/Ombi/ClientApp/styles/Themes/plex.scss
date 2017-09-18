@@ -3,9 +3,7 @@ $primary-colour: #df691a;
 $primary-colour-outline: #ff761b;
 $bg-colour: #333333;
 $bg-colour-disabled: #252424;
-$i:
-!important
-;
+$i:!important;
 
 .form-control-custom {
     background-color: $bg-colour $i;
@@ -272,4 +270,12 @@ button.list-group-item:focus {
     border-radius: 0;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+.ui-widget-content {
+    border: 1px solid #1f1f1f !important;
+    background: #1f1f1f !important;
+}
+.ui-widget-content {
+     color: #ffffff; 
 }

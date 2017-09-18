@@ -775,3 +775,11 @@ textarea {
     -webkit-box-shadow: none;
     box-shadow: none;
 }
+
+.ui-state-default.ui-unselectable-text{
+    display:none;
+}
+.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-right,
+.ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-down {
+    display: none;
+}
