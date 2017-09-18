@@ -1,26 +1,26 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { INotificationTemplates, IMattermostNotifcationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
-import { TesterService } from "../../services/applications/tester.service";
+import { IMattermostNotifcationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './mattermost.component.html'
+    templateUrl: "./mattermost.component.html",
 })
 export class MattermostComponent implements OnInit {
+
+    public NotificationType = NotificationType;
+    public templates: INotificationTemplates[];
+    public form: FormGroup;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder,
-        private testerService : TesterService) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder,
+                private testerService: TesterService) { }
 
-    NotificationType = NotificationType;
-    templates: INotificationTemplates[];
-
-    form: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getMattermostNotificationSettings().subscribe(x => {
             this.templates = x.notificationTemplates;
 
@@ -29,19 +29,19 @@ export class MattermostComponent implements OnInit {
                 username: [x.username],
                 webhookUrl: [x.webhookUrl, [Validators.required]],
                 channel: [x.channel],
-                iconUrl:[x.iconUrl]
+                iconUrl:[x.iconUrl],
 
             });
         });
     }
 
-    onSubmit(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
 
-        var settings = <IMattermostNotifcationSettings>form.value;
+        const settings = <IMattermostNotifcationSettings>form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveMattermostNotificationSettings(settings).subscribe(x => {
@@ -54,7 +54,7 @@ export class MattermostComponent implements OnInit {
 
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
@@ -66,7 +66,7 @@ export class MattermostComponent implements OnInit {
             } else {
                 this.notificationService.success("Error", "There was an error when sending the Mattermost message. Please check your settings");
             }
-        })
+        });
 
     }
 }

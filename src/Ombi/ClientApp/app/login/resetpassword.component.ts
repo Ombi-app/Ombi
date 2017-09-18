@@ -1,37 +1,35 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { IdentityService } from '../services/identity.service';
-import { NotificationService } from '../services/notification.service';
-import { SettingsService } from '../services/settings.service';
-import { ICustomizationSettings } from '../interfaces/ISettings';
+import { ICustomizationSettings } from "../interfaces";
+import { IdentityService } from "../services";
+import { NotificationService } from "../services";
+import { SettingsService } from "../services";
 
 @Component({
-    templateUrl: './resetpassword.component.html',
-    styleUrls: ['./login.component.scss']
+    templateUrl: "./resetpassword.component.html",
+    styleUrls: ["./login.component.scss"],
 })
 export class ResetPasswordComponent implements OnInit {
 
+    public form: FormGroup;
+    public customizationSettings: ICustomizationSettings;
 
     constructor(private identityService: IdentityService, private notify: NotificationService,
-        private fb: FormBuilder, private settingsService: SettingsService) {
+                private fb: FormBuilder, private settingsService: SettingsService) {
         this.form = this.fb.group({
             email: ["", [Validators.required]],
         });
     }
 
-    form: FormGroup;
-    customizationSettings: ICustomizationSettings;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
     }
 
-
-    onSubmit(form: FormGroup): void {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notify.error("Validation", "Email address is required");
-            return
+            return;
         }
         this.identityService.submitResetPassword(form.value.email).subscribe(x => {
             x.errors.forEach((val) => {

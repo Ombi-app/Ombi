@@ -1,37 +1,34 @@
-﻿import { Component, OnInit, OnDestroy, Input} from '@angular/core';
+﻿import { Component, Input, OnDestroy, OnInit} from "@angular/core";
 //import { ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from "rxjs/Subject";
 
 import "rxjs/add/operator/takeUntil";
 
-import { SearchService } from '../services/search.service';
-import { RequestService } from '../services/request.service';
-import { NotificationService } from '../services/notification.service';
+import { NotificationService } from "../services";
+import { RequestService } from "../services";
+import { SearchService } from "../services";
 
-import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-import { IEpisodesRequests } from "../interfaces/IRequestModel";
+import { IRequestEngineResult } from "../interfaces";
+import { IEpisodesRequests } from "../interfaces";
+import { ISearchTvResult } from "../interfaces";
 
 @Component({
-    selector: 'seriesinformation',
-    templateUrl: './seriesinformation.component.html', 
-    styleUrls: ['./seriesinformation.component.scss']
+    selector: "seriesinformation",
+    templateUrl: "./seriesinformation.component.html",
+    styleUrls: ["./seriesinformation.component.scss"],
 })
 export class SeriesInformationComponent implements OnInit, OnDestroy {
 
-    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) {
-    }
+    public result: IRequestEngineResult;
+    public series: ISearchTvResult;
+    public requestedEpisodes: IEpisodesRequests[] = [];
 
+    @Input() private seriesId: number;
     private subscriptions = new Subject<void>();
 
-    public result : IRequestEngineResult;
-    @Input() private seriesId: number;
-    public series: ISearchTvResult;
+    constructor(private searchService: SearchService, private requestService: RequestService, private notificationService: NotificationService) { }
 
-    requestedEpisodes: IEpisodesRequests[] = [];
-
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.searchService.getShowInformation(this.seriesId)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -41,7 +38,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
 
     public submitRequests() {
         this.series.requested = true;
-        
+
         this.requestService.requestTv(this.series)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -63,8 +60,7 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         episode.requested = false;
     }
 
-
-    ngOnDestroy(): void {
+    public ngOnDestroy() {
         this.subscriptions.next();
         this.subscriptions.complete();
     }

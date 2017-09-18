@@ -1,7 +1,7 @@
 ﻿//import { Component, OnInit } from '@angular/core';
 //import { DragulaService } from 'ng2-dragula/ng2-dragula';
-//import { RequestService } from '../services/request.service';
-//import { ITvRequests, IMovieRequests, IRequestGrid } from '../interfaces/IRequestModel';
+//import { RequestService } from '../services";
+//import { ITvRequests, IMovieRequests, IRequestGrid } from '../interfaces";
 
 //@Component({
 //    templateUrl: './request-grid.component.html'
@@ -13,8 +13,7 @@
 //        });
 //    }
 
-
-//    ngOnInit(): void {
+//    ngOnInit() {
 //        this.requestService.getMovieGrid().subscribe(x => {
 //            this.movieRequests = x;
 //        });
@@ -22,7 +21,6 @@
 //            this.tvRequests = x;
 //        });
 //    }
-
 
 //    movieRequests: IRequestGrid<IMovieRequests>;
 //    tvRequests: IRequestGrid<ITvRequests>;

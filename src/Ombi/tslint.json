@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json.schemastore.org/tslint",
+  "extends": "tslint:recommended",
+  "rules": {
+    "object-literal-sort-keys": false,
+    "no-console": [
+      false
+    ],
+    "max-line-length": [
+      true,
+      200
+    ],
+    "arrow-parens": false,
+    "radix": false,
+    "no-angle-bracket-type-assertion": false,
+    "indent": [
+      false
+    ],
+    "whitespace": [
+      false
+    ],
+    "no-unused-expression": [
+      true,
+      "allow-new"
+    ],
+    "max-classes-per-file": [
+      false
+    ],
+    "no-shadowed-variable": false,
+    "comment-format": [
+      false
+    ]
+  }
+}

@@ -1,169 +1,167 @@
-﻿import { Injectable } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
-import { Http } from '@angular/http';
-import { Observable } from 'rxjs/Rx';
+﻿import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import { AuthHttp } from "angular2-jwt";
+import { Observable } from "rxjs/Rx";
 
-import { ServiceAuthHelpers } from './service.helpers';
 import {
-    IOmbiSettings,
-    IEmbySettings,
-    IPlexSettings,
-    ISonarrSettings,
-    ILandingPageSettings,
+    IAuthenticationSettings,
     ICustomizationSettings,
-    IRadarrSettings,
-    IAuthenticationSettings
-} from '../interfaces/ISettings';
-import {
-    IEmailNotificationSettings,
     IDiscordNotifcationSettings,
+    IEmailNotificationSettings,
+    IEmbySettings,
+    ILandingPageSettings,
+    IMattermostNotifcationSettings,
+    IOmbiSettings,
+    IPlexSettings,
     IPushbulletNotificationSettings,
-    ISlackNotificationSettings,
     IPushoverNotificationSettings,
-    IMattermostNotifcationSettings
-} from '../interfaces/INotifcationSettings';
+    IRadarrSettings,
+    ISlackNotificationSettings,
+    ISonarrSettings,
+} from "../interfaces";
+
+import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
     constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http) {
-        super(httpAuth, '/api/v1/Settings');
+        super(httpAuth, "/api/v1/Settings");
     }
 
-    getOmbi(): Observable<IOmbiSettings> {
-        return this.httpAuth.get(`${this.url}/Ombi/`).map(this.extractData).catch(this.handleError)
+    public getOmbi(): Observable<IOmbiSettings> {
+        return this.httpAuth.get(`${this.url}/Ombi/`).map(this.extractData).catch(this.handleError);
     }
 
-    saveOmbi(settings: IOmbiSettings): Observable<boolean> {
+    public saveOmbi(settings: IOmbiSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Ombi/`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    resetOmbiApi(): Observable<string> {
+    public resetOmbiApi(): Observable<string> {
         return this.httpAuth.post(`${this.url}/Ombi/resetApi`, { headers: this.headers }).map(this.extractData)
             .catch(this.handleError);
     }
 
-    getEmby(): Observable<IEmbySettings> {
+    public getEmby(): Observable<IEmbySettings> {
         return this.httpAuth.get(`${this.url}/Emby/`).map(this.extractData).catch(this.handleError);
     }
 
-    saveEmby(settings: IEmbySettings): Observable<boolean> {
+    public saveEmby(settings: IEmbySettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Emby/`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getPlex(): Observable<IPlexSettings> {
+    public getPlex(): Observable<IPlexSettings> {
         return this.httpAuth.get(`${this.url}/Plex/`).map(this.extractData).catch(this.handleError);
     }
 
-    savePlex(settings: IPlexSettings): Observable<boolean> {
+    public savePlex(settings: IPlexSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Plex/`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getSonarr(): Observable<ISonarrSettings> {
+    public getSonarr(): Observable<ISonarrSettings> {
         return this.httpAuth.get(`${this.url}/Sonarr`).map(this.extractData)
             .catch(this.handleError);
     }
 
-    saveSonarr(settings: ISonarrSettings): Observable<boolean> {
+    public saveSonarr(settings: ISonarrSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Sonarr`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getRadarr(): Observable<IRadarrSettings> {
+    public getRadarr(): Observable<IRadarrSettings> {
         return this.httpAuth.get(`${this.url}/Radarr`).map(this.extractData)
             .catch(this.handleError);
     }
 
-    saveRadarr(settings: IRadarrSettings): Observable<boolean> {
+    public saveRadarr(settings: IRadarrSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Radarr`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-
-    getAuthentication(): Observable<IAuthenticationSettings> {
+    public getAuthentication(): Observable<IAuthenticationSettings> {
         return this.httpAuth.get(`${this.url}/Authentication`).map(this.extractData)
             .catch(this.handleError);
     }
 
-    saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
+    public saveAuthentication(settings: IAuthenticationSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/Authentication`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
     // Using http since we need it not to be authenticated to get the landing page settings
-    getLandingPage(): Observable<ILandingPageSettings> {
+    public getLandingPage(): Observable<ILandingPageSettings> {
         return this.nonAuthHttp.get(`${this.url}/LandingPage`).map(this.extractData).catch(this.handleError);
     }
 
-    saveLandingPage(settings: ILandingPageSettings): Observable<boolean> {
+    public saveLandingPage(settings: ILandingPageSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/LandingPage`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
     // Using http since we need it not to be authenticated to get the customization settings
-    getCustomization(): Observable<ICustomizationSettings> {
-        return this.nonAuthHttp.get(`${this.url}/customization`).map(this.extractData).catch(this.handleError)
+    public getCustomization(): Observable<ICustomizationSettings> {
+        return this.nonAuthHttp.get(`${this.url}/customization`).map(this.extractData).catch(this.handleError);
     }
 
-    saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
+    public saveCustomization(settings: ICustomizationSettings): Observable<boolean> {
         return this.httpAuth.post(`${this.url}/customization`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/email`).map(this.extractData).catch(this.handleError)
+    public getEmailNotificationSettings(): Observable<IEmailNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/email`).map(this.extractData).catch(this.handleError);
     }
 
-    saveEmailNotificationSettings(settings: IEmailNotificationSettings): Observable<boolean> {
+    public saveEmailNotificationSettings(settings: IEmailNotificationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/email`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getDiscordNotificationSettings(): Observable<IDiscordNotifcationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/discord`).map(this.extractData).catch(this.handleError)
+    public getDiscordNotificationSettings(): Observable<IDiscordNotifcationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/discord`).map(this.extractData).catch(this.handleError);
     }
 
-    getMattermostNotificationSettings(): Observable<IMattermostNotifcationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/mattermost`).map(this.extractData).catch(this.handleError)
+    public getMattermostNotificationSettings(): Observable<IMattermostNotifcationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/mattermost`).map(this.extractData).catch(this.handleError);
     }
 
-    saveDiscordNotificationSettings(settings: IDiscordNotifcationSettings): Observable<boolean> {
+    public saveDiscordNotificationSettings(settings: IDiscordNotifcationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/discord`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    saveMattermostNotificationSettings(settings: IMattermostNotifcationSettings): Observable<boolean> {
+    public saveMattermostNotificationSettings(settings: IMattermostNotifcationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/mattermost`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
-    getPushbulletNotificationSettings(): Observable<IPushbulletNotificationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/pushbullet`).map(this.extractData).catch(this.handleError)
+    public getPushbulletNotificationSettings(): Observable<IPushbulletNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/pushbullet`).map(this.extractData).catch(this.handleError);
     }
-    getPushoverNotificationSettings(): Observable<IPushoverNotificationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/pushover`).map(this.extractData).catch(this.handleError)
+    public getPushoverNotificationSettings(): Observable<IPushoverNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/pushover`).map(this.extractData).catch(this.handleError);
     }
 
-    savePushbulletNotificationSettings(settings: IPushbulletNotificationSettings): Observable<boolean> {
+    public savePushbulletNotificationSettings(settings: IPushbulletNotificationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/pushbullet`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
-    savePushoverNotificationSettings(settings: IPushoverNotificationSettings): Observable<boolean> {
+    public savePushoverNotificationSettings(settings: IPushoverNotificationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/pushover`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 
-    getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
-        return this.httpAuth.get(`${this.url}/notifications/slack`).map(this.extractData).catch(this.handleError)
+    public getSlackNotificationSettings(): Observable<ISlackNotificationSettings> {
+        return this.httpAuth.get(`${this.url}/notifications/slack`).map(this.extractData).catch(this.handleError);
     }
 
-    saveSlackNotificationSettings(settings: ISlackNotificationSettings): Observable<boolean> {
+    public saveSlackNotificationSettings(settings: ISlackNotificationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/slack`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);

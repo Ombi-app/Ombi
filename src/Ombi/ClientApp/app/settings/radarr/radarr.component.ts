@@ -1,40 +1,37 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import "rxjs/add/operator/takeUntil";
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Subject } from "rxjs/Subject";
 
-import { IRadarrSettings } from '../../interfaces/ISettings';
-import { IRadarrProfile, IRadarrRootFolder, IMinimumAvailability } from '../../interfaces/IRadarr';
-import { SettingsService } from '../../services/settings.service';
-import { RadarrService } from '../../services/applications/radarr.service';
-import { TesterService } from '../../services/applications/tester.service';
-import { NotificationService } from "../../services/notification.service";
+import { IMinimumAvailability, IRadarrProfile, IRadarrRootFolder } from "../../interfaces";
+import { IRadarrSettings } from "../../interfaces";
+import { RadarrService } from "../../services";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-  
-    templateUrl: './radarr.component.html',
+    templateUrl: "./radarr.component.html",
 })
 export class RadarrComponent implements OnInit {
 
-    constructor(private settingsService: SettingsService,
-        private radarrService: RadarrService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder,
-        private testerService : TesterService) { }
-    qualities: IRadarrProfile[];
-    rootFolders: IRadarrRootFolder[];
+    public qualities: IRadarrProfile[];
+    public rootFolders: IRadarrRootFolder[];
+    public minimumAvailabilityOptions: IMinimumAvailability[];
+    public profilesRunning: boolean;
+    public rootFoldersRunning: boolean;
+    public advanced = false;
+    public form: FormGroup;
 
-    minimumAvailabilityOptions: IMinimumAvailability[];
-
-    profilesRunning: boolean;
-    rootFoldersRunning: boolean;
-
-    advanced = false;
     private subscriptions = new Subject<void>();
 
-    form : FormGroup;
-    ngOnInit(): void {
+    constructor(private settingsService: SettingsService,
+                private radarrService: RadarrService,
+                private notificationService: NotificationService,
+                private fb: FormBuilder,
+                private testerService: TesterService) { }
 
+    public ngOnInit() {
         this.settingsService.getRadarr()
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -49,7 +46,7 @@ export class RadarrComponent implements OnInit {
                     ip: [x.ip, [Validators.required]],
                     port: [x.port, [Validators.required]],
                     addOnly: [x.addOnly],
-                    minimumAvailability: [x.minimumAvailability, [Validators.required]]
+                    minimumAvailability: [x.minimumAvailability, [Validators.required]],
                 });
 
                 if (x.defaultQualityProfile) {
@@ -69,33 +66,32 @@ export class RadarrComponent implements OnInit {
 
     }
 
-
-    getProfiles(form: FormGroup) {
+    public getProfiles(form: FormGroup) {
          this.profilesRunning = true;
          this.radarrService.getQualityProfiles(form.value).subscribe(x => {
              this.qualities = x;
-         
+
              this.profilesRunning = false;
              this.notificationService.success("Quality Profiles", "Successfully retrevied the Quality Profiles");
          });
     }
 
-    getRootFolders(form: FormGroup) {
+    public getRootFolders(form: FormGroup) {
          this.rootFoldersRunning = true;
          this.radarrService.getRootFolders(form.value).subscribe(x => {
              this.rootFolders = x;
-         
+
              this.rootFoldersRunning = false;
              this.notificationService.success("Settings Saved", "Successfully retrevied the Root Folders");
          });
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
-        var settings = <IRadarrSettings>form.value;
+        const settings = <IRadarrSettings>form.value;
         this.testerService.radarrTest(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Connected", "Successfully connected to Radarr!");
@@ -105,13 +101,13 @@ export class RadarrComponent implements OnInit {
         });
     }
 
-onSubmit(form: FormGroup) {
+public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
 
-        var settings = <IRadarrSettings>form.value;
+        const settings = <IRadarrSettings>form.value;
         this.settingsService.saveRadarr(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Radarr settings");
@@ -122,7 +118,7 @@ onSubmit(form: FormGroup) {
 
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy() {
         this.subscriptions.next();
         this.subscriptions.complete();
     }

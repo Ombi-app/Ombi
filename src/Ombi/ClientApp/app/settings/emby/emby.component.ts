@@ -1,29 +1,29 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from "@angular/core";
 
-import { IEmbySettings, IEmbyServer } from '../../interfaces/ISettings'
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
-import { TesterService } from '../../services/applications/tester.service';
+import { IEmbyServer, IEmbySettings } from "../../interfaces";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './emby.component.html'
+    templateUrl: "./emby.component.html",
 })
 export class EmbyComponent implements OnInit {
 
+    public settings: IEmbySettings;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-    private testerService : TesterService) { }
+                private notificationService: NotificationService,
+                private testerService: TesterService) { }
 
-    settings: IEmbySettings;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getEmby().subscribe(x => this.settings = x);
     }
 
-    addTab() {
+    public addTab() {
         if (this.settings.servers == null) {
             this.settings.servers = [];
-        } 
+        }
         this.settings.servers.push({
             name: "New*",
             id: Math.floor(Math.random() * (99999 - 0 + 1) + 1),
@@ -33,11 +33,11 @@ export class EmbyComponent implements OnInit {
             ip: "",
             port: 0,
             ssl: false,
-            subDir: ""
+            subDir: "",
         } as IEmbyServer);
     }
 
-    test(server: IEmbyServer) {
+    public test(server: IEmbyServer) {
         this.testerService.embyTest(server).subscribe(x => {
             if (x) {
                 this.notificationService.success("Connected", `Successfully connected to the Emby server ${server.name}!`);
@@ -47,15 +47,14 @@ export class EmbyComponent implements OnInit {
         });
     }
 
-    removeServer(server: IEmbyServer) {
-        var index = this.settings.servers.indexOf(server, 0);
+    public removeServer(server: IEmbyServer) {
+        const index = this.settings.servers.indexOf(server, 0);
         if (index > -1) {
             this.settings.servers.splice(index, 1);
         }
     }
 
-
-    save() {
+    public save() {
         this.settingsService.saveEmby(this.settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Emby settings");

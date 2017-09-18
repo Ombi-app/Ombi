@@ -1,46 +1,44 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './ombi.component.html',
+    templateUrl: "./ombi.component.html",
 })
 export class OmbiComponent implements OnInit {
 
+    public form: FormGroup;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder) { }
 
-    form: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getOmbi().subscribe(x => {
             this.form = this.fb.group({
                 port: [x.port],
                 collectAnalyticData: [x.collectAnalyticData],
                 apiKey: [x.apiKey],
                 externalUrl: [x.externalUrl],
-                allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate]
+                allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate],
             });
         });
     }
 
-
-    refreshApiKey() {
+    public refreshApiKey() {
         this.settingsService.resetOmbiApi().subscribe(x => {
-            this.form.controls["apiKey"].patchValue(x);
+            this.form.controls.apiKey.patchValue(x);
         });
     }
 
-    onSubmit(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
 
-        
         this.settingsService.saveOmbi(form.value).subscribe(x => {
             if (x) {
                 this.notificationService.success("Settings Saved", "Successfully saved Ombi settings");
@@ -50,7 +48,7 @@ export class OmbiComponent implements OnInit {
         });
     }
 
-    successfullyCopied() {
+    public successfullyCopied() {
         this.notificationService.success("Copied", "Copied the Api Key to the clipboard!");
     }
 }

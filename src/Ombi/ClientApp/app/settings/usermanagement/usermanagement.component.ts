@@ -1,9 +1,6 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component } from "@angular/core";
 
 @Component({
-
-    templateUrl: './usermanagement.component.html',
+    templateUrl: "./usermanagement.component.html",
 })
-export class UserManagementComponent  {
-
-}
+export class UserManagementComponent { }

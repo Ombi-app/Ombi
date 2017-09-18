@@ -1,10 +1,10 @@
 ﻿export interface IUserLogin {
-    username: string,
-    password: string,
-    rememberMe:boolean,
+    username: string;
+    password: string;
+    rememberMe: boolean;
 }
 
 export interface ILocalUser {
-    roles: string[],
-    name: string
+    roles: string[];
+    name: string;
 }

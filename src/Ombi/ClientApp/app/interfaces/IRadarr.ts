@@ -1,32 +1,19 @@
-﻿export interface IRadarrRootFolder {
-    id: number,
-    path: string,
-    freespace:number,
+﻿import { ICutoff, IItem } from "./ICommon";
+
+export interface IRadarrRootFolder {
+    id: number;
+    path: string;
+    freespace: number;
 }
 
 export interface IRadarrProfile {
-    name: string,
-    id: number,
-    cutoff: ICutoff,
-    items:IItem[],
+    name: string;
+    id: number;
+    cutoff: ICutoff;
+    items: IItem[];
 }
 
 export interface IMinimumAvailability {
-    value: string,
-    name:string,
-}
-
-export interface ICutoff {
-    id: number,
-    name:string,
-}
-
-export interface IItem {
-    allowed: boolean,
-    quality:IQuality,
-}
-
-export interface IQuality {
-    id: number,
-    name:string,
+    value: string;
+    name: string;
 }

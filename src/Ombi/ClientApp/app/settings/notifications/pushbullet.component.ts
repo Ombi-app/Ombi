@@ -1,26 +1,25 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { INotificationTemplates, IPushbulletNotificationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
-import { TesterService } from "../../services/applications/tester.service";
+import { INotificationTemplates, IPushbulletNotificationSettings, NotificationType } from "../../interfaces";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './pushbullet.component.html',
+    templateUrl: "./pushbullet.component.html",
 })
 export class PushbulletComponent implements OnInit {
+    public NotificationType = NotificationType;
+    public templates: INotificationTemplates[];
+    public form: FormGroup;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder,
-        private testerService : TesterService) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder,
+                private testerService: TesterService) { }
 
-    NotificationType = NotificationType;
-    templates: INotificationTemplates[];
-
-    form: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getPushbulletNotificationSettings().subscribe(x => {
             this.templates = x.notificationTemplates;
 
@@ -32,13 +31,13 @@ export class PushbulletComponent implements OnInit {
         });
     }
 
-    onSubmit(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
-        var settings = <IPushbulletNotificationSettings>form.value;
+        const settings = <IPushbulletNotificationSettings>form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.savePushbulletNotificationSettings(settings).subscribe(x => {
@@ -51,10 +50,10 @@ export class PushbulletComponent implements OnInit {
 
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
         this.testerService.pushbulletTest(form.value).subscribe(x => {
@@ -63,7 +62,7 @@ export class PushbulletComponent implements OnInit {
             } else {
                 this.notificationService.success("Error", "There was an error when sending the Pushbullet message. Please check your settings");
             }
-        })
+        });
 
     }
 }

@@ -1,33 +1,33 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/map";
 import "rxjs/add/operator/takeUntil";
+import { Subject } from "rxjs/Subject";
 
-import { SearchService } from '../services/search.service';
-import { AuthService } from '../auth/auth.service';
-import { RequestService } from '../services/request.service';
-import { NotificationService } from '../services/notification.service';
+import { AuthService } from "../auth/auth.service";
+import { NotificationService } from "../services";
+import { RequestService } from "../services";
+import { SearchService } from "../services";
 
-import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
-import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
+import { IRequestEngineResult } from "../interfaces";
+import { ISearchMovieResult } from "../interfaces";
 
 @Component({
-    selector: 'movie-search',
-    templateUrl: './moviesearch.component.html',
+    selector: "movie-search",
+    templateUrl: "./moviesearch.component.html",
 })
 export class MovieSearchComponent implements OnInit, OnDestroy {
 
-    searchText: string;
+    public searchText: string;
+    public searchChanged: Subject<string> = new Subject<string>();
+    public movieResults: ISearchMovieResult[];
+    public result: IRequestEngineResult;
+    public searchApplied = false;
     private subscriptions = new Subject<void>();
-    searchChanged: Subject<string> = new Subject<string>();
-    movieResults: ISearchMovieResult[];
-    result: IRequestEngineResult;
-    searchApplied = false;
 
     constructor(private searchService: SearchService, private requestService: RequestService,
-        private notificationService: NotificationService, private authService : AuthService) {
+                private notificationService: NotificationService, private authService: AuthService) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
@@ -51,21 +51,21 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnInit(): void {
+    public ngOnInit() {
         this.searchText = "";
         this.movieResults = [];
         this.result = {
             message: "",
             requestAdded: false,
-            errorMessage: ""
-        }
+            errorMessage: "",
+        };
     }
 
-    search(text: any) {
+    public search(text: any) {
         this.searchChanged.next(text.target.value);
     }
 
-    request(searchResult: ISearchMovieResult) {
+    public request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
@@ -87,7 +87,7 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    popularMovies() {
+    public popularMovies() {
         this.clearResults();
         this.searchService.popularMovies()
             .takeUntil(this.subscriptions)
@@ -96,7 +96,7 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
                 this.getExtaInfo();
             });
     }
-    nowPlayingMovies() {
+    public nowPlayingMovies() {
         this.clearResults();
         this.searchService.nowPlayingMovies()
             .takeUntil(this.subscriptions)
@@ -105,7 +105,7 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
                 this.getExtaInfo();
             });
     }
-    topRatedMovies() {
+    public topRatedMovies() {
         this.clearResults();
         this.searchService.topRatedMovies()
             .takeUntil(this.subscriptions)
@@ -114,7 +114,7 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
                 this.getExtaInfo();
             });
     }
-    upcomingMovies() {
+    public upcomingMovies() {
         this.clearResults();
         this.searchService.upcomignMovies()
             .takeUntil(this.subscriptions)
@@ -122,6 +122,11 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
                 this.movieResults = x;
                 this.getExtaInfo();
             });
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.next();
+        this.subscriptions.complete();
     }
 
     private getExtaInfo() {
@@ -134,7 +139,7 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
     }
 
     private updateItem(key: ISearchMovieResult, updated: ISearchMovieResult) {
-        var index = this.movieResults.indexOf(key, 0);
+        const index = this.movieResults.indexOf(key, 0);
         if (index > -1) {
             this.movieResults[index] = updated;
         }
@@ -143,10 +148,4 @@ export class MovieSearchComponent implements OnInit, OnDestroy {
         this.movieResults = [];
         this.searchApplied = false;
     }
-
-    ngOnDestroy(): void {
-        this.subscriptions.next();
-        this.subscriptions.complete();
-    }
-
 }

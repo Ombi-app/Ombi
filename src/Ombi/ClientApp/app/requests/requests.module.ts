@@ -1,29 +1,29 @@
-﻿import { NgModule, } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+﻿import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
-import { ButtonModule, DialogModule } from 'primeng/primeng';
+import { ButtonModule, DialogModule } from "primeng/primeng";
+import { MovieRequestsComponent } from "./movierequests.component";
 // Request
-import { RequestComponent } from './request.component';
-import { MovieRequestsComponent } from './movierequests.component';
-import { TvRequestsComponent } from './tvrequests.component';
-import { TvRequestChildrenComponent } from './tvrequest-children.component';
+import { RequestComponent } from "./request.component";
+import { TvRequestChildrenComponent } from "./tvrequest-children.component";
+import { TvRequestsComponent } from "./tvrequests.component";
 
-import { TreeTableModule } from 'primeng/primeng';
+import { TreeTableModule } from "primeng/primeng";
 
-import { IdentityService } from '../services/identity.service';
-import { RequestService } from '../services/request.service';
+import { IdentityService } from "../services";
+import { RequestService } from "../services";
 
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
-    { path: 'requests', component: RequestComponent, canActivate: [AuthGuard] },
-    { path: 'requests/:id', component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
+    { path: "requests", component: RequestComponent, canActivate: [AuthGuard] },
+    { path: "requests/:id", component: TvRequestChildrenComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -35,7 +35,7 @@ const routes: Routes = [
         InfiniteScrollModule,
         ButtonModule,
         DialogModule,
-        TreeTableModule
+        TreeTableModule,
     ],
     declarations: [
         RequestComponent,
@@ -44,11 +44,11 @@ const routes: Routes = [
         TvRequestChildrenComponent,
     ],
     exports: [
-        RouterModule
+        RouterModule,
     ],
     providers: [
         IdentityService,
-        RequestService
+        RequestService,
     ],
 
 })

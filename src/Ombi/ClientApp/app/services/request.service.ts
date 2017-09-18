@@ -1,81 +1,81 @@
-﻿import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
-import { AuthHttp } from 'angular2-jwt';
-import { Observable } from 'rxjs/Rx';
+﻿import { Injectable } from "@angular/core";
+import { Http } from "@angular/http";
+import { AuthHttp } from "angular2-jwt";
+import { Observable } from "rxjs/Rx";
 
-import { ServiceAuthHelpers } from './service.helpers';
-import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-import { ISearchMovieResult } from '../interfaces/ISearchMovieResult';
-import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IMovieRequests, ITvRequests, IRequestCountModel, IRequestGrid, IChildRequests } from '../interfaces/IRequestModel';
+import { IRequestEngineResult } from "../interfaces";
+import { IChildRequests, IMovieRequests, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
+import { ISearchMovieResult } from "../interfaces";
+import { ISearchTvResult } from "../interfaces";
+import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private basicHttp : Http) {
-        super(http, '/api/v1/Request/');
+    constructor(http: AuthHttp, private basicHttp: Http) {
+        super(http, "/api/v1/Request/");
     }
 
-    requestMovie(movie: ISearchMovieResult): Observable<IRequestEngineResult> {
+    public requestMovie(movie: ISearchMovieResult): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}Movie/`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 
-    requestTv(tv: ISearchTvResult): Observable<IRequestEngineResult> {
+    public requestTv(tv: ISearchTvResult): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
     }
 
-    getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
+    public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
         return this.http.get(`${this.url}movie/${count}/${position}`).map(this.extractData);
     }
 
-    searchMovieRequests(search: string): Observable<IMovieRequests[]> {
+    public searchMovieRequests(search: string): Observable<IMovieRequests[]> {
         return this.http.get(`${this.url}movie/search/${search}`).map(this.extractData);
     }
 
-    removeMovieRequest(request: IMovieRequests) {
+    public removeMovieRequest(request: IMovieRequests) {
         this.http.delete(`${this.url}movie/${request.id}`).map(this.extractData).subscribe();
     }
 
-    updateMovieRequest(request: IMovieRequests): Observable<IMovieRequests> {
+    public updateMovieRequest(request: IMovieRequests): Observable<IMovieRequests> {
         return this.http.put(`${this.url}movie/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
 
-    getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
+    public getTvRequests(count: number, position: number): Observable<ITvRequests[]> {
         return this.http.get(`${this.url}tv/${count}/${position}`).map(this.extractData)
             .catch(this.handleError);
-    }   
-    
-     getChildRequests(requestId: number): Observable<IChildRequests[]> {
+    }
+
+     public getChildRequests(requestId: number): Observable<IChildRequests[]> {
         return this.http.get(`${this.url}tv/${requestId}/child`).map(this.extractData)
             .catch(this.handleError);
     }
 
-    searchTvRequests(search: string): Observable<ITvRequests[]> {
+    public searchTvRequests(search: string): Observable<ITvRequests[]> {
         return this.http.get(`${this.url}tv/search/${search}`).map(this.extractData);
     }
 
-    removeTvRequest(request: ITvRequests) {
+    public removeTvRequest(request: ITvRequests) {
         this.http.delete(`${this.url}tv/${request.id}`).map(this.extractData).subscribe();
     }
 
-    updateTvRequest(request: ITvRequests): Observable<ITvRequests> {
+    public updateTvRequest(request: ITvRequests): Observable<ITvRequests> {
         return this.http.put(`${this.url}tv/`, JSON.stringify(request), { headers: this.headers }).map(this.extractData);
     }
-    updateChild(child: IChildRequests): Observable<IChildRequests> {
+    public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }
-    deleteChild(child: IChildRequests): Observable<IChildRequests> {
+    public deleteChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);
     }
 
-    getRequestsCount(): Observable<IRequestCountModel> {
+    public getRequestsCount(): Observable<IRequestCountModel> {
         return this.basicHttp.get(`${this.url}count`).map(this.extractData);
     }
 
-    getMovieGrid(): Observable<IRequestGrid<IMovieRequests>> {
+    public getMovieGrid(): Observable<IRequestGrid<IMovieRequests>> {
         return this.http.get(`${this.url}movie/grid`).map(this.extractData);
     }
 
-    getTvGrid(): Observable<IRequestGrid<ITvRequests>> {
+    public getTvGrid(): Observable<IRequestGrid<ITvRequests>> {
         return this.http.get(`${this.url}tv/grid`).map(this.extractData);
     }
 }

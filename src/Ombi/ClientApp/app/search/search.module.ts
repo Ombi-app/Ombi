@@ -1,25 +1,25 @@
-﻿import { NgModule, } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { RouterModule, Routes } from '@angular/router';
+﻿import { CommonModule } from "@angular/common";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { RouterModule, Routes } from "@angular/router";
 
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
-import { SearchComponent } from './search.component';
-import { MovieSearchComponent } from './moviesearch.component';
-import { TvSearchComponent } from './tvsearch.component';
-import { SeriesInformationComponent } from './seriesinformation.component';
+import { MovieSearchComponent } from "./moviesearch.component";
+import { SearchComponent } from "./search.component";
+import { SeriesInformationComponent } from "./seriesinformation.component";
+import { TvSearchComponent } from "./tvsearch.component";
 
-import { TreeTableModule } from 'primeng/primeng';
+import { TreeTableModule } from "primeng/primeng";
 
-import { SearchService } from '../services/search.service';
-import { RequestService } from '../services/request.service';
+import { RequestService } from "../services";
+import { SearchService } from "../services";
 
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from "../auth/auth.guard";
 
 const routes: Routes = [
-    { path: 'search', component: SearchComponent, canActivate: [AuthGuard] },
-    { path: 'search/show/:id', component: SeriesInformationComponent, canActivate: [AuthGuard] },
+    { path: "search", component: SearchComponent, canActivate: [AuthGuard] },
+    { path: "search/show/:id", component: SeriesInformationComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -28,7 +28,7 @@ const routes: Routes = [
         FormsModule,
         RouterModule.forChild(routes),
         NgbModule.forRoot(),
-        TreeTableModule
+        TreeTableModule,
     ],
     declarations: [
         SearchComponent,
@@ -37,11 +37,11 @@ const routes: Routes = [
         SeriesInformationComponent,
     ],
     exports: [
-        RouterModule
+        RouterModule,
     ],
     providers: [
         SearchService,
-        RequestService
+        RequestService,
     ],
 })
 export class SearchModule { }

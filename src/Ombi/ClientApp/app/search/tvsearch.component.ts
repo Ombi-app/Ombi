@@ -1,32 +1,33 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
-import { Subject } from 'rxjs/Subject';
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { Subject } from "rxjs/Subject";
 
-import { SearchService } from '../services/search.service';
-import { AuthService } from '../auth/auth.service';
-import { RequestService } from '../services/request.service';
-import { NotificationService } from '../services/notification.service';
+import { AuthService } from "../auth/auth.service";
+import { NotificationService } from "../services";
+import { RequestService } from "../services";
+import { SearchService } from "../services";
 
-import { ISearchTvResult } from '../interfaces/ISearchTvResult';
-import { IRequestEngineResult } from '../interfaces/IRequestEngineResult';
-import { TreeNode } from 'primeng/primeng';
+import { TreeNode } from "primeng/primeng";
+import { IRequestEngineResult } from "../interfaces";
+import { ISearchTvResult } from "../interfaces";
 
 @Component({
-    selector: 'tv-search',
-    templateUrl: './tvsearch.component.html',
-    styleUrls: ['./../requests/tvrequests.component.scss'],
+    selector: "tv-search",
+    templateUrl: "./tvsearch.component.html",
+    styleUrls: ["./../requests/tvrequests.component.scss"],
 })
 export class TvSearchComponent implements OnInit, OnDestroy {
 
+    public searchText: string;
+    public searchChanged = new Subject<string>();
+    public tvResults: TreeNode[];
+    public result: IRequestEngineResult;
+    public searchApplied = false;
+
     private subscriptions = new Subject<void>();
-    searchText: string;
-    searchChanged = new Subject<string>();
-    tvResults: TreeNode[];
-    result: IRequestEngineResult;
-    searchApplied = false;
 
     constructor(private searchService: SearchService, private requestService: RequestService,
-        private notificationService: NotificationService, private route: Router, private authService: AuthService) {
+                private notificationService: NotificationService, private route: Router, private authService: AuthService) {
 
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
@@ -46,22 +47,20 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                     });
             });
     }
-    openClosestTab(el: any): void {
-        let rowclass = "undefined";
+    public openClosestTab(el: any) {
+        const rowclass = "undefined";
         el = el.toElement;
-        while (el.className != rowclass) {
+        while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;
-            if (!el) {
-            }
         }
         // At this point, the while loop has stopped and `el` represents the element that has
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        let caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
-        let caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
-        for (let value of el.children) {
+        const caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
+        const caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
+        for (const value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking
             if (value.className === caretright || value.className === caretdown) {
@@ -70,25 +69,24 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                 //Break from loop since we no longer need to continue looking
                 break;
             }
-        };
+        }
     }
-    
-    ngOnInit(): void {
+
+    public ngOnInit() {
         this.searchText = "";
         this.tvResults = [];
         this.result = {
             message: "",
             requestAdded: false,
-            errorMessage:""
-        }
+            errorMessage:"",
+        };
     }
 
-    search(text: any) {
+    public search(text: any) {
         this.searchChanged.next(text.target.value);
     }
 
-
-    popularShows() {
+    public popularShows() {
         this.clearResults();
         this.searchService.popularTv()
             .takeUntil(this.subscriptions)
@@ -98,7 +96,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    trendingShows() {
+    public trendingShows() {
         this.clearResults();
         this.searchService.trendingTv()
             .takeUntil(this.subscriptions)
@@ -108,7 +106,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    mostWatchedShows() {
+    public mostWatchedShows() {
         this.clearResults();
         this.searchService.mostWatchedTv()
             .takeUntil(this.subscriptions)
@@ -118,7 +116,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    anticipatedShows() {
+    public anticipatedShows() {
         this.clearResults();
         this.searchService.anticipatedTv()
             .takeUntil(this.subscriptions)
@@ -128,7 +126,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    getExtraInfo() {
+    public getExtraInfo() {
         this.tvResults.forEach((val, index) => {
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
@@ -138,7 +136,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         });
     }
 
-    request(searchResult: ISearchTvResult) {
+    public request(searchResult: ISearchTvResult) {
         searchResult.requested = true;
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
@@ -156,40 +154,39 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    allSeasons(searchResult: ISearchTvResult) {
+    public allSeasons(searchResult: ISearchTvResult) {
         searchResult.requestAll = true;
         this.request(searchResult);
     }
 
-    firstSeason(searchResult: ISearchTvResult) {
+    public firstSeason(searchResult: ISearchTvResult) {
         searchResult.firstSeason = true;
         this.request(searchResult);
     }
 
-    latestSeason(searchResult: ISearchTvResult) {
+    public latestSeason(searchResult: ISearchTvResult) {
         searchResult.latestSeason = true;
         this.request(searchResult);
     }
 
-    selectSeason(searchResult: ISearchTvResult) {
-        this.route.navigate(['/search/show', searchResult.id]);
+    public selectSeason(searchResult: ISearchTvResult) {
+        this.route.navigate(["/search/show", searchResult.id]);
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.next();
+        this.subscriptions.complete();
     }
 
     private updateItem(key: TreeNode, updated: TreeNode) {
-        let item = this.tvResults.filter((val) => {
-            return val.data == key;
-        });
-        item[0].data = updated.data;
+        const index = this.tvResults.indexOf(key, 0);
+        if (index > -1) {
+            this.tvResults[index] = updated;
+        }
     }
 
     private clearResults() {
         this.tvResults = [];
         this.searchApplied = false;
     }
-
-    ngOnDestroy(): void {
-        this.subscriptions.next();
-        this.subscriptions.complete();
-    }
-
 }

@@ -108,7 +108,7 @@ Task("SetVersionInfo")
 
 Task("NPM")
 .Does(() => {
-var settings = new NpmInstallSettings {
+    var settings = new NpmInstallSettings {
 		LogLevel = NpmLogLevel.Silent,
 		WorkingDirectory = webProjDir,
 		Production = true
@@ -117,9 +117,21 @@ var settings = new NpmInstallSettings {
 	NpmInstall(settings);
 });
 
+Task("TSLint")
+	.IsDependentOn("NPM")
+    .Does(() =>
+{
+	var settings = new NpmRunScriptSettings {
+		WorkingDirectory = webProjDir,
+		ScriptName = "lint"
+	};
+	
+    NpmRunScript(settings);
+});
+
 Task("Restore")
     .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("NPM")
+	.IsDependentOn("TSLint")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);
