@@ -50,7 +50,7 @@ module.exports = function (env) {
                 'intro.js-mit/intro.js',
                 'intro.js-mit/introjs.css',
                 'ngx-clipboard',
-                'bootstrap/dist/css/bootstrap.min.css',
+                'bootswatch/superhero/bootstrap.min.css',
                 'style-loader',
                 //'ng2-dragula',
                 //'dragula/dist/dragula.min.css'
