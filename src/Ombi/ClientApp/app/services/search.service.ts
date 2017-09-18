@@ -2,10 +2,10 @@
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
+import { TreeNode } from "primeng/primeng";
 import { ISearchMovieResult } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 import { ServiceAuthHelpers } from "./service.helpers";
-import { TreeNode } from "primeng/primeng";
 
 @Injectable()
 export class SearchService extends ServiceAuthHelpers {
