@@ -1,14 +1,14 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component } from "@angular/core";
 
 @Component({
-    templateUrl: './request.component.html'
+    templateUrl: "./request.component.html",
 })
 export class RequestComponent  {
 
-    showMovie = true;
-    showTv = false;
+    public showMovie = true;
+    public showTv = false;
 
-    selectTab() {
+    public selectTab() {
         this.showMovie = !this.showMovie;
         this.showTv = !this.showTv;
     }

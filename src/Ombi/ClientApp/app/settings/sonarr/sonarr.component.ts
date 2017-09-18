@@ -1,47 +1,45 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import "rxjs/add/operator/takeUntil";
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Subject } from "rxjs/Subject";
 
-import { ISonarrProfile, ISonarrRootFolder } from '../../interfaces/ISonarr'
+import { ISonarrProfile, ISonarrRootFolder } from "../../interfaces";
 
-import { TesterService } from '../../services/applications/tester.service';
-import { ISonarrSettings } from '../../interfaces/ISettings';
-import { SettingsService } from '../../services/settings.service';
-import { SonarrService } from '../../services/applications/sonarr.service';
-import { NotificationService } from "../../services/notification.service";
+import { ISonarrSettings } from "../../interfaces";
+import { SonarrService } from "../../services";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-
-    templateUrl: './sonarr.component.html',
+    templateUrl: "./sonarr.component.html",
 })
 export class SonarrComponent implements OnInit, OnDestroy {
 
-    constructor(private settingsService: SettingsService,
-        private sonarrService: SonarrService,
-        private notificationService: NotificationService,
-        private testerService : TesterService,
-        private fb : FormBuilder) { }
+    public qualities: ISonarrProfile[];
+    public rootFolders: ISonarrRootFolder[];
+    public selectedRootFolder: ISonarrRootFolder;
+    public selectedQuality: ISonarrProfile;
+    public profilesRunning: boolean;
+    public rootFoldersRunning: boolean;
+    public form: FormGroup;
+    public advanced = false;
 
-    qualities: ISonarrProfile[];
-    rootFolders: ISonarrRootFolder[];
-
-    selectedRootFolder: ISonarrRootFolder;
-    selectedQuality: ISonarrProfile;
-
-    profilesRunning: boolean;
-    rootFoldersRunning: boolean;
     private subscriptions = new Subject<void>();
-    form : FormGroup;
-    advanced = false;
 
-    ngOnInit(): void {
+    constructor(private settingsService: SettingsService,
+                private sonarrService: SonarrService,
+                private notificationService: NotificationService,
+                private testerService: TesterService,
+                private fb: FormBuilder) { }
+
+    public ngOnInit() {
 
         this.settingsService.getSonarr()
             .takeUntil(this.subscriptions)
             .subscribe(x => {
 
-                 this.form = this.fb.group({
+                this.form = this.fb.group({
                     enabled: [x.enabled],
                     apiKey: [x.apiKey, [Validators.required]],
                     qualityProfile: [x.qualityProfile, [Validators.required]],
@@ -54,19 +52,16 @@ export class SonarrComponent implements OnInit, OnDestroy {
                     seasonFolders: [x.seasonFolders],
                 });
 
-                if (x.qualityProfile)
-                {
+                if (x.qualityProfile) {
                     this.getProfiles(this.form);
                 }
-                if (x.rootPath)
-                {
+                if (x.rootPath) {
                     this.getRootFolders(this.form);
                 }
             });
     }
 
-
-    getProfiles(form:FormGroup) {
+    public getProfiles(form: FormGroup) {
         this.profilesRunning = true;
         this.sonarrService.getQualityProfiles(form.value)
             .takeUntil(this.subscriptions)
@@ -78,7 +73,7 @@ export class SonarrComponent implements OnInit, OnDestroy {
             });
     }
 
-    getRootFolders(form:FormGroup) {
+    public getRootFolders(form: FormGroup) {
         this.rootFoldersRunning = true;
         this.sonarrService.getRootFolders(form.value)
             .takeUntil(this.subscriptions)
@@ -90,12 +85,12 @@ export class SonarrComponent implements OnInit, OnDestroy {
             });
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
             return;
         }
-        var settings = <ISonarrSettings>form.value;
+        const settings = <ISonarrSettings>form.value;
         this.testerService.sonarrTest(settings).subscribe(x => {
             if (x) {
                 this.notificationService.success("Connected", "Successfully connected to Sonarr!");
@@ -105,11 +100,11 @@ export class SonarrComponent implements OnInit, OnDestroy {
         });
     }
 
-    onSubmit(form:FormGroup) {
-   if (form.invalid) {
+    public onSubmit(form: FormGroup) {
+        if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-       return;
-   }
+            return;
+        }
         this.settingsService.saveSonarr(form.value)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
@@ -121,7 +116,7 @@ export class SonarrComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy() {
         this.subscriptions.next();
         this.subscriptions.complete();
     }

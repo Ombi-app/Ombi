@@ -1,28 +1,27 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { INotificationTemplates, IEmailNotificationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
-import { TesterService } from "../../services/applications/tester.service";
-import { ValidationService } from "../../services/helpers/validation.service";
+import { IEmailNotificationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
+import { TesterService } from "../../services";
+import { ValidationService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './emailnotification.component.html',
+    templateUrl: "./emailnotification.component.html",
 })
 export class EmailNotificationComponent implements OnInit {
+    public NotificationType = NotificationType;
+    public templates: INotificationTemplates[];
+    public emailForm: FormGroup;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder,
-        private validationService: ValidationService,
-        private testerService: TesterService) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder,
+                private validationService: ValidationService,
+                private testerService: TesterService) { }
 
-    NotificationType = NotificationType;
-    templates: INotificationTemplates[];
-
-    emailForm: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getEmailNotificationSettings().subscribe(x => {
             this.templates = x.notificationTemplates;
 
@@ -39,21 +38,21 @@ export class EmailNotificationComponent implements OnInit {
             });
 
             if (x.authentication) {
-                this.validationService.enableValidation(this.emailForm, 'username');
-                this.validationService.enableValidation(this.emailForm, 'password');
+                this.validationService.enableValidation(this.emailForm, "username");
+                this.validationService.enableValidation(this.emailForm, "password");
             }
 
             this.subscribeToAuthChanges();
         });
     }
 
-    onSubmit(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
-        var settings = <IEmailNotificationSettings>form.value;
+        const settings = <IEmailNotificationSettings>form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveEmailNotificationSettings(settings).subscribe(x => {
@@ -66,10 +65,10 @@ export class EmailNotificationComponent implements OnInit {
 
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
         this.testerService.emailTest(form.value).subscribe(x => {
@@ -78,7 +77,7 @@ export class EmailNotificationComponent implements OnInit {
             } else {
                 this.notificationService.success("Error", "There was an error when sending the Email message, please check your settings.");
             }
-        })
+        });
     }
 
     private subscribeToAuthChanges() {
@@ -88,11 +87,11 @@ export class EmailNotificationComponent implements OnInit {
         changes$.subscribe((auth: boolean) => {
 
             if (auth) {
-                this.validationService.enableValidation(this.emailForm, 'username');
-                this.validationService.enableValidation(this.emailForm, 'password');
+                this.validationService.enableValidation(this.emailForm, "username");
+                this.validationService.enableValidation(this.emailForm, "password");
             } else {
-                this.validationService.disableValidation(this.emailForm, 'username');
-                this.validationService.disableValidation(this.emailForm, 'password');
+                this.validationService.disableValidation(this.emailForm, "username");
+                this.validationService.disableValidation(this.emailForm, "password");
             }
         });
     }

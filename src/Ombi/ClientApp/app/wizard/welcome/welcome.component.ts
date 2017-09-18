@@ -1,17 +1,13 @@
-﻿import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
+﻿import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
-  
-    templateUrl: './welcome.component.html',
+    templateUrl: "./welcome.component.html",
 })
 export class WelcomeComponent {
-    constructor(private router: Router) {
+    constructor(private router: Router) { }
 
-    }
-
-    next() {
-        this.router.navigate(['Wizard/MediaServer']);
+    public next() {
+        this.router.navigate(["Wizard/MediaServer"]);
     }
 }

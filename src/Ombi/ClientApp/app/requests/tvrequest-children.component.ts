@@ -1,17 +1,15 @@
-﻿import { Component, Input } from '@angular/core';
-import { RequestService } from '../services/request.service';
-import { IChildRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
+﻿import { Component, Input } from "@angular/core";
+import { IChildRequests, IEpisodesRequests } from "../interfaces";
+import { RequestService } from "../services";
 
 @Component({
-    selector:'tvrequests-children',
-    templateUrl: './tvrequest-children.component.html'
+    selector:"tvrequests-children",
+    templateUrl: "./tvrequest-children.component.html",
 })
 export class TvRequestChildrenComponent {
-    constructor(private requestService: RequestService  ) {
-    }
-
-    @Input() childRequests: IChildRequests[];
-    @Input() isAdmin: boolean;
+    @Input() public childRequests: IChildRequests[];
+    @Input() public isAdmin: boolean;
+    constructor(private requestService: RequestService  ) { }
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)
             .subscribe();
@@ -23,7 +21,6 @@ export class TvRequestChildrenComponent {
     }
 
     public deny(request: IChildRequests) {
-        debugger;
         request.approved = false;
         request.denied = true;
 
@@ -37,7 +34,6 @@ export class TvRequestChildrenComponent {
     }
 
     public approve(request: IChildRequests) {
-        debugger;
         request.approved = true;
         request.denied = false;
         this.requestService.updateChild(request)
@@ -62,7 +58,7 @@ export class TvRequestChildrenComponent {
     }
 
     private removeRequestFromUi(key: IChildRequests) {
-        var index = this.childRequests.indexOf(key, 0);
+        const index = this.childRequests.indexOf(key, 0);
         if (index > -1) {
             this.childRequests.splice(index, 1);
         }

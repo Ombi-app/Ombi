@@ -1,24 +1,21 @@
-﻿import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
+﻿import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
-    templateUrl: './mediaserver.component.html',
+    templateUrl: "./mediaserver.component.html",
 })
 export class MediaServerComponent {
-    constructor(private router: Router) {
+    constructor(private router: Router) { }
 
+    public plex() {
+        this.router.navigate(["Wizard/Plex"]);
     }
 
-    plex() {
-        this.router.navigate(['Wizard/Plex']);
+    public emby() {
+        this.router.navigate(["Wizard/Emby"]);
     }
 
-    emby() {
-        this.router.navigate(['Wizard/Emby']);
-    }
-
-    skip() {
-        this.router.navigate(['Wizard/CreateAdmin']);
+    public skip() {
+        this.router.navigate(["Wizard/CreateAdmin"]);
     }
 }

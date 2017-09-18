@@ -32,10 +32,10 @@
   </ItemGroup>
 
   <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
-    <Exec Command="npm run-script vendor" />
+    <Exec Command="npm run vendor" />
   </Target>
   <Target Name="NpmCommandsRelease" Condition="'$(Configuration)'=='Release'" AfterTargets="Build">
-    <Exec Command="npm run-script publish" />
+    <Exec Command="npm run publish" />
   </Target>
   
   <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">

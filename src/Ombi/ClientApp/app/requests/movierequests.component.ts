@@ -1,27 +1,38 @@
-﻿import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/takeUntil';
+﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/map";
+import "rxjs/add/operator/takeUntil";
+import { Subject } from "rxjs/Subject";
 
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/map";
 
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
+import { AuthService } from "../auth/auth.service";
+import { RequestService } from "../services";
 
-import { RequestService } from '../services/request.service';
-import { AuthService } from '../auth/auth.service';
-
-import { IMovieRequests } from '../interfaces/IRequestModel';
+import { IMovieRequests } from "../interfaces";
 
 @Component({
-    selector: 'movie-requests',
-    templateUrl: './movierequests.component.html'
+    selector: "movie-requests",
+    templateUrl: "./movierequests.component.html",
 })
 export class MovieRequestsComponent implements OnInit, OnDestroy {
+    public movieRequests: IMovieRequests[];
+
+    public searchChanged: Subject<string> = new Subject<string>();
+    public searchText: string;
+
+    public isAdmin: boolean;
+
+    private currentlyLoaded: number;
+    private amountToLoad: number;
+
+    private subscriptions = new Subject<void>();
+
     constructor(private requestService: RequestService,
-    private auth:AuthService) {
+                private auth: AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -38,58 +49,48 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
             });
     }
 
-    movieRequests: IMovieRequests[];
-
-    searchChanged: Subject<string> = new Subject<string>();
-    searchText: string;
-
-    isAdmin: boolean;
-
-    private currentlyLoaded: number;
-    private amountToLoad: number;
-
-
-    private subscriptions = new Subject<void>();
-
-    ngOnInit() {
+    public ngOnInit() {
         this.amountToLoad = 5;
         this.currentlyLoaded = 5;
         this.loadInit();
         this.isAdmin = this.auth.hasRole("admin");
     }
 
-
-
-    loadMore() {
+    public loadMore() {
         this.loadRequests(this.amountToLoad, this.currentlyLoaded);
     }
 
-    search(text: any) {
+    public search(text: any) {
         this.searchChanged.next(text.target.value);
     }
 
-    removeRequest(request: IMovieRequests) {
+    public removeRequest(request: IMovieRequests) {
         this.requestService.removeMovieRequest(request);
         this.removeRequestFromUi(request);
         this.loadRequests(1, this.currentlyLoaded);
     }
 
-    changeAvailability(request: IMovieRequests, available: boolean) {
+    public changeAvailability(request: IMovieRequests, available: boolean) {
         request.available = available;
 
         this.updateRequest(request);
     }
 
-    approve(request: IMovieRequests) {
+    public approve(request: IMovieRequests) {
         request.approved = true;
         request.denied = false;
         this.updateRequest(request);
     }
 
-    deny(request: IMovieRequests) {
+    public deny(request: IMovieRequests) {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.next();
+        this.subscriptions.complete();
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
@@ -119,14 +120,9 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
     }
 
     private removeRequestFromUi(key: IMovieRequests) {
-        var index = this.movieRequests.indexOf(key, 0);
+        const index = this.movieRequests.indexOf(key, 0);
         if (index > -1) {
             this.movieRequests.splice(index, 1);
         }
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.next();
-        this.subscriptions.complete();
     }
 }

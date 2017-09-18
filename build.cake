@@ -113,9 +113,16 @@ var settings = new NpmInstallSettings {
 	NpmInstall(settings);
 });
 
+Task("TSLint")
+	.IsDependentOn("NPM")
+    .Does(() =>
+{
+    NpmRunScript("lint");
+});
+
 Task("Restore")
     .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("NPM")
+	.IsDependentOn("TSLint")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);

@@ -1,26 +1,26 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { INotificationTemplates, IDiscordNotifcationSettings, NotificationType } from '../../interfaces/INotifcationSettings';
-import { SettingsService } from '../../services/settings.service';
-import { NotificationService } from "../../services/notification.service";
-import { TesterService } from "../../services/applications/tester.service";
+import { IDiscordNotifcationSettings, INotificationTemplates, NotificationType } from "../../interfaces";
+import { TesterService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-    templateUrl: './discord.component.html',
+    templateUrl: "./discord.component.html",
 })
 export class DiscordComponent implements OnInit {
+
+    public NotificationType = NotificationType;
+    public templates: INotificationTemplates[];
+    public form: FormGroup;
+
     constructor(private settingsService: SettingsService,
-        private notificationService: NotificationService,
-        private fb: FormBuilder,
-        private testerService : TesterService) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder,
+                private testerService: TesterService) { }
 
-    NotificationType = NotificationType;
-    templates: INotificationTemplates[];
-
-    form: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.settingsService.getDiscordNotificationSettings().subscribe(x => {
             this.templates = x.notificationTemplates;
 
@@ -33,13 +33,13 @@ export class DiscordComponent implements OnInit {
         });
     }
 
-    onSubmit(form: FormGroup) {
+    public onSubmit(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
-        var settings = <IDiscordNotifcationSettings>form.value;
+        const settings = <IDiscordNotifcationSettings>form.value;
         settings.notificationTemplates = this.templates;
 
         this.settingsService.saveDiscordNotificationSettings(settings).subscribe(x => {
@@ -52,10 +52,10 @@ export class DiscordComponent implements OnInit {
 
     }
 
-    test(form: FormGroup) {
+    public test(form: FormGroup) {
         if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
         this.testerService.discordTest(form.value).subscribe(x => {
@@ -64,7 +64,7 @@ export class DiscordComponent implements OnInit {
             } else {
                 this.notificationService.success("Error", "There was an error when sending the Discord message. Please check your settings");
             }
-        })
+        });
 
     }
 }

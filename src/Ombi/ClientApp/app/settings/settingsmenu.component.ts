@@ -1,8 +1,6 @@
-﻿import { Component } from '@angular/core';
+﻿import { Component } from "@angular/core";
 @Component({
-    selector: 'settings-menu',
-    templateUrl: './settingsmenu.component.html'
+    selector: "settings-menu",
+    templateUrl: "./settingsmenu.component.html",
 })
-export class SettingsMenuComponent {
-    
-}
+export class SettingsMenuComponent { }

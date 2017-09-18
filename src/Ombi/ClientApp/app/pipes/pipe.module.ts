@@ -1,5 +1,5 @@
-﻿import { NgModule, ModuleWithProviders }      from '@angular/core';
-import { HumanizePipe } from './HumanizePipe';
+﻿import { ModuleWithProviders, NgModule } from "@angular/core";
+import { HumanizePipe } from "./HumanizePipe";
 
 @NgModule({
     imports:        [],
@@ -8,10 +8,10 @@ import { HumanizePipe } from './HumanizePipe';
 })
 export class PipeModule {
 
-    static forRoot() : ModuleWithProviders {
+    public static forRoot(): ModuleWithProviders {
         return {
             ngModule: PipeModule,
             providers: [],
         };
     }
-} 
+}

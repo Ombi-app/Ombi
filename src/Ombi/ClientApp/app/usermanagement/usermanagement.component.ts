@@ -1,16 +1,19 @@
-﻿import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from "@angular/core";
 
-import { IUser } from '../interfaces/IUser';
-import { IdentityService } from '../services/identity.service';
+import { IUser } from "../interfaces";
+import { IdentityService } from "../services";
 
 @Component({
-
-    templateUrl: './usermanagement.component.html'
+    templateUrl: "./usermanagement.component.html",
 })
 export class UserManagementComponent implements OnInit {
+
+    public users: IUser[];
+    public checkAll = false;
+
     constructor(private identityService: IdentityService) { }
 
-    ngOnInit(): void {
+    public ngOnInit() {
         this.users = [];
         this.identityService.getUsers().subscribe(x => {
             this.users = x;
@@ -18,14 +21,11 @@ export class UserManagementComponent implements OnInit {
 
     }
 
-    welcomeEmail(user: IUser): void {
-        
+    public welcomeEmail(user: IUser) {
+        // todo
     }
 
-    users: IUser[];
-    checkAll = false;
-
-    checkAllBoxes() {
+    public checkAllBoxes() {
         this.checkAll = !this.checkAll;
         this.users.forEach(user => {
             user.checked = this.checkAll;

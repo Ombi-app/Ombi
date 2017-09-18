@@ -1,16 +1,16 @@
-﻿import { Component, Input } from '@angular/core';
+﻿import { Component, Input } from "@angular/core";
 
-import { INotificationTemplates, NotificationType } from '../../interfaces/INotifcationSettings';
+import { INotificationTemplates, NotificationType } from "../../interfaces";
 
 @Component({
-    selector:'notification-templates',
-    templateUrl: './notificationtemplate.component.html',
+    selector:"notification-templates",
+    templateUrl: "./notificationtemplate.component.html",
 })
 export class NotificationTemplate {
-    @Input() templates: INotificationTemplates[];  
-    NotificationType = NotificationType;
+    @Input() public templates: INotificationTemplates[];
+    public NotificationType = NotificationType;
 
-    helpText = `
+    public helpText = `
 {RequestedUser} : The User who requested the content <br/>
 {RequestedDate} : The Date the media was requested <br/>
 {Title} : The title of the request e.g. Lion King <br/>

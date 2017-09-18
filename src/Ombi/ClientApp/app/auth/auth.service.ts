@@ -1,43 +1,42 @@
-﻿import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
-import { Http, Headers } from '@angular/http';
+﻿import { Injectable } from "@angular/core";
+import { Headers, Http } from "@angular/http";
+import { JwtHelper, tokenNotExpired } from "angular2-jwt";
+import { Observable } from "rxjs/Rx";
 
-import { ServiceHelpers } from '../services/service.helpers';
-import { IUserLogin, ILocalUser } from './IUserLogin';
+import { ServiceHelpers } from "../services";
+import { ILocalUser, IUserLogin } from "./IUserLogin";
 
 @Injectable()
 export class AuthService extends ServiceHelpers {
+    public jwtHelper: JwtHelper = new JwtHelper();
+
     constructor(http: Http) {
-        super(http, '/api/v1/token');
+        super(http, "/api/v1/token");
     }
 
-    jwtHelper: JwtHelper = new JwtHelper();
-
-    login(login: IUserLogin): Observable<any> {
+    public login(login: IUserLogin): Observable<any> {
         this.headers = new Headers();
-        this.headers.append('Content-Type', 'application/json');
+        this.headers.append("Content-Type", "application/json");
 
         return this.http.post(`${this.url}/`, JSON.stringify(login), { headers: this.headers })
             .map(this.extractData);
     }
 
-    loggedIn() {
-        return tokenNotExpired('id_token');
+    public loggedIn() {
+        return tokenNotExpired("id_token");
     }
 
-    claims(): ILocalUser {
+    public claims(): ILocalUser {
         if (this.loggedIn()) {
-            var token = localStorage.getItem('id_token');
+            const token = localStorage.getItem("id_token");
             if (!token) {
-                throw "Invalid token";
+                throw new Error("Invalid token");
             }
-            var json = this.jwtHelper.decodeToken(token);
-            var roles = json["role"];
-            var name = json["sub"];
+            const json = this.jwtHelper.decodeToken(token);
+            const roles = json.role;
+            const name = json.sub;
 
-
-            var u = { name: name, roles: [] as string[] };
+            const u = { name, roles: [] as string[] };
             if (roles instanceof Array) {
 
                 u.roles  = roles;
@@ -49,13 +48,11 @@ export class AuthService extends ServiceHelpers {
         return <ILocalUser>{};
     }
 
-
-    hasRole(role: string): boolean {
+    public hasRole(role: string): boolean {
         return this.claims().roles.some(r => r.toUpperCase() === role.toUpperCase());
     }
 
-    logout() {
-        localStorage.removeItem('id_token');
+    public logout() {
+        localStorage.removeItem("id_token");
     }
 }
-

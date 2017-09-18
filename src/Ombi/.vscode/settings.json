@@ -1,5 +1,15 @@
 {
   "files.associations": {
     "dockerfile.*": "dockerfile"
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "files.exclude": {
+    "**/*.js": {
+      "when": "$(basename).ts"
+    },
+    "**/*.js.map": true,
+    "node_modules": true,
+    "obj": true,
+    "bin": true
   }
 }

@@ -1,32 +1,44 @@
-﻿import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
+﻿import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/map";
 import "rxjs/add/operator/takeUntil";
+import { Subject } from "rxjs/Subject";
 
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
+import "rxjs/add/operator/debounceTime";
+import "rxjs/add/operator/distinctUntilChanged";
+import "rxjs/add/operator/map";
 
-import { RequestService } from '../services/request.service';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from "../auth/auth.service";
+import { RequestService } from "../services";
 
-import { ITvRequests, IChildRequests, INewSeasonRequests, IEpisodesRequests } from '../interfaces/IRequestModel';
-import { TreeNode, } from "primeng/primeng";
+import { TreeNode } from "primeng/primeng";
+import { IChildRequests, IEpisodesRequests, INewSeasonRequests, ITvRequests } from "../interfaces";
 
 @Component({
-    selector: 'tv-requests',
-    templateUrl: './tvrequests.component.html',
-    styleUrls: ['./tvrequests.component.scss'],
+    selector: "tv-requests",
+    templateUrl: "./tvrequests.component.html",
+    styleUrls: ["./tvrequests.component.scss"],
     //Was required to turn off encapsulation since CSS only should be overridden for this component
     //However when encapsulation is on angular injects prefixes to all classes so css selectors
     //Stop working
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
 })
 export class TvRequestsComponent implements OnInit, OnDestroy {
+
+    public tvRequests: TreeNode[];
+    public searchChanged = new Subject<string>();
+    public searchText: string;
+    public isAdmin: boolean;
+    public showChildDialogue = false; // This is for the child modal popup
+    public selectedSeason: ITvRequests;
+
+    private currentlyLoaded: number;
+    private amountToLoad: number;
+    private subscriptions = new Subject<void>();
+
     constructor(private requestService: RequestService,
-        private auth: AuthService) {
+                private auth: AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -42,22 +54,20 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                     .subscribe(m => this.tvRequests = this.transformData(m));
             });
     }
-    openClosestTab(el: any): void {
-        var rowclass = "undefined";
+    public openClosestTab(el: any) {
+        const rowclass = "undefined";
         el = el.toElement;
-        while (el.className != rowclass) {
+        while (el.className !== rowclass) {
             // Increment the loop to the parent node until we find the row we need
             el = el.parentNode;
-            if (!el) {
-            }
         }
         // At this point, the while loop has stopped and `el` represents the element that has
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        var caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
-        var caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
-        for (var value of el.children) {
+        const caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
+        const caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
+        for (const value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking
             if (value.className === caretright || value.className === caretdown) {
@@ -66,47 +76,33 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
                 //Break from loop since we no longer need to continue looking
                 break;
             }
-        };
+        }
     }
-    transformData(data: ITvRequests[]): TreeNode[] {
-        var temp: TreeNode[] = [];
+    public transformData(data: ITvRequests[]): TreeNode[] {
+        const temp: TreeNode[] = [];
         data.forEach((value) => {
             temp.push({
-                "data": value,
-                "children": [{
-                    "data": this.fixEpisodeSort(value.childRequests), leaf: true
+                data: value,
+                children: [{
+                    data: this.fixEpisodeSort(value.childRequests), leaf: true,
                 }],
-                leaf: false
+                leaf: false,
             });
-        }, this)
+        }, this);
         return <TreeNode[]>temp;
     }
-    private subscriptions = new Subject<void>();
 
-    tvRequests: TreeNode[];
-
-    searchChanged = new Subject<string>();
-    searchText: string;
-
-    isAdmin: boolean;
-
-    private currentlyLoaded: number;
-    private amountToLoad: number;
-
-    public showChildDialogue = false; // This is for the child modal popup
-    public selectedSeason: ITvRequests;
-
-    fixEpisodeSort(items: IChildRequests[]) {
-        items.forEach(function (value) {
-            value.seasonRequests.forEach(function (requests: INewSeasonRequests) {
-                requests.episodes.sort(function (a: IEpisodesRequests, b: IEpisodesRequests) {
+    public fixEpisodeSort(items: IChildRequests[]) {
+        items.forEach((value) => {
+            value.seasonRequests.forEach((requests: INewSeasonRequests) => {
+                requests.episodes.sort((a: IEpisodesRequests, b: IEpisodesRequests) => {
                     return a.episodeNumber - b.episodeNumber;
-                })
-            })
-        })
+                });
+            });
+        });
         return items;
     }
-    ngOnInit() {
+    public ngOnInit() {
         this.amountToLoad = 1000;
         this.currentlyLoaded = 5;
         this.tvRequests = [];
@@ -197,6 +193,11 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         return "white";
     }
 
+    public ngOnDestroy() {
+        this.subscriptions.next();
+        this.subscriptions.complete();
+    }
+
     //private updateRequest(request: ITvRequests) {
     //    this.requestService.updateTvRequest(request)
     //        .takeUntil(this.subscriptions)
@@ -217,14 +218,9 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
     }
 
     private removeRequestFromUi(key: ITvRequests) {
-        var index = this.tvRequests.findIndex(x => x.data === key);
+        const index = this.tvRequests.findIndex(x => x.data === key);
         if (index > -1) {
             this.tvRequests.splice(index, 1);
         }
-    }
-
-    ngOnDestroy(): void {
-        this.subscriptions.next();
-        this.subscriptions.complete();
     }
 }

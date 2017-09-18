@@ -1,25 +1,23 @@
-﻿import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+﻿import { Component } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { IdentityService } from '../../services/identity.service';
-import { SettingsService } from '../../services/settings.service';
-import { AuthService } from '../../auth/auth.service';
-import { NotificationService } from '../../services/notification.service';
+import { AuthService } from "../../auth/auth.service";
+import { IdentityService } from "../../services";
+import { NotificationService } from "../../services";
+import { SettingsService } from "../../services";
 
 @Component({
-  
-    templateUrl: './createadmin.component.html',
+    templateUrl: "./createadmin.component.html",
 })
 export class CreateAdminComponent {
 
+    public username: string;
+    public password: string;
+
     constructor(private identityService: IdentityService, private notificationService: NotificationService,
-        private router: Router, private auth: AuthService, private settings: SettingsService) { }
+                private router: Router, private auth: AuthService, private settings: SettingsService) { }
 
-
-    username: string;
-    password: string;
-
-    createUser() {
+    public createUser() {
         this.identityService.createWizardUser(this.username, this.password).subscribe(x => {
             if (x) {
                 // Log me in.
@@ -32,8 +30,8 @@ export class CreateAdminComponent {
                         ombi.wizard = true;
 
                         this.settings.saveOmbi(ombi).subscribe(x => {
-                            
-                            this.router.navigate(['search']);
+
+                            this.router.navigate(["search"]);
                         });
 
                     });

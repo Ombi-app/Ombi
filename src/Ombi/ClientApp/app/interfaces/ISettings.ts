@@ -1,101 +1,99 @@
-﻿export interface ISettings {
-    id: number
-}
+﻿import { ISettings } from "./ICommon";
 
 export interface IExternalSettings extends ISettings {
-    ssl: boolean,
-    subDir: string,
-    ip: string,
-    port: number,
+    ssl: boolean;
+    subDir: string;
+    ip: string;
+    port: number;
 }
 
 export interface IOmbiSettings extends ISettings {
-    port: number,
-    //baseUrl:string, 
-    collectAnalyticData: boolean,
-    wizard: boolean,
-    apiKey: string,
-    externalUrl: string,
-    allowExternalUsersToAuthenticate:boolean,
+    port: number;
+    //baseUrl:string,
+    collectAnalyticData: boolean;
+    wizard: boolean;
+    apiKey: string;
+    externalUrl: string;
+    allowExternalUsersToAuthenticate: boolean;
 }
 
 export interface IEmbySettings extends ISettings {
-    enable: boolean,
-    servers: IEmbyServer[]
+    enable: boolean;
+    servers: IEmbyServer[];
 }
 
 export interface IEmbyServer extends IExternalSettings {
-    name:string,
-    apiKey: string,
-    administratorId: string,
-    enableEpisodeSearching: boolean,
+    name: string;
+    apiKey: string;
+    administratorId: string;
+    enableEpisodeSearching: boolean;
 }
 
 export interface IPlexSettings extends ISettings {
 
-    enable: boolean,
-    servers: IPlexServer[]
+    enable: boolean;
+    servers: IPlexServer[];
 }
 
 export interface IPlexServer extends IExternalSettings {
-    name: string,
-    enableEpisodeSearching: boolean,
-    plexAuthToken: string,
-    machineIdentifier: string,
-    plexSelectedLibraries: IPlexLibraries[],
+    name: string;
+    enableEpisodeSearching: boolean;
+    plexAuthToken: string;
+    machineIdentifier: string;
+    plexSelectedLibraries: IPlexLibrariesSettings[];
 }
 
-export interface IPlexLibraries {
-    key: string,
-    title: string,
-    enabled: boolean,
+export interface IPlexLibrariesSettings {
+    key: string;
+    title: string;
+    enabled: boolean;
 }
 
 export interface ISonarrSettings extends IExternalSettings {
-    apiKey: string,
-    enabled: boolean,
-    qualityProfile: string,
-    seasonFolders: boolean,
-    rootPath: string,
-    fullRootPath: string,
-    addOnly:boolean,
+    apiKey: string;
+    enabled: boolean;
+    qualityProfile: string;
+    seasonFolders: boolean;
+    rootPath: string;
+    fullRootPath: string;
+    addOnly: boolean;
 }
 
 export interface IRadarrSettings extends IExternalSettings {
-    enabled: boolean,
-    apiKey: string,
-    defaultQualityProfile: string,
-    defaultRootPath: string,
-    fullRootPath: string,
-    addOnly: boolean,
-    minimumAvailability:string,
+    enabled: boolean;
+    apiKey: string;
+    defaultQualityProfile: string;
+    defaultRootPath: string;
+    fullRootPath: string;
+    addOnly: boolean;
+    minimumAvailability: string;
 }
 
 export interface ILandingPageSettings extends ISettings {
-    enabled: boolean,
-   
-    noticeEnabled: boolean,
-    noticeText: string,
-   
-    timeLimit: boolean,
-    startDateTime: Date,
-    endDateTime: Date,
-    expired:boolean,
+    enabled: boolean;
+
+    noticeEnabled: boolean;
+    noticeText: string;
+
+    timeLimit: boolean;
+    startDateTime: Date;
+    endDateTime: Date;
+    expired: boolean;
 }
 
 export interface ICustomizationSettings extends ISettings {
-    applicationName: string,
-    logo: string,
+    applicationName: string;
+    logo: string;
 }
 
 export interface IAuthenticationSettings extends ISettings {
 
-    allowExternalUsersToAuthenticate: boolean,
+    allowExternalUsersToAuthenticate: boolean;
     // Password
 
-    requiredDigit: boolean,
-    requiredLength: number,
-    requiredLowercase: boolean,
-    requireNonAlphanumeric: boolean,
-    requireUppercase:boolean,
+    requiredDigit: boolean;
+    requiredLength: number;
+    requiredLowercase: boolean;
+    requireNonAlphanumeric: boolean;
+    requireUppercase: boolean;
 }

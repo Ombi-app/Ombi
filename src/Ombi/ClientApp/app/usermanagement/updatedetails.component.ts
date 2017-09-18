@@ -1,24 +1,24 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+﻿import { Component, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
-import { IUpdateLocalUser } from '../interfaces/IUser';
-import { IdentityService } from '../services/identity.service';
-import { NotificationService } from '../services/notification.service';
+import { IUpdateLocalUser } from "../interfaces";
+import { IdentityService } from "../services";
+import { NotificationService } from "../services";
 
 @Component({
-    templateUrl: './updatedetails.component.html'
+    templateUrl: "./updatedetails.component.html",
 })
 export class UpdateDetailsComponent implements OnInit {
+    public form: FormGroup;
+
     constructor(private identityService: IdentityService,
-        private notificationService: NotificationService,
-     private fb: FormBuilder) { }
+                private notificationService: NotificationService,
+                private fb: FormBuilder) { }
 
-    form: FormGroup;
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.identityService.getUser().subscribe(x => {
-            var localUser = x as IUpdateLocalUser;
-             this.form = this.fb.group({
+            const localUser = x as IUpdateLocalUser;
+            this.form = this.fb.group({
                  id:[localUser.id],
                 username: [localUser.username],
                 emailAddress: [localUser.emailAddress, [Validators.email]],
@@ -27,27 +27,26 @@ export class UpdateDetailsComponent implements OnInit {
                 password: [localUser.password],
             });
 
-            
         });
 
     }
 
-    onSubmit(form : FormGroup) {
+    public onSubmit(form: FormGroup) {
     if (form.invalid) {
             this.notificationService.error("Validation", "Please check your entered values");
-            return
+            return;
         }
 
-        if (form.controls["password"].dirty) {
+    if (form.controls.password.dirty) {
             if (form.value.password !== form.value.confirmNewPassword) {
                 this.notificationService.error("Error", "Passwords do not match");
                 return;
             }
         }
 
-        this.identityService.updateLocalUser(this.form.value).subscribe(x => {
+    this.identityService.updateLocalUser(this.form.value).subscribe(x => {
             if (x.successful) {
-                this.notificationService.success("Updated", `All of your details have now been updated`)
+                this.notificationService.success("Updated", `All of your details have now been updated`);
             } else {
                 x.errors.forEach((val) => {
                     this.notificationService.error("Error", val);
@@ -57,5 +56,4 @@ export class UpdateDetailsComponent implements OnInit {
 
     }
 
-     
 }

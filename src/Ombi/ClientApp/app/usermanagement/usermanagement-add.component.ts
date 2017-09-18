@@ -1,24 +1,23 @@
-﻿import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+﻿import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { IUser, UserType, ICheckbox } from '../interfaces/IUser';
-import { IdentityService } from '../services/identity.service';
-import { NotificationService } from '../services/notification.service';
+import { ICheckbox, IUser, UserType } from "../interfaces";
+import { IdentityService } from "../services";
+import { NotificationService } from "../services";
 
 @Component({
-
-    templateUrl: './usermanagement-add.component.html'
+    templateUrl: "./usermanagement-add.component.html",
 })
 export class UserManagementAddComponent implements OnInit {
+    public user: IUser;
+    public availableClaims: ICheckbox[];
+    public confirmPass: "";
+
     constructor(private identityService: IdentityService,
-        private notificationSerivce: NotificationService,
-        private router: Router) { }
+                private notificationSerivce: NotificationService,
+                private router: Router) { }
 
-    user: IUser;
-    availableClaims: ICheckbox[];
-    confirmPass: "";
-
-    ngOnInit(): void {
+    public ngOnInit() {
         this.identityService.getAllAvailableClaims().subscribe(x => this.availableClaims = x);
         this.user = {
             alias: "",
@@ -29,11 +28,11 @@ export class UserManagementAddComponent implements OnInit {
             username: "",
             userType: UserType.LocalUser,
             checked:false,
-            isSetup:false
-        }
+            isSetup:false,
+        };
     }
 
-    create(): void {
+    public create() {
         this.user.claims = this.availableClaims;
 
         if (this.user.password) {
@@ -42,7 +41,7 @@ export class UserManagementAddComponent implements OnInit {
                 return;
             }
         }
-        var hasClaims = this.availableClaims.some((item) => {
+        const hasClaims = this.availableClaims.some((item) => {
             if (item.enabled) { return true; }
 
             return false;
@@ -55,14 +54,14 @@ export class UserManagementAddComponent implements OnInit {
 
         this.identityService.createUser(this.user).subscribe(x => {
             if (x.successful) {
-                this.notificationSerivce.success("Updated", `The user ${this.user.username} has been created successfully`)
-                this.router.navigate(['usermanagement']);
+                this.notificationSerivce.success("Updated", `The user ${this.user.username} has been created successfully`);
+                this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
                     this.notificationSerivce.error("Error", val);
                 });
             }
-        })
+        });
     }
 
 }
