@@ -1,10 +1,6 @@
-﻿import { Component, OnInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+﻿import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/operator/distinctUntilChanged';
-import 'rxjs/add/operator/map';
-import "rxjs/add/operator/takeUntil";
 
 import { SearchService } from '../services/search.service';
 import { AuthService } from '../auth/auth.service';
@@ -19,10 +15,6 @@ import { TreeNode } from "primeng/primeng";
     selector: 'tv-search',
     templateUrl: './tvsearch.component.html',
     styleUrls: ['./../requests/tvrequests.component.scss'],
-    //Was required to turn off encapsulation since CSS only should be overridden for this component
-    //However when encapsulation is on angular injects prefixes to all classes so css selectors
-    //Stop working
-    encapsulation: ViewEncapsulation.None
 })
 export class TvSearchComponent implements OnInit, OnDestroy {
 
@@ -67,8 +59,8 @@ export class TvSearchComponent implements OnInit, OnDestroy {
         // the class you specified
 
         // Then we loop through the children to find the caret which we want to click
-        var caretright = "ui-treetable-toggler fa fa-fw ui-c fa-caret-right";
-        var caretdown = "ui-treetable-toggler fa fa-fw ui-c fa-caret-down";
+        var caretright = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-right";
+        var caretdown = "ui-treetable-toggler fa fa-fw ui-clickable fa-caret-down";
         for (var value of el.children) {
             // the caret from the ui has 2 class selectors depending on if expanded or not
             // we search for both since we want to still toggle the clicking

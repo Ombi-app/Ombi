@@ -95,19 +95,11 @@ Task("SetVersionInfo")
 
 
 	buildSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
+	buildSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
 	publishSettings.ArgumentCustomization = args => args.Append("/p:SemVer=" + versionInfo.AssemblySemVer);
-	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + fullVer);
-	buildSettings.VersionSuffix = versionInfo.BranchName;
-	publishSettings.VersionSuffix = versionInfo.BranchName;
-});
-
-Task("Restore")
-    .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("Gulp Publish")
-    .Does(() =>
-{
-    DotNetCoreRestore(projDir);
+	publishSettings.ArgumentCustomization = args => args.Append("/p:FullVer=" + versionInfo.FullSemVer);
+	//buildSettings.VersionSuffix = versionInfo.BranchName;
+	//publishSettings.VersionSuffix = versionInfo.BranchName;
 });
 
 Task("NPM")
@@ -121,17 +113,14 @@ var settings = new NpmInstallSettings {
 	NpmInstall(settings);
 });
 
-Task("Gulp Publish")
-.IsDependentOn("NPM")
-.Does(() => {
-
-var runScriptSettings = new NpmRunScriptSettings {
-		ScriptName="publish",
-		WorkingDirectory = webProjDir,
-	};
-	
-	NpmRunScript(runScriptSettings);
+Task("Restore")
+    .IsDependentOn("SetVersionInfo")
+	.IsDependentOn("NPM")
+    .Does(() =>
+{
+    DotNetCoreRestore(projDir);
 });
+
 
 Task("Build")
     .IsDependentOn("Restore")

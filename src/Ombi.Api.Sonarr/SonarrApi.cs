@@ -97,7 +97,7 @@ namespace Ombi.Api.Sonarr
 
                 return await Api.Request<NewSeries>(request);
             }
-            catch (JsonSerializationException e)
+            catch (JsonSerializationException)
             {
                 var error = await Api.Request<List<SonarrError>>(request);
                 var messages = error?.Select(x => x.errorMessage).ToList();

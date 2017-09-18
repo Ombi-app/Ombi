@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function (env) {
     const extractCSS = new ExtractTextPlugin('main.css');
@@ -13,7 +14,7 @@ module.exports = function (env) {
     const cssLoader = prod ? 'css-loader?minimize' : 'css-loader';
     const outputDir = './wwwroot/dist';
     const bundleConfig = {
-        entry: { 'main': './ClientApp/main.ts', 'styles': './Styles/Themes/plex.scss' },
+        entry: { 'main': './ClientApp/main.ts' },
         stats: { modules: false },
         context: __dirname,
         resolve: { extensions: ['.ts', '.js'] },
@@ -28,8 +29,8 @@ module.exports = function (env) {
                 { test: /\.ts$/, include: /ClientApp/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', cssLoader] },
-                { test: /\.scss$/, include: /ClientApp/, use: ['to-string-loader', cssLoader, 'sass-loader'] },
-                { test: /\.scss$/, include: /Styles/, use: extractCSS.extract({ use: [cssLoader, 'sass-loader'] }) },
+                { test: /\.scss$/, include: /ClientApp(\\|\/)app/, use: ["to-string-loader", cssLoader, "sass-loader"] },
+                { test: /\.scss$/, include: /ClientApp(\\|\/)styles/, use: ["style-loader", cssLoader, "sass-loader"] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },
@@ -42,7 +43,7 @@ module.exports = function (env) {
             })
         ].concat(prod ? [
             // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin()
+            new UglifyJSPlugin()
         ] : [
             // Plugins that apply in development builds only
         ]).concat(analyse ? [

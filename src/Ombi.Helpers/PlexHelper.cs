@@ -62,7 +62,7 @@ namespace Ombi.Helpers
                 return ep;
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return ep;
             }

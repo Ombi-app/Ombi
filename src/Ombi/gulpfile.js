@@ -1,4 +1,3 @@
-/// <binding BeforeBuild='build' />
 'use strict'; 
 
 const gulp = require('gulp');
@@ -42,11 +41,11 @@ gulp.task('test_run', function () {
 
 gulp.task('prod_var', function () {
     global.prod = true;
-})
+});
 
 gulp.task('analyse_var', function () {
     global.analyse = true;
-})
+});
 
 gulp.task('clean', function() {
   del.sync(outputDir, { force: true });

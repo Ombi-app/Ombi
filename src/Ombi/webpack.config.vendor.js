@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = function (env) {
     const extractCSS = new ExtractTextPlugin('vendor.css');
@@ -49,6 +50,8 @@ module.exports = function (env) {
                 'intro.js-mit/intro.js',
                 'intro.js-mit/introjs.css',
                 'ngx-clipboard',
+                'bootswatch/superhero/bootstrap.min.css',
+                'style-loader',
                 //'ng2-dragula',
                 //'dragula/dist/dragula.min.css'
             ]
@@ -58,6 +61,9 @@ module.exports = function (env) {
             filename: '[name].js',
             library: '[name]_[hash]',
             path: path.join(__dirname, outputDir)
+        },
+        node: {
+            fs: "empty",
         },
         resolve: {
             alias: {
@@ -76,7 +82,7 @@ module.exports = function (env) {
             })
         ].concat(prod ? [
             // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin()
+            new UglifyJSPlugin()
         ] : [
             // Plugins that apply in development builds only
         ]).concat(analyse ? [

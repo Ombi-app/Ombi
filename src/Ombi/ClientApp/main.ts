@@ -1,4 +1,7 @@
+import "./styles/base.scss";
+import "./styles/Themes/plex.scss";
 import './polyfills';
+import './imports';
 import 'bootstrap/dist/js/bootstrap';
 import 'pace-progress';
 
@@ -14,6 +17,7 @@ if (module['hot']) {
         const newRootElem = document.createElement('ombi');
         if (oldRootElem && oldRootElem.parentNode) {
             oldRootElem.parentNode.insertBefore(newRootElem, oldRootElem);
+            oldRootElem.parentNode.removeChild(oldRootElem);
         }
         modulePromise.then(appModule => appModule.destroy());
     });

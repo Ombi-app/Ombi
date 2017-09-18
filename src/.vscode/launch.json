@@ -10,17 +10,17 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceRoot}/Ombi/bin/Debug/netcoreapp1.1/Ombi.dll",
+            "program": "${workspaceRoot}/Ombi/bin/Debug/netcoreapp2.0/Ombi.dll",
             "args": [],
             "cwd": "${workspaceRoot}/Ombi",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
                 "enabled": true,
-                "args": "${auto-detect-url}",
+                "args": "http://localhost:5000",
                 "windows": {
                     "command": "cmd.exe",
-                    "args": "/C start ${auto-detect-url}"
+                    "args": "/C start http://localhost:5000"
                 },
                 "osx": {
                     "command": "open"
