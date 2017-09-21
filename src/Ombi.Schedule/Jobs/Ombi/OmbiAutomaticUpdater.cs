@@ -195,20 +195,8 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             using (var client = new WebClient())
             {
-                client.DownloadProgressChanged += DownloadProgressChanged;
-
                 await client.DownloadFileTaskAsync(requestUri, filename);
             }
-
-        }
-
-        private static void DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            var bytesIn = double.Parse(e.BytesReceived.ToString());
-            var totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
-            var percentage = bytesIn / totalBytes * 100;
-
-            Ctx.WriteProgressBar("Download", percentage);
         }
     }
 }
