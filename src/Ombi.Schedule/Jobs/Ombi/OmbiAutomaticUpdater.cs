@@ -52,7 +52,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
                 Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
                 Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
-                
+
                 c.WriteLine("Looking for updates now");
                 var updates = await OmbiService.GetUpdates(branch);
                 c.WriteLine("Updates: {0}", updates);
@@ -68,6 +68,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     var proce = RuntimeInformation.ProcessArchitecture;
 
                     Logger.LogInformation(LoggingEvents.Updater, "OS Information: {0} {1}", desc, proce);
+                    c.WriteLine("OS Information: {0} {1}", desc, proce);
                     Download download;
                     if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                     {
@@ -113,10 +114,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                         return;
                     }
 
+                    c.WriteLine("Found the download! {0}", download.Name);
+                    c.WriteLine("URL {0}", download.Url);
+
                     // Download it
                     Logger.LogInformation(LoggingEvents.Updater, "Downloading the file {0} from {1}", download.Name, download.Url);
                     var extension = download.Name.Split('.').Last();
                     var zipDir = Path.Combine(currentLocation, $"Ombi.{extension}");
+                    c.WriteLine("Zip Dir: {0}", zipDir);
                     try
                     {
                         if (File.Exists(zipDir))
@@ -124,20 +129,25 @@ namespace Ombi.Schedule.Jobs.Ombi
                             File.Delete(zipDir);
                         }
 
+                        c.WriteLine("Starting Download");
                         await DownloadAsync(download.Url, zipDir);
+                        c.WriteLine("Finished Download");
                     }
                     catch (Exception e)
                     {
+                        c.WriteLine("Error when downloading");
+                        c.WriteLine(e.Message);
                         Logger.LogError(LoggingEvents.Updater, e, "Error when downloading the zip");
                         throw;
                     }
-
+                    c.WriteLine("Clearing out Temp Path");
                     var tempPath = Path.Combine(currentLocation, "TempUpdate");
                     if (Directory.Exists(tempPath))
                     {
                         Directory.Delete(tempPath, true);
                     }
                     // Extract it
+                    c.WriteLine("Extracting ZIP");
                     using (var files = ZipFile.OpenRead(zipDir))
                     {
                         // Temp Path
@@ -153,7 +163,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                             entry.ExtractToFile(Path.Combine(tempPath, entry.FullName));
                         }
                     }
-
+                    c.WriteLine("Finished Extracting files");
+                    c.WriteLine("Starting the Ombi.Updater process");
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
@@ -166,6 +177,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         proc.Start();
                     }
+                    c.WriteLine("Bye bye");
                 }
             }
             catch (Exception e)
