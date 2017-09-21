@@ -58,16 +58,9 @@
 
                                     <span *ngIf="node.data.firstAired" class="label label-info" target="_blank">Air Date: {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
 
-                                    <span *ngIf="node.data.available" class="label label-success">Available</span>
-                                    <span *ngIf="node.data.approved && !node.data.available" class="label label-info">Processing Request</span>
-                                    <div *ngIf="node.data.requested && !node.data.available; then requested else notRequested"></div>
-                                    <ng-template #requested>
-                                        <span *ngIf="!node.data.available" class="label label-warning">Pending Approval</span>
-                                    </ng-template>
+                       
+                                    <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>
 
-                                    <ng-template #notRequested>
-                                        <span *ngIf="!node.data.available" class="label label-danger">Not Yet Requested</span>
-                                    </ng-template>
 
 
                                     <span id="{{id}}netflixTab"></span>

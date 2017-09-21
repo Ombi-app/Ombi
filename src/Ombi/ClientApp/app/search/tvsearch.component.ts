@@ -131,7 +131,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
                 .subscribe(x => {
-                    this.updateItem(val.data, x);
+                    this.updateItem(val, x);
                 });
         });
     }
@@ -181,7 +181,11 @@ export class TvSearchComponent implements OnInit, OnDestroy {
     private updateItem(key: TreeNode, updated: TreeNode) {
         const index = this.tvResults.indexOf(key, 0);
         if (index > -1) {
-            this.tvResults[index] = updated;
+            // Update certian properties, otherwise we will loose some data
+            this.tvResults[index].data.banner = updated.data.banner;
+            this.tvResults[index].data.imdbId = updated.data.imdbId;
+            this.tvResults[index].data.seasonRequests = updated.data.seasonRequests;
+            this.tvResults[index].data.seriesId = updated.data.seriesId;
         }
     }
 

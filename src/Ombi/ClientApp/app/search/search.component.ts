@@ -17,7 +17,7 @@ export class SearchComponent implements OnInit  {
     } 
 
     public selectTvTab() {
-        this.showMovie = true;
-        this.showTv = false;
+        this.showMovie = false;
+        this.showTv = true;
     }
 }
