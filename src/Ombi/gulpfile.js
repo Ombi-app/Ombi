@@ -1,4 +1,4 @@
-/// <binding BeforeBuild='vendor' />
+/// <binding BeforeBuild='vendor, build' />
 'use strict'; 
 
 const gulp = require('gulp');

@@ -11,8 +11,13 @@ export class SearchComponent implements OnInit  {
         this.showTv = false;
     }
 
-    public selectTab() {
-        this.showMovie = !this.showMovie;
-        this.showTv = !this.showTv;
+    public selectMovieTab() {
+        this.showMovie = true;
+        this.showTv = false;
+    } 
+
+    public selectTvTab() {
+        this.showMovie = true;
+        this.showTv = false;
     }
 }

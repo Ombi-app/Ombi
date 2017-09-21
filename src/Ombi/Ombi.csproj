@@ -32,23 +32,7 @@
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
 
-  <Target Name="NpmCommandsDebug" Condition="'$(Configuration)'=='Debug'" AfterTargets="Build">
-    <Exec Command="npm run vendor" />
-  </Target>
-  <!--<Target Name="NpmCommandsRelease" Condition="'$(Configuration)'=='Release'" AfterTargets="Build">
-    <Exec Command="npm run publish" />
-  </Target>-->
-  
-  <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
-    <ItemGroup>
-      <DistFiles Include="wwwroot\dist\**" />
-      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>%(DistFiles.Identity)</RelativePath>
-        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-      </ResolvedFileToPublish>
-    </ItemGroup>
-  </Target>
-  
+
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.1.1" />
