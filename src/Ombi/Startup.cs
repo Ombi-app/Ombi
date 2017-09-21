@@ -1,7 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Security.Principal;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
@@ -27,11 +30,13 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
 using Ombi.Core.Claims;
+using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
 using Ombi.Mapping;
 using Ombi.Models.Identity;
 using Ombi.Schedule;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Serilog;
@@ -63,7 +68,7 @@ namespace Ombi
             if (env.IsProduction())
             {
                 Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Information()
+                    .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
                     .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
                     .CreateLogger();
@@ -245,6 +250,8 @@ namespace Ombi
 
             app.UseAuthentication();
 
+            //ApiKeyMiddlewear(app, serviceProvider);
+
             app.UseMvc(routes =>
             { 
                 routes.MapRoute(
@@ -254,6 +261,50 @@ namespace Ombi
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
+            });
+        }
+
+        private static void ApiKeyMiddlewear(IApplicationBuilder app, IServiceProvider serviceProvider)
+        {
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.Path.StartsWithSegments(new PathString("/api")))
+                {
+                    // Let's check if this is an API Call
+                    if (context.Request.Headers["ApiKey"].Any())
+                    {
+                        // validate the supplied API key
+                        // Validate it
+                        var headerKey = context.Request.Headers["ApiKey"].FirstOrDefault();
+                        var settingsProvider = serviceProvider.GetService<ISettingsService<OmbiSettings>>();
+                        var ombiSettings = settingsProvider.GetSettings();
+                        var valid = ombiSettings.ApiKey.Equals(headerKey, StringComparison.CurrentCultureIgnoreCase);
+                        if (!valid)
+                        {
+                            context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                            await context.Response.WriteAsync("Invalid API Key");
+                        }
+                        else
+                        {
+                            var identity = new GenericIdentity("API");
+                            identity.AddClaim(new System.Security.Claims.Claim("Origin", "Api"));
+                            identity.AddClaim(new System.Security.Claims.Claim("role", "Admin"));
+
+                            var principal = new GenericPrincipal(identity, new[] {"ApiUser"});
+                            // TODO need to think about if I require a JWT Token here.
+                            context.User = principal;
+                            await next();
+                        }
+                    }
+                    else
+                    {
+                        await next();
+                    }
+                }
+                else
+                {
+                    await next();
+                }
             });
         }
     }
