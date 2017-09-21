@@ -185,7 +185,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
             }
             catch (Exception e)
-            {
+            { 
                 Ctx.WriteLine(e);
                 throw;
             }
