@@ -117,6 +117,17 @@ Task("NPM")
 	NpmInstall(settings);
 });
 
+Task("Gulp Publish")
+ .Does(() => {
+ 
+ var runScriptSettings = new NpmRunScriptSettings {
+ 		ScriptName="publish",
+ 		WorkingDirectory = webProjDir,
+ 	};
+ 	
+ 	NpmRunScript(runScriptSettings);
+ });
+
 Task("TSLint")
 	.IsDependentOn("NPM")
     .Does(() =>
@@ -132,6 +143,7 @@ Task("TSLint")
 Task("Restore")
     .IsDependentOn("SetVersionInfo")
 	.IsDependentOn("TSLint")
+	.IsDependentOn("Gulp Publish")
     .Does(() =>
 {
     DotNetCoreRestore(projDir);
