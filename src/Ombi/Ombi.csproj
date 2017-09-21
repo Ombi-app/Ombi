@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <RuntimeIdentifiers>win10-x64;osx-x64;ubuntu-x64;debian.8-x64;centos.7-x64;linux-x64;</RuntimeIdentifiers>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
     <AssemblyVersion>$(SemVer)</AssemblyVersion>
     <FileVersion>$(SemVer)</FileVersion>
     <Version>$(FullVer)</Version>
