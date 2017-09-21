@@ -4,6 +4,10 @@
 
 ### **New Features**
 
+- Changed the way we download the updates #865. [Jamie.Rees]
+
+- Updated packages and more logging. [Jamie.Rees]
+
 - Update versioning. [Jamie.Rees]
 
 - Update nuget packages and added logging to the Updater #865. [tidusjar]
@@ -27,6 +31,18 @@
 - Updated CHangelog. [Jamie.Rees]
 
 ### **Fixes**
+
+- Fixed linter. [Jamie.Rees]
+
+- Fixed some bugs in the UI #865. [Jamie.Rees]
+
+- Improved the search buttons #865. [Jamie.Rees]
+
+- More logging #865. [Jamie.Rees]
+
+- Made build faster. [Jamie.Rees]
+
+- More logging. [Jamie.Rees]
 
 - Set debug level to Debug for now. [Jamie.Rees]
 
@@ -87,6 +103,11 @@
 - Fixed a bunch of bugs in Ombi #865. [tidusjar]
 
 - Build versioning. [Jamie.Rees]
+
+
+## v3.0.0 (2017-09-01)
+
+### **New Features**
 
 - Updated changelog. [Jamie.Rees]
 
