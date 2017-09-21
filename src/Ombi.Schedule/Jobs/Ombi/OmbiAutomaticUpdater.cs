@@ -42,19 +42,20 @@ namespace Ombi.Schedule.Jobs.Ombi
             Logger.LogInformation(LoggingEvents.Updater, "Product Version {0}", productVersion);
             c.WriteLine("Product Version {0}", productVersion);
 
-            var productArray = productVersion.Split('-');
-            var version = productArray[0];
-            var branch = productArray[1];
-
-
-            Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
-            Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
-
             try
             {
+                var productArray = productVersion.Split('-');
+                var version = productArray[0];
+                c.WriteLine("Version {0}", version);
+                var branch = productArray[1];
+                c.WriteLine("Branch Version {0}", branch);
+
+                Logger.LogInformation(LoggingEvents.Updater, "Version {0}", version);
+                Logger.LogInformation(LoggingEvents.Updater, "Branch {0}", branch);
+                
+                c.WriteLine("Looking for updates now");
                 var updates = await OmbiService.GetUpdates(branch);
                 var serverVersion = updates.UpdateVersionString;
-
 
                 Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
                 c.WriteLine("Service Version {0}", updates.UpdateVersionString);
@@ -76,7 +77,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         Logger.LogInformation(LoggingEvents.Updater, "We are OSX");
                         download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("osx", CompareOptions.IgnoreCase));
-
                     }
                     else
                     {
@@ -164,7 +164,6 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         proc.Start();
                     }
-
                 }
             }
             catch (Exception e)

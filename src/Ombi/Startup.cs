@@ -57,22 +57,22 @@ namespace Ombi
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
 
-            if (env.IsDevelopment())
-            {
+            //if (env.IsDevelopment())
+            //{
                 Log.Logger = new LoggerConfiguration()
                     .MinimumLevel.Debug()
                     .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
                     .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
                     .CreateLogger();
-            }
-            if (env.IsProduction())
-            {
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
-                    .CreateLogger();
-            }
+            //}
+            //if (env.IsProduction())
+            //{
+            //    Log.Logger = new LoggerConfiguration()
+            //        .MinimumLevel.Debug()
+            //        .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
+            //        .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
+            //        .CreateLogger();
+            //}
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -102,7 +102,6 @@ namespace Ombi
 
             var tokenValidationParameters = new TokenValidationParameters
             {
-
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
 
@@ -188,9 +187,6 @@ namespace Ombi
                 x.UseConsole();
             });
 
-
-            
-
             // Build the intermediate service provider
             var serviceProvider = services.BuildServiceProvider();
             
@@ -238,15 +234,12 @@ namespace Ombi
             jobSetup.Setup();
             ctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider();
-            provider.Mappings[".map"] = "application/octet-stream";
+            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
 
             app.UseStaticFiles(new StaticFileOptions()
             {
                 ContentTypeProvider = provider
             });
-
-
 
             app.UseAuthentication();
 

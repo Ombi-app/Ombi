@@ -4,11 +4,89 @@
 
 ### **New Features**
 
+- Update versioning. [Jamie.Rees]
+
+- Update nuget packages and added logging to the Updater #865. [tidusjar]
+
+- Added the ForwardedHeaders middlewear for Reverse Proxy scenarios #865. [tidusjar]
+
+- Update build.cake. [Jamie]
+
+- Update DiscordApi.cs. [Jamie]
+
+- Update README.md. [PotatoQuality]
+
+- Added a authorization filter so we can see hangfire outisde of the local requests. [TidusJar]
+
+- Added more logging for the updater. [Jamie.Rees]
+
 - Added the emby episode cacher and the job to check if items are available on emby #1464 #865. [tidusjar]
 
 - Added the Emby Cacher, we now cache the Emby data! [tidusjar]
 
 - Updated CHangelog. [Jamie.Rees]
+
+### **Fixes**
+
+- Set debug level to Debug for now. [Jamie.Rees]
+
+- Add linting and indexes for interfaces/services (#1510) [Matt Jeanes]
+
+- Fixed the issue with the tv search not working #1463. [Jamie.Rees]
+
+- Latest practices... also probably broke some styles - sorry (#1508) [Matt Jeanes]
+
+- Build with the branch version. [tidusjar]
+
+- Build fix. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Omgwtf so many changes. #865. [tidusjar]
+
+- Tests. [Jamie.Rees]
+
+- #1456 Started on the User Importer Also added the remember me button. [Jamie.Rees]
+
+- Made some UI changes, reworked the Emby and Plex screens to make them more user friendly and no so fugly. #865 Also made the login page placeholder text slightly lighter. [Jamie.Rees]
+
+- Cake skip verification build stuff #865. [Jamie.Rees]
+
+- Some fixes around the UI and managing requests #865. [tidusjar]
+
+- #1486. [Jamie.Rees]
+
+- #1486. [Jamie.Rees]
+
+- Upgraded to .net core 2.0 #1486. [Jamie.Rees]
+
+- #865 Finished the landing page, we now check the server's status. [Jamie.Rees]
+
+- Fixed build. [TidusJar]
+
+- Removed the telegram api. [Jamie.Rees]
+
+- Small changes on the updater #1460 #865. [Jamie.Rees]
+
+- Remove unused functions. [Dhruv Bhavsar]
+
+- Make Episode picker similar to Requests Child view. #1457 #1463. [Dhruv Bhavsar]
+
+- Fix merge conflict for TvRequests component. [Dhruv Bhavsar]
+
+- Upstream Changes... [Dhruv Bhavsar]
+
+- Clean up Requests page code by moving children request to old component, remove additional REST calls when merging and update component names to make more sense. [Dhruv Bhavsar]
+
+- Lots of different UI enhancements and fixes #865. [tidusjar]
+
+- Gitchangelog. [tidusjar]
+
+- Fixed the issue where we were using the wrong availability options. [tidusjar]
+
+- Fixed a bunch of bugs in Ombi #865. [tidusjar]
+
+- Build versioning. [Jamie.Rees]
 
 - Updated changelog. [Jamie.Rees]
 
@@ -123,12 +201,6 @@
 - Update StringCipher.cs. [Jamie]
 
 ### **Fixes**
-
-- Fixed the issue where we were using the wrong availability options. [tidusjar]
-
-- Fixed a bunch of bugs in Ombi #865. [tidusjar]
-
-- Build versioning. [Jamie.Rees]
 
 - #1460 The assembly versioning seems to work correctly now. [Jamie.Rees]
 
