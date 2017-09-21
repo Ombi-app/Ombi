@@ -221,12 +221,6 @@ namespace Ombi
                 Authorization = new [] { new HangfireAuthorizationFilter() }
             });
 
-            app.UseSwaggerUI(c =>
-            {
-         
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-                c.ShowJsonEditor();
-            });
 
 
             // Setup the scheduler
@@ -254,6 +248,12 @@ namespace Ombi
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new { controller = "Home", action = "Index" });
+            });
+            app.UseSwaggerUI(c =>
+            {
+
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.ShowJsonEditor();
             });
         }
 

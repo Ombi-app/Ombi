@@ -55,6 +55,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 
                 c.WriteLine("Looking for updates now");
                 var updates = await OmbiService.GetUpdates(branch);
+                c.WriteLine("Updates: {0}", updates);
                 var serverVersion = updates.UpdateVersionString;
 
                 Logger.LogInformation(LoggingEvents.Updater, "Service Version {0}", updates.UpdateVersionString);
@@ -108,6 +109,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     if (download == null)
                     {
+                        c.WriteLine("There were no downloads");
                         return;
                     }
 
