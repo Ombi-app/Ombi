@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Security.Principal;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -49,13 +51,14 @@ namespace Ombi.DependencyInjection
     [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
     public static class IocExtensions
     {
-        public static void RegisterDependencies(this IServiceCollection services)
+        public static void RegisterApplicationDependencies(this IServiceCollection services)
         {
             services.RegisterEngines();
             services.RegisterApi();
             services.RegisterServices();
             services.RegisterStore();
             services.RegisterJobs();
+            services.RegisterHttp();
         }
 
         public static void RegisterEngines(this IServiceCollection services)
@@ -67,6 +70,11 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRuleEvaluator, RuleEvaluator>();
             services.AddTransient<IMovieSender, MovieSender>();
             services.AddTransient<ITvSender, TvSender>();
+        }
+        public static void RegisterHttp(this IServiceCollection services)
+        {
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
         }
 
         public static void RegisterApi(this IServiceCollection services)

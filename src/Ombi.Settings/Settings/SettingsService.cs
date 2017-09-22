@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.DataProtection;
 namespace Ombi.Settings.Settings
 {
     public class SettingsService<T> : ISettingsService<T>
-        where T : Ombi.Settings.Settings.Models.Settings, new()
+        where T : Models.Settings, new()
     {
 
         public SettingsService(ISettingsRepository repo, IDataProtectionProvider provider)
@@ -127,12 +127,14 @@ namespace Ombi.Settings.Settings
 
         private string EncryptSettings(GlobalSettings settings)
         {
-            return _protector.Protect(settings.Content);
+            return settings.Content;
+            //return _protector.Protect(settings.Content);
         }
 
         private string DecryptSettings(GlobalSettings settings)
         {
-            return _protector.Unprotect(settings.Content);
+            return settings.Content;
+            //return _protector.Unprotect(settings.Content);
         }
     }
 }

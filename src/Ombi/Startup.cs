@@ -59,11 +59,11 @@ namespace Ombi
 
             //if (env.IsDevelopment())
             //{
-                Log.Logger = new LoggerConfiguration()
-                    .MinimumLevel.Debug()
-                    .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
-                    .CreateLogger();
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
+                .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
+                .CreateLogger();
             //}
             //if (env.IsProduction())
             //{
@@ -82,7 +82,7 @@ namespace Ombi
         {
             // Add framework services.
             services.AddDbContext<OmbiContext>();
-            
+
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders();
@@ -96,88 +96,23 @@ namespace Ombi
                 options.Password.RequireUppercase = false;
             });
 
+            services.AddDataProtection();
             services.AddMemoryCache();
 
-            var tokenOptions = Configuration.GetSection("TokenAuthentication");
-
-            var tokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenOptions.GetValue("SecretKey", string.Empty))),
-
-                RequireExpirationTime = true,
-                ValidateLifetime = true,
-                ValidAudience = "Ombi",
-                ValidIssuer = "Ombi",
-                ClockSkew = TimeSpan.Zero,
-            };
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.Audience = "Ombi";
-                x.TokenValidationParameters = tokenValidationParameters;
-            });
+            services.AddJwtAuthentication(Configuration);
 
             services.AddMvc()
                 .AddJsonOptions(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            
+
             services.AddOmbiMappingProfile();
             services.AddAutoMapper(expression =>
             {
                 expression.AddCollectionMappers();
             });
-            services.RegisterDependencies(); // Ioc and EF
-            services.AddSwaggerGen(c =>
-            {
-                c.DescribeAllEnumsAsStrings();
-                c.SwaggerDoc("v1", new Info
-                {
-                    Version = "v1",
-                    Title = "Ombi Api",
-                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/connect/token/\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
-                                  "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
-                    Contact = new Contact
-                    {
-                        Email = "tidusjar@gmail.com",
-                        Name = "Jamie Rees",
-                        Url = "https://www.ombi.io/"
-                    }
-                });
-                c.CustomSchemaIds(x => x.FullName);
-                var basePath = PlatformServices.Default.Application.ApplicationBasePath;
-                var xmlPath = Path.Combine(basePath, "Swagger.xml");
-                try
-                {
-                    c.IncludeXmlComments(xmlPath);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                }
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
-                {
-                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-                    Name = "Authorization",
-                    In = "header",
-                    Type = "apiKey"
-                });
 
-                c.AddSecurityDefinition("Authentication", new ApiKeyScheme());
-                c.OperationFilter<SwaggerOperationFilter>();
-                c.DescribeAllParametersInCamelCase();
-            });
-            
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddScoped<IPrincipal>(sp => sp.GetService<IHttpContextAccessor>().HttpContext.User);
-
-            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
-            services.Configure<UserSettings>(Configuration.GetSection("UserSettings"));
-            services.Configure<TokenAuthentication>(Configuration.GetSection("TokenAuthentication"));
-            services.Configure<LandingPageBackground>(Configuration.GetSection("LandingPageBackground"));
+            services.RegisterApplicationDependencies(); // Ioc and EF
+            services.AddSwagger();
+            services.AddAppSettingsValues(Configuration);
 
             services.AddHangfire(x =>
             {
@@ -188,10 +123,7 @@ namespace Ombi
             });
 
             // Build the intermediate service provider
-            var serviceProvider = services.BuildServiceProvider();
-            
-            //return the provider
-            return serviceProvider;
+            return services.BuildServiceProvider();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -214,21 +146,19 @@ namespace Ombi
                     HotModuleReplacement = true
                 });
             }
-            
+
             app.UseHangfireServer();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
-                Authorization = new [] { new HangfireAuthorizationFilter() }
+                Authorization = new[] { new HangfireAuthorizationFilter() }
             });
-
-
 
             // Setup the scheduler
             var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
             jobSetup.Setup();
             ctx.Seed();
 
-            var provider = new FileExtensionContentTypeProvider {Mappings = {[".map"] = "application/octet-stream"}};
+            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
             {
@@ -240,7 +170,7 @@ namespace Ombi
             //ApiKeyMiddlewear(app, serviceProvider);
 
             app.UseMvc(routes =>
-            { 
+            {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
@@ -251,7 +181,6 @@ namespace Ombi
             });
             app.UseSwaggerUI(c =>
             {
-
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.ShowJsonEditor();
             });
@@ -274,7 +203,7 @@ namespace Ombi
                         var valid = ombiSettings.ApiKey.Equals(headerKey, StringComparison.CurrentCultureIgnoreCase);
                         if (!valid)
                         {
-                            context.Response.StatusCode = (int) HttpStatusCode.Unauthorized;
+                            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
                             await context.Response.WriteAsync("Invalid API Key");
                         }
                         else
@@ -283,7 +212,7 @@ namespace Ombi
                             identity.AddClaim(new System.Security.Claims.Claim("Origin", "Api"));
                             identity.AddClaim(new System.Security.Claims.Claim("role", "Admin"));
 
-                            var principal = new GenericPrincipal(identity, new[] {"ApiUser"});
+                            var principal = new GenericPrincipal(identity, new[] { "ApiUser" });
                             // TODO need to think about if I require a JWT Token here.
                             context.User = principal;
                             await next();
@@ -301,7 +230,7 @@ namespace Ombi
             });
         }
     }
-    
+
     public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         public bool Authorize(DashboardContext context)
