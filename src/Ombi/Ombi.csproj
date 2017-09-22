@@ -32,7 +32,16 @@
     <EmbeddedResource Remove="wwwroot\dist\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
-
+  
+  <Target Name="RunWebpack" AfterTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <DistFiles Include="wwwroot\dist\**" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
 
 
   <ItemGroup>

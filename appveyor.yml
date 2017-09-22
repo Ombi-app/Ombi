@@ -16,16 +16,7 @@ after_build:
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\windows.zip"
     
     
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\osx.tar.gz"
-    
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\ubuntu.tar.gz"
-    
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\debian.tar.gz"
-    
-    
-    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\centos.tar.gz"
+    appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\osx.tar.gz"  
     
     
     appveyor PushArtifact "%APPVEYOR_BUILD_FOLDER%\src\Ombi\bin\Release\netcoreapp2.0\linux.tar.gz"

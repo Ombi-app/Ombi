@@ -43,9 +43,6 @@ var publishSettings = new DotNetCorePublishSettings
 var artifactsFolder = buildDir + "/netcoreapp2.0/";
 var windowsArtifactsFolder = artifactsFolder + "win10-x64/published";
 var osxArtifactsFolder = artifactsFolder + "osx-x64/published";
-var ubuntuArtifactsFolder = artifactsFolder + "ubuntu-x64/published";
-var debianArtifactsFolder = artifactsFolder + "debian.8-x64/published";
-var centosArtifactsFolder = artifactsFolder + "centos.7-x64/published";
 var linuxArtifactsFolder = artifactsFolder + "linux-x64/published";
 
 
@@ -107,7 +104,7 @@ Task("SetVersionInfo")
 });
 
 Task("NPM")
-.Does(() => {
+	.Does(() => {
     var settings = new NpmInstallSettings {
 		LogLevel = NpmLogLevel.Silent,
 		WorkingDirectory = webProjDir,
@@ -118,9 +115,10 @@ Task("NPM")
 });
 
 Task("Gulp Publish")
- .Does(() => {
+	.IsDependentOn("NPM")
+	.Does(() => {
  
- var runScriptSettings = new NpmRunScriptSettings {
+	var runScriptSettings = new NpmRunScriptSettings {
  		ScriptName="publish",
  		WorkingDirectory = webProjDir,
  	};
@@ -129,7 +127,6 @@ Task("Gulp Publish")
  });
 
 Task("TSLint")
-	.IsDependentOn("NPM")
     .Does(() =>
 {
 	var settings = new NpmRunScriptSettings {
@@ -140,38 +137,24 @@ Task("TSLint")
     NpmRunScript(settings);
 });
 
-Task("Restore")
+Task("PrePublish")
     .IsDependentOn("SetVersionInfo")
-	.IsDependentOn("TSLint")
 	.IsDependentOn("Gulp Publish")
-    .Does(() =>
-{
-    DotNetCoreRestore(projDir);
-});
+	.IsDependentOn("TSLint");
 
-
-Task("Build")
-    .IsDependentOn("Restore")
-    .Does(() =>
-{
-        DotNetCoreBuild(csProj, buildSettings);
-});
 
 Task("Package")
     .Does(() =>
 {	
     Zip(windowsArtifactsFolder +"/",artifactsFolder + "windows.zip");
 	GZipCompress(osxArtifactsFolder, artifactsFolder + "osx.tar.gz");
-	GZipCompress(ubuntuArtifactsFolder, artifactsFolder + "ubuntu.tar.gz");
-	GZipCompress(debianArtifactsFolder, artifactsFolder + "debian.tar.gz");
-	GZipCompress(centosArtifactsFolder, artifactsFolder + "centos.tar.gz");
 	GZipCompress(linuxArtifactsFolder, artifactsFolder + "linux.tar.gz");
 });
 
 Task("Publish")
-    .IsDependentOn("Build")
+    .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
-    .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Ubuntu").IsDependentOn("Publish-Debian").IsDependentOn("Publish-Centos").IsDependentOn("Publish-Linux")
+    .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Linux")
     .IsDependentOn("Package");
 
 Task("Publish-Windows")
@@ -193,37 +176,6 @@ Task("Publish-OSX")
 
     DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
     CopyFile(buildDir + "/netcoreapp2.0/osx-x64/Swagger.xml", buildDir + "/netcoreapp2.0/osx-x64/published/Swagger.xml");
-    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
-});
-
-Task("Publish-Ubuntu")
-    .Does(() =>
-{
-    publishSettings.Runtime = "ubuntu-x64";
-    publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/ubuntu-x64/published");
-
-    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
-    CopyFile(buildDir + "/netcoreapp2.0/ubuntu-x64/Swagger.xml", buildDir + "/netcoreapp2.0/ubuntu-x64/published/Swagger.xml");
-    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
-});
-Task("Publish-Debian")
-    .Does(() =>
-{
-    publishSettings.Runtime = "debian.8-x64";
-    publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/debian.8-x64/published");
-
-    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
-    CopyFile(buildDir + "/netcoreapp2.0/debian.8-x64/Swagger.xml", buildDir + "/netcoreapp2.0/debian.8-x64/published/Swagger.xml");
-    DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
-});
-Task("Publish-Centos")
-    .Does(() =>
-{
-    publishSettings.Runtime = "centos.7-x64";
-    publishSettings.OutputDirectory = Directory(buildDir) + Directory("netcoreapp2.0/centos.7-x64/published");
-
-    DotNetCorePublish("./src/Ombi/Ombi.csproj", publishSettings);
-    CopyFile(buildDir + "/netcoreapp2.0/centos.7-x64/Swagger.xml", buildDir + "/netcoreapp2.0/centos.7-x64/published/Swagger.xml");
     DotNetCorePublish("./src/Ombi.Updater/Ombi.Updater.csproj", publishSettings);
 });
 
