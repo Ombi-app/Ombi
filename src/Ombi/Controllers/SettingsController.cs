@@ -27,7 +27,6 @@ namespace Ombi.Controllers
     /// <summary>
     /// The Settings Controller
     /// </summary>
-    /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
     [ApiV1]
     [Produces("application/json")]
@@ -39,6 +38,10 @@ namespace Ombi.Controllers
         /// <param name="resolver">The resolver.</param>
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
+        /// <param name="embyApi">The embyApi.</param>
+        /// <param name="cacher">The cacher.</param>
+        /// <param name="embyCacher">The embyCacher.</param>
+        /// <param name="radarrCacher">The radarrCacher.</param>
         public SettingsController(ISettingsResolver resolver, 
             IMapper mapper, 
             INotificationTemplatesRepository templateRepo,

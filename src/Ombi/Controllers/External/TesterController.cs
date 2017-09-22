@@ -22,7 +22,6 @@ namespace Ombi.Controllers.External
     /// <summary>
     /// The Tester Controller
     /// </summary>
-    /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [Admin]
     [ApiV1]
     [Produces("application/json")]
@@ -36,6 +35,13 @@ namespace Ombi.Controllers.External
         /// <param name="emailN">The notification.</param>
         /// <param name="pushbullet">The pushbullet.</param>
         /// <param name="slack">The slack.</param>
+        /// <param name="plex">The plex.</param>
+        /// <param name="emby">The emby.</param>
+        /// <param name="radarr">The radarr.</param>
+        /// <param name="sonarr">The sonarr.</param>
+        /// <param name="po">The pushover.</param>
+        /// <param name="mm">The mattermost.</param>
+        /// <param name="log">The logger.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
             IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log)
