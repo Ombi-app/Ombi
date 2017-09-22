@@ -32,7 +32,6 @@ namespace Ombi.Controllers
     /// <summary>
     /// The Identity Controller, the API for everything Identity/User related
     /// </summary>
-    /// <seealso cref="Ombi.Controllers.BaseV1ApiController" />
     [PowerUser]
     [ApiV1]
     [Produces("application/json")]

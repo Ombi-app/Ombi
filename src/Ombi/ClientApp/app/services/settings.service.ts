@@ -18,6 +18,7 @@ import {
     IRadarrSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
+    IUpdateSettings
 } from "../interfaces";
 
 import { ServiceAuthHelpers } from "./service.helpers";
@@ -164,6 +165,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveSlackNotificationSettings(settings: ISlackNotificationSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/notifications/slack`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getUpdateSettings(): Observable<IUpdateSettings> {
+        return this.httpAuth.get(`${this.url}/update`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveUpdateSettings(settings: IUpdateSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/update`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

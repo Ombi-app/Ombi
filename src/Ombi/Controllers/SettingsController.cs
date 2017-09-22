@@ -267,6 +267,28 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Save the Update settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("Update")]
+        public async Task<bool> UpdateSettings([FromBody]UpdateSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
+        /// Gets the Update Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("Update")]
+        public async Task<UpdateSettings> UpdateSettings()
+        {
+            return await Get<UpdateSettings>();
+        }
+
+
+        /// <summary>
         /// Saves the email notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

@@ -5,10 +5,8 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading.Tasks;
 using Hangfire.Console;
 using Hangfire.Server;
@@ -16,29 +14,53 @@ using Microsoft.Extensions.Logging;
 
 using Ombi.Api.Service;
 using Ombi.Api.Service.Models;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Schedule.Ombi;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
     public class OmbiAutomaticUpdater : IOmbiAutomaticUpdater
     {
-        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service)
+        public OmbiAutomaticUpdater(ILogger<OmbiAutomaticUpdater> log, IOmbiService service,
+            ISettingsService<UpdateSettings> s)
         {
             Logger = log;
             OmbiService = service;
+            Settings = s;
         }
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
         private IOmbiService OmbiService { get; }
+        private ISettingsService<UpdateSettings> Settings { get;s }
         private static PerformContext Ctx { get; set; }
+
+        public string[] GetVersion()
+        {
+            var productVersion = AssemblyHelper.GetRuntimeVersion();
+            var productArray = productVersion.Split('-');
+            return productArray;
+        }
+        public async Task<bool> UpdateAvailable(string branch, string currentVersion)
+        {
+            var updates = await OmbiService.GetUpdates(branch);
+            var serverVersion = updates.UpdateVersionString;
+            return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
+        }
 
         public async Task Update(PerformContext c)
         {
             Ctx = c;
             Ctx.WriteLine("Starting the updater");
-            // IF AutoUpdateEnabled =>
-            // ELSE Return;
+
+            var settings = await Settings.GetSettingsAsync();
+            if (!settings.AutoUpdateEnabled)
+            {
+                Ctx.WriteLine("Auto update is not enabled");
+                return;
+            }
+
             var currentLocation = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
             Ctx.WriteLine("Path: {0}", currentLocation);
 
@@ -48,7 +70,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
             try
             {
-                var productArray = productVersion.Split('-');
+                var productArray = GetVersion();
                 var version = productArray[0];
                 Ctx.WriteLine("Version {0}", version);
                 var branch = productArray[1];

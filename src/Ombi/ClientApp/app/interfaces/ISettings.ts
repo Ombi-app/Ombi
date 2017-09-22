@@ -17,6 +17,10 @@ export interface IOmbiSettings extends ISettings {
     allowExternalUsersToAuthenticate: boolean;
 }
 
+export interface IUpdateSettings extends ISettings {
+    autoUpdateEnabled: boolean;
+}
+
 export interface IEmbySettings extends ISettings {
     enable: boolean;
     servers: IEmbyServer[];
