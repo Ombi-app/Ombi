@@ -33,7 +33,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         private ILogger<OmbiAutomaticUpdater> Logger { get; }
         private IOmbiService OmbiService { get; }
-        private ISettingsService<UpdateSettings> Settings { get;s }
+        private ISettingsService<UpdateSettings> Settings { get; }
         private static PerformContext Ctx { get; set; }
 
         public string[] GetVersion()
