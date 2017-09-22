@@ -18,7 +18,7 @@ import {
     IRadarrSettings,
     ISlackNotificationSettings,
     ISonarrSettings,
-    IUpdateSettings
+    IUpdateSettings,
 } from "../interfaces";
 
 import { ServiceAuthHelpers } from "./service.helpers";
