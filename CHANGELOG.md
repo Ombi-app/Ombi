@@ -4,6 +4,8 @@
 
 ### **New Features**
 
+- Changelog. [Jamie.Rees]
+
 - Changed the way we download the updates #865. [Jamie.Rees]
 
 - Updated packages and more logging. [Jamie.Rees]
@@ -31,6 +33,8 @@
 - Updated CHangelog. [Jamie.Rees]
 
 ### **Fixes**
+
+- Removed percentage. [Jamie.Rees]
 
 - Fixed linter. [Jamie.Rees]
 
