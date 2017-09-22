@@ -169,12 +169,17 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     Ctx.WriteLine("Finished Extracting files");
                     Ctx.WriteLine("Starting the Ombi.Updater process");
+                    var updaterExtension = string.Empty;
+                    if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                    {
+                        updaterExtension = ".exe";
+                    }
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
-                        FileName = "Ombi.Updater",
+                        FileName = $"Ombi.Updater{updaterExtension}",
                         Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension,
                     };
                     using (var proc = new Process { StartInfo = start })
