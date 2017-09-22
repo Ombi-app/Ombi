@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Ombi.Updater
 {
@@ -156,19 +153,9 @@ namespace Ombi.Updater
             return process.MainModule.FileName;
         }
 
-        private List<System.Diagnostics.Process> GetProcessesByName(string name)
+        private List<Process> GetProcessesByName(string name)
         {
-            //TODO: move this to an OS specific class
-
-            var monoProcesses = Process.GetProcessesByName("mono")
-                                       .Union(Process.GetProcessesByName("mono-sgen"))
-                                       .Where(process =>
-                                              process.Modules.Cast<ProcessModule>()
-                                                     .Any(module =>
-                                                          module.ModuleName.ToLower() == name.ToLower() + ".exe"));
-
-            var processes = Process.GetProcessesByName(name)
-                                   .Union(monoProcesses).ToList();
+            var processes = Process.GetProcessesByName(name).ToList();
 
             Console.WriteLine("Found {0} processes with the name: {1}", processes.Count, name);
 
@@ -187,7 +174,6 @@ namespace Ombi.Updater
             return processes;
         }
     }
-
 
     public class ProcessInfo
     {

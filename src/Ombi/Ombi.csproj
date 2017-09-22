@@ -69,6 +69,7 @@
 
 
   <ItemGroup>
+    <Folder Include="ClientApp\app\settings\update\" />
     <Folder Include="Styles\" />
   </ItemGroup>
 
