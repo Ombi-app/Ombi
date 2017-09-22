@@ -8,10 +8,7 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthModule } from "../auth/auth.module";
 import { AuthService } from "../auth/auth.service";
-import { RadarrService } from "../services";
-import { SonarrService } from "../services";
-import { TesterService } from "../services";
-import { ValidationService } from "../services";
+import { RadarrService, SonarrService, TesterService, UpdateService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { CustomizationComponent } from "./customization/customization.component";
@@ -28,6 +25,7 @@ import { OmbiComponent } from "./ombi/ombi.component";
 import { PlexComponent } from "./plex/plex.component";
 import { RadarrComponent } from "./radarr/radarr.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
+import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
@@ -49,6 +47,7 @@ const routes: Routes = [
     { path: "Settings/Pushbullet", component: PushbulletComponent, canActivate: [AuthGuard] },
     { path: "Settings/Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "Settings/UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
+    { path: "Settings/Update", component: UpdateComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -86,6 +85,7 @@ const routes: Routes = [
         MattermostComponent,
         PushbulletComponent,
         UserManagementComponent,
+        UpdateComponent,
     ],
     exports: [
         RouterModule,
@@ -97,6 +97,7 @@ const routes: Routes = [
         AuthGuard,
         ValidationService,
         TesterService,
+        UpdateService,
     ],
 
 })
