@@ -49,7 +49,6 @@
                         <a *ngIf="result.homepage" href="{{result.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
 
                         <a *ngIf="result.trailer" href="{{result.trailer}}" target="_blank"><span class="label label-info">Trailer</span></a>
-                        <span *ngIf="result.available" class="label label-success">Available</span>
                         <span *ngIf="result.quality" class="label label-success">{{result.quality}}p</span>
                         
                         <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>

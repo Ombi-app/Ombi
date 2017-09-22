@@ -179,8 +179,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
-                        FileName = $"Ombi.Updater{updaterExtension}",
-                        Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension,
+                        FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),"TempUpdate",$"Ombi.Updater{updaterExtension}"),
+                        Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension
                     };
                     using (var proc = new Process { StartInfo = start })
                     {
