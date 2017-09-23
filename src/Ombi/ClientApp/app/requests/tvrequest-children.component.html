@@ -10,13 +10,13 @@
 
             <div class="col-md-1 col-md-push-9" *ngIf="isAdmin">
                 <form>
-                    <button style="text-align: right" *ngIf="child.CanApprove" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                    <button style="text-align: right" *ngIf="child.canApprove && !child.approved" (click)="approve(child)" class="btn btn-sm btn-success-outline" type="submit"><i class="fa fa-plus"></i> Approve</button>
                 </form>
                 <form>
                     <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>
                 </form>
                 <form>
-                    <button type="button" (click)="deny(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
+                    <button type="button" (click)="removeRequest(child)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Remove</button>
                 </form>
             </div>
         </div>
@@ -68,7 +68,7 @@
                                             <span *ngIf="ep.available" class="label label-success">Available</span>
                                             <span *ngIf="ep.approved && !ep.available" class="label label-info">Processing Request</span>
                                             <div *ngIf="!ep.approved">
-                                            <div *ngIf="!ep.available"><span class="label label-warning">Pending Approval</span></div>
+                                                <div *ngIf="!ep.available"><span class="label label-warning">Pending Approval</span></div>
                                             </div>
                                         </td>
                                     </tr>

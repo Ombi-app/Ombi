@@ -11,4 +11,13 @@ namespace Ombi.Core.Engine
         public bool Leaf { get; set; }
         public bool Expanded { get; set; }
     }
+
+    public class TreeNode<T,U>
+    {
+        public string Label { get; set; }
+        public T Data { get; set; }
+        public List<TreeNode<U>> Children { get; set; }
+        public bool Leaf { get; set; }
+        public bool Expanded { get; set; }
+    }
 }

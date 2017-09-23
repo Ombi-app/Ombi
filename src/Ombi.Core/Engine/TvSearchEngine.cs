@@ -19,13 +19,14 @@ using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository.Requests;
 using Ombi.Store.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, ITraktApi trakt, IRuleEvaluator r, UserManager<OmbiUser> um)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, UserManager<OmbiUser> um)
             : base(identity, service, r, um)
         {
             TvMazeApi = tvMaze;
@@ -34,6 +35,7 @@ namespace Ombi.Core.Engine
             EmbySettings = embySettings;
             PlexContentRepo = repo;
             TraktApi = trakt;
+            EmbyContentRepo = embyRepo;
         }
 
         private ITvMazeApi TvMazeApi { get; }
@@ -41,6 +43,7 @@ namespace Ombi.Core.Engine
         private ISettingsService<PlexSettings> PlexSettings { get; }
         private ISettingsService<EmbySettings> EmbySettings { get; }
         private IPlexContentRepository PlexContentRepo { get; }
+        private IEmbyContentRepository EmbyContentRepo { get; }
         private ITraktApi TraktApi { get; }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
@@ -175,11 +178,31 @@ namespace Ombi.Core.Engine
         {
             if (embySettings.Enable)
             {
-                //var embyShow = EmbyChecker.GetTvShow(embyCached.ToArray(), t.show.name, t.show.premiered?.Substring(0, 4), providerId);
-                //if (embyShow != null)
-                //{
-                //    viewT.Available = true;
-                //}
+                var content = await EmbyContentRepo.Get(item.Id.ToString());
+
+                if (content != null)
+                {
+                    item.Available = true;
+                }
+
+                // Let's go through the episodes now
+                if (item.SeasonRequests.Any())
+                {
+                    var allEpisodes = EmbyContentRepo.GetAllEpisodes().Include(x => x.Series);
+                    foreach (var season in item.SeasonRequests)
+                    {
+                        foreach (var episode in season.Episodes)
+                        {
+                            var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber && item.Id.ToString() == x.Series.ProviderId);
+                            if (epExists != null)
+                            {
+                                episode.Available = true;
+                            }
+                        }
+                    }
+                }
+
             }
             if (plexSettings.Enable)
             {
@@ -190,6 +213,24 @@ namespace Ombi.Core.Engine
                     item.Available = true;
                     item.PlexUrl = content.Url;
                 }
+                // Let's go through the episodes now
+                if (item.SeasonRequests.Any())
+                {
+                    var allEpisodes = PlexContentRepo.GetAllEpisodes();
+                    foreach (var season in item.SeasonRequests)
+                    {
+                        foreach (var episode in season.Episodes)
+                        {
+                            var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber);
+                            if (epExists != null)
+                            {
+                                episode.Available = true;
+                            }
+                        }
+                    }
+                }
+
             }
 
             if (item.Id > 0)

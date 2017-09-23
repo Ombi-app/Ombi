@@ -19,11 +19,13 @@ namespace Ombi
 
             int port = 0;
             string host = string.Empty;
+            string storagePath = string.Empty;
             Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
                     port = o.Port;
                     host = o.Host;
+                    storagePath = o.StoragePath;
                 });
             
             UrlArgs = $"{host}:{port}";
@@ -46,7 +48,7 @@ namespace Ombi
                         Type = ConfigurationTypes.Port,
                         Value = "5000"
                     };
-
+                    
                     ctx.ApplicationConfigurations.Add(url);
                     ctx.ApplicationConfigurations.Add(dbPort);
                     ctx.SaveChanges();
@@ -87,5 +89,10 @@ namespace Ombi
 
         [Option('p', "port", Required = false, HelpText = "The port, default is 5000", Default = 5000)]
         public int Port { get; set; }
+
+
+        [Option('s', "storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
+        public string StoragePath { get; set; }
+
     }
 }

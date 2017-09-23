@@ -3,6 +3,7 @@ import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
+import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IChildRequests, IMovieRequests, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
 import { ISearchMovieResult } from "../interfaces";
@@ -44,6 +45,11 @@ export class RequestService extends ServiceAuthHelpers {
             .catch(this.handleError);
     }
 
+    public getTvRequestsTree(count: number, position: number): Observable<TreeNode[]> {
+        return this.http.get(`${this.url}tv/${count}/${position}/tree`).map(this.extractData)
+            .catch(this.handleError);
+    }
+
      public getChildRequests(requestId: number): Observable<IChildRequests[]> {
         return this.http.get(`${this.url}tv/${requestId}/child`).map(this.extractData)
             .catch(this.handleError);
@@ -51,6 +57,10 @@ export class RequestService extends ServiceAuthHelpers {
 
     public searchTvRequests(search: string): Observable<ITvRequests[]> {
         return this.http.get(`${this.url}tv/search/${search}`).map(this.extractData);
+     }
+
+    public searchTvRequestsTree(search: string): Observable<TreeNode[]> {
+        return this.http.get(`${this.url}tv/search/${search}/tree`).map(this.extractData);
     }
 
     public removeTvRequest(request: ITvRequests) {

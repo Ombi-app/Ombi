@@ -59,7 +59,7 @@
                                     <span *ngIf="node.data.firstAired" class="label label-info" target="_blank">Air Date: {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
 
                        
-                                    <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>
+                                    <ng-template [ngIf]="node.data.available"><span class="label label-success">Available</span></ng-template>
 
 
 

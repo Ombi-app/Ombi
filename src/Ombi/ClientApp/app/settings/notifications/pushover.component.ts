@@ -58,11 +58,10 @@ export class PushoverComponent implements OnInit {
 
         this.testerService.pushoverTest(form.value).subscribe(x => {
             if (x) {
-                this.notificationService.success("Successful", "Successfully sent a Pushbullet message, please check the discord channel");
+                this.notificationService.success("Successful", "Successfully sent a Pushover message");
             } else {
-                this.notificationService.success("Error", "There was an error when sending the Pushbullet message. Please check your settings");
+                this.notificationService.success("Error", "There was an error when sending the Pushover message. Please check your settings");
             }
         });
-
     }
 }

@@ -36,6 +36,11 @@ export class TvRequestChildrenComponent {
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
+        request.seasonRequests.forEach((season) => {
+            season.episodes.forEach((ep) => {
+                ep.approved = true;
+            });
+        });
         this.requestService.updateChild(request)
             .subscribe();
     }

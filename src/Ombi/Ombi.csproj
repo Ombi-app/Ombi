@@ -24,12 +24,16 @@
   
   <ItemGroup>
     <!-- Files not to show in IDE -->
+    <Compile Remove="Styles\**" />
     <Compile Remove="wwwroot\dist\**" />
 
     <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
     <Content Remove="ClientApp\**" />
+    <Content Remove="Styles\**" />
     <Content Remove="wwwroot\dist\**" />
+    <EmbeddedResource Remove="Styles\**" />
     <EmbeddedResource Remove="wwwroot\dist\**" />
+    <None Remove="Styles\**" />
     <None Remove="wwwroot\dist\**" />
   </ItemGroup>
   
@@ -75,11 +79,6 @@
     <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
     <ProjectReference Include="..\Ombi.TheMovieDbApi\Ombi.Api.TheMovieDb.csproj" />
     <ProjectReference Include="..\Ombi.Updater\Ombi.Updater.csproj" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Styles\" />
   </ItemGroup>
 
   <ItemGroup>
