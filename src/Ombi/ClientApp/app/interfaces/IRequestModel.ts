@@ -137,5 +137,5 @@ export interface IEpisodesRequests {
     available: boolean;
     requested: boolean;
     approved: boolean;
-    selected:boolean; // This is for the UI only
+    selected: boolean; // This is for the UI only
 }
