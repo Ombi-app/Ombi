@@ -17,7 +17,7 @@ export interface IPlexLibraries {
 export interface IPlexLibResponse {
     successful: boolean;
     message: string;
-    data:IPlexLibraries;
+    data: IPlexLibraries;
 }
 
 export interface IMediaContainer {

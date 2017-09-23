@@ -159,9 +159,23 @@ namespace Ombi.Core.Engine
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            // TODO need to check if we need to approve any child requests since they may have updated
             await TvRepository.Update(results);
             return results;
+        }
+
+        public async Task<RequestEngineResult> ApproveChildRequest(ChildRequests request)
+        {
+            if (request.Approved)
+            {
+                await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
+                // Autosend
+                await TvSender.SendToSonarr(request);
+            }
+            await TvRepository.UpdateChild(request);
+            return new RequestEngineResult
+            {
+                RequestAdded = true
+            };
         }
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)

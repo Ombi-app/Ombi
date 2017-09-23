@@ -18,7 +18,7 @@
                     <h3><i class="fa fa-bell-o"></i> <b>Notice</b></h3>
                     <span [innerHtml]="landingPageSettings.noticeText"></span>
                 </div>
-                <div>
+                <div *ngIf="mediaServerStatus">
                     <div *ngIf="mediaServerStatus.fullyAvailable">
                         <h3 class="online"><i class="fa fa-check-circle "></i> Currently Online</h3>
                         <span>The media server is currently online</span>

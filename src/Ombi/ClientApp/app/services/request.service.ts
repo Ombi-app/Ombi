@@ -24,6 +24,10 @@ export class RequestService extends ServiceAuthHelpers {
         return this.http.post(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
     }
 
+    public approveMovie(movie: IMovieRequests): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}Movie/Approve`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
+    }
+
     public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
         return this.http.get(`${this.url}movie/${count}/${position}`).map(this.extractData);
     }
@@ -72,6 +76,9 @@ export class RequestService extends ServiceAuthHelpers {
     }
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    }   
+    public approveChild(child: IChildRequests): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}tv/child/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }
     public deleteChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);

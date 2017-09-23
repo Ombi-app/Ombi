@@ -29,6 +29,8 @@ export class LandingPageComponent implements OnInit {
 
         });
 
-        this.landingPageService.getServerStatus().subscribe(x => this.mediaServerStatus = x);
+        this.landingPageService.getServerStatus().subscribe(x => {
+            this.mediaServerStatus = x;
+        });
     }
 }

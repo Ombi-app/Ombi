@@ -90,6 +90,17 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Updates the specified movie request.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("movie/approve")]
+        public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieRequests model)
+        {
+            return await MovieRequestEngine.ApproveMovie(model);
+        }
+
+        /// <summary>
         /// Gets the tv requests.
         /// </summary>
         /// <param name="count">The count of items you want to return.</param>
@@ -187,6 +198,17 @@ namespace Ombi.Controllers
         public async Task<ChildRequests> UpdateChild([FromBody] ChildRequests child)
         {
             return await TvRequestEngine.UpdateChildRequest(child);
+        }
+
+        /// <summary>
+        /// Updates the a specific child request
+        /// </summary>
+        /// <param name="child">The model.</param>
+        /// <returns></returns>
+        [HttpPost("tv/child/approve")]
+        public async Task<RequestEngineResult> ApproveChild([FromBody] ChildRequests child)
+        {
+            return await TvRequestEngine.ApproveChildRequest(child);
         }
 
         /// <summary>

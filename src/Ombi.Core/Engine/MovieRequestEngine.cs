@@ -142,6 +142,42 @@ namespace Ombi.Core.Engine
         }
 
         /// <summary>
+        /// This is the method that is triggered by pressing Approve on the requests page
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
+        {
+            if (request.Approved) 
+            {
+                var result = await Sender.Send(request);
+                if (result.Success && result.MovieSent)
+                {
+                    return new RequestEngineResult
+                    {
+                        RequestAdded = true
+                    };
+                }
+                if (!result.Success)
+                {
+                    Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
+                    return new RequestEngineResult
+                    {
+                        Message = result.Message,
+                        ErrorMessage = result.Message,
+                        RequestAdded = false
+                    };
+                }
+                // If there are no providers then it's successful but movie has not been sent
+            }
+
+            return new RequestEngineResult
+            {
+                RequestAdded = true
+            };
+        }
+
+        /// <summary>
         /// Updates the movie request.
         /// </summary>
         /// <param name="request">The request.</param>

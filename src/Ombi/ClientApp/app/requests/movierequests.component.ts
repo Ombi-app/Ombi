@@ -1,16 +1,11 @@
-﻿import { Component, OnDestroy, OnInit } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
-import "rxjs/add/operator/takeUntil";
 import { Subject } from "rxjs/Subject";
 
-import "rxjs/add/operator/debounceTime";
-import "rxjs/add/operator/distinctUntilChanged";
-import "rxjs/add/operator/map";
-
 import { AuthService } from "../auth/auth.service";
-import { RequestService } from "../services";
+import { NotificationService, RequestService } from "../services";
 
 import { IMovieRequests } from "../interfaces";
 
@@ -18,7 +13,7 @@ import { IMovieRequests } from "../interfaces";
     selector: "movie-requests",
     templateUrl: "./movierequests.component.html",
 })
-export class MovieRequestsComponent implements OnInit, OnDestroy {
+export class MovieRequestsComponent implements OnInit {
     public movieRequests: IMovieRequests[];
 
     public searchChanged: Subject<string> = new Subject<string>();
@@ -29,14 +24,12 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
     private currentlyLoaded: number;
     private amountToLoad: number;
 
-    private subscriptions = new Subject<void>();
-
     constructor(private requestService: RequestService,
-                private auth: AuthService) {
+                private auth: AuthService,
+                private notificationService: NotificationService) {
         this.searchChanged
-            .debounceTime(600) // Wait Xms afterthe last event before emitting last event
+            .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.searchText = x as string;
                 if (this.searchText === "") {
@@ -44,7 +37,6 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
                     return;
                 }
                 this.requestService.searchMovieRequests(this.searchText)
-                    .takeUntil(this.subscriptions)
                     .subscribe(m => this.movieRequests = m);
             });
     }
@@ -79,7 +71,7 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
     public approve(request: IMovieRequests) {
         request.approved = true;
         request.denied = false;
-        this.updateRequest(request);
+        this.approveRequest(request);
     }
 
     public deny(request: IMovieRequests) {
@@ -88,14 +80,8 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
         this.updateRequest(request);
     }
 
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
-    }
-
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.movieRequests.push.apply(this.movieRequests, x);
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
@@ -104,13 +90,25 @@ export class MovieRequestsComponent implements OnInit, OnDestroy {
 
     private updateRequest(request: IMovieRequests) {
         this.requestService.updateMovieRequest(request)
-            .takeUntil(this.subscriptions)
             .subscribe(x => request = x);
+    }
+
+    private approveRequest(request: IMovieRequests) {
+        this.requestService.approveMovie(request)
+            .subscribe(x => {
+
+                if (x.requestAdded) {
+                    this.notificationService.success("Request Approved",
+                        `Request for ${request.title} has been approved successfully`);
+                } else {
+                    this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
     }
 
     private loadInit() {
         this.requestService.getMovieRequests(this.amountToLoad, 0)
-            .takeUntil(this.subscriptions)
             .subscribe(x => this.movieRequests = x);
     }
 

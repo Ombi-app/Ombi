@@ -15,5 +15,6 @@ namespace Ombi.Core.Engine.Interfaces
         Task RemoveMovieRequest(int requestId);
 
         Task<MovieRequests> UpdateMovieRequest(MovieRequests request);
+        Task<RequestEngineResult> ApproveMovie(MovieRequests request);
     }
 }
