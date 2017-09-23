@@ -39,7 +39,7 @@ export class EmbyComponent implements OnInit {
 
     public test(server: IEmbyServer) {
         this.testerService.embyTest(server).subscribe(x => {
-            if (x) {
+            if (x === true) {
                 this.notificationService.success("Connected", `Successfully connected to the Emby server ${server.name}!`);
             } else {
                 this.notificationService.error("Connected", `We could not connect to the Emby server  ${server.name}!`);

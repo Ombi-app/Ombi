@@ -1,4 +1,5 @@
 ﻿import { Headers, Http, Response } from "@angular/http";
+import "rxjs/add/observable/throw";
 import { Observable } from "rxjs/Observable";
 
 import { AuthHttp } from "angular2-jwt";

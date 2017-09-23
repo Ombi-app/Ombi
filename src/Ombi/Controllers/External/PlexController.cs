@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
 using Ombi.Attributes;
@@ -18,14 +19,17 @@ namespace Ombi.Controllers.External
     [Produces("application/json")]
     public class PlexController : Controller
     {
-        public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings)
+        public PlexController(IPlexApi plexApi, ISettingsService<PlexSettings> plexSettings,
+            ILogger<PlexController> logger)
         {
             PlexApi = plexApi;
             PlexSettings = plexSettings;
+            _log = logger;
         }
 
         private IPlexApi PlexApi { get; }
         private ISettingsService<PlexSettings> PlexSettings { get; }
+        private readonly ILogger<PlexController> _log;
 
         /// <summary>
         /// Signs into the Plex API.
@@ -88,11 +92,29 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("Libraries")]
-        public async Task<PlexContainer> GetPlexLibraries([FromBody] PlexServers settings)
+        public async Task<PlexLibrariesResponse> GetPlexLibraries([FromBody] PlexServers settings)
         {
-            var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
+            try
+            {
+                var libs = await PlexApi.GetLibrarySections(settings.PlexAuthToken, settings.FullUri);
 
-            return libs;
+                return new PlexLibrariesResponse
+                {
+                    Successful = true,
+                    Data = libs
+                };
+            }
+           catch (Exception e)
+            {
+                _log.LogWarning(e,"Error thrown when attempting to obtain the plex libs");
+
+                var message = e.InnerException != null ? $"{e.Message} - {e.InnerException.Message}" : e.Message;
+                return new PlexLibrariesResponse
+                {
+                    Successful = false,
+                    Message = message
+                };
+            }
         }
 
         /// <summary>
