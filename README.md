@@ -14,46 +14,67 @@ ____
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
 
 
-| Service  | Master (Recommend)                     | Early Access                 | Dev                          | V3 (Not ready for use!)                   |
-|----------|:---------------------------:|:----------------------------:|:----------------------------:|:----------------------------:|
+| Service  | Master (Recommend Version 3.0)                     | Early Access                 | Dev                          |
+|----------|:---------------------------:|:----------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)| [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore)
-| Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)             |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |[![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)            |
+| Download |[![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |
 # Features
-Here some of the features Ombi has:
-* All your users to Request Movies, TV Shows (Whole series, whole seaons or even single episodes!) and Albums
+Here some of the features Ombi V3 has:
+* Out of the box working on all OS Just download the zip and start Ombi!
+* Let users request Movies and TV Shows (Whole series, whole seaons or even single episodes!)
 * Easily manage your requests
 * User management system (supports plex.tv accounts and local accounts)
-* Sending newsletters
-* Fault Queue for requests (Buffer requests if Sonar/Couchpotato/SickRage is offline)
 * Allow your users to report issues and manage them separately
 * A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
-* Allow your users to get notifications!
+* Allow your users to get custom notifications!
 * Secure authentication so you don't have to worry about those script kiddies
 * We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
-* We have allowed the ability for a user to add a custom note on a request
 * It automatically updates the status of requests when they are available on Plex
 * Slick, responsive and mobile friendly UI
-
+* Ombi wil automatically update here self :)
+* Very fast system.
 
 ### Integration 
 We integrate with the following applications:
-* Plex server 1.2 (and higher)
-* Emby (beta)
+* Plex server
+* Emby
 * Sonarr
-* SickRage
-* CouchPotato
 * Radarr (beta)
-* Watcher (beta)
-* Headphones
+
 
 ### Notifications
 Supported notifications:
 * SMTP Notifications (Email)
+* Discord
+* Slack
 * Pushbullet
 * Pushover
-* Slack
-* Discord
-* Weekly Recently Added email notification to all of your Plex Users!
+* Mattermost
+
+### The difference between Version 3 and 2
+
+Over the last 7 months, we focust on the main functions on Ombi.
+Make it better, faster and more stable.
+We did already a lot of work, but you will still miss some functions in the new version.
+We are planning to bring this features back in Version 3. You can find a list below with the feature difference.
+
+
+| Service  | Version 3 | Version 2 |
+|----------|:----------:|:----------:|
+| Supported online | Yes | No |
+| Emby & Plex support | Yes | Yes |
+| Mono needed | No | Yes |
+| Notifications support | Yes| Yes |
+| Landing page | Yes (brand new) | Yes |
+| Login page | Yes (brand new) | Yes |
+| Custom Logo in Ombi and notifications | Yes | No |
+| Change bulk roles in user management | Yes  | No |
+| Sending newsletters | Planned | Yes |
+| Send a Mass Email | Planned | Yes |
+| SickRage | Planned (not supported yet)| Yes |
+| CouchPotato | Planned| Yes |
+| Watcher | Planned| Yes |
+| Headphones | X (support dropped) | Yes |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
@@ -69,8 +90,15 @@ Search the existing requests to see if your suggestion has already been submitte
 
 # Installation
 
-[Windows Guide!](http://www.htpcguides.com/install-plex-requests-net-windows-system-service/)  
-[Ubuntu Guide!](http://www.htpcguides.com/install-plex-requests-net-ubuntu-14-x/)
+Windows: Download the windows zip file above and run ombi.exe
+
+Linux: Download the linux zip file, run chmod +x Ombi to make the Ombi file an executable.
+
+Get the following error? 
+libunwind.so.8: cannot open shared object file
+Sometimes you need to install libwind8. 
+Pleas run the following command: 
+```apt-get install libunwind8```
 
 # FAQ
 Do you have an issue or a question? if so check out our [FAQ](https://github.com/tidusjar/Ombi/wiki/FAQ)!
