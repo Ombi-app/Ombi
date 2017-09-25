@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using CommandLine;
+using CommandLine.Text;
 using Microsoft.AspNetCore;
 
 namespace Ombi
@@ -13,29 +15,31 @@ namespace Ombi
     public class Program
     {
         private static string UrlArgs { get; set; }
+        private static string WebRoot { get; set; }
         public static void Main(string[] args)
         {
             Console.Title = "Ombi";
 
-            int port = 0;
-            string host = string.Empty;
-            string storagePath = string.Empty;
-            Parser.Default.ParseArguments<Options>(args)
+            var host = string.Empty;
+            var storagePath = string.Empty;
+            var result = Parser.Default.ParseArguments<Options>(args)
                 .WithParsed(o =>
                 {
-                    port = o.Port;
                     host = o.Host;
+                    WebRoot = o.WebRoot;
                     storagePath = o.StoragePath;
                 });
-            
-            UrlArgs = $"{host}:{port}";
-            
+
+            Console.WriteLine(HelpOutput(result));
+
+            UrlArgs = host;
+
             var urlValue = string.Empty;
             using (var ctx = new OmbiContext())
             {
-                var url = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
-                var savedPort = ctx.ApplicationConfigurations.FirstOrDefault(x => x.Type == ConfigurationTypes.Port);
-                if (url == null && savedPort == null)
+                var config = ctx.ApplicationConfigurations.ToList();
+                var url = config.FirstOrDefault(x => x.Type == ConfigurationTypes.Url);
+                if (url == null)
                 {
                     url = new ApplicationConfiguration
                     {
@@ -43,31 +47,16 @@ namespace Ombi
                         Value = "http://*"
                     };
 
-                    var dbPort = new ApplicationConfiguration
-                    {
-                        Type = ConfigurationTypes.Port,
-                        Value = "5000"
-                    };
-                    
                     ctx.ApplicationConfigurations.Add(url);
-                    ctx.ApplicationConfigurations.Add(dbPort);
                     ctx.SaveChanges();
                     urlValue = url.Value;
-                    port = int.Parse(dbPort.Value);
                 }
-                if (url != null && !url.Value.Equals(host))
+                if (!url.Value.Equals(host))
                 {
                     url.Value = UrlArgs;
                     ctx.SaveChanges();
                     urlValue = url.Value;
                 }
-
-                if (savedPort != null && !savedPort.Value.Equals(port.ToString()))
-                {
-                    savedPort.Value = port.ToString() ;
-                    ctx.SaveChanges();
-                }
-
             }
 
             Console.WriteLine($"We are running on {urlValue}");
@@ -79,20 +68,37 @@ namespace Ombi
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .UseUrls(UrlArgs)
+                .PreferHostingUrls(true)
+                .UseWebRoot(WebRoot)
                 .Build();
+
+        private static string HelpOutput(ParserResult<Options> args)
+        {
+            var result = new StringBuilder();
+
+            result.AppendLine("Hello, and welcome to the  console application.");
+            result.AppendLine("This application takes in a data file and attempts to import that data into our systems.");
+            result.AppendLine("Valid options are:");
+            result.AppendLine(HelpText.AutoBuild(args, null, null));
+            result.AppendLine("Press any key to exit");
+
+            return result.ToString();
+        }
     }
 
     public class Options
     {
-        [Option('h', "host", Required = false, HelpText = "The Hostname default is http://*", Default ="http://*")]
+        [Option('h', "host", Required = false, HelpText =
+            "Set to a semicolon-separated (;) list of URL prefixes to which the server should respond. For example, http://localhost:123." +
+            " Use \"*\" to indicate that the server should listen for requests on any IP address or hostname using the specified port and protocol (for example, http://*:5000). " +
+            "The protocol (http:// or https://) must be included with each URL. Supported formats vary between servers.", Default = "http://*:5000")]
         public string Host { get; set; }
-
-        [Option('p', "port", Required = false, HelpText = "The port, default is 5000", Default = 5000)]
-        public int Port { get; set; }
-
 
         [Option('s', "storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
         public string StoragePath { get; set; }
 
+        [Option('w', "webroot", Required = false, HelpText = "(Root Path for Reverse Proxies) If not specified, the default is \"(Content Root)/wwwroot\", if the path exists. If the path doesn\'t exist, then a no-op file provider is used.")]
+        public string WebRoot { get; set; }
+        
     }
 }

@@ -12,7 +12,6 @@ namespace Ombi.Store.Entities
     public enum ConfigurationTypes
     {
         Url,
-        Port,
         FanartTv,
         TheMovieDb,
         StoragePath
