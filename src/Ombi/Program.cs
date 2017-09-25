@@ -26,12 +26,16 @@ namespace Ombi
                 .WithParsed(o =>
                 {
                     host = o.Host;
-                    WebRoot = o.WebRoot;
+                    WebRoot = Path.Combine(o.WebRoot, "wwwroot");
                     storagePath = o.StoragePath;
                 });
 
             Console.WriteLine(HelpOutput(result));
 
+            if (string.IsNullOrEmpty(WebRoot))
+            {
+                WebRoot = Path.Combine(WebHost.CreateDefaultBuilder().GetSetting("contentRoot"), "wwwroot");
+            }
             UrlArgs = host;
 
             var urlValue = string.Empty;
@@ -97,7 +101,9 @@ namespace Ombi
         [Option('s', "storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
         public string StoragePath { get; set; }
 
-        [Option('w', "webroot", Required = false, HelpText = "(Root Path for Reverse Proxies) If not specified, the default is \"(Content Root)/wwwroot\", if the path exists. If the path doesn\'t exist, then a no-op file provider is used.")]
+        [Option('w', "webroot", Required = false,
+            HelpText = "(Root Path for Reverse Proxies) If not specified, the default is \"(Working Directory)\", if the path exists. If the path doesn\'t exist, then a no-op file provider is used."
+            ,Default = "")]
         public string WebRoot { get; set; }
         
     }
