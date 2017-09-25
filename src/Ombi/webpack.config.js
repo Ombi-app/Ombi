@@ -10,7 +10,7 @@ module.exports = function (env) {
     const prod = env && env.prod;
     console.log(prod ? 'Production' : 'Dev' + ' main build');
     const analyse = env && env.analyse;
-    if (analyse) { console.log("Analysing build") };
+    if (analyse) { console.log("Analysing build"); }
     const cssLoader = prod ? 'css-loader?minimize' : 'css-loader';
     const outputDir = './wwwroot/dist';
     const bundleConfig = {

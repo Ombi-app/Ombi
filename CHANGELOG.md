@@ -4,6 +4,10 @@
 
 ### **New Features**
 
+- Update Startup.cs. [Jamie]
+
+- Added an about page #865. [Jamie.Rees]
+
 - Changelog. [Jamie.Rees]
 
 - Changed the way we download the updates #865. [Jamie.Rees]
@@ -33,6 +37,18 @@
 - Updated CHangelog. [Jamie.Rees]
 
 ### **Fixes**
+
+- Optimized images, Update old compressed image with a new lossless one. (#1514) [camjac251]
+
+- #1513 #865 Fixed the issue where we do not send the requests to Radarr/Sonarr when approving. [tidusjar]
+
+- #1506 #865 Fixed an issue with the test buttons not working correctly. [tidusjar]
+
+- #865 Added donation link. [tidusjar]
+
+- Fixed a bunch of issues on #1513. [tidusjar]
+
+- #1460 Added the Updater, it all seems to be working correctly. #865. [Jamie.Rees]
 
 - Removed percentage. [Jamie.Rees]
 
@@ -107,8 +123,6 @@
 - Fixed a bunch of bugs in Ombi #865. [tidusjar]
 
 - Build versioning. [Jamie.Rees]
-
-
 
 
 - Updated changelog. [Jamie.Rees]
