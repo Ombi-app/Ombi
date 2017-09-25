@@ -133,7 +133,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                         }
 
                         Ctx.WriteLine("Starting Download");
-                        await DownloadAsync(download.Url, zipDir);
+                        await DownloadAsync(download.Url, zipDir, c);
                         Ctx.WriteLine("Finished Download");
                     }
                     catch (Exception e)
@@ -195,10 +195,15 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public static async Task DownloadAsync(string requestUri, string filename)
+        public static async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
         {
             using (var client = new WebClient())
             {
+                ctx.WriteProgressBar();
+                client.DownloadProgressChanged += (s, e) =>
+                {
+                    ctx.WriteProgressBar(e.ProgressPercentage);
+                };
                 await client.DownloadFileTaskAsync(requestUri, filename);
             }
         }

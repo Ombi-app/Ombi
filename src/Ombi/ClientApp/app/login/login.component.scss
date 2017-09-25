@@ -23,6 +23,11 @@ landingDiv {
     background-size: cover;
 }
 
+img.center {
+    display: block;
+    margin: 0 auto;
+}
+
 img.bg {
     /* Set rules to fill background */
     min-height: 100%;

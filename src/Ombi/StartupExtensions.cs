@@ -24,7 +24,7 @@ namespace Ombi
                 {
                     Version = "v1",
                     Title = "Ombi Api",
-                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/connect/token/\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
+                    Description = "The API for Ombi, most of these calls require an auth token that you can get from calling POST:\"/api/v1/token\" with the body of: \n {\n\"username\":\"YOURUSERNAME\",\n\"password\":\"YOURPASSWORD\"\n} \n" +
                                   "You can then use the returned token in the JWT Token field e.g. \"Bearer Token123xxff\"",
                     Contact = new Contact
                     {
@@ -44,18 +44,29 @@ namespace Ombi
                 {
                     Console.WriteLine(e);
                 }
-                c.AddSecurityDefinition("Bearer", new ApiKeyScheme()
+                c.AddSecurityDefinition("Bearer", new JwtBearer
                 {
                     Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
                     Name = "Authorization",
                     In = "header",
-                    Type = "apiKey"
+                    Type = "apiKey",
                 });
-
-                c.AddSecurityDefinition("Authentication", new ApiKeyScheme());
+                
                 c.OperationFilter<SwaggerOperationFilter>();
                 c.DescribeAllParametersInCamelCase();
             });
+        }
+
+        public class JwtBearer : SecurityScheme
+        {
+            public string Name { get; set; }
+
+            public string In { get; set; }
+
+            public JwtBearer()
+            {
+                this.Type = "bearer";
+            }
         }
 
         public static void AddAppSettingsValues(this IServiceCollection services, IConfigurationRoot configuration)

@@ -1,4 +1,6 @@
 ﻿<ul class="nav nav-tabs">
+    
+    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']"><i class="fa fa-question" aria-hidden="true"></i> About</a></li>
     <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']">Ombi</a></li>
 
     <li class="dropdown" [routerLinkActive]="['active']">
@@ -22,14 +24,14 @@
         </ul>
     </li>
 
-    <li class="dropdown"  [routerLinkActive]="['active']">
+    <li class="dropdown" [routerLinkActive]="['active']">
         <a class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-television" aria-hidden="true"></i> TV <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Sonarr']" >Sonarr</a></li>
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Sonarr']">Sonarr</a></li>
             <li [routerLinkActive]="['active']"><a>More Coming Soon...</a></li>
-            <!--<li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/SickRage']" >SickRage</a></li>-->
+            <!--<li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/SickRage']">SickRage</a></li>-->
         </ul>
     </li>
 
@@ -62,12 +64,11 @@
     </li>
 
 
-    <li class="dropdown"  [routerLinkActive]="['active']">
+    <li class="dropdown" [routerLinkActive]="['active']">
         <a class="dropdown-toggle" data-toggle="dropdown">
             <i class="fa fa-tachometer" aria-hidden="true"></i> System <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
-            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']">About</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Update']">Update</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Logs']">Logs (Not available)</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/ScheduledJobs']">Scheduled Jobs (Not available)</a></li>

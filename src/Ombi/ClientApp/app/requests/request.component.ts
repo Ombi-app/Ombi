@@ -8,9 +8,13 @@ export class RequestComponent  {
     public showMovie = true;
     public showTv = false;
 
-    public selectTab() {
-        this.showMovie = !this.showMovie;
-        this.showTv = !this.showTv;
+    public selectMovieTab() {
+        this.showMovie = true;
+        this.showTv = false;
     }
 
+    public selectTvTab() {
+        this.showMovie = false;
+        this.showTv = true;
+    }
 }
