@@ -11,6 +11,7 @@ import { AuthService } from "../auth/auth.service";
 import { RadarrService, SonarrService, TesterService, UpdateService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
+import { AboutComponent } from "./about/about.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { EmbyComponent } from "./emby/emby.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
@@ -34,6 +35,7 @@ import { AutoCompleteModule, CalendarModule, InputSwitchModule, InputTextModule,
 
 const routes: Routes = [
     { path: "Settings/Ombi", component: OmbiComponent, canActivate: [AuthGuard] },
+    { path: "Settings/About", component: AboutComponent, canActivate: [AuthGuard] },
     { path: "Settings/Plex", component: PlexComponent, canActivate: [AuthGuard] },
     { path: "Settings/Emby", component: EmbyComponent, canActivate: [AuthGuard] },
     { path: "Settings/Sonarr", component: SonarrComponent, canActivate: [AuthGuard] },
@@ -86,6 +88,7 @@ const routes: Routes = [
         PushbulletComponent,
         UserManagementComponent,
         UpdateComponent,
+        AboutComponent,
     ],
     exports: [
         RouterModule,

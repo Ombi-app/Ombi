@@ -4,6 +4,7 @@ import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
 import {
+    IAbout,
     IAuthenticationSettings,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
@@ -27,6 +28,10 @@ import { ServiceAuthHelpers } from "./service.helpers";
 export class SettingsService extends ServiceAuthHelpers {
     constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http) {
         super(httpAuth, "/api/v1/Settings");
+    }
+
+    public about(): Observable<IAbout> {
+        return this.httpAuth.get(`${this.url}/About/`).map(this.extractData).catch(this.handleError);
     }
 
     public getOmbi(): Observable<IOmbiSettings> {

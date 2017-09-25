@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.PlatformAbstractions;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
 using Ombi.Core.Models.UI;
@@ -13,6 +15,7 @@ using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Models;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Radarr;
@@ -24,6 +27,7 @@ using Ombi.Store.Repository;
 
 namespace Ombi.Controllers
 {
+    /// <inheritdoc />
     /// <summary>
     /// The Settings Controller
     /// </summary>
@@ -42,8 +46,8 @@ namespace Ombi.Controllers
         /// <param name="cacher">The cacher.</param>
         /// <param name="embyCacher">The embyCacher.</param>
         /// <param name="radarrCacher">The radarrCacher.</param>
-        public SettingsController(ISettingsResolver resolver, 
-            IMapper mapper, 
+        public SettingsController(ISettingsResolver resolver,
+            IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
             IPlexContentCacher cacher,
@@ -87,6 +91,25 @@ namespace Ombi.Controllers
         {
             ombi.Wizard = true;
             return await Save(ombi);
+        }
+
+        [HttpGet("about")]
+        public AboutViewModel About()
+        {
+            var model = new AboutViewModel
+            {
+                FrameworkDescription = RuntimeInformation.FrameworkDescription,
+                OsArchitecture = RuntimeInformation.OSArchitecture.ToString(),
+                OsDescription = RuntimeInformation.OSDescription,
+                ProcessArchitecture = RuntimeInformation.ProcessArchitecture.ToString(),
+                ApplicationBasePath =PlatformServices.Default.Application.ApplicationBasePath
+            };
+            
+            var version = AssemblyHelper.GetRuntimeVersion();
+            var productArray = version.Split('-');
+            model.Version = productArray[0];
+            model.Branch = productArray[1];
+            return model;
         }
 
         [HttpPost("ombi/resetApi")]

@@ -101,3 +101,12 @@ export interface IAuthenticationSettings extends ISettings {
     requireNonAlphanumeric: boolean;
     requireUppercase: boolean;
 }
+
+export interface IAbout {
+    version: string;
+    branch: string;
+    osArchitecture: string;
+    osDescription: string;
+    processArchitecture: string;
+    applicationBasePath: string;
+}
