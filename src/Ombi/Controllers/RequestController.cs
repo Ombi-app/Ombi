@@ -90,6 +90,29 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Updates the specified movie request.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("movie/approve")]
+        public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieRequests model)
+        {
+            return await MovieRequestEngine.ApproveMovie(model);
+        }
+
+        /// <summary>
+        /// Gets the tv requests.
+        /// </summary>
+        /// <param name="count">The count of items you want to return.</param>
+        /// <param name="position">The position.</param>
+        /// <returns></returns>
+        [HttpGet("tv/{count:int}/{position:int}/tree")]
+        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetTvRequestsTree(int count, int position)
+        {
+            return await TvRequestEngine.GetRequestsTreeNode(count, position);
+        }
+
+        /// <summary>
         /// Gets the tv requests.
         /// </summary>
         /// <param name="count">The count of items you want to return.</param>
@@ -98,16 +121,7 @@ namespace Ombi.Controllers
         [HttpGet("tv/{count:int}/{position:int}")]
         public async Task<IEnumerable<TvRequests>> GetTvRequests(int count, int position)
         {
-            try
-            {
-
-                return await TvRequestEngine.GetRequests(count, position);
-            }
-            catch (System.Exception e)
-            {
-                Debug.WriteLine(e.Message);
-                throw;
-            }
+            return await TvRequestEngine.GetRequests(count, position);
         }
 
         /// <summary>
@@ -143,6 +157,17 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Searches for a specific tv request
+        /// </summary>
+        /// <param name="searchTerm">The search term.</param>
+        /// <returns></returns>
+        [HttpGet("tv/search/{searchTerm}/tree")]
+        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvTree(string searchTerm)
+        {
+            return await TvRequestEngine.SearchTvRequestTree(searchTerm);
+        }
+
+        /// <summary>
         /// Deletes the a specific tv request
         /// </summary>
         /// <param name="requestId">The request identifier.</param>
@@ -173,6 +198,17 @@ namespace Ombi.Controllers
         public async Task<ChildRequests> UpdateChild([FromBody] ChildRequests child)
         {
             return await TvRequestEngine.UpdateChildRequest(child);
+        }
+
+        /// <summary>
+        /// Updates the a specific child request
+        /// </summary>
+        /// <param name="child">The model.</param>
+        /// <returns></returns>
+        [HttpPost("tv/child/approve")]
+        public async Task<RequestEngineResult> ApproveChild([FromBody] ChildRequests child)
+        {
+            return await TvRequestEngine.ApproveChildRequest(child);
         }
 
         /// <summary>

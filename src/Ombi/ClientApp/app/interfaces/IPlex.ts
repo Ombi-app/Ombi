@@ -14,6 +14,12 @@ export interface IPlexLibraries {
     mediaContainer: IMediaContainer;
 }
 
+export interface IPlexLibResponse {
+    successful: boolean;
+    message: string;
+    data: IPlexLibraries;
+}
+
 export interface IMediaContainer {
     directory: IDirectory[];
 }

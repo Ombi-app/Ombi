@@ -55,14 +55,15 @@
                             </td>
                             <td>
                                 <ng-template [ngIf]="ep.available"><span class="label label-success">Available</span></ng-template>
-                                <ng-template [ngIf]="ep.approved && !ep.available"><span class="label label-info">Processing Request</span></ng-template>
-                                <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available"><span class="label label-warning">Pending Approval</span></ng-template>
+                                <ng-template [ngIf]="ep.approved && !ep.available "><span class="label label-info">Processing Request</span></ng-template>
+                                <ng-template [ngIf]="ep.selected"><span class="label label-info">Selected</span></ng-template>
+                                <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available && !ep.selected"><span class="label label-warning">Pending Approval</span></ng-template>
                                 <ng-template [ngIf]="!ep.requested && !ep.available"><span class="label label-danger">Not Requested</span></ng-template>
                             </td>
 
                             <td>
-
-                                <button (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-primary-outline">Add Request</button>
+                                <button *ngIf="!ep.selected" (click)="addRequest(ep)" [disabled]="ep.available || ep.requested || ep.approved" class="btn btn-sm btn-primary-outline">Select</button>
+                                <button *ngIf="ep.selected" (click)="removeRequest(ep)" class="btn btn-sm btn-primary-outline">Unselect</button>
                             </td>
                         </tr>
                         </tbody>

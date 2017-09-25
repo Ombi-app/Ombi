@@ -1,6 +1,6 @@
 ﻿import { Component, Input } from "@angular/core";
 import { IChildRequests, IEpisodesRequests } from "../interfaces";
-import { RequestService } from "../services";
+import { NotificationService, RequestService } from "../services";
 
 @Component({
     selector:"tvrequests-children",
@@ -9,7 +9,9 @@ import { RequestService } from "../services";
 export class TvRequestChildrenComponent {
     @Input() public childRequests: IChildRequests[];
     @Input() public isAdmin: boolean;
-    constructor(private requestService: RequestService  ) { }
+    constructor(private requestService: RequestService,
+                private notificationService: NotificationService) { }
+
     public removeRequest(request: IChildRequests) {
         this.requestService.deleteChild(request)
             .subscribe();
@@ -36,8 +38,21 @@ export class TvRequestChildrenComponent {
     public approve(request: IChildRequests) {
         request.approved = true;
         request.denied = false;
-        this.requestService.updateChild(request)
-            .subscribe();
+        request.seasonRequests.forEach((season) => {
+            season.episodes.forEach((ep) => {
+                ep.approved = true;
+            });
+        });
+        this.requestService.approveChild(request)
+            .subscribe(x => {
+                if (x.requestAdded) {
+                    this.notificationService.success("Request Approved",
+                        `Request has been approved successfully`);
+                } else {
+                    this.notificationService.warning("Request Approved", x.message ? x.message : x.errorMessage);
+                    request.approved = false;
+                }
+            });
     }
 
     public denySeasonRequest(request: IChildRequests) {

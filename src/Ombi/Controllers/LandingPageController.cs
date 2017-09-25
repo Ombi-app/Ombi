@@ -36,58 +36,55 @@ namespace Ombi.Controllers
         {
             var model = new MediaSeverAvailibilityViewModel();
 
-            model.ServersAvailable = 3;
-            model.ServersUnavailable = 1;
-            return model;
-            //var plex = await _plexSettings.GetSettingsAsync();
-            //if (plex.Enable)
-            //{
-                
-            //    foreach (var s in plex.Servers)
-            //    {
-            //        try
-            //        {
-            //            var result = await _plexApi.GetStatus(s.PlexAuthToken, s.FullUri);
-            //            if (!string.IsNullOrEmpty(result.MediaContainer?.version))
-            //            {
-            //                model.ServersAvailable++;
-            //            }
-            //            else
-            //            {
-            //                model.ServersUnavailable++;
-            //            }
-            //        }
-            //        catch (Exception)
-            //        {
-            //            model.ServersUnavailable++;
-            //        }
-            //    }
-            //}
+            var plex = await _plexSettings.GetSettingsAsync();
+            if (plex.Enable)
+            {
 
-            //var emby = await _embySettings.GetSettingsAsync();
-            //if (emby.Enable)
-            //{
-            //    foreach (var server in emby.Servers)
-            //    {
-            //        try
-            //        {
-            //            var result = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
-            //            if (result.Any())
-            //            {
-            //                model.ServersAvailable++;
-            //            }
-            //            else
-            //            {
-            //                model.ServersUnavailable++;
-            //            }
-            //        }
-            //        catch (Exception)
-            //        {
-            //            model.ServersUnavailable++;
-            //        }
-            //    }
-            //}
-            //return model;
+                foreach (var s in plex.Servers)
+                {
+                    try
+                    {
+                        var result = await _plexApi.GetStatus(s.PlexAuthToken, s.FullUri);
+                        if (!string.IsNullOrEmpty(result.MediaContainer?.version))
+                        {
+                            model.ServersAvailable++;
+                        }
+                        else
+                        {
+                            model.ServersUnavailable++;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        model.ServersUnavailable++;
+                    }
+                }
+            }
+
+            var emby = await _embySettings.GetSettingsAsync();
+            if (emby.Enable)
+            {
+                foreach (var server in emby.Servers)
+                {
+                    try
+                    {
+                        var result = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                        if (result.Any())
+                        {
+                            model.ServersAvailable++;
+                        }
+                        else
+                        {
+                            model.ServersUnavailable++;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        model.ServersUnavailable++;
+                    }
+                }
+            }
+            return model;
         }
     }
 }

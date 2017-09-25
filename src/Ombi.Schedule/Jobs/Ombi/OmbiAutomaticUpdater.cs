@@ -108,31 +108,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     else
                     {
-                        // Linux
-                        if (desc.Contains("ubuntu", CompareOptions.IgnoreCase))
-                        {
-                            // Ubuntu
-                            Logger.LogInformation(LoggingEvents.Updater, "We are ubuntu");
-                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("ubuntu", CompareOptions.IgnoreCase));
-
-                        }
-                        else if (desc.Contains("debian", CompareOptions.IgnoreCase))
-                        {
-                            // Debian
-                            Logger.LogInformation(LoggingEvents.Updater, "We are debian");
-                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("debian", CompareOptions.IgnoreCase));
-                        }
-                        else if (desc.Contains("centos", CompareOptions.IgnoreCase))
-                        {
-                            // Centos
-                            Logger.LogInformation(LoggingEvents.Updater, "We are centos");
-                            download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("centos",
-                                CompareOptions.IgnoreCase));
-                        }
-                        else
-                        {
-                            return;
-                        }
+                        Logger.LogInformation(LoggingEvents.Updater, "We are linux");
+                        download = updates.Downloads.FirstOrDefault(x => x.Name.Contains("linux", CompareOptions.IgnoreCase));
                     }
                     if (download == null)
                     {
@@ -201,7 +178,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
-                        FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),"TempUpdate",$"Ombi.Updater{updaterExtension}"),
+                        FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate", $"Ombi.Updater{updaterExtension}"),
                         Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension
                     };
                     using (var proc = new Process { StartInfo = start })
@@ -212,7 +189,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                 }
             }
             catch (Exception e)
-            { 
+            {
                 Ctx.WriteLine(e);
                 throw;
             }

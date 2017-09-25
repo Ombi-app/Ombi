@@ -60,7 +60,7 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     public testPlex(server: IPlexServer) {
         this.testerService.plexTest(server).subscribe(x => {
-            if (x) {
+            if (x === true) {
                 this.notificationService.success("Connected", `Successfully connected to the Plex server ${server.name}!`);
             } else {
                 this.notificationService.error("Connected", `We could not connect to the Plex server  ${server.name}!`);
@@ -90,15 +90,19 @@ export class PlexComponent implements OnInit, OnDestroy {
         }
         this.plexService.getLibraries(server).subscribe(x => {
             server.plexSelectedLibraries = [];
-            x.mediaContainer.directory.forEach((item, index) => {
-                const lib: IPlexLibrariesSettings = {
-                    key: item.key,
-                    title: item.title,
-                    enabled: false,
-                };
-                server.plexSelectedLibraries.push(lib);
-            });
-        },
+            if (x.successful) {
+                    x.data.mediaContainer.directory.forEach((item) => {
+                        const lib: IPlexLibrariesSettings = {
+                            key: item.key,
+                            title: item.title,
+                            enabled: false,
+                        };
+                        server.plexSelectedLibraries.push(lib);
+                    });
+                } else {
+                    this.notificationService.error("Error", x.message);
+                }
+            },
         err => { this.notificationService.error("Error", err); });
     }
 

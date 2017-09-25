@@ -3,6 +3,7 @@ import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
+import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
 import { IChildRequests, IMovieRequests, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
 import { ISearchMovieResult } from "../interfaces";
@@ -21,6 +22,10 @@ export class RequestService extends ServiceAuthHelpers {
 
     public requestTv(tv: ISearchTvResult): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
+    }
+
+    public approveMovie(movie: IMovieRequests): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}Movie/Approve`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 
     public getMovieRequests(count: number, position: number): Observable<IMovieRequests[]> {
@@ -44,6 +49,11 @@ export class RequestService extends ServiceAuthHelpers {
             .catch(this.handleError);
     }
 
+    public getTvRequestsTree(count: number, position: number): Observable<TreeNode[]> {
+        return this.http.get(`${this.url}tv/${count}/${position}/tree`).map(this.extractData)
+            .catch(this.handleError);
+    }
+
      public getChildRequests(requestId: number): Observable<IChildRequests[]> {
         return this.http.get(`${this.url}tv/${requestId}/child`).map(this.extractData)
             .catch(this.handleError);
@@ -51,6 +61,10 @@ export class RequestService extends ServiceAuthHelpers {
 
     public searchTvRequests(search: string): Observable<ITvRequests[]> {
         return this.http.get(`${this.url}tv/search/${search}`).map(this.extractData);
+     }
+
+    public searchTvRequestsTree(search: string): Observable<TreeNode[]> {
+        return this.http.get(`${this.url}tv/search/${search}/tree`).map(this.extractData);
     }
 
     public removeTvRequest(request: ITvRequests) {
@@ -62,6 +76,9 @@ export class RequestService extends ServiceAuthHelpers {
     }
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    }   
+    public approveChild(child: IChildRequests): Observable<IRequestEngineResult> {
+        return this.http.post(`${this.url}tv/child/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }
     public deleteChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.delete(`${this.url}tv/child/${child.id}`, { headers: this.headers }).map(this.extractData);

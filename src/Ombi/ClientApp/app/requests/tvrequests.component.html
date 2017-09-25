@@ -19,11 +19,6 @@
      (scrolled)="loadMore()">-->
     <div>
     <p-treeTable [value]="tvRequests">
-        <!--<p-column>
-            <ng-template let-col let-node="rowData" pTemplate="body">
-                <img src="{{node.data.data.banner}}" class="img-responsive poster" width="150" />
-            </ng-template>
-        </p-column>-->
 
         <p-column>
             <ng-template let-col let-node="rowData" pTemplate="header">
@@ -63,7 +58,7 @@
                 </div>
                 <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                 <div *ngIf="node.leaf">
-                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin"></tvrequests-children>
+                    <tvrequests-children [childRequests]="node.data" [isAdmin] ="isAdmin" ></tvrequests-children>
                 </div>
             </ng-template>
         </p-column>

@@ -24,7 +24,7 @@
                     <ng-template ngbTabContent>
                         <br />
                         <br />
-                        <div class="col-md-2 " style="float: right;">
+                        <div class="col-md-2" style="float: right;">
                             <button type="submit" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
                         </div>
                         <br />
@@ -76,23 +76,20 @@
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <button id="testPlex" type="submit" (click)="test()" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
+                                    <button id="testEmby" type="submit" (click)="test()" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
                                 </div>
-                        
                             </div>
                         </div>
                     </ng-template>
                 </ngb-tab>
             </div>
         </ngb-tabset>
-        <div class="row">
-        <div class="col-md-1 col-md-push-5">
+        <div class="col-md-12">
             <div class="form-group">
                 <div>
                     <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                 </div>
             </div>
-        </div>
         </div>
     </fieldset>
 </div>

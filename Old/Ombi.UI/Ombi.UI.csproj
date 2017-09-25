@@ -471,7 +471,7 @@
     <Content Include="Content\helpers\bootbox.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Content\images\emby-logo-dark.jpg">
+    <Content Include="Content\images\emby-logo-dark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\images\emby-logo.png">

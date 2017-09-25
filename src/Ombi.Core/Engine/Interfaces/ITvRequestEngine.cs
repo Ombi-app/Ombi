@@ -13,10 +13,13 @@ namespace Ombi.Core.Engine.Interfaces
         Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv);
 
         Task<IEnumerable<TvRequests>> SearchTvRequest(string search);
+        Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search);
 
         Task<TvRequests> UpdateTvRequest(TvRequests request);
+        Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position);
         Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId);
         Task<ChildRequests> UpdateChildRequest(ChildRequests request);
         Task RemoveTvChild(int requestId);
+        Task<RequestEngineResult> ApproveChildRequest(ChildRequests request);
     }
 }

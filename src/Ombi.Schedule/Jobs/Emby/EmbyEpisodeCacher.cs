@@ -77,6 +77,12 @@ namespace Ombi.Schedule.Jobs.Emby
 
             foreach (var ep in allEpisodes.Items)
             {
+                if (ep.LocationType.Equals("Virtual", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    // This means that we don't actully have the file, it's just Emby being nice and showing future stuff
+                    continue;
+                }
+
                 var epInfo = await _api.GetEpisodeInformation(ep.Id, server.ApiKey, server.AdministratorId, server.FullUri);
                 if (epInfo?.ProviderIds?.Tvdb == null)
                 {

@@ -37,7 +37,7 @@ namespace Ombi.Core.Engine
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
         private IMapper Mapper { get; }
-        private ITvSender TvSender {get;}
+        private ITvSender TvSender { get; }
         private IAuditRepository Audit { get; }
 
         public async Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv)
@@ -51,7 +51,7 @@ namespace Ombi.Core.Engine
                 .CreateChild(tv, user.Id);
 
             await tvBuilder.BuildEpisodes(tv);
-           
+
             var ruleResults = await RunRequestRules(tvBuilder.ChildRequest);
             var results = ruleResults as RuleResult[] ?? ruleResults.ToArray();
             if (results.Any(x => !x.Success))
@@ -122,6 +122,12 @@ namespace Ombi.Core.Engine
             return allRequests;
         }
 
+        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
+        {
+            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
+            return ParseIntoTreeNode(allRequests);
+        }
+
         public async Task<IEnumerable<TvRequests>> GetRequests()
         {
             var allRequests = TvRepository.Get();
@@ -132,12 +138,19 @@ namespace Ombi.Core.Engine
         {
             return await TvRepository.GetChild().Where(x => x.ParentRequestId == tvId).ToListAsync();
         }
-        
+
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)
         {
             var allRequests = TvRepository.Get();
             var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
             return results;
+        }
+
+        public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search)
+        {
+            var allRequests = TvRepository.Get();
+            var results = await allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase)).ToListAsync();
+            return ParseIntoTreeNode(results);
         }
 
         public async Task<TvRequests> UpdateTvRequest(TvRequests request)
@@ -146,15 +159,29 @@ namespace Ombi.Core.Engine
             var allRequests = TvRepository.Get();
             var results = await allRequests.FirstOrDefaultAsync(x => x.Id == request.Id);
 
-            // TODO need to check if we need to approve any child requests since they may have updated
             await TvRepository.Update(results);
             return results;
+        }
+
+        public async Task<RequestEngineResult> ApproveChildRequest(ChildRequests request)
+        {
+            if (request.Approved)
+            {
+                await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
+                // Autosend
+                await TvSender.SendToSonarr(request);
+            }
+            await TvRepository.UpdateChild(request);
+            return new RequestEngineResult
+            {
+                RequestAdded = true
+            };
         }
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
         {
             await Audit.Record(AuditType.Updated, AuditArea.TvRequest, $"Updated Request {request.Title}", Username);
-            
+
             await TvRepository.UpdateChild(request);
             return request;
         }
@@ -164,7 +191,7 @@ namespace Ombi.Core.Engine
             var request = await TvRepository.GetChild().FirstOrDefaultAsync(x => x.Id == requestId);
             var all = TvRepository.Db.TvRequests.Include(x => x.ChildRequests);
             var parent = all.FirstOrDefault(x => x.Id == request.ParentRequestId);
-           
+
             // Is this the only child? If so delete the parent
             if (parent.ChildRequests.Count <= 1)
             {
@@ -201,6 +228,41 @@ namespace Ombi.Core.Engine
             return await AfterRequest(model.ChildRequests.FirstOrDefault());
         }
 
+        private static List<TreeNode<TvRequests, List<ChildRequests>>> ParseIntoTreeNode(IEnumerable<TvRequests> result)
+        {
+            var node = new List<TreeNode<TvRequests, List<ChildRequests>>>();
+
+            foreach (var value in result)
+            {
+                node.Add(new TreeNode<TvRequests, List<ChildRequests>>
+                {
+                    Data = value,
+                    Children = new List<TreeNode<List<ChildRequests>>>
+                    {
+                        new TreeNode<List<ChildRequests>>
+                        {
+                            Data = SortEpisodes(value.ChildRequests),
+                            Leaf = true
+                        }
+                    }
+                });
+            }
+            return node;
+        }
+
+        private static List<ChildRequests> SortEpisodes(List<ChildRequests> items)
+        {
+            foreach (var value in items)
+            {
+                foreach (var requests in value.SeasonRequests)
+                {
+                    requests.Episodes.OrderBy(x => x.EpisodeNumber);
+                }
+            }
+            return items;
+        }
+
+
         private async Task<RequestEngineResult> AfterRequest(ChildRequests model)
         {
             var sendRuleResult = await RunSpecificRule(model, SpecificRules.CanSendNotification);
@@ -209,7 +271,7 @@ namespace Ombi.Core.Engine
                 NotificationHelper.NewRequest(model);
             }
 
-            if(model.Approved)
+            if (model.Approved)
             {
                 // Autosend
                 await TvSender.SendToSonarr(model);
@@ -221,8 +283,8 @@ namespace Ombi.Core.Engine
         //public async Task<IEnumerable<TvRequests>> GetApprovedRequests()
         //{
         //    var allRequests = TvRepository.Get();
-            
-            
+
+
         //}
 
         //public async Task<IEnumerable<TvRequests>> GetNewRequests()

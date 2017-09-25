@@ -23,6 +23,9 @@
       true,
       "allow-new"
     ],
+    "no-trailing-whitespace": [
+      false
+    ],
     "max-classes-per-file": [
       false
     ],

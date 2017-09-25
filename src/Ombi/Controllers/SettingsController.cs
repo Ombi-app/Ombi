@@ -141,7 +141,7 @@ namespace Ombi.Controllers
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
             var result = await Save(plex);
-            if (result)
+            if (result && plex.Enable)
             {
                 BackgroundJob.Enqueue(() => _plexContentCacher.CacheContent());
             }
@@ -166,14 +166,17 @@ namespace Ombi.Controllers
         [HttpPost("emby")]
         public async Task<bool> EmbySettings([FromBody]EmbySettings emby)
         {
-            foreach (var server in emby.Servers)
+            if (emby.Enable)
             {
-                var users = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
-                var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
-                server.AdministratorId = admin?.Id;
+                foreach (var server in emby.Servers)
+                {
+                    var users = await _embyApi.GetUsers(server.FullUri, server.ApiKey);
+                    var admin = users.FirstOrDefault(x => x.Policy.IsAdministrator);
+                    server.AdministratorId = admin?.Id;
+                }
             }
             var result = await Save(emby);
-            if (result)
+            if (result && emby.Enable)
             {
                 BackgroundJob.Enqueue(() => _embyContentCacher.Start());
             }

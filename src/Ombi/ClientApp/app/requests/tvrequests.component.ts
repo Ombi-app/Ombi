@@ -1,8 +1,7 @@
-﻿import { Component, OnDestroy, OnInit, ViewEncapsulation } from "@angular/core";
+﻿import { Component, OnInit } from "@angular/core";
 import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/distinctUntilChanged";
 import "rxjs/add/operator/map";
-import "rxjs/add/operator/takeUntil";
 import { Subject } from "rxjs/Subject";
 
 import "rxjs/add/operator/debounceTime";
@@ -13,18 +12,14 @@ import { AuthService } from "../auth/auth.service";
 import { RequestService } from "../services";
 
 import { TreeNode } from "primeng/primeng";
-import { IChildRequests, IEpisodesRequests, INewSeasonRequests, ITvRequests } from "../interfaces";
+import { ITvRequests } from "../interfaces";
 
 @Component({
     selector: "tv-requests",
     templateUrl: "./tvrequests.component.html",
     styleUrls: ["./tvrequests.component.scss"],
-    //Was required to turn off encapsulation since CSS only should be overridden for this component
-    //However when encapsulation is on angular injects prefixes to all classes so css selectors
-    //Stop working
-    encapsulation: ViewEncapsulation.None,
 })
-export class TvRequestsComponent implements OnInit, OnDestroy {
+export class TvRequestsComponent implements OnInit {
 
     public tvRequests: TreeNode[];
     public searchChanged = new Subject<string>();
@@ -35,23 +30,20 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
 
     private currentlyLoaded: number;
     private amountToLoad: number;
-    private subscriptions = new Subject<void>();
 
     constructor(private requestService: RequestService,
                 private auth: AuthService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms afterthe last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
-            .takeUntil(this.subscriptions)
             .subscribe(x => {
                 this.searchText = x as string;
                 if (this.searchText === "") {
                     this.resetSearch();
                     return;
                 }
-                this.requestService.searchTvRequests(this.searchText)
-                    .takeUntil(this.subscriptions)
-                    .subscribe(m => this.tvRequests = this.transformData(m));
+                this.requestService.searchTvRequestsTree(this.searchText)
+                    .subscribe(m => this.tvRequests = m);
             });
     }
     public openClosestTab(el: any) {
@@ -78,30 +70,7 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
             }
         }
     }
-    public transformData(data: ITvRequests[]): TreeNode[] {
-        const temp: TreeNode[] = [];
-        data.forEach((value) => {
-            temp.push({
-                data: value,
-                children: [{
-                    data: this.fixEpisodeSort(value.childRequests), leaf: true,
-                }],
-                leaf: false,
-            });
-        }, this);
-        return <TreeNode[]>temp;
-    }
 
-    public fixEpisodeSort(items: IChildRequests[]) {
-        items.forEach((value) => {
-            value.seasonRequests.forEach((requests: INewSeasonRequests) => {
-                requests.episodes.sort((a: IEpisodesRequests, b: IEpisodesRequests) => {
-                    return a.episodeNumber - b.episodeNumber;
-                });
-            });
-        });
-        return items;
-    }
     public ngOnInit() {
         this.amountToLoad = 1000;
         this.currentlyLoaded = 5;
@@ -116,10 +85,9 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         //if you scroll really quickly then you start getting duplicates of movies
         //since it's async and some subsequent results return first and then incrementer
         //is increased so you see movies which had already been gotten show up...
-        this.requestService.getTvRequests(this.amountToLoad, this.currentlyLoaded + 1)
-            .takeUntil(this.subscriptions)
+        this.requestService.getTvRequestsTree(this.amountToLoad, this.currentlyLoaded + 1)
             .subscribe(x => {
-                this.tvRequests.push.apply(this.tvRequests, this.transformData(x));
+                this.tvRequests = x;
                 this.currentlyLoaded = this.currentlyLoaded + this.amountToLoad;
             });
     }
@@ -128,99 +96,20 @@ export class TvRequestsComponent implements OnInit, OnDestroy {
         this.searchChanged.next(text.target.value);
     }
 
-    public removeRequest(request: ITvRequests) {
-        this.requestService.removeTvRequest(request);
-        this.removeRequestFromUi(request);
-    }
-
-    public changeAvailability(request: IChildRequests, available: boolean) {
-        request.available = available;
-
-        //this.updateRequest(request);
-    }
-
-    //Was already here but not sure what's using it...'
-    //public approve(request: IChildRequests) {
-    //    request.approved = true;
-    //    request.denied = false;
-    //    //this.updateRequest(request);
-    //}
-    public approve(request: IChildRequests) {
-        request.approved = true;
-        request.denied = false;
-        this.requestService.updateChild(request)
-            .subscribe();
-    }
-    //Was already here but not sure what's using it...'
-    //public deny(request: IChildRequests) {
-    //    request.approved = false;
-    //    request.denied = true;
-    //    //this.updateRequest(request);
-    //}
-    public deny(request: IChildRequests) {
-        request.approved = false;
-        request.denied = true;
-        this.requestService.updateChild(request)
-            .subscribe();
-    }
-
-    public approveSeasonRequest(request: IChildRequests) {
-        request.approved = true;
-        request.denied = false;
-        this.requestService.updateTvRequest(this.selectedSeason)
-            .subscribe();
-    }
-
-    public denySeasonRequest(request: IChildRequests) {
-        request.approved = false;
-        request.denied = true;
-        this.requestService.updateTvRequest(this.selectedSeason)
-            .subscribe();
-    }
-
     public showChildren(request: ITvRequests) {
         this.selectedSeason = request;
         this.showChildDialogue = true;
     }
 
-    public getColour(ep: IEpisodesRequests): string {
-        if (ep.available) {
-            return "lime";
-        }
-        if (ep.approved) {
-            return "#00c0ff";
-        }
-        return "white";
-    }
-
-    public ngOnDestroy() {
-        this.subscriptions.next();
-        this.subscriptions.complete();
-    }
-
-    //private updateRequest(request: ITvRequests) {
-    //    this.requestService.updateTvRequest(request)
-    //        .takeUntil(this.subscriptions)
-    //        .subscribe(x => request = x);
-    //}
-
     private loadInit() {
-        this.requestService.getTvRequests(this.amountToLoad, 0)
-            .takeUntil(this.subscriptions)
+        this.requestService.getTvRequestsTree(this.amountToLoad, 0)
             .subscribe(x => {
-                this.tvRequests = this.transformData(x);
+                this.tvRequests = x;
             });
     }
 
     private resetSearch() {
         this.currentlyLoaded = 5;
         this.loadInit();
-    }
-
-    private removeRequestFromUi(key: ITvRequests) {
-        const index = this.tvRequests.findIndex(x => x.data === key);
-        if (index > -1) {
-            this.tvRequests.splice(index, 1);
-        }
     }
 }

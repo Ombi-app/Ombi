@@ -54,10 +54,12 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
 
     public addRequest(episode: IEpisodesRequests) {
         episode.requested = true;
+        episode.selected = true;
     }
 
     public removeRequest(episode: IEpisodesRequests) {
         episode.requested = false;
+        episode.selected = false;
     }
 
     public ngOnDestroy() {
