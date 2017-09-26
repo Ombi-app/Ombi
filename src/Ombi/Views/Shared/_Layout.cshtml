@@ -4,13 +4,13 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ombi</title>
-        <base href="/" />
+        @*<base href="/ombi" />*@
+        <Reverse-Proxy></Reverse-Proxy>
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link rel="stylesheet" href="~/loading.css" asp-append-version="true" />
         <link rel="stylesheet" href="~/dist/vendor.css" asp-append-version="true" />
         <script src="~/dist/vendor.js" asp-append-version="true" defer></script>
         <script src="~/dist/main.js" asp-append-version="true" defer></script>
-        <mini-profiler />
     </head>
     <body>
         @RenderBody()

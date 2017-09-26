@@ -9,7 +9,7 @@ export interface IExternalSettings extends ISettings {
 
 export interface IOmbiSettings extends ISettings {
     port: number;
-    //baseUrl:string,
+    baseUrl: string;
     collectAnalyticData: boolean;
     wizard: boolean;
     apiKey: string;

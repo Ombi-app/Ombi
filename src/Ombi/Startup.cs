@@ -45,7 +45,7 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
 {
-    public partial class Startup
+    public class Startup
     {
         public Startup(IHostingEnvironment env)
         {
@@ -167,7 +167,7 @@ namespace Ombi
 
             app.UseAuthentication();
 
-            //ApiKeyMiddlewear(app, serviceProvider);
+            ApiKeyMiddlewear(app, serviceProvider);
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -210,11 +210,7 @@ namespace Ombi
                         else
                         {
                             var identity = new GenericIdentity("API");
-                            identity.AddClaim(new System.Security.Claims.Claim("Origin", "Api"));
-                            identity.AddClaim(new System.Security.Claims.Claim("role", "Admin"));
-
-                            var principal = new GenericPrincipal(identity, new[] { "ApiUser" });
-                            // TODO need to think about if I require a JWT Token here.
+                            var principal = new GenericPrincipal(identity, new[] {"Admin", "ApiUser"});
                             context.User = principal;
                             await next();
                         }
