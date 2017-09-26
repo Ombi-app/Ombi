@@ -1,6 +1,5 @@
 ﻿<ul class="nav nav-tabs">
     
-    <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']"><i class="fa fa-question" aria-hidden="true"></i> About</a></li>
     <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Ombi']">Ombi</a></li>
 
     <li class="dropdown" [routerLinkActive]="['active']">
@@ -69,6 +68,7 @@
             <i class="fa fa-tachometer" aria-hidden="true"></i> System <span class="caret"></span>
         </a>
         <ul class="dropdown-menu">
+            <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']">About</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Update']">Update</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/Logs']">Logs (Not available)</a></li>
             <li [routerLinkActive]="['active']"><a [routerLink]="['/Settings/ScheduledJobs']">Scheduled Jobs (Not available)</a></li>
