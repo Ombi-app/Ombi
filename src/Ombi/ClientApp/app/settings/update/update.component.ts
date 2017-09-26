@@ -18,7 +18,6 @@ export class UpdateComponent implements OnInit {
                 private fb: FormBuilder) { }
 
     public ngOnInit() {
-
         this.settingsService.getUpdateSettings()
             .subscribe(x => {
                 this.form = this.fb.group({
