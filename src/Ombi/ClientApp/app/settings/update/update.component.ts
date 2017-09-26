@@ -29,9 +29,11 @@ export class UpdateComponent implements OnInit {
 
     public checkForUpdate() {
         this.updateService.checkForNewUpdate().subscribe(x => {
-            if (x) {
+            if (x === true) {
                 this.updateAvailable = true;
                 this.notificationService.success("Update", "There is a new update available");
+            } else {
+                this.notificationService.success("Update", "You are on the latest version!")
             }
         });
     }
