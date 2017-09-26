@@ -10,6 +10,7 @@ using Ombi.Api.Plex.Models;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
 using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
@@ -104,9 +105,9 @@ namespace Ombi.Controllers.External
                     Data = libs
                 };
             }
-           catch (Exception e)
+            catch (Exception e)
             {
-                _log.LogWarning(e,"Error thrown when attempting to obtain the plex libs");
+                _log.LogWarning(e, "Error thrown when attempting to obtain the plex libs");
 
                 var message = e.InnerException != null ? $"{e.Message} - {e.InnerException.Message}" : e.Message;
                 return new PlexLibrariesResponse
@@ -142,6 +143,30 @@ namespace Ombi.Controllers.External
             }
         }
 
+        /// <summary>
+        /// Gets the plex friends.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("friends")]
+        public async Task<IEnumerable<PlexUsersViewModel>> GetFriends()
+        {
+            var vm = new List<PlexUsersViewModel>();
+            var s = await PlexSettings.GetSettingsAsync();
+            foreach (var server in s.Servers)
+            {
+                var users = await PlexApi.GetUsers(server.PlexAuthToken);
+                if (users?.User != null && users.User.Any())
+                {
+                    vm.AddRange(users.User.Select(u => new PlexUsersViewModel
+                    {
+                        Username = u.Username,
+                        Id = u.Id
+                    }));
+                }
+            }
 
+            // Filter out any dupes
+            return vm.DistinctBy(x => x.Id);
+        }
     }
 }

@@ -55,6 +55,13 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 foreach (var plexUsers in users.User)
                 {
+                    // Check if we should import this user
+                    if (userManagementSettings.BannedPlexUserIds.Contains(plexUsers.Id))
+                    {
+                        // Do not import these, they are not allowed into the country.
+                        continue;
+                    }
+
                     // Check if this Plex User already exists
                     // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
                     var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUsers.Id);
@@ -79,7 +86,6 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             continue;
                         }
-                        // TODO Set default permissions/roles
                         if (userManagementSettings.DefaultRoles.Any())
                         {
                             foreach (var defaultRole in userManagementSettings.DefaultRoles)

@@ -20,6 +20,11 @@ export interface IPlexLibResponse {
     data: IPlexLibraries;
 }
 
+export interface IPlexFriends {
+    id: string;
+    username: string;
+}
+
 export interface IMediaContainer {
     directory: IDirectory[];
 }

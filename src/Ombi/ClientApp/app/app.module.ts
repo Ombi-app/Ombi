@@ -10,7 +10,7 @@ import { RouterModule, Routes } from "@angular/router";
 //import { DragulaModule, DragulaService } from 'ng2-dragula/ng2-dragula';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { GrowlModule } from "primeng/components/growl/growl";
-import { ButtonModule, CaptchaModule, DataTableModule,DialogModule, SharedModule } from "primeng/primeng";
+import { ButtonModule, CaptchaModule, DataTableModule,DialogModule, SharedModule, TooltipModule } from "primeng/primeng";
 
 // Components
 import { AppComponent } from "./app.component";
@@ -79,6 +79,7 @@ const routes: Routes = [
         UserManagementModule,
         RequestsModule,
         CaptchaModule,
+        TooltipModule,
     ],
     declarations: [
         AppComponent,

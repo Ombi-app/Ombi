@@ -2,42 +2,50 @@
 <fieldset>
     <legend>User Management Settings</legend>
 
-        <div class="col-md-6">
-            <div *ngIf="plexEnabled">
-                
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="importPlex" formControlName="importPlexUsers">
-                        <label for="importPlexUsers">Import Plex Users</label>
-                    </div>
-                </div>
+    <div class="col-md-6">
+        <div *ngIf="plexEnabled">
 
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="importPlex" [(ngModel)]="importPlexUsers">
+                    <label for="importPlexUsers">Import Plex Users</label>
+                </div>
             </div>
-
-            <div *ngIf="embyEnabled">
+            <div *ngIf="plexUsers">
+                <p>Plex Users exclude from Import</p>
                 
-
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" id="importEmbyUsers" formControlName="importEmbyUsers">
-                        <label for="importEmbyUsers">Import Emby Users</label>
-                    </div>
-                </div>
-
+                <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterCountryMultiple($event)"></p-autoComplete>
             </div>
         </div>
-        <div class="col-md-6" >
-            <h4>Default Roles</h4>
-            
-            <div *ngFor="let c of claims">
-                <div class="form-group">
-                    <div class="checkbox">
-                        <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                        <label for="create{{c.value}}">{{c.value}}</label>
 
-                    </div>
+        <div *ngIf="embyEnabled">
+
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="importEmbyUsers">
+                    <label for="importEmbyUsers">Import Emby Users</label>
                 </div>
             </div>
 
         </div>
+    </div>
+    <div class="col-md-6">
+        <h4>Default Roles</h4>
+
+        <div *ngFor="let c of claims">
+            <div class="form-group">
+                <div class="checkbox">
+                    <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
+                    <label for="create{{c.value}}">{{c.value | humanize}}</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-6">
+        <div class="form-group">
+            <button type="submit" id="save" (click)="submit()" class="btn btn-primary-outline">Submit</button>
+        </div>
+    </div>
 </fieldset>

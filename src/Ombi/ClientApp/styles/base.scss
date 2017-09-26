@@ -783,3 +783,15 @@ textarea {
 .ui-treetable-toggler.fa.fa-fw.ui-clickable.fa-caret-down {
     display: none;
 }
+
+.ui-state-highlight {
+    background: $primary-colour;
+}
+
+.ui-inputtext {
+    background: $form-color;
+}
+
+.ui-state-default {
+    border: 1px solid $form-color-lighter;
+}

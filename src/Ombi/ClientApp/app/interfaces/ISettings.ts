@@ -1,5 +1,4 @@
 ﻿import { ISettings } from "./ICommon";
-import { ICheckbox } from "./index";
 
 export interface IExternalSettings extends ISettings {
     ssl: boolean;
@@ -106,7 +105,9 @@ export interface IAuthenticationSettings extends ISettings {
 export interface IUserManagementSettings extends ISettings {
     importPlexUsers: boolean;
     importEmbyUsers: boolean;
-    defaultClaims: ICheckbox[];
+    defaultRoles: string[];
+    bannedPlexUserIds: string[];
+    bannedEmbyUserIds: string[];
 }
 
 export interface IAbout {

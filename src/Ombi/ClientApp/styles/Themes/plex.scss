@@ -279,3 +279,16 @@ button.list-group-item:focus {
 .ui-widget-content {
      color: #ffffff; 
 }
+
+
+.ui-inputtext {
+    background: $bg-colour;
+    color:white;
+}
+.ui-autocomplete-input-token input{
+    color:white;
+}
+
+.ui-state-default {
+    border: 2px solid $bg-colour-disabled;
+}
