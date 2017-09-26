@@ -27,7 +27,7 @@
             <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
                 <li id="UserManagement" [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
             </ul>
-            <ul class="nav navbar-nav">
+            <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
                 <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank"><i class="fa fa-heart" style="color:red"></i> Donate!</a></li>
             </ul>
 
