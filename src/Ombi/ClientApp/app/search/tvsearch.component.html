@@ -80,24 +80,7 @@
                             <div class="col-sm-2">
                                 <input name="{{type}}Id" type="text" value="{{node.data.id}}" hidden="hidden" />
 
-
-                                <!--<div *ngIf="node.data.requested; then requestedBtn else notRequestedBtn"></div>
-            <template #requestedBtn>
-                <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
-            </template>
-            <template #notRequestedBtn>
-                <button id="{{node.data.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)"><i class="fa fa-plus"></i> Request</button>
-            </template>-->
-                                <!--{{#if_eq type "tv"}}
-            {{#if_eq tvFullyAvailable true}}
-            @*//TODO Not used yet*@
-            <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> @UI.Search_Available</button><br/>
-            {{else}}
-            {{#if_eq enableTvRequestsForOnlySeries true}}
-            <button id="{{id}}" style="text-align: right" class="btn {{#if available}}btn-success-outline{{else}}btn-primary-outline dropdownTv{{/if}} btn-primary-outline" season-select="0" type="button" {{#if available}} disabled{{/if}}><i class="fa fa-plus"></i> {{#if available}}@UI.Search_Available{{else}}@UI.Search_Request{{/if}}</button>
-            {{else}}
-            -->
-                                <div class="dropdown">
+                                <div *ngIf="!node.data.fullyAvailable" class="dropdown">
                                     <button class="btn btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                         <i class="fa fa-plus"></i> Request
                                         <span class="caret"></span>
@@ -109,7 +92,10 @@
                                         <li><a (click)="openClosestTab($event)">Select ...</a></li>
                                     </ul>
                                 </div>
-
+                                
+                                <div *ngIf="node.data.fullyAvailable">
+                                    <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
+                                </div>
                                 <!--
             <br/>
             <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>

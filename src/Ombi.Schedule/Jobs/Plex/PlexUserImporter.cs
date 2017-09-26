@@ -34,7 +34,7 @@ namespace Ombi.Schedule.Jobs.Plex
         public async Task Start()
         {
             var userManagementSettings = await _userManagementSettings.GetSettingsAsync();
-            if (!userManagementSettings.ImportMediaServerUsers)
+            if (!userManagementSettings.ImportPlexUsers)
             {
                 return;
             }

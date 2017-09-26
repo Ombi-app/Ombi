@@ -202,7 +202,6 @@ namespace Ombi.Core.Engine
                         }
                     }
                 }
-
             }
             if (plexSettings.Enable)
             {
@@ -230,12 +229,15 @@ namespace Ombi.Core.Engine
                         }
                     }
                 }
+            }
 
+            if (item.SeasonRequests.Any() && item.SeasonRequests.All(x => x.Episodes.All(e => e.Approved)))
+            {
+                item.FullyAvailable = true;
             }
 
             if (item.Id > 0)
             {
-                // TODO need to check if the episodes are available
                 var tvdbid = item.Id;
                 if (existingRequests.ContainsKey(tvdbid))
                 {
@@ -269,6 +271,7 @@ namespace Ombi.Core.Engine
                         }
                     }
                 }
+                // TODO CHECK SONARR/RADARR
                 //if (sonarrCached.Select(x => x.TvdbId).Contains(tvdbid) || sickRageCache.Contains(tvdbid))
                 //    // compare to the sonarr/sickrage db
                 //{

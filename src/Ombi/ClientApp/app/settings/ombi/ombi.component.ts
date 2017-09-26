@@ -23,6 +23,7 @@ export class OmbiComponent implements OnInit {
                 apiKey: [x.apiKey],
                 externalUrl: [x.externalUrl],
                 allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate],
+                baseUrl: [x.baseUrl],
             });
         });
     }

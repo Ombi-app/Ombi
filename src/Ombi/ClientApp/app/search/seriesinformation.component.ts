@@ -46,8 +46,15 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
                         `Request for ${this.series.title} has been added successfully`);
+
+                    this.series.seasonRequests.forEach((season) => {
+                        season.episodes.forEach((ep) => {
+                            ep.selected = false;
+                        });
+                    });
+
                 } else {
-                    this.notificationService.warning("Request Added", this.result.message);
+                    this.notificationService.warning("Request Added", this.result.errorMessage ? this.result.errorMessage : this.result.message);
                 }
             });
     }

@@ -1,4 +1,5 @@
 ﻿import { ISettings } from "./ICommon";
+import { ICheckbox } from "./index";
 
 export interface IExternalSettings extends ISettings {
     ssl: boolean;
@@ -9,7 +10,7 @@ export interface IExternalSettings extends ISettings {
 
 export interface IOmbiSettings extends ISettings {
     port: number;
-    //baseUrl:string,
+    baseUrl: string;
     collectAnalyticData: boolean;
     wizard: boolean;
     apiKey: string;
@@ -100,6 +101,12 @@ export interface IAuthenticationSettings extends ISettings {
     requiredLowercase: boolean;
     requireNonAlphanumeric: boolean;
     requireUppercase: boolean;
+}
+
+export interface IUserManagementSettings extends ISettings {
+    importPlexUsers: boolean;
+    importEmbyUsers: boolean;
+    defaultClaims: ICheckbox[];
 }
 
 export interface IAbout {

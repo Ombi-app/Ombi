@@ -49,5 +49,10 @@ namespace Ombi.Core.Models.Search
 
         public bool FirstSeason { get; set; }
         public bool LatestSeason { get; set; }
+
+        /// <summary>
+        /// This is where we have EVERY Episode for that series
+        /// </summary>
+        public bool FullyAvailable { get; set; }
     }
 }

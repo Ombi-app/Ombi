@@ -1,4 +1,4 @@
-﻿import { ISeasonRequests } from "./IRequestModel";
+﻿import { INewSeasonRequests } from "./IRequestModel";
 
 export interface ISearchTvResult {
     id: number;
@@ -21,7 +21,7 @@ export interface ISearchTvResult {
     siteRating: number;
     trailer: string;
     homepage: string;
-    seasonsRequests: ISeasonRequests[];
+    seasonRequests: INewSeasonRequests[];
     requestAll: boolean;
     approved: boolean;
     requested: boolean;

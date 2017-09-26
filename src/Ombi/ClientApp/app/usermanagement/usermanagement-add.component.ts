@@ -2,8 +2,7 @@
 import { Router } from "@angular/router";
 
 import { ICheckbox, IUser, UserType } from "../interfaces";
-import { IdentityService } from "../services";
-import { NotificationService } from "../services";
+import { IdentityService, NotificationService } from "../services";
 
 @Component({
     templateUrl: "./usermanagement-add.component.html",

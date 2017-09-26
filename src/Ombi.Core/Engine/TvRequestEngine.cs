@@ -108,7 +108,16 @@ namespace Ombi.Core.Engine
 
                 // Remove the ID since this is a new child
                 tvBuilder.ChildRequest.Id = 0;
-                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
+                if (!tvBuilder.ChildRequest.SeasonRequests.Any())
+                {
+                    // Looks like we have removed them all! They were all duplicates...
+                    return new RequestEngineResult
+                    {
+                        RequestAdded = false,
+                        ErrorMessage = "They have already been requestsed"
+                    };
+                }
+                    return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
             }
 
             // This is a new request
