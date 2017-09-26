@@ -16,3 +16,8 @@ export interface IQuality {
     id: number;
     name: string;
 }
+
+export interface ICheckbox {
+    value: string;
+    enabled: boolean;
+}

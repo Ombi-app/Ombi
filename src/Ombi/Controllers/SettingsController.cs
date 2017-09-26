@@ -307,6 +307,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the UserManagement Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("UserManagement")]
+        public async Task<UserManagementSettings> UserManagementSettings()
+        {
+            return await Get<UserManagementSettings>();
+        }
+
+        /// <summary>
+        /// Save the UserManagement settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("UserManagement")]
+        public async Task<bool> UserManagementSettings([FromBody]UserManagementSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Gets the Update Settings.
         /// </summary>
         /// <returns></returns>

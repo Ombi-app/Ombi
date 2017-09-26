@@ -20,6 +20,7 @@ import {
     ISlackNotificationSettings,
     ISonarrSettings,
     IUpdateSettings,
+    IUserManagementSettings,
 } from "../interfaces";
 
 import { ServiceAuthHelpers } from "./service.helpers";
@@ -180,6 +181,16 @@ export class SettingsService extends ServiceAuthHelpers {
     public saveUpdateSettings(settings: IUpdateSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/update`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getUserManagementSettings(): Observable<IUserManagementSettings> {
+        return this.httpAuth.get(`${this.url}/UserManagement`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveUserManagementSettings(settings: IUserManagementSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }
