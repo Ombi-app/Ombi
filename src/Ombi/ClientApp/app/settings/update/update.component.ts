@@ -32,7 +32,7 @@ export class UpdateComponent implements OnInit {
                 this.updateAvailable = true;
                 this.notificationService.success("Update", "There is a new update available");
             } else {
-                this.notificationService.success("Update", "You are on the latest version!")
+                this.notificationService.success("Update", "You are on the latest version!");
             }
         });
     }

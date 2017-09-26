@@ -42,7 +42,6 @@ export class SeriesInformationComponent implements OnInit, OnDestroy {
         this.requestService.requestTv(this.series)
             .takeUntil(this.subscriptions)
             .subscribe(x => {
-                debugger;
                 this.result = x as IRequestEngineResult;
                 if (this.result.requestAdded) {
                     this.notificationService.success("Request Added",
