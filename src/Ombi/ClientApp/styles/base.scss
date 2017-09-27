@@ -795,3 +795,6 @@ textarea {
 .ui-state-default {
     border: 1px solid $form-color-lighter;
 }
+.ui-treetable tbody td {
+    white-space:inherit;
+}

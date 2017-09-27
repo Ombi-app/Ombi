@@ -82,8 +82,8 @@
             <td>
                 <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
-            <td *ngIf="!u.isSetup">
-                <a (click)="welcomeEmail(u)" class="btn btn-sm btn-info-outline">Send Welcome Email</a>
+            <td>
+                <a *ngIf="!u.isSetup" (click)="welcomeEmail(u)" class="btn btn-sm btn-info-outline">Send Welcome Email</a>
             </td>
         </tr>
     </tbody>
