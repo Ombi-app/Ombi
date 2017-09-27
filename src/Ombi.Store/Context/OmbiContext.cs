@@ -115,7 +115,7 @@ namespace Ombi.Store.Context
                             {
                                 NotificationType = notificationType,
                                 Message = "Hello! The user '{RequestedUser}' has requested the {Type} '{Title}'! Please log in to approve this request. Request Date: {RequestedDate}",
-                                Subject = "Ombi: New {Type} request for {Title}!",
+                                Subject = "{ApplicationName}: New {Type} request for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
                             };
@@ -125,7 +125,7 @@ namespace Ombi.Store.Context
                             {
                                 NotificationType = notificationType,
                                 Message = "Hello! The user '{RequestedUser}' has reported a new issue for the title {Title}! </br> {Issue}",
-                                Subject = "Ombi: New issue for {Title}!",
+                                Subject = "{ApplicationName}: New issue for {Title}!",
                                 Agent = agent,
                                 Enabled = true,
                             };
@@ -134,8 +134,8 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! You requested {Title} on Ombi! This is now available! :)",
-                                Subject = "Ombi: {Title} is now available!",
+                                Message = "Hello! You requested {Title} on {ApplicationName}! This is now available! :)",
+                                Subject = "{ApplicationName}: {Title} is now available!",
                                 Agent = agent,
                                 Enabled = true,
                             };
@@ -145,7 +145,7 @@ namespace Ombi.Store.Context
                             {
                                 NotificationType = notificationType,
                                 Message = "Hello! Your request for {Title} has been approved!",
-                                Subject = "Ombi: your request has been approved",
+                                Subject = "{ApplicationName}: your request has been approved",
                                 Agent = agent,
                                 Enabled = true,
                             };
@@ -159,13 +159,23 @@ namespace Ombi.Store.Context
                             {
                                 NotificationType = notificationType,
                                 Message = "Hello! Your request for {Title} has been declined, Sorry!",
-                                Subject = "Ombi: your request has been declined",
+                                Subject = "{ApplicationName}: your request has been declined",
                                 Agent = agent,
                                 Enabled = true,
                             };
                             break;
                         case NotificationType.ItemAddedToFaultQueue:
                             continue;
+                        case NotificationType.WelcomeEmail:
+                            notificationToAdd = new NotificationTemplates
+                            {
+                                NotificationType = notificationType,
+                                Message = "Hello! You have been invited to use {ApplicationName}!",
+                                Subject = "Invite to {ApplicationName}",
+                                Agent = agent,
+                                Enabled = true,
+                            };
+                            break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }

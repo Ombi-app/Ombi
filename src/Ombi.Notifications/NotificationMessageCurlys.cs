@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Settings.Settings.Models;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Notifications
@@ -7,8 +9,9 @@ namespace Ombi.Notifications
     public class NotificationMessageCurlys
     { 
 
-        public void Setup(FullBaseRequest req)
+        public void Setup(FullBaseRequest req, CustomizationSettings s)
         {
+            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
@@ -20,8 +23,9 @@ namespace Ombi.Notifications
             PosterImage = req.PosterPath;
         }
 
-        public void Setup(ChildRequests req)
+        public void Setup(ChildRequests req, CustomizationSettings s)
         {
+            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
                 : req.RequestedUser.Alias;
@@ -32,6 +36,12 @@ namespace Ombi.Notifications
             Year = req.ParentRequest.ReleaseDate.Year.ToString();
             PosterImage = req.ParentRequest.PosterPath;
             // DO Episode and Season Lists
+        }
+
+        public void Setup(OmbiUser user, CustomizationSettings s)
+        {
+            ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
+            RequestedUser = user.UserName;
         }
         
         // User Defined
@@ -45,6 +55,7 @@ namespace Ombi.Notifications
         public string EpisodesList { get; set; }
         public string SeasonsList { get; set; }
         public string PosterImage { get; set; }
+        public string ApplicationName { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -68,6 +79,7 @@ namespace Ombi.Notifications
             {nameof(EpisodesList),EpisodesList},
             {nameof(SeasonsList),SeasonsList},
             {nameof(PosterImage),PosterImage},
+            {nameof(ApplicationName),ApplicationName},
         };
     }
 }

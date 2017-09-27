@@ -6,6 +6,7 @@ using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Interfaces;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
@@ -15,7 +16,8 @@ namespace Ombi.Notifications.Agents
 {
     public class PushbulletNotification : BaseNotification<PushbulletSettings>, IPushbulletNotification
     {
-        public PushbulletNotification(IPushbulletApi api, ISettingsService<PushbulletSettings> sn, ILogger<PushbulletNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t) : base(sn, r, m, t)
+        public PushbulletNotification(IPushbulletApi api, ISettingsService<PushbulletSettings> sn, ILogger<PushbulletNotification> log, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t,
+            ISettingsService<CustomizationSettings> s) : base(sn, r, m, t,s)
         {
             Api = api;
             Logger = log;

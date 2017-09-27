@@ -17,13 +17,11 @@ namespace Ombi.Notifications.Agents
 {
     public class EmailNotification : BaseNotification<EmailNotificationSettings>, IEmailNotification
     {
-        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c) : base(settings, r, m, t)
+        public EmailNotification(ISettingsService<EmailNotificationSettings> settings, INotificationTemplatesRepository r, IMovieRequestRepository m, ITvRequestRepository t, IEmailProvider prov, ISettingsService<CustomizationSettings> c) : base(settings, r, m, t, c)
         {
             EmailProvider = prov;
-            CustomizationSettings = c;
         }
         private IEmailProvider EmailProvider { get; }
-        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         public override string NotificationName => nameof(EmailNotification);
 
         protected override bool ValidateConfiguration(EmailNotificationSettings settings)
@@ -51,10 +49,8 @@ namespace Ombi.Notifications.Agents
         {
             var parsed = await LoadTemplate(NotificationAgent.Email, type, model);
 
-            var customization = await CustomizationSettings.GetSettingsAsync();
-
             var email = new EmailBasicTemplate();
-            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image, customization.Logo);
+            var html = email.LoadTemplate(parsed.Subject, parsed.Message,parsed.Image, Customization.Logo);
             
 
             var message = new NotificationMessage
@@ -67,8 +63,6 @@ namespace Ombi.Notifications.Agents
             return message;
         }
 
-
-
         protected override async Task NewRequest(NotificationOptions model, EmailNotificationSettings settings)
         {
             var message = await LoadTemplate(NotificationType.NewRequest, model, settings);
@@ -76,9 +70,7 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-
-            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested the {model.RequestType} '{model.Title}'! Please log in to approve this request. Request Date: {model.DateTime:f}");
-
+            
             await Send(message, settings);
         }
 
@@ -89,9 +81,7 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-
-            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has reported a new issue {model.Body} for the title {model.Title}!");
-
+            
             await Send(message, settings);
         }
 
@@ -114,21 +104,17 @@ namespace Ombi.Notifications.Agents
                 img = TvRequest.ParentRequest.PosterPath;
             }
 
-            var customization = await CustomizationSettings.GetSettingsAsync();
             var html = email.LoadTemplate(
-                "Ombi: A request could not be added.",
-                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img, customization.Logo);
+                $"{Customization.ApplicationName}: A request could not be added.",
+                $"Hello! The user '{user}' has requested {title} but it could not be added. This has been added into the requests queue and will keep retrying", img, Customization.Logo);
 
             var message = new NotificationMessage
             {
                 Message = html,
-                Subject = $"Ombi: A request could not be added",
+                Subject = $"{Customization.ApplicationName}: A request could not be added",
                 To = settings.AdminEmail,
             };
-
-            //message.Other.Add("PlainTextBody", $"Hello! The user '{model.RequestedUser}' has requested {model.Title} but it could not be added. This has been added into the requests queue and will keep retrying");
-
-
+            
             await Send(message, settings);
         }
 
@@ -139,10 +125,9 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-
-            //message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been declined, Sorry!");
-
-
+            message.To = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.Email
+                : TvRequest.RequestedUser.Email;
             await Send(message, settings);
         }
 
@@ -153,9 +138,9 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-
-            //message.Other.Add("PlainTextBody", $"Hello! Your request for {model.Title} has been approved!");
-
+            message.To = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.Email
+                : TvRequest.RequestedUser.Email;
             await Send(message, settings);
         }
 
@@ -166,9 +151,9 @@ namespace Ombi.Notifications.Agents
             {
                 return;
             }
-
-            //message.Other.Add("PlainTextBody", $"Hello! You requested {model.Title} on Ombi! This is now available on Plex! :)");
-
+            message.To = model.RequestType == RequestType.Movie
+                ? MovieRequest.RequestedUser.Email
+                : TvRequest.RequestedUser.Email;
             await Send(message, settings);
         }
 
@@ -180,10 +165,9 @@ namespace Ombi.Notifications.Agents
         protected override async Task Test(NotificationOptions model, EmailNotificationSettings settings)
         {
             var email = new EmailBasicTemplate();
-            var customization = await CustomizationSettings.GetSettingsAsync();
             var html = email.LoadTemplate(
                 "Test Message",
-                "This is just a test! Success!", "", customization.Logo);
+                "This is just a test! Success!", "", Customization.Logo);
             var message = new NotificationMessage
             {
                 Message = html,

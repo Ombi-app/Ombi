@@ -2,7 +2,7 @@
 {
     public interface IEmailBasicTemplate
     {
-        string LoadTemplate(string subject, string body, string img, string logo);
+        string LoadTemplate(string subject, string body, string img = default(string), string logo = default(string));
         string TemplateLocation { get; }
     }
 }

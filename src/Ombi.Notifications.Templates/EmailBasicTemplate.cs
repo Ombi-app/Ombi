@@ -11,7 +11,7 @@ namespace Ombi.Notifications.Templates
             get
             {
 #if DEBUG
-                return Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp1.1", "Templates", "BasicTemplate.html");
+                return Path.Combine(Directory.GetCurrentDirectory(), "bin", "Debug", "netcoreapp2.0", "Templates", "BasicTemplate.html");
 #else
                 return Path.Combine(Directory.GetCurrentDirectory(), "Templates","BasicTemplate.html");
 #endif
@@ -22,9 +22,9 @@ namespace Ombi.Notifications.Templates
         private const string BodyKey = "{@BODY}";
         private const string ImgSrc = "{@IMGSRC}";
         private const string DateKey = "{@DATENOW}";
-        private const string Logo = "{@DATENOW}";
+        private const string Logo = "{@LOGO}";
 
-        public string LoadTemplate(string subject, string body, string img, string logo)
+        public string LoadTemplate(string subject, string body, string img = default(string), string logo = default(string))
         {
             var sb = new StringBuilder(File.ReadAllText(TemplateLocation));
             sb.Replace(SubjectKey, subject);

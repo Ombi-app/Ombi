@@ -54,6 +54,10 @@ export class IdentityService extends ServiceAuthHelpers {
         return this.regularHttp.post(this.url + "resetpassword", JSON.stringify(token), { headers: this.headers }).map(this.extractData);
     }
 
+    public sendWelcomeEmail(user: IUser): Observable<null> {
+        return this.http.post(`${this.url}welcomeEmail`, JSON.stringify(user), { headers: this.headers }).map(this.extractData);
+    }
+
     public hasRole(role: string): boolean {
         const roles = localStorage.getItem("roles") as string[] | null;
         if (roles) {

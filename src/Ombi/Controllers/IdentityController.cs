@@ -5,6 +5,7 @@ using System.Net;
 using System.Threading.Tasks;
 
 using AutoMapper;
+using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -18,13 +19,16 @@ using Ombi.Core.Claims;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
+using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Notifications;
 using Ombi.Notifications.Models;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
@@ -40,7 +44,8 @@ namespace Ombi.Controllers
         public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
-            IOptions<UserSettings> userSettings)
+            IOptions<UserSettings> userSettings,
+            IWelcomeEmail welcome)
         {
             UserManager = user;
             Mapper = mapper;
@@ -49,6 +54,7 @@ namespace Ombi.Controllers
             EmailSettings = s;
             CustomizationSettings = c;
             UserSettings = userSettings;
+            WelcomeEmail = welcome;
         }
 
         private UserManager<OmbiUser> UserManager { get; }
@@ -58,6 +64,7 @@ namespace Ombi.Controllers
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private IOptions<UserSettings> UserSettings { get; }
+        private IWelcomeEmail WelcomeEmail { get; }
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -517,6 +524,17 @@ namespace Ombi.Controllers
             };
         }
 
+        [HttpPost("welcomeEmail")]
+        public void SendWelcomeEmail([FromBody] UserViewModel user)
+        {
+            var ombiUser = new OmbiUser
+            {
+                Email = user.EmailAddress,
+                UserName = user.Username
+            };
+            BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
+        }
+        
         private async Task<List<Microsoft.AspNetCore.Identity.IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<Microsoft.AspNetCore.Identity.IdentityResult>();

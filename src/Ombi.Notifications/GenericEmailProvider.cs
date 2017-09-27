@@ -17,11 +17,17 @@ namespace Ombi.Notifications
             CustomizationSettings = s;
         }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+
+        /// <summary>
+        /// This will load up the Email template and generate the HTML
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="settings"></param>
+        /// <returns></returns>
         public async Task SendAdHoc(NotificationMessage model, EmailNotificationSettings settings)
         {
             try
             {
-
                 var email = new EmailBasicTemplate();
 
                 var customization = await CustomizationSettings.GetSettingsAsync();

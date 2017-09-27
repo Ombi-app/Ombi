@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
+using Ombi.Settings.Settings.Models;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
@@ -13,19 +14,24 @@ namespace Ombi.Notifications.Interfaces
 {
     public abstract class BaseNotification<T> : INotification where T : Settings.Settings.Models.Settings, new()
     {
-        protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv)
+        protected BaseNotification(ISettingsService<T> settings, INotificationTemplatesRepository templateRepo, IMovieRequestRepository movie, ITvRequestRepository tv,
+            ISettingsService<CustomizationSettings> customization)
         {
             Settings = settings;
             TemplateRepository = templateRepo;
             MovieRepository = movie;
             TvRepository = tv;
+            CustomizationSettings = customization;
         }
         
         protected ISettingsService<T> Settings { get; }
         protected INotificationTemplatesRepository TemplateRepository { get; }
         protected IMovieRequestRepository MovieRepository { get; }
         protected ITvRequestRepository TvRepository { get; }
-        
+        protected CustomizationSettings Customization { get; set; }
+        private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
+
+
         protected ChildRequests TvRequest { get; set; }
         protected MovieRequests MovieRequest { get; set; }
         
@@ -54,6 +60,8 @@ namespace Ombi.Notifications.Interfaces
             {
                 await LoadRequest(model.RequestId, model.RequestType);
             }
+
+            Customization = await CustomizationSettings.GetSettingsAsync();
             try
             {
                 switch (model.NotificationType)
@@ -129,11 +137,11 @@ namespace Ombi.Notifications.Interfaces
             var curlys = new NotificationMessageCurlys();
             if (model.RequestType == RequestType.Movie)
             {
-                curlys.Setup(MovieRequest);
+                curlys.Setup(MovieRequest, Customization);
             }
             else
             {
-                curlys.Setup(TvRequest);
+                curlys.Setup(TvRequest, Customization);
             }
             var parsed = resolver.ParseMessage(template, curlys);
 

@@ -144,6 +144,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IRadarrCacher, RadarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
+            services.AddTransient<IWelcomeEmail, WelcomeEmail>();
         }
     }
 }

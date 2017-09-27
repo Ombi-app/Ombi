@@ -20,6 +20,7 @@ export class NotificationTemplate {
 {EpisodesList} : A comma seperated list of Episodes requested<br/>
 {SeasonsList} : A comma seperated list of seasons requested<br/>
 {PosterImage} : The requested poster image link<br/>
+{ApplicationName} : The Application Name from the Customization Settings
 {LongDate} : 15 June 2017 <br/>
 {ShortDate} : 15/06/2017 <br/>
 {LongTime} : 16:02:34 <br/>

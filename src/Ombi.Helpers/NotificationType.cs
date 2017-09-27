@@ -9,6 +9,7 @@
         AdminNote,
         Test,
         RequestDeclined,
-        ItemAddedToFaultQueue
+        ItemAddedToFaultQueue,
+        WelcomeEmail
     }
 }
