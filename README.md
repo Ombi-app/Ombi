@@ -14,29 +14,28 @@ ____
 [![Report a bug](http://i.imgur.com/xSpw482.png)](https://github.com/tidusjar/Ombi/issues/new) [![Feature request](http://i.imgur.com/mFO0OuX.png)](http://feathub.com/tidusjar/Ombi)
 
 
-| Service  | Master (Recommend Version 3.0)                     | Early Access                 | Dev                          |
+| Service  | Master (Version 3.0 - Recommended)                | Early Access                 | Dev                          |
 |----------|:---------------------------:|:----------------------------:|:----------------------------:|
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/eap?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/dev?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev)| [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore)
 | Download |[![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/eap/artifacts)       |  [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/dev/artifacts)            |
 # Features
 Here some of the features Ombi V3 has:
-* Out of the box working on all OS Just download the zip and start Ombi!
-* Let users request Movies and TV Shows (Whole series, whole seaons or even single episodes!)
+* Now working without crashes on Linux.
+* Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
-* User management system (supports plex.tv accounts and local accounts)
-* Allow your users to report issues and manage them separately
-* A landing page that will give you the availability of your Plex server and also add custom notification text to inform your users of downtime.
+* User management system (supports plex.tv, Emby and local accounts)
+* A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
 * Allow your users to get custom notifications!
 * Secure authentication so you don't have to worry about those script kiddies
-* We check to see if the request is already in Plex, if it's already in Plex then why you requesting it?!
-* It automatically updates the status of requests when they are available on Plex
+* We check to see if the request is already on Plex, if it's already on Plex then why you requesting it?!
+* It automatically updates the status of requests when they are available on Plex/Emby
 * Slick, responsive and mobile friendly UI
-* Ombi wil automatically update here self :)
+* Ombi will automatically update itself :)
 * Very fast system.
 
 ### Integration 
 We integrate with the following applications:
-* Plex server
+* Plex Media Server
 * Emby
 * Sonarr
 * Radarr (beta)
@@ -53,28 +52,27 @@ Supported notifications:
 
 ### The difference between Version 3 and 2
 
-Over the last 7 months, we focust on the main functions on Ombi.
-Make it better, faster and more stable.
-We did already a lot of work, but you will still miss some functions in the new version.
-We are planning to bring this features back in Version 3. You can find a list below with the feature difference.
+Over the last 7 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
+We have already done most of the work, but some features will still be missing in this first version.
+We are planning to bring back these features in Version 3 but for now you can find a list below with a comparison of features between v2 and v3.
 
 
 | Service  | Version 3 | Version 2 |
 |----------|:----------:|:----------:|
 | Supported online | Yes | No |
+|Multiple Plex/Emby Servers| Yes | No |
 | Emby & Plex support | Yes | Yes |
-| Mono needed | No | Yes |
+| Mono dependency | No | Yes |
 | Notifications support | Yes| Yes |
 | Landing page | Yes (brand new) | Yes |
 | Login page | Yes (brand new) | Yes |
 | Custom Logo in Ombi and notifications | Yes | No |
-| Change bulk roles in user management | Yes  | No |
 | Sending newsletters | Planned | Yes |
 | Send a Mass Email | Planned | Yes |
 | SickRage | Planned (not supported yet)| Yes |
-| CouchPotato | Planned| Yes |
-| Watcher | Planned| Yes |
-| Headphones | X (support dropped) | Yes |
+| CouchPotato | Planned | Yes |
+| Watcher | Planned | Yes |
+| Headphones | No (support dropped) | Yes |
 
 # Feature Requests
 Feature requests are handled on FeatHub.
@@ -96,7 +94,7 @@ Linux: Download the linux zip file, run chmod +x Ombi to make the Ombi file an e
 
 Get the following error? 
 libunwind.so.8: cannot open shared object file
-Sometimes you need to install libwind8. 
+You may need to install libwind8.
 Pleas run the following command: 
 ```apt-get install libunwind8```
 
