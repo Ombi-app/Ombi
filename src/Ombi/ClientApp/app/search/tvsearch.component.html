@@ -58,12 +58,11 @@
 
                                     <span *ngIf="node.data.firstAired" class="label label-info" target="_blank">Air Date: {{node.data.firstAired | date: 'dd/MM/yyyy'}}</span>
 
+                                    <span *ngIf="node.data.network" class="label label-info" target="_blank">{{node.data.network}}</span>
+
                        
                                     <ng-template [ngIf]="node.data.available"><span class="label label-success">Available</span></ng-template>
 
-
-
-                                    <span id="{{id}}netflixTab"></span>
 
                                     <a *ngIf="node.data.homepage" href="{{node.data.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>
 
