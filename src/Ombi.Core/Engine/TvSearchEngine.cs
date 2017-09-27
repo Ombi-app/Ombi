@@ -65,7 +65,17 @@ namespace Ombi.Core.Engine
         public async Task<SearchTvShowViewModel> GetShowInformation(int tvdbid)
         {
             var show = await TvMazeApi.ShowLookupByTheTvDbId(tvdbid);
+            if (show == null)
+            { 
+                // We don't have enough information
+                return null;
+            }
             var episodes = await TvMazeApi.EpisodeLookup(show.id);
+            if (episodes == null || !episodes.Any())
+            {
+                // We don't have enough information
+                return null;
+            }
 
             var mapped = Mapper.Map<SearchTvShowViewModel>(show);
 

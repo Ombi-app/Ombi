@@ -131,7 +131,14 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             this.searchService.getShowInformationTreeNode(val.data.id)
                 .takeUntil(this.subscriptions)
                 .subscribe(x => {
-                    this.updateItem(val, x);
+                    if (x.data) {
+                        this.updateItem(val, x);
+                    } else {
+                        const index = this.tvResults.indexOf(val, 0);
+                        if (index > -1) {
+                            this.tvResults.splice(index, 1);
+                        }
+                    }
                 });
         });
     }
