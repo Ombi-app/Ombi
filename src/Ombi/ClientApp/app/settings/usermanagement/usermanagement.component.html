@@ -7,14 +7,14 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="importPlex" [(ngModel)]="importPlexUsers">
-                    <label for="importPlexUsers">Import Plex Users</label>
+                    <input type="checkbox" id="importPlex" [(ngModel)]="settings.importPlexUsers">
+                    <label for="importPlex">Import Plex Users</label>
                 </div>
             </div>
             <div *ngIf="plexUsers">
                 <p>Plex Users exclude from Import</p>
                 
-                <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterCountryMultiple($event)"></p-autoComplete>
+                <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterUserList($event)"></p-autoComplete>
             </div>
         </div>
 
@@ -23,7 +23,7 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="importEmbyUsers">
+                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="settings.importPlexUsers">
                     <label for="importEmbyUsers">Import Emby Users</label>
                 </div>
             </div>
@@ -46,6 +46,9 @@
     <div class="col-md-6">
         <div class="form-group">
             <button type="submit" id="save" (click)="submit()" class="btn btn-primary-outline">Submit</button>
+            <button type="button" (click)="runImporter()" class="btn btn-info-outline">Run Importer</button>
+        </div>     
+        <div class="form-group">
         </div>
     </div>
 </fieldset>

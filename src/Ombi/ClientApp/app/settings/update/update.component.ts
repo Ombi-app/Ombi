@@ -2,7 +2,7 @@
 import { FormBuilder, FormGroup } from "@angular/forms";
 
 import { NotificationService } from "../../services";
-import { SettingsService, UpdateService } from "../../services";
+import { JobService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./update.component.html",
@@ -14,7 +14,7 @@ export class UpdateComponent implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private updateService: UpdateService,
+                private updateService: JobService,
                 private fb: FormBuilder) { }
 
     public ngOnInit() {

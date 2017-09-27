@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Rx";
 import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
-export class UpdateService extends ServiceAuthHelpers {
+export class JobService extends ServiceAuthHelpers {
     constructor(http: AuthHttp) {
         super(http, "/api/v1/Job/");
     }
@@ -15,5 +15,9 @@ export class UpdateService extends ServiceAuthHelpers {
 
     public checkForNewUpdate(): Observable<boolean> {
         return this.http.get(`${this.url}update/`).map(this.extractData);
+    }
+
+    public runPlexImporter(): Observable<boolean> {
+        return this.http.post(`${this.url}plexUserImporter/`, { headers: this.headers }).map(this.extractData);
     }
 }

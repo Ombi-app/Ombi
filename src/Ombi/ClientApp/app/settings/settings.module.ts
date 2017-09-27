@@ -8,7 +8,7 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthModule } from "../auth/auth.module";
 import { AuthService } from "../auth/auth.service";
-import { RadarrService, SonarrService, TesterService, UpdateService, ValidationService } from "../services";
+import { JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
@@ -100,7 +100,7 @@ const routes: Routes = [
         AuthGuard,
         ValidationService,
         TesterService,
-        UpdateService,
+        JobService,
     ],
 
 })

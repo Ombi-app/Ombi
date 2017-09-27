@@ -9,4 +9,4 @@ export * from "./search.service";
 export * from "./service.helpers";
 export * from "./settings.service";
 export * from "./status.service";
-export * from "./update.service";
+export * from "./job.service";

@@ -2,7 +2,7 @@
 
 import { ICheckbox, IUserManagementSettings } from "../../interfaces";
 import { IPlexFriends } from "../../interfaces/IPlex";
-import { IdentityService, NotificationService, PlexService, SettingsService } from "../../services";
+import { IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
@@ -21,7 +21,8 @@ export class UserManagementComponent implements OnInit {
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private identityService: IdentityService,
-                private plexService: PlexService) {
+                private plexService: PlexService,
+                private jobService: JobService) {
 
     }
 
@@ -64,6 +65,7 @@ export class UserManagementComponent implements OnInit {
         });
         this.settings.defaultRoles = enabledClaims.map((claim) => claim.value);
         this.settings.bannedPlexUserIds = this.bannedPlexUsers.map((u) => u.id);
+
         this.settingsService.saveUserManagementSettings(this.settings).subscribe(x => {
             if (x === true) {
                 this.notificationService.success("Saved", "Successfully saved the User Management Settings");
@@ -73,8 +75,12 @@ export class UserManagementComponent implements OnInit {
         });
     }
 
-    public filterCountryMultiple(event: any) {
+    public filterUserList(event: any) {
         this.filteredPlexUsers = this.filter(event.query, this.plexUsers);
+    }
+
+    public runImporter(): void {
+        this.jobService.runPlexImporter().subscribe();
     }
 
     private filter(query: string, users: IPlexFriends[]): IPlexFriends[] {

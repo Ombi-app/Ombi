@@ -3,6 +3,7 @@ using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Service;
 using Ombi.Attributes;
+using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
 
 namespace Ombi.Controllers
@@ -12,12 +13,14 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class JobController : Controller
     {
-        public JobController(IOmbiAutomaticUpdater updater)
+        public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter)
         {
             _updater = updater;
+            _plexUserImporter = userImporter;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
+        private readonly IPlexUserImporter _plexUserImporter;
 
         [HttpPost("update")]
         public bool ForceUpdate()
@@ -35,6 +38,13 @@ namespace Ombi.Controllers
             var updateAvailable = await _updater.UpdateAvailable(branch, version);
 
             return updateAvailable;
+        }
+
+        [HttpPost("plexuserimporter")]
+        public bool PlexUserImporter()
+        {
+            BackgroundJob.Enqueue(() => _plexUserImporter.Start());
+            return true;
         }
     }
 }
