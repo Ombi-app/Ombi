@@ -1,8 +1,8 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
 import { ICheckbox, IUserManagementSettings } from "../../interfaces";
-import { IPlexFriends } from "../../interfaces/IPlex";
-import { IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
+import { IUsersModel } from "../../interfaces";
+import { EmbyService, IdentityService, JobService, NotificationService, PlexService, SettingsService } from "../../services";
 
 @Component({
     templateUrl: "./usermanagement.component.html",
@@ -14,31 +14,47 @@ export class UserManagementComponent implements OnInit {
     public settings: IUserManagementSettings;
     public claims: ICheckbox[];
 
-    public plexUsers: IPlexFriends[];
-    public filteredPlexUsers: IPlexFriends[];
-    public bannedPlexUsers: IPlexFriends[] = [];
+    public plexUsers: IUsersModel[];
+    public filteredPlexUsers: IUsersModel[];
+    public bannedPlexUsers: IUsersModel[] = [];
 
-    constructor(private settingsService: SettingsService,
-                private notificationService: NotificationService,
-                private identityService: IdentityService,
-                private plexService: PlexService,
-                private jobService: JobService) {
+    public embyUsers: IUsersModel[];
+    public filteredEmbyUsers: IUsersModel[];
+    public bannedEmbyUsers: IUsersModel[] = [];
 
+    constructor(private readonly settingsService: SettingsService,
+                private readonly notificationService: NotificationService,
+                private readonly identityService: IdentityService,
+                private readonly plexService: PlexService,
+                private readonly jobService: JobService,
+                private readonly embyService: EmbyService) {
     }
 
     public ngOnInit(): void {
         this.settingsService.getUserManagementSettings().subscribe(x => {
             this.settings = x;
 
-            this.plexService.getFriends().subscribe(f => { 
+            this.plexService.getFriends().subscribe(f => {
                 this.plexUsers = f;
                 this.plexUsers.forEach((plex) => {
                     const isExcluded = this.settings.bannedPlexUserIds.some((val) => {
                         return plex.id === val;
                     });
                     if (isExcluded) {
-                    this.bannedPlexUsers.push(plex);
-                }
+                        this.bannedPlexUsers.push(plex);
+                    }
+                });
+            });
+
+            this.embyService.getUsers().subscribe(f => {
+                this.embyUsers = f;
+                this.embyUsers.forEach((emby) => {
+                    const isExcluded = this.settings.bannedPlexUserIds.some((val) => {
+                        return emby.id === val;
+                    });
+                    if (isExcluded) {
+                        this.bannedEmbyUsers.push(emby);
+                    }
                 });
             });
 
@@ -65,6 +81,7 @@ export class UserManagementComponent implements OnInit {
         });
         this.settings.defaultRoles = enabledClaims.map((claim) => claim.value);
         this.settings.bannedPlexUserIds = this.bannedPlexUsers.map((u) => u.id);
+        this.settings.bannedEmbyUserIds = this.bannedEmbyUsers.map((u) => u.id);
 
         this.settingsService.saveUserManagementSettings(this.settings).subscribe(x => {
             if (x === true) {
@@ -75,15 +92,19 @@ export class UserManagementComponent implements OnInit {
         });
     }
 
-    public filterUserList(event: any) {
+    public filterPlexList(event: any) {
         this.filteredPlexUsers = this.filter(event.query, this.plexUsers);
+    }
+
+    public filterEmbyList(event: any) {
+        this.filteredEmbyUsers = this.filter(event.query, this.embyUsers);
     }
 
     public runImporter(): void {
         this.jobService.runPlexImporter().subscribe();
     }
 
-    private filter(query: string, users: IPlexFriends[]): IPlexFriends[] {
+    private filter(query: string, users: IUsersModel[]): IUsersModel[] {
         return users.filter((val) => {
             return val.username.toLowerCase().indexOf(query.toLowerCase()) === 0;
         });

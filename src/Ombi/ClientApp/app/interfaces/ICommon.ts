@@ -21,3 +21,8 @@ export interface ICheckbox {
     value: string;
     enabled: boolean;
 }
+
+export interface IUsersModel {
+    id: string;
+    username: string;
+}

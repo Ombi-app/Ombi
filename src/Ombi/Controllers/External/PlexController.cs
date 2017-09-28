@@ -148,16 +148,16 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("friends")]
-        public async Task<IEnumerable<PlexUsersViewModel>> GetFriends()
+        public async Task<IEnumerable<UsersViewModel>> GetFriends()
         {
-            var vm = new List<PlexUsersViewModel>();
+            var vm = new List<UsersViewModel>();
             var s = await PlexSettings.GetSettingsAsync();
             foreach (var server in s.Servers)
             {
                 var users = await PlexApi.GetUsers(server.PlexAuthToken);
                 if (users?.User != null && users.User.Any())
                 {
-                    vm.AddRange(users.User.Select(u => new PlexUsersViewModel
+                    vm.AddRange(users.User.Select(u => new UsersViewModel
                     {
                         Username = u.Username,
                         Id = u.Id

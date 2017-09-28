@@ -1,11 +1,15 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Ombi.Api.Emby;
+using Ombi.Api.Plex;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Helpers;
+using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
 {
@@ -57,6 +61,32 @@ namespace Ombi.Controllers.External
                 return request;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Gets the emby users.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("users")]
+        public async Task<IEnumerable<UsersViewModel>> EmbyUsers()
+        {
+            var vm = new List<UsersViewModel>();
+            var s = await EmbySettings.GetSettingsAsync();
+            foreach (var server in s.Servers)
+            {
+                var users = await EmbyApi.GetUsers(server.FullUri, server.ApiKey);
+                if (users != null && users.Any())
+                {
+                    vm.AddRange(users.Select(u => new UsersViewModel
+                    {
+                        Username = u.Name,
+                        Id = u.Id
+                    }));
+                }
+            }
+
+            // Filter out any dupes
+            return vm.DistinctBy(x => x.Id);
         }
     }
 }
