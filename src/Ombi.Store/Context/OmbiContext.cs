@@ -170,7 +170,7 @@ namespace Ombi.Store.Context
                             notificationToAdd = new NotificationTemplates
                             {
                                 NotificationType = notificationType,
-                                Message = "Hello! You have been invited to use {ApplicationName}!",
+                                Message = "Hello! You have been invited to use {ApplicationName}! You can login here: {ApplicationUrl}",
                                 Subject = "Invite to {ApplicationName}",
                                 Agent = agent,
                                 Enabled = true,

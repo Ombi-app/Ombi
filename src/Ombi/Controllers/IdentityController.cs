@@ -472,16 +472,16 @@ namespace Ombi.Controllers
             var appName = (string.IsNullOrEmpty(customizationSettings.ApplicationName)
                 ? "Ombi"
                 : customizationSettings.ApplicationName);
-            
-            
-            var url =
-                $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}";
+
+            customizationSettings.AddToUrl("/token?token=");
+            var url = customizationSettings.ApplicationUrl;
+
             await EmailProvider.SendAdHoc(new NotificationMessage
             {
                 To = user.Email,
                 Subject = $"{appName} Password Reset",
                 Message = $"You recently made a request to reset your {appName} account. Please click the link below to complete the process.<br/><br/>" +
-                          $"<a href=\"{url}/token?token={token}\"> Reset </a>"
+                          $"<a href=\"{url}{token}\"> Reset </a>"
             }, emailSettings);
 
             return defaultMessage;

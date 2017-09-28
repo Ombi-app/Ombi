@@ -7,10 +7,11 @@ using Ombi.Store.Entities.Requests;
 namespace Ombi.Notifications
 {
     public class NotificationMessageCurlys
-    { 
+    {
 
         public void Setup(FullBaseRequest req, CustomizationSettings s)
         {
+            ApplicationUrl = s.ApplicationUrl;
             ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
@@ -25,6 +26,7 @@ namespace Ombi.Notifications
 
         public void Setup(ChildRequests req, CustomizationSettings s)
         {
+            ApplicationUrl = s.ApplicationUrl;
             ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
             RequestedUser = string.IsNullOrEmpty(req.RequestedUser.Alias)
                 ? req.RequestedUser.UserName
@@ -40,10 +42,11 @@ namespace Ombi.Notifications
 
         public void Setup(OmbiUser user, CustomizationSettings s)
         {
+            ApplicationUrl = s.ApplicationUrl;
             ApplicationName = string.IsNullOrEmpty(s.ApplicationName) ? "Ombi" : s.ApplicationName;
             RequestedUser = user.UserName;
         }
-        
+
         // User Defined
         public string RequestedUser { get; set; }
         public string Title { get; set; }
@@ -56,6 +59,7 @@ namespace Ombi.Notifications
         public string SeasonsList { get; set; }
         public string PosterImage { get; set; }
         public string ApplicationName { get; set; }
+        public string ApplicationUrl { get; set; }
 
         // System Defined
         private string LongDate => DateTime.Now.ToString("D");
@@ -80,6 +84,7 @@ namespace Ombi.Notifications
             {nameof(SeasonsList),SeasonsList},
             {nameof(PosterImage),PosterImage},
             {nameof(ApplicationName),ApplicationName},
+            {nameof(ApplicationUrl),ApplicationUrl},
         };
     }
 }

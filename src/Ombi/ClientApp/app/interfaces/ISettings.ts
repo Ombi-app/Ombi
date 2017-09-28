@@ -87,6 +87,7 @@ export interface ILandingPageSettings extends ISettings {
 
 export interface ICustomizationSettings extends ISettings {
     applicationName: string;
+    applicationUrl: string;
     logo: string;
 }
 
