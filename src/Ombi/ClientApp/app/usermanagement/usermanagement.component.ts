@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
-import { IEmailNotificationSettings, IUser } from "../interfaces";
+import { ICustomizationSettings, IEmailNotificationSettings, IUser } from "../interfaces";
 import { IdentityService, NotificationService, SettingsService } from "../services";
 
 @Component({
@@ -11,10 +11,11 @@ export class UserManagementComponent implements OnInit {
     public users: IUser[];
     public checkAll = false;
     public emailSettings: IEmailNotificationSettings; 
+    public customizationSettings: ICustomizationSettings;
 
-    constructor(private identityService: IdentityService,
-                private settingsService: SettingsService,
-                private notificationService: NotificationService) { }
+    constructor(private readonly identityService: IdentityService,
+                private readonly settingsService: SettingsService,
+                private readonly notificationService: NotificationService) { }
 
     public ngOnInit() {
         this.users = [];
@@ -22,6 +23,7 @@ export class UserManagementComponent implements OnInit {
             this.users = x;
         });
 
+        this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }
 

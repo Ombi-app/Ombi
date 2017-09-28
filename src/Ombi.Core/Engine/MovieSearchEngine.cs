@@ -15,13 +15,14 @@ using Ombi.Core.Rule.Interfaces;
 using StackExchange.Profiling;
 using Ombi.Store.Entities;
 using Microsoft.AspNetCore.Identity;
+using Ombi.Core.Authentication;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
         public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
-            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, UserManager<OmbiUser> um)
+            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um)
             : base(identity, service, r, um)
         {
             MovieApi = movApi;

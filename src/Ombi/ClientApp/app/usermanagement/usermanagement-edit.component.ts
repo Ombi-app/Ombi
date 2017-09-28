@@ -18,7 +18,7 @@ export class UserManagementEditComponent {
                 private notificationSerivce: NotificationService,
                 private router: Router) {
         this.route.params
-            .subscribe(params => {
+            .subscribe((params: any) => {
                 this.userId = params.id;
 
                 this.identityService.getUserById(this.userId).subscribe(x => {

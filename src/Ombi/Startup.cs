@@ -29,6 +29,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.IdentityModel.Tokens;
 using Ombi.Config;
+using Ombi.Core.Authentication;
 using Ombi.Core.Claims;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
@@ -85,7 +86,8 @@ namespace Ombi
 
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddUserManager<OmbiUserManager>();
 
             services.Configure<IdentityOptions>(options =>
             {

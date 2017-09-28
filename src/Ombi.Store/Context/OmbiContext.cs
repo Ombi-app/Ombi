@@ -100,13 +100,13 @@ namespace Ombi.Store.Context
 
             foreach (var agent in allAgents)
             {
-                if (templates.Any(x => x.Agent == agent))
-                {
-                    // We have all the templates for this notification agent
-                    continue;
-                }
                 foreach (var notificationType in allTypes)
                 {
+                    if (templates.Any(x => x.Agent == agent && x.NotificationType == notificationType))
+                    {
+                        // We already have this
+                        continue;
+                    }
                     NotificationTemplates notificationToAdd;
                     switch (notificationType)
                     {

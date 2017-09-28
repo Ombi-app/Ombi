@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Ombi.Core.Authentication;
 using Ombi.Core.Claims;
 using Ombi.Models;
 using Ombi.Models.Identity;
@@ -21,7 +22,7 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class TokenController
     {
-        public TokenController(UserManager<OmbiUser> um, IOptions<TokenAuthentication> ta,
+        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta,
             IApplicationConfigRepository config, IAuditRepository audit, ITokenRepository token)
         {
             _userManager = um;
@@ -35,7 +36,7 @@ namespace Ombi.Controllers
         private IApplicationConfigRepository _config;
         private readonly IAuditRepository _audit;
         private readonly ITokenRepository _token;
-        private readonly UserManager<OmbiUser> _userManager;
+        private readonly OmbiUserManager _userManager;
 
         /// <summary>
         /// Gets the token.
@@ -64,6 +65,9 @@ namespace Ombi.Controllers
                 {
                     return new UnauthorizedResult();
                 }
+
+                user.LastLoggedIn = DateTime.UtcNow;
+                await _userManager.UpdateAsync(user);
 
                 var claims = new List<Claim>
                         {

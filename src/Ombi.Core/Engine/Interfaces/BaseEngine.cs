@@ -9,12 +9,13 @@ using Ombi.Store.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 
 namespace Ombi.Core.Engine.Interfaces
 {
     public abstract class BaseEngine
     {
-        protected BaseEngine(IPrincipal user, UserManager<OmbiUser> um, IRuleEvaluator rules)
+        protected BaseEngine(IPrincipal user, OmbiUserManager um, IRuleEvaluator rules)
         {
             UserPrinciple = user;
             Rules = rules;
@@ -23,7 +24,7 @@ namespace Ombi.Core.Engine.Interfaces
 
         protected IPrincipal UserPrinciple { get; }
         protected IRuleEvaluator Rules { get; }
-        protected UserManager<OmbiUser> UserManager { get;  }
+        protected OmbiUserManager UserManager { get;  }
         protected string Username => UserPrinciple.Identity.Name;
 
         private OmbiUser _user;

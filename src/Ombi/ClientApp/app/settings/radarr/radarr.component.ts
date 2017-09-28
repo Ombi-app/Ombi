@@ -93,7 +93,7 @@ export class RadarrComponent implements OnInit {
         }
         const settings = <IRadarrSettings>form.value;
         this.testerService.radarrTest(settings).subscribe(x => {
-            if (x) {
+            if (x === true) {
                 this.notificationService.success("Connected", "Successfully connected to Radarr!");
             } else {
                 this.notificationService.error("Connected", "We could not connect to Radarr!");

@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Rule;
@@ -24,7 +25,7 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule, UserManager<OmbiUser> manager,
+            IRuleEvaluator rule, OmbiUserManager manager,
             ITvSender sender, IAuditRepository audit) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;

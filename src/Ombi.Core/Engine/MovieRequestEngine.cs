@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities.Requests;
@@ -21,8 +22,8 @@ namespace Ombi.Core.Engine
     public class MovieRequestEngine : BaseMediaEngine, IMovieRequestEngine
     {
         public MovieRequestEngine(IMovieDbApi movieApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log, 
-            UserManager<OmbiUser> manager) : base(user, requestService, r, manager)
+            INotificationHelper helper, IRuleEvaluator r, IMovieSender sender, ILogger<MovieRequestEngine> log,
+            OmbiUserManager manager) : base(user, requestService, r, manager)
         {
             MovieApi = movieApi;
             NotificationHelper = helper;

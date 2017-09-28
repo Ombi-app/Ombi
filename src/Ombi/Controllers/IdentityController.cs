@@ -15,6 +15,7 @@ using Microsoft.Extensions.Options;
 
 using Ombi.Attributes;
 using Ombi.Config;
+using Ombi.Core.Authentication;
 using Ombi.Core.Claims;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
@@ -41,7 +42,7 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class IdentityController : Controller
     {
-        public IdentityController(UserManager<OmbiUser> user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
+        public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
             IOptions<UserSettings> userSettings,
@@ -57,7 +58,7 @@ namespace Ombi.Controllers
             WelcomeEmail = welcome;
         }
 
-        private UserManager<OmbiUser> UserManager { get; }
+        private OmbiUserManager UserManager { get; }
         private RoleManager<IdentityRole> RoleManager { get; }
         private IMapper Mapper { get; }
         private IEmailProvider EmailProvider { get; }
@@ -178,7 +179,8 @@ namespace Ombi.Controllers
                 EmailAddress = user.Email,
                 UserType = (Core.Models.UserType)(int)user.UserType,
                 Claims = new List<ClaimCheckboxes>(),
-                IsSetup = !string.IsNullOrEmpty(user.PasswordHash)
+                LastLoggedIn = user.LastLoggedIn,
+                HasLoggedIn = user.LastLoggedIn.HasValue
             };
 
             foreach (var role in userRoles)

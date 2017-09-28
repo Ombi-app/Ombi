@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Ombi.Core.Models.UI
 {
@@ -10,7 +11,8 @@ namespace Ombi.Core.Models.UI
         public List<ClaimCheckboxes> Claims { get; set; }
         public string EmailAddress { get; set; }
         public string Password { get; set; }
-        public bool IsSetup { get; set; }
+        public DateTime? LastLoggedIn { get; set; }
+        public bool HasLoggedIn { get; set; }
         public UserType UserType { get; set; }
     }
 

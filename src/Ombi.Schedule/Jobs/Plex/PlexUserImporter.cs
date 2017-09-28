@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -53,10 +54,10 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 var users = await _api.GetUsers(server.PlexAuthToken);
 
-                foreach (var plexUsers in users.User)
+                foreach (var plexUser in users.User)
                 {
                     // Check if we should import this user
-                    if (userManagementSettings.BannedPlexUserIds.Contains(plexUsers.Id))
+                    if (userManagementSettings.BannedPlexUserIds.Contains(plexUser.Id))
                     {
                         // Do not import these, they are not allowed into the country.
                         continue;
@@ -64,7 +65,7 @@ namespace Ombi.Schedule.Jobs.Plex
 
                     // Check if this Plex User already exists
                     // We are using the Plex USERNAME and Not the TITLE, the Title is for HOME USERS
-                    var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUsers.Id);
+                    var existingPlexUser = allUsers.FirstOrDefault(x => x.ProviderUserId == plexUser.Id);
                     if (existingPlexUser == null)
                     {
                         // Create this users
@@ -72,9 +73,9 @@ namespace Ombi.Schedule.Jobs.Plex
                         var newUser = new OmbiUser
                         {
                             UserType = UserType.PlexUser,
-                            UserName = plexUsers.Username,
-                            ProviderUserId = plexUsers.Id,
-                            Email = plexUsers.Email,
+                            UserName = plexUser.Username,
+                            ProviderUserId = plexUser.Id,
+                            Email = plexUser.Email,
                             Alias = string.Empty
                         };
                         var result = await _userManager.CreateAsync(newUser);
@@ -97,6 +98,10 @@ namespace Ombi.Schedule.Jobs.Plex
                     else
                     {
                         // Do we need to update this user?
+                        existingPlexUser.Email = plexUser.Email;
+                        existingPlexUser.UserName = plexUser.Username;
+
+                        await _userManager.UpdateAsync(existingPlexUser);
                     }
                 }
             }

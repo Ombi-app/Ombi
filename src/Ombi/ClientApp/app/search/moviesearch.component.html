@@ -54,7 +54,7 @@
                         <ng-template [ngIf]="result.available"><span class="label label-success">Available</span></ng-template>
                         <ng-template [ngIf]="result.approved && !result.available"><span class="label label-info">Processing Request</span></ng-template>
                         <ng-template [ngIf]="result.requested && !result.approved && !result.available"><span class="label label-warning">Pending Approval</span></ng-template>
-                        <ng-template [ngIf]="!result.requested && !result.available"><span class="label label-danger">Not Requested</span></ng-template>
+                        <ng-template [ngIf]="!result.requested && !result.available && !result.approved"><span class="label label-danger">Not Requested</span></ng-template>
 
 
 
