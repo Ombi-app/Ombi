@@ -72,7 +72,7 @@ export class EmailNotificationComponent implements OnInit {
         }
 
         this.testerService.emailTest(form.value).subscribe(x => {
-              if (x) {
+              if (x === true) {
                 this.notificationService.success("Sent", "Successfully sent an email message, please check your inbox");
             } else {
                 this.notificationService.success("Error", "There was an error when sending the Email message, please check your settings.");

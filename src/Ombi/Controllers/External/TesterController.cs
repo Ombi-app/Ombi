@@ -12,8 +12,10 @@ using Ombi.Attributes;
 using Ombi.Core.Notifications;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Notifications;
 using Ombi.Notifications.Agents;
 using Ombi.Notifications.Models;
+using Ombi.Notifications.Templates;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Settings.Settings.Models.Notifications;
 
@@ -44,7 +46,7 @@ namespace Ombi.Controllers.External
         /// <param name="log">The logger.</param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log)
+            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider)
         {
             Service = service;
             DiscordNotification = notification;
@@ -58,6 +60,7 @@ namespace Ombi.Controllers.External
             EmbyApi = emby;
             SonarrApi = sonarr;
             Log = log;
+            EmailProvider = provider;
         }
 
         private INotificationService Service { get; }
@@ -72,6 +75,7 @@ namespace Ombi.Controllers.External
         private IEmbyApi EmbyApi { get; }
         private ISonarrApi SonarrApi { get; }
         private ILogger<TesterController> Log { get; }
+        private IEmailProvider EmailProvider { get; }
 
 
         /// <summary>
@@ -156,15 +160,25 @@ namespace Ombi.Controllers.External
         /// <param name="settings">The settings.</param>
         /// <returns></returns>
         [HttpPost("email")]
-        public bool Email([FromBody] EmailNotificationSettings settings)
+        public async Task<bool> Email([FromBody] EmailNotificationSettings settings)
         {
-            settings.Enabled = true;
-            var notificationModel = new NotificationOptions
+            try
             {
-                NotificationType = NotificationType.Test,
-                RequestId = -1
-            };
-            EmailNotification.NotifyAsync(notificationModel, settings);
+                var message = new NotificationMessage
+                {
+                    Message = "This is just a test! Success!",
+                    Subject = $"Ombi: Test",
+                    To = settings.AdminEmail,
+                };
+
+                message.Other.Add("PlainTextBody", "This is just a test! Success!");
+                await EmailProvider.SendAdHoc(message, settings);
+            }
+            catch (Exception e)
+            {
+                Log.LogWarning(e, "Exception when testing Email Notifications");
+                return false;
+            }
 
             return true;
         }
