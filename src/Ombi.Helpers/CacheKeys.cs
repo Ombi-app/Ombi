@@ -6,6 +6,6 @@ namespace Ombi.Helpers
 {
     public static class CacheKeys
     {
-        public const string RadarrCacher = nameof(RadarrCacher);
+        public const string Update = nameof(Update);
     }
 }

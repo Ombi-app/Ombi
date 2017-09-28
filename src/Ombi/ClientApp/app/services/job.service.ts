@@ -17,6 +17,10 @@ export class JobService extends ServiceAuthHelpers {
         return this.http.get(`${this.url}update/`).map(this.extractData);
     }
 
+    public getCachedUpdate(): Observable<boolean> {
+        return this.http.get(`${this.url}updateCached/`).map(this.extractData);
+    }
+
     public runPlexImporter(): Observable<boolean> {
         return this.http.post(`${this.url}plexUserImporter/`, { headers: this.headers }).map(this.extractData);
     }

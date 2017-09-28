@@ -15,7 +15,7 @@ export class AboutComponent implements OnInit {
 
     public ngOnInit() {
         this.settingsService.about().subscribe(x => this.about = x);
-        this.jobService.checkForNewUpdate().subscribe(x => {
+        this.jobService.getCachedUpdate().subscribe(x => {
             if (x === true) {
                 this.newUpdate = true;
             }

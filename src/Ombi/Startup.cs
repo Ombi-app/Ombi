@@ -99,8 +99,7 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+";
             });
-
-            services.AddDataProtection();
+            
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);

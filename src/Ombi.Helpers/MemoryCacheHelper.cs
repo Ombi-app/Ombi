@@ -1,7 +1,7 @@
 ﻿#region Copyright
 // /************************************************************************
 //    Copyright (c) 2017 Jamie Rees
-//    File: StatusController.cs
+//    File: MemoryCacheHelper.cs
 //    Created By: Jamie Rees
 //   
 //    Permission is hereby granted, free of charge, to any person obtaining
@@ -25,50 +25,30 @@
 //  ************************************************************************/
 #endregion
 
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Ombi.Core.Settings;
-using Ombi.Settings.Settings.Models;
 
-namespace Ombi.Controllers
+using System;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace Ombi.Helpers
 {
-    [ApiV1]
-    [Produces("application/json")]
-    public class StatusController : Controller
+    public static class MemoryCacheHelper
     {
-        public StatusController(ISettingsService<OmbiSettings> ombi)
+        public static IMemoryCache TryAdd(this IMemoryCache cache, object cacheObject, TimeSpan slidingExpiration)
         {
-            Ombi = ombi;
-        }
+            object cachedObject;
+            if (!cache.TryGetValue(CacheKeys.Update, out cachedObject))
+            { 
+                // Key not in cache, so get data.
+                
+                // Set cache options.
+                var cacheEntryOptions = new MemoryCacheEntryOptions()
+                    .SetSlidingExpiration(slidingExpiration);
 
-        private ISettingsService<OmbiSettings> Ombi { get; }
+                // Save data in cache.
+                cache.Set(CacheKeys.Update, cacheObject, cacheEntryOptions);
+            }
 
-        /// <summary>
-        /// Gets the status of Ombi.
-        /// </summary>
-        /// <returns></returns>
-        [AllowAnonymous]
-        [HttpGet]
-        public HttpStatusCode GetStatus()
-        {
-            return HttpStatusCode.OK;
-        }
-
-
-        /// <summary>
-        /// Checks to see if we have run through the wizard
-        /// </summary>
-        /// <returns></returns>
-        [ApiExplorerSettings(IgnoreApi = true)]
-        [AllowAnonymous]
-        [HttpGet("Wizard")]
-        public async Task<object> WizardStatus()
-        {
-            var settings = await Ombi.GetSettingsAsync();
-
-            return new { Result = settings?.Wizard ?? false};
+            return cache;
         }
     }
 }
