@@ -10,8 +10,9 @@ export class ServiceHelpers {
     protected headers: Headers;
 
     constructor(protected http: Http, protected url: string, protected platformLocation: PlatformLocation) {
-        if (this.url.length > 1) {
-            this.url = platformLocation.getBaseHrefFromDOM() + this.url;
+        const base = platformLocation.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.url = base + this.url;
         }
         this.headers = new Headers();
         this.headers.append("Content-Type", "application/json; charset=utf-8");
@@ -37,8 +38,9 @@ export class ServiceAuthHelpers {
     protected headers: Headers;
 
     constructor(protected http: AuthHttp, protected url: string, protected platformLocation: PlatformLocation) {
-        if (this.url.length > 1) {
-            this.url = platformLocation.getBaseHrefFromDOM() + this.url;
+        const base = platformLocation.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.url = base + this.url;
         }
         this.headers = new Headers();
         this.headers.append("Content-Type", "application/json; charset=utf-8");
