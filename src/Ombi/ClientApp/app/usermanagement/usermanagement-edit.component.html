@@ -27,7 +27,7 @@
             <div class="form-group">
                 <label for="alias" class="control-label">Email Address</label>
                 <div>
-                    <input type="text" [(ngModel)]="user.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{user?.emailAddress}}" [disabled]="user?.userType != 1">
+                    <input type="text" [(ngModel)]="user.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{user?.emailAddress}}" [disabled]="user?.userType == 2">
                 </div>
             </div>
         </div>

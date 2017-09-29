@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Ombi.Api.Service;
 using Ombi.Attributes;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Ombi;
 
@@ -17,15 +18,17 @@ namespace Ombi.Controllers
     public class JobController : Controller
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            IMemoryCache mem)
+            IMemoryCache mem, IEmbyUserImporter embyImporter)
         {
             _updater = updater;
             _plexUserImporter = userImporter;
+            _embyUserImporter = embyImporter;
             _memCache = mem;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
         private readonly IPlexUserImporter _plexUserImporter;
+        private readonly IEmbyUserImporter _embyUserImporter;
         private readonly IMemoryCache _memCache;
 
         [HttpPost("update")]
@@ -66,6 +69,13 @@ namespace Ombi.Controllers
         public bool PlexUserImporter()
         {
             BackgroundJob.Enqueue(() => _plexUserImporter.Start());
+            return true;
+        }
+
+        [HttpPost("embyuserimporter")]
+        public bool EmbyUserImporter()
+        {
+            BackgroundJob.Enqueue(() => _embyUserImporter.Start());
             return true;
         }
     }

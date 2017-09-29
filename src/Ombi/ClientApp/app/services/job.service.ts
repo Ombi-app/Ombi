@@ -24,4 +24,8 @@ export class JobService extends ServiceAuthHelpers {
     public runPlexImporter(): Observable<boolean> {
         return this.http.post(`${this.url}plexUserImporter/`, { headers: this.headers }).map(this.extractData);
     }
+
+    public runEmbyImporter(): Observable<boolean> {
+        return this.http.post(`${this.url}embyUserImporter/`, { headers: this.headers }).map(this.extractData);
+    }
 }

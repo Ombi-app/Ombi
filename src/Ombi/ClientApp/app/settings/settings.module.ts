@@ -28,6 +28,7 @@ import { RadarrComponent } from "./radarr/radarr.component";
 import { SonarrComponent } from "./sonarr/sonarr.component";
 import { UpdateComponent } from "./update/update.component";
 import { UserManagementComponent } from "./usermanagement/usermanagement.component";
+import { WikiComponent } from "./wiki.component";
 
 import { SettingsMenuComponent } from "./settingsmenu.component";
 
@@ -89,6 +90,7 @@ const routes: Routes = [
         UserManagementComponent,
         UpdateComponent,
         AboutComponent,
+        WikiComponent,
     ],
     exports: [
         RouterModule,
