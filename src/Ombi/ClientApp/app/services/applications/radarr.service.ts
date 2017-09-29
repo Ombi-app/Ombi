@@ -1,5 +1,5 @@
-﻿import { Injectable } from "@angular/core";
-import { PlatformLocation } from "@angular/common";
+﻿import { PlatformLocation } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 

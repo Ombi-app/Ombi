@@ -1,5 +1,5 @@
-﻿import { Injectable } from "@angular/core";
-import { PlatformLocation } from "@angular/common";
+﻿import { PlatformLocation } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import { JwtHelper, tokenNotExpired } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
