@@ -1,4 +1,5 @@
-﻿import { Headers, Http, Response } from "@angular/http";
+﻿import { PlatformLocation } from "@angular/common";
+import { Headers, Http, Response } from "@angular/http";
 import "rxjs/add/observable/throw";
 import { Observable } from "rxjs/Observable";
 
@@ -8,7 +9,10 @@ export class ServiceHelpers {
 
     protected headers: Headers;
 
-    constructor(protected http: Http, protected url: string) {
+    constructor(protected http: Http, protected url: string, protected platformLocation: PlatformLocation) {
+        if (this.url.length > 1) {
+            this.url = platformLocation.getBaseHrefFromDOM() + this.url;
+        }
         this.headers = new Headers();
         this.headers.append("Content-Type", "application/json; charset=utf-8");
     }
@@ -32,7 +36,10 @@ export class ServiceAuthHelpers {
 
     protected headers: Headers;
 
-    constructor(protected http: AuthHttp, protected url: string) {
+    constructor(protected http: AuthHttp, protected url: string, protected platformLocation: PlatformLocation) {
+        if (this.url.length > 1) {
+            this.url = platformLocation.getBaseHrefFromDOM() + this.url;
+        }
         this.headers = new Headers();
         this.headers.append("Content-Type", "application/json; charset=utf-8");
     }

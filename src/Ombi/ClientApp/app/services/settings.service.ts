@@ -1,4 +1,5 @@
-﻿import { Injectable } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
@@ -27,8 +28,9 @@ import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
-    constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http) {
-        super(httpAuth, "/api/v1/Settings");
+    constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http,
+                public platformLocation: PlatformLocation) {
+        super(httpAuth, "/api/v1/Settings", platformLocation);
     }
 
     public about(): Observable<IAbout> {

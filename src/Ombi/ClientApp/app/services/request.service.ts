@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
@@ -12,8 +13,8 @@ import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class RequestService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private basicHttp: Http) {
-        super(http, "/api/v1/Request/");
+    constructor(http: AuthHttp, private basicHttp: Http, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/Request/", platformLocation);
     }
 
     public requestMovie(movie: ISearchMovieResult): Observable<IRequestEngineResult> {

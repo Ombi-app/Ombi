@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
@@ -9,8 +10,8 @@ import { IEmbySettings, IUsersModel } from "../../interfaces";
 
 @Injectable()
 export class EmbyService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private regularHttp: Http) {
-        super(http, "/api/v1/Emby/");
+    constructor(http: AuthHttp, private regularHttp: Http, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/Emby/", platformLocation);
     }
 
     public logIn(settings: IEmbySettings): Observable<IEmbySettings> {

@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
@@ -6,8 +7,8 @@ import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class JobService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp) {
-        super(http, "/api/v1/Job/");
+    constructor(http: AuthHttp, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/Job/", platformLocation);
     }
     public forceUpdate(): Observable<boolean> {
         return this.http.post(`${this.url}update/`, { headers: this.headers }).map(this.extractData);

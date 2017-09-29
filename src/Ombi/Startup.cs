@@ -3,46 +3,34 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.IdentityModel.Tokens;
-using Ombi.Config;
 using Ombi.Core.Authentication;
-using Ombi.Core.Claims;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
 using Ombi.Mapping;
-using Ombi.Models.Identity;
 using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Serilog;
 using Serilog.Events;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
 {
@@ -157,15 +145,23 @@ namespace Ombi
             });
 
             // Setup the scheduler
-            var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
+            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
             ctx.Seed();
 
             var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
+            var ombiService =
+                app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
+            var settings = ombiService.GetSettings();
+            if (settings.BaseUrl.HasValue())
+            {
+                app.UsePathBase(settings.BaseUrl);
+            }
+
             app.UseStaticFiles(new StaticFileOptions()
             {
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
             });
 
             app.UseAuthentication();

@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
 import { Http } from "@angular/http";
 
 import { AuthHttp } from "angular2-jwt";
@@ -10,8 +11,8 @@ import { IPlexAuthentication, IPlexLibResponse, IPlexServer, IPlexServerViewMode
 
 @Injectable()
 export class PlexService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp, private regularHttp: Http) {
-        super(http, "/api/v1/Plex/");
+    constructor(http: AuthHttp, private regularHttp: Http, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/Plex/", platformLocation);
     }
 
     public logIn(login: string, password: string): Observable<IPlexAuthentication> {

@@ -1,4 +1,5 @@
 ﻿import { Injectable } from "@angular/core";
+import { PlatformLocation } from "@angular/common";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
 
@@ -9,8 +10,8 @@ import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class SearchService extends ServiceAuthHelpers {
-    constructor(http: AuthHttp) {
-        super(http, "/api/v1/search");
+    constructor(http: AuthHttp, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/search", platformLocation);
     }
 
     // Movies

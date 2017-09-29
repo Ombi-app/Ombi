@@ -7,5 +7,6 @@ namespace Ombi.Helpers
     public static class CacheKeys
     {
         public const string Update = nameof(Update);
+        public const string OmbiSettings = nameof(OmbiSettings);
     }
 }
