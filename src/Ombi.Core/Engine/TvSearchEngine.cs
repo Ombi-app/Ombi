@@ -232,7 +232,7 @@ namespace Ombi.Core.Engine
                         foreach (var episode in season.Episodes)
                         {
                             var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber);
+                                x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber && x.Series.ProviderId == item.Id.ToString());
                             if (epExists != null)
                             {
                                 episode.Available = true;

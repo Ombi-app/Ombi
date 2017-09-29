@@ -33,11 +33,13 @@ export class AppComponent implements OnInit {
         this.router.events.subscribe(() => {
             this.user = this.authService.claims();
             this.showNav = this.authService.loggedIn();
-        });
 
-        if (this.user !== null && this.user.name) {
-            this.jobService.getCachedUpdate().subscribe(x => this.updateAvailable = x);
-        }
+            if (this.user !== null && this.user.name) {
+                this.jobService.getCachedUpdate().subscribe(x => {
+                    this.updateAvailable = (x === true);
+                });
+            }
+        });
     }
 
     public hasRole(role: string): boolean {
