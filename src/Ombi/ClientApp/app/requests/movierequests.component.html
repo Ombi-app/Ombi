@@ -29,6 +29,12 @@
                 </div>
                 <br />
                 <div>
+                    <span>Requested By: </span>
+                    <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
+                    <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
+                    <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
+                </div>
+                <div>
                     <span>Status: </span>
                     <span class="label label-success">{{request.status}}</span>
                 </div>

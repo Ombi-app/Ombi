@@ -35,7 +35,9 @@ export class AppComponent implements OnInit {
             this.showNav = this.authService.loggedIn();
         });
 
-        this.jobService.getCachedUpdate().subscribe(x => this.updateAvailable = x);
+        if (this.user !== null && this.user.name) {
+            this.jobService.getCachedUpdate().subscribe(x => this.updateAvailable = x);
+        }
     }
 
     public hasRole(role: string): boolean {
