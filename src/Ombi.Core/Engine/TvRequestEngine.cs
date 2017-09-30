@@ -128,13 +128,21 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
+            var allRequests = await TvRepository.Get()
+                .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                .Skip(position).Take(count).ToListAsync();
             return allRequests;
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
         {
-            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
+            var allRequests = await TvRepository.Get()
+                .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x=>x.Episodes)
+                .Skip(position).Take(count).ToListAsync();
             return ParseIntoTreeNode(allRequests);
         }
 
@@ -146,7 +154,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId)
         {
-            return await TvRepository.GetChild().Where(x => x.ParentRequestId == tvId).ToListAsync();
+            return await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
         }
 
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)

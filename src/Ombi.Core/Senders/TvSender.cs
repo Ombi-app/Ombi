@@ -111,7 +111,7 @@ namespace Ombi.Core.Senders
                     {
                         foreach (var ep in req.Episodes)
                         {
-                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == ep.Season.SeasonNumber);
+                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
                             if (sonarrEp != null)
                             {
                                 sonarrEp.monitored = true;

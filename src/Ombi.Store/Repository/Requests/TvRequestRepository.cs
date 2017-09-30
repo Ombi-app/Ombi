@@ -99,6 +99,7 @@ namespace Ombi.Store.Repository.Requests
         public async Task UpdateChild(ChildRequests request)
         {
             Db.Attach(request).State = EntityState.Modified;
+            Db.Attach(request.SeasonRequests).State = EntityState.Modified;
             
             await Db.SaveChangesAsync();
         }
