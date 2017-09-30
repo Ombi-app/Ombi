@@ -19,16 +19,16 @@ ____
 | AppVeyor | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/master?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/hgj8j6lcea7j0yhn/branch/DotNetCore?svg=true)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore) | 
 | Download |[![Download](http://i.imgur.com/odToka3.png)](https://github.com/tidusjar/Ombi/releases)            |      [![Download](http://i.imgur.com/odToka3.png)](https://ci.appveyor.com/project/tidusjar/requestplex/branch/DotNetCore/artifacts)       | 
 # Features
-Here some of the features Ombi V3 has:
+Here are some of the features Ombi V3 has:
 * Now working without crashes on Linux.
 * Lets users request Movies and TV Shows (whether it being the entire series, an entire season, or even single episodes.)
 * Easily manage your requests
 * User management system (supports plex.tv, Emby and local accounts)
 * A landing page that will give you the availability of your Plex/Emby server and also add custom notification text to inform your users of downtime.
-* Allow your users to get custom notifications!
+* Allows your users to get custom notifications!
 * Secure authentication so you don't have to worry about those script kiddies
-* We check to see if the request is already on Plex, if it's already on Plex then why you requesting it?!
-* It automatically updates the status of requests when they are available on Plex/Emby
+* Will show if the request is already on plex or even if it's already monitored.
+* Automatically updates the status of requests when they are available on Plex/Emby
 * Slick, responsive and mobile friendly UI
 * Ombi will automatically update itself :)
 * Very fast system.
@@ -53,7 +53,7 @@ Supported notifications:
 ### The difference between Version 3 and 2
 
 Over the last 7 months, we focused on the main functions on Ombi, a complete rewrite while making it better, faster and more stable.
-We have already done most of the work, but some features will still be missing in this first version.
+We have already done most of the work, but some features are still be missing in this first version.
 We are planning to bring back these features in Version 3 but for now you can find a list below with a comparison of features between v2 and v3.
 
 
@@ -95,7 +95,6 @@ Linux: Download the linux zip file, run chmod +x Ombi to make the Ombi file an e
 Get the following error? 
 libunwind.so.8: cannot open shared object file
 You may need to install libwind8.
-Pleas run the following command: 
 ```apt-get install libunwind8```
 
 # FAQ
