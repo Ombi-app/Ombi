@@ -3,7 +3,7 @@
 @inject ISettingsService<OmbiSettings> Settings
 @{
     var s = await Settings.GetSettingsAsync();
-    var baseUrl = s.BaseUrl;
+    var baseUrl = s?.BaseUrl ?? string.Empty;
 
     if (!baseUrl.EndsWith("/"))
     {
