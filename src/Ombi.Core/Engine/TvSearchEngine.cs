@@ -20,14 +20,17 @@ using Ombi.Store.Repository.Requests;
 using Ombi.Store.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Ombi.Core.Authentication;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class TvSearchEngine : BaseMediaEngine, ITvSearchEngine
     {
         public TvSearchEngine(IPrincipal identity, IRequestServiceMain service, ITvMazeApi tvMaze, IMapper mapper, ISettingsService<PlexSettings> plexSettings,
-            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um)
+            ISettingsService<EmbySettings> embySettings, IPlexContentRepository repo, IEmbyContentRepository embyRepo, ITraktApi trakt, IRuleEvaluator r, OmbiUserManager um,
+            IMemoryCache memCache)
             : base(identity, service, r, um)
         {
             TvMazeApi = tvMaze;
@@ -37,6 +40,7 @@ namespace Ombi.Core.Engine
             PlexContentRepo = repo;
             TraktApi = trakt;
             EmbyContentRepo = embyRepo;
+            MemCache = memCache;
         }
 
         private ITvMazeApi TvMazeApi { get; }
@@ -46,6 +50,7 @@ namespace Ombi.Core.Engine
         private IPlexContentRepository PlexContentRepo { get; }
         private IEmbyContentRepository EmbyContentRepo { get; }
         private ITraktApi TraktApi { get; }
+        private IMemoryCache MemCache { get; }
 
         public async Task<IEnumerable<SearchTvShowViewModel>> Search(string searchTerm)
         {
@@ -127,28 +132,44 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Popular()
         {
-            var result = await TraktApi.GetPopularShows();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.PopularTv, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await TraktApi.GetPopularShows();
+            });
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Anticipated()
         {
-            var result = await TraktApi.GetAnticipatedShows();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.AnticipatedTv, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await TraktApi.GetAnticipatedShows();
+            });
             var processed= await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> MostWatches()
         {
-            var result = await TraktApi.GetMostWatchesShows();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.MostWatchesTv, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await TraktApi.GetMostWatchesShows();
+            });
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }
 
         public async Task<IEnumerable<TreeNode<SearchTvShowViewModel>>> Trending()
         {
-            var result = await TraktApi.GetTrendingShows();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.TrendingTv, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await TraktApi.GetTrendingShows();
+            });
             var processed = await ProcessResults(result);
             return processed.Select(ParseIntoTreeNode).ToList();
         }

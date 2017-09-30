@@ -1,38 +1,39 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.TheMovieDb;
 using Ombi.Api.TheMovieDb.Models;
 using Ombi.Core.Models.Requests;
 using Ombi.Core.Models.Search;
-using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
-using Ombi.Store.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
 using StackExchange.Profiling;
-using Ombi.Store.Entities;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Caching.Memory;
+using Ombi.Api.Trakt;
 using Ombi.Core.Authentication;
+using Ombi.Helpers;
 
 namespace Ombi.Core.Engine
 {
     public class MovieSearchEngine : BaseMediaEngine, IMovieEngine
     {
         public MovieSearchEngine(IPrincipal identity, IRequestServiceMain service, IMovieDbApi movApi, IMapper mapper,
-            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um)
+            ILogger<MovieSearchEngine> logger, IRuleEvaluator r, OmbiUserManager um, IMemoryCache mem)
             : base(identity, service, r, um)
         {
             MovieApi = movApi;
             Mapper = mapper;
             Logger = logger;
+            MemCache = mem;
         }
 
         private IMovieDbApi MovieApi { get; }
         private IMapper Mapper { get; }
         private ILogger<MovieSearchEngine> Logger { get; }
+        private IMemoryCache MemCache { get; }
 
         /// <summary>
         /// Lookups the imdb information.
@@ -78,7 +79,11 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> PopularMovies()
         {
-            var result = await MovieApi.PopularMovies();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.PopularMovies, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await MovieApi.PopularMovies();
+            });
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -93,7 +98,11 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> TopRatedMovies()
         {
-            var result = await MovieApi.TopRated();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.TopRatedMovies, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await MovieApi.TopRated();
+            });
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -108,7 +117,11 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> UpcomingMovies()
         {
-            var result = await MovieApi.Upcoming();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.UpcomingMovies, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await MovieApi.Upcoming();
+            });
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
@@ -123,7 +136,11 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> NowPlayingMovies()
         {
-            var result = await MovieApi.NowPlaying();
+            var result = await MemCache.GetOrCreateAsync(CacheKeys.NowPlayingMovies, async entry =>
+            {
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(12);
+                return await MovieApi.NowPlaying();
+            });
             if (result != null)
             {
                 Logger.LogDebug("Search Result: {result}", result);
