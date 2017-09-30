@@ -2,6 +2,7 @@
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 
+import { PlatformLocation } from "@angular/common";
 import { AuthService } from "../auth/auth.service";
 import { ICustomizationSettings } from "../interfaces";
 import { NotificationService } from "../services";
@@ -21,14 +22,15 @@ export class LoginComponent implements OnInit {
     public customizationSettings: ICustomizationSettings;
     public background: any;
     public landingFlag: boolean;
+    public baseUrl: string;
 
     constructor(private authService: AuthService, private router: Router, private notify: NotificationService, private status: StatusService,
                 private fb: FormBuilder, private settingsService: SettingsService, private images: ImageService, private sanitizer: DomSanitizer,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute, private location: PlatformLocation) {
         this.route.params
-            .subscribe(params => {
+            .subscribe((params: any) => {
                 this.landingFlag = params.landing;
-                if (this.landingFlag === false) {
+                if (!this.landingFlag) {
                     this.settingsService.getLandingPage().subscribe(x => {
                         if (x.enabled && !this.landingFlag) {
                             this.router.navigate(["landingpage"]);
@@ -55,6 +57,10 @@ export class LoginComponent implements OnInit {
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%),url(" + x.url + ")");
         });
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
     }
 
     public onSubmit(form: FormGroup) {

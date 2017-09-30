@@ -1,4 +1,6 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
+
 import { IMediaServerStatus } from "../interfaces";
 import { ICustomizationSettings, ILandingPageSettings } from "../interfaces";
 import { LandingPageService } from "../services";
@@ -17,17 +19,23 @@ export class LandingPageComponent implements OnInit {
     public landingPageSettings: ILandingPageSettings;
     public background: any;
     public mediaServerStatus: IMediaServerStatus;
+    public baseUrl: string;
 
     constructor(private settingsService: SettingsService,
-                private images: ImageService, private sanitizer: DomSanitizer, private landingPageService: LandingPageService) { }
+                private images: ImageService, private sanitizer: DomSanitizer, private landingPageService: LandingPageService,
+                private location: PlatformLocation) { }
 
     public ngOnInit() {
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getLandingPage().subscribe(x => this.landingPageSettings = x);
         this.images.getRandomBackground().subscribe(x => {
             this.background = this.sanitizer.bypassSecurityTrustStyle("linear-gradient(-10deg, transparent 20%, rgba(0,0,0,0.7) 20.0%, rgba(0,0,0,0.7) 80.0%, transparent 80%), url(" + x.url + ")");
-
         });
+
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
 
         this.landingPageService.getServerStatus().subscribe(x => {
             this.mediaServerStatus = x;
