@@ -45,7 +45,10 @@ namespace Ombi.Api.Sonarr
 
             foreach (var s in results)
             {
-                s.seasons.ToList().RemoveAt(0);
+                if (s.seasons.Length > 0)
+                {
+                    s.seasons.ToList().RemoveAt(0);
+                }
             }
             return results;
         }
