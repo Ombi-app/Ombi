@@ -75,9 +75,10 @@ namespace Ombi.Schedule.Jobs.Plex
                             UserType = UserType.PlexUser,
                             UserName = plexUser.Username,
                             ProviderUserId = plexUser.Id,
-                            Email = plexUser.Email,
+                            Email = plexUser?.Email ?? string.Empty,
                             Alias = string.Empty
                         };
+                        _log.LogInformation("Creating Plex user {0}", newUser.UserName);
                         var result = await _userManager.CreateAsync(newUser);
                         if (!result.Succeeded)
                         {

@@ -20,7 +20,7 @@ namespace Ombi.Api.Discord
           
             request.AddJsonBody(body);
 
-            request.AddHeader("Content-Type", "application/json");
+            request.ApplicationJsonContentType();
 
             await Api.Request(request);
         }
