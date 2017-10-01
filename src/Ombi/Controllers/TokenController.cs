@@ -53,7 +53,13 @@ namespace Ombi.Controllers
 
             if (user == null)
             {
-                return new UnauthorizedResult();
+                // Could this be an email login?
+                user = await _userManager.FindByEmailAsync(model.Username);
+
+                if (user == null)
+                {
+                    return new UnauthorizedResult();
+                }
             }
 
             // Verify Password
