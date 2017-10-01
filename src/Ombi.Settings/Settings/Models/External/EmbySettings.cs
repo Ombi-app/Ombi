@@ -5,7 +5,7 @@ namespace Ombi.Core.Settings.Models.External
     public sealed class EmbySettings : Ombi.Settings.Settings.Models.Settings
     {
         public bool Enable { get; set; }
-        public List<EmbyServers> Servers { get; set; }
+        public List<EmbyServers> Servers { get; set; } = new List<EmbyServers>();
     }
 
     public class EmbyServers : ExternalSettings

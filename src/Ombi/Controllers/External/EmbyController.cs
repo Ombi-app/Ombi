@@ -72,7 +72,7 @@ namespace Ombi.Controllers.External
         {
             var vm = new List<UsersViewModel>();
             var s = await EmbySettings.GetSettingsAsync();
-            foreach (var server in s.Servers)
+            foreach (var server in s?.Servers ?? new List<EmbyServers>())
             {
                 var users = await EmbyApi.GetUsers(server.FullUri, server.ApiKey);
                 if (users != null && users.Any())
