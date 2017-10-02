@@ -78,45 +78,32 @@
                 <div *ngIf="isAdmin">
                     <div *ngIf="!request.approved">
                         <form>
-                            <input name="requestId" type="text" value="{{request.requestId}}" hidden="hidden" />
-                            <div *ngIf="request.hasQualities" class="btn-group btn-split">
-                                <button type="button" (click)="approve(request)" class="btn btn-sm btn-success-outline approve"><i class="fa fa-plus"></i> Approve</button>
-                                <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">Toggle Dropdown</span>
-                                </button>
-                                <!--<ul class="dropdown-menu">
-                                    {{#each qualities}}
-                                    <li><a href="#" class="approve-with-quality" id="{{id}}">{{name}}</a></li>
-                                    {{/each}}
-                                </ul>-->
-                            </div>
-
-
-                            <button *ngIf="!request.hasQualities" (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
+                            <button (click)="approve(request)" style="text-align: right" class="btn btn-sm btn-success-outline approve" type="submit"><i class="fa fa-plus"></i> Approve</button>
                         </form>
 
-
-
-                        <!--<form method="POST" action="@formAction/requests/changeRootFolder{{#if_eq type "tv"}}tv{{else}}movie{{/if_eq}}" id="changeFolder{{requestId}}">
-                            <input name="requestId" type="text" value="{{requestId}}" hidden="hidden"/>
-                            {{#if_eq hasRootFolders true}}
-                            <div class="btn-group btn-split">
-                                <button type="button" class="btn btn-sm btn-success-outline" id="changeRootFolderBtn{{requestId}}" custom-button="{{requestId}}">@*<i class="fa fa-plus"></i>*@ Change Root Folder</button>
-                                <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="caret"></span>
-                                    <span class="sr-only">@UI.Requests_ToggleDropdown</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    {{#each rootFolders}}
-                                    <li><a href="#" class="change-root-folder" id="{{id}}" requestId="{{requestId}}">{{path}}</a></li>
-                                    {{/each}}
-                                </ul>
-                            </div>
-                            {{/if_eq}}
-                        </form>-->
-
-
+                        <!--Radarr Root Folder-->
+                        <div *ngIf="radarrRootFolders" class="btn-group btn-split">
+                            <button type="button" class="btn btn-sm btn-success-outline"><i class="fa fa-plus"></i> Change Root Folder</button>
+                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li *ngFor="let folder of radarrRootFolders"><a href="#" (click)="selectRootFolder(request, folder)">{{folder.path}}</a></li>
+                            </ul>
+                        </div>
+                        
+                        <!--Radarr Quality Profiles -->
+                        <div *ngIf="radarrProfiles" class="btn-group btn-split">
+                            <button type="button" class="btn btn-sm btn-success-outline"><i class="fa fa-plus"></i> Change Quality Profile</button>
+                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li *ngFor="let profile of radarrProfiles"><a href="#" (click)="selectQualityProfile(request, profile)">{{profile.name}}</a></li>
+                            </ul>
+                        </div>
 
                         <div *ngIf="!request.denied">
                             <button type="button" (click)="deny(request)" class="btn btn-sm btn-danger-outline deny"><i class="fa fa-times"></i> Deny</button>

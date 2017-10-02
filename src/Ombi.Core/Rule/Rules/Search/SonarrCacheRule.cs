@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -8,9 +7,9 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
-    public class RadarrCacheRule : BaseSearchRule, IRules<SearchViewModel>
+    public class SonarrCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public RadarrCacheRule(IOmbiContext ctx)
+        public SonarrCacheRule(IOmbiContext ctx)
         {
             _ctx = ctx;
         }
@@ -19,10 +18,10 @@ namespace Ombi.Core.Rule.Rules.Search
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
-            if (obj.Type == RequestType.Movie)
+            if (obj.Type == RequestType.TvShow)
             {
                 // Check if it's in Radarr
-                var result = await _ctx.RadarrCache.FirstOrDefaultAsync(x => x.TheMovieDbId == obj.Id);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == obj.Id);
                 if (result != null)
                 {
                     obj.Approved =

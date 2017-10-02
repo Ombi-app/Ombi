@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,8 +29,11 @@ namespace Ombi.Schedule.Jobs.Radarr
         private ILogger<RadarrCacher> Logger { get; }
         private readonly IOmbiContext _ctx;
 
+        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+
         public async Task CacheContent()
         {
+            await SemaphoreSlim.WaitAsync();
             try
             {
                 var settings = RadarrSettings.GetSettings();
@@ -48,7 +52,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                             {
                                 if (m.tmdbId > 0)
                                 {
-                                    movieIds.Add(new RadarrCache { TheMovieDbId = m.tmdbId });
+                                    movieIds.Add(new RadarrCache {TheMovieDbId = m.tmdbId});
                                 }
                                 else
                                 {
@@ -69,6 +73,10 @@ namespace Ombi.Schedule.Jobs.Radarr
             catch (Exception)
             {
                 Logger.LogInformation(LoggingEvents.RadarrCacher, "Radarr is not setup, cannot cache episodes");
+            }
+            finally
+            {
+                SemaphoreSlim.Release();
             }
         }
 

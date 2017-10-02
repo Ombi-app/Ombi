@@ -19,4 +19,11 @@ export class RadarrService extends ServiceAuthHelpers {
     public getQualityProfiles(settings: IRadarrSettings): Observable<IRadarrProfile[]> {
         return this.http.post(`${this.url}/Profiles/`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
+
+    public getRootFoldersFromSettings(): Observable<IRadarrRootFolder[]> {
+        return this.http.get(`${this.url}/RootFolders/`, { headers: this.headers }).map(this.extractData);
+    }
+    public getQualityProfilesFromSettings(): Observable<IRadarrProfile[]> {
+        return this.http.get(`${this.url}/Profiles/`, { headers: this.headers }).map(this.extractData);
+    }
 }

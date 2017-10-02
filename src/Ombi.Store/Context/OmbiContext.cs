@@ -38,6 +38,7 @@ namespace Ombi.Store.Context
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
+        public DbSet<SonarrCache> SonarrCache { get; set; }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 

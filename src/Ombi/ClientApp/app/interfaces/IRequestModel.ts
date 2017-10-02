@@ -79,6 +79,8 @@ export interface IRequestGrid<T> {
 
 export interface IMovieRequests extends IFullBaseRequest {
     theMovieDbId: number;
+    rootPathOverride: number;
+    qualityOverride: number;
 }
 
 export interface IFullBaseRequest extends IBaseRequest {

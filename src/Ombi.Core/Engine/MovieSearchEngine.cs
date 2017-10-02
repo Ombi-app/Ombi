@@ -10,9 +10,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Ombi.Core.Rule.Interfaces;
-using StackExchange.Profiling;
 using Microsoft.Extensions.Caching.Memory;
-using Ombi.Api.Trakt;
 using Ombi.Core.Authentication;
 using Ombi.Helpers;
 
@@ -55,22 +53,14 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<SearchMovieViewModel>> Search(string search)
         {
-            using (MiniProfiler.Current.Step("Starting Movie Search Engine"))
-            using (MiniProfiler.Current.Step("Searching Movie"))
+            var result = await MovieApi.SearchMovie(search);
+
+            if (result != null)
             {
-                var result = await MovieApi.SearchMovie(search);
-
-                using (MiniProfiler.Current.Step("Fin API, Transforming"))
-                {
-                    if (result != null)
-                    {
-                        Logger.LogDebug("Search Result: {result}", result);
-                        return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
-                    }
-                }
-
-                return null;
+                Logger.LogDebug("Search Result: {result}", result);
+                return await TransformMovieResultsToResponse(result.Take(10)); // Take 10 to stop us overloading the API
             }
+            return null;
         }
 
         /// <summary>
@@ -174,7 +164,7 @@ namespace Ombi.Core.Engine
             // So set the ImdbId to viewMovie.Id and then set it back afterwards
             var oldId = viewMovie.Id;
             viewMovie.CustomId = viewMovie.ImdbId ?? string.Empty;
-            
+
             await RunSearchRules(viewMovie);
 
             viewMovie.Id = oldId;

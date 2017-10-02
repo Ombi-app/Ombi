@@ -16,5 +16,7 @@ namespace Ombi.Helpers
         public const string TopRatedMovies = nameof(TopRatedMovies);
         public const string UpcomingMovies = nameof(UpcomingMovies);
         public const string NowPlayingMovies = nameof(NowPlayingMovies);
+        public const string RadarrRootProfiles = nameof(RadarrRootProfiles);
+        public const string RadarrQualityProfiles = nameof(RadarrQualityProfiles);
     }
 }

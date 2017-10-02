@@ -138,19 +138,6 @@ namespace Ombi
                 });
             }
 
-            app.UseHangfireServer();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
-            {
-                Authorization = new[] { new HangfireAuthorizationFilter() }
-            });
-
-            // Setup the scheduler
-            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
-            jobSetup.Setup();
-            ctx.Seed();
-
-            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
-
             var ombiService =
                 app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
             var settings = ombiService.GetSettings();
@@ -158,6 +145,20 @@ namespace Ombi
             {
                 app.UsePathBase(settings.BaseUrl);
             }
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
+                new DashboardOptions
+                {
+                    Authorization = new[] {new HangfireAuthorizationFilter()}
+                });
+
+            // Setup the scheduler
+            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
+            jobSetup.Setup();
+            ctx.Seed();
+
+            var provider = new FileExtensionContentTypeProvider { Mappings = { [".map"] = "application/octet-stream" } };
 
             app.UseStaticFiles(new StaticFileOptions()
             {
