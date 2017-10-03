@@ -64,7 +64,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
                 Overview = movieInfo.Overview,
                 ImdbId = movieInfo.ImdbId,
-                PosterPath = movieInfo.PosterPath,
+                PosterPath = movieInfo.PosterPath.TrimStart('/'),
                 Title = movieInfo.Title,
                 ReleaseDate = !string.IsNullOrEmpty(movieInfo.ReleaseDate)
                     ? DateTime.Parse(movieInfo.ReleaseDate)
