@@ -343,6 +343,26 @@ namespace Ombi.Controllers
             return await Get<UpdateSettings>();
         }
 
+        /// <summary>
+        /// Gets the CouchPotatoSettings Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("CouchPotato")]
+        public async Task<CouchPotatoSettings> CouchPotatoSettings()
+        {
+            return await Get<CouchPotatoSettings>();
+        }
+
+        /// <summary>
+        /// Save the CouchPotatoSettings settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("CouchPotato")]
+        public async Task<bool> CouchPotatoSettings([FromBody]CouchPotatoSettings settings)
+        {
+            return await Save(settings);
+        }
 
         /// <summary>
         /// Saves the email notification settings.

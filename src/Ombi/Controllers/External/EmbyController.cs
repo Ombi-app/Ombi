@@ -13,9 +13,6 @@ using Ombi.Models.External;
 
 namespace Ombi.Controllers.External
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [Admin]
     [ApiV1]
     [Produces("application/json")]

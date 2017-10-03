@@ -816,3 +816,11 @@ a > h4 {
 a > h4:hover {
     text-decoration: underline;
 }
+
+.form-error {
+    border: 1px solid #d9534f;
+}
+
+.error-text {
+    color: #d9534f;
+}

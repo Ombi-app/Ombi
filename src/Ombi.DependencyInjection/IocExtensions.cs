@@ -31,6 +31,7 @@ using Ombi.Store.Repository;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
+using Ombi.Api.CouchPotato;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
@@ -95,6 +96,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
+            services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services)

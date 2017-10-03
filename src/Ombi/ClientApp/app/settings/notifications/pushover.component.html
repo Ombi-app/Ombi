@@ -13,14 +13,12 @@
                     </div>
                 </div>
 
-                <div *ngIf="form.invalid && form.dirty" class="alert alert-danger">
-                    <div *ngIf="form.get('accessToken').hasError('required')">The Access Token is required</div>
-                </div>
+      
                 <div class="form-group">
                     <label for="accessToken" class="control-label">Access Token</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
-                    </div>
+                   
+                        <input type="text" class="form-control form-control-custom " id="accessToken" name="accessToken" [ngClass]="{'form-error': form.get('accessToken').hasError('required')}" formControlName="accessToken" pTooltip="Enter your API Key from Pushover.">
+                    <small *ngIf="form.get('accessToken').hasError('required')" class="error-text">The Access Token is required</small>
                 </div>
 
                 <div class="form-group">

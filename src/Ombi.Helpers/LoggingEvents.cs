@@ -8,6 +8,7 @@ namespace Ombi.Helpers
 
         public static EventId Api => new EventId(1000);
         public static EventId RadarrApi => new EventId(1001);
+        public static EventId CouchPotatoApi => new EventId(1002);
         
         public static EventId Cacher => new EventId(2000);
         public static EventId RadarrCacher => new EventId(2001);
