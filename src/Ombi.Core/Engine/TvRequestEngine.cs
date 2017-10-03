@@ -11,6 +11,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Rule;
@@ -24,7 +25,7 @@ namespace Ombi.Core.Engine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
             INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule, UserManager<OmbiUser> manager,
+            IRuleEvaluator rule, OmbiUserManager manager,
             ITvSender sender, IAuditRepository audit) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
@@ -127,13 +128,21 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<TvRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
+            var allRequests = await TvRepository.Get()
+                .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x => x.Episodes)
+                .Skip(position).Take(count).ToListAsync();
             return allRequests;
         }
 
         public async Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position)
         {
-            var allRequests = await TvRepository.Get().Skip(position).Take(count).ToListAsync();
+            var allRequests = await TvRepository.Get()
+                .Include(x => x.ChildRequests)
+                    .ThenInclude(x => x.SeasonRequests)
+                    .ThenInclude(x=>x.Episodes)
+                .Skip(position).Take(count).ToListAsync();
             return ParseIntoTreeNode(allRequests);
         }
 
@@ -145,7 +154,7 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId)
         {
-            return await TvRepository.GetChild().Where(x => x.ParentRequestId == tvId).ToListAsync();
+            return await TvRepository.GetChild().Include(x => x.SeasonRequests).Where(x => x.ParentRequestId == tvId).ToListAsync();
         }
 
         public async Task<IEnumerable<TvRequests>> SearchTvRequest(string search)

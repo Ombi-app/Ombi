@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
@@ -20,6 +23,28 @@ namespace Ombi.Core.Rule.Rules.Search
             if (item != null)
             {
                 obj.Available = true;
+
+                if (obj.Type == RequestType.TvShow)
+                {
+                    var searchResult = (SearchTvShowViewModel)obj;
+                    // Let's go through the episodes now
+                    if (searchResult.SeasonRequests.Any())
+                    {
+                        var allEpisodes = EmbyContentRepository.GetAllEpisodes().Include(x => x.Series);
+                        foreach (var season in searchResult.SeasonRequests)
+                        {
+                            foreach (var episode in season.Episodes)
+                            {
+                                var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
+                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber && item.ProviderId.ToString() == x.Series.ProviderId);
+                                if (epExists != null)
+                                {
+                                    episode.Available = true;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             return Success();
         }

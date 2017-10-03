@@ -8,12 +8,15 @@ namespace Ombi.Helpers
 
         public static EventId Api => new EventId(1000);
         public static EventId RadarrApi => new EventId(1001);
+        public static EventId CouchPotatoApi => new EventId(1002);
         
         public static EventId Cacher => new EventId(2000);
         public static EventId RadarrCacher => new EventId(2001);
-        public static EventId PlexEpisodeCacher => new EventId(2001);
-        public static EventId EmbyContentCacher => new EventId(2002);
-        public static EventId PlexUserImporter => new EventId(2003);
+        public static EventId PlexEpisodeCacher => new EventId(2002);
+        public static EventId EmbyContentCacher => new EventId(2003);
+        public static EventId PlexUserImporter => new EventId(2004);
+        public static EventId EmbyUserImporter => new EventId(2005);
+        public static EventId SonarrCacher => new EventId(2006);
         
         public static EventId MovieSender => new EventId(3000);
 

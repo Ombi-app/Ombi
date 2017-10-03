@@ -10,7 +10,7 @@ namespace Ombi.Settings.Settings.Models.Notifications
         public string Username { get; set; }
 
         [JsonIgnore]
-        public string WebookId => SplitWebUrl(4);
+        public string WebHookId => SplitWebUrl(4);
 
         [JsonIgnore]
         public string Token => SplitWebUrl(5);

@@ -1,6 +1,7 @@
 ﻿using Ombi.Core.Models.Requests;
 using Ombi.Store.Repository.Requests;
 using System.Collections.Generic;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
 {
@@ -54,5 +55,7 @@ namespace Ombi.Core.Models.Search
         /// This is where we have EVERY Episode for that series
         /// </summary>
         public bool FullyAvailable { get; set; }
+
+        public override RequestType Type => RequestType.TvShow;
     }
 }

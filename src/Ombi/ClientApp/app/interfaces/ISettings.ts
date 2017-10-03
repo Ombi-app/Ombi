@@ -119,3 +119,11 @@ export interface IAbout {
     processArchitecture: string;
     applicationBasePath: string;
 }
+
+export interface ICouchPotatoSettings extends IExternalSettings {
+    enabled: boolean;
+    apiKey: string;
+    defaultProfileId: string;
+    username: string;
+    password: string;
+}

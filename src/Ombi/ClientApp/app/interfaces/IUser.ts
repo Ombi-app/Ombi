@@ -8,7 +8,8 @@ export interface IUser {
     emailAddress: string;
     password: string;
     userType: UserType;
-    isSetup: boolean;
+    lastLoggedIn: Date;
+    hasLoggedIn: boolean;
     // FOR UI
     checked: boolean;
 }

@@ -1,4 +1,5 @@
-﻿import { Injectable } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { Headers, Http } from "@angular/http";
 import { JwtHelper, tokenNotExpired } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
@@ -10,8 +11,8 @@ import { ILocalUser, IUserLogin } from "./IUserLogin";
 export class AuthService extends ServiceHelpers {
     public jwtHelper: JwtHelper = new JwtHelper();
 
-    constructor(http: Http) {
-        super(http, "/api/v1/token");
+    constructor(http: Http, public platformLocation: PlatformLocation) {
+        super(http, "/api/v1/token", platformLocation);
     }
 
     public login(login: IUserLogin): Observable<any> {

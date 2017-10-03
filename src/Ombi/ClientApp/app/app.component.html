@@ -28,12 +28,19 @@
                 <li id="UserManagement" [routerLinkActive]="['active']"><a  [routerLink]="['/usermanagement']"><i class="fa fa-user"></i> User Management</a></li>
             </ul>
             <ul *ngIf="hasRole('Admin') || hasRole('PowerUser')" class="nav navbar-nav">
-                <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="This is how I convince my wife to let me spend my spare time on Ombi ;)"><i class="fa fa-heart" style="color:red"></i> Donate!</a></li>
+                <li><a href="https://www.paypal.me/PlexRequestsNet" target="_blank" pTooltip="This is how I convince my wife to let me spend my spare time developing Ombi ;)"><i class="fa fa-heart" style="color:red"></i> Donate!</a></li>
             </ul>
 
             
             <ul class="nav navbar-nav navbar-right">
-                    <li *ngIf="hasRole('Admin') " [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']"><i class="fa fa-cog"></i> Settings</a></li>
+                <li *ngIf="hasRole('Admin') " [routerLinkActive]="['active']"><a [routerLink]="['/Settings/About']">
+                    
+                    <i *ngIf="!updateAvailable" class="fa fa-cog"></i>
+                    <i *ngIf="updateAvailable" class="fa fa-warning" style="color:#f57f17" pTooltip="Update Available!" tooltipPosition="left" [tooltipZIndex]="999999"></i>
+                    
+                    Settings
+
+                </a></li>
                 <li  [routerLinkActive]="['active']" class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-user"></i> Welcome {{user.name}} <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,10 @@ namespace Ombi.Store.Context
         public OmbiContext()
         {
             if (_created) return;
-
+            
             _created = true;
             Database.Migrate();
             
-            // Add the notifcation templates
-        
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
@@ -38,12 +37,14 @@ namespace Ombi.Store.Context
 
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
+        public DbSet<SonarrCache> SonarrCache { get; set; }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Ombi.db");
+            var i = StoragePathSingleton.Instance;
+            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath,"Ombi.db")}");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -100,13 +101,13 @@ namespace Ombi.Store.Context
 
             foreach (var agent in allAgents)
             {
-                if (templates.Any(x => x.Agent == agent))
-                {
-                    // We have all the templates for this notification agent
-                    continue;
-                }
                 foreach (var notificationType in allTypes)
                 {
+                    if (templates.Any(x => x.Agent == agent && x.NotificationType == notificationType))
+                    {
+                        // We already have this
+                        continue;
+                    }
                     NotificationTemplates notificationToAdd;
                     switch (notificationType)
                     {

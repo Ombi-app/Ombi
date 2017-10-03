@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
 {
@@ -22,5 +23,8 @@ namespace Ombi.Core.Models.Search
         public string Trailer { get; set; }
         public string Homepage { get; set; }
         public string ImdbId { get; set; }
+        public int RootPathOverride { get; set; }
+        public int QualityOverride { get; set; }
+        public override RequestType Type => RequestType.Movie;
     }
 }

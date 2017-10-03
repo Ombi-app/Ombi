@@ -5,9 +5,9 @@ import "rxjs/add/operator/map";
 import { Subject } from "rxjs/Subject";
 
 import { AuthService } from "../auth/auth.service";
-import { NotificationService, RequestService } from "../services";
+import { NotificationService, RadarrService, RequestService } from "../services";
 
-import { IMovieRequests } from "../interfaces";
+import { IMovieRequests, IRadarrProfile, IRadarrRootFolder } from "../interfaces";
 
 @Component({
     selector: "movie-requests",
@@ -21,12 +21,16 @@ export class MovieRequestsComponent implements OnInit {
 
     public isAdmin: boolean;
 
+    public radarrProfiles: IRadarrProfile[];
+    public radarrRootFolders: IRadarrRootFolder[];
+
     private currentlyLoaded: number;
     private amountToLoad: number;
 
     constructor(private requestService: RequestService,
                 private auth: AuthService,
-                private notificationService: NotificationService) {
+                private notificationService: NotificationService,
+                private radarrService: RadarrService) {
         this.searchChanged
             .debounceTime(600) // Wait Xms after the last event before emitting last event
             .distinctUntilChanged() // only emit if value is different from previous value
@@ -42,10 +46,13 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     public ngOnInit() {
+        this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrProfiles = x);
+        this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
+
         this.amountToLoad = 5;
         this.currentlyLoaded = 5;
         this.loadInit();
-        this.isAdmin = this.auth.hasRole("admin");
+        this.isAdmin = this.auth.hasRole("admin") || this.auth.hasRole("poweruser");
     }
 
     public loadMore() {
@@ -78,6 +85,14 @@ export class MovieRequestsComponent implements OnInit {
         request.approved = false;
         request.denied = true;
         this.updateRequest(request);
+    }
+
+    public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder) {
+        searchResult.rootPathOverride = rootFolderSelected.id;
+    }
+
+    public selectQualityProfile(searchResult: IMovieRequests, profileSelected: IRadarrProfile) {
+        searchResult.qualityOverride = profileSelected.id;
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {

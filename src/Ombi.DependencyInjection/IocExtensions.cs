@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Principal;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -31,6 +33,7 @@ using Ombi.Store.Repository;
 using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
+using Ombi.Api.CouchPotato;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
@@ -42,6 +45,7 @@ using Ombi.Core.Senders;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
+using Ombi.Schedule.Jobs.Sonarr;
 using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
@@ -94,12 +98,12 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IFanartTvApi, FanartTvApi>();
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
+            services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
         }
 
-        public static void RegisterStore(this IServiceCollection services)
-        {
+        public static void RegisterStore(this IServiceCollection services) { 
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
-
+            
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();
@@ -142,8 +146,10 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexAvailabilityChecker, PlexAvailabilityChecker>();
             services.AddTransient<IJobSetup, JobSetup>();
             services.AddTransient<IRadarrCacher, RadarrCacher>();
+            services.AddTransient<ISonarrCacher, SonarrCacher>();
             services.AddTransient<IOmbiAutomaticUpdater, OmbiAutomaticUpdater>();
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
+            services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();
             services.AddTransient<IWelcomeEmail, WelcomeEmail>();
         }
     }

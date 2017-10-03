@@ -15,8 +15,8 @@
         public float Popularity { get; set; }
         public string PosterPath { get; set; }
         public string ReleaseDate { get; set; }
-        public int Revenue { get; set; }
-        public int Runtime { get; set; }
+        public float Revenue { get; set; }
+        public float Runtime { get; set; }
         public string Status { get; set; }
         public string Tagline { get; set; }
         public string Title { get; set; }

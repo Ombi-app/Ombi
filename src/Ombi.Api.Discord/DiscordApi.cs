@@ -11,16 +11,16 @@ namespace Ombi.Api.Discord
             Api = api;
         }
         
-        private string Endpoint => "https://discordapp.com/api/";
+        private const string BaseUrl = "https://discordapp.com/api/";
         private IApi Api { get; }
         
         public async Task SendMessage(DiscordWebhookBody body, string webhookId, string webhookToken)
         {
-            var request = new Request(Endpoint, $"webhooks/{webhookId}/{webhookToken}", HttpMethod.Post);
+            var request = new Request($"webhooks/{webhookId}/{webhookToken}", BaseUrl, HttpMethod.Post);
           
             request.AddJsonBody(body);
 
-            request.AddHeader("Content-Type", "application/json");
+            request.ApplicationJsonContentType();
 
             await Api.Request(request);
         }

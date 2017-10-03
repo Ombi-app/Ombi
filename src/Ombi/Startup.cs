@@ -3,21 +3,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Dashboard;
 using Hangfire.MemoryStorage;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
@@ -25,28 +21,23 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.IdentityModel.Tokens;
-using Ombi.Config;
-using Ombi.Core.Claims;
+using Ombi.Core.Authentication;
 using Ombi.Core.Settings;
 using Ombi.DependencyInjection;
 using Ombi.Helpers;
 using Ombi.Mapping;
-using Ombi.Models.Identity;
 using Ombi.Schedule;
 using Ombi.Settings.Settings.Models;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
 using Serilog;
 using Serilog.Events;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace Ombi
 {
     public class Startup
     {
+        public static StoragePathSingleton StoragePath => StoragePathSingleton.Instance;
         public Startup(IHostingEnvironment env)
         {
             Console.WriteLine(env.ContentRootPath);
@@ -59,11 +50,24 @@ namespace Ombi
 
             //if (env.IsDevelopment())
             //{
-            Log.Logger = new LoggerConfiguration()
-                .MinimumLevel.Debug()
-                .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
-                .CreateLogger();
+            Serilog.ILogger config;
+            if (string.IsNullOrEmpty(StoragePath.StoragePath))
+            {
+                config = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
+                    .CreateLogger();
+            }
+            else
+            {
+                config = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.SQLite(Path.Combine(StoragePath.StoragePath, "Ombi.db"), "Logs", LogEventLevel.Debug)
+                    .CreateLogger();
+            }
+            Log.Logger = config;
+
+
             //}
             //if (env.IsProduction())
             //{
@@ -80,12 +84,14 @@ namespace Ombi
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+
             // Add framework services.
             services.AddDbContext<OmbiContext>();
-
+            
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddUserManager<OmbiUserManager>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -97,8 +103,7 @@ namespace Ombi
                 options.User.AllowedUserNameCharacters =
                     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+";
             });
-
-            services.AddDataProtection();
+            
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -123,6 +128,7 @@ namespace Ombi
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
                 x.UseConsole();
             });
+
 
             // Build the intermediate service provider
             return services.BuildServiceProvider();
@@ -149,14 +155,23 @@ namespace Ombi
                 });
             }
 
-            app.UseHangfireServer();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            var ombiService =
+                app.ApplicationServices.GetService<ISettingsService<OmbiSettings>>();
+            var settings = ombiService.GetSettings();
+            if (settings.BaseUrl.HasValue())
             {
-                Authorization = new[] { new HangfireAuthorizationFilter() }
-            });
+                app.UsePathBase(settings.BaseUrl);
+            }
+
+            app.UseHangfireServer();
+            app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
+                new DashboardOptions
+                {
+                    Authorization = new[] {new HangfireAuthorizationFilter()}
+                });
 
             // Setup the scheduler
-            var jobSetup = (IJobSetup)app.ApplicationServices.GetService(typeof(IJobSetup));
+            var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
             jobSetup.Setup();
             ctx.Seed();
 
@@ -164,7 +179,7 @@ namespace Ombi
 
             app.UseStaticFiles(new StaticFileOptions()
             {
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
             });
 
             app.UseAuthentication();

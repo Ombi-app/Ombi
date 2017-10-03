@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using Ombi.Store.Entities;
 
 namespace Ombi.Core.Models.Search
 {
-    public class SearchViewModel
+    public abstract class SearchViewModel
     {
         public int Id { get; set; }
         public bool Approved { get; set; }
@@ -10,6 +11,7 @@ namespace Ombi.Core.Models.Search
         public bool Available { get; set; }
         public string PlexUrl { get; set; }
         public string Quality { get; set; }
+        public abstract RequestType Type { get; }
 
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿import { Injectable } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 import { AuthHttp } from "angular2-jwt";
 import { Observable } from "rxjs/Rx";
@@ -6,6 +7,7 @@ import { Observable } from "rxjs/Rx";
 import {
     IAbout,
     IAuthenticationSettings,
+    ICouchPotatoSettings,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
@@ -27,8 +29,9 @@ import { ServiceAuthHelpers } from "./service.helpers";
 
 @Injectable()
 export class SettingsService extends ServiceAuthHelpers {
-    constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http) {
-        super(httpAuth, "/api/v1/Settings");
+    constructor(public httpAuth: AuthHttp, private nonAuthHttp: Http,
+                public platformLocation: PlatformLocation) {
+        super(httpAuth, "/api/v1/Settings", platformLocation);
     }
 
     public about(): Observable<IAbout> {
@@ -189,6 +192,16 @@ export class SettingsService extends ServiceAuthHelpers {
     }
 
     public saveUserManagementSettings(settings: IUserManagementSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getCouchPotatoSettings(): Observable<ICouchPotatoSettings> {
+        return this.httpAuth.get(`${this.url}/UserManagement`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveCouchPotatoSettings(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);

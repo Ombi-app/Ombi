@@ -14,7 +14,7 @@
                                 <span>Version</span>
                             </td>
                             <td>
-                                <span>{{about.version}}</span>
+                                <span>{{about.version}} <a [routerLink]="['/Settings/Update']" *ngIf="newUpdate" style="color:#df691a"><b>(New Update Available)</b></a></span>
                             </td>
                         </tr>
                         <tr>

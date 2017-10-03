@@ -9,13 +9,14 @@ using Ombi.Store.Entities;
 using CommandLine;
 using CommandLine.Text;
 using Microsoft.AspNetCore;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Helpers;
 
 namespace Ombi
 {
     public class Program
     {
         private static string UrlArgs { get; set; }
-        private static string WebRoot { get; set; }
         public static void Main(string[] args)
         {
             Console.Title = "Ombi";
@@ -26,19 +27,16 @@ namespace Ombi
                 .WithParsed(o =>
                 {
                     host = o.Host;
-                    WebRoot = Path.Combine(o.WebRoot, "wwwroot");
                     storagePath = o.StoragePath;
                 });
 
             Console.WriteLine(HelpOutput(result));
 
-            if (string.IsNullOrEmpty(WebRoot))
-            {
-                WebRoot = Path.Combine(WebHost.CreateDefaultBuilder().GetSetting("contentRoot"), "wwwroot");
-            }
             UrlArgs = host;
 
             var urlValue = string.Empty;
+            var instance = StoragePathSingleton.Instance;
+            instance.StoragePath = storagePath ?? string.Empty;
             using (var ctx = new OmbiContext())
             {
                 var config = ctx.ApplicationConfigurations.ToList();
@@ -73,7 +71,6 @@ namespace Ombi
                 .UseStartup<Startup>()
                 .UseUrls(UrlArgs)
                 .PreferHostingUrls(true)
-                .UseWebRoot(WebRoot)
                 .Build();
 
         private static string HelpOutput(ParserResult<Options> args)
@@ -100,11 +97,6 @@ namespace Ombi
 
         [Option('s', "storage", Required = false, HelpText = "Storage path, where we save the logs and database")]
         public string StoragePath { get; set; }
-
-        [Option('w', "webroot", Required = false,
-            HelpText = "(Root Path for Reverse Proxies) If not specified, the default is \"(Working Directory)\", if the path exists. If the path doesn\'t exist, then a no-op file provider is used."
-            ,Default = "")]
-        public string WebRoot { get; set; }
-        
+       
     }
 }

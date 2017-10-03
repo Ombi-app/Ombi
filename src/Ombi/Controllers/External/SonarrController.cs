@@ -7,6 +7,7 @@ using Ombi.Api.Sonarr.Models;
 using Ombi.Attributes;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
+using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Controllers.External
 {

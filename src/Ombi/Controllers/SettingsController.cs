@@ -7,6 +7,7 @@ using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.PlatformAbstractions;
 using Ombi.Api.Emby;
 using Ombi.Attributes;
@@ -52,7 +53,8 @@ namespace Ombi.Controllers
             IEmbyApi embyApi,
             IPlexContentCacher cacher,
             IEmbyContentCacher embyCacher,
-            IRadarrCacher radarrCacher)
+            IRadarrCacher radarrCacher,
+            IMemoryCache memCache)
         {
             SettingsResolver = resolver;
             Mapper = mapper;
@@ -61,6 +63,7 @@ namespace Ombi.Controllers
             _plexContentCacher = cacher;
             _embyContentCacher = embyCacher;
             _radarrCacher = radarrCacher;
+            _cache = memCache;
         }
 
         private ISettingsResolver SettingsResolver { get; }
@@ -70,6 +73,7 @@ namespace Ombi.Controllers
         private readonly IPlexContentCacher _plexContentCacher;
         private readonly IEmbyContentCacher _embyContentCacher;
         private readonly IRadarrCacher _radarrCacher;
+        private readonly IMemoryCache _cache;
 
         /// <summary>
         /// Gets the Ombi settings.
@@ -290,6 +294,8 @@ namespace Ombi.Controllers
             var result = await Save(settings);
             if (result)
             {
+                _cache.Remove(CacheKeys.RadarrRootProfiles);
+                _cache.Remove(CacheKeys.RadarrQualityProfiles);
                 BackgroundJob.Enqueue(() => _radarrCacher.CacheContent());
             }
             return result;
@@ -337,6 +343,26 @@ namespace Ombi.Controllers
             return await Get<UpdateSettings>();
         }
 
+        /// <summary>
+        /// Gets the CouchPotatoSettings Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("CouchPotato")]
+        public async Task<CouchPotatoSettings> CouchPotatoSettings()
+        {
+            return await Get<CouchPotatoSettings>();
+        }
+
+        /// <summary>
+        /// Save the CouchPotatoSettings settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("CouchPotato")]
+        public async Task<bool> CouchPotatoSettings([FromBody]CouchPotatoSettings settings)
+        {
+            return await Save(settings);
+        }
 
         /// <summary>
         /// Saves the email notification settings.

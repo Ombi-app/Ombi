@@ -8,19 +8,6 @@
             <p-inputSwitch id="customInputSwitch" [(ngModel)]="advanced"></p-inputSwitch>
         </div>
         <form novalidate [formGroup]="form" (ngSubmit)="onSubmit(form)" style="padding-top:5%;">
-            <div *ngIf="form.invalid" class="alert alert-danger">
-                <div *ngIf="form.dirty">
-                    <div *ngIf="form.get('ip').hasError('required')">The IP/Hostname is required</div>
-                    <div *ngIf="form.get('port').hasError('required')">The Port is required</div>
-                    <div *ngIf="form.get('apiKey').hasError('required')">The Api Key is required</div>
-                </div>
-                <div>
-                    <div *ngIf="form.get('defaultQualityProfile').hasError('required')">A Default Quality Profile is required</div>
-                    <div *ngIf="form.get('defaultRootPath').hasError('required')">A Default Root Path is required</div>
-                    <div *ngIf="form.get('minimumAvailability').hasError('required')">A Default Minimum Availability is required</div>
-                </div>
-            </div>
-
             <div class="col-md-6">
                 <div class="form-group">
                     <div class="checkbox">
@@ -33,25 +20,24 @@
 
                 <div class="form-group">
                     <label for="Ip" class="control-label">Hostname or IP</label>
-                    <div class="">
-                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" formControlName="ip">
-                    </div>
+
+                        <input type="text" class="form-control form-control-custom " id="Ip" name="Ip" placeholder="localhost" formControlName="ip"  [ngClass]="{'form-error': form.get('ip').hasError('required')}">
+                        <small *ngIf="form.get('ip').hasError('required')" class="error-text">The IP/Hostname is required</small>
                 </div>
 
                 <div class="form-group">
                     <label for="portNumber" class="control-label">Port</label>
 
-                    <div class="">
-                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number">
-                    </div>
+                        <input type="text" class="form-control form-control-custom " formControlName="port" id="portNumber" name="Port" placeholder="Port Number"  [ngClass]="{'form-error': form.get('port').hasError('required')}">
+                        <small *ngIf="form.get('port').hasError('required')" class="error-text">The Port is required</small>
                 </div>
 
 
                 <div class="form-group">
                     <label for="ApiKey" class="control-label">API Key</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="ApiKey" name="ApiKey" formControlName="apiKey">
-                    </div>
+                    
+                        <input type="text" class="form-control form-control-custom "  [ngClass]="{'form-error': form.get('apiKey').hasError('required')}" id="ApiKey" name="ApiKey" formControlName="apiKey">
+                        <small *ngIf="form.get('apiKey').hasError('required')" class="error-text">The API Key is required</small>
                 </div>
                 <div class="form-group">
                     <div class="checkbox">
@@ -76,10 +62,11 @@
                 <div class="form-group">
                     <label for="select" class="control-label">Quality Profiles</label>
                     <div id="profiles">
-                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select">
+                        <select formControlName="defaultQualityProfile" class="form-control form-control-custom" id="select"  [ngClass]="{'form-error': form.get('defaultQualityProfile').hasError('required')}">
                             <option *ngFor="let quality of qualities" value="{{quality.id}}">{{quality.name}}</option>
                         </select>
                     </div>
+                    <small *ngIf="form.get('defaultQualityProfile').hasError('required')" class="error-text">A Default Quality Profile is required</small>
                 </div>
 
                 <div class="form-group">
@@ -92,19 +79,22 @@
                 <div class="form-group">
                     <label for="rootFolders" class="control-label">Default Root Folders</label>
                     <div id="rootFolders">
-                        <select formControlName="defaultRootPath" class="form-control form-control-custom">
+                        <select formControlName="defaultRootPath" class="form-control form-control-custom"  [ngClass]="{'form-error': form.get('defaultRootPath').hasError('required')}">
                             <option *ngFor="let folder of rootFolders" value="{{folder.path}}">{{folder.path}}</option>
                         </select>
-                    </div>
+                    </div>                    
+                    <small *ngIf="form.get('defaultRootPath').hasError('required')" class="error-text">A Default Root Path is required</small>
                 </div>
 
                 <div class="form-group">
                     <label for="rootFolders" class="control-label">Default Minimum Availability</label>
                     <div id="rootFolders">
-                        <select formControlName="minimumAvailability" class="form-control form-control-custom">
+                        <select formControlName="minimumAvailability" class="form-control form-control-custom" [ngClass]="{'form-error': form.get('minimumAvailability').hasError('required')}">
                             <option *ngFor="let min of minimumAvailabilityOptions" value="{{min.value}}">{{min.name}}</option>
                         </select>
                     </div>
+                    
+                    <small *ngIf="form.get('minimumAvailability').hasError('required')" class="error-text">A Default Minimum Availability is required</small>
                 </div>
 
                 <div class="form-group" *ngIf="advanced" style="color:#ff761b">

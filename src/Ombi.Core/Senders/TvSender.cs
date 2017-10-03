@@ -8,6 +8,7 @@ using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Senders
@@ -111,7 +112,7 @@ namespace Ombi.Core.Senders
                     {
                         foreach (var ep in req.Episodes)
                         {
-                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == ep.Season.SeasonNumber);
+                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
                             if (sonarrEp != null)
                             {
                                 sonarrEp.monitored = true;

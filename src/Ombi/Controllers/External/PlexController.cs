@@ -50,17 +50,23 @@ namespace Ombi.Controllers.External
             {
                 var server = await PlexApi.GetServer(result.user.authentication_token);
                 var servers = server.Server.FirstOrDefault();
+                if (servers == null)
+                {
+                    _log.LogWarning("Looks like we can't find any Plex Servers");
+                }
 
                 settings.Enable = true;
-                settings.Servers = new List<PlexServers> { new PlexServers{
-                        PlexAuthToken = result.user.authentication_token,
-                        Id = new Random().Next(),
-                        Ip = servers.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
-                        MachineIdentifier = servers.MachineIdentifier,
-                        Port = int.Parse(servers.Port),
-                        Ssl = servers.Scheme != "http",
-                        Name = $"Server 1",
-                }
+                settings.Servers = new List<PlexServers> {
+                    new PlexServers
+                    {
+                            PlexAuthToken = result.user.authentication_token,
+                            Id = new Random().Next(),
+                            Ip = servers?.LocalAddresses?.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries)?.FirstOrDefault() ?? string.Empty,
+                            MachineIdentifier = servers?.MachineIdentifier ?? string.Empty,
+                            Port = int.Parse(servers?.Port ?? "0"),
+                            Ssl = (servers?.Scheme ?? "http") != "http",
+                            Name = "Server 1",
+                    }
                 };
                 //var serverNumber = 0;
                 //foreach (var s in servers)
@@ -148,16 +154,16 @@ namespace Ombi.Controllers.External
         /// </summary>
         /// <returns></returns>
         [HttpGet("friends")]
-        public async Task<IEnumerable<PlexUsersViewModel>> GetFriends()
+        public async Task<IEnumerable<UsersViewModel>> GetFriends()
         {
-            var vm = new List<PlexUsersViewModel>();
+            var vm = new List<UsersViewModel>();
             var s = await PlexSettings.GetSettingsAsync();
             foreach (var server in s.Servers)
             {
                 var users = await PlexApi.GetUsers(server.PlexAuthToken);
                 if (users?.User != null && users.User.Any())
                 {
-                    vm.AddRange(users.User.Select(u => new PlexUsersViewModel
+                    vm.AddRange(users.User.Select(u => new UsersViewModel
                     {
                         Username = u.Username,
                         Id = u.Id

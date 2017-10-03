@@ -8,7 +8,7 @@
                     <img [src]="customizationSettings.logo" style="width:100%"/>
                 </div>
                 <div *ngIf="!customizationSettings.logo">
-                    <img src="/images/logo.png" style="width:100%" />
+                    <img src="{{baseUrl}}/images/logo.png" style="width:100%" />
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 </div>
             </div>
             <div class="col-md-3 col-md-push-4 vcenter">
-                <button [routerLink]="['/login', 'true']" class="btn btn-lg btn-success-outline">Contine</button>
+                <button [routerLink]="['/login', 'true']" class="btn btn-lg btn-success-outline">Continue</button>
             </div>
         </div>
     </div>

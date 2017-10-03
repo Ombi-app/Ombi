@@ -13,15 +13,11 @@
                     </div>
                 </div>
 
-                <div *ngIf="form.invalid && form.dirty" class="alert alert-danger">
-                    <div *ngIf="form.get('webhookUrl').hasError('required')">The Webhook Url is required</div>
-                </div>
 
                 <div class="form-group">
                     <label for="webhookUrl" class="control-label">Webhook Url</label>
-                    <div>
-                        <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" formControlName="webhookUrl">
-                    </div>
+                        <input type="text" class="form-control form-control-custom " id="webhookUrl" name="webhookUrl" formControlName="webhookUrl"  [ngClass]="{'form-error': form.get('webhookUrl').hasError('required')}">
+                        <small *ngIf="form.get('webhookUrl').hasError('required')" class="error-text">The Webhook Url is required</small>
                 </div>
 
                 <div class="form-group">

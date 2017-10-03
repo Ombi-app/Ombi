@@ -27,7 +27,8 @@ export class UserManagementAddComponent implements OnInit {
             username: "",
             userType: UserType.LocalUser,
             checked:false,
-            isSetup:false,
+            hasLoggedIn: false,
+            lastLoggedIn:new Date(),
         };
     }
 

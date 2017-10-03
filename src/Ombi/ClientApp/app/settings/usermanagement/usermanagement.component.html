@@ -1,4 +1,6 @@
 ﻿<settings-menu></settings-menu>
+
+<wiki [url]="'https://github.com/tidusjar/Ombi/wiki/User-Management-Settings'"></wiki>
 <fieldset>
     <legend>User Management Settings</legend>
 
@@ -14,7 +16,7 @@
             <div *ngIf="plexUsers">
                 <p>Plex Users exclude from Import</p>
                 
-                <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterUserList($event)"></p-autoComplete>
+                <p-autoComplete [(ngModel)]="bannedPlexUsers" [suggestions]="filteredPlexUsers" [multiple]="true" field="username" (completeMethod)="filterPlexList($event)"></p-autoComplete>
             </div>
         </div>
 
@@ -23,9 +25,15 @@
 
             <div class="form-group">
                 <div class="checkbox">
-                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="settings.importPlexUsers">
+                    <input type="checkbox" id="importEmbyUsers" [(ngModel)]="settings.importEmbyUsers">
                     <label for="importEmbyUsers">Import Emby Users</label>
                 </div>
+            </div>
+            
+            <div *ngIf="embyUsers">
+                <p>Emby Users exclude from Import</p>
+                
+                <p-autoComplete [(ngModel)]="bannedEmbyUsers" [suggestions]="filteredEmbyUsers" [multiple]="true" field="username" (completeMethod)="filterEmbyList($event)"></p-autoComplete>
             </div>
 
         </div>
