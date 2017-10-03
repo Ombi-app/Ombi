@@ -53,7 +53,7 @@ namespace Ombi.Core
         private async Task<MovieSenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
             var qualityToUse = int.Parse(settings.DefaultQualityProfile);
-            if (model.QualityOverride <= 0)
+            if (model.QualityOverride > 0)
             {
                 qualityToUse = model.QualityOverride;
             }
