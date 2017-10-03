@@ -165,7 +165,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                     if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
-                        foreach (var movie in content.Metadata)
+                        foreach (var movie in content?.Metadata ?? new Metadata[]{})
                         {
                             // Let's check if we have this movie
                             var existing = await Repo.GetByKey(movie.ratingKey);
