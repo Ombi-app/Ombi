@@ -11,5 +11,8 @@ namespace Ombi.Store.Entities.Requests
         public int? IssueId { get; set; }
         [ForeignKey(nameof(IssueId))]
         public List<MovieIssues> Issues { get; set; }
+
+        public int RootPathOverride { get; set; }
+        public int QualityOverride { get; set; }
     }
 }

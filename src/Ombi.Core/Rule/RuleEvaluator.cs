@@ -73,7 +73,7 @@ namespace Ombi.Core.Rule
         }
 
 
-        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, List<IRules<T>> ruleList) where T : new()
+        private void GetTypes<T>(IServiceProvider provider, Assembly ass, string baseSearchType, List<IRules<T>> ruleList)
         {
             foreach (var ti in ass.DefinedTypes)
             {

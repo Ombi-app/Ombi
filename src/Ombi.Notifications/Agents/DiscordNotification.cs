@@ -42,7 +42,7 @@ namespace Ombi.Notifications.Agents
             try
             {
                 var a = settings.Token;
-                var b = settings.WebookId;
+                var b = settings.WebHookId;
             }
             catch (IndexOutOfRangeException)
             {
@@ -164,7 +164,7 @@ namespace Ombi.Notifications.Agents
                     };
                 }
 
-                await Api.SendMessage(discordBody, settings.WebookId, settings.Token);
+                await Api.SendMessage(discordBody, settings.WebHookId, settings.Token);
             }
             catch (Exception e)
             {

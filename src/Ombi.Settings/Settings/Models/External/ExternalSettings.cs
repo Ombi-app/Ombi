@@ -1,10 +1,9 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Ombi.Helpers;
 
-namespace Ombi.Core.Settings.Models.External
+namespace Ombi.Settings.Settings.Models.External
 {
-    public abstract class ExternalSettings : Ombi.Settings.Settings.Models.Settings
+    public abstract class ExternalSettings : Models.Settings
     {
         public bool Ssl { get; set; }
         public string SubDir { get; set; }

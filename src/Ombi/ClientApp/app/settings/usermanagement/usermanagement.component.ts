@@ -102,7 +102,7 @@ export class UserManagementComponent implements OnInit {
 
     public runImporter(): void {
         this.jobService.runPlexImporter().subscribe();
-        this.jobService.runPlexImporter().subscribe();
+        this.jobService.runEmbyImporter().subscribe();
     }
 
     private filter(query: string, users: IUsersModel[]): IUsersModel[] {

@@ -8,10 +8,11 @@ import { ClipboardModule } from "ngx-clipboard/dist";
 import { AuthGuard } from "../auth/auth.guard";
 import { AuthModule } from "../auth/auth.module";
 import { AuthService } from "../auth/auth.service";
-import { JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
+import { CouchPotatoService, JobService, RadarrService, SonarrService, TesterService, ValidationService } from "../services";
 
 import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
+import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
 import { EmbyComponent } from "./emby/emby.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
@@ -51,6 +52,7 @@ const routes: Routes = [
     { path: "Settings/Mattermost", component: MattermostComponent, canActivate: [AuthGuard] },
     { path: "Settings/UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Settings/Update", component: UpdateComponent, canActivate: [AuthGuard] },
+    { path: "Settings/CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -91,6 +93,7 @@ const routes: Routes = [
         UpdateComponent,
         AboutComponent,
         WikiComponent,
+        CouchPotatoComponent,
     ],
     exports: [
         RouterModule,
@@ -103,6 +106,7 @@ const routes: Routes = [
         ValidationService,
         TesterService,
         JobService,
+        CouchPotatoService,
     ],
 
 })

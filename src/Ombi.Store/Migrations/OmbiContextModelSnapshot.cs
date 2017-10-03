@@ -460,6 +460,8 @@ namespace Ombi.Store.Migrations
 
                     b.Property<string>("PosterPath");
 
+                    b.Property<int>("QualityOverride");
+
                     b.Property<DateTime>("ReleaseDate");
 
                     b.Property<int>("RequestType");
@@ -467,6 +469,8 @@ namespace Ombi.Store.Migrations
                     b.Property<DateTime>("RequestedDate");
 
                     b.Property<string>("RequestedUserId");
+
+                    b.Property<int>("RootPathOverride");
 
                     b.Property<string>("Status");
 
@@ -527,6 +531,18 @@ namespace Ombi.Store.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("TvRequests");
+                });
+
+            modelBuilder.Entity("Ombi.Store.Entities.SonarrCache", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("TvDbId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SonarrCache");
                 });
 
             modelBuilder.Entity("Ombi.Store.Entities.Tokens", b =>

@@ -8,6 +8,7 @@ using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core.Senders

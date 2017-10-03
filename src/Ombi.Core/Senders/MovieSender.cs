@@ -1,4 +1,5 @@
-﻿using Ombi.Core.Settings;
+﻿using System.Linq;
+using Ombi.Core.Settings;
 using Ombi.Settings.Settings.Models.External;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -21,7 +22,7 @@ namespace Ombi.Core
         private IRadarrApi RadarrApi { get; }
         private ILogger<MovieSender> Log { get; }
 
-        public async Task<MovieSenderResult> Send(MovieRequests model, string qualityId = "")
+        public async Task<MovieSenderResult> Send(MovieRequests model)
         {
             //var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
             //var watcherSettings = await WatcherSettings.GetSettingsAsync();
@@ -39,7 +40,7 @@ namespace Ombi.Core
 
             if (radarrSettings.Enabled)
             {
-                return await SendToRadarr(model, radarrSettings, qualityId);
+                return await SendToRadarr(model, radarrSettings);
             }
 
             return new MovieSenderResult
@@ -49,22 +50,16 @@ namespace Ombi.Core
             };
         }
 
-        private async Task<MovieSenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings, string qualityId)
+        private async Task<MovieSenderResult> SendToRadarr(MovieRequests model, RadarrSettings settings)
         {
-            var qualityProfile = 0;
-            if (!string.IsNullOrEmpty(qualityId)) // try to parse the passed in quality, otherwise use the settings default quality
+            var qualityToUse = int.Parse(settings.DefaultQualityProfile);
+            if (model.QualityOverride > 0)
             {
-                int.TryParse(qualityId, out qualityProfile);
+                qualityToUse = model.QualityOverride;
             }
 
-            if (qualityProfile <= 0)
-            {
-                int.TryParse(settings.DefaultQualityProfile, out qualityProfile);
-            }
-
-            //var rootFolderPath = model.RootFolderSelected <= 0 ? settings.FullRootPath : GetRootPath(model.RootFolderSelected, settings);
-            var rootFolderPath = settings.DefaultRootPath; // TODO Allow changing in the UI
-            var result = await RadarrApi.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year, qualityProfile, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
+            var rootFolderPath = model.RootPathOverride <= 0 ? settings.DefaultRootPath : await RadarrRootPath(model.RootPathOverride, settings);
+            var result = await RadarrApi.AddMovie(model.TheMovieDbId, model.Title, model.ReleaseDate.Year, qualityToUse, rootFolderPath, settings.ApiKey, settings.FullUri, !settings.AddOnly, settings.MinimumAvailability);
 
             if (!string.IsNullOrEmpty(result.Error?.message))
             {
@@ -76,6 +71,13 @@ namespace Ombi.Core
                 return new MovieSenderResult { Success = true, MovieSent = false };
             }
             return new MovieSenderResult { Success = true, MovieSent = false };
+        }
+
+        private async Task<string> RadarrRootPath(int overrideId, RadarrSettings settings)
+        {
+            var paths = await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+            var selectedPath = paths.FirstOrDefault(x => x.id == overrideId);
+            return selectedPath.path;
         }
     }
 }

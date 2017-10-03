@@ -7,6 +7,7 @@ import { Observable } from "rxjs/Rx";
 import {
     IAbout,
     IAuthenticationSettings,
+    ICouchPotatoSettings,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
@@ -191,6 +192,16 @@ export class SettingsService extends ServiceAuthHelpers {
     }
 
     public saveUserManagementSettings(settings: IUserManagementSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getCouchPotatoSettings(): Observable<ICouchPotatoSettings> {
+        return this.httpAuth.get(`${this.url}/UserManagement`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveCouchPotatoSettings(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.httpAuth
             .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);

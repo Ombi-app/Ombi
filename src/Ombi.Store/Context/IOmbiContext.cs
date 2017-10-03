@@ -33,6 +33,7 @@ namespace Ombi.Store.Context
         DbSet<MovieIssues> MovieIssues { get; set; }
         DbSet<TvIssues> TvIssues { get; set; }
         DbSet<Tokens> Tokens { get; set; }
+        DbSet<SonarrCache> SonarrCache { get; set; }
         EntityEntry Update(object entity);
         EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
     }

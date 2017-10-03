@@ -25,6 +25,8 @@ namespace Ombi.Api
         public string BaseUrl { get; }
         public HttpMethod HttpMethod { get; }
 
+        public Action<string> OnBeforeDeserialization { get; set; }
+
         private string FullUrl
         {
             get

@@ -1,4 +1,5 @@
 ﻿export * from "./ICommon";
+export * from "./ICouchPotato";
 export * from "./IImages";
 export * from "./IMediaServerStatus";
 export * from "./INotificationSettings";

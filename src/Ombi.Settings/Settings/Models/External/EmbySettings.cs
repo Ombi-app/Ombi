@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Ombi.Settings.Settings.Models.External;
 
 namespace Ombi.Core.Settings.Models.External
 {

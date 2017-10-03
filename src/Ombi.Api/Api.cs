@@ -52,6 +52,7 @@ namespace Ombi.Api
                         var receivedString = await data.ReadAsStringAsync();
                         if (request.ContentType == ContentType.Json)
                         {
+                            request.OnBeforeDeserialization?.Invoke(receivedString);
                             return JsonConvert.DeserializeObject<T>(receivedString, Settings);
                         }
                         else

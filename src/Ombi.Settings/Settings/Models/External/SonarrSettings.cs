@@ -1,4 +1,4 @@
-﻿namespace Ombi.Core.Settings.Models.External
+﻿namespace Ombi.Settings.Settings.Models.External
 {
     public class SonarrSettings : ExternalSettings
     {
