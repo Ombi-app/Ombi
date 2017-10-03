@@ -41,12 +41,21 @@ namespace Ombi.Controllers
         [HttpGet("update")]
         public async Task<bool> CheckForUpdate()
         {
+            try
+            {
+
+
             var productArray = _updater.GetVersion();
             var version = productArray[0];
             var branch = productArray[1];
             var updateAvailable = await _updater.UpdateAvailable(branch, version);
 
             return updateAvailable;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         [HttpGet("updateCached")]

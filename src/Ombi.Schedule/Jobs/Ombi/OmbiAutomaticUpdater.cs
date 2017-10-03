@@ -44,16 +44,11 @@ namespace Ombi.Schedule.Jobs.Ombi
         }
         public async Task<bool> UpdateAvailable(string branch, string currentVersion)
         {
-            try
-            {
+    
                 var updates = await OmbiService.GetUpdates(branch);
                 var serverVersion = updates.UpdateVersionString;
                 return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
-            }
-            catch (Exception e)
-            {
-                Logger.LogError(e, "Attempted to check if there was an update");
-            }
+            
         }
 
         public async Task Update(PerformContext c)
