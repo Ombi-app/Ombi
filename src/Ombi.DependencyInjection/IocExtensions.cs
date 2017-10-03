@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Principal;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -99,10 +101,9 @@ namespace Ombi.DependencyInjection
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
         }
 
-        public static void RegisterStore(this IServiceCollection services)
-        {
+        public static void RegisterStore(this IServiceCollection services) { 
             services.AddEntityFrameworkSqlite().AddDbContext<OmbiContext>();
-
+            
             services.AddScoped<IOmbiContext, OmbiContext>(); // https://docs.microsoft.com/en-us/aspnet/core/data/entity-framework-6
             services.AddTransient<ISettingsRepository, SettingsJsonRepository>();
             services.AddTransient<ISettingsResolver, SettingsResolver>();

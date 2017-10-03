@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +15,10 @@ namespace Ombi.Store.Context
         public OmbiContext()
         {
             if (_created) return;
-
+            
             _created = true;
             Database.Migrate();
             
-            // Add the notifcation templates
-        
         }
 
         public DbSet<NotificationTemplates> NotificationTemplates { get; set; }
@@ -44,7 +43,8 @@ namespace Ombi.Store.Context
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=Ombi.db");
+            var i = StoragePathSingleton.Instance;
+            optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath,"Ombi.db")}");
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

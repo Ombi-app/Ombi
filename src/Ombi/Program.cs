@@ -9,6 +9,8 @@ using Ombi.Store.Entities;
 using CommandLine;
 using CommandLine.Text;
 using Microsoft.AspNetCore;
+using Microsoft.EntityFrameworkCore;
+using Ombi.Helpers;
 
 namespace Ombi
 {
@@ -33,6 +35,8 @@ namespace Ombi
             UrlArgs = host;
 
             var urlValue = string.Empty;
+            var instance = StoragePathSingleton.Instance;
+            instance.StoragePath = storagePath ?? string.Empty;
             using (var ctx = new OmbiContext())
             {
                 var config = ctx.ApplicationConfigurations.ToList();
