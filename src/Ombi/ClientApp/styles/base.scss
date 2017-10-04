@@ -824,3 +824,8 @@ a > h4:hover {
 .error-text {
     color: #d9534f;
 }
+
+.btn-split .btn.dropdown-toggle {
+    border-radius: 0 0.25rem 0.25rem 0 !important;
+    padding: 3.5px 10px;
+    }

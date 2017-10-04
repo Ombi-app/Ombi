@@ -35,7 +35,7 @@ namespace Ombi.Schedule
         {
             RecurringJob.AddOrUpdate(() => PlexContentCacher.CacheContent(), Cron.Hourly(20));
             RecurringJob.AddOrUpdate(() => EmbyContentCacher.Start(), Cron.Hourly(5));
-            RecurringJob.AddOrUpdate(() => RadarrCacher.CacheContent(), Cron.Hourly(10));
+            RecurringJob.AddOrUpdate(() => SonarrCacher.Start(), Cron.Hourly(10));
             RecurringJob.AddOrUpdate(() => RadarrCacher.CacheContent(), Cron.Hourly(15));
             RecurringJob.AddOrUpdate(() => PlexUserImporter.Start(), Cron.Daily(5));
             RecurringJob.AddOrUpdate(() => EmbyUserImporter.Start(), Cron.Daily);

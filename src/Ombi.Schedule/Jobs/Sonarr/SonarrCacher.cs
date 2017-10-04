@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Sonarr;
+using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
@@ -21,6 +23,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
             _settings = s;
             _api = api;
             _log = l;
+            _ctx = ctx;
         }
 
         private readonly ISettingsService<SonarrSettings> _settings;
@@ -42,12 +45,28 @@ namespace Ombi.Schedule.Jobs.Sonarr
                 var series = await _api.GetSeries(settings.ApiKey, settings.FullUri);
                 if (series != null)
                 {
-                    var ids = series.Select(x => x.tvdbId);
+                    var sonarrSeries = series as IList<SonarrSeries> ?? series.ToList();
+                    var ids = sonarrSeries.Select(x => x.tvdbId);
 
                     await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrCache");
-                    var entites = ids.Select(id => new SonarrCache {TvDbId = id}).ToList();
+                    var entites = ids.Select(id => new SonarrCache { TvDbId = id }).ToList();
 
                     await _ctx.SonarrCache.AddRangeAsync(entites);
+
+                    var episodesToAdd = new List<SonarrEpisodeCache>();
+                    foreach (var s in sonarrSeries)
+                    {
+                        var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
+                        var monitoredEpisodes = episodes.Where(x => x.monitored || x.hasFile);
+                        episodesToAdd.AddRange(monitoredEpisodes.Select(episode => new SonarrEpisodeCache
+                        {
+                            EpisodeNumber = episode.episodeNumber,
+                            SeasonNumber = episode.seasonNumber,
+                            TvDbId = s.tvdbId
+                        }));
+                    }
+
+                    await _ctx.SonarrEpisodeCache.AddRangeAsync(episodesToAdd);
                     await _ctx.SaveChangesAsync();
                 }
             }

@@ -36,6 +36,10 @@ namespace Ombi.Core.Senders
         public async Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null)
         {
             var s = await Settings.GetSettingsAsync();
+            if (!s.Enabled)
+            {
+                return null;
+            }
             if(string.IsNullOrEmpty(s.ApiKey))
             {
                 return null;
@@ -86,121 +90,24 @@ namespace Ombi.Core.Senders
                     // Montitor the correct seasons,
                     // If we have that season in the model then it's monitored!
                     var seasonsToAdd = new List<Season>();
-                    for (int i = 1; i < model.ParentRequest.TotalSeasons + 1; i++)
+                    for (var i = 1; i < model.ParentRequest.TotalSeasons + 1; i++)
                     {
+                        var index = i;
                         var season = new Season
                         {
                             seasonNumber = i,
-                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == i)
+                            monitored = model.SeasonRequests.Any(x => x.SeasonNumber == index)
                         };
                         seasonsToAdd.Add(season);
                     }
                     newSeries.seasons = seasonsToAdd;
                     var result = await SonarrApi.AddSeries(newSeries, s.ApiKey, s.FullUri);
-
-                    // Ok, now let's sort out the episodes.
-                    var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
-                    while (!sonarrEpisodes.Any())
-                    {
-                        // It could be that the series metadata is not ready yet. So wait
-                        sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
-                        await Task.Delay(300);
-                    }
-
-                    var episodesToUpdate = new List<Episode>();
-                    foreach (var req in model.SeasonRequests)
-                    {
-                        foreach (var ep in req.Episodes)
-                        {
-                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
-                            if (sonarrEp != null)
-                            {
-                                sonarrEp.monitored = true;
-                                episodesToUpdate.Add(sonarrEp);
-                            }
-                        }
-                    }
-
-                    // Now update the episodes that need updating
-                    foreach (var epToUpdate in episodesToUpdate)
-                    {
-                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                    }
-
-                    // TODO possibly update the season as it might be unmonitored due to the clash with the AddOptions                    
-
-                    if (!s.AddOnly)
-                    {
-                        foreach (var season in model.SeasonRequests)
-                        {
-                            var sonarrSeason = sonarrEpisodes.Where(x => x.seasonNumber == season.SeasonNumber);
-                            var sonarrEpCount = sonarrSeason.Count();
-                            var ourRequestCount = season.Episodes.Count();
-
-                            if (sonarrEpCount == ourRequestCount)
-                            {
-                                // We have the same amount of requests as all of the episodes in the season.
-                                // Do a season search
-                                await SonarrApi.SeasonSearch(result.id, season.SeasonNumber, s.ApiKey, s.FullUri);
-                            }
-                            else
-                            {
-                                // There is a miss-match, let's search the episodes indiviaully 
-                                await SonarrApi.EpisodeSearch(episodesToUpdate.Select(x => x.id).ToArray(), s.ApiKey, s.FullUri);
-                            }
-                        }
-                    }
-
-                    return result;
+                    existingSeries = await SonarrApi.GetSeriesById(result.id, s.ApiKey, s.FullUri);
+                    await SendToSonarr(model, existingSeries, s);
                 }
                 else
                 {
-
-                    var sonarrEpisodes = await SonarrApi.GetEpisodes(existingSeries.id, s.ApiKey, s.FullUri);
-
-                    var episodesToUpdate = new List<Episode>();
-                    foreach (var req in model.SeasonRequests)
-                    {
-                        foreach (var ep in req.Episodes)
-                        {
-                            var sonarrEp = sonarrEpisodes.FirstOrDefault(x => x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == ep.Season.SeasonNumber);
-                            if (sonarrEp != null)
-                            {
-                                sonarrEp.monitored = true;
-                                episodesToUpdate.Add(sonarrEp);
-                            }
-                        }
-                    }
-
-                    // Now update the episodes that need updating
-                    foreach (var epToUpdate in episodesToUpdate)
-                    {
-                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
-                    }
-
-                    // TODO possibly update the season as it might be unmonitored due to the clash with the AddOptions                    
-
-                    if (!s.AddOnly)
-                    {
-                        foreach (var season in model.SeasonRequests)
-                        {
-                            var sonarrSeason = sonarrEpisodes.Where(x => x.seasonNumber == season.SeasonNumber);
-                            var sonarrEpCount = sonarrSeason.Count();
-                            var ourRequestCount = season.Episodes.Count;
-
-                            if (sonarrEpCount == ourRequestCount)
-                            {
-                                // We have the same amount of requests as all of the episodes in the season.
-                                // Do a season search
-                                await SonarrApi.SeasonSearch(existingSeries.id, season.SeasonNumber, s.ApiKey, s.FullUri);
-                            }
-                            else
-                            {
-                                // There is a miss-match, let's search the episodes indiviaully 
-                                await SonarrApi.EpisodeSearch(episodesToUpdate.Select(x => x.id).ToArray(), s.ApiKey, s.FullUri);
-                            }
-                        }
-                    }
+                    await SendToSonarr(model, existingSeries, s);
                 }
 
                 return new NewSeries
@@ -216,6 +123,93 @@ namespace Ombi.Core.Senders
             {
                 Logger.LogError(LoggingEvents.SonarrSender, e, "Exception thrown when attempting to send series over to Sonarr");
                 throw;
+            }
+        }
+
+        private async Task SendToSonarr(ChildRequests model, SonarrSeries result, SonarrSettings s)
+        {
+            var episodesToUpdate = new List<Episode>();
+            // Ok, now let's sort out the episodes.
+
+            var sonarrEpisodes = await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri);
+            var sonarrEpList = sonarrEpisodes.ToList() ?? new List<Episode>();
+            while (!sonarrEpList.Any())
+            {
+                // It could be that the series metadata is not ready yet. So wait
+                sonarrEpList = (await SonarrApi.GetEpisodes(result.id, s.ApiKey, s.FullUri)).ToList();
+                await Task.Delay(500);
+            }
+
+
+            foreach (var req in model.SeasonRequests)
+            {
+                foreach (var ep in req.Episodes)
+                {
+                    var sonarrEp = sonarrEpList.FirstOrDefault(x =>
+                        x.episodeNumber == ep.EpisodeNumber && x.seasonNumber == req.SeasonNumber);
+                    if (sonarrEp != null)
+                    {
+                        sonarrEp.monitored = true;
+                        episodesToUpdate.Add(sonarrEp);
+                    }
+                }
+            }
+            var seriesChanges = false;
+            foreach (var season in model.SeasonRequests)
+            {
+                var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
+                var sonarrEpCount = sonarrSeason.Count();
+                var ourRequestCount = season.Episodes.Count;
+
+                if (sonarrEpCount == ourRequestCount)
+                {
+                    // We have the same amount of requests as all of the episodes in the season.
+                    var existingSeason =
+                        result.seasons.First(x => x.seasonNumber == season.SeasonNumber);
+                    existingSeason.monitored = true;
+                    seriesChanges = true;
+                }
+                else
+                {
+                    // Now update the episodes that need updating
+                    foreach (var epToUpdate in episodesToUpdate.Where(x => x.seasonNumber == season.SeasonNumber))
+                    {
+                        await SonarrApi.UpdateEpisode(epToUpdate, s.ApiKey, s.FullUri);
+                    }
+                }
+            }
+            if (seriesChanges)
+            {
+                await SonarrApi.UpdateSeries(result, s.ApiKey, s.FullUri);
+            }
+
+
+            if (!s.AddOnly)
+            {
+                await SearchForRequest(model, sonarrEpList, result, s, episodesToUpdate);
+            }
+        }
+
+        private async Task SearchForRequest(ChildRequests model, IEnumerable<Episode> sonarrEpList, SonarrSeries existingSeries, SonarrSettings s,
+            IReadOnlyCollection<Episode> episodesToUpdate)
+        {
+            foreach (var season in model.SeasonRequests)
+            {
+                var sonarrSeason = sonarrEpList.Where(x => x.seasonNumber == season.SeasonNumber);
+                var sonarrEpCount = sonarrSeason.Count();
+                var ourRequestCount = season.Episodes.Count;
+
+                if (sonarrEpCount == ourRequestCount)
+                {
+                    // We have the same amount of requests as all of the episodes in the season.
+                    // Do a season search
+                    await SonarrApi.SeasonSearch(existingSeries.id, season.SeasonNumber, s.ApiKey, s.FullUri);
+                }
+                else
+                {
+                    // There is a miss-match, let's search the episodes indiviaully 
+                    await SonarrApi.EpisodeSearch(episodesToUpdate.Select(x => x.id).ToArray(), s.ApiKey, s.FullUri);
+                }
             }
         }
 

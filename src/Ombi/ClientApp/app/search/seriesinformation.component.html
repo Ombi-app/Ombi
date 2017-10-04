@@ -58,7 +58,7 @@
                                 <ng-template [ngIf]="ep.approved && !ep.available "><span class="label label-info">Processing Request</span></ng-template>
                                 <ng-template [ngIf]="ep.selected"><span class="label label-info">Selected</span></ng-template>
                                 <ng-template [ngIf]="ep.requested && !ep.approved && !ep.available && !ep.selected"><span class="label label-warning">Pending Approval</span></ng-template>
-                                <ng-template [ngIf]="!ep.requested && !ep.available"><span class="label label-danger">Not Requested</span></ng-template>
+                                <ng-template [ngIf]="!ep.requested && !ep.available && !ep.approved"><span class="label label-danger">Not Requested</span></ng-template>
                             </td>
 
                             <td>

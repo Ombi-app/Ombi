@@ -52,6 +52,7 @@ legend {
 .form-control {
     color: #fefefe;
     background-color: #333;
+    border-radius: 5px;
 }
 
 .radio input[type="radio"],
@@ -83,6 +84,14 @@ legend {
 
 .input-group-addon {
     background-color: #333333;
+
+}
+
+.right-radius {
+    border-radius: 0px 5px 5px 0px;
+}
+.left-radius {
+    border-radius: 5px 0px 0px 5px;
 }
 
 .nav > li > a:hover,

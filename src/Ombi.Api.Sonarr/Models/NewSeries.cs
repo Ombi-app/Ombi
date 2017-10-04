@@ -34,7 +34,6 @@ namespace Ombi.Api.Sonarr.Models
 
         public string Validate()
         {
-            var errors = new List<string>();
             var sb = new StringBuilder();
             if(this.tvdbId == 0)
             {

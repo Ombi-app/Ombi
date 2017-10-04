@@ -44,6 +44,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
                     .subscribe(x => {
                         this.tvResults = x;
                         this.searchApplied = true;
+                        this.getExtraInfo();
                     });
             });
     }

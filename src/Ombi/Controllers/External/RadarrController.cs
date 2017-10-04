@@ -62,7 +62,11 @@ namespace Ombi.Controllers.External
             {
                 entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var settings = await RadarrSettings.GetSettingsAsync();
-                return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+                if (settings.Enabled)
+                {
+                    return await RadarrApi.GetProfiles(settings.ApiKey, settings.FullUri);
+                }
+                return null;
             });
         }
 
@@ -78,7 +82,11 @@ namespace Ombi.Controllers.External
             {
                 entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
                 var settings = await RadarrSettings.GetSettingsAsync();
-                return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+                if (settings.Enabled)
+                {
+                    return await RadarrApi.GetRootFolders(settings.ApiKey, settings.FullUri);
+                }
+                return null;
             });
         }
     }

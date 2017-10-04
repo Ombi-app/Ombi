@@ -21,7 +21,7 @@ export class ServiceHelpers {
     protected extractData(res: Response) {
         const body = res.json();
         //console.log('extractData', body || {});
-        return body || {};
+        return body;
     }
 
     protected handleError(error: any) {
@@ -49,7 +49,7 @@ export class ServiceAuthHelpers {
     protected extractData(res: Response) {
         const body = res.json();
         //console.log('extractData', body || {});
-        return body || {};
+        return body;
     }
 
     protected handleError(error: any) {

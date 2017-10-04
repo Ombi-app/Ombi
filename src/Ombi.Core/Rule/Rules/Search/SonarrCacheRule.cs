@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
@@ -20,12 +21,31 @@ namespace Ombi.Core.Rule.Rules.Search
         {
             if (obj.Type == RequestType.TvShow)
             {
+                var vm = (SearchTvShowViewModel) obj;
                 // Check if it's in Radarr
-                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == obj.Id);
+                var result = await _ctx.SonarrCache.FirstOrDefaultAsync(x => x.TvDbId == vm.Id);
                 if (result != null)
                 {
-                    obj.Approved =
-                        true; // It's in radarr so it's approved... Maybe have a new property called "Processing" or something?
+                    vm.Approved = true;
+
+                    if (vm.SeasonRequests.Any())
+                    {
+                        var sonarrEpisodes = _ctx.SonarrEpisodeCache;
+                        foreach (var season in vm.SeasonRequests)
+                        {
+                            foreach (var ep in season.Episodes)
+                            {
+                                // Check if we have it
+                                var monitoredInSonarr = sonarrEpisodes.Any(x =>
+                                    x.EpisodeNumber == ep.EpisodeNumber && x.SeasonNumber == season.SeasonNumber
+                                    && x.TvDbId == vm.Id);
+                                if (monitoredInSonarr)
+                                {
+                                    ep.Approved = true;
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return Success();

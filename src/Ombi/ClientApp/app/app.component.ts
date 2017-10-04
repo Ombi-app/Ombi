@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
+import { NavigationStart, Router } from "@angular/router";
 import { AuthService } from "./auth/auth.service";
 import { ILocalUser } from "./auth/IUserLogin";
 import { NotificationService } from "./services";
@@ -30,14 +30,16 @@ export class AppComponent implements OnInit {
 
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
 
-        this.router.events.subscribe(() => {
-            this.user = this.authService.claims();
-            this.showNav = this.authService.loggedIn();
+        this.router.events.subscribe((event: NavigationStart) => {
+            if (event instanceof NavigationStart) {
+                this.user = this.authService.claims();
+                this.showNav = this.authService.loggedIn();
 
-            if (this.user !== null && this.user.name) {
-                this.jobService.getCachedUpdate().subscribe(x => {
-                    this.updateAvailable = (x === true);
-                });
+                if (this.user !== null && this.user.name) {
+                    this.jobService.getCachedUpdate().subscribe(x => {
+                        this.updateAvailable = x;
+                    });
+                }
             }
         });
     }

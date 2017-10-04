@@ -74,18 +74,12 @@
 
                 <div class="form-group">
                     <div>
+                        <button [disabled]="emailForm.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                         <button [disabled]="emailForm.invalid" type="submit" (click)="test(emailForm)" class="btn btn-primary-outline">
-                            Test Connectivity
+                            Test
                             <div id="spinner"></div>
                         </button>
-                    </div>
-                </div>
 
-
-
-                <div class="form-group">
-                    <div>
-                        <button [disabled]="emailForm.invalid" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
                     </div>
                 </div>
             </form>

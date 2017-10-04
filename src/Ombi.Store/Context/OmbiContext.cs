@@ -38,12 +38,17 @@ namespace Ombi.Store.Context
         public DbSet<Audit> Audit { get; set; }
         public DbSet<Tokens> Tokens { get; set; }
         public DbSet<SonarrCache> SonarrCache { get; set; }
+        public DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
 
         public DbSet<ApplicationConfiguration> ApplicationConfigurations { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var i = StoragePathSingleton.Instance;
+            if (string.IsNullOrEmpty(i.StoragePath))
+            {
+                i.StoragePath = string.Empty;
+            }
             optionsBuilder.UseSqlite($"Data Source={Path.Combine(i.StoragePath,"Ombi.db")}");
         }
 
