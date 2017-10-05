@@ -99,7 +99,7 @@ namespace Ombi.Core.Helpers
                                 new EpisodeRequests
                                 {
                                     EpisodeNumber = ep.number,
-                                    AirDate = DateTime.Parse(ep.airdate),
+                                    AirDate = FormatDate(ep.airdate),
                                     Title = ep.name,
                                     Url = ep.url
                                 }
@@ -112,7 +112,7 @@ namespace Ombi.Core.Helpers
                         season.Episodes.Add(new EpisodeRequests
                         {
                             EpisodeNumber = ep.number,
-                            AirDate = DateTime.Parse(ep.airdate),
+                            AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
                             Url = ep.url
                         });
@@ -132,7 +132,7 @@ namespace Ombi.Core.Helpers
                         episodesRequests.Add(new EpisodeRequests
                         {
                             EpisodeNumber = ep.number,
-                            AirDate = DateTime.Parse(ep.airdate),
+                            AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
                             Url = ep.url
                         });
@@ -156,7 +156,7 @@ namespace Ombi.Core.Helpers
                         episodesRequests.Add(new EpisodeRequests
                         {
                             EpisodeNumber = ep.number,
-                            AirDate = DateTime.Parse(ep.airdate),
+                            AirDate = FormatDate(ep.airdate),
                             Title = ep.name,
                             Url = ep.url
                         });
@@ -195,6 +195,11 @@ namespace Ombi.Core.Helpers
             NewRequest.ChildRequests.Add(ChildRequest);
 
             return this;
+        }
+
+        private DateTime FormatDate(string date)
+        {
+            return string.IsNullOrEmpty(date) ? DateTime.MinValue : DateTime.Parse(date);
         }
     }
 }
