@@ -30,7 +30,7 @@ namespace Ombi.Core.Rule.Rules
 
             if (User.IsInRole(OmbiRoles.RequestTv))
                 return Task.FromResult(Success());
-            return Task.FromResult(Fail("You do not have permissions to Request a Movie"));
+            return Task.FromResult(Fail("You do not have permissions to Request a TV Show"));
         }
     }
 }

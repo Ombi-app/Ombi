@@ -30,8 +30,7 @@ namespace Ombi.Core.Rule.Rules.Request
                 var existing = await movieRequests.FirstOrDefaultAsync(x => x.TheMovieDbId == movie.TheMovieDbId);
                 if (existing != null) // Do we already have a request for this?
                 {
-
-                    return Fail($"{obj.Title} has already been requested");
+                    return Fail($"\"{obj.Title}\" has already been requested");
                 }
             }
             return Success();

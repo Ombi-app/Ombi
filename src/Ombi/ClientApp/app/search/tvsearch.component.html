@@ -95,43 +95,25 @@
                                 <div *ngIf="node.data.fullyAvailable">
                                     <button style="text-align: right" class="btn btn-success-outline disabled" disabled><i class="fa fa-check"></i> Available</button>
                                 </div>
-                                <!--
-            <br/>
-            <a style="text-align: right" class="btn btn-sm btn-primary-outline" href="{{url}}" target="_blank"><i class="fa fa-eye"></i> @UI.Search_ViewInPlex</a>
-
-            -->
-
-
                                 <br />
                                 <div *ngIf="node.data.available">
                                     <a *ngIf="node.data.plexUrl" style="text-align: right" class="btn btn-sm btn-success-outline" href="{{node.data.plexUrl}}" target="_blank"><i class="fa fa-eye"></i> View On Plex</a>
-
-                                    <!--<input name="providerId" type="text" value="{{id}}" hidden="hidden"/>
-                <input name="type" type="text" value="{{type}}" hidden="hidden"/>
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-danger-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <i class="fa fa-exclamation"></i> Report Issue
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a issue-select="0" class="dropdownIssue" href="#">WrongAudio</a></li>
-                        <li><a issue-select="1" class="dropdownIssue" href="#">NoSubs</a></li>
-                        <li><a issue-select="2" class="dropdownIssue" href="#">WrongContent</a></li>
-                        <li><a issue-select="3" class="dropdownIssue" href="#">Playback</a></li>
-                        <li><a issue-select="4" class="dropdownIssue" href="#" data-toggle="modal" data-target="#issuesModal">Other</a></li>
-                    </ul>
-                </div>-->
+                                </div>
+                                <div *ngIf="!node.data.available">
+                                    <br/>
+                                    <br/>
                                 </div>
 
                             </div>
 
                         </div>
-                        <hr />
                     </div>
                     <!--This is the section that holds the child seasons if they want to specify specific episodes-->
                     <div *ngIf="node.leaf">
                         <seriesinformation [seriesId]="node.data.id"></seriesinformation>
                     </div>
+                    
+                    <hr />
                 </ng-template>
             </p-column>
         </p-treeTable>
