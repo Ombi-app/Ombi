@@ -49,6 +49,7 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
     public openClosestTab(el: any) {
+        el.preventDefault();
         const rowclass = "undefined";
         el = el.toElement;
         while (el.className !== rowclass) {
@@ -162,17 +163,20 @@ export class TvSearchComponent implements OnInit, OnDestroy {
             });
     }
 
-    public allSeasons(searchResult: ISearchTvResult) {
+    public allSeasons(searchResult: ISearchTvResult, event: any) {
+        event.preventDefault();
         searchResult.requestAll = true;
         this.request(searchResult);
     }
 
-    public firstSeason(searchResult: ISearchTvResult) {
+    public firstSeason(searchResult: ISearchTvResult, event: any) {
+        event.preventDefault();
         searchResult.firstSeason = true;
         this.request(searchResult);
     }
 
-    public latestSeason(searchResult: ISearchTvResult) {
+    public latestSeason(searchResult: ISearchTvResult, event: any) {
+        event.preventDefault();
         searchResult.latestSeason = true;
         this.request(searchResult);
     }
