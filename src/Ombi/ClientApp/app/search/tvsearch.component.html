@@ -62,6 +62,7 @@
 
                        
                                     <ng-template [ngIf]="node.data.available"><span class="label label-success">Available</span></ng-template>
+                                    <ng-template [ngIf]="node.data.partlyAvailable"><span class="label label-warning">Partially Available</span></ng-template>
 
 
                                     <a *ngIf="node.data.homepage" href="{{node.data.homepage}}" target="_blank"><span class="label label-info">HomePage</span></a>

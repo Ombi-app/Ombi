@@ -55,6 +55,8 @@ namespace Ombi.Core.Models.Search
         /// This is where we have EVERY Episode for that series
         /// </summary>
         public bool FullyAvailable { get; set; }
+        // We only have some episodes
+        public bool PartlyAvailable { get; set; }
 
         public override RequestType Type => RequestType.TvShow;
     }

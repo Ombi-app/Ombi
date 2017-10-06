@@ -87,6 +87,10 @@ namespace Ombi.Core.Rule.Rules.Search
                 {
                     request.FullyAvailable = true;
                 }
+                if (request.SeasonRequests.Any() && request.SeasonRequests.All(x => x.Episodes.Any(e => e.Approved)))
+                {
+                    request.PartlyAvailable = true;
+                }
 
 
                 return Task.FromResult(Success());
