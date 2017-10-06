@@ -60,23 +60,38 @@ export class MovieSearchComponent implements OnInit {
 
     public request(searchResult: ISearchMovieResult) {
         searchResult.requested = true;
+        searchResult.requestProcessing = true;
         if (this.authService.hasRole("admin") || this.authService.hasRole("AutoApproveMovie")) {
             searchResult.approved = true;
         }
 
-        this.requestService.requestMovie(searchResult)
-            .subscribe(x => {
-                this.result = x;
+        try {
+            this.requestService.requestMovie(searchResult)
+                .subscribe(x => {
+                    this.result = x;
 
-                if (this.result.requestAdded) {
-                    this.notificationService.success("Request Added",
-                        `Request for ${searchResult.title} has been added successfully`);
-                } else {
-                    this.notificationService.warning("Request Added", this.result.message ? this.result.message : this.result.errorMessage);
-                    searchResult.requested = false;
-                    searchResult.approved = false;
-                }
-            });
+                    if (this.result.requestAdded) {
+                        this.notificationService.success("Request Added",
+                            `Request for ${searchResult.title} has been added successfully`);
+                        searchResult.processed = true;
+                    } else {
+                        if (this.result.errorMessage && this.result.message) {
+                            this.notificationService.warning("Request Added", `${this.result.message} - ${this.result.errorMessage}`);
+                        } else {
+                            this.notificationService.warning("Request Added", this.result.message ? this.result.message : this.result.errorMessage);
+                        }
+                        searchResult.requested = false;
+                        searchResult.approved = false;
+                        searchResult.processed = false;
+                        searchResult.requestProcessing = false;
+                    }
+                });
+        } catch (e) {
+
+            searchResult.processed = false;
+            searchResult.requestProcessing = false;
+            this.notificationService.error("Something went wrong", e);
+        }
     }
 
     public popularMovies() {

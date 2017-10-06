@@ -22,4 +22,8 @@
     available: boolean;
     plexUrl: string;
     quality: string;
+
+    // for the UI
+    requestProcessing: boolean;
+    processed: boolean;
 }

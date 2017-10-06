@@ -85,7 +85,9 @@
                         <button style="text-align: right" class="btn btn-primary-outline disabled" [disabled]><i class="fa fa-check"></i> Requested</button>
                     </ng-template>
                     <ng-template #notRequestedBtn>
-                        <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)"><i class="fa fa-plus"></i> Request</button>
+                        <button id="{{result.id}}" style="text-align: right" class="btn btn-primary-outline" (click)="request(result)">
+                            <i *ngIf="result.requestProcessing" class="fa fa-circle-o-notch fa-spin fa-fw"></i> <i *ngIf="!result.requestProcessing && !result.processed" class="fa fa-plus"></i>
+                            <i *ngIf="result.processed && !result.requestProcessing" class="fa fa-check"></i>Request</button>
                     </ng-template>
                         </div>
 
