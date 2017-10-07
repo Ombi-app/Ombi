@@ -7,7 +7,7 @@
         {
             "taskName": "build",
             "args": [
-                "${workspaceRoot}/Ombi.csproj"
+                "${workspaceRoot}/Ombi/Ombi.csproj"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

@@ -37,7 +37,6 @@ namespace Ombi.Controllers
     /// <summary>
     /// The Identity Controller, the API for everything Identity/User related
     /// </summary>
-    [PowerUser]
     [ApiV1]
     [Produces("application/json")]
     public class IdentityController : Controller
@@ -127,7 +126,8 @@ namespace Ombi.Controllers
         /// Gets all users.
         /// </summary>
         /// <returns>Information about all users</returns>
-        [HttpGet("Users")]
+        [HttpGet("Users")]   
+        [PowerUser]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
             var users = await UserManager.Users
@@ -160,7 +160,8 @@ namespace Ombi.Controllers
         /// Gets the user by the user id.
         /// </summary>
         /// <returns>Information about the user</returns>
-        [HttpGet("User/{id}")]
+        [HttpGet("User/{id}")]   
+        [PowerUser]
         public async Task<UserViewModel> GetUser(string id)
         {
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == id);
@@ -212,7 +213,8 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name = "user" > The user.</param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost]   
+        [PowerUser]
         public async Task<OmbiIdentityResult> CreateUser([FromBody] UserViewModel user)
         {
             if (!EmailValidator.IsValidEmail(user.EmailAddress))
@@ -336,7 +338,8 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name = "ui" > The user.</param>
         /// <returns></returns>
-        [HttpPut]
+        [HttpPut]   
+        [PowerUser]
         public async Task<OmbiIdentityResult> UpdateUser([FromBody] UserViewModel ui)
         {
             if (!EmailValidator.IsValidEmail(ui.EmailAddress))
@@ -391,7 +394,8 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="userId">The user.</param>
         /// <returns></returns>
-        [HttpDelete("{userId}")]
+        [HttpDelete("{userId}")]   
+        [PowerUser]
         public async Task<OmbiIdentityResult> DeleteUser(string userId)
         {
 
@@ -419,7 +423,8 @@ namespace Ombi.Controllers
         /// Gets all available claims in the system.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("claims")]
+        [HttpGet("claims")]   
+        [PowerUser]
         public async Task<IEnumerable<ClaimCheckboxes>> GetAllClaims()
         {
             var claims = new List<ClaimCheckboxes>();
@@ -526,7 +531,8 @@ namespace Ombi.Controllers
             };
         }
 
-        [HttpPost("welcomeEmail")]
+        [HttpPost("welcomeEmail")]   
+        [PowerUser]
         public void SendWelcomeEmail([FromBody] UserViewModel user)
         {
             var ombiUser = new OmbiUser
