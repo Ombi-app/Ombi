@@ -55,24 +55,13 @@
 
 
                 <div>Release Date: {{request.releaseDate | date}}</div>
-                <br />
-
-
-                <div *ngIf="request.requestedUsers">Requested By: <span *ngFor="let user of request.requestedUsers">{{user}} </span></div>
-
                 <div>Requested Date: {{request.requestedDate | date}}</div>
-                <!--{{#if admin}}
-                {{#if currentRootPath}}
-                <div class="{{requestId}}rootPathMain">Root Path: <span id="{{requestId}}currentRootPath">{{currentRootPath}}</span></div>
-                {{/if}}
-                {{/if}}
-                <div>
-                    {{#if_eq issueId 0}}
-                    @*Nothing*@
-                    {{else}}
-                    @UI.Issues_Issue: <a href="@formAction/issues/{{issueId}}"><i class="fa fa-check"></i></a>
-                    {{/if_eq}}
-                </div>-->
+                <br />
+                <div *ngIf="isAdmin">
+                    <div *ngIf="request.qualityOverrideTitle">Quality Override: <span>{{request.qualityOverrideTitle}} </span></div>
+                    <div *ngIf="request.rootPathOverrideTitle">Root Folder Override: <span>{{request.rootPathOverrideTitle}} </span></div>
+                </div>
+
             </div>
             <div class="col-sm-3 col-sm-push-3">
                 <div *ngIf="isAdmin">
@@ -83,25 +72,25 @@
 
                         <!--Radarr Root Folder-->
                         <div *ngIf="radarrRootFolders" class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-success-outline"><i class="fa fa-plus"></i> Change Root Folder</button>
-                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> Change Root Folder</button>
+                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li *ngFor="let folder of radarrRootFolders"><a href="#" (click)="selectRootFolder(request, folder)">{{folder.path}}</a></li>
+                                <li *ngFor="let folder of radarrRootFolders"><a href="#" (click)="selectRootFolder(request, folder, $event)">{{folder.path}}</a></li>
                             </ul>
                         </div>
-                        
+
                         <!--Radarr Quality Profiles -->
                         <div *ngIf="radarrProfiles" class="btn-group btn-split">
-                            <button type="button" class="btn btn-sm btn-success-outline"><i class="fa fa-plus"></i> Change Quality Profile</button>
-                            <button type="button" class="btn btn-success-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button type="button" class="btn btn-sm btn-warning-outline"><i class="fa fa-plus"></i> Change Quality Profile</button>
+                            <button type="button" class="btn btn-warning-outline dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li *ngFor="let profile of radarrProfiles"><a href="#" (click)="selectQualityProfile(request, profile)">{{profile.name}}</a></li>
+                                <li *ngFor="let profile of radarrProfiles"><a href="#" (click)="selectQualityProfile(request, profile, $event)">{{profile.name}}</a></li>
                             </ul>
                         </div>
 
@@ -124,7 +113,7 @@
                 </div>
 
 
-                
+
                 <!--<div class="dropdown">
                     <button id="{{request.requestId}}" class="btn btn-sm btn-primary-outline dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <i class="fa fa-plus"></i> Report Issue

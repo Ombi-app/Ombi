@@ -19,7 +19,7 @@ export class MovieRequestsComponent implements OnInit {
     public searchChanged: Subject<string> = new Subject<string>();
     public searchText: string;
 
-    public isAdmin: boolean;
+    public isAdmin: boolean; // Also PowerUser
 
     public radarrProfiles: IRadarrProfile[];
     public radarrRootFolders: IRadarrRootFolder[];
@@ -41,14 +41,13 @@ export class MovieRequestsComponent implements OnInit {
                     return;
                 }
                 this.requestService.searchMovieRequests(this.searchText)
-                    .subscribe(m => this.movieRequests = m);
+                    .subscribe(m => {
+                        this.movieRequests = m;
+                    });
             });
     }
 
     public ngOnInit() {
-        this.radarrService.getQualityProfilesFromSettings().subscribe(x => this.radarrProfiles = x);
-        this.radarrService.getRootFoldersFromSettings().subscribe(x => this.radarrRootFolders = x);
-
         this.amountToLoad = 5;
         this.currentlyLoaded = 5;
         this.loadInit();
@@ -87,17 +86,24 @@ export class MovieRequestsComponent implements OnInit {
         this.updateRequest(request);
     }
 
-    public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder) {
+    public selectRootFolder(searchResult: IMovieRequests, rootFolderSelected: IRadarrRootFolder, event: any) {
+        event.preventDefault();
         searchResult.rootPathOverride = rootFolderSelected.id;
+        this.setOverride(searchResult);
+        this.updateRequest(searchResult);
     }
 
-    public selectQualityProfile(searchResult: IMovieRequests, profileSelected: IRadarrProfile) {
+    public selectQualityProfile(searchResult: IMovieRequests, profileSelected: IRadarrProfile, event: any) {
+        event.preventDefault();
         searchResult.qualityOverride = profileSelected.id;
+        this.setOverride(searchResult);
+        this.updateRequest(searchResult);
     }
 
     private loadRequests(amountToLoad: number, currentlyLoaded: number) {
         this.requestService.getMovieRequests(amountToLoad, currentlyLoaded + 1)
             .subscribe(x => {
+                this.setOverrides(x);
                 this.movieRequests.push.apply(this.movieRequests, x);
                 this.currentlyLoaded = currentlyLoaded + amountToLoad;
             });
@@ -105,7 +111,10 @@ export class MovieRequestsComponent implements OnInit {
 
     private updateRequest(request: IMovieRequests) {
         this.requestService.updateMovieRequest(request)
-            .subscribe(x => request = x);
+            .subscribe(x => {
+                this.setOverride(x);
+                request = x;
+            });
     }
 
     private approveRequest(request: IMovieRequests) {
@@ -124,7 +133,17 @@ export class MovieRequestsComponent implements OnInit {
 
     private loadInit() {
         this.requestService.getMovieRequests(this.amountToLoad, 0)
-            .subscribe(x => this.movieRequests = x);
+            .subscribe(x => {
+                this.movieRequests = x;
+                this.radarrService.getQualityProfilesFromSettings().subscribe(c => {
+                    this.radarrProfiles = c;
+                    this.movieRequests.forEach((req) => this.setQualityOverrides(req));
+                });
+                this.radarrService.getRootFoldersFromSettings().subscribe(c => {
+                    this.radarrRootFolders = c;
+                    this.movieRequests.forEach((req) => this.setRootFolderOverrides(req));
+                });
+            });
     }
 
     private resetSearch() {
@@ -137,5 +156,37 @@ export class MovieRequestsComponent implements OnInit {
         if (index > -1) {
             this.movieRequests.splice(index, 1);
         }
+    }
+
+    private setOverrides(requests: IMovieRequests[]): void {
+        requests.forEach((req) => {
+            this.setOverride(req);
+        });
+    }
+
+    private setQualityOverrides(req: IMovieRequests): void {
+        if (this.radarrProfiles) {
+            const profile = this.radarrProfiles.filter((p) => {
+                return p.id === req.qualityOverride;
+            });
+            if (profile.length > 0) {
+                req.qualityOverrideTitle = profile[0].name;
+            }
+        }
+    }
+    private setRootFolderOverrides(req: IMovieRequests): void {
+        if (this.radarrRootFolders) {
+            const path = this.radarrRootFolders.filter((folder) => {
+                return folder.id === req.rootPathOverride;
+            });
+            if (path.length > 0) {
+                req.rootPathOverrideTitle = path[0].path;
+            }
+        }
+    }
+
+    private setOverride(req: IMovieRequests): void {
+       this.setQualityOverrides(req);
+       this.setRootFolderOverrides(req);
     }
 }

@@ -81,6 +81,9 @@ export interface IMovieRequests extends IFullBaseRequest {
     theMovieDbId: number;
     rootPathOverride: number;
     qualityOverride: number;
+
+    rootPathOverrideTitle: string;
+    qualityOverrideTitle: string;
 }
 
 export interface IFullBaseRequest extends IBaseRequest {

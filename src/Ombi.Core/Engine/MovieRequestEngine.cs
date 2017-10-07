@@ -197,6 +197,8 @@ namespace Ombi.Core.Engine
             results.Issues = request.Issues;
             results.Overview = request.Overview;
             results.PosterPath = request.PosterPath;
+            results.QualityOverride = request.QualityOverride;
+            results.RootPathOverride = request.RootPathOverride;
 
             await MovieRepository.Update(results);
             return results;
