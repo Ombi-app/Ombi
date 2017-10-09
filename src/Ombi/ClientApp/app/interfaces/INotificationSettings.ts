@@ -13,6 +13,8 @@ export interface IEmailNotificationSettings extends INotificationSettings {
     username: string;
     authentication: boolean;
     adminEmail: string;
+    disableTLS: boolean;
+    disableCertificateChecking: boolean;
     notificationTemplates: INotificationTemplates[];
 }
 

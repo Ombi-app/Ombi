@@ -11,5 +11,7 @@
         public string Username { get; set; }
         public bool Authentication { get; set; }
         public string AdminEmail { get; set; }
+        public bool DisableTLS { get; set; }
+        public bool DisableCertificateChecking { get; set; }
     }
 }
