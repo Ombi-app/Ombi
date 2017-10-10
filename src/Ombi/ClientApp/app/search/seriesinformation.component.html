@@ -51,7 +51,7 @@
                                 {{ep.title}}
                             </td>
                             <td>
-                                {{ep.airDate | date: 'dd/MM/yyyy' }}
+                                {{ep.airDate | date: 'MMM dd, yyyy' }}
                             </td>
                             <td>
                                 <ng-template [ngIf]="ep.available"><span class="label label-success">Available</span></ng-template>
