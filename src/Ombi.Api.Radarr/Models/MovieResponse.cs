@@ -32,7 +32,7 @@ namespace Ombi.Api.Radarr.Models
         public List<object> tags { get; set; }
         public string added { get; set; }
         public Ratings ratings { get; set; }
-        public List<string> alternativeTitles { get; set; }
+        //public List<string> alternativeTitles { get; set; }
         public int qualityProfileId { get; set; }
         public int id { get; set; }
     }
