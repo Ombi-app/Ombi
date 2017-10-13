@@ -16,6 +16,7 @@ using Ombi.Core.Engine.Interfaces;
 using Ombi.Core.Helpers;
 using Ombi.Core.Rule;
 using Ombi.Core.Rule.Interfaces;
+using Ombi.Core.Senders;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 
@@ -188,7 +189,7 @@ namespace Ombi.Core.Engine
             {
                 await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
                 // Autosend
-                await TvSender.SendToSonarr(request);
+                await TvSender.Send(request);
             }
             return new RequestEngineResult
             {
@@ -292,7 +293,15 @@ namespace Ombi.Core.Engine
             if (model.Approved)
             {
                 // Autosend
-                await TvSender.SendToSonarr(model);
+                var result = await TvSender.Send(model);
+                if (result.Success)
+                {
+                    return new RequestEngineResult { RequestAdded = true };
+                }
+                return new RequestEngineResult
+                {
+                    ErrorMessage = result.Message
+                };
             }
 
             return new RequestEngineResult { RequestAdded = true };

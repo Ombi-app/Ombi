@@ -14,6 +14,7 @@ import { PipeModule } from "../pipes/pipe.module";
 import { AboutComponent } from "./about/about.component";
 import { CouchPotatoComponent } from "./couchpotato/couchpotato.component";
 import { CustomizationComponent } from "./customization/customization.component";
+import { DogNzbComponent } from "./dognzb/dognzb.component";
 import { EmbyComponent } from "./emby/emby.component";
 import { LandingPageComponent } from "./landingpage/landingpage.component";
 import { DiscordComponent } from "./notifications/discord.component";
@@ -53,6 +54,7 @@ const routes: Routes = [
     { path: "Settings/UserManagement", component: UserManagementComponent, canActivate: [AuthGuard] },
     { path: "Settings/Update", component: UpdateComponent, canActivate: [AuthGuard] },
     { path: "Settings/CouchPotato", component: CouchPotatoComponent, canActivate: [AuthGuard] },
+    { path: "Settings/DogNzb", component: DogNzbComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({
@@ -94,6 +96,7 @@ const routes: Routes = [
         AboutComponent,
         WikiComponent,
         CouchPotatoComponent,
+        DogNzbComponent,
     ],
     exports: [
         RouterModule,

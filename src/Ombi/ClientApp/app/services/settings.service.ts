@@ -10,6 +10,7 @@ import {
     ICouchPotatoSettings,
     ICustomizationSettings,
     IDiscordNotifcationSettings,
+    IDogNzbSettings,
     IEmailNotificationSettings,
     IEmbySettings,
     ILandingPageSettings,
@@ -198,12 +199,22 @@ export class SettingsService extends ServiceAuthHelpers {
     }
 
     public getCouchPotatoSettings(): Observable<ICouchPotatoSettings> {
-        return this.httpAuth.get(`${this.url}/UserManagement`).map(this.extractData).catch(this.handleError);
+        return this.httpAuth.get(`${this.url}/CouchPotato`).map(this.extractData).catch(this.handleError);
     }
 
     public saveCouchPotatoSettings(settings: ICouchPotatoSettings): Observable<boolean> {
         return this.httpAuth
-            .post(`${this.url}/UserManagement`, JSON.stringify(settings), { headers: this.headers })
+            .post(`${this.url}/CouchPotato`, JSON.stringify(settings), { headers: this.headers })
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    public getDogNzbSettings(): Observable<IDogNzbSettings> {
+        return this.httpAuth.get(`${this.url}/DogNzb`).map(this.extractData).catch(this.handleError);
+    }
+
+    public saveDogNzbSettings(settings: IDogNzbSettings): Observable<boolean> {
+        return this.httpAuth
+            .post(`${this.url}/DogNzb`, JSON.stringify(settings), { headers: this.headers })
             .map(this.extractData).catch(this.handleError);
     }
 }

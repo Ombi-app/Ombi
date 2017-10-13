@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Api.CouchPotato\Ombi.Api.CouchPotato.csproj" />
     <ProjectReference Include="..\Ombi.Api.Discord\Ombi.Api.Discord.csproj" />
+    <ProjectReference Include="..\Ombi.Api.DogNzb\Ombi.Api.DogNzb.csproj" />
     <ProjectReference Include="..\Ombi.Api.Emby\Ombi.Api.Emby.csproj" />
     <ProjectReference Include="..\Ombi.Api.FanartTv\Ombi.Api.FanartTv.csproj" />
     <ProjectReference Include="..\Ombi.Api.Mattermost\Ombi.Api.Mattermost.csproj" />

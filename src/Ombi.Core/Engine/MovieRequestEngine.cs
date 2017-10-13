@@ -87,7 +87,7 @@ namespace Ombi.Core.Engine
             if (requestModel.Approved) // The rules have auto approved this
             {
                 var result = await Sender.Send(requestModel);
-                if (result.Success && result.MovieSent)
+                if (result.Success && result.Sent)
                 {
                     return await AddMovieRequest(requestModel, fullMovieName);
                 }
@@ -153,7 +153,7 @@ namespace Ombi.Core.Engine
             if (request.Approved) 
             {
                 var result = await Sender.Send(request);
-                if (result.Success && result.MovieSent)
+                if (result.Success && result.Sent)
                 {
                     return new RequestEngineResult
                     {

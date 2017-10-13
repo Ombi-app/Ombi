@@ -1,12 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using System.Security.Principal;
 using Hangfire;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
 using Ombi.Api.Discord;
@@ -34,6 +29,7 @@ using Ombi.Notifications.Agents;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Api;
 using Ombi.Api.CouchPotato;
+using Ombi.Api.DogNzb;
 using Ombi.Api.FanartTv;
 using Ombi.Api.Mattermost;
 using Ombi.Api.Pushbullet;
@@ -99,6 +95,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPushoverApi, PushoverApi>();
             services.AddTransient<IMattermostApi, MattermostApi>();
             services.AddTransient<ICouchPotatoApi, CouchPotatoApi>();
+            services.AddTransient<IDogNzbApi, DogNzbApi>();
         }
 
         public static void RegisterStore(this IServiceCollection services) { 

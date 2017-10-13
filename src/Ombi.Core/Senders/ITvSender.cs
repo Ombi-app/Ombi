@@ -1,12 +1,10 @@
 ﻿using System.Threading.Tasks;
-using Ombi.Api.Sonarr.Models;
-using Ombi.Core.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
 
-namespace Ombi.Core
+namespace Ombi.Core.Senders
 {
     public interface ITvSender
     {
-        Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null);
+        Task<SenderResult> Send(ChildRequests model);
     }
 }

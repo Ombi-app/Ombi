@@ -365,6 +365,27 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Gets the DogNzbSettings Settings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("DogNzb")]
+        public async Task<DogNzbSettings> DogNzbSettings()
+        {
+            return await Get<DogNzbSettings>();
+        }
+
+        /// <summary>
+        /// Save the DogNzbSettings settings.
+        /// </summary>
+        /// <param name="settings">The settings.</param>
+        /// <returns></returns>
+        [HttpPost("DogNzb")]
+        public async Task<bool> DogNzbSettings([FromBody]DogNzbSettings settings)
+        {
+            return await Save(settings);
+        }
+
+        /// <summary>
         /// Saves the email notification settings.
         /// </summary>
         /// <param name="model">The model.</param>

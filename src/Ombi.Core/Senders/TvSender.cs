@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.DogNzb;
+using Ombi.Api.DogNzb.Models;
 using Ombi.Api.Sonarr;
 using Ombi.Api.Sonarr.Models;
 using Ombi.Core.Settings;
-using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Settings.Settings.Models.External;
 using Ombi.Store.Entities.Requests;
@@ -15,16 +16,65 @@ namespace Ombi.Core.Senders
 {
     public class TvSender : ITvSender
     {
-        public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> settings)
+        public TvSender(ISonarrApi sonarrApi, ILogger<TvSender> log, ISettingsService<SonarrSettings> sonarrSettings,
+            ISettingsService<DogNzbSettings> dog, IDogNzbApi dogApi)
         {
             SonarrApi = sonarrApi;
             Logger = log;
-            Settings = settings;
+            SonarrSettings = sonarrSettings;
+            DogNzbSettings = dog;
+            DogNzbApi = dogApi;
         }
 
         private ISonarrApi SonarrApi { get; }
+        private IDogNzbApi DogNzbApi { get; }
         private ILogger<TvSender> Logger { get; }
-        private ISettingsService<SonarrSettings> Settings { get; }
+        private ISettingsService<SonarrSettings> SonarrSettings { get; }
+        private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
+
+        public async Task<SenderResult> Send(ChildRequests model)
+        {
+            var sonarr = await SonarrSettings.GetSettingsAsync();
+            if (sonarr.Enabled)
+            {
+                var result = await SendToSonarr(model);
+                if (result != null)
+                {
+                    return new SenderResult
+                    {
+                        Sent = true,
+                        Success = true
+                    };
+                }
+            }
+            var dog = await DogNzbSettings.GetSettingsAsync();
+            if (dog.Enabled)
+            {
+                var result = await SendToDogNzb(model, dog);
+                if (!result.Failure)
+                {
+                    return new SenderResult
+                    {
+                        Sent = true,
+                        Success = true
+                    };
+                }
+                return new SenderResult
+                {
+                    Message = result.ErrorMessage
+                };
+            }
+            return new SenderResult
+            {
+                Success = true
+            };
+        }
+
+        private async Task<DogNzbAddResult> SendToDogNzb(ChildRequests model, DogNzbSettings settings)
+        {
+            var id = model.ParentRequest.TvDbId;
+            return await DogNzbApi.AddTvShow(settings.ApiKey, id.ToString());
+        }
 
         /// <summary>
         /// Send the request to Sonarr to process
@@ -35,7 +85,7 @@ namespace Ombi.Core.Senders
         /// <returns></returns>
         public async Task<NewSeries> SendToSonarr(ChildRequests model, string qualityId = null)
         {
-            var s = await Settings.GetSettingsAsync();
+            var s = await SonarrSettings.GetSettingsAsync();
             if (!s.Enabled)
             {
                 return null;

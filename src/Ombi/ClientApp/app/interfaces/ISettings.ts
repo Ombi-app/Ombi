@@ -127,3 +127,10 @@ export interface ICouchPotatoSettings extends IExternalSettings {
     username: string;
     password: string;
 }
+
+export interface IDogNzbSettings extends ISettings {
+    enabled: boolean;
+    apiKey: string;
+    movies: boolean;
+    tvShows: boolean;
+}
