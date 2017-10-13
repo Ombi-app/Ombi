@@ -47,10 +47,30 @@ namespace Ombi.Notifications
                 message.From.Add(new MailboxAddress(settings.SenderAddress, settings.SenderAddress));
                 message.To.Add(new MailboxAddress(model.To, model.To));
 
+                
+
+
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.Host, settings.Port); // Let MailKit figure out the correct SecureSocketOptions.
+                    if (settings.DisableCertificateChecking)
+                    {
+                        // Disable validation of the certificate associated with the SMTP service
+                        // Helpful when the TLS certificate is not in the certificate store of the server
+                        // Does carry the risk of man in the middle snooping
+                        client.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                    }
 
+                    if (settings.DisableTLS)
+                    {
+                        // Does not attempt to use either TLS or SSL
+                        // Helpful when MailKit finds a TLS certificate, but it unable to use it
+                        client.Connect(settings.Host, settings.Port, MailKit.Security.SecureSocketOptions.None); 
+                    }
+                    else
+                    {
+                        client.Connect(settings.Host, settings.Port); // Let MailKit figure out the correct SecureSocketOptions.
+                    }
+                    
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
                     client.AuthenticationMechanisms.Remove("XOAUTH2");
@@ -92,7 +112,19 @@ namespace Ombi.Notifications
 
                 using (var client = new SmtpClient())
                 {
-                    client.Connect(settings.Host, settings.Port); // Let MailKit figure out the correct SecureSocketOptions.
+                    if (settings.DisableCertificateChecking)
+                    {
+                        client.ServerCertificateValidationCallback += (sender, certificate, chain, sslPolicyErrors) => true;
+                    }
+
+                    if (settings.DisableTLS)
+                    {
+                        client.Connect(settings.Host, settings.Port, MailKit.Security.SecureSocketOptions.None);
+                    }
+                    else
+                    {
+                        client.Connect(settings.Host, settings.Port); // Let MailKit figure out the correct SecureSocketOptions.
+                    }
 
                     // Note: since we don't have an OAuth2 token, disable
                     // the XOAUTH2 authentication mechanism.
