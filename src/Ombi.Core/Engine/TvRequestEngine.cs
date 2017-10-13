@@ -183,13 +183,13 @@ namespace Ombi.Core.Engine
 
         public async Task<RequestEngineResult> ApproveChildRequest(ChildRequests request)
         {
+            await TvRepository.UpdateChild(request);
             if (request.Approved)
             {
                 await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
                 // Autosend
                 await TvSender.SendToSonarr(request);
             }
-            await TvRepository.UpdateChild(request);
             return new RequestEngineResult
             {
                 RequestAdded = true

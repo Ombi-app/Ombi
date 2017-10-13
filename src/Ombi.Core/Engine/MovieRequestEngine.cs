@@ -149,6 +149,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
         {
+            await MovieRepository.Update(request);
             if (request.Approved) 
             {
                 var result = await Sender.Send(request);
