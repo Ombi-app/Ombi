@@ -8,7 +8,7 @@ using AutoMapper.EquivalencyExpression;
 using Hangfire;
 using Hangfire.Console;
 using Hangfire.Dashboard;
-using Hangfire.MemoryStorage;
+using Hangfire.SQLite;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +16,6 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.StaticFiles;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,10 +124,16 @@ namespace Ombi
             services.AddSwagger();
             services.AddAppSettingsValues(Configuration);
 
+            var i = StoragePathSingleton.Instance;
+            if (string.IsNullOrEmpty(i.StoragePath))
+            {
+                i.StoragePath = string.Empty;
+            }
+            var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Ombi.db")};";
+            
             services.AddHangfire(x =>
             {
-                x.UseMemoryStorage(new MemoryStorageOptions());
-                //x.UseSQLiteStorage("Data Source=Ombi.db;");
+                x.UseSQLiteStorage(sqliteStorage);
                 x.UseActivator(new IoCJobActivator(services.BuildServiceProvider()));
                 x.UseConsole();
             });
@@ -167,7 +172,7 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer();
+            app.UseHangfireServer(new BackgroundJobServerOptions{WorkerCount = 1});
             app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                 new DashboardOptions
                 {

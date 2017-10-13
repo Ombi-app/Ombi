@@ -36,7 +36,7 @@ namespace Ombi.Core.Rule.Rules.Search
                             foreach (var episode in season.Episodes)
                             {
                                 var epExists = await allEpisodes.FirstOrDefaultAsync(x =>
-                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber && item.ProviderId.ToString() == x.Series.ProviderId);
+                                    x.EpisodeNumber == episode.EpisodeNumber && x.SeasonNumber == season.SeasonNumber && item.ProviderId.ToString() == searchResult.Id.ToString());
                                 if (epExists != null)
                                 {
                                     episode.Available = true;
