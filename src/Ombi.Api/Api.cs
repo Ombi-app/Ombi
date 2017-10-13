@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -14,9 +13,14 @@ namespace Ombi.Api
         public Api(ILogger<Api> log)
         {
             Logger = log;
+            _handler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+            };
         }
 
         private ILogger<Api> Logger { get; }
+        private readonly HttpMessageHandler _handler;
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -25,8 +29,9 @@ namespace Ombi.Api
 
         public async Task<T> Request<T>(Request request)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(_handler))
             {
+                
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
                     // Add the Json Body
@@ -70,7 +75,7 @@ namespace Ombi.Api
 
         public async Task<string> RequestContent(Request request)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(_handler))
             {
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
@@ -104,7 +109,7 @@ namespace Ombi.Api
 
         public async Task Request(Request request)
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpClient(_handler))
             {
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
