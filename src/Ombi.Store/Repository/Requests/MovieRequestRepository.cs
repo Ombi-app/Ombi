@@ -62,6 +62,11 @@ namespace Ombi.Store.Repository.Requests
 
         public async Task Update(MovieRequests request)
         {
+            if (Db.Entry(request).State == EntityState.Detached)
+            {
+                Db.MovieRequests.Attach(request);
+                Db.Update(request);
+            }
             await Db.SaveChangesAsync();
         }
 
