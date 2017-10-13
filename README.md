@@ -38,6 +38,7 @@ We integrate with the following applications:
 * Emby
 * Sonarr
 * Radarr (beta)
+* DogNzb
 
 
 ### Notifications
@@ -71,6 +72,7 @@ We are planning to bring back these features in Version 3 but for now you can fi
 | SickRage | Planned (not supported yet)| Yes |
 | CouchPotato | Planned | Yes |
 | Watcher | Planned | Yes |
+| DogNzb | Yes | No |
 | Headphones | No (support dropped) | Yes |
 
 # Feature Requests
