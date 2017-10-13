@@ -126,7 +126,7 @@ namespace Ombi.Controllers
         /// Gets all users.
         /// </summary>
         /// <returns>Information about all users</returns>
-        [HttpGet("Users")]   
+        [HttpGet("Users")]
         [PowerUser]
         public async Task<IEnumerable<UserViewModel>> GetAllUsers()
         {
@@ -160,7 +160,7 @@ namespace Ombi.Controllers
         /// Gets the user by the user id.
         /// </summary>
         /// <returns>Information about the user</returns>
-        [HttpGet("User/{id}")]   
+        [HttpGet("User/{id}")]
         [PowerUser]
         public async Task<UserViewModel> GetUser(string id)
         {
@@ -213,13 +213,17 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name = "user" > The user.</param>
         /// <returns></returns>
-        [HttpPost]   
+        [HttpPost]
         [PowerUser]
         public async Task<OmbiIdentityResult> CreateUser([FromBody] UserViewModel user)
         {
             if (!EmailValidator.IsValidEmail(user.EmailAddress))
             {
                 return Error($"The email address {user.EmailAddress} is not a valid format");
+            }
+            if (!CanModifyUser(user.Claims.Select(x => x.Value)))
+            {
+                return Error("You do not have the correct permissions to create this user");
             }
             var ombiUser = new OmbiUser
             {
@@ -261,6 +265,19 @@ namespace Ombi.Controllers
             };
         }
 
+        private bool CanModifyUser(IEnumerable<string> roles)
+        {
+            if (roles.Any(x => x.Equals("admin", StringComparison.CurrentCultureIgnoreCase)))
+            {
+                // Only Admins can create admins
+                if (!User.IsInRole(OmbiRoles.Admin))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         /// <summary>
         /// This is for the local user to change their details.
         /// </summary>
@@ -274,7 +291,7 @@ namespace Ombi.Controllers
             {
                 return Error("You need to provide your current password to make any changes");
             }
-
+ 
             var changingPass = !string.IsNullOrEmpty(ui.Password) || !string.IsNullOrEmpty(ui.ConfirmNewPassword);
 
             if (changingPass)
@@ -338,13 +355,17 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name = "ui" > The user.</param>
         /// <returns></returns>
-        [HttpPut]   
+        [HttpPut]
         [PowerUser]
         public async Task<OmbiIdentityResult> UpdateUser([FromBody] UserViewModel ui)
         {
             if (!EmailValidator.IsValidEmail(ui.EmailAddress))
             {
                 return Error($"The email address {ui.EmailAddress} is not a valid format");
+            }
+            if (!CanModifyUser(ui.Claims.Select(x => x.Value)))
+            {
+                return Error("You do not have the correct permissions to create this user");
             }
             // Get the user
             var user = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == ui.Id);
@@ -394,14 +415,20 @@ namespace Ombi.Controllers
         /// </summary>
         /// <param name="userId">The user.</param>
         /// <returns></returns>
-        [HttpDelete("{userId}")]   
+        [HttpDelete("{userId}")]
         [PowerUser]
         public async Task<OmbiIdentityResult> DeleteUser(string userId)
         {
-
             var userToDelete = await UserManager.Users.FirstOrDefaultAsync(x => x.Id == userId);
             if (userToDelete != null)
             {
+
+                // Can we delete this user?
+                var userRoles = await UserManager.GetRolesAsync(userToDelete);
+                if (!CanModifyUser(userRoles))
+                {
+                    return Error("You do not have the correct permissions to delete this user");
+                }
                 var result = await UserManager.DeleteAsync(userToDelete);
                 if (result.Succeeded)
                 {
@@ -423,7 +450,7 @@ namespace Ombi.Controllers
         /// Gets all available claims in the system.
         /// </summary>
         /// <returns></returns>
-        [HttpGet("claims")]   
+        [HttpGet("claims")]
         [PowerUser]
         public async Task<IEnumerable<ClaimCheckboxes>> GetAllClaims()
         {
@@ -444,7 +471,7 @@ namespace Ombi.Controllers
 
         //public async Task SendWelcomeEmail([FromBody] UserViewModel user)
         //{
-            
+
         //}
 
         /// <summary>
@@ -459,18 +486,18 @@ namespace Ombi.Controllers
         {
             // Check if account exists
             var user = await UserManager.FindByEmailAsync(email.Email);
-            
+
             var defaultMessage = new OmbiIdentityResult
             {
                 Successful = true,
                 Errors = new List<string> { "If this account exists you should recieve a password reset link." }
             };
-            
+
             if (user == null)
             {
                 return defaultMessage;
             }
-            
+
             // We have the user
             var token = await UserManager.GeneratePasswordResetTokenAsync(user);
             // We now need to email the user with this token
@@ -531,7 +558,7 @@ namespace Ombi.Controllers
             };
         }
 
-        [HttpPost("welcomeEmail")]   
+        [HttpPost("welcomeEmail")]
         [PowerUser]
         public void SendWelcomeEmail([FromBody] UserViewModel user)
         {
@@ -542,7 +569,7 @@ namespace Ombi.Controllers
             };
             BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
         }
-        
+
         private async Task<List<Microsoft.AspNetCore.Identity.IdentityResult>> AddRoles(IEnumerable<ClaimCheckboxes> roles, OmbiUser ombiUser)
         {
             var roleResult = new List<Microsoft.AspNetCore.Identity.IdentityResult>();
