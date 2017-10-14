@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
-import { CookieService } from "ng2-cookies";
 import { Router } from "@angular/router";
+import { CookieService } from "ng2-cookies";
 
 @Component({
     templateUrl: "cookie.component.html",
@@ -10,7 +10,6 @@ export class CookieComponent implements OnInit {
                 private readonly router: Router) { }
 
     public ngOnInit() {
-        debugger;
         const cookie = this.cookieService.getAll();
         if(cookie.Auth) {
             const jwtVal = cookie.Auth;
