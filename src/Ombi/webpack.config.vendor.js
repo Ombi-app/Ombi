@@ -52,6 +52,7 @@ module.exports = function (env) {
                 'ngx-clipboard',
                 'bootswatch/superhero/bootstrap.min.css',
                 'style-loader',
+                'ng2-cookies',
                 //'ng2-dragula',
                 //'dragula/dist/dragula.min.css'
             ]

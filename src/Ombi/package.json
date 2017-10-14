@@ -46,6 +46,7 @@
     "html-loader": "0.5.1",
     "intro.js-mit": "^3.0.0",
     "jquery": "3.2.1",
+    "ng2-cookies": "^1.0.12",
     "ng2-dragula": "1.5.0",
     "ngx-clipboard": "^8.0.4",
     "ngx-infinite-scroll": "^0.5.1",
