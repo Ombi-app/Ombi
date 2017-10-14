@@ -42,7 +42,6 @@ using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
-using Ombi.Schedule.Ombi;
 using Ombi.Store.Repository.Requests;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
 

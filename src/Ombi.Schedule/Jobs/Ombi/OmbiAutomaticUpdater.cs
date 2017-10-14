@@ -16,8 +16,9 @@ using Ombi.Api.Service;
 using Ombi.Api.Service.Models;
 using Ombi.Core.Settings;
 using Ombi.Helpers;
-using Ombi.Schedule.Ombi;
 using Ombi.Settings.Settings.Models;
+using SharpCompress.Readers;
+using SharpCompress.Readers.Tar;
 
 namespace Ombi.Schedule.Jobs.Ombi
 {
@@ -44,11 +45,11 @@ namespace Ombi.Schedule.Jobs.Ombi
         }
         public async Task<bool> UpdateAvailable(string branch, string currentVersion)
         {
-    
-                var updates = await OmbiService.GetUpdates(branch);
-                var serverVersion = updates.UpdateVersionString;
-                return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
-            
+
+            var updates = await OmbiService.GetUpdates(branch);
+            var serverVersion = updates.UpdateVersionString;
+            return !serverVersion.Equals(currentVersion, StringComparison.CurrentCultureIgnoreCase);
+
         }
 
         public async Task Update(PerformContext c)
@@ -153,21 +154,8 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     // Extract it
                     Ctx.WriteLine("Extracting ZIP");
-                    using (var files = ZipFile.OpenRead(zipDir))
-                    {
-                        // Temp Path
-                        Directory.CreateDirectory(tempPath);
-                        foreach (var entry in files.Entries)
-                        {
-                            if (entry.FullName.Contains("/"))
-                            {
-                                var path = Path.GetDirectoryName(Path.Combine(tempPath, entry.FullName));
-                                Directory.CreateDirectory(path);
-                            }
+                    Extract(zipDir, tempPath, extension);
 
-                            entry.ExtractToFile(Path.Combine(tempPath, entry.FullName));
-                        }
-                    }
                     Ctx.WriteLine("Finished Extracting files");
                     Ctx.WriteLine("Starting the Ombi.Updater process");
                     var updaterExtension = string.Empty;
@@ -194,6 +182,38 @@ namespace Ombi.Schedule.Jobs.Ombi
             {
                 Ctx.WriteLine(e);
                 throw;
+            }
+        }
+
+        private void Extract(string zipDir, string tempPath, string osPlat)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                using (var files = ZipFile.OpenRead(zipDir))
+                {
+                    // Temp Path
+                    Directory.CreateDirectory(tempPath);
+                    foreach (var entry in files.Entries)
+                    {
+                        if (entry.FullName.Contains("/"))
+                        {
+                            var path = Path.GetDirectoryName(Path.Combine(tempPath, entry.FullName));
+                            Directory.CreateDirectory(path);
+                        }
+
+                        entry.ExtractToFile(Path.Combine(tempPath, entry.FullName));
+                    }
+                }
+            }
+            else
+            {
+                // Something else!
+                using (var stream = File.Open(zipDir, FileMode.Open))
+                using (var files = TarReader.Open(stream))
+                {
+                    Directory.CreateDirectory(tempPath);
+                    files.WriteAllToDirectory(tempPath, new ExtractionOptions { Overwrite = true });
+                }
             }
         }
 

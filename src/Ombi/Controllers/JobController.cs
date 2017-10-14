@@ -7,8 +7,8 @@ using Ombi.Api.Service;
 using Ombi.Attributes;
 using Ombi.Helpers;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
-using Ombi.Schedule.Ombi;
 
 namespace Ombi.Controllers
 {

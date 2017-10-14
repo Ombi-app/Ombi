@@ -1,10 +1,10 @@
 ﻿using Hangfire;
 using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
+using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Schedule.Jobs.Sonarr;
-using Ombi.Schedule.Ombi;
 
 namespace Ombi.Schedule
 {

@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Hangfire.Server;
 
-namespace Ombi.Schedule.Ombi
+namespace Ombi.Schedule.Jobs.Ombi
 {
     public interface IOmbiAutomaticUpdater
     {
