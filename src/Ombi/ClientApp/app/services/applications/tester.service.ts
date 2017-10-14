@@ -16,7 +16,7 @@ import {
     IPushoverNotificationSettings,
     IRadarrSettings,
     ISlackNotificationSettings,
-    ISonarrSettings
+    ISonarrSettings,
 } from "../../interfaces";
 
 @Injectable()
