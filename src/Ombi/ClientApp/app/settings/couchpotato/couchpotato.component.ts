@@ -34,6 +34,10 @@ export class CouchPotatoComponent implements OnInit {
                 subDir:             [x.subDir],
                 defaultProfileId:   [x.defaultProfileId],
             });
+
+            if(x.defaultProfileId) {
+                this.getProfiles(this.form);
+            }
         });
     }
 
@@ -68,11 +72,11 @@ export class CouchPotatoComponent implements OnInit {
             return;
         }
         const settings = form.value;
-        this.testerService.radarrTest(settings).subscribe(x => {
+        this.testerService.couchPotatoTest(settings).subscribe(x => {
             if (x === true) {
-                this.notificationService.success("Connected", "Successfully connected to Radarr!");
+                this.notificationService.success("Connected", "Successfully connected to CouchPotato!");
             } else {
-                this.notificationService.error("Connected", "We could not connect to Radarr!");
+                this.notificationService.error("Connected", "We could not connect to CouchPotato!");
             }
         });
     }
@@ -80,7 +84,7 @@ export class CouchPotatoComponent implements OnInit {
     public requestToken(form: FormGroup) {
         this.couchPotatoService.getApiKey(form.value).subscribe(x => {
             if (x.success === true) {
-                (<FormControl>this.form.controls.apiKey).setValue(x.apiKey);
+                (<FormControl>this.form.controls.apiKey).setValue(x.api_key);
                 this.notificationService.success("Api Key", "Successfully got the Api Key");
             } else {
                 this.notificationService.error("Api Key", "Could not get the Api Key");

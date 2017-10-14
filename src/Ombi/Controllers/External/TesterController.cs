@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Hangfire;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.CouchPotato;
 using Ombi.Api.Emby;
 using Ombi.Api.Plex;
 using Ombi.Api.Radarr;
@@ -44,9 +45,11 @@ namespace Ombi.Controllers.External
         /// <param name="po">The pushover.</param>
         /// <param name="mm">The mattermost.</param>
         /// <param name="log">The logger.</param>
+        /// <param name="provider"></param>
         public TesterController(INotificationService service, IDiscordNotification notification, IEmailNotification emailN,
             IPushbulletNotification pushbullet, ISlackNotification slack, IPushoverNotification po, IMattermostNotification mm,
-            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider)
+            IPlexApi plex, IEmbyApi emby, IRadarrApi radarr, ISonarrApi sonarr, ILogger<TesterController> log, IEmailProvider provider,
+            ICouchPotatoApi cpApi)
         {
             Service = service;
             DiscordNotification = notification;
@@ -61,6 +64,7 @@ namespace Ombi.Controllers.External
             SonarrApi = sonarr;
             Log = log;
             EmailProvider = provider;
+            CouchPotatoApi = cpApi;
         }
 
         private INotificationService Service { get; }
@@ -74,6 +78,7 @@ namespace Ombi.Controllers.External
         private IRadarrApi RadarrApi { get; }
         private IEmbyApi EmbyApi { get; }
         private ISonarrApi SonarrApi { get; }
+        private ICouchPotatoApi CouchPotatoApi { get; }
         private ILogger<TesterController> Log { get; }
         private IEmailProvider EmailProvider { get; }
 
@@ -263,6 +268,26 @@ namespace Ombi.Controllers.External
             catch (Exception e)
             {
                 Log.LogError(LoggingEvents.Api, e, "Could not test Sonarr");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if we can connect to Sonarr with the provided settings
+        /// </summary>
+        /// <param name="settings"></param>
+        /// <returns></returns>
+        [HttpPost("couchpotato")]
+        public async Task<bool> CouchPotato([FromBody] CouchPotatoSettings settings)
+        {
+            try
+            {
+                var result = await CouchPotatoApi.Status(settings.FullUri, settings.ApiKey);
+                return result?.success ?? false;
+            }
+            catch (Exception e)
+            {
+                Log.LogError(LoggingEvents.Api, e, "Could not test CP");
                 return false;
             }
         }

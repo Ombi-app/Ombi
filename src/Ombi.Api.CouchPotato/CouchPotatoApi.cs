@@ -74,7 +74,7 @@ namespace Ombi.Api.CouchPotato
 
         public async Task<CouchPotatoApiKey> GetApiKey(string baseUrl, string username, string password)
         {
-            var request = new Request("getkey/",baseUrl, HttpMethod.Get);
+            var request = new Request("getkey",baseUrl, HttpMethod.Get);
             request.AddQueryString("u",username.CalcuateMd5Hash());
             request.AddQueryString("p",password.CalcuateMd5Hash());
 

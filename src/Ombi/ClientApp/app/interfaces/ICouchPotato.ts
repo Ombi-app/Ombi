@@ -21,5 +21,5 @@ export interface IProfileList {
 
 export interface ICouchPotatoApiKey {
     success: boolean;
-    apiKey: string;
+    api_key: string;
 }

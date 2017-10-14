@@ -6,6 +6,7 @@ import { Observable } from "rxjs/Rx";
 import { ServiceAuthHelpers } from "../service.helpers";
 
 import {
+    ICouchPotatoSettings,
     IDiscordNotifcationSettings,
     IEmailNotificationSettings,
     IEmbyServer,
@@ -15,7 +16,7 @@ import {
     IPushoverNotificationSettings,
     IRadarrSettings,
     ISlackNotificationSettings,
-    ISonarrSettings,
+    ISonarrSettings
 } from "../../interfaces";
 
 @Injectable()
@@ -57,5 +58,8 @@ export class TesterService extends ServiceAuthHelpers {
     }
     public sonarrTest(settings: ISonarrSettings): Observable<boolean> {
         return this.http.post(`${this.url}sonarr`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
+    }    
+    public couchPotatoTest(settings: ICouchPotatoSettings): Observable<boolean> {
+        return this.http.post(`${this.url}couchpotato`, JSON.stringify(settings), { headers: this.headers }).map(this.extractData);
     }
 }
