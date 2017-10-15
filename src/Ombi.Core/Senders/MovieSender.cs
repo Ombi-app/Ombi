@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Ombi.Api.CouchPotato;
 using Ombi.Api.DogNzb.Models;
 using Ombi.Api.Radarr;
 using Ombi.Core.Settings;
@@ -14,13 +15,16 @@ namespace Ombi.Core.Senders
     public class MovieSender : IMovieSender
     {
         public MovieSender(ISettingsService<RadarrSettings> radarrSettings, IRadarrApi api, ILogger<MovieSender> log,
-            ISettingsService<DogNzbSettings> dogSettings, IDogNzbApi dogApi)
+            ISettingsService<DogNzbSettings> dogSettings, IDogNzbApi dogApi, ISettingsService<CouchPotatoSettings> cpSettings,
+            ICouchPotatoApi cpApi)
         {
             RadarrSettings = radarrSettings;
             RadarrApi = api;
             Log = log;
             DogNzbSettings = dogSettings;
             DogNzbApi = dogApi;
+            CouchPotatoSettings = cpSettings;
+            CouchPotatoApi = cpApi;
         }
 
         private ISettingsService<RadarrSettings> RadarrSettings { get; }
@@ -28,10 +32,12 @@ namespace Ombi.Core.Senders
         private ILogger<MovieSender> Log { get; }
         private IDogNzbApi DogNzbApi { get; }
         private ISettingsService<DogNzbSettings> DogNzbSettings { get; }
+        private ISettingsService<CouchPotatoSettings> CouchPotatoSettings { get; }
+        private ICouchPotatoApi CouchPotatoApi { get; }
 
         public async Task<SenderResult> Send(MovieRequests model)
         {
-            //var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
+            var cpSettings = await CouchPotatoSettings.GetSettingsAsync();
             //var watcherSettings = await WatcherSettings.GetSettingsAsync();
             var radarrSettings = await RadarrSettings.GetSettingsAsync();
             if (radarrSettings.Enabled)
@@ -50,10 +56,10 @@ namespace Ombi.Core.Senders
                 };
             }
 
-            //if (cpSettings.Enabled)
-            //{
-            //    return SendToCp(model, cpSettings, string.IsNullOrEmpty(qualityId) ? cpSettings.ProfileId : qualityId);
-            //}
+            if (cpSettings.Enabled)
+            {
+                return await SendToCp(model, cpSettings, cpSettings.DefaultProfileId);
+            }
 
             //if (watcherSettings.Enabled)
             //{
@@ -66,6 +72,12 @@ namespace Ombi.Core.Senders
                 Success = true,
                 Sent = false,
             };
+        }
+
+        private async Task<SenderResult> SendToCp(FullBaseRequest model, CouchPotatoSettings cpSettings, string cpSettingsDefaultProfileId)
+        {
+            var result = await CouchPotatoApi.AddMovie(model.ImdbId, cpSettings.ApiKey, model.Title, cpSettings.FullUri, cpSettingsDefaultProfileId);
+            return new SenderResult { Success = result, Sent = true };
         }
 
         private async Task<DogNzbMovieAddResult> SendToDogNzb(FullBaseRequest model, DogNzbSettings settings)
