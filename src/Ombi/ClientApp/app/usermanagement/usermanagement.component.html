@@ -88,7 +88,7 @@
             <td>
                 <a [routerLink]="['/usermanagement/edit/' + u.id]" class="btn btn-sm btn-info-outline">Details/Edit</a>
             </td>
-            <td>
+            <td *ngIf="customizationSettings">
                 <button *ngIf="!u.hasLoggedIn" (click)="welcomeEmail(u)" [disabled]="!customizationSettings.applicationUrl" class="btn btn-sm btn-info-outline">Send Welcome Email</button>
             </td>
         </tr>

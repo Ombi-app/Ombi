@@ -221,11 +221,6 @@ namespace Ombi.Schedule.Jobs.Ombi
         {
             using (var client = new WebClient())
             {
-                ctx.WriteProgressBar();
-                client.DownloadProgressChanged += (s, e) =>
-                {
-                    ctx.WriteProgressBar(e.ProgressPercentage);
-                };
                 await client.DownloadFileTaskAsync(requestUri, filename);
             }
         }

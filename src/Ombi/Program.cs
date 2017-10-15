@@ -77,11 +77,9 @@ namespace Ombi
         {
             var result = new StringBuilder();
 
-            result.AppendLine("Hello, and welcome to the  console application.");
-            result.AppendLine("This application takes in a data file and attempts to import that data into our systems.");
+            result.AppendLine("Hello, welcome to Ombi");
             result.AppendLine("Valid options are:");
             result.AppendLine(HelpText.AutoBuild(args, null, null));
-            result.AppendLine("Press any key to exit");
 
             return result.ToString();
         }
