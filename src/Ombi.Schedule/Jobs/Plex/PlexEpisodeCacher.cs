@@ -47,7 +47,6 @@ namespace Ombi.Schedule.Jobs.Plex
 
                 foreach (var server in s.Servers)
                 {
-
                     await Cache(server);
                     BackgroundJob.Enqueue(() => _availabilityChecker.Start());
                 }
@@ -62,6 +61,8 @@ namespace Ombi.Schedule.Jobs.Plex
         {
             if (!Validate(settings))
             {
+
+                _log.LogWarning("Validation failed");
                 return;
             }
 

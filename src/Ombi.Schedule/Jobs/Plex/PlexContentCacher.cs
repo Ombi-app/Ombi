@@ -68,6 +68,7 @@ namespace Ombi.Schedule.Jobs.Plex
             }
             if (!ValidateSettings(plexSettings))
             {
+                Logger.LogError("Plex Settings are not valid");
                 return;
             }
 
@@ -76,6 +77,8 @@ namespace Ombi.Schedule.Jobs.Plex
             {
                 await StartTheCache(plexSettings);
 
+
+                Logger.LogInformation("Starting EP Cacher");
                 BackgroundJob.Enqueue(() => EpisodeCacher.Start());
             }
             catch (Exception e)
@@ -89,6 +92,7 @@ namespace Ombi.Schedule.Jobs.Plex
             foreach (var servers in plexSettings.Servers ?? new List<PlexServers>())
             {
 
+                Logger.LogInformation("Getting all content from server {0}", servers.Name);
                 var allContent = GetAllContent(servers);
 
                 // Let's now process this.
@@ -98,6 +102,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Show.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Process Shows
+                        Logger.LogInformation("Processing TV Shows");
                         foreach (var show in content.Metadata)
                         {
                             var seasonList = await PlexApi.GetSeasons(servers.PlexAuthToken, servers.FullUri,
@@ -118,6 +123,7 @@ namespace Ombi.Schedule.Jobs.Plex
                             var existingContent = await Repo.GetByKey(show.ratingKey);
                             if (existingContent != null)
                             {
+                                Logger.LogInformation("We already have show {0} checking for new seasons", existingContent.Title);
                                 // Ok so we have it, let's check if there are any new seasons
                                 var itemAdded = false;
                                 foreach (var season in seasonsContent)
@@ -138,6 +144,8 @@ namespace Ombi.Schedule.Jobs.Plex
                             }
                             else
                             {
+
+                                Logger.LogInformation("New show {0}, so add it", show.title);
 
                                 // Get the show metadata... This sucks since the `metadata` var contains all information about the show
                                 // But it does not contain the `guid` property that we need to pull out thetvdb id...
@@ -165,6 +173,7 @@ namespace Ombi.Schedule.Jobs.Plex
                     }
                     if (content.viewGroup.Equals(Jobs.PlexContentCacher.PlexMediaType.Movie.ToString(), StringComparison.CurrentCultureIgnoreCase))
                     {
+                        Logger.LogInformation("Processing Movies");
                         foreach (var movie in content?.Metadata ?? new Metadata[]{})
                         {
                             // Let's check if we have this movie
@@ -174,6 +183,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 continue;
                             }
 
+                            Logger.LogInformation("Adding movie {0}", movie.title);
                             var metaData = await PlexApi.GetMetadata(servers.PlexAuthToken, servers.FullUri,
                                 movie.ratingKey);
                             var item = new PlexContent
@@ -229,6 +239,7 @@ namespace Ombi.Schedule.Jobs.Plex
                                 .Select(x => x.Key.ToString()).ToList();
                             if (!keys.Contains(dir.key))
                             {
+                                Logger.LogInformation("Lib {0} is not monitored, so skipping", dir.key);
                                 // We are not monitoring this lib
                                 continue;
                             }
