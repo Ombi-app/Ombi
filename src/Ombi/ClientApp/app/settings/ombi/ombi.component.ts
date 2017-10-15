@@ -18,11 +18,9 @@ export class OmbiComponent implements OnInit {
     public ngOnInit() {
         this.settingsService.getOmbi().subscribe(x => {
             this.form = this.fb.group({
-                port: [x.port],
                 collectAnalyticData: [x.collectAnalyticData],
                 apiKey: [x.apiKey],
-                externalUrl: [x.externalUrl],
-                allowExternalUsersToAuthenticate: [x.allowExternalUsersToAuthenticate],
+                ignoreCertificateErrors: [x.ignoreCertificateErrors],
                 baseUrl: [x.baseUrl],
             });
         });

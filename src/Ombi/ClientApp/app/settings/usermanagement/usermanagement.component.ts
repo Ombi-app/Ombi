@@ -22,6 +22,8 @@ export class UserManagementComponent implements OnInit {
     public filteredEmbyUsers: IUsersModel[];
     public bannedEmbyUsers: IUsersModel[] = [];
 
+    public enableImportButton = false;
+
     constructor(private readonly settingsService: SettingsService,
                 private readonly notificationService: NotificationService,
                 private readonly identityService: IdentityService,
@@ -33,6 +35,10 @@ export class UserManagementComponent implements OnInit {
     public ngOnInit(): void {
         this.settingsService.getUserManagementSettings().subscribe(x => {
             this.settings = x;
+
+            if(x.importEmbyUsers || x.importPlexUsers) {
+                this.enableImportButton = true;
+            }
 
             this.plexService.getFriends().subscribe(f => {
                 this.plexUsers = f;
@@ -82,6 +88,10 @@ export class UserManagementComponent implements OnInit {
         this.settings.defaultRoles = enabledClaims.map((claim) => claim.value);
         this.settings.bannedPlexUserIds = this.bannedPlexUsers.map((u) => u.id);
         this.settings.bannedEmbyUserIds = this.bannedEmbyUsers.map((u) => u.id);
+        
+        if(this.settings.importEmbyUsers || this.settings.importPlexUsers) {
+            this.enableImportButton = true;
+        }
 
         this.settingsService.saveUserManagementSettings(this.settings).subscribe(x => {
             if (x === true) {
@@ -101,6 +111,7 @@ export class UserManagementComponent implements OnInit {
     }
 
     public runImporter(): void {
+        
         this.jobService.runPlexImporter().subscribe();
         this.jobService.runEmbyImporter().subscribe();
     }

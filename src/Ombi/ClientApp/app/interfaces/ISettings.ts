@@ -8,13 +8,11 @@ export interface IExternalSettings extends ISettings {
 }
 
 export interface IOmbiSettings extends ISettings {
-    port: number;
     baseUrl: string;
     collectAnalyticData: boolean;
     wizard: boolean;
     apiKey: string;
-    externalUrl: string;
-    allowExternalUsersToAuthenticate: boolean;
+    ignoreCertificateErrors: boolean;
 }
 
 export interface IUpdateSettings extends ISettings {

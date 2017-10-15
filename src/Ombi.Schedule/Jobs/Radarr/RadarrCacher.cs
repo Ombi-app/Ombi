@@ -56,7 +56,7 @@ namespace Ombi.Schedule.Jobs.Radarr
                                 }
                                 else
                                 {
-                                    Log.Error("TMDBId is not > 0 for movie {0}", m.title);
+                                   Logger.LogError("TMDBId is not > 0 for movie {0}", m.title);
                                 }
                             }
                             await _ctx.RadarrCache.AddRangeAsync(movieIds);

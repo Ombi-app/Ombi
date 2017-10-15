@@ -54,7 +54,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <button type="submit" id="save" (click)="submit()" class="btn btn-primary-outline">Submit</button>
-            <button type="button" [disabled]="!settings.importEmbyUsers || !settings.importPlexUsers" (click)="runImporter()" class="btn btn-info-outline">Run Importer</button>
+            <button type="button" [disabled]="!enableImportButton" (click)="runImporter()" class="btn btn-info-outline">Run Importer</button>
         </div>     
         <div class="form-group">
         </div>

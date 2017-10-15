@@ -37,5 +37,6 @@ namespace Ombi.Store.Context
         DbSet<SonarrEpisodeCache> SonarrEpisodeCache { get; set; }
         EntityEntry Update(object entity);
         EntityEntry<TEntity> Update<TEntity>(TEntity entity) where TEntity : class;
+        DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
     }
 }

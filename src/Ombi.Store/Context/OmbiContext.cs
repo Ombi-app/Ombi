@@ -26,6 +26,7 @@ namespace Ombi.Store.Context
         public DbSet<PlexContent> PlexContent { get; set; }
         public DbSet<PlexEpisode> PlexEpisode { get; set; }
         public DbSet<RadarrCache> RadarrCache { get; set; }
+        public DbSet<CouchPotatoCache> CouchPotatoCache { get; set; }
         public DbSet<EmbyContent> EmbyContent { get; set; }
         public DbSet<EmbyEpisode> EmbyEpisode { get; set; }
 

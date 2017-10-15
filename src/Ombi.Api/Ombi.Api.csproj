@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Helpers\Ombi.Helpers.csproj" />
+    <ProjectReference Include="..\Ombi.Settings\Ombi.Settings.csproj" />
   </ItemGroup>
 
 </Project>

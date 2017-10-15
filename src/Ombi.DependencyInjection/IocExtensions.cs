@@ -38,10 +38,12 @@ using Ombi.Api.Service;
 using Ombi.Api.Slack;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Core.Senders;
+using Ombi.Schedule.Jobs.Couchpotato;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
 using Ombi.Schedule.Jobs.Sonarr;
+using Ombi.Store.Entities;
 using Ombi.Store.Repository.Requests;
 using PlexContentCacher = Ombi.Schedule.Jobs.Plex.PlexContentCacher;
 
@@ -129,11 +131,12 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IMattermostNotification, MattermostNotification>();
             services.AddTransient<IPushoverNotification, PushoverNotification>();
 
-            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
         }
 
         public static void RegisterJobs(this IServiceCollection services)
         {
+            services.AddTransient<IBackgroundJobClient, BackgroundJobClient>();
+
             services.AddTransient<IPlexContentCacher, PlexContentCacher>();
             services.AddTransient<IEmbyContentCacher, EmbyContentCacher>();
             services.AddTransient<IEmbyEpisodeCacher, EmbyEpisodeCacher>();
@@ -147,6 +150,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IPlexUserImporter, PlexUserImporter>();
             services.AddTransient<IEmbyUserImporter, EmbyUserImporter>();
             services.AddTransient<IWelcomeEmail, WelcomeEmail>();
+            services.AddTransient<ICouchPotatoCacher, CouchPotatoCacher>();
         }
     }
 }

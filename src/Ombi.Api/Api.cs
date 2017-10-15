@@ -1,29 +1,45 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
+using Ombi.Core.Settings;
 using Ombi.Helpers;
+using Ombi.Settings.Settings.Models;
 
 namespace Ombi.Api
 {
     public class Api : IApi
     {
-        public Api(ILogger<Api> log)
+        public Api(ILogger<Api> log, ISettingsService<OmbiSettings> s, IMemoryCache cache)
         {
             Logger = log;
+            _settings = s;
+            _cache = cache;
         }
 
         private ILogger<Api> Logger { get; }
+        private readonly ISettingsService<OmbiSettings> _settings;
+        private readonly IMemoryCache _cache;
 
-
-        private HttpMessageHandler GetHandler()
+        private async Task<HttpMessageHandler> GetHandler()
         {
-            return new HttpClientHandler
+            var settings = await _cache.GetOrCreateAsync(CacheKeys.OmbiSettings, async entry =>
             {
-                ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
-            };
+                entry.AbsoluteExpiration = DateTimeOffset.Now.AddHours(1);
+                return await _settings.GetSettingsAsync();
+            });
+            if (settings.IgnoreCertificateErrors)
+            {
+                return new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+                };
+            }
+            return new HttpClientHandler();
         }
 
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
@@ -33,7 +49,7 @@ namespace Ombi.Api
 
         public async Task<T> Request<T>(Request request)
         {
-            using (var httpClient = new HttpClient(GetHandler()))
+            using (var httpClient = new HttpClient(await GetHandler()))
             {
 
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
@@ -79,7 +95,7 @@ namespace Ombi.Api
 
         public async Task<string> RequestContent(Request request)
         {
-            using (var httpClient = new HttpClient(GetHandler()))
+            using (var httpClient = new HttpClient(await GetHandler()))
             {
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
@@ -113,7 +129,7 @@ namespace Ombi.Api
 
         public async Task Request(Request request)
         {
-            using (var httpClient = new HttpClient(GetHandler()))
+            using (var httpClient = new HttpClient(await GetHandler()))
             {
                 using (var httpRequestMessage = new HttpRequestMessage(request.HttpMethod, request.FullUri))
                 {
