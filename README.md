@@ -39,6 +39,7 @@ We integrate with the following applications:
 * Sonarr
 * Radarr (beta)
 * DogNzb
+* Couch Potato
 
 
 ### Notifications
@@ -70,7 +71,7 @@ We are planning to bring back these features in Version 3 but for now you can fi
 | Sending newsletters | Planned | Yes |
 | Send a Mass Email | Planned | Yes |
 | SickRage | Planned (not supported yet)| Yes |
-| CouchPotato | Planned | Yes |
+| CouchPotato | Yes | Yes |
 | Watcher | Planned | Yes |
 | DogNzb | Yes | No |
 | Headphones | No (support dropped) | Yes |
