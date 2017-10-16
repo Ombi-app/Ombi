@@ -54,6 +54,7 @@ namespace Ombi.Schedule.Jobs.Sonarr
                     await _ctx.SonarrCache.AddRangeAsync(entites);
 
                     var episodesToAdd = new List<SonarrEpisodeCache>();
+                    await _ctx.Database.ExecuteSqlCommandAsync("DELETE FROM SonarrEpisodeCache");
                     foreach (var s in sonarrSeries)
                     {
                         var episodes = await _api.GetEpisodes(s.id, settings.ApiKey, settings.FullUri);
