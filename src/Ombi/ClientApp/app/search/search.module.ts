@@ -6,6 +6,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 
 import { MovieSearchComponent } from "./moviesearch.component";
+import { MovieSearchGridComponent } from "./moviesearchgrid.component";
 import { SearchComponent } from "./search.component";
 import { SeriesInformationComponent } from "./seriesinformation.component";
 import { TvSearchComponent } from "./tvsearch.component";
@@ -35,6 +36,7 @@ const routes: Routes = [
         MovieSearchComponent,
         TvSearchComponent,
         SeriesInformationComponent,
+        MovieSearchGridComponent,
     ],
     exports: [
         RouterModule,

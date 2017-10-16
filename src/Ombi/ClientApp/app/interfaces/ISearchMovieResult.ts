@@ -27,3 +27,7 @@
     requestProcessing: boolean;
     processed: boolean;
 }
+
+export interface ISearchMovieResultContainer {
+    movies: ISearchMovieResult[];
+}
