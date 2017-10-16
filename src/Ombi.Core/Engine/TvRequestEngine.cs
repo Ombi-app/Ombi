@@ -116,7 +116,7 @@ namespace Ombi.Core.Engine
                     return new RequestEngineResult
                     {
                         RequestAdded = false,
-                        ErrorMessage = "They have already been requestsed"
+                        ErrorMessage = "This has already been requested"
                     };
                 }
                     return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
