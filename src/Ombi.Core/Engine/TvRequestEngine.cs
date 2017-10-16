@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Core.Authentication;
 using Ombi.Core.Engine.Interfaces;
@@ -25,20 +24,17 @@ namespace Ombi.Core.Engine
     public class TvRequestEngine : BaseMediaEngine, ITvRequestEngine
     {
         public TvRequestEngine(ITvMazeApi tvApi, IRequestServiceMain requestService, IPrincipal user,
-            INotificationHelper helper, IMapper map,
-            IRuleEvaluator rule, OmbiUserManager manager,
+            INotificationHelper helper, IRuleEvaluator rule, OmbiUserManager manager,
             ITvSender sender, IAuditRepository audit) : base(user, requestService, rule, manager)
         {
             TvApi = tvApi;
             NotificationHelper = helper;
-            Mapper = map;
             TvSender = sender;
             Audit = audit;
         }
 
         private INotificationHelper NotificationHelper { get; }
         private ITvMazeApi TvApi { get; }
-        private IMapper Mapper { get; }
         private ITvSender TvSender { get; }
         private IAuditRepository Audit { get; }
 
@@ -119,7 +115,7 @@ namespace Ombi.Core.Engine
                         ErrorMessage = "This has already been requested"
                     };
                 }
-                    return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
+                return await AddExistingRequest(tvBuilder.ChildRequest, existingRequest);
             }
 
             // This is a new request
@@ -296,7 +292,7 @@ namespace Ombi.Core.Engine
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {
-                    return new RequestEngineResult { RequestAdded = true };
+                    return new RequestEngineResult {RequestAdded = true};
                 }
                 return new RequestEngineResult
                 {
@@ -304,28 +300,7 @@ namespace Ombi.Core.Engine
                 };
             }
 
-            return new RequestEngineResult { RequestAdded = true };
+            return new RequestEngineResult {RequestAdded = true};
         }
-
-        //public async Task<IEnumerable<TvRequests>> GetApprovedRequests()
-        //{
-        //    var allRequests = TvRepository.Get();
-
-
-        //}
-
-        //public async Task<IEnumerable<TvRequests>> GetNewRequests()
-        //{
-        //    //var allRequests = await TvRepository.GetAllAsync();
-        //    //return allRequests.Where(x => !x.Approved && !x.Available);
-        //    return null;
-        //}
-
-        //public async Task<IEnumerable<TvRequests>> GetAvailableRequests()
-        //{
-        //    //var allRequests = await TvRepository.GetAllAsync();
-        //    //return allRequests.Where(x => x.Available);
-        //    return null;
-        //}
     }
 }
