@@ -140,7 +140,7 @@ namespace Ombi.Controllers
                 model.Add(await GetUserWithRoles(user));
             }
 
-            return model;
+            return model.OrderBy(x => x.Username);
         }
 
         /// <summary>
