@@ -194,9 +194,7 @@ Task("Publish-Linux")
 Task("Run-Unit-Tests")
     .Does(() =>
 {  
-	DotNetCoreTest("./src/Ombi.Core.Tests/");
-	DotNetCoreTest("./src/Ombi.Notifications.Tests/");
-	DotNetCoreTest("./src/Ombi.Schedule.Tests/");
+	DotNetCoreBuild(csProj, buildSettings);
 });
 
 //////////////////////////////////////////////////////////////////////
