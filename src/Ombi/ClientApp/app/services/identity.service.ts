@@ -44,7 +44,7 @@ export class IdentityService extends ServiceAuthHelpers {
     }
 
     public deleteUser(user: IUser): Observable<IIdentityResult> {
-        return this.http.delete(`${this.url}/${user.id}`, { headers: this.headers }).map(this.extractData);
+        return this.http.delete(`${this.url}${user.id}`, { headers: this.headers }).map(this.extractData);
     }
 
     public submitResetPassword(email: string): Observable<IIdentityResult> {
