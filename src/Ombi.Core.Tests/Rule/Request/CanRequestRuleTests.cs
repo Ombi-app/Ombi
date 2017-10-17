@@ -1,26 +1,28 @@
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Moq;
+using NUnit.Framework;
 using Ombi.Core.Claims;
-using Ombi.Core.Models.Requests;
 using Ombi.Core.Rule.Rules;
 using Ombi.Store.Entities.Requests;
-using Xunit;
 
-namespace Ombi.Core.Tests.Rule
+namespace Ombi.Core.Tests.Rule.Request
 {
     public class CanRequestRuleTests
     {
-        public CanRequestRuleTests()
+        [SetUp]
+        public void Setup()
         {
+
             PrincipalMock = new Mock<IPrincipal>();
             Rule = new CanRequestRule(PrincipalMock.Object);
         }
 
-        private CanRequestRule Rule { get; }
-        private Mock<IPrincipal> PrincipalMock { get; }
 
-        [Fact]
+        private CanRequestRule Rule { get; set; }
+        private Mock<IPrincipal> PrincipalMock { get; set; }
+
+        [Test]
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithMovieRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestMovie)).Returns(true);
@@ -30,7 +32,7 @@ namespace Ombi.Core.Tests.Rule
             Assert.True(result.Success);
         }
 
-        [Fact]
+        [Test]
         public async Task Should_ReturnFail_WhenRequestingMovieWithoutMovieRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestMovie)).Returns(false);
@@ -41,7 +43,7 @@ namespace Ombi.Core.Tests.Rule
             Assert.False(string.IsNullOrEmpty(result.Message));
         }
 
-        [Fact]
+        [Test]
         public async Task Should_ReturnSuccess_WhenRequestingMovieWithAdminRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.Admin)).Returns(true);
@@ -51,7 +53,7 @@ namespace Ombi.Core.Tests.Rule
             Assert.True(result.Success);
         }
 
-        [Fact]
+        [Test]
         public async Task Should_ReturnSuccess_WhenRequestingTVWithAdminRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.Admin)).Returns(true);
@@ -61,7 +63,7 @@ namespace Ombi.Core.Tests.Rule
             Assert.True(result.Success);
         }
 
-        [Fact]
+        [Test]
         public async Task Should_ReturnSuccess_WhenRequestingTVWithTVRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestTv)).Returns(true);
@@ -71,7 +73,7 @@ namespace Ombi.Core.Tests.Rule
             Assert.True(result.Success);
         }
 
-        [Fact]
+        [Test]
         public async Task Should_ReturnFail_WhenRequestingTVWithoutTVRole()
         {
             PrincipalMock.Setup(x => x.IsInRole(OmbiRoles.RequestTv)).Returns(false);

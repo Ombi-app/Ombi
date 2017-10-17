@@ -152,6 +152,7 @@ Task("Package")
 });
 
 Task("Publish")
+    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("PrePublish")
     .IsDependentOn("Publish-Windows")
     .IsDependentOn("Publish-OSX").IsDependentOn("Publish-Linux")
@@ -191,9 +192,11 @@ Task("Publish-Linux")
 });
 
 Task("Run-Unit-Tests")
-    .IsDependentOn("Publish")
     .Does(() =>
-{
+{  
+	DotNetCoreTest("./src/Ombi.Core.Tests/");
+	DotNetCoreTest("./src/Ombi.Notifications.Tests/");
+	DotNetCoreTest("./src/Ombi.Schedule.Tests/");
 });
 
 //////////////////////////////////////////////////////////////////////
@@ -201,7 +204,7 @@ Task("Run-Unit-Tests")
 //////////////////////////////////////////////////////////////////////
 
 Task("Default")
-    .IsDependentOn("Run-Unit-Tests");
+    .IsDependentOn("Publish");
 
 //////////////////////////////////////////////////////////////////////
 // EXECUTION

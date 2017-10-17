@@ -66,6 +66,8 @@ namespace Ombi.Store.Context
                 .WithMany(b => b.Episodes)
                 .HasPrincipalKey(x => x.EmbyId)
                 .HasForeignKey(p => p.ParentId);
+
+            builder.Ignore<Logs>();
             base.OnModelCreating(builder);
         }
 

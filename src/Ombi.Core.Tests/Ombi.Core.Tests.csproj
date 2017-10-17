@@ -6,20 +6,14 @@
 
   <ItemGroup>
     <PackageReference Include="Moq" Version="4.7.99" />
-    <PackageReference Include="xunit" Version="2.3.0-beta5-build3769" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.0-beta5-build3769" />
     <PackageReference Include="Nunit" Version="3.8.1" />
     <PackageReference Include="NUnit.ConsoleRunner" Version="3.7.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.0-beta4-build3742" />
+    <packagereference Include="Microsoft.NET.Test.Sdk" Version="15.0.0"></packagereference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Ombi.Core\Ombi.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
   </ItemGroup>
 
 </Project>

@@ -1,32 +1,39 @@
-//using System.Linq;
-//using Ombi.Store.Entities;
-//using Xunit;
-//using Xunit.Abstractions;
+using System.Linq;
+using NUnit.Framework;
+using Ombi.Store.Entities;
 
-//namespace Ombi.Notifications.Tests
-//{
-//    public class NotificationMessageResolverTests
-//    {
-//        public NotificationMessageResolverTests(ITestOutputHelper helper)
-//        {
-//            _resolver = new NotificationMessageResolver();
-//            output = helper;
-//        }
+namespace Ombi.Notifications.Tests
+{
+    [TestFixture]
+    public class NotificationMessageResolverTests
+    {
+        [SetUp]
+        public void Setup()
+        {
 
-//        private readonly NotificationMessageResolver _resolver;
-//        private readonly ITestOutputHelper output;
+            _resolver = new NotificationMessageResolver();
+        }
+        
+        private NotificationMessageResolver _resolver;
 
-//        [Fact]
-//        public void Resolved_ShouldResolve_RequestedUser()
-//        {
-//            var result = _resolver.ParseMessage(new NotificationTemplates
-//            {
-//                Subject = "This is a {RequestedUser}"
-//            }, new NotificationMessageCurlys {RequestedUser = "Abc"});
-//            output.WriteLine(result.Message);
-//            //Assert.True(result.Message.Equals("This is a Abc"));
-            
-//            Assert.Contains("11a", result.Message);
-//        }
-//    }
-//}
+        [Test]
+        public void Resolved_ShouldResolveSubject_RequestedUser()
+        {
+            var result = _resolver.ParseMessage(new NotificationTemplates
+            {
+                Subject = "This is a {RequestedUser}"
+            }, new NotificationMessageCurlys { RequestedUser = "Abc" });
+            Assert.True(result.Subject.Equals("This is a Abc"), result.Subject);
+        }
+
+        [Test]
+        public void Resolved_ShouldResolveMessage_RequestedUser()
+        {
+            var result = _resolver.ParseMessage(new NotificationTemplates
+            {
+                Message = "This is a {RequestedUser}"
+            }, new NotificationMessageCurlys { RequestedUser = "Abc" });
+            Assert.True(result.Message.Equals("This is a Abc"), result.Message);
+        }
+    }
+}

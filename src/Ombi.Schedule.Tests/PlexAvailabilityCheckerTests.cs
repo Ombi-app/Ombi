@@ -17,21 +17,22 @@ namespace Ombi.Schedule.Tests
     [TestFixture]
     public class PlexAvailabilityCheckerTests
     {
-        public PlexAvailabilityCheckerTests()
+        [SetUp]
+        public void Setup()
         {
             _repo = new Mock<IPlexContentRepository>();
             _tv = new Mock<ITvRequestRepository>();
-            _movie = new Mock<IMovieRequestRepository>();
             _movie = new Mock<IMovieRequestRepository>();
             _notify = new Mock<INotificationService>();
             Checker = new PlexAvailabilityChecker(_repo.Object, _tv.Object, _movie.Object, _notify.Object, new Mock<IBackgroundJobClient>().Object);
         }
 
-        private readonly Mock<IPlexContentRepository> _repo;
-        private readonly Mock<ITvRequestRepository> _tv;
-        private readonly Mock<IMovieRequestRepository> _movie;
-        private readonly Mock<INotificationService> _notify;
-        private PlexAvailabilityChecker Checker { get; }
+
+        private Mock<IPlexContentRepository> _repo;
+        private Mock<ITvRequestRepository> _tv;
+        private Mock<IMovieRequestRepository> _movie;
+        private Mock<INotificationService> _notify;
+        private PlexAvailabilityChecker Checker;
 
         [Test]
         public async Task ProcessMovies_ShouldMarkAvailable_WhenInPlex()

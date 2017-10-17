@@ -1,51 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Moq;
+using NUnit.Framework;
 using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Rules.Search;
+using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
-using Xunit;
 
 namespace Ombi.Core.Tests.Rule.Search
 {
     public class ExistignRequestRuleTests
     {
-        public ExistignRequestRuleTests()
+        [SetUp]
+        public void Setup()
         {
+
             MovieMock = new Mock<IMovieRequestRepository>();
             TvMock = new Mock<ITvRequestRepository>();
             Rule = new ExistingRule(MovieMock.Object, TvMock.Object);
         }
 
-        private ExistingRule Rule { get; }
-        private Mock<IMovieRequestRepository> MovieMock { get; }
-        private Mock<ITvRequestRepository> TvMock { get; }
+        private ExistingRule Rule { get; set; }
+        private Mock<IMovieRequestRepository> MovieMock { get; set; }
+        private Mock<ITvRequestRepository> TvMock { get; set; }
 
 
-        [Fact]
+        [Test]
         public async Task ShouldBe_Requested_WhenExisitngMovie()
         {
             var list = new MovieRequests
             {
                 TheMovieDbId = 123,
-                Approved = true
+                Approved = true,
+                RequestType = RequestType.Movie
             };
 
             MovieMock.Setup(x => x.GetRequest(123)).Returns(list);
             var search = new SearchMovieViewModel
             {
                 Id = 123,
+                
 
             };
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
-            Assert.False(search.Approved);
+            Assert.True(search.Approved);
+            Assert.True(search.Requested);
         }
 
-        [Fact]
+        [Test]
         public async Task ShouldBe_NotRequested_WhenNewMovie()
         {
             var list = new MovieRequests
@@ -64,9 +70,10 @@ namespace Ombi.Core.Tests.Rule.Search
 
             Assert.True(result.Success);
             Assert.False(search.Approved);
+            Assert.False(search.Requested);
         }
 
-        [Fact]
+        [Test]
         public async Task ShouldBe_Requested_WhenExisitngTv()
         {
             var list = new TvRequests
@@ -86,15 +93,15 @@ namespace Ombi.Core.Tests.Rule.Search
             var search = new SearchTvShowViewModel
             {
                 Id = 123,
-
             };
             var result = await Rule.Execute(search);
 
             Assert.True(result.Success);
             Assert.True(search.Approved);
+            Assert.True(search.Requested);
         }
 
-        [Fact]
+        [Test]
         public async Task ShouldBe_NotRequested_WhenNewTv()
         {
             var list = new TvRequests
@@ -121,8 +128,7 @@ namespace Ombi.Core.Tests.Rule.Search
 
             Assert.True(result.Success);
             Assert.False(search.Approved);
+            Assert.False(search.Requested);
         }
-
-
     }
 }
