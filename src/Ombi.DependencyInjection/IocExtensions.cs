@@ -115,6 +115,7 @@ namespace Ombi.DependencyInjection
             services.AddTransient<IApplicationConfigRepository, ApplicationConfigRepository>();
             services.AddTransient<ITokenRepository, TokenRepository>();
             services.AddTransient(typeof(ISettingsService<>), typeof(SettingsService<>));
+            services.AddTransient(typeof(IRepository<>), typeof(Repository<>));
         }
         public static void RegisterServices(this IServiceCollection services)
         {

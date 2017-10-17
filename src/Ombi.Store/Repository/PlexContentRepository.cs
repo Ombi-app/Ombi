@@ -34,47 +34,25 @@ using Ombi.Store.Entities;
 
 namespace Ombi.Store.Repository
 {
-    public class PlexContentRepository : IPlexContentRepository
+    public class PlexContentRepository : Repository<PlexContent>, IPlexContentRepository
     {
 
-        public PlexContentRepository(IOmbiContext db)
+        public PlexContentRepository(IOmbiContext db) : base(db)
         {
             Db = db;
         }
 
         private IOmbiContext Db { get; }
 
-        public async Task<IEnumerable<PlexContent>> GetAll()
-        {
-            return await Db.PlexContent.ToListAsync();
-        }
-
-        public async Task AddRange(IEnumerable<PlexContent> content)
-        {
-            Db.PlexContent.AddRange(content);
-            await Db.SaveChangesAsync();
-        }
 
         public async Task<bool> ContentExists(string providerId)
         {
             return await Db.PlexContent.AnyAsync(x => x.ProviderId == providerId);
         }
 
-        public async Task<PlexContent> Add(PlexContent content)
-        {
-            await Db.PlexContent.AddAsync(content);
-            await Db.SaveChangesAsync();
-            return content;
-        }
-
         public async Task<PlexContent> Get(string providerId)
         {
             return await Db.PlexContent.FirstOrDefaultAsync(x => x.ProviderId == providerId);
-        }
-
-        public IQueryable<PlexContent> Get()
-        {
-            return Db.PlexContent.AsQueryable();
         }
 
         public async Task<PlexContent> GetByKey(int key)
