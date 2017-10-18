@@ -157,7 +157,7 @@ namespace Ombi.Schedule.Jobs.Ombi
                     }
                     // Extract it
                     Ctx.WriteLine("Extracting ZIP");
-                    Extract(zipDir, tempPath, extension);
+                    Extract(zipDir, tempPath);
 
                     Ctx.WriteLine("Finished Extracting files");
                     Ctx.WriteLine("Starting the Ombi.Updater process");
@@ -175,6 +175,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                         Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension,
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
+                    if (settings.Username.HasValue())
+                    {
+                        start.UserName = settings.Username;
+                    }
+                    if (settings.Password.HasValue())
+                    {
+                        start.Password = settings.Password.ToSecureString();
+                    }
                     using (var proc = new Process { StartInfo = start })
                     {
                         proc.Start();
@@ -189,7 +197,7 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        private void Extract(string zipDir, string tempPath, string osPlat)
+        private void Extract(string zipDir, string tempPath)
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {

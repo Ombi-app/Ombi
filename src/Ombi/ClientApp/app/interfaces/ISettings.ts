@@ -17,6 +17,8 @@ export interface IOmbiSettings extends ISettings {
 
 export interface IUpdateSettings extends ISettings {
     autoUpdateEnabled: boolean;
+    username: string;
+    password: string;
 }
 
 export interface IEmbySettings extends ISettings {

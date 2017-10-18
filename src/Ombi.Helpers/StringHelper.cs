@@ -1,5 +1,7 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -44,5 +46,24 @@ namespace Ombi.Helpers
             return string.Join("", (sha1.ComputeHash(Encoding.UTF8.GetBytes(input))).Select(x => x.ToString("x2")).ToArray());
         }
 
+
+        public static bool IsNullOrEmpty(this string s) => string.IsNullOrEmpty(s);
+        public static bool HasValue(this string s) => !IsNullOrEmpty(s);
+
+        public static SecureString ToSecureString(this string password)
+        {
+            if (password == null)
+                throw new ArgumentNullException(nameof(password));
+
+            var securePassword = new SecureString();
+
+            foreach (var c in password)
+            {
+                securePassword.AppendChar(c);
+            }
+
+            securePassword.MakeReadOnly();
+            return securePassword;
+        }
     }
 }

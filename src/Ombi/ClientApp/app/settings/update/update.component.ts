@@ -22,6 +22,8 @@ export class UpdateComponent implements OnInit {
             .subscribe(x => {
                 this.form = this.fb.group({
                     autoUpdateEnabled: [x.autoUpdateEnabled],
+                    username: [x.username],
+                    password: [x.password],
                 });
             });
     }
