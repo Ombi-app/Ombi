@@ -4,6 +4,66 @@
 
 ### **New Features**
 
+- Added usersname and password option for the updater #1460. [Jamie.Rees]
+
+- Changed the way we download the .zip files in the auto updater #1460 This might make a difference to the permissions issue. but not 100% sure. [Jamie.Rees]
+
+- Changed cake. [Jamie.Rees]
+
+- Added feedback when we send a welcome email #1578. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Added some logging into the PlexCachers and set the log level to informational. [tidusjar]
+
+- Added Couchpotato support and fixed #1548. [tidusjar]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Update ISSUE_TEMPLATE.md. [PotatoQuality]
+
+- Update README.md. [Jamie]
+
+- Added the ability to use a cookie to login. Mainly for Org. [tidusjar]
+
+- Added support for a new TV and Movie provider. DogNZB. [tidusjar]
+
+- Added a PartlyAvailable flag for tv shows. [Jamie.Rees]
+
+- Added some feedback on the request buttons for movies #1536. [Jamie.Rees]
+
+- Added a fix for the poster path issue #1533. [Jamie.Rees]
+
+- Added back the log path writing #865. [Jamie.Rees]
+
+- Update README.md. [Jamie]
+
+- Added support for email login #1513. [tidusjar]
+
+- Added some more logging around the plex user importer fixed the discord notification issue #1513. [tidusjar]
+
+- Update README.md. [PotatoQuality]
+
+- Update README.md. [PotatoQuality]
+
+- Update README.md. [PotatoQuality]
+
+- Update README.md. [PotatoQuality]
+
+- Update README.md. [PotatoQuality]
+
+- Update Readme for V3. [PotatoQuality]
+
+- Added some wiki pages and also made it so we cannot edit Plex Users email address (since they will get overwrote via the Importer) #865. [Jamie.Rees]
+
+- Added transparency to icon files (#1520) [Auwen]
+
+- Added an application URL in the customization settings #1513. [Jamie.Rees]
+
+- Update ISSUE_TEMPLATE.md. [Jamie]
+
+- Added the ability to enable Plex User importing. We also allow you to exclude users #1456. [tidusjar]
+
 - Update Startup.cs. [Jamie]
 
 - Added an about page #865. [Jamie.Rees]
@@ -37,6 +97,132 @@
 - Updated CHangelog. [Jamie.Rees]
 
 ### **Fixes**
+
+- #1460 looks like the permissions issue has been resolved. Just need to make sure the Ombi process is terminated. [Jamie.Rees]
+
+- Put back the old download code. [Jamie.Rees]
+
+- Test. [Jamie]
+
+- Build sln. [Jamie.Rees]
+
+- Order by the username #1581. [Jamie.Rees]
+
+- Remove sonarr episodes from the cache table. [Jamie.Rees]
+
+- Couchpotato finished. [tidusjar]
+
+- Disable run import button if no import options are selected. [tidusjar]
+
+- Fixed #1574. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Fixes the issue with non windows systems unable to unzip the tarball #1460. [tidusjar]
+
+- Finished the couchpotato settings. [tidusjar]
+
+- Fixed build. [tidusjar]
+
+- Fixed #1570 #1571. [tidusjar]
+
+- Fixed #1547. [tidusjar]
+
+- Should fix #1538. [tidusjar]
+
+- Fixed #1553. [tidusjar]
+
+- Fixed #1546. [tidusjar]
+
+- Fixed #1543. [tidusjar]
+
+- Fixes an issue with Movie caching not working on develop branch of Radarr (#1567) [Jeffrey Peters]
+
+- This adds two fields to the Email Notifications settings page. It allows for the disabling of TLS/SSL as well as the ability to disable certificate validation when sending notification emails. (#1552) [Jeffrey Peters]
+
+- Fixed typo (#1551) [Codehhh]
+
+- Use Sqlite storage for Hangfire. [tidusjar]
+
+- Fixed the overrides #1539 also display it on screen now too. [tidusjar]
+
+- Fixed #1542 also added VSCode support. [tidusjar]
+
+- Fixed some cosmetic issues #865. [Jamie.Rees]
+
+- Fixed #1531. [Jamie.Rees]
+
+- Small fixes #865. [Jamie.Rees]
+
+- Some errors fixed and some ui improvements #865. [tidusjar]
+
+- Auto-scale large images down to container size (#1529) [Avi]
+
+- Fix logo on login page. (#1528) [Avi]
+
+- Another potential issue? :/ [tidusjar]
+
+- Real fix. [tidusjar]
+
+- #1513 Added storage path. [Jamie.Rees]
+
+- Fixed the discord issue relating to images #1513. [Jamie.Rees]
+
+- Fixed the issue sending movies to Radarr #1513 Fixed typo #1524. [Jamie.Rees]
+
+- Fixed logo on reset password pages fixed the run importer button on the user management settings. [Jamie.Rees]
+
+- Fixed crash/error #865. [tidusjar]
+
+- #1513 fixed the landing page and also the reverse proxy images. [tidusjar]
+
+- #1513 correctly set the child requests as approved. [tidusjar]
+
+- Fixed an issue that potentially causes as issue when siging into plex #865. [tidusjar]
+
+- Remove dev branch. [PotatoQuality]
+
+- Prepare readme for upcoming beta. [PotatoQuality]
+
+- #1513 partially fixed a bug. [tidusjar]
+
+- Fixed the exception. [tidusjar]
+
+- Fixed the application url not saving #1513. [tidusjar]
+
+- Fixed liniting. [tidusjar]
+
+- REVERSE PROXY BITCH! #1513. [tidusjar]
+
+- Fixed a bug where we were marking the wrong episodes as available #1513 #865. [Jamie.Rees]
+
+- Fixed an issue where we messed up the pages and routing. [Jamie.Rees]
+
+- Emby user importer is now therer!  #1456. [tidusjar]
+
+- #1513 Added the update available icon. [tidusjar]
+
+- Fixed the issue of it showing as not requested when we find it in Radarr. Made the tv shows match a bit more to the movie requests Added the ability for plex and emby users to login Improved the welcome email, will only show for users that have not logged in Fixed discord notifications the about screen now checks if there is an update ready #1513. [tidusjar]
+
+- Support email addresses as usernames #1513. [Jamie.Rees]
+
+- Link to issue treath. [PotatoQuality]
+
+- Give correct feedback when testing email notifications #1513. [Jamie.Rees]
+
+- Report issue removed and the deny dropdown removed #1513. [Jamie.Rees]
+
+- #1513 removed the discord text when testing pushbullet. [Jamie.Rees]
+
+- Made a lot of changes around the notifcations to support the custom app name also started on the welcome email ##1456. [Jamie.Rees]
+
+- Fixed the bug where we were displaying shows where we do not have enough information to request #1513. [Jamie.Rees]
+
+- #1513 added the network to tv shows. [Jamie.Rees]
+
+- Fixed the whitespace issue #1513. [Jamie.Rees]
+
+- Fixed the swagger endpoint  #865 #1513 Fixed the custom image issue on the login page Fixed the bug when clicking on the tab on the requests page it would switch to the wrong one Swagger is now back @ /swagger. [tidusjar]
 
 - Optimized images, Update old compressed image with a new lossless one. (#1514) [camjac251]
 
@@ -123,7 +309,6 @@
 - Fixed a bunch of bugs in Ombi #865. [tidusjar]
 
 - Build versioning. [Jamie.Rees]
-
 
 - Updated changelog. [Jamie.Rees]
 
@@ -1605,7 +1790,7 @@
 
 - WIP hide tv request options based on admin settings. [Matt McHughes]
 
-- Set meta charset to be utf-8. [Madeleine Schönemann]
+- Set meta charset to be utf-8. [Madeleine Schï¿½nemann]
 
 - F#552: updated labels text. [Jim MacKenize]
 
@@ -1962,7 +2147,7 @@
 
 - Fixed issues from the merge. [tidusjar]
 
-- Stupid &$(*£ merge. [tidusjar]
+- Stupid &$(*ï¿½ merge. [tidusjar]
 
 - Angular. [tidusjar]
 
