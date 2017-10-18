@@ -5,9 +5,11 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Hangfire;
 using Hangfire.Console;
 using Hangfire.Server;
 using Microsoft.Extensions.Logging;
@@ -52,6 +54,7 @@ namespace Ombi.Schedule.Jobs.Ombi
 
         }
 
+        [AutomaticRetry(Attempts = 1)]
         public async Task Update(PerformContext c)
         {
             Ctx = c;
@@ -217,11 +220,23 @@ namespace Ombi.Schedule.Jobs.Ombi
             }
         }
 
-        public static async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
+        public async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
         {
-            using (var client = new WebClient())
+            Logger.LogDebug("Starting the DownloadAsync");
+            using (var client = new HttpClient())
             {
-                await client.DownloadFileTaskAsync(requestUri, filename);
+                using (var result = await client.GetAsync(requestUri))
+                {
+                    if (result.IsSuccessStatusCode)
+                    {
+                        var contentStream = await result.Content.ReadAsStreamAsync();
+                        using (var stream =
+                            new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            await contentStream.CopyToAsync(stream);
+                        }
+                    }
+                }
             }
         }
     }

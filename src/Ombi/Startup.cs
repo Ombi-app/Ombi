@@ -58,7 +58,7 @@ namespace Ombi
                     .MinimumLevel.Information()
 
                     .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Information)
+                    .WriteTo.SQLite("Ombi.db", "Logs", LogEventLevel.Debug)
                     .CreateLogger();
             }
             else
@@ -67,7 +67,7 @@ namespace Ombi
                     .MinimumLevel.Information()
 
                     .WriteTo.RollingFile(Path.Combine(StoragePath.StoragePath, "Logs", "log-{Date}.txt"))
-                    .WriteTo.SQLite(Path.Combine(StoragePath.StoragePath, "Ombi.db"), "Logs", LogEventLevel.Information)
+                    .WriteTo.SQLite(Path.Combine(StoragePath.StoragePath, "Ombi.db"), "Logs", LogEventLevel.Debug)
                     .CreateLogger();
             }
             Log.Logger = config;
@@ -92,7 +92,7 @@ namespace Ombi
 
             // Add framework services.
             services.AddDbContext<OmbiContext>();
-            
+
             services.AddIdentity<OmbiUser, IdentityRole>()
                 .AddEntityFrameworkStores<OmbiContext>()
                 .AddDefaultTokenProviders()
@@ -105,9 +105,9 @@ namespace Ombi
                 options.Password.RequireLowercase = false;
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = false;
-                options.User.AllowedUserNameCharacters =string.Empty;
+                options.User.AllowedUserNameCharacters = string.Empty;
             });
-            
+
             services.AddMemoryCache();
 
             services.AddJwtAuthentication(Configuration);
@@ -131,7 +131,7 @@ namespace Ombi
                 i.StoragePath = string.Empty;
             }
             var sqliteStorage = $"Data Source={Path.Combine(i.StoragePath, "Ombi.db")};";
-            
+
             services.AddHangfire(x =>
             {
                 x.UseSQLiteStorage(sqliteStorage);
@@ -173,12 +173,13 @@ namespace Ombi
                 app.UsePathBase(settings.BaseUrl);
             }
 
-            app.UseHangfireServer(new BackgroundJobServerOptions{WorkerCount = 1});
+            app.UseHangfireServer(new BackgroundJobServerOptions { WorkerCount = 1 });
             app.UseHangfireDashboard(settings.BaseUrl.HasValue() ? $"{settings.BaseUrl}/hangfire" : "/hangfire",
                 new DashboardOptions
                 {
-                    Authorization = new[] {new HangfireAuthorizationFilter()}
+                    Authorization = new[] { new HangfireAuthorizationFilter() }
                 });
+            GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 3 });
 
             // Setup the scheduler
             var jobSetup = app.ApplicationServices.GetService<IJobSetup>();
@@ -201,7 +202,7 @@ namespace Ombi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.ShowJsonEditor();
             });
-            
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
@@ -237,7 +238,7 @@ namespace Ombi
                         else
                         {
                             var identity = new GenericIdentity("API");
-                            var principal = new GenericPrincipal(identity, new[] {"Admin", "ApiUser"});
+                            var principal = new GenericPrincipal(identity, new[] { "Admin", "ApiUser" });
                             context.User = principal;
                             await next();
                         }

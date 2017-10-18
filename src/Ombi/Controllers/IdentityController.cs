@@ -8,7 +8,6 @@ using AutoMapper;
 using Hangfire;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -20,7 +19,6 @@ using Ombi.Core.Claims;
 using Ombi.Core.Helpers;
 using Ombi.Core.Models.UI;
 using Ombi.Core.Settings;
-using Ombi.Helpers;
 using Ombi.Models;
 using Ombi.Models.Identity;
 using Ombi.Notifications;
@@ -29,7 +27,6 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
-using Ombi.Store.Repository;
 using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
