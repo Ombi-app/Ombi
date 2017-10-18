@@ -171,8 +171,9 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
-                        FileName = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate", $"Ombi.Updater{updaterExtension}"),
-                        Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension
+                        FileName = $"Ombi.Updater{updaterExtension}",
+                        Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + extension,
+                        WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
                     using (var proc = new Process { StartInfo = start })
                     {
@@ -223,20 +224,9 @@ namespace Ombi.Schedule.Jobs.Ombi
         public async Task DownloadAsync(string requestUri, string filename, PerformContext ctx)
         {
             Logger.LogDebug("Starting the DownloadAsync");
-            using (var client = new HttpClient())
+            using (var client = new WebClient())
             {
-                using (var result = await client.GetAsync(requestUri))
-                {
-                    if (result.IsSuccessStatusCode)
-                    {
-                        var contentStream = await result.Content.ReadAsStreamAsync();
-                        using (var stream =
-                            new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None))
-                        {
-                            await contentStream.CopyToAsync(stream);
-                        }
-                    }
-                }
+                await client.DownloadFileTaskAsync(requestUri, filename);
             }
         }
     }
