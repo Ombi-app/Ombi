@@ -19,6 +19,7 @@ export interface IUpdateSettings extends ISettings {
     autoUpdateEnabled: boolean;
     username: string;
     password: string;
+    processName: string;
 }
 
 export interface IEmbySettings extends ISettings {

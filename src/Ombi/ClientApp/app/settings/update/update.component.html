@@ -22,21 +22,23 @@
                 
                 
                 <small>If you are getting any permissions issues, you can specify a user for the update process to run under.</small>
-
-                <div class="form-group">
-                    <input type="text" id="username" class="form-control form-control-custom"  formControlName="username">
-                    <label for="username">Username</label>
-                </div>
                 
                 <div class="form-group">
-                    <input type="password" id="password" class="form-control form-control-custom"  formControlName="password">
+                    <label for="username" class="control-label">Username</label>
+                    <input type="text" class="form-control form-control-custom " id="username" name="username" formControlName="username">
+                </div>
+
+                <div class="form-group">
                     <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control form-control-custom" formControlName="password">
                 </div>
-
                 
-             
-               
-
+                <small>By default the process name is Ombi, but this could be different for your system. We need to know the process name so we can kill that process to update the files.</small>
+                <div class="form-group">
+                    <label for="processName">Ombi Process Name</label>
+                    <input type="text" id="processName" class="form-control form-control-custom" placeholder="Ombi" formControlName="processName">
+                </div>
+                
                 <div class="form-group">
                     <div>
                         <button type="submit" class="btn btn-primary-outline ">Submit</button>

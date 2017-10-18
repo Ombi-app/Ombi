@@ -1,40 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 
 namespace Ombi.Updater
 {
     public class Installer
     {
-        public void Start(StartupOptions options)
+        public void Start(StartupOptions opt)
         {
             // Kill Ombi Process
             var p = new ProcessProvider();
-            p.Kill(options.OmbiProcessId);
-
-
+            p.Kill(opt.OmbiProcessId);
+            
             // Make sure the process has been killed
-            while (p.FindProcessByName("Ombi").Any())
+            while (p.FindProcessByName(opt.ProcessName).Any())
             {
+                Thread.Sleep(500);
                 Console.WriteLine("Found another process called Ombi, KILLING!");
-                var proc = p.FindProcessByName("Ombi").FirstOrDefault();
+                var proc = p.FindProcessByName(opt.ProcessName).FirstOrDefault();
                 if (proc != null)
                 {
                     Console.WriteLine($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
                     p.Kill(proc.Id);
                 }
-                Thread.Sleep(500);
             }
 
-            MoveFiles(options);
+            MoveFiles(opt);
             
             // Start Ombi
-            StartOmbi(options);
+            StartOmbi(opt);
         }
 
         private void StartOmbi(StartupOptions options)

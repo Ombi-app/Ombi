@@ -21,25 +21,29 @@ namespace Ombi.Updater
 
         private static StartupOptions CheckArgs(string[] args)
         {
-            if(args.Length <= 0)
+            if(args.Length <= 1)
             {
                 Console.WriteLine("No Args Provided... Exiting");
                 Environment.Exit(1);
             }
-
-            var p = new ProcessProvider();
-            var ombiProc = p.FindProcessByName("Ombi").FirstOrDefault();
-
-            return new StartupOptions
+            var startup = new StartupOptions
             {
                 ApplicationPath = args[0],
-                OmbiProcessId = ombiProc?.Id ?? -1
+                ProcessName = args[1],
             };
+
+            var p = new ProcessProvider();
+            var ombiProc = p.FindProcessByName(startup.ProcessName).FirstOrDefault();
+
+            startup.OmbiProcessId = ombiProc?.Id ?? -1;
+
+            return startup;
         }
     }
 
     public class StartupOptions
     {
+        public string ProcessName { get; set; }
         public string ApplicationPath { get; set; }
         public int OmbiProcessId { get; set; }
     }
