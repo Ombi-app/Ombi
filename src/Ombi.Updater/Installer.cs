@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 
 namespace Ombi.Updater
 {
@@ -18,9 +19,16 @@ namespace Ombi.Updater
 
 
             // Make sure the process has been killed
-            if (p.FindProcessByName("Ombi").Any())
+            while (p.FindProcessByName("Ombi").Any())
             {
-                // throw
+                Console.WriteLine("Found another process called Ombi, KILLING!");
+                var proc = p.FindProcessByName("Ombi").FirstOrDefault();
+                if (proc != null)
+                {
+                    Console.WriteLine($"[{proc.Id}] - {proc.Name} - Path: {proc.StartPath}");
+                    p.Kill(proc.Id);
+                }
+                Thread.Sleep(500);
             }
 
             MoveFiles(options);

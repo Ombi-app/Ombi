@@ -71,7 +71,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = child.ParentRequestId,
-                        RequestType = RequestType.TvShow
+                        RequestType = RequestType.TvShow,
+                        Recipient = child.RequestedUser.Email
                     }));
                 }
             }
@@ -101,7 +102,8 @@ namespace Ombi.Schedule.Jobs.Plex
                         DateTime = DateTime.Now,
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
-                        RequestType = RequestType.Movie
+                        RequestType = RequestType.Movie,
+                        Recipient = movie.RequestedUser.Email
                     }));
                 }
             }

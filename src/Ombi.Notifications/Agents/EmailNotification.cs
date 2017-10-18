@@ -57,7 +57,7 @@ namespace Ombi.Notifications.Agents
             {
                 Message = html,
                 Subject = parsed.Subject,
-                To = settings.AdminEmail,
+                To = model.Recipient.HasValue() ? model.Recipient : settings.AdminEmail,
             };
 
             return message;
