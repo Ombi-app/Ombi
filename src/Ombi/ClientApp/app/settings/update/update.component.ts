@@ -24,6 +24,7 @@ export class UpdateComponent implements OnInit {
                     autoUpdateEnabled: [x.autoUpdateEnabled],
                     username: [x.username],
                     password: [x.password],
+                    processName: [x.processName],
                 });
             });
     }
