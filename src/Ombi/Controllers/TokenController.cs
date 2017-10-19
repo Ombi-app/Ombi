@@ -22,18 +22,15 @@ namespace Ombi.Controllers
     [Produces("application/json")]
     public class TokenController
     {
-        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta,
-            IApplicationConfigRepository config, IAuditRepository audit, ITokenRepository token)
+        public TokenController(OmbiUserManager um, IOptions<TokenAuthentication> ta, IAuditRepository audit, ITokenRepository token)
         {
             _userManager = um;
             _tokenAuthenticationOptions = ta.Value;
-            _config = config;
             _audit = audit;
             _token = token;
         }
 
         private readonly TokenAuthentication _tokenAuthenticationOptions;
-        private IApplicationConfigRepository _config;
         private readonly IAuditRepository _audit;
         private readonly ITokenRepository _token;
         private readonly OmbiUserManager _userManager;

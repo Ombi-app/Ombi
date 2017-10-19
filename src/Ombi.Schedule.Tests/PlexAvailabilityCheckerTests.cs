@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Castle.Components.DictionaryAdapter;
 using Hangfire;
@@ -103,6 +105,7 @@ namespace Ombi.Schedule.Tests
                     SeasonNumber = 2
                 }
             }.AsQueryable);
+            _repo.Setup(x => x.Include(It.IsAny<IQueryable<PlexEpisode>>(),It.IsAny<Expression<Func<PlexEpisode, PlexContent>>>()));
 
             await Checker.Start();
 

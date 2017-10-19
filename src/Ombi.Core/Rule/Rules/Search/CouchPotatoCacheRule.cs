@@ -5,24 +5,25 @@ using Ombi.Core.Models.Search;
 using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Context;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
 
 namespace Ombi.Core.Rule.Rules.Search
 {
     public class CouchPotatoCacheRule : BaseSearchRule, IRules<SearchViewModel>
     {
-        public CouchPotatoCacheRule(IOmbiContext ctx)
+        public CouchPotatoCacheRule(IRepository<CouchPotatoCache> ctx)
         {
             _ctx = ctx;
         }
 
-        private readonly IOmbiContext _ctx;
+        private readonly IRepository<CouchPotatoCache> _ctx;
 
         public async Task<RuleResult> Execute(SearchViewModel obj)
         {
             if (obj.Type == RequestType.Movie)
             {
                 // Check if it's in Radarr
-                var result = await _ctx.CouchPotatoCache.FirstOrDefaultAsync(x => x.TheMovieDbId == obj.Id);
+                var result = await _ctx.FirstOrDefaultAsync(x => x.TheMovieDbId == obj.Id);
                 if (result != null)
                 {
                     obj.Approved =

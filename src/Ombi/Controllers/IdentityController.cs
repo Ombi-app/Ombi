@@ -41,7 +41,6 @@ namespace Ombi.Controllers
         public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
-            IOptions<UserSettings> userSettings,
             IWelcomeEmail welcome)
         {
             UserManager = user;
@@ -50,7 +49,6 @@ namespace Ombi.Controllers
             EmailProvider = prov;
             EmailSettings = s;
             CustomizationSettings = c;
-            UserSettings = userSettings;
             WelcomeEmail = welcome;
         }
 
@@ -60,7 +58,6 @@ namespace Ombi.Controllers
         private IEmailProvider EmailProvider { get; }
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
-        private IOptions<UserSettings> UserSettings { get; }
         private IWelcomeEmail WelcomeEmail { get; }
 
         /// <summary>
@@ -97,7 +94,7 @@ namespace Ombi.Controllers
                 await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
             }
 
-            return true;
+            return result.Succeeded;
         }
 
         private async Task CreateRoles()

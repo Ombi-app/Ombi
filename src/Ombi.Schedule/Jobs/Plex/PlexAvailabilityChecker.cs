@@ -103,7 +103,7 @@ namespace Ombi.Schedule.Jobs.Plex
                         NotificationType = NotificationType.RequestAvailable,
                         RequestId = movie.Id,
                         RequestType = RequestType.Movie,
-                        Recipient = movie.RequestedUser.Email
+                        Recipient = movie.RequestedUser != null ? movie.RequestedUser.Email : string.Empty
                     }));
                 }
             }
