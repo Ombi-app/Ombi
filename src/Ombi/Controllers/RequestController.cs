@@ -201,6 +201,28 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
+        /// Denies the a specific child request
+        /// </summary>
+        /// <param name="child">The model.</param>
+        /// <returns></returns>
+        [HttpPut("tv/deny")]
+        public async Task<ChildRequests> DenyChild([FromBody] ChildRequests child)
+        {
+            return await TvRequestEngine.DenyChildRequest(child);
+        }
+
+        /// <summary>
+        /// Changes the availability of the a specific child request
+        /// </summary>
+        /// <param name="child">The model.</param>
+        /// <returns></returns>
+        [HttpPut("tv/changeavailability")]
+        public async Task<ChildRequests> ChangeAvailability([FromBody] ChildRequests child)
+        {
+            return await TvRequestEngine.ChangeAvailability(child);
+        }
+
+        /// <summary>
         /// Updates the a specific child request
         /// </summary>
         /// <param name="child">The model.</param>

@@ -78,6 +78,12 @@ export class RequestService extends ServiceAuthHelpers {
     public updateChild(child: IChildRequests): Observable<IChildRequests> {
         return this.http.put(`${this.url}tv/child`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }   
+    public denyChild(child: IChildRequests): Observable<IChildRequests> {
+        return this.http.put(`${this.url}tv/deny`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    } 
+    public changeAvailabilityChild(child: IChildRequests): Observable<IChildRequests> {
+        return this.http.put(`${this.url}tv/changeavailability`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
+    }   
     public approveChild(child: IChildRequests): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}tv/child/approve`, JSON.stringify(child), { headers: this.headers }).map(this.extractData);
     }

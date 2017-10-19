@@ -1,4 +1,5 @@
-﻿import { Component, OnInit } from "@angular/core";
+﻿import { PlatformLocation } from "@angular/common";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 import { ICustomizationSettings, IEmailNotificationSettings } from "../interfaces";
@@ -15,15 +16,20 @@ export class ResetPasswordComponent implements OnInit {
     public form: FormGroup;
     public customizationSettings: ICustomizationSettings;
     public emailSettings: IEmailNotificationSettings;
+    public baseUrl: string;
 
     constructor(private identityService: IdentityService, private notify: NotificationService,
-                private fb: FormBuilder, private settingsService: SettingsService) {
+                private fb: FormBuilder, private settingsService: SettingsService, private location: PlatformLocation) {
         this.form = this.fb.group({
             email: ["", [Validators.required]],
         });
     }
 
     public ngOnInit() {
+        const base = this.location.getBaseHrefFromDOM();
+        if (base.length > 1) {
+            this.baseUrl = base;
+        }
         this.settingsService.getCustomization().subscribe(x => this.customizationSettings = x);
         this.settingsService.getEmailNotificationSettings().subscribe(x => this.emailSettings = x);
     }

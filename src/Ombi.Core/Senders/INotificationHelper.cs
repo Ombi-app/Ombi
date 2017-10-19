@@ -1,4 +1,5 @@
 ﻿using Ombi.Core.Models.Requests;
+using Ombi.Helpers;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core
@@ -7,5 +8,7 @@ namespace Ombi.Core
     {
         void NewRequest(FullBaseRequest model);
         void NewRequest(ChildRequests model);
+        void Notify(MovieRequests model, NotificationType type);
+        void Notify(ChildRequests model, NotificationType type);
     }
 }

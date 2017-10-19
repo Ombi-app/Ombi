@@ -86,12 +86,12 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var result = await Sender.Send(requestModel);
-                if (result.Success && result.Sent)
+                var result = await ApproveMovie(requestModel);
+                if (result.RequestAdded)
                 {
                     return await AddMovieRequest(requestModel, fullMovieName);
                 }
-                if (!result.Success)
+                if (!result.IsError)
                 {
                     Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
                     return new RequestEngineResult
@@ -150,6 +150,7 @@ namespace Ombi.Core.Engine
         public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
         {
             await MovieRepository.Update(request);
+            NotificationHelper.Notify(request, NotificationType.RequestApproved);
             if (request.Approved) 
             {
                 var result = await Sender.Send(request);
@@ -188,6 +189,17 @@ namespace Ombi.Core.Engine
         {
             var allRequests = await MovieRepository.Get().ToListAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
+
+            if (!(results.Denied ?? false) && (request.Denied ?? false))
+            {
+                // We are denying a request
+                NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            }
+            if (!results.Available && request.Available)
+            {
+                // We changed the availability manually
+                NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            }
 
             results.Approved = request.Approved;
             results.Available = request.Available;

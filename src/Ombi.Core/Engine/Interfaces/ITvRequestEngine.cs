@@ -9,12 +9,11 @@ namespace Ombi.Core.Engine.Interfaces
     {
 
         Task RemoveTvRequest(int requestId);
-
         Task<RequestEngineResult> RequestTvShow(SearchTvShowViewModel tv);
-
+        Task<ChildRequests> DenyChildRequest(ChildRequests request);
+        Task<ChildRequests> ChangeAvailability(ChildRequests request);
         Task<IEnumerable<TvRequests>> SearchTvRequest(string search);
         Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> SearchTvRequestTree(string search);
-
         Task<TvRequests> UpdateTvRequest(TvRequests request);
         Task<IEnumerable<TreeNode<TvRequests, List<ChildRequests>>>> GetRequestsTreeNode(int count, int position);
         Task<IEnumerable<ChildRequests>> GetAllChldren(int tvId);

@@ -1,5 +1,5 @@
 ﻿import { Component, Input } from "@angular/core";
-import { IChildRequests, IEpisodesRequests } from "../interfaces";
+import { IChildRequests } from "../interfaces";
 import { NotificationService, RequestService } from "../services";
 
 @Component({
@@ -31,7 +31,7 @@ export class TvRequestChildrenComponent {
                 ep.approved = false;
             });
         });
-        this.requestService.updateChild(request)
+        this.requestService.deleteChild(request)
             .subscribe();
     }
 
@@ -53,23 +53,6 @@ export class TvRequestChildrenComponent {
                     request.approved = false;
                 }
             });
-    }
-
-    public denySeasonRequest(request: IChildRequests) {
-        request.approved = false;
-        request.denied = true;
-        this.requestService.updateChild(request)
-            .subscribe();
-    }
-
-    public getColour(ep: IEpisodesRequests): string {
-        if (ep.available) {
-            return "lime";
-        }
-        if (ep.approved) {
-            return "#00c0ff";
-        }
-        return "white";
     }
 
     private removeRequestFromUi(key: IChildRequests) {

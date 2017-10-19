@@ -183,6 +183,7 @@ namespace Ombi.Core.Engine
             await TvRepository.UpdateChild(request);
             if (request.Approved)
             {
+                NotificationHelper.Notify(request, NotificationType.RequestApproved);
                 await Audit.Record(AuditType.Approved, AuditArea.TvRequest, $"Approved Request {request.Title}", Username);
                 // Autosend
                 await TvSender.Send(request);
@@ -191,6 +192,21 @@ namespace Ombi.Core.Engine
             {
                 RequestAdded = true
             };
+        }
+
+        public async Task<ChildRequests> DenyChildRequest(ChildRequests request)
+        {
+            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+            return await UpdateChildRequest(request);
+        }
+
+        public async Task<ChildRequests> ChangeAvailability(ChildRequests request)
+        {
+            if (request.Available)
+            {
+                NotificationHelper.Notify(request, NotificationType.RequestAvailable);
+            }
+            return await UpdateChildRequest(request);
         }
 
         public async Task<ChildRequests> UpdateChildRequest(ChildRequests request)
@@ -289,6 +305,7 @@ namespace Ombi.Core.Engine
             if (model.Approved)
             {
                 // Autosend
+                NotificationHelper.Notify(model, NotificationType.RequestApproved);
                 var result = await TvSender.Send(model);
                 if (result.Success)
                 {

@@ -1,10 +1,8 @@
 ﻿using System;
 using Hangfire;
-using Ombi.Core.Models.Requests;
 using Ombi.Core.Notifications;
 using Ombi.Helpers;
 using Ombi.Notifications.Models;
-using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Core
@@ -29,6 +27,7 @@ namespace Ombi.Core
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
 
         }
+
         public void NewRequest(ChildRequests model)
         {
             var notificationModel = new NotificationOptions
@@ -39,7 +38,32 @@ namespace Ombi.Core
                 RequestType = model.RequestType
             };
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+        }
 
+
+        public void Notify(MovieRequests model, NotificationType type)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = type,
+                RequestType = model.RequestType,
+                Recipient = model.RequestedUser.Email
+            };
+            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
+        }
+        public void Notify(ChildRequests model, NotificationType type)
+        {
+            var notificationModel = new NotificationOptions
+            {
+                RequestId = model.Id,
+                DateTime = DateTime.Now,
+                NotificationType = type,
+                RequestType = model.RequestType,
+                Recipient = model.RequestedUser.Email
+            };
+            BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }
     }
 }
