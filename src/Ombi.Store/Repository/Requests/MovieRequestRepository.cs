@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +7,9 @@ using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public class MovieRequestRepository : IMovieRequestRepository
+    public class MovieRequestRepository : Repository<MovieRequests>, IMovieRequestRepository
     {
-        public MovieRequestRepository(IOmbiContext ctx)
+        public MovieRequestRepository(IOmbiContext ctx) : base(ctx)
         {
             Db = ctx;
         }
@@ -40,18 +39,11 @@ namespace Ombi.Store.Repository.Requests
                 .FirstOrDefault();
         }
 
-        public IQueryable<MovieRequests> Get()
+        public IQueryable<MovieRequests> GetWithUser()
         {
             return Db.MovieRequests
                 .Include(x => x.RequestedUser)
                 .AsQueryable();
-        }
-
-        public async Task<MovieRequests> Add(MovieRequests request)
-        {
-            await Db.MovieRequests.AddAsync(request);
-            await Db.SaveChangesAsync();
-            return request;
         }
 
         public async Task Delete(MovieRequests request)

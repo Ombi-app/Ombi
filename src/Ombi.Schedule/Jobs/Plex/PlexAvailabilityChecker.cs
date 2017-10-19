@@ -83,7 +83,7 @@ namespace Ombi.Schedule.Jobs.Plex
         private async Task ProcessMovies()
         {
             // Get all non available
-            var movies = _movieRepo.Get().Where(x => !x.Available);
+            var movies = _movieRepo.GetAll().Where(x => !x.Available);
 
             foreach (var movie in movies)
             {

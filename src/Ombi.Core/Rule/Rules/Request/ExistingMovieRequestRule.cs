@@ -26,7 +26,7 @@ namespace Ombi.Core.Rule.Rules.Request
             if (obj.RequestType == RequestType.Movie)
             {
                 var movie = (MovieRequests) obj;
-                var movieRequests = Movie.Get();
+                var movieRequests = Movie.GetAll();
                 var existing = await movieRequests.FirstOrDefaultAsync(x => x.TheMovieDbId == movie.TheMovieDbId);
                 if (existing != null) // Do we already have a request for this?
                 {

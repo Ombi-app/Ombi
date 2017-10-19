@@ -43,7 +43,7 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _movie.Setup(x => x.Get()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
             _repo.Setup(x => x.Get("test")).ReturnsAsync(new PlexContent());
 
             await Checker.Start();
@@ -60,7 +60,7 @@ namespace Ombi.Schedule.Tests
             {
                 ImdbId = "test"
             };
-            _movie.Setup(x => x.Get()).Returns(new List<MovieRequests> { request }.AsQueryable());
+            _movie.Setup(x => x.GetAll()).Returns(new List<MovieRequests> { request }.AsQueryable());
 
             await Checker.Start();
             

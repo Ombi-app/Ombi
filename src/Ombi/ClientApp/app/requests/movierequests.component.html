@@ -30,9 +30,9 @@
                 <br />
                 <div>
                     <span>Requested By: </span>
-                    <span *ngIf="!isAdmin">{{request.requestedUser.userName}}</span>
+                    <span *ngIf="!isAdmin">{{request.requestedUser.username}}</span>
                     <span *ngIf="isAdmin && request.requestedUser.alias">{{request.requestedUser.alias}}</span>
-                    <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.userName}}</span>
+                    <span *ngIf="isAdmin && !request.requestedUser.alias">{{request.requestedUser.username}}</span>
                 </div>
                 <div>
                     <span>Status: </span>

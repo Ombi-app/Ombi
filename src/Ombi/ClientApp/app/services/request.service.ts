@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Rx";
 
 import { TreeNode } from "primeng/primeng";
 import { IRequestEngineResult } from "../interfaces";
-import { IChildRequests, IMovieRequests, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
+import { IChildRequests, IMovieRequests, IMovieUpdateModel, IRequestCountModel, IRequestGrid, ITvRequests } from "../interfaces";
 import { ISearchMovieResult } from "../interfaces";
 import { ISearchTvResult } from "../interfaces";
 import { ServiceAuthHelpers } from "./service.helpers";
@@ -25,7 +25,7 @@ export class RequestService extends ServiceAuthHelpers {
         return this.http.post(`${this.url}TV/`, JSON.stringify(tv), { headers: this.headers }).map(this.extractData);
     }
 
-    public approveMovie(movie: IMovieRequests): Observable<IRequestEngineResult> {
+    public approveMovie(movie: IMovieUpdateModel): Observable<IRequestEngineResult> {
         return this.http.post(`${this.url}Movie/Approve`, JSON.stringify(movie), { headers: this.headers }).map(this.extractData);
     }
 

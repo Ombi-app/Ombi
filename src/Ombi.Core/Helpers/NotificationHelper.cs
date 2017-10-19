@@ -49,7 +49,7 @@ namespace Ombi.Core
                 DateTime = DateTime.Now,
                 NotificationType = type,
                 RequestType = model.RequestType,
-                Recipient = model.RequestedUser.Email
+                Recipient = model.RequestedUser?.Email ?? string.Empty
             };
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }
@@ -61,7 +61,7 @@ namespace Ombi.Core
                 DateTime = DateTime.Now,
                 NotificationType = type,
                 RequestType = model.RequestType,
-                Recipient = model.RequestedUser.Email
+                Recipient = model.RequestedUser?.Email ?? string.Empty
             };
             BackgroundJob.Enqueue(() => NotificationService.Publish(notificationModel));
         }

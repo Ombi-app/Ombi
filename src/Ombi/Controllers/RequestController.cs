@@ -90,14 +90,25 @@ namespace Ombi.Controllers
         }
 
         /// <summary>
-        /// Updates the specified movie request.
+        /// Approves the specified movie request.
         /// </summary>
         /// <param name="model">The model.</param>
         /// <returns></returns>
         [HttpPost("movie/approve")]
-        public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieRequests model)
+        public async Task<RequestEngineResult> ApproveMovie([FromBody] MovieUpdateModel model)
         {
-            return await MovieRequestEngine.ApproveMovie(model);
+            return await MovieRequestEngine.ApproveMovieById(model.Id);
+        }
+
+        /// <summary>
+        /// Denies the specified movie request.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [HttpPost("movie/deny")]
+        public async Task<RequestEngineResult> DenyMovie([FromBody] MovieUpdateModel model)
+        {
+            return await MovieRequestEngine.DenyMovieById(model.Id);
         }
 
         /// <summary>

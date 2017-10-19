@@ -76,7 +76,6 @@ export class MovieRequestsComponent implements OnInit {
 
     public approve(request: IMovieRequests) {
         request.approved = true;
-        request.denied = false;
         this.approveRequest(request);
     }
 
@@ -118,7 +117,7 @@ export class MovieRequestsComponent implements OnInit {
     }
 
     private approveRequest(request: IMovieRequests) {
-        this.requestService.approveMovie(request)
+        this.requestService.approveMovie({ id: request.id })
             .subscribe(x => {
 
                 if (x.requestAdded) {

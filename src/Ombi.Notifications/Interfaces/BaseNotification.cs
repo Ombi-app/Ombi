@@ -104,7 +104,7 @@ namespace Ombi.Notifications.Interfaces
         {
             if (type == RequestType.Movie)
             {
-                MovieRequest = await MovieRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+                MovieRequest = await MovieRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
                 MovieRequest.PosterPath = $"https://image.tmdb.org/t/p/w300/{MovieRequest.PosterPath}";
             }
             else

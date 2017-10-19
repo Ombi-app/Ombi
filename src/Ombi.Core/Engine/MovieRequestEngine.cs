@@ -86,21 +86,24 @@ namespace Ombi.Core.Engine
 
             if (requestModel.Approved) // The rules have auto approved this
             {
-                var result = await ApproveMovie(requestModel);
-                if (result.RequestAdded)
+                var requestEngineResult = await AddMovieRequest(requestModel, fullMovieName);
+                if (requestEngineResult.RequestAdded)
                 {
-                    return await AddMovieRequest(requestModel, fullMovieName);
-                }
-                if (!result.IsError)
-                {
-                    Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
-                    return new RequestEngineResult
+                    var result = await ApproveMovie(requestModel);
+                    if (result.IsError)
                     {
-                        Message = result.Message,
-                        ErrorMessage = result.Message,
-                        RequestAdded = false
-                    };
+                        Logger.LogWarning("Tried auto sending movie but failed. Message: {0}", result.Message);
+                        return new RequestEngineResult
+                        {
+                            Message = result.Message,
+                            ErrorMessage = result.Message,
+                            RequestAdded = false
+                        };
+                    }
+
+                    return requestEngineResult;
                 }
+                
                 // If there are no providers then it's successful but movie has not been sent
             }
 
@@ -116,7 +119,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
-            var allRequests = await MovieRepository.Get().Skip(position).Take(count).ToListAsync();
+            var allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
             allRequests.ForEach(x => PosterPathHelper.FixPosterPath(x.PosterPath));
             return allRequests;
         }
@@ -127,7 +130,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> GetRequests()
         {
-            var allRequests = await MovieRepository.Get().ToListAsync();
+            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
             return allRequests;
         }
 
@@ -138,9 +141,36 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<IEnumerable<MovieRequests>> SearchMovieRequest(string search)
         {
-            var allRequests = await MovieRepository.Get().ToListAsync();
+            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
             var results = allRequests.Where(x => x.Title.Contains(search, CompareOptions.IgnoreCase));
             return results;
+        }
+        
+        public async Task<RequestEngineResult> ApproveMovieById(int requestId)
+        {
+            var request = await MovieRepository.Find(requestId);
+            return await ApproveMovie(request);
+        }
+
+        public async Task<RequestEngineResult> DenyMovieById(int modelId)
+        {
+            var request = await MovieRepository.Find(modelId);
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+            request.Denied = true;
+            // We are denying a request
+            NotificationHelper.Notify(request, NotificationType.RequestDeclined);
+                await MovieRepository.Update(request);
+
+            return new RequestEngineResult
+            {
+                Message = "Request successfully deleted",
+            };
         }
 
         /// <summary>
@@ -150,9 +180,19 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<RequestEngineResult> ApproveMovie(MovieRequests request)
         {
+            if (request == null)
+            {
+                return new RequestEngineResult
+                {
+                    ErrorMessage = "Request does not exist"
+                };
+            }
+            request.Approved = true;
             await MovieRepository.Update(request);
+
             NotificationHelper.Notify(request, NotificationType.RequestApproved);
-            if (request.Approved) 
+
+            if (request.Approved)
             {
                 var result = await Sender.Send(request);
                 if (result.Success && result.Sent)
@@ -188,19 +228,8 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task<MovieRequests> UpdateMovieRequest(MovieRequests request)
         {
-            var allRequests = await MovieRepository.Get().ToListAsync();
+            var allRequests = await MovieRepository.GetWithUser().ToListAsync();
             var results = allRequests.FirstOrDefault(x => x.Id == request.Id);
-
-            if (!(results.Denied ?? false) && (request.Denied ?? false))
-            {
-                // We are denying a request
-                NotificationHelper.Notify(request, NotificationType.RequestDeclined);
-            }
-            if (!results.Available && request.Available)
-            {
-                // We changed the availability manually
-                NotificationHelper.Notify(request, NotificationType.RequestAvailable);
-            }
 
             results.Approved = request.Approved;
             results.Available = request.Available;
@@ -225,7 +254,7 @@ namespace Ombi.Core.Engine
         /// <returns></returns>
         public async Task RemoveMovieRequest(int requestId)
         {
-            var request = await MovieRepository.Get().FirstOrDefaultAsync(x => x.Id == requestId);
+            var request = await MovieRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
             await MovieRepository.Delete(request);
         }
 
@@ -244,19 +273,19 @@ namespace Ombi.Core.Engine
 
         public async Task<IEnumerable<MovieRequests>> GetApprovedRequests()
         {
-            var allRequests = MovieRepository.Get();
+            var allRequests = MovieRepository.GetWithUser();
             return await allRequests.Where(x => x.Approved && !x.Available).ToListAsync();
         }
 
         public async Task<IEnumerable<MovieRequests>> GetNewRequests()
         {
-            var allRequests = MovieRepository.Get();
+            var allRequests = MovieRepository.GetWithUser();
             return await allRequests.Where(x => !x.Approved && !x.Available).ToListAsync();
         }
 
         public async Task<IEnumerable<MovieRequests>> GetAvailableRequests()
         {
-            var allRequests = MovieRepository.Get();
+            var allRequests = MovieRepository.GetWithUser();
             return await allRequests.Where(x => !x.Approved && x.Available).ToListAsync();
         }
     }

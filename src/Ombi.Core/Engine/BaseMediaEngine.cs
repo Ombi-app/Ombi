@@ -38,7 +38,7 @@ namespace Ombi.Core.Engine
             var now = DateTime.Now.Ticks;
             if (_dbMovies == null || now - _cacheTime > 10000)
             {
-                var allResults = await MovieRepository.Get().ToListAsync();
+                var allResults = await MovieRepository.GetAll().ToListAsync();
 
                 var distinctResults = allResults.DistinctBy(x => x.TheMovieDbId);
                 _dbMovies = distinctResults.ToDictionary(x => x.TheMovieDbId);
@@ -63,7 +63,7 @@ namespace Ombi.Core.Engine
 
         public RequestCountModel RequestCount()
         {
-            var movieQuery = MovieRepository.Get();
+            var movieQuery = MovieRepository.GetAll();
             var tvQuery = TvRepository.Get();
 
             var pendingMovies = movieQuery.Count(x => !x.Approved && !x.Available);
