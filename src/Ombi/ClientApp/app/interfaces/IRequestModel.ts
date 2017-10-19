@@ -61,7 +61,7 @@ export interface IEpisodesRequested {
 
 export enum RequestType {
   movie = 1,
-  tvShow = 2
+  tvShow = 2,
 }
 
 export interface IRequestsPageScroll {
