@@ -64,7 +64,7 @@ namespace Ombi.Core.Engine
                 RequestType = RequestType.Movie,
                 Overview = movieInfo.Overview,
                 ImdbId = movieInfo.ImdbId,
-                PosterPath = PosterPathHelper.FixPosterPath(movieInfo.PosterPath.TrimStart('/')),
+                PosterPath = PosterPathHelper.FixPosterPath(movieInfo.PosterPath),
                 Title = movieInfo.Title,
                 ReleaseDate = !string.IsNullOrEmpty(movieInfo.ReleaseDate)
                     ? DateTime.Parse(movieInfo.ReleaseDate)
@@ -80,7 +80,7 @@ namespace Ombi.Core.Engine
             {
                 return new RequestEngineResult
                 {
-                    ErrorMessage = ruleResults.FirstOrDefault(x => !string.IsNullOrEmpty(x.Message)).Message
+                    ErrorMessage = ruleResults.FirstOrDefault(x => x.Message.HasValue()).Message
                 };
             }
 
@@ -117,6 +117,7 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
             var allRequests = await MovieRepository.Get().Skip(position).Take(count).ToListAsync();
+            allRequests.ForEach(x => PosterPathHelper.FixPosterPath(x.PosterPath));
             return allRequests;
         }
 
