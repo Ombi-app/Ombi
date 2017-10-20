@@ -42,7 +42,7 @@ namespace Ombi.Notifications.Agents
             try
             {
                 var a = settings.Token;
-                var b = settings.Channel;
+                var b = settings.Team;
                 var c = settings.Service;
             }
             catch (IndexOutOfRangeException)
