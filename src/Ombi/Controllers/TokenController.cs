@@ -44,7 +44,7 @@ namespace Ombi.Controllers
         public async Task<IActionResult> GetToken([FromBody] UserAuthModel model)
         {
             await _audit.Record(AuditType.None, AuditArea.Authentication,
-                $"Username {model.Username} attempting to authenticate");
+                $"UserName {model.Username} attempting to authenticate");
 
             var user = await _userManager.FindByNameAsync(model.Username);
 

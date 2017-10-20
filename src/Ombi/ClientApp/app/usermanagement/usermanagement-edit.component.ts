@@ -1,5 +1,6 @@
 ﻿import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { ConfirmationService } from "primeng/primeng";
 
 import { ActivatedRoute } from "@angular/router";
 import { IUser } from "../interfaces";
@@ -12,11 +13,12 @@ import { NotificationService } from "../services";
 export class UserManagementEditComponent {
     public user: IUser;
     public userId: string;
-
+    
     constructor(private identityService: IdentityService,
                 private route: ActivatedRoute,
-                private notificationSerivce: NotificationService,
-                private router: Router) {
+                private notificationService: NotificationService,
+                private router: Router,
+                private confirmationService: ConfirmationService) {
         this.route.params
             .subscribe((params: any) => {
                 this.userId = params.id;
@@ -28,27 +30,38 @@ export class UserManagementEditComponent {
     }
 
     public delete() {
-        this.identityService.deleteUser(this.user).subscribe(x => {
-            if (x.successful) {
-                this.notificationSerivce.success("Deleted", `The user ${this.user.username} was deleted`);
-                this.router.navigate(["usermanagement"]);
-            } else {
-                x.errors.forEach((val) => {
-                    this.notificationSerivce.error("Error", val);
-                });
-            }
 
-        });
+        this.confirmationService.confirm({
+            message: "Are you sure that you want to delete this user? If this user has any requests they will also be deleted.",
+            header: "Are you sure?",
+            icon: "fa fa-trash",
+            accept: () => {
+                this.identityService.deleteUser(this.user).subscribe(x => {
+                    if (x.successful) {
+                        this.notificationService.success("Deleted", `The user ${this.user.userName} was deleted`);
+                        this.router.navigate(["usermanagement"]);
+                    } else {
+                        x.errors.forEach((val) => {
+                            this.notificationService.error("Error", val);
+                        });
+                    }
+        
+                });
+            },
+            reject: () => {
+                return;
+            },
+        });        
     }
 
     public resetPassword() {
         this.identityService.submitResetPassword(this.user.emailAddress).subscribe(x => {
             if (x.successful) {
-                this.notificationSerivce.success("Reset", `Sent reset password email to ${this.user.emailAddress}`);
+                this.notificationService.success("Reset", `Sent reset password email to ${this.user.emailAddress}`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationSerivce.error("Error", val);
+                    this.notificationService.error("Error", val);
                 });
             }
 
@@ -63,17 +76,17 @@ export class UserManagementEditComponent {
         });
 
         if (!hasClaims) {
-            this.notificationSerivce.error("Error", "Please assign a role");
+            this.notificationService.error("Error", "Please assign a role");
             return;
         }
 
         this.identityService.updateUser(this.user).subscribe(x => {
             if (x.successful) {
-                this.notificationSerivce.success("Updated", `The user ${this.user.username} has been updated successfully`);
+                this.notificationService.success("Updated", `The user ${this.user.userName} has been updated successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
-                    this.notificationSerivce.error("Error", val);
+                    this.notificationService.error("Error", val);
                 });
             }
         });

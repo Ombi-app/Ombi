@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using Ombi.Store.Entities.Requests;
 
-namespace Ombi.Store.Repository
+namespace Ombi.Store.Repository.Requests
 {
     public interface IMovieRequestRepository : IRepository<MovieRequests>
     {
         Task<MovieRequests> Add(MovieRequests request);
-        Task Delete(MovieRequests request);
         Task<MovieRequests> GetRequestAsync(int theMovieDbId);
         MovieRequests GetRequest(int theMovieDbId);
         Task Update(MovieRequests request);

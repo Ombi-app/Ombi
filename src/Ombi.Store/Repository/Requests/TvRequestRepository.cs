@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Ombi.Store.Context;
@@ -82,10 +83,16 @@ namespace Ombi.Store.Repository.Requests
             Db.TvRequests.Remove(request);
             await Db.SaveChangesAsync();
         }
-        
+
         public async Task DeleteChild(ChildRequests request)
         {
             Db.ChildRequests.Remove(request);
+            await Db.SaveChangesAsync();
+        }
+
+        public async Task DeleteChildRange(IEnumerable<ChildRequests> request)
+        {
+            Db.ChildRequests.RemoveRange(request);
             await Db.SaveChangesAsync();
         }
 

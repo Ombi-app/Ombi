@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -44,12 +45,6 @@ namespace Ombi.Store.Repository.Requests
             return Db.MovieRequests
                 .Include(x => x.RequestedUser)
                 .AsQueryable();
-        }
-
-        public async Task Delete(MovieRequests request)
-        {
-            Db.MovieRequests.Remove(request);
-            await Db.SaveChangesAsync();
         }
 
         public async Task Update(MovieRequests request)

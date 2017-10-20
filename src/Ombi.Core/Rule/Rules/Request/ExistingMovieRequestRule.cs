@@ -4,6 +4,7 @@ using Ombi.Core.Rule.Interfaces;
 using Ombi.Store.Entities;
 using Ombi.Store.Entities.Requests;
 using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 
 namespace Ombi.Core.Rule.Rules.Request
 {

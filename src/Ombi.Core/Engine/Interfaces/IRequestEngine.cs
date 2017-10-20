@@ -13,5 +13,6 @@ namespace Ombi.Core.Engine.Interfaces
         RequestCountModel RequestCount();
         Task<IEnumerable<T>> GetRequests(int count, int position);
         Task<IEnumerable<T>> GetRequests();
+        Task<bool> UserHasRequest(string userId);
     }
 }

@@ -120,7 +120,10 @@ namespace Ombi.Core.Engine
         public async Task<IEnumerable<MovieRequests>> GetRequests(int count, int position)
         {
             var allRequests = await MovieRepository.GetWithUser().Skip(position).Take(count).ToListAsync();
-            allRequests.ForEach(x => PosterPathHelper.FixPosterPath(x.PosterPath));
+            allRequests.ForEach(x =>
+            {
+                x.PosterPath = PosterPathHelper.FixPosterPath(x.PosterPath);
+            });
             return allRequests;
         }
 
@@ -256,6 +259,11 @@ namespace Ombi.Core.Engine
         {
             var request = await MovieRepository.GetAll().FirstOrDefaultAsync(x => x.Id == requestId);
             await MovieRepository.Delete(request);
+        }
+
+        public async Task<bool> UserHasRequest(string userId)
+        {
+            return await MovieRepository.GetAll().AnyAsync(x => x.RequestedUserId == userId);
         }
 
         private async Task<RequestEngineResult> AddMovieRequest(MovieRequests model, string movieName)

@@ -27,6 +27,8 @@ using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Settings.Settings.Models;
 using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
+using Ombi.Store.Repository;
+using Ombi.Store.Repository.Requests;
 using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
@@ -41,7 +43,9 @@ namespace Ombi.Controllers
         public IdentityController(OmbiUserManager user, IMapper mapper, RoleManager<IdentityRole> rm, IEmailProvider prov,
             ISettingsService<EmailNotificationSettings> s,
             ISettingsService<CustomizationSettings> c,
-            IWelcomeEmail welcome)
+            IWelcomeEmail welcome,
+            IMovieRequestRepository m,
+            ITvRequestRepository t)
         {
             UserManager = user;
             Mapper = mapper;
@@ -50,6 +54,8 @@ namespace Ombi.Controllers
             EmailSettings = s;
             CustomizationSettings = c;
             WelcomeEmail = welcome;
+            MovieRepo = m;
+            TvRepo = t;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -59,6 +65,8 @@ namespace Ombi.Controllers
         private ISettingsService<EmailNotificationSettings> EmailSettings { get; }
         private ISettingsService<CustomizationSettings> CustomizationSettings { get; }
         private IWelcomeEmail WelcomeEmail { get; }
+        private IMovieRequestRepository MovieRepo { get; }
+        private ITvRequestRepository TvRepo { get; }
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -134,7 +142,7 @@ namespace Ombi.Controllers
                 model.Add(await GetUserWithRoles(user));
             }
 
-            return model.OrderBy(x => x.Username);
+            return model.OrderBy(x => x.UserName);
         }
 
         /// <summary>
@@ -169,7 +177,7 @@ namespace Ombi.Controllers
             var vm = new UserViewModel
             {
                 Alias = user.Alias,
-                Username = user.UserName,
+                UserName = user.UserName,
                 Id = user.Id,
                 EmailAddress = user.Email,
                 UserType = (Core.Models.UserType)(int)user.UserType,
@@ -223,7 +231,7 @@ namespace Ombi.Controllers
             {
                 Alias = user.Alias,
                 Email = user.EmailAddress,
-                UserName = user.Username,
+                UserName = user.UserName,
                 UserType = UserType.LocalUser,
             };
             var userResult = await UserManager.CreateAsync(ombiUser, user.Password);
@@ -423,6 +431,20 @@ namespace Ombi.Controllers
                 {
                     return Error("You do not have the correct permissions to delete this user");
                 }
+                
+                // We need to delete all the requests first
+                var moviesUserRequested = MovieRepo.GetAll().Where(x => x.RequestedUserId == userId);
+                var tvUserRequested = TvRepo.GetChild().Where(x => x.RequestedUserId == userId);
+
+                if (moviesUserRequested.Any())
+                {
+                    await MovieRepo.DeleteRange(moviesUserRequested);
+                }
+                if (tvUserRequested.Any())
+                {
+                    await TvRepo.DeleteChildRange(tvUserRequested);
+                }
+
                 var result = await UserManager.DeleteAsync(userToDelete);
                 if (result.Succeeded)
                 {
@@ -559,7 +581,7 @@ namespace Ombi.Controllers
             var ombiUser = new OmbiUser
             {
                 Email = user.EmailAddress,
-                UserName = user.Username
+                UserName = user.UserName
             };
             BackgroundJob.Enqueue(() => WelcomeEmail.SendEmail(ombiUser));
         }

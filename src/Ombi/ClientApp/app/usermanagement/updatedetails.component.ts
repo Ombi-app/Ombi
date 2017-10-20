@@ -20,7 +20,7 @@ export class UpdateDetailsComponent implements OnInit {
             const localUser = x as IUpdateLocalUser;
             this.form = this.fb.group({
                  id:[localUser.id],
-                username: [localUser.username],
+                username: [localUser.userName],
                 emailAddress: [localUser.emailAddress, [Validators.email]],
                 confirmNewPassword: [localUser.confirmNewPassword],
                 currentPassword: [localUser.currentPassword, [Validators.required]],

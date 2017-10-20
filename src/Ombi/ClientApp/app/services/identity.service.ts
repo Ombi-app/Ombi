@@ -47,6 +47,10 @@ export class IdentityService extends ServiceAuthHelpers {
         return this.http.delete(`${this.url}${user.id}`, { headers: this.headers }).map(this.extractData);
     }
 
+    public hasUserRequested(userId: string): Observable<boolean> {
+         return this.http.get(`${this.url}userhasrequest/${userId}`).map(this.extractData);
+    }
+
     public submitResetPassword(email: string): Observable<IIdentityResult> {
         return this.regularHttp.post(this.url + "reset", JSON.stringify({email}), { headers: this.headers }).map(this.extractData);
     }

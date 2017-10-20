@@ -48,6 +48,18 @@ namespace Ombi.Store.Repository
             return content;
         }
 
+        public async Task Delete(T request)
+        {
+            _db.Remove(request);
+            await _ctx.SaveChangesAsync();
+        }
+
+        public async Task DeleteRange(IEnumerable<T> req)
+        {
+            _db.RemoveRange(req);
+            await _ctx.SaveChangesAsync();
+        }
+
         public IIncludableQueryable<TEntity, TProperty> Include<TEntity, TProperty>(
             IQueryable<TEntity> source, Expression<Func<TEntity, TProperty>> navigationPropertyPath)
             where TEntity : class

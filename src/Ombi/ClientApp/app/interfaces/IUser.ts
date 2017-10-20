@@ -2,7 +2,7 @@
 
 export interface IUser {
     id: string;
-    username: string;
+    userName: string;
     alias: string;
     claims: ICheckbox[];
     emailAddress: string;

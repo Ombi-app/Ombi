@@ -301,3 +301,13 @@ button.list-group-item:focus {
 .ui-state-default {
     border: 2px solid $bg-colour-disabled;
 }
+
+.ui-button {
+    background: $primary-colour $i;
+    border: 1px solid $primary-colour-outline $i;
+} 
+
+.ui-dialog-titlebar{
+    background:$bg-colour-disabled;
+    color:white;
+}

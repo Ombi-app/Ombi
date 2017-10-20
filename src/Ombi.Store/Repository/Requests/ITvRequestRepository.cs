@@ -1,11 +1,12 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Ombi.Store.Context;
 using Ombi.Store.Entities.Requests;
 
 namespace Ombi.Store.Repository.Requests
 {
-    public interface ITvRequestRepository
+    public interface ITvRequestRepository 
     {
         IOmbiContext Db { get; }
         Task<TvRequests> Add(TvRequests request);
@@ -19,5 +20,6 @@ namespace Ombi.Store.Repository.Requests
         Task UpdateChild(ChildRequests request);
         IQueryable<ChildRequests> GetChild();
         Task Save();
+        Task DeleteChildRange(IEnumerable<ChildRequests> request);
     }
 }

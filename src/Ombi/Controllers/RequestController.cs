@@ -279,6 +279,21 @@ namespace Ombi.Controllers
             return TvRequestEngine.RequestCount();
         }
 
+        /// <summary>
+        /// Checks if the passed in user has a request
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpGet("userhasrequest")]
+        public async Task<bool> UserHasRequest(string userId)
+        {
+            var movies = await MovieRequestEngine.UserHasRequest(userId);
+            var tv = await TvRequestEngine.UserHasRequest(userId);
+
+            return movies || tv;
+        }
+
+
         ///// <summary>
         ///// Gets the specific grid model for the requests (for modelling the UI).
         ///// </summary>

@@ -63,7 +63,7 @@
                 <input type="checkbox" [(ngModel)]="u.checked">
             </td>
             <td>
-                {{u.username}}
+                {{u.userName}}
             </td>
             <td>
                 {{u.alias}}
@@ -97,108 +97,4 @@
 
 
 
-<div class="modal fade in" *ngIf="showEditDialog" style="display: block;">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" (click)="showEditDialog=false">&times;</button>
-                <h4 class="modal-title">Editing User {{selectedUser?.username}}</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label for="username" class="control-label">Username</label>
-                    <div>
-                        <input type="text" [(ngModel)]="selectedUser.username" [readonly]="true" class="form-control form-control-custom " id="username" name="username" value="{{selectedUser?.username}}">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="alias" class="control-label">Alias</label>
-                    <div>
-                        <input type="text" [(ngModel)]="selectedUser.alias" class="form-control form-control-custom " id="alias" name="alias" value="{{selectedUser?.alias}}">
-                    </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="alias" class="control-label">Email Address</label>
-                    <div>
-                        <input type="text" [(ngModel)]="selectedUser.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{selectedUser?.emailAddress}}">
-                    </div>
-                </div>
-
-                <div *ngFor="let c of selectedUser.claims">
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                            <label for="create{{c.value}}">{{c.value}}</label>
-
-                        </div>
-                    </div>
-
-
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger-outline" (click)="showEditDialog=false">Close</button>
-                <button type="button" class="btn btn-primary-outline" (click)="updateUser()">Save changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-<div>
-    <div class="modal fade in " *ngIf="showCreateDialogue" style="display: block;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" (click)="showCreateDialogue=false">&times;</button>
-                    <h4 class="modal-title">Create User</h4>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="username" class="control-label">Username</label>
-                        <div>
-                            <input type="text" [(ngModel)]="createdUser.username" class="form-control form-control-custom " id="username" name="username" value="{{createdUser?.username}}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="alias" class="control-label">Alias</label>
-                        <div>
-                            <input type="text" [(ngModel)]="createdUser.alias" class="form-control form-control-custom " id="alias" name="alias" value="{{createdUser?.alias}}">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="emailAddress" class="control-label">Email Address</label>
-                        <div>
-                            <input type="text" [(ngModel)]="createdUser.emailAddress" class="form-control form-control-custom " id="emailAddress" name="emailAddress" value="{{createdUser?.emailAddress}}">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="password" class="control-label">Password</label>
-                        <div>
-                            <input type="password" [(ngModel)]="createdUser.password" class="form-control form-control-custom " id="password" name="password" value="{{createdUser?.password}}">
-                        </div>
-                    </div>
-
-
-                    <div *ngFor="let c of availableClaims">
-                        <div class="form-group">
-                            <div class="checkbox">
-                                <input type="checkbox" [(ngModel)]="c.enabled" [value]="c.value" id="create{{c.value}}" [attr.name]="'create' + c.value" ng-checked="c.enabled">
-                                <label for="create{{c.value}}">{{c.value}}</label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger-outline" (click)="showCreateDialogue=false">Close</button>
-                    <button type="button" class="btn btn-primary-outline" (click)="create()">Add User</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>

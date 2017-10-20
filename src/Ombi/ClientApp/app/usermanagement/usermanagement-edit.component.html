@@ -1,8 +1,10 @@
 ﻿<div *ngIf="user">
-    <h3>User: {{user.username}}</h3>
+    <h3>User: {{user.userName}}</h3>
     <button type="button" class="btn btn-primary-outline" style="float:right;" [routerLink]="['/usermanagement/']">Back</button>
 
 
+    <p-confirmDialog></p-confirmDialog>
+    
     <div class="modal-body" style="margin-top: 45px;">
         <div class="col-md-6">
             <h4>User Details</h4>
@@ -14,7 +16,7 @@
             <div class="form-group">
                 <label for="username" class="control-label">Username</label>
                 <div>
-                    <input type="text" [(ngModel)]="user.username" [readonly]="true" class="form-control form-control-custom " id="username" name="username" value="{{user?.username}}">
+                    <input type="text" [(ngModel)]="user.userName" [readonly]="true" class="form-control form-control-custom " id="username" name="username" value="{{user?.userName}}">
                 </div>
             </div>
             <div class="form-group">

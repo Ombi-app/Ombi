@@ -242,6 +242,11 @@ namespace Ombi.Core.Engine
             await TvRepository.Delete(request);
         }
 
+        public async Task<bool> UserHasRequest(string userId)
+        {
+            return await TvRepository.GetChild().AnyAsync(x => x.RequestedUserId == userId);
+        }
+
         private async Task<RequestEngineResult> AddExistingRequest(ChildRequests newRequest, TvRequests existingRequest)
         {
             // Add the child

@@ -24,7 +24,7 @@ export class UserManagementAddComponent implements OnInit {
             emailAddress: "",
             id: "",
             password: "",
-            username: "",
+            userName: "",
             userType: UserType.LocalUser,
             checked:false,
             hasLoggedIn: false,
@@ -54,7 +54,7 @@ export class UserManagementAddComponent implements OnInit {
 
         this.identityService.createUser(this.user).subscribe(x => {
             if (x.successful) {
-                this.notificationSerivce.success("Updated", `The user ${this.user.username} has been created successfully`);
+                this.notificationSerivce.success("Updated", `The user ${this.user.userName} has been created successfully`);
                 this.router.navigate(["usermanagement"]);
             } else {
                 x.errors.forEach((val) => {
