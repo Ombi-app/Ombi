@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
+using ILogger = Serilog.ILogger;
 
 namespace Ombi.Updater
 {
@@ -14,10 +21,43 @@ namespace Ombi.Updater
 
 
             var options = CheckArgs(args);
-            var install = new Installer();
-            install.Start(options);
 
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+
+            // Create service provider
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+
+            // Run app
+            serviceProvider.GetService<IInstaller>().Start(options);
         }
+
+        private static void ConfigureServices(IServiceCollection serviceCollection)
+        {
+            // Add logging
+            serviceCollection.AddSingleton(new LoggerFactory()
+                .AddConsole()
+                .AddSerilog()
+                .AddDebug());
+            serviceCollection.AddLogging();
+
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.RollingFile(Path.Combine("Logs", "log-{Date}.txt"))
+                .Enrich.FromLogContext()
+                .CreateLogger();
+            
+            // Build configuration
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .Build();
+
+            // Add access to generic IConfigurationRoot
+            serviceCollection.AddSingleton(configuration);
+
+            //// Add services
+            serviceCollection.AddTransient<IInstaller, Installer>();
+    }
 
         private static StartupOptions CheckArgs(string[] args)
         {

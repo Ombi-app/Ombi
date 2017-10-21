@@ -30,6 +30,7 @@ using Ombi.Settings.Settings.Models.Notifications;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
 using Ombi.Store.Repository.Requests;
+using IdentityResult = Microsoft.AspNetCore.Identity.IdentityResult;
 using OmbiIdentityResult = Ombi.Models.Identity.IdentityResult;
 
 namespace Ombi.Controllers
@@ -102,17 +103,32 @@ namespace Ombi.Controllers
             var result = await UserManager.CreateAsync(userToCreate, user.Password);
             if (result.Succeeded)
             {
+                _log.LogInformation("Created User {0}", userToCreate.UserName);
                 await CreateRoles();
-                await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
+                _log.LogInformation("Created the roles");
+                var roleResult = await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
+                if (!roleResult.Succeeded)
+                {
+                    LogErrors(roleResult);
+                }
+                else
+                {
+                    _log.LogInformation("Added the Admin role");
+                }
             }
             if (!result.Succeeded)
             {
-                foreach (var err in result.Errors)
-                {
-                    _log.LogCritical(err.Description);
-                }
+                LogErrors(result);
             }
             return result.Succeeded;
+        }
+
+        private void LogErrors(IdentityResult result)
+        {
+            foreach (var err in result.Errors)
+            {
+                _log.LogCritical(err.Description);
+            }
         }
 
         private async Task CreateRoles()
