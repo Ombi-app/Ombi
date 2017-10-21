@@ -68,24 +68,6 @@ namespace Ombi.Controllers.External
                             Name = "Server 1",
                     }
                 };
-                //var serverNumber = 0;
-                //foreach (var s in servers)
-                //{
-                //    if (string.IsNullOrEmpty(s.LocalAddresses) || string.IsNullOrEmpty(s.Port))
-                //    {
-                //        continue;
-                //    }
-                //    settings.Servers.Add(new PlexServers
-                //    {
-                //        PlexAuthToken = result.user.authentication_token,
-                //        Id = new Random().Next(),
-                //        Ip = s.LocalAddresses.Split(new []{','}, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(),
-                //        MachineIdentifier = s.MachineIdentifier,
-                //        Port = int.Parse(s.Port),
-                //        Ssl = s.Scheme != "http",
-                //        Name = $"Server{serverNumber++}"
-                //    });
-                //}
 
                 await PlexSettings.SaveSettingsAsync(settings);
             }

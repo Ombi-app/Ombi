@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Ombi.Api.Service;
 using Ombi.Attributes;
 using Ombi.Helpers;
+using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Ombi;
 using Ombi.Schedule.Jobs.Plex;
@@ -18,19 +19,28 @@ namespace Ombi.Controllers
     public class JobController : Controller
     {
         public JobController(IOmbiAutomaticUpdater updater, IPlexUserImporter userImporter,
-            IMemoryCache mem, IEmbyUserImporter embyImporter)
+            IMemoryCache mem, IEmbyUserImporter embyImporter, IPlexContentCacher plexContentCacher,
+            IEmbyContentCacher embyContentCacher)
         {
             _updater = updater;
             _plexUserImporter = userImporter;
             _embyUserImporter = embyImporter;
             _memCache = mem;
+            _plexContentCacher = plexContentCacher;
+            _embyContentCacher = embyContentCacher;
         }
 
         private readonly IOmbiAutomaticUpdater _updater;
         private readonly IPlexUserImporter _plexUserImporter;
         private readonly IEmbyUserImporter _embyUserImporter;
         private readonly IMemoryCache _memCache;
+        private readonly IPlexContentCacher _plexContentCacher;
+        private readonly IEmbyContentCacher _embyContentCacher;
 
+        /// <summary>
+        /// Runs the update job
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("update")]
         public bool ForceUpdate()
         {
@@ -38,26 +48,29 @@ namespace Ombi.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Checks for an update
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("update")]
         public async Task<bool> CheckForUpdate()
         {
             try
             {
+                var productArray = _updater.GetVersion();
+                var version = productArray[0];
+                var branch = productArray[1];
+                var updateAvailable = await _updater.UpdateAvailable(branch, version);
 
-
-            var productArray = _updater.GetVersion();
-            var version = productArray[0];
-            var branch = productArray[1];
-            var updateAvailable = await _updater.UpdateAvailable(branch, version);
-
-            return updateAvailable;
+                return updateAvailable;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }
         }
-
+        
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("updateCached")]
         public async Task<bool> CheckForUpdateCached()
         {
@@ -74,6 +87,10 @@ namespace Ombi.Controllers
             return val;
         }
 
+        /// <summary>
+        /// Runs the Plex User importer
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("plexuserimporter")]
         public bool PlexUserImporter()
         {
@@ -81,10 +98,36 @@ namespace Ombi.Controllers
             return true;
         }
 
+        /// <summary>
+        /// Runs the Emby User importer
+        /// </summary>
+        /// <returns></returns>
         [HttpPost("embyuserimporter")]
         public bool EmbyUserImporter()
         {
             BackgroundJob.Enqueue(() => _embyUserImporter.Start());
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the Plex Content Cacher
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("plexcontentcacher")]
+        public bool StartPlexContentCacher()
+        {
+            BackgroundJob.Enqueue(() => _plexContentCacher.CacheContent());
+            return true;
+        }
+
+        /// <summary>
+        /// Runs the Emby Content Cacher
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost("embycontentcacher")]
+        public bool StartEmbyContentCacher()
+        {
+            BackgroundJob.Enqueue(() => _embyContentCacher.Start());
             return true;
         }
     }

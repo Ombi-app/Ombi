@@ -17,7 +17,6 @@ using Ombi.Core.Settings.Models;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Models;
-using Ombi.Schedule.Jobs;
 using Ombi.Schedule.Jobs.Emby;
 using Ombi.Schedule.Jobs.Radarr;
 using Ombi.Settings.Settings.Models;
@@ -44,14 +43,13 @@ namespace Ombi.Controllers
         /// <param name="mapper">The mapper.</param>
         /// <param name="templateRepo">The templateRepo.</param>
         /// <param name="embyApi">The embyApi.</param>
-        /// <param name="cacher">The cacher.</param>
         /// <param name="embyCacher">The embyCacher.</param>
         /// <param name="radarrCacher">The radarrCacher.</param>
+        /// <param name="memCache">The memory cache.</param>
         public SettingsController(ISettingsResolver resolver,
             IMapper mapper,
             INotificationTemplatesRepository templateRepo,
             IEmbyApi embyApi,
-            IPlexContentCacher cacher,
             IEmbyContentCacher embyCacher,
             IRadarrCacher radarrCacher,
             IMemoryCache memCache)
@@ -60,7 +58,6 @@ namespace Ombi.Controllers
             Mapper = mapper;
             TemplateRepository = templateRepo;
             _embyApi = embyApi;
-            _plexContentCacher = cacher;
             _embyContentCacher = embyCacher;
             _radarrCacher = radarrCacher;
             _cache = memCache;
@@ -70,7 +67,6 @@ namespace Ombi.Controllers
         private IMapper Mapper { get; }
         private INotificationTemplatesRepository TemplateRepository { get; }
         private readonly IEmbyApi _embyApi;
-        private readonly IPlexContentCacher _plexContentCacher;
         private readonly IEmbyContentCacher _embyContentCacher;
         private readonly IRadarrCacher _radarrCacher;
         private readonly IMemoryCache _cache;
@@ -145,10 +141,6 @@ namespace Ombi.Controllers
         public async Task<bool> PlexSettings([FromBody]PlexSettings plex)
         {
             var result = await Save(plex);
-            if (result && plex.Enable)
-            {
-                BackgroundJob.Enqueue(() => _plexContentCacher.CacheContent());
-            }
             return result;
         }
 
@@ -180,10 +172,6 @@ namespace Ombi.Controllers
                 }
             }
             var result = await Save(emby);
-            if (result && emby.Enable)
-            {
-                BackgroundJob.Enqueue(() => _embyContentCacher.Start());
-            }
             return result;
         }
 

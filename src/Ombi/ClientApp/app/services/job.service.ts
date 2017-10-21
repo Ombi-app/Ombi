@@ -29,4 +29,12 @@ export class JobService extends ServiceAuthHelpers {
     public runEmbyImporter(): Observable<boolean> {
         return this.http.post(`${this.url}embyUserImporter/`, { headers: this.headers }).map(this.extractData);
     }
+
+    public runPlexCacher(): Observable<boolean> {
+        return this.http.post(`${this.url}plexcontentcacher/`, { headers: this.headers }).map(this.extractData);
+    }
+
+    public runEmbyCacher(): Observable<boolean> {
+        return this.http.post(`${this.url}embycontentcacher/`, { headers: this.headers }).map(this.extractData);
+    }
 }

@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="col-md-2 col-md-push-7">
-                <button type="submit" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
+                <button type="button" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
             </div>
         </div>
 
@@ -30,7 +30,7 @@
                         <br />
                         <br />
                         <div class="col-md-2 " style="float: right;">
-                            <button type="submit" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
+                            <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
                         </div>
                         <br />
                         <br />
@@ -158,7 +158,7 @@
 
                             <div class="form-group">
                                 <div>
-                                    <button id="testPlex" type="submit" (click)="testPlex(server)" class="btn btn-primary-outline">
+                                    <button id="testPlex" type="button" (click)="testPlex(server)" class="btn btn-primary-outline">
                                         Test Connectivity
                                         <div id="spinner"></div>
                                     </button>
@@ -171,12 +171,19 @@
                 </ngb-tab>
             </div>
         </ngb-tabset>
-        <div class="col-md-3">
-            <div class="form-group">
-                <div>
-                    <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+        <div class="col-md-1">
+                <div class="form-group">
+                    <div>
+                        <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-1">
+                    <div class="form-group">
+                        <div>
+                            <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
+                        </div>
+                    </div>
+                </div>
     </fieldset>
 </div>

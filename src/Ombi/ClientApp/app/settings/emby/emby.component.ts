@@ -1,9 +1,7 @@
 ﻿import { Component, OnInit } from "@angular/core";
 
 import { IEmbyServer, IEmbySettings } from "../../interfaces";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { JobService, NotificationService, SettingsService, TesterService } from "../../services";
 
 @Component({
     templateUrl: "./emby.component.html",
@@ -14,7 +12,8 @@ export class EmbyComponent implements OnInit {
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
-                private testerService: TesterService) { }
+                private testerService: TesterService,
+                private jobService: JobService) { }
 
     public ngOnInit() {
         this.settingsService.getEmby().subscribe(x => this.settings = x);
@@ -60,6 +59,14 @@ export class EmbyComponent implements OnInit {
                 this.notificationService.success("Settings Saved", "Successfully saved Emby settings");
             } else {
                 this.notificationService.success("Settings Saved", "There was an error when saving the Emby settings");
+            }
+        });
+    }
+
+    public runCacher(): void {
+        this.jobService.runEmbyCacher().subscribe(x => {
+            if(x) {
+                this.notificationService.success("Running","Triggered the Emby Content Cacher");
             }
         });
     }

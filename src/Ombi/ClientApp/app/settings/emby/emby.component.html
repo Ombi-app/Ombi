@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="col-md-2 col-md-push-7">
-                <button type="submit" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
+                <button type="button" (click)="addTab()" class="btn btn-success-outline">Add Server</button>
             </div>
         </div>
 
@@ -25,7 +25,7 @@
                         <br />
                         <br />
                         <div class="col-md-2" style="float: right;">
-                            <button type="submit" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
+                            <button type="button" (click)="removeServer(server)" class="btn btn-danger-outline">Remove Server</button>
                         </div>
                         <br />
                         <br />
@@ -57,17 +57,6 @@
                                 </div>
                             </div>
 
-                            <!--<div class="form-group">
-                                <div class="checkbox">
-
-
-                                    <input type="checkbox" id="EnableTvEpisodeSearching" [(ngModel)]="server.enableEpisodeSearching" ng-checked="server.enableEpisodeSearching">
-                                    <label for="EnableTvEpisodeSearching">Enable Episode Searching</label>
-
-                                </div>
-                            </div>-->
-
-
                             <div class="form-group">
                                 <label for="authToken" class="control-label">Emby Api Key</label>
                                 <div class="">
@@ -76,7 +65,7 @@
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <button id="testEmby" type="submit" (click)="test(server)" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
+                                    <button id="testEmby" type="button" (click)="test(server)" class="btn btn-primary-outline">Test Connectivity <div id="spinner"></div></button>
                                 </div>
                             </div>
                         </div>
@@ -84,10 +73,17 @@
                 </ngb-tab>
             </div>
         </ngb-tabset>
-        <div class="col-md-12">
+        <div class="col-md-1">
             <div class="form-group">
                 <div>
                     <button (click)="save()" type="submit" id="save" class="btn btn-primary-outline">Submit</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1">
+            <div class="form-group">
+                <div>
+                    <button (click)="runCacher()" type="button" id="save" class="btn btn-primary-outline">Manually Run Cacher</button>
                 </div>
             </div>
         </div>

@@ -5,10 +5,7 @@ import { Subject } from "rxjs/Subject";
 import { IPlexServerResponse, IPlexServerViewModel } from "../../interfaces";
 import { IPlexLibrariesSettings, IPlexServer, IPlexSettings } from "../../interfaces";
 
-import { PlexService } from "../../services";
-import { TesterService } from "../../services";
-import { NotificationService } from "../../services";
-import { SettingsService } from "../../services";
+import { JobService, NotificationService, PlexService, SettingsService, TesterService } from "../../services";
 
 @Component({
     templateUrl: "./plex.component.html",
@@ -20,14 +17,15 @@ export class PlexComponent implements OnInit, OnDestroy {
     public password: string;
     public serversButton = false;
 
-    private subscriptions = new Subject<void>();
-
     public advanced = false;
+
+    private subscriptions = new Subject<void>();
 
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private plexService: PlexService,
-                private testerService: TesterService) { }
+                private testerService: TesterService,
+                private jobService: JobService) { }
 
     public ngOnInit() {
         this.settingsService.getPlex().subscribe(x => {
@@ -40,7 +38,6 @@ export class PlexComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 if (x.success) {
-                    debugger;
                     this.loadedServers = x;
                     this.serversButton = true;
                     this.notificationService.success("Loaded", "Found the servers! Please select one!");
@@ -117,6 +114,14 @@ export class PlexComponent implements OnInit, OnDestroy {
                 this.notificationService.success("Settings Saved", "Successfully saved Plex settings");
             } else {
                 this.notificationService.success("Settings Saved", "There was an error when saving the Plex settings");
+            }
+        });
+    }
+
+    public runCacher(): void {
+        this.jobService.runPlexCacher().subscribe(x => {
+            if(x) {
+                this.notificationService.success("Running","Triggered the Plex Content Cacher");
             }
         });
     }
