@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Ombi.Attributes;
@@ -45,7 +46,8 @@ namespace Ombi.Controllers
             ISettingsService<CustomizationSettings> c,
             IWelcomeEmail welcome,
             IMovieRequestRepository m,
-            ITvRequestRepository t)
+            ITvRequestRepository t,
+            ILogger<IdentityController> l)
         {
             UserManager = user;
             Mapper = mapper;
@@ -56,6 +58,7 @@ namespace Ombi.Controllers
             WelcomeEmail = welcome;
             MovieRepo = m;
             TvRepo = t;
+            _log = l;
         }
 
         private OmbiUserManager UserManager { get; }
@@ -67,6 +70,7 @@ namespace Ombi.Controllers
         private IWelcomeEmail WelcomeEmail { get; }
         private IMovieRequestRepository MovieRepo { get; }
         private ITvRequestRepository TvRepo { get; }
+        private ILogger<IdentityController> _log;
 
         /// <summary>
         /// This is what the Wizard will call when creating the user for the very first time.
@@ -101,7 +105,13 @@ namespace Ombi.Controllers
                 await CreateRoles();
                 await UserManager.AddToRoleAsync(userToCreate, OmbiRoles.Admin);
             }
-
+            if (!result.Succeeded)
+            {
+                foreach (var err in result.Errors)
+                {
+                    _log.LogCritical(err.Description);
+                }
+            }
             return result.Succeeded;
         }
 
