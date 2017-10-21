@@ -166,12 +166,14 @@ namespace Ombi.Schedule.Jobs.Ombi
                     {
                         updaterExtension = ".exe";
                     }
+                    var updaterFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location),
+                        "TempUpdate", $"Ombi.Updater{updaterExtension}");
                     // There must be an update
                     var start = new ProcessStartInfo
                     {
                         UseShellExecute = false,
                         CreateNoWindow = true,
-                        FileName = $"Ombi.Updater{updaterExtension}",
+                        FileName = updaterFile,
                         Arguments = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location) + " " + (settings.ProcessName.HasValue() ? settings.ProcessName : "Ombi"),
                         WorkingDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "TempUpdate"),
                     };
