@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Hangfire;
-using Hangfire.Common;
 using Microsoft.Extensions.Logging;
 using Ombi.Api.Plex;
 using Ombi.Api.Plex.Models;
-using Ombi.Api.Plex.Models.Server;
 using Ombi.Core.Settings;
 using Ombi.Core.Settings.Models.External;
 using Ombi.Helpers;
 using Ombi.Store.Entities;
 using Ombi.Store.Repository;
-using Serilog;
 
 namespace Ombi.Schedule.Jobs.Plex
 {
@@ -98,26 +95,26 @@ namespace Ombi.Schedule.Jobs.Plex
 
         private async Task GetEpisodes(PlexServers settings, Directory section)
         {
-
-            // Get the first 50
             var currentPosition = 0;
-            var ResultCount = 50;
-            var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, ResultCount);
+            var resultCount = settings.EpisodeBatchSize == 0 ? 50 : settings.EpisodeBatchSize;
+            var episodes = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition, resultCount);
             var currentData = _repo.GetAllEpisodes();
             _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Total Epsiodes found for {episodes.MediaContainer.librarySectionTitle} = {episodes.MediaContainer.totalSize}");
 
             await ProcessEpsiodes(episodes, currentData);
-            currentPosition += ResultCount;
+            currentPosition += resultCount;
 
             while (currentPosition < episodes.MediaContainer.totalSize)
             {
                 var ep = await _api.GetAllEpisodes(settings.PlexAuthToken, settings.FullUri, section.key, currentPosition,
-                    ResultCount);
+                    resultCount);
                 await ProcessEpsiodes(ep, currentData);
-                _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {ResultCount} more episodes. Total Remaining {currentPosition - episodes.MediaContainer.totalSize}");
-                currentPosition += ResultCount;
+                _log.LogInformation(LoggingEvents.PlexEpisodeCacher, $"Processed {resultCount} more episodes. Total Remaining {episodes.MediaContainer.totalSize - currentPosition}");
+                currentPosition += resultCount;
             }
 
+            // we have now finished.
+            await _repo.SaveChangesAsync();
         }
 
         private async Task ProcessEpsiodes(PlexContainer episodes, IQueryable<PlexEpisode> currentEpisodes)

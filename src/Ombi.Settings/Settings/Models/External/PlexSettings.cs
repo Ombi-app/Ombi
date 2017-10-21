@@ -18,6 +18,8 @@ namespace Ombi.Core.Settings.Models.External
         public string PlexAuthToken { get; set; }
         public string MachineIdentifier { get; set; }
 
+        public int EpisodeBatchSize { get; set; }
+
         public List<PlexSelectedLibraries> PlexSelectedLibraries { get; set; } = new List<PlexSelectedLibraries>();
     }
     public class PlexSelectedLibraries

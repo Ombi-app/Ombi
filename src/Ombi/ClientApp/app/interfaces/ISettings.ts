@@ -45,6 +45,7 @@ export interface IPlexServer extends IExternalSettings {
     enableEpisodeSearching: boolean;
     plexAuthToken: string;
     machineIdentifier: string;
+    episodeBatchSize: number;
     plexSelectedLibraries: IPlexLibrariesSettings[];
 }
 

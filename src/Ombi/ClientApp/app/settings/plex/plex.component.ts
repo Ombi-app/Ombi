@@ -22,6 +22,8 @@ export class PlexComponent implements OnInit, OnDestroy {
 
     private subscriptions = new Subject<void>();
 
+    public advanced = false;
+
     constructor(private settingsService: SettingsService,
                 private notificationService: NotificationService,
                 private plexService: PlexService,
@@ -38,6 +40,7 @@ export class PlexComponent implements OnInit, OnDestroy {
             .takeUntil(this.subscriptions)
             .subscribe(x => {
                 if (x.success) {
+                    debugger;
                     this.loadedServers = x;
                     this.serversButton = true;
                     this.notificationService.success("Loaded", "Found the servers! Please select one!");

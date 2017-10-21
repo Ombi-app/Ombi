@@ -32,7 +32,14 @@ export interface IDirectory {
 export interface IPlexServerViewModel {
     success: boolean;
     message: string;
-    servers: IPlexServerResponse;
+    servers: IPlexServerResult;
+}
+
+export interface IPlexServerResult {
+    friendlyName: string;
+    machineIdentifier: string;
+    identifier: string;
+    server: IPlexServerResponse[];
 }
 
 export interface IPlexServerResponse {
